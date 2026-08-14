@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:115929ae087ceb6f",
+  "sourceHash": "fnv1a64:1a6c6c3f5058300d",
   "lessons": [
     {
       "id": "SA-C11-mitram",
@@ -844,6 +844,207 @@
             {
               "kind": "speech",
               "text": "Which character is this — आ? What sound does it carry? (ā.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S110-letter-ra",
+      "sequence": 546,
+      "title": "र — one character, met inside words you already say",
+      "headword": "र",
+      "romanization": "ra",
+      "gloss": "the single character र — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e083048617d082a2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: र",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌ि — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "र — ra."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom stem curling clockwise around the lower loop."
+            },
+            {
+              "kind": "speech",
+              "text": "a diagonal tail."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has र (ra) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्कारः namaskāraḥ — hello (lit. \"the making of a bow\") (namaskāraḥ)."
+            },
+            {
+              "kind": "speech",
+              "text": "पुनर्दर्शनाय punardarśanāya — until we meet again (lit. \"for seeing again\")."
+            },
+            {
+              "kind": "speech",
+              "text": "करोमि karomi — I do, I make (कार्यं करोमि, \"I work\")."
+            },
+            {
+              "kind": "speech",
+              "text": "एक द्व त्रि चतुर् पञ्च eka dva tri catur pañca — one to five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the headline junction, descend the stem, and curl left and clockwise around the lower loop to the tail junction."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at that junction and draw the diagonal tail down-right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-र (ra)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find र (ra) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find र in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्कारः, पुनर्दर्शनाय, नमस्ते."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "र three times, saying ra as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: र three times, saying *ra* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find र (ra) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find र once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — र? What sound does it carry? (ra.) Name one word you already say that contains it."
             }
           ]
         }

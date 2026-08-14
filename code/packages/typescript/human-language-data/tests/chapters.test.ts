@@ -341,7 +341,7 @@ describe("corpus snapshot", () => {
     // exactly 2/4 (0.50), which clears the floor rather than falling below it. So this is
     // +2 and not +4, and the difference is one atom of arithmetic, not a difference in
     // kind. Both new members are recorded in tamil/chapters.json's own payoff notes.
-    expect(report.summary.payoffsNotRepresentative).toBe(57); // +1: HL-C88 slices 5-6 // HL12: +1. One chapter's payoff ratio falls below the 0.5 floor because a recognition segment adds an atom its chapter payoff does not name -- a letter is not a thing the chapter promises the reader can DO // HL12 payment two: +3, all Hindi, and the arithmetic is exact. Chapters 10, 11 and 12 each held 4 atoms with a payoff assessing 2 -- 2/4 = 0.50, sitting exactly ON the floor. One recognition segment adds one atom to each, so each becomes 2/5 = 0.40. The payoffs are NOT widened to absorb it: a chapter promises something the reader can DO with the language, and recognising a character is the other ramp, which HL12 section 2.1 keeps separate on purpose. Recorded in hindi/chapters.json's own payoff notes // HL-C154: Tamil's letter ledger completed — 15 more one-character segments, 24/24 positions taught
+    expect(report.summary.payoffsNotRepresentative).toBe(68); // +1: HL-C88 slices 5-6 // HL12: +1. One chapter's payoff ratio falls below the 0.5 floor because a recognition segment adds an atom its chapter payoff does not name -- a letter is not a thing the chapter promises the reader can DO // HL12 payment two: +3, all Hindi, and the arithmetic is exact. Chapters 10, 11 and 12 each held 4 atoms with a payoff assessing 2 -- 2/4 = 0.50, sitting exactly ON the floor. One recognition segment adds one atom to each, so each becomes 2/5 = 0.40. The payoffs are NOT widened to absorb it: a chapter promises something the reader can DO with the language, and recognising a character is the other ramp, which HL12 section 2.1 keeps separate on purpose. Recorded in hindi/chapters.json's own payoff notes // HL-C154: Tamil's letter ledger completed — 15 more one-character segments, 24/24 positions taught // HL-C156: the letter ledgers replicated to all six — 85 one-character segments, 133/144 positions taught
   });
 
   it("names the tracks whose chapter debt is already zero", () => {
@@ -352,6 +352,8 @@ describe("corpus snapshot", () => {
       trackChapters: loadTrackChapters(),
       policy: loadChapterPolicy(),
     });
+    // HL-C156: kannada, telugu leave this list — each now carries
+    // one-character script segments whose typed-atom payoff debt is not yet paid.
     // Capability closure makes nine more tracks clean. Tracks omitted from this list
     // still carry typed-atom payoff debt, even though none lacks a chapter capability.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
@@ -361,12 +363,10 @@ describe("corpus snapshot", () => {
       "gujarati",
       "italian",
       "japanese",
-      "kannada",
       "latin",
       "marathi",
       "portuguese",
       "punjabi",
-      "telugu",
     ]);
   });
 

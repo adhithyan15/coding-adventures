@@ -1,8 +1,8 @@
 Sanskrit, chapter 15: Describing Things.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 महत् (mahat) — big.
 
 Warm-up.
@@ -26,7 +26,7 @@ Wrap-up Recall.
 What is mahat? (big.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 अल्प (alpa) — small.
 
 Warm-up.
@@ -51,7 +51,7 @@ Wrap-up Recall.
 What is alpa? (small.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 उत्तम (uttama) — good.
 
 Warm-up.
@@ -76,7 +76,7 @@ Wrap-up Recall.
 What is uttama? (good.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 नव (nava) — new.
 
 Warm-up.
@@ -101,7 +101,7 @@ Wrap-up Recall.
 What is nava? (new.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 पुरातन (purātana) — old — of a thing, not of a person.
 
 Warm-up.
@@ -126,7 +126,7 @@ Wrap-up Recall.
 What is purātana? (old — of a thing, not of a person.) Where does it go — before the word it describes, or after? (Before.)
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 before the noun, and it AGREES — five words, one rule.
 
 Warm-up.
@@ -154,3 +154,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Where does an adjective go in this language? (In front of the noun.) Does it change shape to match the noun? (and it AGREES.)
+
+
+Lesson 7 of 7.
+ह — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ह and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: प — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ह.
+ह — ha.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not h, it is ha.
+What it is made of:
+a descending right stem joined to the leftward shoulder and clockwise hooked body.
+a separate down-right outer curve and tail.
+the top shirorekhā.
+You already say these, and every one of them has ह somewhere inside it:
+अहम् aham — I.
+अहं संस्कृतं वदामि ahaṁ saṁskṛtaṁ vadāmi — I speak Sanskrit.
+गृह्णाति gṛhṇāti — he, she, or it takes, seizes.
+साहाय्यं करोति sāhāyyaṁ karoti — he, she, or it helps.
+
+Writing: ह.
+1. start at the right stem's headline junction, descend, sweep left through the shoulder, then curve clockwise around the hooked body to its lower-right tip without lifting.
+2. lift at the body's left junction and sweep down-left around the outer curve, then continue diagonally down-right through the tail.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; the corroborating deskbook stages the joined first body in more component steps.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ह in the ones that have it]
+[pause 8 seconds for the answer]
+अहम्, नमस्ते.
+[once you have stopped driving — trace: ह three times, saying ha as you finish each one]
+[your turn — look: back at any page of this chapter and find ह once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ह? What sound does it carry? (ha.) Name one word you already say that contains it.

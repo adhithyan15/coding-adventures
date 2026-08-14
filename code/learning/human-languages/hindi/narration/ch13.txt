@@ -1,8 +1,8 @@
 Hindi, chapter 13: Head and Hand.
-3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 सिर (sir) — the head.
 
 Warm-up.
@@ -27,7 +27,7 @@ Wrap-up Recall.
 What does सिर mean, and what Sanskrit word is it worn down from? ("Head" — from शिरस् śiras.) Where else does this root show up, in a more formal register? (Yoga/anatomical terms built on the related śīrṣa root.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 हाथ (hāth) — the hand.
 
 Warm-up.
@@ -54,7 +54,7 @@ Wrap-up Recall.
 What does हाथ mean, and what Sanskrit word is it from? ("Hand" — from हस्त hasta.) What's the general shape of the sound change between them? (Sanskrit's ‑st‑ cluster simplified through Prakrit into a geminate aspirated consonant (hattha), which later simplified to a single consonant — and the vowel before it lengthened to compensate.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 स — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: स and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -95,3 +95,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — स? What sound does it carry? (sa.) Name one word you already say that contains it.
+
+
+Lesson 4 of 4.
+च (ca) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: च and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ◌ी — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: च.
+च — ca.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not c, it is ca.
+What it is made of:
+a short upper bar joined to a rounded body opening right.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has च (ca) somewhere inside it:
+चलता हूँ — I'll be off (lit. "I go"), gendered.
+एक दो तीन चार पाँच — one to five.
+तीन, चार — three and four descend from Sanskrit neuter forms through Prakrit weight trades.
+पाँच pāṁch — Sanskrit's nasal consonant survives inside the Hindi vowel.
+
+Writing: च.
+1. draw the short upper bar left-to-right, turn down and left through the shoulder, then curve around the rounded body to its open right junction without lifting.
+2. lift and draw the right stem top-to-bottom.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-च (ca)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find च (ca) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्ते.
+[once you have stopped driving — trace: च three times, saying ca as you finish each one]
+[your turn — look: back at any page of this chapter and find च (ca) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — च? What sound does it carry? (ca.) Name one word you already say that contains it.

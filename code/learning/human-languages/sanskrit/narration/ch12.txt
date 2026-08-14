@@ -1,8 +1,8 @@
 Sanskrit, chapter 12: The Face, Part One.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 अक्षि (akṣi) — "eye," and the number Sanskrit built for it.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -38,7 +38,7 @@ Wrap-up Recall.
 Name two English words from the same root as अक्षि (akṣi). (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (अक्षिणी; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 कर्णः (karṇaḥ) — "ear," a word without a settled parent.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -74,7 +74,7 @@ Wrap-up Recall.
 Is कर्णः (karṇaḥ)'s root settled or disputed? (Disputed — four guesses, no winner.) What ending marks it masculine, and where did you meet that sound before? (-अः, a visarga, first heard on नमस्ते.) What gender does the Gujarati descendant kān take, and is that the same as Sanskrit's? (Feminine — it changed.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 मुखम् (mukham) — "mouth," a word two families both claim.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -90,7 +90,7 @@ Sanskrit: सम्मुखम्. sound: sammukham. meaning: face to face — 
 Neuter, back to the family's usual ending.
 
 The letters in this word.
-मु is म under a short-u sign. ख is the aspirated kha you met in खादति — a k with a puff of breath, distinct from plain क. म् closes it: mu-kha-m.
+मु is म under a short-u sign. ख is the aspirated kha you met in खादति — a k with a puff of breath, distinct from plain क (ka). म् closes it: mu-kha-m.
 
 The word, taken apart — a word two families claim.
 मुखम् (mukham) is genuinely contested territory. One line of scholarship derives it from Dravidian; another argues for an Indo-European source, pointing to its presence in the Rigveda and in Iranian languages. Neither claim has settled the question, and this book takes no side either.
@@ -110,7 +110,7 @@ Wrap-up Recall.
 Which two language families both claim मुखम्? (Dravidian, and Indo-European — unsettled.) Name मुखम्'s two Gujarati descendants and which is तत्सम, which तद्भव. (mukh, तत्सम; moḍhũ, तद्भव.) Name this chapter's three words for the face. (Akṣi, karṇaḥ, mukham.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ◌् ((vowel killer)) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌् and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -125,7 +125,7 @@ Script you'll notice: ◌्.
 ◌् ((vowel killer)) — no sound of its own — it takes one away.
 It is a vowel-killer. Every consonant in this script arrives with an a already inside it — that is what an abugida is. This mark takes the a back, leaving the bare consonant. It is how the script writes two consonants in a row.
 Where it sits: a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant.
-Worked through: क + ◌् ((vowel killer)) = क् — k.
+Worked through: क (ka) + ◌् ((vowel killer)) = क् — k.
 You already say these, and every one of them has ◌् ((vowel killer)) somewhere inside it:
 नमस्ते namaste — hello (lit. "a bow to you") (namaste).
 नमस्कारः namaskāraḥ — hello (lit. "the making of a bow") (namaskāraḥ).
@@ -148,3 +148,51 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ◌् ((vowel killer))? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it.
+
+
+Lesson 5 of 5.
+क (ka) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: र — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: क.
+क — ka.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka.
+What it is made of:
+a counterclockwise left bowl.
+a top-to-bottom central stem.
+a separate right-hand arch.
+the top shirorekhā.
+You already say these, and every one of them has क (ka) somewhere inside it:
+नमस्कारः namaskāraḥ — hello (lit. "the making of a bow") (namaskāraḥ).
+किम् kim — what.
+कथम् katham — how.
+कुशलम् kuśalam — well-being — and the reply "अहं कुशली अस्मि.
+
+Writing: क.
+1. start at the bowl's upper-right junction and sweep left over the top, down around the left side, and back to the lower-right junction.
+2. lift and draw the central stem top-to-bottom.
+3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+Verified four-stroke teaching form; everyday handwriting may join or simplify the body differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-क (ka)-order.gif’, strokes 1–4, Wikimedia Commons, 8 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find क (ka) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्कारः, किम्, नमस्ते.
+[once you have stopped driving — trace: क three times, saying ka as you finish each one]
+[your turn — look: back at any page of this chapter and find क (ka) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — क? What sound does it carry? (ka.) Name one word you already say that contains it.

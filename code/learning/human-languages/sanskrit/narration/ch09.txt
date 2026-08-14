@@ -1,8 +1,8 @@
 Sanskrit, chapter 9: Taking, Asking, Helping, Loving.
-5 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 गृह्णाति (gṛhṇāti) — "takes," and English grab.
 
 Warm-up.
@@ -39,7 +39,7 @@ Wrap-up Recall.
 Which class builds gṛhṇāti, and which earlier verb shares it? (Class 9; जानाति.) Why -णा- and not -ना-? (The curled-back ऋ pulls the n back to match.) Name three English words from the same root. (Grab, grip, grasp.) Are they the same word as gṛhṇāti or relatives of it? (Relatives — same root, different suffixes, like eka and one.) Is Marathi gheṇe tatsama or tadbhava? (Tadbhava.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 पृच्छति (pṛcchati) — "asks," and the prayer at the other end of it.
 
 Warm-up.
@@ -77,7 +77,7 @@ Wrap-up Recall.
 Which class builds pṛcchati, and which verb shares its doubled middle? (Class 6; गच्छति.) What did Latin precārī mean, and name two English words from it. (To entreat; pray, precarious.) Why does German say fragen with an f? (Grimm's law turned initial p into f — as in pañca and five.) And is Hindi pūchnā tatsama or tadbhava? (Tadbhava.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 साहाय्यं करोति (sāhāyyaṁ karoti) — "helps," or going along with.
 
 Warm-up.
@@ -113,7 +113,7 @@ Wrap-up Recall.
 How does Sanskrit say "helps"? (साहाय्यं करोति (sāhāyyaṁ karoti) — a noun plus "does".) What are the two pieces inside sahāya, and which Latin word for a companion is built the same way? (सह "with" + आय "going"; comes.) Which language still helps with this exact Sanskrit noun, and which two borrowed an Arabic one instead? (Bengali; Hindi and Marathi, with madad.)
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 स्निह्यति and प्रियम् — loving, and the word inside friend.
 
 Warm-up.
@@ -152,7 +152,7 @@ Wrap-up Recall.
 Give this chapter's four, and what स्निह् meant before "love." (Gṛhṇāti, pṛcchati, sāhāyyaṁ karoti, snihyati; sticky, oily.) Three English words from प्रिय, and what turned its p into f? (Friend, free, Friday; Grimm's law, as in fragen and five.) Which English number's f is not that law? (Four, copying five.) Which earlier word travelled both ways as priya does, and is piyā tatsama or tadbhava? (पञ्च — east to panj and Punjab, "five waters," west to Greek pente; piyā is tadbhava.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 न (na) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -192,3 +192,51 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — न? What sound does it carry? (na.) Name one word you already say that contains it.
+
+
+Lesson 6 of 6.
+स — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: स and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: त — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: स.
+स — sa.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not s, it is sa.
+What it is made of:
+a descending left stem curling through the central hook and diagonal tail.
+a left-to-right middle crossbar.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has स somewhere inside it:
+नमस्ते namaste — hello (lit. "a bow to you") (namaste).
+नमस्कारः namaskāraḥ — hello (lit. "the making of a bow") (namaskāraḥ).
+स्वागतम् svāgatam — welcome (lit. "well come") (svāgatam).
+अस्ति asti — is.
+
+Writing: स.
+1. start just below the headline, descend the left stem, curve left around the central hook, and continue diagonally down-right through the tail without lifting.
+2. lift at the central junction and draw the middle crossbar left-to-right.
+3. lift and draw the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+Verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari s स (sa).gif’, strokes 1–4, Wikimedia Commons, 29 March 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find स (sa) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्ते, नमस्कारः.
+[once you have stopped driving — trace: स three times, saying sa as you finish each one]
+[your turn — look: back at any page of this chapter and find स (sa) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — स? What sound does it carry? (sa.) Name one word you already say that contains it.

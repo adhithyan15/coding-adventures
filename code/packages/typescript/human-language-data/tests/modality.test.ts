@@ -973,7 +973,7 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(62); // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6). Each carries a detachable tracing block, so the hands-free view keeps the rest of the lesson // HL12 payment two: +8 Hindi segments // HL-C154: Tamil's letter ledger completed — 15 more one-character segments, 24/24 positions taught
+    expect(summary.lessonsWithWritingSegments).toBe(132); // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6). Each carries a detachable tracing block, so the hands-free view keeps the rest of the lesson // HL12 payment two: +8 Hindi segments // HL-C154: Tamil's letter ledger completed — 15 more one-character segments, 24/24 positions taught // HL-C156: letter ledgers replicated to all six — 85 one-character segments — every segment carries a detachable tracing block
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.

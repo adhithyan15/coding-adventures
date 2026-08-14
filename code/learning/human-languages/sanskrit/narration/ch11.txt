@@ -1,8 +1,8 @@
 Sanskrit, chapter 11: The People You'd Introduce.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 मित्रम् (mitram) — "friend," and the god of the given word.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -40,7 +40,7 @@ Wrap-up Recall.
 What does the root behind मित्रम् mean, and what god shares it? ("To bind"; Mithra, the covenant god.) Is मित्र in Hindi तत्सम or तद्भव? (तत्सम.) What gender is mitram, and why is that surprising? (Neuter — it names a person, but gender tracks the word's class, not the person.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 कुटुम्बम् (kuṭumbam) — "family," a word that made a round trip.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -75,7 +75,7 @@ Wrap-up Recall.
 Which direction did कुटुम्बम् (kuṭumbam) travel first — into Sanskrit, or out of it? (Into it — a Dravidian loanword.) What Tamil word is it compared to, and what does it literally build on? (kuṭimai, "family, lineage," on kuṭi, "a hut.") Which languages later borrowed the Sanskrit-shaped form back? (Kannada, Telugu, Tamil.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 भ्राता (bhrātā) — "brother," the same word, worn two ways.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -112,7 +112,7 @@ Wrap-up Recall.
 Is English brother a cousin of भ्राता (bhrātā), or the same word? (The same word, unbroken from PIE.) Which two daughter languages wore it down to bhāi? (Bengali, Gujarati.) What gender is भ्राता (bhrātā), unlike every noun before it this chapter? (Masculine.)
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 भगिनी (bhaginī) — "sister," one with a share.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -152,7 +152,7 @@ Wrap-up Recall.
 What does भगिनी literally mean? ("One with a share.") What is the actual PIE cousin of English sister, and why is it not the word we learned? (स्वसृ — attested, but never the living word.) Which two daughter languages descend from भगिनी instead? (Bengali, Gujarati.) Name this chapter's four people. (Mitram, kuṭumbam, bhrātā, bhaginī.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 आ (ā) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -199,3 +199,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — आ? What sound does it carry? (ā.) Name one word you already say that contains it.
+
+
+Lesson 6 of 6.
+र — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ◌ि — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: र.
+र — ra.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra.
+What it is made of:
+a top-to-bottom stem curling clockwise around the lower loop.
+a diagonal tail.
+the top shirorekhā.
+You already say these, and every one of them has र (ra) somewhere inside it:
+नमस्कारः namaskāraḥ — hello (lit. "the making of a bow") (namaskāraḥ).
+पुनर्दर्शनाय punardarśanāya — until we meet again (lit. "for seeing again").
+करोमि karomi — I do, I make (कार्यं करोमि, "I work").
+एक द्व त्रि चतुर् पञ्च eka dva tri catur pañca — one to five.
+
+Writing: र.
+1. start at the headline junction, descend the stem, and curl left and clockwise around the lower loop to the tail junction.
+2. lift at that junction and draw the diagonal tail down-right.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-र (ra)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find र (ra) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्कारः, पुनर्दर्शनाय, नमस्ते.
+[once you have stopped driving — trace: र three times, saying ra as you finish each one]
+[your turn — look: back at any page of this chapter and find र (ra) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — र? What sound does it carry? (ra.) Name one word you already say that contains it.

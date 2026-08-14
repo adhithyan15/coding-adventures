@@ -44,7 +44,15 @@
         "SA-S03-letter-a",
         "SA-S04-letter-aa",
         "SA-S05-sign-virama",
-        "SA-S06-vowel-sign-aa"
+        "SA-S06-vowel-sign-aa",
+        "SA-S107-letter-ta",
+        "SA-S108-letter-sa",
+        "SA-S109-vowel-sign-i",
+        "SA-S110-letter-ra",
+        "SA-S111-letter-ka",
+        "SA-S112-vowel-sign-e",
+        "SA-S113-letter-pa",
+        "SA-S114-letter-ha"
       ],
       "before": [],
       "inline": [
@@ -651,7 +659,15 @@
         "SA-S03-letter-a",
         "SA-S04-letter-aa",
         "SA-S05-sign-virama",
-        "SA-S06-vowel-sign-aa"
+        "SA-S06-vowel-sign-aa",
+        "SA-S107-letter-ta",
+        "SA-S108-letter-sa",
+        "SA-S109-vowel-sign-i",
+        "SA-S110-letter-ra",
+        "SA-S111-letter-ka",
+        "SA-S112-vowel-sign-e",
+        "SA-S113-letter-pa",
+        "SA-S114-letter-ha"
       ]
     },
     {

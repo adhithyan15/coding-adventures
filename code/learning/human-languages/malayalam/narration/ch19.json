@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e5e120e17bcb588f",
+  "sourceHash": "fnv1a64:b368a65361afa6f1",
   "lessons": [
     {
       "id": "ML-C19-vayassu",
@@ -123,6 +123,175 @@
             {
               "kind": "speech",
               "text": "Is Malayalam's വയസ്സ് the same Sanskrit word as Kannada's and Telugu's? (Yes.) Does Malayalam ask age the same simple way Kannada and Telugu do? (No — it uses a dative subject, \"to you,\" plus the existential verb ഉണ്ട്, \"exists.\") What does enikku irupatu vayassuṇṭŭ literally mean? (\"To me twenty age exists.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S122-letter-ya",
+      "sequence": 481,
+      "title": "യ (ya) — one character, met inside words you already say",
+      "headword": "യ",
+      "romanization": "ya",
+      "gloss": "the single character യ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5564bc9174851491",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: യ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: യ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ഷ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: യ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യ — ya."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not y, it is ya."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has യ (ya) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "പോയി വരാം pōyi varāṁ — goodbye (lit. \"I'll go and come back\")."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി ചെയ്യുക jōli ceyyuka — to work (lit. \"work-do\")."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് മലയാളം അറിയാം enikku malayāḷam aṟiyām — 'I know Malayalam'."
+            },
+            {
+              "kind": "speech",
+              "text": "ദയവായി dayavāyi — please (dayavāyi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: യ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on യ (ya) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find യ (ya) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find യ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "നമസ്കാരം."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "യ three times, saying ya as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: യ three times, saying *ya* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find യ (ya) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find യ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — യ? What sound does it carry? (ya.) Name one word you already say that contains it."
             }
           ]
         }
