@@ -104,6 +104,7 @@ const CYRILLIC_CHE = DUCTUS[ductusKey("cyrillic", "ч")];
 const CYRILLIC_SHA = DUCTUS[ductusKey("cyrillic", "ш")];
 const CYRILLIC_SHCHA = DUCTUS[ductusKey("cyrillic", "щ")];
 const CYRILLIC_HARD_SIGN = DUCTUS[ductusKey("cyrillic", "ъ")];
+const CYRILLIC_YERY = DUCTUS[ductusKey("cyrillic", "ы")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1648,6 +1649,26 @@ describe("handwriting ductus", () => {
     expect(lower[0].x).toBeLessThan(lower.at(-1)!.x);
     expect(right.at(-1)!.y).toBeGreaterThan(right[0].y);
     expect(upper.at(-1)!.x).toBeLessThan(upper[0].x);
+  });
+
+  it("Cyrillic ы keeps the left stem and bowl joined before the lifted right stem", () => {
+    expect(CYRILLIC_YERY.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_YERY)).toBe(1);
+    expect(CYRILLIC_YERY.strokes).toHaveLength(2);
+    expect(CYRILLIC_YERY.strokes.map((stroke) => stroke.segments.length)).toEqual([4, 1]);
+    const [left, lower, right, upper] = CYRILLIC_YERY.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const separate = CYRILLIC_YERY.strokes[1].segments[0].path;
+    expect(left.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(right[0]);
+    expect(right.at(-1)).toEqual(upper[0]);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(lower[0].x).toBeLessThan(lower.at(-1)!.x);
+    expect(right.at(-1)!.y).toBeGreaterThan(right[0].y);
+    expect(upper.at(-1)!.x).toBeLessThan(upper[0].x);
+    expect(separate[0].y).toBeGreaterThan(separate.at(-1)!.y);
+    expect(separate[0].x).toBeGreaterThan(right.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3774,6 +3795,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*10:34–10:38.*upper left.*narrow entry loop.*rounded top shoulder.*descends the tall main stem.*baseline.*circles the lower bowl counterclockwise.*closes it against the stem without lifting.*one continuous pen-down run.*zero intervening lifts.*looped entry and top shoulder.*main stem down.*joined lower bowl.*bundled Noto Sans Cyrillic.*printed ъ-like form.*broad horizontal top flag.*straight main stem.*wide closed lower bowl.*without the narrow entry loop.*rounded top shoulder.*flag-to-stem-to-bowl order.*zero-lift evidence.*sweep right along the top flag.*descend the main stem.*circle the lower bowl counterclockwise.*close it against the stem without lifting.*connected cursive restores/i,
+    );
+  });
+
+  it("Cyrillic ы traces its body-before-right-stem order to the native lesson", () => {
+    const src = CYRILLIC_YERY.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase ы.*10:45–10:56.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*10:45–10:56.*upper left.*narrow entry loop.*descends the tall left stem.*baseline.*circles the joined lower bowl counterclockwise.*closes it against the stem.*lifts once.*upper right.*descends the separate tall right stem.*small rising exit.*two pen-down runs.*one intervening lift.*left stem and lower bowl first.*separate right stem.*bundled Noto Sans Cyrillic.*printed ы-like form.*straight full-height left upright.*wide closed lower bowl.*separate straight full-height right stem.*without the narrow entry loop.*curled exit.*body-before-right-stem order.*counterclockwise direction.*one-lift evidence.*descend the left stem.*circle and close the lower bowl.*lift once.*descend the separate right stem.*connected cursive restores/i,
     );
   });
 

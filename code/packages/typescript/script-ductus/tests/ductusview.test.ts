@@ -254,6 +254,8 @@ const CYRILLIC_SHCHA = ductusFor("щ", "cyrillic")!;
 const cyrillicShchaOutline = cyrillicOutline("щ");
 const CYRILLIC_HARD_SIGN = ductusFor("ъ", "cyrillic")!;
 const cyrillicHardSignOutline = cyrillicOutline("ъ");
+const CYRILLIC_YERY = ductusFor("ы", "cyrillic")!;
+const cyrillicYeryOutline = cyrillicOutline("ы");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3249,6 +3251,45 @@ describe("Cyrillic ъ — one joined flag-to-stem-to-bowl run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_HARD_SIGN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic ы — joined left body before a lifted right stem", () => {
+  const steps = ductusSteps(CYRILLIC_YERY);
+  const strip = ductusFilmstrip(CYRILLIC_YERY, cyrillicYeryOutline);
+
+  it("keeps the left stem and bowl together before the separate right stem", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "sweep right along the lower bowl",
+      "curve upward around the bowl's right side",
+      "return left through the upper bowl to close against the stem",
+      "lift, then descend the separate right stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the final stem", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicYeryOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CYRILLIC_YERY.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_YERY.strokes[1], 1),
     );
   });
 });

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added - source-verified Cyrillic ы (HL-C09FB)
+
+- Cite RussianIrina's 10:45–10:56 lowercase ы school-hand demonstration and record its two-stroke, one-lift body-before-right-stem order.
+- Explain how the handwritten narrow entry loop and curled exit fit Noto Sans Cyrillic's straight left upright, wide closed lower bowl, and separate right stem.
+- Reduce measured HL-C09 debt to 74 entries and queue Cyrillic ь next.
+
 ### Added - source-verified Cyrillic ъ (HL-C09FA)
 
 - Cite RussianIrina's 10:34–10:38 lowercase ъ school-hand demonstration and record its one-stroke, zero-lift flag-to-stem-to-bowl order.
