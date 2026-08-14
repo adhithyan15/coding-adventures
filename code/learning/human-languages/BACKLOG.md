@@ -9,6 +9,50 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C161 — Sanskrit's ledger is blocked on CHAPTERS, and the ratio proves it
+
+**Measured 2026-08-14, and this row exists because the attempt was reverted
+rather than shipped.**
+
+`author_recognition_segments.py sanskrit` happily places ledger positions 15-23
+— eight new segments, taking Sanskrit from 8 to 16. Everything passes except one
+number, and that number is the whole point:
+
+```
+R1 missed / atomsTaught   1087 / 3363 = 0.3232     ceiling 0.32
+```
+
+R1 is the tightest reinforcement window: an atom must be revisited within three
+lessons. Sanskrit has **15 chapters** against 41-42 in every sibling track, so a
+letter taught in chapter 13 has nothing after it to come back to. The eight
+segments are individually fine and collectively unreinforced.
+
+This is a RATIO, not a count — it is scale-invariant on purpose, so exceeding it
+is not "the corpus got bigger," it is "the ramp got worse." Re-seating it to
+0.33 would have bought eight ledger positions by making the ramp measurably less
+gentle, in the one track least able to afford it.
+
+**So the order of work is fixed, and it is the reverse of what the ledger gap
+suggests:**
+
+1. Author Sanskrit chapters 16-40, bringing it level with its siblings.
+2. THEN re-run the segment generator, which will place positions 15-24 into a
+   book with runway behind them.
+
+Doing (2) first is what this row is here to prevent. Related: HL12 §3.1 — size
+is not a constraint, and no rule may be relaxed to save pages.
+
+## HL-C162 — Kannada ledger position 24 (ಓ) has no host word
+
+`author_recognition_segments.py kannada` writes **0 segments**: no chapter slot
+qualifies, because the drizzle rule requires the letter to appear in a word the
+reader already knows, and no taught Kannada word contains ಓ. The ledger sits at
+23 of 24 for want of one vocabulary lesson.
+
+Fix is a Kannada word lesson containing ಓ (e.g. ಓದು, "to read") placed before
+the drizzle slot; the generator then closes the position with no further work.
+
+
 Note on ids: the HL11 script-ramp block was opened as HL-C113…HL-C120, but
 HL-C113 had already been taken by the CEFR B1→C2 climb, which eight merged PRs
 (#11078, #11081, #11086, #11090, #11094, #11096, #11099 and this one) cite in
