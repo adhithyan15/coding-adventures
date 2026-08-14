@@ -915,7 +915,10 @@ backend immediately) come before the enabler-dependent items.
   known predicate over unchanged ordinary local boolean, integer, and real
   scalars. An exact bare self-assignment does not make such a predicate
   dependency unstable, nor does a conditional assignment whose leaves are all
-  that same bare dependency. Computed selector assignments, differing,
+  that same bare dependency. One additional bounded dependency level permits
+  an unchanged known scalar predicate to select the preserving leaf of such a
+  dependency assignment; cyclic and deeper proofs fail closed. Computed
+  selector assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
