@@ -307,7 +307,7 @@ bridge worker path:
   dispatch, event-stream ingestion, and normalized state update through the
   production socket transport.
 
-## Chief Of Staff Remaining Work
+## Chief Of Staff Production Composition
 
 The Chief host-profile slice now provides JSON orchestrator profiles, isolated
 host tool ownership, privilege ceilings, capability coverage checks, catalog
@@ -378,16 +378,41 @@ keeps the raw credential out of model-visible values, reports, and durable
 audit rows. Executable tests cover approved and approval-denied jobs plus
 one-shot, revoked, malformed, and unknown lease behavior.
 
-These packages complete many Chief of Staff primitives, but they do not yet
-complete the production composition boundary. The runnable Chief daemon owns
-host lifecycle and the encrypted Level 1 data plane, while the Home
-Assistant-compatible controller, discovery services, pairing services, and
-Chief smart-home tool bridge still create or restore separate D23 runtime
-instances. The production host data plane also has no provider-neutral tool
-call operation. Closing D18 therefore requires one durable D23 mutation owner,
-migration of supervised smart-home services onto that owner, a thread-safe
-Chief tool adapter, authenticated host tool dispatch, and one executable Chief
-to D23 end-to-end path.
+The central production-composition boundary is now complete. The runnable Chief
+daemon restores one durable D23 mutation owner and shares it with supervised
+discovery and pairing workers, the Home Assistant-compatible API, and the
+thread-safe `smart_home.*` tool adapter. PR #10998 adds exact catalog discovery,
+authenticated provider-neutral tool execution, structured result replay,
+final-text-only publication, and an eight-turn cap to the Level One host loop.
+PR #11003 proves a real signed Chief subprocess selecting
+`smart_home.list_devices`, executing through the central D23 owner, persisting
+authorization and audit evidence, reopening the state from disk, and observing
+the result through the Home Assistant-compatible API.
+
+That executable path closes the former central-orchestrator composition gap; it
+does not make every surface in D18 complete. The original child trackers cover
+broader cross-language, sandbox, SDK, CLI, credential-product, protocol, and
+reference-agent acceptance. Their current residual scope is recorded here so a
+completed composition path is not mistaken for completion of those products.
+
+## D18 Child-Tracker Reconciliation
+
+| Tracker | Status | Evidence or residual acceptance |
+| --- | --- | --- |
+| #129 D19 crypto specification | Open | A dedicated audit must still reconcile the specification, RFC vectors, and all-six-language acceptance. |
+| #130 Message abstraction | Open | The repository has message primitives, but the issue's all-six-language rich-message conformance has not been accepted as a whole. |
+| #131 Channel abstraction | Open | Durable encrypted channels exist, but the issue's all-six-language persistent one-way channel contract still needs a complete conformance audit. |
+| #132 Capability Cage | Open | The production Deno deny-all path is executable; the issue also requires replaceable Docker and native cages whose acceptance is not yet proven. |
+| #133 Originator/Receiver | Open | Durable Rust endpoints exist, but the full SKILL, simple-function, full-program, and stdin interface spectrum still needs acceptance. |
+| #134 Vault | Open | Vault storage and leased/direct delivery primitives exist; unlock, store, rotation, and the complete credential-product surface remain broader than the accepted slices. |
+| #135 Trust Checker | Complete | Canonical Tier 0 through Tier 3 policy and production notification, biometric, and hardware-key providers are shipped, including the canonical 5/30/60-second deadlines. |
+| #136 Service Registry | Open | Durable host and service registries exist, but the original combined agent, channel, and pipeline registry API needs an explicit contract reconciliation. |
+| #137 WebSocket | Complete | The checked-in cross-language WebSocket implementation and accepted tracker are complete. |
+| #138 Orchestrator daemon | Open; central composition complete | The central owner, supervision, authenticated host dispatch, bounded model loop, durable audit/state, and Home Assistant readback are executable. Public agent registration, deregistration, listing, and lifecycle/health acceptance remain. |
+| #139 Agent SDK and SKILL parser | Open | Level One parsing and execution exist; the Level Two function, Level Three direct-channel, Level Four any-language/stdin, discovery, and hot-reload surfaces remain. |
+| #140 CLI | Open | Doctor, install, wire, and unwire exist; the request/response channel UX, Tier 1 prompt, Tier 2 passphrase fallback, Vault unlock, agent listing, and pipeline commands remain. |
+| #141 Channel encryption | Open | The production Rust protocol exists; cross-language protocol interoperability, conformance, and key-rotation acceptance remain. |
+| #142 Reference agents | Open | The Weather Agent is executable; the email reader, email responder, and finance reference agents remain. |
 
 ## Current Durable Runtime Persistence Slice
 
