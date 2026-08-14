@@ -262,6 +262,8 @@ const CYRILLIC_E = ductusFor("э", "cyrillic")!;
 const cyrillicEOutline = cyrillicOutline("э");
 const CYRILLIC_YU = ductusFor("ю", "cyrillic")!;
 const cyrillicYuOutline = cyrillicOutline("ю");
+const CYRILLIC_YA = ductusFor("я", "cyrillic")!;
+const cyrillicYaOutline = cyrillicOutline("я");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3387,6 +3389,35 @@ describe("Cyrillic ю — one joined stem-to-oval run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_YU.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic я — one joined rise-to-loop-to-leg run", () => {
+  const steps = ductusSteps(CYRILLIC_YA);
+  const strip = ductusFilmstrip(CYRILLIC_YA, cyrillicYaOutline);
+
+  it("keeps the rising stem, counterclockwise bowl, and diagonal leg joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "climb the right stem from the baseline to the top",
+      "curve counterclockwise around the upper bowl",
+      "sweep left through the bowl's lower join",
+      "descend the diagonal leg to the lower-left tip",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined run", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicYaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_YA.strokes[0], 1),
     );
   });
 });
