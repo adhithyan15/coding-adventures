@@ -1,0 +1,21 @@
+% ============================================================================
+% heat-transfer-example.query — worked recall queries against
+% heat-transfer-example.adj (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind an
+% example, find the mode), and honest abstention on a non-heat-transfer
+% word (this table, like its parent heat-transfer.adj, covers the full
+% three-mode domain with no abstention among the three -- but still
+% abstains on anything outside that set, e.g. evaporation).
+% ============================================================================
+
+import "heat-transfer-example.adj"
+
+% Forward: what everyday example does the cited NASA span give for conduction?
+? heat_transfer_example(conduction, $Example)
+
+% Backward: which mode does "warm air rises" illustrate?
+? heat_transfer_example($Mode, warm_air_rising)
+
+% Honest abstention: evaporation is a phase change, not one of the three heat-transfer modes.
+? heat_transfer_example(evaporation, $ExampleEvap)
