@@ -43,7 +43,8 @@ This profile does not own:
 - `D18M` encrypted-message fields, creation, verification, or JSON; D18F owns
   those rules
 - `D18G` sealed-grant cryptography, receiver key agreement, or key rotation;
-  issue #141 owns those rules
+  [D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) and issue #141 own
+  those rules
 - concrete filesystem, database, or cloud storage backends
 - clocks, UUID generation, randomness, private-key custody, or zeroization
 - process supervision, actor routing, host transport, or pipeline wiring
@@ -644,10 +645,14 @@ Issue #131 is complete only after this sequence:
 5. **Complete:** the exact-head gate and required Ubuntu, macOS, and Windows
    builds passed on #11721, satisfying the close condition for #131.
 
-Issue #141 may then reuse D18P's immutable grant slots and endpoint boundary for
-portable sealed-key generation, opening, rotation, and revocation. Issue #133
-may reuse the structural role interfaces while adding the wider SKILL, function,
-program, stdin/stdout, and bridge developer surfaces.
+[D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) reuses D18P's
+immutable grant slots and endpoint boundary for portable sealed-key generation,
+opening, receiver epoch state, and cryptographic rotation. D18P version 1 does
+not yet activate a new epoch durably; that
+crash-safe transition is tracked by #11734 rather than being an implied side
+effect of saving grants. Issue #133 may reuse the structural role interfaces
+while adding the wider SKILL, function, program, stdin/stdout, and bridge
+developer surfaces.
 
 ---
 
