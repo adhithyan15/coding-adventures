@@ -7,6 +7,8 @@
   executable; missing mappings and interactive tiers remain fail-closed.
 - Compose an optional shell-free notification helper for exact Tier 1 approval
   while preserving unavailable Tier 1 defaults and closed Tier 2/3 gates.
+- Compose an independently optional shell-free native biometric helper for exact
+  Tier 2 approval while preserving timeout-as-denial and a closed Tier 3 gate.
 
 - Add optional Chief-owned Reolink pairing over the shared durable controller.
   One complete owner-only configuration tuple binds credentials and a pinned

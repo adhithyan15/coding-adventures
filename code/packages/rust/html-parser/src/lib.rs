@@ -4729,10 +4729,13 @@ impl HtmlParser {
                             );
                         }
                         if self.current_element_is_authored_text_mode_element() {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "eof-in-text-mode",
-                                "end of file was reached while parsing a text element",
-                            ));
+                            self.diagnostics.push(
+                                ParserDiagnostic::new(
+                                    "eof-in-text-mode",
+                                    "end of file was reached while parsing a text element",
+                                )
+                                .at_emission(self.current_token_emission_position),
+                            );
                             self.open_elements.pop();
                         }
                         let authored_template_count = self.authored_open_template_count();
@@ -36023,7 +36026,11 @@ mod tests {
                 })
         }));
         assert!(noframes.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "eof-in-text-mode" && diagnostic.position.is_none()
+            diagnostic.code == "eof-in-text-mode"
+                && diagnostic.position.is_some_and(|position| {
+                    position.byte_offset == noframes_source.len()
+                        && position.char_offset == noframes_source.chars().count()
+                })
         }));
 
         let fragment =
@@ -40616,31 +40623,140 @@ mod tests {
     }
 
     #[test]
-    fn reports_eof_in_text_insertion_mode() {
+    fn positions_eof_in_text_insertion_mode_at_token_emission() {
         for source in [
-            "<!doctype html><script>",
-            "<!doctype html><style> EOF",
             "<!doctype html><title>title",
+            "<!doctype html><textarea>text",
+            "<!doctype html><style>style",
+            "<!doctype html><xmp>text",
+            "<!doctype html><iframe>fallback",
+            "<!doctype html><noembed>fallback",
+            "<!doctype html><script>script",
+            "<!doctype html><noscript>fallback",
             "<!doctype html><frameset></frameset><noframes>fallback",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-in-text-mode")
+                .collect::<Vec<_>>();
             assert_eq!(
-                output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "eof-in-text-mode",
-                    "end of file was reached while parsing a text element"
-                )],
+                diagnostics.len(),
+                1,
+                "source {source:?}"
+            );
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }),
                 "source {source:?}"
             );
         }
 
-        let output = parse_html_fragment_with_diagnostics("<script>").unwrap();
+        let fragment_source = "<script>fragment";
+        let output = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        let diagnostic = output
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-text-mode")
+            .unwrap();
         assert_eq!(
-            output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "eof-in-text-mode",
-                "end of file was reached while parsing a text element"
-            )]
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: fragment_source.len(),
+                char_offset: fragment_source.chars().count(),
+                line: 1,
+                column: fragment_source.chars().count() + 1,
+            })
+        );
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<title>té";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        let diagnostic = unicode
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-text-mode")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: unicode_source.len(),
+                char_offset: unicode_source.chars().count(),
+                line: 2,
+                column: "<title>té".chars().count() + 1,
+            })
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let escaped_script_source = "<!doctype html><script><!--é";
+        let escaped_script = parse_html_with_diagnostics(escaped_script_source).unwrap();
+        assert!(escaped_script
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-script-html-comment-like-text"));
+        let diagnostic = escaped_script
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-text-mode")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: escaped_script_source.len(),
+                char_offset: escaped_script_source.chars().count(),
+                line: 1,
+                column: escaped_script_source.chars().count() + 1,
+            })
+        );
+
+        for source in [
+            "<!doctype html><title>closed</title>",
+            "<!doctype html><script>closed</script>",
+            "<!doctype html><plaintext>plain",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "eof-in-text-mode"),
+                "source {source:?}"
+            );
+        }
+
+        let scripting_disabled = parse_html_with_diagnostics_and_options(
+            "<!doctype html><noscript>markup",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(scripting_disabled
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-text-mode"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "script".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-in-text-mode")
+                .unwrap()
+                .position,
+            None
         );
     }
 

@@ -588,6 +588,7 @@ impl VaultConfig {
 pub struct PrivilegeConfig {
     tier_1_auto_approve_timeout: Duration,
     tier_1_notification_command: Option<ConfigPath>,
+    tier_2_biometric_command: Option<ConfigPath>,
     biometric_timeout: Duration,
     hardware_key_timeout: Duration,
     agent_tiers: Vec<AgentPrivilegeTierConfig>,
@@ -864,6 +865,11 @@ impl PrivilegeConfig {
         self.tier_1_notification_command.as_ref()
     }
 
+    /// Return the optional operator-reviewed Tier 2 biometric helper.
+    pub fn tier_2_biometric_command(&self) -> Option<&ConfigPath> {
+        self.tier_2_biometric_command.as_ref()
+    }
+
     /// Return the non-zero biometric interaction timeout.
     pub fn biometric_timeout(&self) -> Duration {
         self.biometric_timeout
@@ -983,6 +989,12 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         positive_secs(document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?)?;
     let tier_1_notification_command = document
         .take_optional(PRIVILEGE, "tier_1_notification_command")
+        .map(expect_string)
+        .transpose()?
+        .map(ConfigPath::parse)
+        .transpose()?;
+    let tier_2_biometric_command = document
+        .take_optional(PRIVILEGE, "tier_2_biometric_command")
         .map(expect_string)
         .transpose()?
         .map(ConfigPath::parse)
@@ -1433,6 +1445,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         privilege: PrivilegeConfig {
             tier_1_auto_approve_timeout,
             tier_1_notification_command,
+            tier_2_biometric_command,
             biometric_timeout,
             hardware_key_timeout,
             agent_tiers,
@@ -2210,6 +2223,7 @@ hardware_key_timeout = 60
             Duration::from_secs(60)
         );
         assert!(config.privilege().tier_1_notification_command().is_none());
+        assert!(config.privilege().tier_2_biometric_command().is_none());
         assert!(config.data_plane().channel_keys().is_empty());
         assert!(config.data_plane().ollama_models().is_empty());
         assert!(config.data_plane().smart_home_tool_grants().is_empty());
@@ -2232,6 +2246,27 @@ hardware_key_timeout = 60
         for invalid in ["notify", "~/../notify", "", "~/"] {
             assert_eq!(
                 parse_config(&source.replace("~/.chief-of-staff/bin/notify", invalid)),
+                Err(ConfigError::UnsafePath)
+            );
+        }
+    }
+
+    #[test]
+    fn tier_two_biometric_command_is_optional_typed_and_normalized() {
+        let source = VALID.replace(
+            "biometric_timeout = 30",
+            "biometric_timeout = 30\ntier_2_biometric_command = \"~/.chief-of-staff/bin/biometric\"",
+        );
+        let config = parse_config(&source).unwrap();
+        let command = config.privilege().tier_2_biometric_command().unwrap();
+        assert_eq!(command.as_str(), "~/.chief-of-staff/bin/biometric");
+        assert_eq!(
+            command.resolve(Path::new("/home/operator")).unwrap(),
+            PathBuf::from("/home/operator/.chief-of-staff/bin/biometric")
+        );
+        for invalid in ["biometric", "~/../biometric", "", "~/"] {
+            assert_eq!(
+                parse_config(&source.replace("~/.chief-of-staff/bin/biometric", invalid)),
                 Err(ConfigError::UnsafePath)
             );
         }

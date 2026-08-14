@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use chief_of_staff_biometric_approval::{BiometricApprovalError, BiometricCommandProvider};
 use chief_of_staff_daemon_api::{Operation, SessionAuthorizer};
 use chief_of_staff_daemon_config::{ConfiguredPrivilegeTier, PrivilegeConfig};
 use chief_of_staff_notification_approval::{
@@ -15,7 +16,7 @@ use chief_of_staff_orchestrator_core::{
 };
 use chief_of_staff_tool_api::PrivilegeTier;
 use chief_of_staff_trust_checker::{
-    ApprovalOutcome, ApprovalPrompt, ApprovalProvider, TrustRequestContext,
+    ApprovalOutcome, ApprovalPrompt, ApprovalProvider, ApprovalRequirement, TrustRequestContext,
 };
 use coding_adventures_csprng::random_array;
 use coding_adventures_ct_compare::ct_eq_fixed;
@@ -368,6 +369,8 @@ pub enum ProductionApprovalError {
     Unavailable,
     /// The configured Tier 1 notification helper failed closed.
     Notification(NotificationApprovalError),
+    /// The configured Tier 2 biometric helper failed closed.
+    Biometric(BiometricApprovalError),
 }
 
 impl Display for ProductionApprovalError {
@@ -375,6 +378,7 @@ impl Display for ProductionApprovalError {
         formatter.write_str(match self {
             Self::Unavailable => "chief daemon policy: approval provider unavailable",
             Self::Notification(_) => "chief daemon policy: notification approval failed",
+            Self::Biometric(_) => "chief daemon policy: biometric approval failed",
         })
     }
 }
@@ -382,12 +386,23 @@ impl Display for ProductionApprovalError {
 impl std::error::Error for ProductionApprovalError {}
 
 /// Production provider selected from the closed daemon configuration.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum ProductionApprovalProvider {
-    /// Preserve fail-closed behavior when no helper is configured.
-    Unavailable,
-    /// Delegate Tier 1 notification approval to one reviewed shell-free helper.
-    Notification(NotificationCommandProvider),
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ProductionApprovalProvider {
+    notification: Option<NotificationCommandProvider>,
+    biometric: Option<BiometricCommandProvider>,
+}
+
+impl ProductionApprovalProvider {
+    /// Compose the independently optional reviewed Tier 1 and Tier 2 helpers.
+    pub fn new(
+        notification: Option<NotificationCommandProvider>,
+        biometric: Option<BiometricCommandProvider>,
+    ) -> Self {
+        Self {
+            notification,
+            biometric,
+        }
+    }
 }
 
 impl ApprovalProvider for ProductionApprovalProvider {
@@ -397,11 +412,22 @@ impl ApprovalProvider for ProductionApprovalProvider {
         &mut self,
         prompt: ApprovalPrompt<'_>,
     ) -> Result<ApprovalOutcome, Self::Error> {
-        match self {
-            Self::Unavailable => Err(ProductionApprovalError::Unavailable),
-            Self::Notification(provider) => provider
+        match prompt.requirement() {
+            ApprovalRequirement::Notification { .. } => self
+                .notification
+                .as_mut()
+                .ok_or(ProductionApprovalError::Unavailable)?
                 .request_approval(prompt)
                 .map_err(ProductionApprovalError::Notification),
+            ApprovalRequirement::Biometric { .. } => self
+                .biometric
+                .as_mut()
+                .ok_or(ProductionApprovalError::Unavailable)?
+                .request_approval(prompt)
+                .map_err(ProductionApprovalError::Biometric),
+            ApprovalRequirement::None | ApprovalRequirement::HardwareKey { .. } => {
+                Err(ProductionApprovalError::Unavailable)
+            }
         }
     }
 }
@@ -413,6 +439,8 @@ pub enum ProductionPolicyError {
     Config(chief_of_staff_daemon_config::ConfigError),
     /// The resolved helper path was not acceptable to the notification provider.
     Notification(NotificationApprovalError),
+    /// The resolved helper path was not acceptable to the biometric provider.
+    Biometric(BiometricApprovalError),
 }
 
 impl Display for ProductionPolicyError {
@@ -420,6 +448,7 @@ impl Display for ProductionPolicyError {
         formatter.write_str(match self {
             Self::Config(_) => "chief daemon policy: approval path resolution failed",
             Self::Notification(_) => "chief daemon policy: approval provider configuration failed",
+            Self::Biometric(_) => "chief daemon policy: approval provider configuration failed",
         })
     }
 }
@@ -430,21 +459,32 @@ impl std::error::Error for ProductionPolicyError {}
 pub type ProductionWiringAuthorizer =
     TrustCheckingChannelWiring<ProductionApprovalProvider, ExplicitPrivilegeResolver>;
 
-/// Compose exact configured tiers with the optional Tier 1 notification helper.
+/// Compose exact configured tiers with optional reviewed Tier 1 and Tier 2 helpers.
 pub fn production_wiring_authorizer(
     config: &PrivilegeConfig,
     home: &Path,
 ) -> Result<ProductionWiringAuthorizer, ProductionPolicyError> {
-    let provider = match config.tier_1_notification_command() {
-        None => ProductionApprovalProvider::Unavailable,
+    let notification = match config.tier_1_notification_command() {
+        None => None,
         Some(path) => {
             let executable = path.resolve(home).map_err(ProductionPolicyError::Config)?;
-            ProductionApprovalProvider::Notification(
+            Some(
                 NotificationCommandProvider::new(executable)
                     .map_err(ProductionPolicyError::Notification)?,
             )
         }
     };
+    let biometric = match config.tier_2_biometric_command() {
+        None => None,
+        Some(path) => {
+            let executable = path.resolve(home).map_err(ProductionPolicyError::Config)?;
+            Some(
+                BiometricCommandProvider::new(executable)
+                    .map_err(ProductionPolicyError::Biometric)?,
+            )
+        }
+    };
+    let provider = ProductionApprovalProvider::new(notification, biometric);
     Ok(TrustCheckingChannelWiring::new(
         provider,
         ExplicitPrivilegeResolver::from_config(config),
@@ -635,6 +675,10 @@ mod tests {
                 .to_string(),
             "chief daemon policy: notification approval failed"
         );
+        assert_eq!(
+            ProductionApprovalError::Biometric(BiometricApprovalError::SpawnFailed).to_string(),
+            "chief daemon policy: biometric approval failed"
+        );
     }
 
     #[test]
@@ -664,9 +708,53 @@ mod tests {
             Err(
                 chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
                     chief_of_staff_trust_checker::TrustCheckerError::Provider(
-                        ProductionApprovalError::Notification(
-                            NotificationApprovalError::UnsupportedRequirement
-                        )
+                        ProductionApprovalError::Unavailable
+                    )
+                )
+            )
+        ));
+    }
+
+    #[test]
+    fn configured_tier_two_helper_is_selected_without_opening_other_tiers() {
+        let config = policy_config_with_biometric(2);
+        let context = TrustRequestContext::new("request", "operator:local").unwrap();
+        let binding = pipeline_binding();
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
+        assert!(matches!(
+            authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+            Err(
+                chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                    chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                        ProductionApprovalError::Biometric(BiometricApprovalError::SpawnFailed)
+                    )
+                )
+            )
+        ));
+
+        let tier_one = policy_config_with_biometric(1);
+        let mut authorizer =
+            production_wiring_authorizer(tier_one.privilege(), test_home()).unwrap();
+        assert!(matches!(
+            authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+            Err(
+                chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                    chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                        ProductionApprovalError::Unavailable
+                    )
+                )
+            )
+        ));
+
+        let tier_three = policy_config_with_biometric(3);
+        let mut authorizer =
+            production_wiring_authorizer(tier_three.privilege(), test_home()).unwrap();
+        assert!(matches!(
+            authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+            Err(
+                chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                    chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                        ProductionApprovalError::Unavailable
                     )
                 )
             )
@@ -758,6 +846,21 @@ model_tiers = [{{ model = "qwen2.5:0.5b", tier = 0 }}]"#,
         .replace(
             "tier_1_auto_approve_timeout = 5",
             "tier_1_auto_approve_timeout = 5\ntier_1_notification_command = \"~/missing-notification-helper\"",
+        );
+        parse_config(&source).unwrap()
+    }
+
+    fn policy_config_with_biometric(package_tier: u8) -> chief_of_staff_daemon_config::ChiefConfig {
+        let source = base_config(&format!(
+            r#"agent_tiers = [{{ agent_id = "77656174686572", tier = 0 }}]
+channel_tiers = [{{ channel_id = "00000000-0000-7000-8000-000000000000", tier = 0 }}]
+package_tiers = [{{ package_hash = "{}", tier = {package_tier} }}]
+model_tiers = [{{ model = "qwen2.5:0.5b", tier = 0 }}]"#,
+            "ab".repeat(32)
+        ))
+        .replace(
+            "biometric_timeout = 30",
+            "biometric_timeout = 30\ntier_2_biometric_command = \"~/missing-biometric-helper\"",
         );
         parse_config(&source).unwrap()
     }

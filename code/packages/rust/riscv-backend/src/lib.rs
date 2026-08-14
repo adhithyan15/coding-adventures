@@ -93,11 +93,14 @@ pub enum BackendError {
     },
     UnsupportedOp(String),
     UnsupportedType(String),
-    /// A value the module needs to hold in a register is a floating-point
-    /// number, and RV32I — the *base integer* ISA — has no floating-point
-    /// registers at all.  See [`is_floating_point_type`] for the reasoning.
+    /// A floating-point form is not supported by the RV32I lowering.
     ///
-    /// `site` names where the float showed up (`op "const_f64"`, or
+    /// `f64` transport values are the exception: they use an opaque low/high
+    /// integer pair. Arithmetic still needs a host soft-float lowering, and
+    /// `f32` has no transport representation yet. See
+    /// [`is_floating_point_type`] for the target-level reasoning.
+    ///
+    /// `site` names where the float showed up (`op "add_f64"`, or
     /// `parameter "mag"`) so a caller's message points at real CIR, not just
     /// "somewhere in this function".
     UnsupportedFloat { site: String, ty: String },
@@ -717,7 +720,7 @@ impl Lowerer {
             if !is_rv32_value_type(ty) {
                 return Err(unsupported_type_error(ty, &format!("parameter {name:?}")));
             }
-            let location = if matches!(ty.as_str(), "i64" | "u64" | "str") {
+            let location = if is_pair_type(ty) {
                 if next_argument + 1 >= ARG_REGISTERS.len() {
                     return Err(BackendError::TooManyArguments(next_argument + 2));
                 }
@@ -741,7 +744,7 @@ impl Lowerer {
             .iter()
             .filter(|instr| instr.dest.is_some())
             .map(|instr| {
-                if matches!(instr.ty.as_str(), "i64" | "u64" | "str") {
+                if is_pair_type(&instr.ty) {
                     2
                 } else {
                     1
@@ -840,7 +843,21 @@ impl Lowerer {
         }
         if let Some(ty) = op.strip_prefix("const_") {
             self.require_scalar_type(ty, op)?;
-            if matches!(ty, "i64" | "u64") && !wide_literal_fits_word(instr.srcs.first(), ty)? {
+            if ty == "f64" {
+                let Some(CIROperand::Float(value)) = instr.srcs.first() else {
+                    return Err(BackendError::InvalidOperand(
+                        "const_f64 srcs[0] must be Float".to_owned(),
+                    ));
+                };
+                let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+                    unreachable!("dest_pair always returns a pair")
+                };
+                let bits = value.to_bits();
+                self.load_constant(lo, bits as u32);
+                self.load_constant(hi, (bits >> 32) as u32);
+            } else if matches!(ty, "i64" | "u64")
+                && !wide_literal_fits_word(instr.srcs.first(), ty)?
+            {
                 let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
                     unreachable!("dest_pair always returns a pair")
                 };
@@ -1170,7 +1187,7 @@ impl Lowerer {
             (Some(_), "void") => Err(BackendError::InvalidOperand(
                 "void call must not have a destination".to_owned(),
             )),
-            (Some(_), "i64" | "u64" | "str") => {
+            (Some(_), ty) if is_pair_type(ty) => {
                 let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "call")? else {
                     unreachable!("dest_pair always returns a pair")
                 };
@@ -1437,7 +1454,7 @@ impl Lowerer {
                 )))
             }
         };
-        if !matches!(ty, "i64" | "u64" | "str") {
+        if !is_pair_type(ty) {
             let source = self.var_src(instr, 0, op)?;
             let destination = self.dest(instr, op)?;
             self.words.push(encode_addi(destination, source, 0));
@@ -2969,7 +2986,7 @@ fn count_value_uses(cir: &[CIRInstr]) -> HashMap<String, usize> {
 }
 
 fn abi_word_count(ty: &str) -> usize {
-    usize::from(matches!(ty, "i64" | "u64" | "str")) + 1
+    usize::from(is_pair_type(ty)) + 1
 }
 
 fn max_call_argument_words(
@@ -3037,7 +3054,7 @@ fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
 }
 
 fn storage_word_count(ty: &str) -> usize {
-    if matches!(ty, "i64" | "u64" | "str" | "any") {
+    if is_pair_type(ty) || ty == "any" {
         2
     } else {
         1
@@ -3132,8 +3149,16 @@ fn unsupported_type_error(ty: &str, site: &str) -> BackendError {
 fn is_rv32_value_type(ty: &str) -> bool {
     matches!(
         ty,
-        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool" | "str"
+        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool" | "str" | "f64"
     )
+}
+
+/// Values represented in RV32I integer registers as low/high 32-bit pairs.
+///
+/// `f64` joins the existing wide integer and string ABI here, but it remains
+/// opaque until soft-float operation lowering calls the simulator host ABI.
+fn is_pair_type(ty: &str) -> bool {
+    matches!(ty, "i64" | "u64" | "str" | "f64")
 }
 
 fn is_rv32_operation_type(ty: &str) -> bool {

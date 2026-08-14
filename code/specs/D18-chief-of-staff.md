@@ -1647,9 +1647,13 @@ notification helper is launched without a shell or inherited environment and
 receives a bounded versioned exact-resource protocol. Only `approve` and `deny`
 responses are accepted after an explicit post-presentation readiness acknowledgement;
 only an acknowledged helper that remains live through the complete canonical window
-produces the sole timeout auto-approval path. An absent or unacknowledged helper,
-early exit, malformed output, I/O or process failure, and every Tier 2/3 request
-fail closed until the corresponding reviewed provider is composed.
+produces the sole timeout auto-approval path. Tier 2 may independently select an
+operator-reviewed native biometric helper through another fresh, shell-free,
+environment-cleared process. Its private pipe carries the same exact request and
+accepts only `approve biometric` after readiness; its canonical timeout is denial.
+An absent or unacknowledged helper, early exit, weak or malformed output, I/O or
+process failure, and every Tier 3 request fail closed until the corresponding
+reviewed provider is composed.
 
 ```
 Pipeline: "Check bank balance and email it to accountant"
@@ -2242,6 +2246,7 @@ container = true               # run vault in OS container
 tier_1_auto_approve_timeout = 5  # seconds
 tier_1_notification_command = "~/.chief-of-staff/bin/chief-notify" # optional
 biometric_timeout = 30           # seconds
+tier_2_biometric_command = "~/.chief-of-staff/bin/chief-biometric" # optional
 hardware_key_timeout = 60        # seconds
 agent_tiers = [
   { agent_id = "77656174686572", tier = 0 }, # lowercase-hex "weather"

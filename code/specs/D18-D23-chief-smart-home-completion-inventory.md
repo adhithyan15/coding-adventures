@@ -2064,6 +2064,32 @@ This slice opens only the reviewed D18 Tier 1 interaction path:
   and unsupported higher-tier requests across the same standard process API used
   in production.
 
+## Current Chief Tier 2 Biometric Approval Slice
+
+This slice opens only the reviewed D18 Tier 2 interaction path:
+
+- `chief-of-staff-biometric-approval` launches one absolute configured native
+  helper directly, without a shell or inherited environment. The executable is
+  an operator-reviewed trusted device boundary; the daemon never receives or
+  stores biometric credentials.
+- A fresh helper process receives the complete bounded, versioned, non-secret
+  exact-resource prompt on its private standard-input pipe. Its response cannot
+  be replayed into a later request because no response channel is reused.
+- After presenting native authentication UI, the helper acknowledges readiness.
+  Only the canonical `approve biometric` line from that exact process becomes
+  biometric assurance; a weaker approval label, malformed or oversized output,
+  early exit, incomplete input, launch/I/O failure, or process-control failure
+  fails closed.
+- An acknowledged helper that remains pending through the canonical thirty-second
+  window returns timeout, which Trust Checker denies for Tier 2. There is no
+  biometric auto-approval path.
+- Optional `[privilege].tier_2_biometric_command` composition is independent of
+  Tier 1 notification configuration. Omitting either helper closes only its
+  corresponding tier, and Tier 3 hardware-key approval remains unavailable.
+- Unit and real-process tests cover exact protocol encoding, maximum-size
+  prompts, environment clearing, strong approval, denial, weak/malformed output,
+  early exit, timeout-as-denial, missing helpers, and unsupported tiers.
+
 ## Current Chief HTTP Request Clock Slice
 
 This slice closes the remaining request-time ambiguity in the shared

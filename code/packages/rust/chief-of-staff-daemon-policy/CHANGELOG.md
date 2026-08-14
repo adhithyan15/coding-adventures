@@ -10,6 +10,8 @@
   and every interactive tier fail closed through an unavailable provider.
 - Select an optional shell-free Tier 1 notification command from validated
   configuration while preserving fail-closed Tier 2/3 behavior.
+- Route an independently optional shell-free Tier 2 biometric helper through a
+  strict exact-request process boundary while Tier 3 remains unavailable.
 
 ## 0.1.0
 

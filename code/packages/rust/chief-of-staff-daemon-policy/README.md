@@ -14,8 +14,11 @@ and selected model must be explicitly assigned; missing authority fails closed.
 Trust Checker can authorize a fully declared Tier 0 request without interaction.
 An optional validated Tier 1 notification command is launched directly through
 the environment-cleared, bounded protocol in `chief-of-staff-notification-approval`.
-Omitting it keeps every interactive request unavailable; configuring it enables
-only Tier 1, while biometric Tier 2 and hardware-key Tier 3 remain fail-closed.
+An independently optional Tier 2 command uses the same shell-free process
+isolation with the stricter exact-request protocol in
+`chief-of-staff-biometric-approval`; only its operator-reviewed native helper may
+return biometric assurance. Each missing helper keeps its tier unavailable, and
+hardware-key Tier 3 remains fail-closed.
 The local bearer authenticates the requester but never acts as privilege approval.
 
 The package generates credential material but performs no terminal or network
