@@ -8,6 +8,8 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18F validation, JSON, verification, and UUID-v7 helpers.
+pub mod profile;
 /// Versioned binary codecs and stable storage-record key derivation.
 pub mod wire;
 
@@ -792,7 +794,12 @@ fn grant_signature_input(
     ])
 }
 
-fn canonical_message_header(header: &MessageHeader) -> Vec<u8> {
+/// Return the canonical D18F authenticated-header bytes.
+///
+/// These bytes are the Ed25519 signature input and XChaCha20-Poly1305
+/// additional authenticated data. They are exposed for conformance fixtures;
+/// applications normally call [`encrypt_message`] or [`decrypt_message`].
+pub fn authenticated_message_header(header: &MessageHeader) -> Vec<u8> {
     let timestamp = header.fields.timestamp_ns.to_be_bytes();
     let sequence = header.fields.sequence.0.to_be_bytes();
     let epoch = header.fields.key_epoch.0.to_be_bytes();
@@ -807,6 +814,10 @@ fn canonical_message_header(header: &MessageHeader) -> Vec<u8> {
         header.fields.content_type.as_bytes(),
         &header.plaintext_hash,
     ])
+}
+
+fn canonical_message_header(header: &MessageHeader) -> Vec<u8> {
+    authenticated_message_header(header)
 }
 
 fn frame(fields: &[&[u8]]) -> Vec<u8> {

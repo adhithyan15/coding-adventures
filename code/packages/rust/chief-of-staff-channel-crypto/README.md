@@ -27,6 +27,14 @@ encrypted messages. Its stable storage keys sort messages by sequence and hash
 receiver IDs before putting them into path-like keys, so an external identity
 cannot inject storage path segments.
 
+The `profile` module implements the portable D18F contract on top of those
+unchanged bytes: UUID-v7 and MIME validation, stable cross-language errors,
+canonical lossless JSON, epoch-key resolution, and an injectable monotonic
+UUID-v7 generator. The checked-in fixtures under
+`code/fixtures/chief-of-staff-message/v1` lock the authenticated header, D18M
+record, JSON representation, verification order, and failure taxonomy for
+other language implementations.
+
 This crate deliberately does not implement storage or actor routing. The caller
 must persist a sequence advance before calling message encryption; `SequenceCursor`
 provides a fail-closed recovery and reservation protocol for that integration.

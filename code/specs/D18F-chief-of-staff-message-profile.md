@@ -261,6 +261,10 @@ verification algorithm above.
 JSON is for diagnostics, APIs, and fixtures. It is never the signature input,
 AEAD input, or append-log storage representation.
 
+An implementation MUST reject a JSON input larger than 94,371,840 bytes (90
+MiB) before parsing. This bound holds the maximum base64 ciphertext plus the
+bounded envelope while preventing an unbounded parser allocation.
+
 The version 1 object has exactly these fields:
 
 ```json
@@ -434,16 +438,17 @@ Implementations must not include secret keys or recovered plaintext in errors.
 
 ## Shared conformance fixtures
 
-The follow-up fixture package will live under:
+The fixture package lives under:
 
 ```text
 code/fixtures/chief-of-staff-message/v1/
 ```
 
-Its checked-in manifest will identify this spec, fixture version, generator
-commit, public test keys, channel master keys explicitly marked as test-only,
-input fields/plaintext, canonical authenticated header, `D18M` bytes, canonical
-JSON, and expected error code.
+Its checked-in manifest identifies this spec, fixture version, the generator
+source's Git blob hash, public test keys, channel master keys explicitly marked
+as test-only, input fields/plaintext, canonical authenticated header, `D18M`
+bytes, canonical JSON, and expected error code. The content-addressed source
+identifier remains stable across rebases and squash merges.
 
 Positive cases cover empty, UTF-8 text, JSON, arbitrary binary, multipart, key
 epochs, and a multi-message stream. Negative cases mutate every authenticated
@@ -474,4 +479,5 @@ plaintext payloads, another AEAD, or a non-canonical JSON-only envelope.
 5. Run one cross-language fixture gate in CI and close #130 only when all six
    languages pass it.
 
-Part of #130 and #128. Tracked by #11649.
+Part of #130 and #128. The normative profile was tracked by #11649; the Rust
+adapter and shared fixture lock are tracked by #11652.
