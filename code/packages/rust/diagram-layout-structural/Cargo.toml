@@ -1,6 +1,6 @@
 [package]
 name = "diagram-layout-structural"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 description = "Structural diagram layout engine for class, ER, C4, and Requirement diagrams (DG04)"
 

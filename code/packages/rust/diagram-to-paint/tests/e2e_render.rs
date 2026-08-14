@@ -739,7 +739,7 @@ mod apple {
     #[test]
     fn render_mermaid_requirement_to_png() {
         let diagram = parse_requirement_diagram(
-            "requirementDiagram\naccTitle: Native requirement graph\naccDescr: Requirement graph rendered through Metal\ndirection LR\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nsystem - satisfies -> test_req",
+            "requirementDiagram\naccTitle: Native requirement graph\naccDescr: Requirement graph rendered through Metal\ndirection LR\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nstyle test_req fill:#fff1a8,stroke:#b45309,stroke-width:4px,color:#7c2d12\nsystem - satisfies -> test_req",
         )
         .expect("Mermaid requirement parse failed");
         let layout = layout_structural_diagram(&diagram);
@@ -768,6 +768,13 @@ mod apple {
         write_png(&pixels, "/tmp/mermaid_requirement_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#fff1a8")
+                    && rect.stroke.as_deref() == Some("#b45309")
+                    && rect.stroke_width == Some(4.0)
+        )));
         let metadata = scene.metadata.as_ref().expect("accessibility metadata");
         assert_eq!(metadata["accessibility.title"], "Native requirement graph");
         assert_eq!(

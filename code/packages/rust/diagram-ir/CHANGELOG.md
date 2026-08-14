@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.58.0
+
+- Add semantic and resolved styles to structural nodes.
+
 ## 0.57.0
 
 - Preserve structural diagram accessibility title and description metadata.

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.51.0";
+pub const VERSION: &str = "0.52.0";
 
 use std::collections::HashMap;
 
@@ -1172,10 +1172,10 @@ where
             y: node.y,
             width: node.width,
             height: node.height,
-            fill: Some("#f9fafb".into()),
-            stroke: Some("#374151".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(4.0),
+            fill: Some(node.style.fill.clone()),
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            corner_radius: Some(node.style.corner_radius),
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
@@ -1207,12 +1207,7 @@ where
             node.width,
             HEADER_H - 8.0,
             options.title_font.clone(),
-            Color {
-                r: 17,
-                g: 24,
-                b: 39,
-                a: 255,
-            },
+            css_to_color(&node.style.text_color),
         ));
         // Compartments
         for comp in &node.compartments {
@@ -1241,12 +1236,7 @@ where
                     node.width - 16.0,
                     ls * 1.2,
                     lf.clone(),
-                    Color {
-                        r: 55,
-                        g: 65,
-                        b: 81,
-                        a: 255,
-                    },
+                    css_to_color(&node.style.text_color),
                 ));
             }
         }
@@ -3378,7 +3368,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.51.0");
+        assert_eq!(crate::VERSION, "0.52.0");
     }
 
     #[test]

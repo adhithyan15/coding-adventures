@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.57.0";
+pub const VERSION: &str = "0.58.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -809,6 +809,7 @@ pub struct StructuralNode {
     pub stereotype: Option<String>,
     pub node_kind: StructuralNodeKind,
     pub metadata: Option<StructuralNodeMetadata>,
+    pub style: Option<DiagramStyle>,
     pub compartments: Vec<Compartment>,
     pub parent_group: Option<String>,
 }
@@ -870,6 +871,7 @@ pub struct LayoutedStructuralNode {
     pub height: f64,
     pub header: String,
     pub stereotype: Option<String>,
+    pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,
 }
 
@@ -1253,7 +1255,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.57.0");
+        assert_eq!(VERSION, "0.58.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1362,6 +1364,7 @@ mod tests {
             stereotype: None,
             node_kind: StructuralNodeKind::Class,
             metadata: None,
+            style: None,
             compartments: vec![],
             parent_group: None,
         };

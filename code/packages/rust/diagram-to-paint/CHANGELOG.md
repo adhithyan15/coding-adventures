@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.52.0
+
+- Lower resolved structural node styles into backend-neutral paint instructions.
+
 ## 0.51.0
 
 - Lower structural accessibility metadata into backend-neutral PaintScene metadata.
