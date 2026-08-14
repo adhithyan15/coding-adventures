@@ -1,0 +1,53 @@
+% ============================================================================
+% solfege-alt-name — for the movable-do solfège syllables the SAME cited
+% Wikipedia span also gives an alternate spelling or name for, that
+% alternate (adj-facts-stdlib, MUSIC).
+% ============================================================================
+% A sibling to the already-shipped `solfege.adj` (`solfege_degree(syllable,
+% degree)`, ONE scale-degree number per syllable). That table's own `source`
+% field already quotes, VERBATIM, an alternate spelling or name for two of
+% the seven syllables — but the degree-only schema had no room for it:
+%
+%   do → doh
+%     "do (spelt doh in tonic sol-fa)"
+%
+%   ti → si
+%     "ti (or si)"
+%
+% Recall is a binding query:
+%
+%     ? solfege_alt_name(do, $Alt)   % doh
+%     ? solfege_alt_name(ti, $Alt)   % si
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation `solfege_alt_name(syllable,
+% alt_name)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the alternate WITH its source, on the
+% CPU, with zero model calls, and abstains on the other five syllables (re,
+% mi, fa, sol, la), since the SAME cited span states no alternate spelling
+% or name for any of them — the same honest-abstention-by-simple-absence
+% discipline `coin-penny-discontinued.adj` uses for every coin but the
+% penny. The query also runs BACKWARD — bind an alternate and recall which
+% syllable it names:
+%
+%     ? solfege_alt_name($Syllable, si)   % ti
+%
+% Provenance: reproduces, byte-for-byte, the SAME Wikipedia "Solfège" span
+% already quoted inside `solfege.adj`'s own `source` field — no new
+% WebFetch, only a different schema decoding the alternate-name half of
+% that already-verified quote. `trust consensus` — the same tier
+% `solfege.adj` already carries (an encyclopedia is a secondary reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table solfege_alt_name {
+    columns syllable, alt_name
+
+    row (do, doh)   % Wikipedia Solfège: "do (spelt doh in tonic sol-fa)"
+    row (ti, si)    % Wikipedia Solfège: "ti (or si)"
+
+    source "The tonic sol-fa method popularised the seven syllables commonly used in English-speaking countries: do (spelt doh in tonic sol-fa), re, mi, fa, so(l), la, and ti (or si)"
+    locator "https://en.wikipedia.org/wiki/Solf%C3%A8ge"
+    trust consensus
+}
