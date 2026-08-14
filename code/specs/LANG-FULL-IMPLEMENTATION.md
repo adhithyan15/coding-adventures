@@ -914,7 +914,9 @@ backend immediately) come before the enabler-dependent items.
   assignment may instead scan only its selected leaf, as may a statically
   known predicate over unchanged ordinary local boolean, integer, and real
   scalars. An exact bare self-assignment does not make such a predicate
-  dependency unstable. Computed selector assignments, computed or otherwise
+  dependency unstable, nor does a conditional assignment whose leaves are all
+  that same bare dependency. Computed selector assignments, differing,
+  computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
   cross-assigned dependency writes remain conservative without recursive
