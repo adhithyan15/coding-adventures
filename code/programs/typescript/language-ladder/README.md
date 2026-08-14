@@ -796,6 +796,13 @@ without lifting. The native-teacher lesson demonstrates its rounded two-arch
 school-hand order at 05:26–05:31; the Noto Sans Cyrillic fit preserves that
 zero-lift evidence while tracing the printed straight upright stems and deep
 central V and records the source's entry and exit joins.
+The three-frame Cyrillic **н** filmstrip descends the left stem, retraces to the
+middle bridge and rises to the upper right, then descends the right stem without
+lifting. The native-teacher lesson demonstrates its rounded
+left-stem-to-middle-bridge-to-right-stem school-hand order at 05:47–05:52; the
+Noto Sans Cyrillic fit preserves that zero-lift evidence while tracing the
+printed straight vertical stems and horizontal middle bar and records the
+source's rounded bridge and entry and exit joins.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

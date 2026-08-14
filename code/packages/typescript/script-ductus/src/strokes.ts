@@ -3559,6 +3559,55 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("м"),
   },
+  // RussianIrina writes lowercase н in one continuous school-hand motion:
+  // descend the left stem, turn upward through the rounded middle bridge,
+  // rise to the right shoulder, then descend the right stem. The fitted path
+  // preserves that order across the bundled printed stems and middle bar.
+  [ductusKey("cyrillic", "н")]: {
+    script: "cyrillic",
+    glyph: "н",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 510 },
+              { x: 129, y: 390 },
+              { x: 129, y: 274 },
+              { x: 129, y: 150 },
+              { x: 129, y: 25 },
+            ],
+          },
+          {
+            label: "retrace to the middle bridge and rise to the upper right",
+            path: [
+              { x: 129, y: 25 },
+              { x: 129, y: 140 },
+              { x: 129, y: 274 },
+              { x: 220, y: 274 },
+              { x: 310, y: 274 },
+              { x: 400, y: 274 },
+              { x: 485, y: 274 },
+              { x: 485, y: 390 },
+              { x: 485, y: 510 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 485, y: 510 },
+              { x: 485, y: 390 },
+              { x: 485, y: 274 },
+              { x: 485, y: 150 },
+              { x: 485, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("н"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
