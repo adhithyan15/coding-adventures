@@ -33,6 +33,13 @@ let's meet**," the Telugu "see you tomorrow." The **-దాం** (*-ddām*) endi
 Telugu's "let's ___" — a first-person-plural invitation: *veḷḷddām* ("let's go"),
 *tindām* ("let's eat").
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+రే (*rē*) + పు (*pu*) → రేపు. కలుద్దాం
+(*kaludḍām*) = *kalu* (“meet”) + *-dḍām*
+(“let's”).
+
 ## Guided Practice
 
 [PAUSE 1s]

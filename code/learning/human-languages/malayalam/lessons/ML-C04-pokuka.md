@@ -32,6 +32,12 @@ a verb in the dictionary, its "to ___" form (where Tamil uses a bare stem).
 Malayalam, like all its family, does not say a plain "goodbye": it says "I go,
 and I **come back**."
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+പോ (*pō*) + കുക (*kuka*, the *-uka* infinitive) →
+പോകുക. Its partner വരിക (*varika*, “to come”).
+
 ## Guided Practice
 
 [PAUSE 1s]

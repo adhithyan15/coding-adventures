@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a23619fcde3b6f8b",
+  "sourceHash": "fnv1a64:98a621e1729512a5",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d22f8c59ef7d1f5",
+      "sourceHash": "fnv1a64:49c863931124843a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ (pa) + േ (the ē-sign) becomes പേ (pē); ര് (bare r, with the chandrakkala). Read പേ, ര് becomes pēru."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -133,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:73dbb79ea1b3aef9",
+      "sourceHash": "fnv1a64:17c41728004599b4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -186,6 +197,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എ (independent e) + the conjunct ന്റെ (nṟe) becomes enṟe."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -216,7 +238,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -247,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b6f93d68dd2d38b5",
+      "sourceHash": "fnv1a64:8a261dfc63184a1a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -315,6 +337,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആ (independent long ā) + ണ് (bare retroflex ṇ) becomes āṇŭ."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -345,7 +378,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -489,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fd0de19c1c0a268b",
+      "sourceHash": "fnv1a64:6e10deb91f6108b2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -553,6 +586,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നീ (n=i); നിങ്ങൾ (niṅṅaḷ)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -574,7 +618,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -605,7 +649,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5b3fb89837ef51ed",
+      "sourceHash": "fnv1a64:052d821c7d03fdce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -658,6 +702,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എ (e) + the conjunct ന്ത് (ntŭ) becomes entŭ."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -688,7 +743,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

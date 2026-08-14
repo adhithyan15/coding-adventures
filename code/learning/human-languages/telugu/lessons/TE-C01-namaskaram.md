@@ -72,6 +72,17 @@ side of the family.
 gesture *is* the word. It serves as both **hello and goodbye**, any time, to
 almost anyone, respectful without being stiff.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Telugu reads **left to right**, and every consonant carries a built-in
+“a” (many under a little check-mark hat, the *talakaṭṭu*). న na,
+మ ma, ర ra. A **vowel sign** changes it: క ka + long-ā
+→ కా kā. A vowel-less consonant **stacks below** the next as a
+conjunct: స tucks under *ka* → స్క “ska.” And the
+**anusvāra** ం adds a final nasal “-ṁ.” Read
+న·మ·స్·కా·ర·ం → *namaskāram*.
+
 ## Guided Practice
 
 [PAUSE 1s]

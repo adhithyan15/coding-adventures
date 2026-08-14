@@ -49,6 +49,12 @@ One form, all persons. Malayalam threw away person-agreement entirely — which 
 exactly why (Chapter 3) it can never drop the pronoun: the verb won't tell you
 who. Of all its Dravidian sisters, Malayalam went the furthest here.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+സം (*saṃ*) + സാ (*sā*) + രി (*ri*) +
+ക്കുക (*kkuka*) → സംസാരിക്കുക.
+
 ## Guided Practice
 
 [PAUSE 1s]

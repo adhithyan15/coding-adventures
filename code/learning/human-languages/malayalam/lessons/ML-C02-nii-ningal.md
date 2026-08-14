@@ -36,6 +36,11 @@ respectful/plural "you" — *nī* + a plural ending, the exact cousin of Tamil
 shared politeness-by-plural, same idea as French *vous*. For a first meeting,
 **niṅṅaḷ**.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+നീ (*n\=\i*); നിങ്ങൾ (*niṅṅaḷ*).
+
 ## Guided Practice
 
 [PAUSE 1s]

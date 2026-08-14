@@ -37,6 +37,9 @@ Tamil alone kept its own word; Telugu sits firmly on the Sanskrit-borrowing side
 Why it's said this way.
 namaskāram is said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff.
 
+Sounds you'll need.
+Telugu reads left to right, and every consonant carries a built-in “a” (many under a little check-mark hat, the talakaṭṭu). న na, మ ma, ర ra. A vowel sign changes it: క ka + long-ā becomes కా kā. A vowel-less consonant stacks below the next as a conjunct: స tucks under ka becomes స్క “ska.” And the anusvāra ం adds a final nasal “-ṁ.” Read న, మ, స్, కా, ర, ం becomes namaskāram.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: na, ma, s, kā, raṁ becomes "namaskāram"]
@@ -83,6 +86,9 @@ Language: Tamil. "Thanks": naṉṟi (நன்றி). Note: native ("goodness"
 Language: Malayalam. "Thanks": nandi (നന്ദി). Note: native — Tamil's cousin.
 Telugu, Kannada, and Hindi share the Sanskrit stem; Tamil and Malayalam keep the native naṉṟi / nandi.
 
+Sounds you'll need.
+New: ధ dha (aspirated d), the conjunct న్య (na stacked with ya), then వా, ద, ము, లు. Read ధ, న్య, వా, ద, ము, లు becomes dhanyavādamulu.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: dha, nya, vā, da, mu, lu becomes "dhanyavādamulu"]
@@ -119,6 +125,9 @@ The word, taken apart.
 
 Grammar Lens: yes and no as "it is" / "it is not".
 Telugu's yes/no pair are really little statements of being: avunu ("it is [so]") and kādu ("it is not"). This is a very Dravidian instinct — answer by asserting or denying existence, rather than with a bare particle. You'll also hear a "yes" come back as the question's own verb, echoed (vaccānu, "I came," for "did you come?"). Bank avunu as the simple word.
+
+Sounds you'll need.
+అ is the independent vowel “a” (word-initial). వు is vu, ను is nu (each a consonant with the “u” sign). Read అ, వు, ను becomes avunu.
 
 Guided Practice.
 [pause 1 second]
@@ -167,6 +176,9 @@ Language: Malayalam. "No / isn't": illa (ഇല്ല). Note: native, root il-.
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
 Three sisters share il-; Telugu alone picked lē- / kā-. Same family, not a uniform one — a reminder that Dravidian has real internal branches.
 
+Sounds you'll need.
+లే is lē (ల la with the long-“ē” sign); దు is du. Read లే, దు becomes lēdu.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: lē, du becomes "lēdu"]
@@ -203,6 +215,9 @@ The word, taken apart.
 Grammar Lens: one Dravidian word, three scripts.
 sari / sarē is a clean demonstration of family closeness: essentially one word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu. As you learn to read each, spotting a shared word shift its shape but not its sense is the quickest way to feel the relationship (and the whole reason to learn these four side by side).
 
+Sounds you'll need.
+స is sa; రే is rē (ర ra with the long-“ē” sign you just met on lē). Read స, రే becomes sarē.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: sa, rē becomes "sarē"]
@@ -236,6 +251,9 @@ The farewell — the same "go and come back".
 Telugu, too, avoids a bare "I'm leaving." The everyday goodbye is:
 వెళ్ళి వస్తాను (veḷḷi vastānu) — literally "having gone, I [will] come [back]."
 and the reply is వెళ్ళి రండి (veḷḷi raṇḍi) — "go, and come [back]." The same worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: never simply depart — promise a return. (Casually, Telugu also just says veḷtānu, "I'll go," or re-uses namaskāram.)
+
+Why it's said this way.
+The same “go and come back.” Telugu, too, avoids a bare “I'm leaving.” The everyday goodbye is వెళ్ళి వస్తాను (veḷḷi vastānu), “having gone, I [will] come [back],” with the reply వెళ్ళి రండి (veḷḷi raṇḍi), “go, and come back” — the worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne.
 
 Guided Practice.
 [pause 1 second]

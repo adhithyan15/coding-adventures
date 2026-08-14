@@ -36,6 +36,12 @@ root as Tamil *nī*. **ನೀವು** (*nīvu*) is the respectful/plural "you."
 politeness-by-plural as Tamil *nīṅgaḷ* and French *vous*: one respected person
 addressed as "you all." For a first meeting, **nīvu**.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ನೀ (*n\=\i*) + ನು (*nu*) → *n\=\i nu*; ನೀ +
+ವು (*vu*) → *n\=\i vu*.
+
 ## Guided Practice
 
 [PAUSE 1s]

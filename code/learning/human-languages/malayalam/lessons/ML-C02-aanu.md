@@ -41,6 +41,12 @@ Like Hindi's *hai* (and unlike Tamil), *āṇŭ* closes the sentence — Malayal
 subject–object–**verb**: "my name Arun **is**." (Malayalis sometimes drop *āṇŭ*
 in fast speech, but the full form keeps it.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ആ (independent long ā) + ണ് (bare retroflex *ṇ*) →
+*āṇŭ*.
+
 ## Guided Practice
 
 [PAUSE 1s]

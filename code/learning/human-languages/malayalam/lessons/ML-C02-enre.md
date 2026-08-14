@@ -31,6 +31,12 @@ reviews_of: [ML-C02-peru]
 Dravidian, the same pronoun stem behind Tamil *nāṉ / eṉ*. No Indo-European
 cousin: the Dravidian "I/my" is a different word from the European *I/my*.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+എ (independent *e*) + the conjunct ന്റെ (*nṟe*) →
+*enṟe*.
+
 ## Guided Practice
 
 [PAUSE 1s]

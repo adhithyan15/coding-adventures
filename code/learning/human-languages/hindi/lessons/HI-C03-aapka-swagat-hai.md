@@ -40,6 +40,13 @@ from Chapter 2) and **है** (*hai*, "is").
 Sanskrit's own *svāgatam* is this very word, unchanged — here it is
 again, worn into everyday Hindi.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The key word स्वागत (*svāgat*): the conjunct स्व (स् *s*
++ व *va* → *sva*) + ग (*ga*) + त
+(*ta*), with आपका (*āpkā*, “your”) and है (*hai*).
+
 ## Guided Practice
 
 [PAUSE 1s]

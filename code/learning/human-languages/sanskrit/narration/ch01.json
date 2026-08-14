@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:00c2829605c0f442",
+  "sourceHash": "fnv1a64:9c4899c747d7348b",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1921daab27a404ea",
+      "sourceHash": "fnv1a64:230c1999511e7459",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -83,6 +83,21 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Devanagari runs left to right under a top line; every consonant carries a built-in “a.” न na, म ma, ते te (त."
+            },
+            {
+              "kind": "speech",
+              "text": "the e-sign े). A hasanta under स् strips its vowel so it joins the next: स् + त becomes स्त. Read नमस्ते (namaste) as na,,,ma,,,s,,,te."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +137,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +169,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9cc259568591cf1e",
+      "sourceHash": "fnv1a64:e839452682b7fb0f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -219,6 +234,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed “ḥ” at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +284,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +315,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4ecffb1a457ed78",
+      "sourceHash": "fnv1a64:c0c538e82146b36d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -357,6 +383,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: ध dha (breathy d), व va, द da, and the conjunct न्य (न + य ya). With the visarga again, read धन्यवादः as dha,,,nya,,,vā,,,daḥ."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -396,7 +433,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -427,7 +464,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bae2bbc170af3401",
+      "sourceHash": "fnv1a64:d92e56c9e2145744",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -503,6 +540,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वागतम् (svāgatam) as svā,,,ga,,,tam."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -551,7 +599,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -582,7 +630,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:26f0b8249ddcfa9e",
+      "sourceHash": "fnv1a64:7a9824e38ca63b11",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -646,6 +694,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: आ — the independent vowel ā (the shape for a word-initial vowel) — closed by the halant म् m: आम् ām. And न na, a single consonant with its built-in “a.”"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -685,7 +744,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

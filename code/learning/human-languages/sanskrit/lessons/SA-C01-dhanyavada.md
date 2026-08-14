@@ -40,6 +40,13 @@ with a set formula; *dhanyavāda* is the plain, dignified "thank you," and its
 survival across every modern northern language shows how durable a good word can
 be. Note you already knew all its pieces — only the ending (*-aḥ*) is new.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: ध *dha* (breathy *d*), व *va*, द *da*, and
+the conjunct न्य (न + य *ya*). With the visarga again, read
+धन्यवादः as *dha\,·\,nya\,·\,vā\,·\,daḥ*.
+
 ## Guided Practice
 
 [PAUSE 1s]

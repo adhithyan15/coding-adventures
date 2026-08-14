@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:da4c98fe9a740c73",
+  "sourceHash": "fnv1a64:019cb1ff72c2a304",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9579a0ccd39b22d1",
+      "sourceHash": "fnv1a64:05881d6a5a937214",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -76,6 +76,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹ (ha) + ೆ (the e-sign) becomes ಹೆ (he); ಸ (sa); ರು (ru). Read ಹೆ, ಸ, ರು becomes hesaru."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -146,7 +157,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:229bda84c825c47a",
+      "sourceHash": "fnv1a64:87fa1eb4380ad2c5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -199,6 +210,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನ (na) + the conjunct ನ್ನ (nna) becomes nanna — a doubled, held nn."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -229,7 +251,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -373,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:53e893ba224f55ae",
+      "sourceHash": "fnv1a64:0e177e57b6af6045",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -437,6 +459,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೀ (n=i) + ನು (nu) becomes n=i nu; ನೀ + ವು (vu) becomes n=i vu."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -458,7 +491,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -489,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:062cc85675e84d85",
+      "sourceHash": "fnv1a64:f26612a654b8b21e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -542,6 +575,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -572,7 +616,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

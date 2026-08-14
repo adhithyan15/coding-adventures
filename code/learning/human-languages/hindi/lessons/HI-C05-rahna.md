@@ -39,6 +39,12 @@ little word **में** (*meṁ*, "in") sits **after** Delhi, not before — H
 **post**positions where English uses prepositions. "Delhi-in I live." The verb, as
 ever, is last.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+र (*ra*) + ह (*ha*) + ना (*nā*) →
+रहना. The familiar infinitive -ना.
+
 ## Guided Practice
 
 [PAUSE 1s]

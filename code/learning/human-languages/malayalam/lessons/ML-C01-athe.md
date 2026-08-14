@@ -48,6 +48,14 @@ by **echoing the verb** of the question (*vannu*, "[I] came," for "did you
 come?"). Bank *athe* as the simple word, but hear the logic underneath — you
 agree by confirming *that* is how things are.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+അ is the **independent vowel** “a” (word-initial). തെ is
+“the” — ത (*tha*, a soft *th*) with the “e” sign, which is
+written *in front* of its consonant but read after. Read അ·തെ →
+*athe*.
+
 ## Guided Practice
 
 [PAUSE 1s]

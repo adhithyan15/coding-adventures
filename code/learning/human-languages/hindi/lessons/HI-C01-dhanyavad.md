@@ -57,6 +57,12 @@ small everyday thanks, where Hindi speakers often reach for a lighter, Persian-
 derived word instead — **शुक्रिया** (*shukriyā*), your next lesson. Holding
 those two side by side is the single best window into how Hindi works.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: ध dha, य ya, व va, द da, and a new conjunct न् +
+य → न्य (“nya”). ध·न्·य·वा·द → *dhanyavād*.
+
 ## Guided Practice
 
 [PAUSE 1s]

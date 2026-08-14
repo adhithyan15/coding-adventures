@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b50a2c2085ef6eb6",
+  "sourceHash": "fnv1a64:b68c1124e024b3c9",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b873bd22a89b59c5",
+      "sourceHash": "fnv1a64:62a6529e9adc7296",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -83,6 +83,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka) + ै (the ai-mātrā) becomes कै (kai); स (sa) + े (the e-mātrā) becomes से (se). Read कै, से becomes kaise."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -287,7 +298,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eaf462ab49f15988",
+      "sourceHash": "fnv1a64:c7c0a5854835a6e9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -351,6 +362,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म (ma) + ै (ai) + the anusvāra ं becomes मैं (maiṁ) (maiṃ). One nasal syllable."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -381,7 +403,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -412,7 +434,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b9b8907d02f276fd",
+      "sourceHash": "fnv1a64:011fd624d0601732",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -491,6 +513,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ह (ha) + ू (long u) becomes हू (hū); the chandrabindu ँ nasalises becomes हूँ (hūṁ) (hūṃ)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -530,7 +563,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -561,7 +594,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:80c091809332b359",
+      "sourceHash": "fnv1a64:77490446403001c4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -633,6 +666,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long =i) + क (ka) becomes ठीक. The retroflex ट-ठ-ड series is a hallmark of Indian sound."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -672,7 +716,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -703,7 +747,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e52436ed289f50c0",
+      "sourceHash": "fnv1a64:7c67b59efd32f37d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -768,6 +812,21 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The key word स्वागत (svāgat): the conjunct स्व (स् s."
+            },
+            {
+              "kind": "speech",
+              "text": "व va becomes sva) + ग (ga) + त (ta), with आपका (āpkā, “your”) and है (hai)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -807,7 +866,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -40,6 +40,12 @@ The stem *bol-* is where the action lives; endings pin down who and when:
 *bol-tā* (speaking, m.), *bol-tī* (speaking, f.), *bol-o* (speak!, familiar
 command). You will build every tense by adding to a stem like this.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ब (*ba*) + ो (the *o*-mātrā) → बो (*bo*);
+ल (*la*); ना (*nā*). Read बो·ल·ना → *bolnā*.
+
 ## Guided Practice
 
 [PAUSE 1s]

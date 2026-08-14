@@ -52,6 +52,13 @@ clothes but not its sound is the fastest way to feel the family resemblance.
 (This "same word, different script" pattern-matching is exactly what carries
 you across Kannada, Telugu, and Malayalam.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಸ is *sa*; ರಿ is *ri* (ರ *ra* with the “i”
+sign). No conjunct here — two clean, round syllables. Read ಸ·ರಿ →
+*sari*.
+
 ## Guided Practice
 
 [PAUSE 1s]

@@ -59,6 +59,13 @@ and scripts, saying thanks with one Semitic root. No Sanskrit here at all.
 shopkeeper, a waiter. *dhanyavād* is its formal twin. Choosing between them is
 choosing a register — and, quietly, a heritage.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: श sha, and the sign ि for “i” (written *before* the
+consonant, read *after*). With a conjunct क् + र → क्र
+(“kra”): शु·क्·रि·या → *shukriyā*.
+
 ## Guided Practice
 
 [PAUSE 1s]

@@ -44,6 +44,14 @@ dhanyavād.* And the whole exchange stands:
 > — *āp kaise haiṁ?* ("How are you?")
 > — *maiṁ ṭhīk hūṁ, dhanyavād.* ("I'm fine, thank you.")
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ठ (*ṭha*, a **retroflex** *th* — tongue curled to the
+roof of the mouth) + ी (long *\=\i*) + क (*ka*) →
+ठीक. The retroflex ट-ठ-ड series is a hallmark of Indian
+sound.
+
 ## Guided Practice
 
 [PAUSE 1s]

@@ -32,6 +32,12 @@ reviews_of: [TE-C02-nuvvu-miiru, TE-C02-naa-peru]
 *ēnu*, heading Telugu's question family: *ēmiṭi* (what), *evaru* (who), *ekkaḍa*
 (where), *enduku* (why).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ఏ (independent long ē) + మి (*mi*) + టి (*ṭi*,
+retroflex) → *ēmiṭi*.
+
 ## Guided Practice
 
 [PAUSE 1s]

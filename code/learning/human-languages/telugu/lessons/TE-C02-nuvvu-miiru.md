@@ -37,6 +37,12 @@ respectful/plural "you."
 politeness-by-plural as Tamil *nīṅgaḷ*, Kannada *nīvu*, and French *vous*. For a
 first meeting, **mīru**.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+నువ్వు (*nuvvu*); మీరు (*m\=\i ru*, మీ m\=\i\ + రు
+ru).
+
 ## Guided Practice
 
 [PAUSE 1s]

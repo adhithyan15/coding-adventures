@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5734fc6b2c7fa0c6",
+  "sourceHash": "fnv1a64:87215aacbb547f09",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a57afa3bc6c094f1",
+      "sourceHash": "fnv1a64:0af09810bf1e9da8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -140,6 +140,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam reads left to right, and every consonant carries a built-in “a.” ന na, മ ma, ര ra. A vowel sign changes it: ക ka + long-ā becomes കാ kā. The chandrakkala strips a vowel so consonants join as a conjunct: സ + ക becomes സ്ക “ska.” The anusvāram ം adds a final nasal “-m.” Read ന, മ, സ്, കാ, ര, ം becomes namaskāram."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -179,7 +190,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -210,7 +221,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:752147cf992ef12b",
+      "sourceHash": "fnv1a64:f09716a797ce7790",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -318,6 +329,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ന is na; ന്ദി is “ndi” — a conjunct of ന (na) + ദ (da) into “nd,” with the “i” sign. Read ന, ന്ദി becomes nandi."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +379,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +410,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:86b671b212716394",
+      "sourceHash": "fnv1a64:f4cc416de3521c37",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -468,6 +490,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അ is the independent vowel “a” (word-initial). തെ is “the” — ത (tha, a soft th) with the “e” sign, which is written in front of its consonant but read after. Read അ, തെ becomes athe."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -507,7 +540,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -538,7 +571,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:15a41103b7634715",
+      "sourceHash": "fnv1a64:082eb704b9b04ef0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -654,6 +687,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇ is the independent vowel “i” (word-initial). ല്ല is “lla” — a conjunct of ല (la) + ല (la), a held “ll.” Read ഇ, ല്ല becomes illa."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -693,7 +737,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -724,7 +768,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7754e489c664fb53",
+      "sourceHash": "fnv1a64:e6bfc9b26404a5c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -804,6 +848,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ is “śa” (a sh-sound). Having borrowed so much Sanskrit, Malayalam keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which uses one. രി is ri. Read ശ, രി becomes śari."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -843,7 +898,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -874,7 +929,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:479c8e92f19dcd81",
+      "sourceHash": "fnv1a64:6f6ee9b070afef33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -956,6 +1011,17 @@
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nearly the Tamil words exactly. Malayalam, too, will not say a bare “I'm leaving.” The everyday goodbye is പോയി വരാം (pōyi varām), “having gone, I [will] come [back]” — set beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview, and in Malayalam and Tamil almost the same words."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -995,7 +1061,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

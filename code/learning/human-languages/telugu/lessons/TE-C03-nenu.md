@@ -40,6 +40,11 @@ Telugu verbs carry the person in their ending — *unnānu* already means "**I**
 — so *nēnu* is often left out. You still learn it first, because the answer to
 *elā unnāru?* begins with it.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+నే (*nē*) + ను (*nu*) → నేను (*nēnu*).
+
 ## Guided Practice
 
 [PAUSE 1s]

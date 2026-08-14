@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9e34f740220a38d5",
+  "sourceHash": "fnv1a64:5236bd3259a983df",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:77fb69d0c9e36e79",
+      "sourceHash": "fnv1a64:2265710b18de3e1c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എ (e) + ങ്ങ (ṅṅa, a doubled velar nasal) + നെ (ne) becomes എങ്ങനെ (eṅṅane)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -267,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0699d35520d55a2a",
+      "sourceHash": "fnv1a64:0fdbbc2b7762997b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,6 +342,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഞ (ña, a palatal nasal like “ny,” at the very start) + ാ (long ā) + ൻ (the word-final n, a chillu) becomes ഞാൻ."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -370,7 +392,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

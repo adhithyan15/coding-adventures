@@ -33,6 +33,12 @@ Dravidian verbs. As commands they are whole words: *veḷḷu!* ("go!"), *rā!*
 ("come!"). You need both, because Telugu — like every Dravidian language — does
 not say a plain "goodbye." It says "I go, and I **come back**."
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+వె (*ve*) + ళ్ళు (*ḷḷu*, doubled retroflex ళ
+*ḷ*) → వెళ్ళు. Its partner వచ్చు (*vaccu*, “come”).
+
 ## Guided Practice
 
 [PAUSE 1s]

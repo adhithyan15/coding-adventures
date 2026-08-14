@@ -42,6 +42,12 @@ a near-certain future) → "**see you tomorrow**."
 tomorrow"), uses the present for a scheduled future. *Milte* (the habitual
 participle) + *haiṁ* (the "are" you learned in Chapter 3).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+क (*ka*) + ल (*la*) → कल (*kal*). Two simple
+letters, one tricky word.
+
 ## Guided Practice
 
 [PAUSE 1s]

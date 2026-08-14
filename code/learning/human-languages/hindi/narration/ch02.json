@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:966f7b063e67d596",
+  "sourceHash": "fnv1a64:31dfbad14e49faec",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9d12833dbdd4b9a7",
+      "sourceHash": "fnv1a64:7c00d55783af569e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -80,6 +80,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three letters, left to right: न (na), ा the long-ā mātrā (ना = nā), म (ma). Read ना, म becomes nām."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,7 +121,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -141,7 +152,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5bc85e6fefc56a37",
+      "sourceHash": "fnv1a64:3dc42a62f1b460cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -205,6 +216,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म (ma) + े (the e-mātrā) becomes मे (me); then र (ra) + ा (long ā) becomes रा (rā). Read मे, रा becomes merā."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -244,7 +266,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -275,7 +297,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29dd3d969fa9aacd",
+      "sourceHash": "fnv1a64:374f155e31226a78",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -347,6 +369,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ह (ha) + ै (the ai-mātrā) becomes है (hai). One syllable."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -386,7 +419,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -530,7 +563,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c9a40f1902dd168",
+      "sourceHash": "fnv1a64:9d25f0858bf127e9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -598,6 +631,21 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आप: the independent vowel आ (ā, word-initial) + प (pa) becomes āp. तुम: त (ta) + ु (the u-sign)."
+            },
+            {
+              "kind": "speech",
+              "text": "म (ma) becomes tum."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -637,7 +685,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -668,7 +716,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f1f02463d232832c",
+      "sourceHash": "fnv1a64:04cd31db315d5aff",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -721,6 +769,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A conjunct: क (ka) loses its vowel (halant) and joins य (ya) becomes क्य (kya); add the long-ā mātrā becomes क्या (kyā) (kyā)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -760,7 +819,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -37,6 +37,12 @@ Across the family: Telugu *pēru*, Tamil *peyar*, Malayalam *pēr*, Kannada
 *hesaru* — one Dravidian word; only Hindi *nām* / English *name* are
 Indo-European.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ప (*pa*) + ే (the *ē*-sign) → పే (pē); రు
+(*ru*). Read పే·రు → *pēru*.
+
 ## Guided Practice
 
 [PAUSE 1s]

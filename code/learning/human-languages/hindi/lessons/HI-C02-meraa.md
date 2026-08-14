@@ -38,6 +38,13 @@ Hindi possessives change to match what's owned: **merā** (masculine), **merī**
 (feminine), **mere** (plural). *nām* is masculine → **merā nām**. (You'll meet
 *merī* at your first feminine noun.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+म (*ma*) + े (the *e*-mātrā) → मे (me);
+then र (*ra*) + ा (long ā) → रा (rā). Read
+मे·रा → *merā*.
+
 ## Guided Practice
 
 [PAUSE 1s]

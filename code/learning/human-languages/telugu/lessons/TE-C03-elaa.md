@@ -34,6 +34,12 @@ this **e-**: *ēmiṭi* (what), *elā* (how), *evaru* (who), *ekkaḍa* (where),
 Tamil's *eppaḍi* and Kannada's *ēnu* — a family older than the Sanskrit words that
 Telugu otherwise borrows so freely.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ఎ (independent short *e*) + లా (*lā*) → ఎలా
+(*elā*).
+
 ## Guided Practice
 
 [PAUSE 1s]

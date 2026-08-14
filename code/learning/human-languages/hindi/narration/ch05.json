@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d864bb3dce196298",
+  "sourceHash": "fnv1a64:184c01edb54d88f7",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa1b43061e12cc33",
+      "sourceHash": "fnv1a64:ae78ad2f330261be",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -83,6 +83,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ब (ba) + ो (the o-mātrā) becomes बो (bo); ल (la); ना (nā). Read बो, ल, ना becomes bolnā."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +302,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:241dc2d3a8dad2a8",
+      "sourceHash": "fnv1a64:ca46ccaaa68ffc75",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -356,6 +367,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "र (ra) + ह (ha) + ना (nā) becomes रहना. The familiar infinitive -ना."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -390,7 +412,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -421,7 +443,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a9943cf4b5cb8c82",
+      "sourceHash": "fnv1a64:5520670f09c9cd1b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -517,6 +539,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka) + र (ra) + ना (nā) becomes करना."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -556,7 +589,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

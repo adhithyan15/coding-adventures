@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6554397bdd3829cf",
+  "sourceHash": "fnv1a64:d107feb63e65ce1e",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3e0647363489d9a9",
+      "sourceHash": "fnv1a64:6d48303ca8dca56e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -107,6 +107,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi reads left to right, and every consonant carries a built-in “a.” न na, म ma, स sa, त ta. A vowel sign changes the vowel: े makes “e” (ते = te). A halant (the stroke under स्) removes the vowel, and the bare consonant leans onto the next as a conjunct: स् + ते becomes स्ते. Read left to right: न, म (na, ma), स्, ते becomes namaste."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -146,7 +157,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +188,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e937779a0f8ee11c",
+      "sourceHash": "fnv1a64:40befbc05ec1de23",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -272,6 +283,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: क ka, र ra, and the sign ा for long “ā” (का = kā). You already read नमस् (namas). न, म (na, ma), स्, का, र becomes namaskār."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -311,7 +333,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -342,7 +364,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c155316e068c9dae",
+      "sourceHash": "fnv1a64:972c7a81178b8b43",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -433,6 +455,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: ध dha, य ya, व va, द da, and a new conjunct न् + य becomes न्य (“nya”). ध, न्, य, वा, द becomes dhanyavād."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -472,7 +505,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -503,7 +536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d2725fa4f4d31ff",
+      "sourceHash": "fnv1a64:b8a489f2b5fa561e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -598,6 +631,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: श sha, and the sign ि for “i” (written before the consonant, read after). With a conjunct क् + र becomes क्र (“kra”): शु, क्, रि, या becomes shukriyā."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -637,7 +681,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -668,7 +712,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3af777560e37c2a8",
+      "sourceHash": "fnv1a64:9f47fd60c0ff364b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -755,6 +799,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: the independent vowel अ (“a,” for a word that starts with a vowel) and ल la. अ, ल, वि, दा becomes alvidā."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -794,7 +849,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

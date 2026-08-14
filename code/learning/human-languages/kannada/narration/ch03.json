@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fbe7fccaa7539a91",
+  "sourceHash": "fnv1a64:5e7ea2c74c9eb4eb",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4a41b92f23d7d03",
+      "sourceHash": "fnv1a64:b7d2f301f5b43090",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇ (hē) + ಗೆ (ge) becomes ಹೇಗೆ (hēge) (hēge)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -267,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6d70070c39ff951",
+      "sourceHash": "fnv1a64:032a992bf4587e4a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,6 +342,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾ (nā) + ನು (nu) becomes ನಾನು (nānu) (nānu)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -370,7 +392,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -401,7 +423,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88d5dd6c8c4fa046",
+      "sourceHash": "fnv1a64:59222ac64a876c13",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -469,6 +491,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚೆ (ce — the letter ಚ is “ch as in cheese”) + ನ್ನಾ (nnā) + ಗಿ (gi) becomes ಚೆನ್ನಾಗಿ (cennāgi)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -508,7 +541,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

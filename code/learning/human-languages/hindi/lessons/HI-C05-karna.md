@@ -50,6 +50,12 @@ Hindi builds countless verbs as **noun + करना**:
 So *maiṁ kām kartā hūṁ* = "I work" (lit. "I work-do am"). Learn *karnā* and you
 unlock a whole grammar of "do-verbs."
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+क (*ka*) + र (*ra*) + ना (*nā*) →
+करना.
+
 ## Guided Practice
 
 [PAUSE 1s]

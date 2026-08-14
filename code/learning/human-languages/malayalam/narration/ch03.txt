@@ -17,6 +17,9 @@ The letters in this word.
 The word, taken apart.
 എങ്ങനെ (eṅṅane, "how") is native Dravidian, on the interrogative base e- you met in entŭ. Malayalam gathers its questions here: entŭ (what), eṅṅane (how), ārŭ (who), eviṭe (where), eppōḷ (when), entinŭ (why). It is the same Dravidian question-root heading Tamil's eppaḍi — the deepest, most native layer of a language otherwise rich in Sanskrit.
 
+Sounds you'll need.
+എ (e) + ങ്ങ (ṅṅa, a doubled velar nasal) + നെ (ne) becomes എങ്ങനെ (eṅṅane).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "eṅṅane"]
@@ -78,6 +81,9 @@ The word, taken apart.
 
 Grammar Lens: Malayalam does not drop "I".
 Here Malayalam parts from its sisters. Tamil, Kannada, and Telugu verbs carry the person in their ending, so they freely drop "I." But Malayalam verbs do not change for person at all (you'll see this in Chapter 5) — so the pronoun ñān must be said. It cannot be left out, because the verb won't tell you who acts.
+
+Sounds you'll need.
+ഞ (ña, a palatal nasal like “ny,” at the very start) + ാ (long ā) + ൻ (the word-final n, a chillu) becomes ഞാൻ.
 
 Guided Practice.
 [pause 1 second]

@@ -31,6 +31,11 @@ reviews_of: [ML-C02-nii-ningal, ML-C02-enre-peru-aanu]
 *ēmiṭi*, heading Malayalam's question family: *entŭ* (what), *ār* (who), *eviṭe*
 (where).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+എ (*e*) + the conjunct ന്ത് (*ntŭ*) → *entŭ*.
+
 ## Guided Practice
 
 [PAUSE 1s]

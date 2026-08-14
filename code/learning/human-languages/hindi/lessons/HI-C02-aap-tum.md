@@ -40,6 +40,13 @@ Hindi grades respect three ways: **āp** (respectful — strangers, elders),
 if misused). The European tracks had two levels each; Hindi has three. For a
 first meeting, always **āp**.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+आप: the independent vowel आ (ā, word-initial) + प (*pa*)
+→ *āp*. तुम: त (*ta*) + ु (the *u*-sign)
++ म (*ma*) → *tum*.
+
 ## Guided Practice
 
 [PAUSE 1s]

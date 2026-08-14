@@ -47,6 +47,13 @@ by asserting or denying existence, rather than with a bare particle. You'll
 also hear a "yes" come back as the question's own verb, echoed (*vaccānu*, "I
 came," for "did you come?"). Bank *avunu* as the simple word.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+అ is the **independent vowel** “a” (word-initial). వు is
+*vu*, ను is *nu* (each a consonant with the “u” sign). Read
+అ·వు·ను → *avunu*.
+
 ## Guided Practice
 
 [PAUSE 1s]

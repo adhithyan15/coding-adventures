@@ -17,6 +17,9 @@ The letters in this word.
 The word, taken apart.
 പേര് (pēru, "name") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Telugu pēru, a cousin of Kannada hesaru (p becomes h). Being Tamil's closest sister, Malayalam keeps the native word, not Sanskrit nāma (Hindi nām, English name).
 
+Sounds you'll need.
+പ (pa) + േ (the ē-sign) becomes പേ (pē); ര് (bare r, with the chandrakkala). Read പേ, ര് becomes pēru.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "pēru"]
@@ -43,6 +46,9 @@ The letters in this word.
 
 The word, taken apart.
 എന്റെ (enṟe, "my") is the possessive of ഞാൻ (ñāṉ, "I") — native Dravidian, the same pronoun stem behind Tamil nāṉ / eṉ. No Indo-European cousin: the Dravidian "I/my" is a different word from the European I/my.
+
+Sounds you'll need.
+എ (independent e) + the conjunct ന്റെ (nṟe) becomes enṟe.
 
 Guided Practice.
 [pause 1 second]
@@ -74,6 +80,9 @@ Here's the point: Tamil, Kannada, and Telugu all use the zero copula — no word
 
 Grammar Lens: the verb comes last.
 Like Hindi's hai (and unlike Tamil), āṇŭ closes the sentence — Malayalam is subject–object–verb: "my name Arun is." (Malayalis sometimes drop āṇŭ in fast speech, but the full form keeps it.)
+
+Sounds you'll need.
+ആ (independent long ā) + ണ് (bare retroflex ṇ) becomes āṇŭ.
 
 Guided Practice.
 [pause 1 second]
@@ -132,6 +141,9 @@ The word, taken apart.
 Grammar Lens: respect by the plural.
 nī (familiar) vs. niṅṅaḷ (respectful, literally plural) — the family's shared politeness-by-plural, same idea as French vous. For a first meeting, niṅṅaḷ.
 
+Sounds you'll need.
+നീ (n=i); നിങ്ങൾ (niṅṅaḷ).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "nī" (familiar), "niṅṅaḷ" (respectful)]
@@ -156,6 +168,9 @@ The letters in this word.
 
 The word, taken apart.
 എന്ത് (entŭ, "what") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Telugu ēmiṭi, heading Malayalam's question family: entŭ (what), ār (who), eviṭe (where).
+
+Sounds you'll need.
+എ (e) + the conjunct ന്ത് (ntŭ) becomes entŭ.
 
 Guided Practice.
 [pause 1 second]

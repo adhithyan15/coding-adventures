@@ -17,6 +17,9 @@ The letters in this word.
 The word, taken apart.
 ఎలా (elā, "how") is native Dravidian, on the interrogative base ఎ- (e-) you already met in ēmiṭi. Telugu gathers nearly all its questions under this e-: ēmiṭi (what), elā (how), evaru (who), ekkaḍa (where), eppuḍu (when), enduku (why). It is the same Dravidian question-root that heads Tamil's eppaḍi and Kannada's ēnu — a family older than the Sanskrit words that Telugu otherwise borrows so freely.
 
+Sounds you'll need.
+ఎ (independent short e) + లా (lā) becomes ఎలా (elā).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "elā"]
@@ -79,6 +82,9 @@ The word, taken apart.
 Grammar Lens: "I" you can drop.
 Telugu verbs carry the person in their ending — unnānu already means "I am" — so nēnu is often left out. You still learn it first, because the answer to elā unnāru? begins with it.
 
+Sounds you'll need.
+నే (nē) + ను (nu) becomes నేను (nēnu) (nēnu).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "nēnu"]
@@ -110,6 +116,9 @@ The word, taken apart.
 నేను బాగున్నాను (nēnu bāgunnānu) — "I am well" (bāgā + unnānu, "I am," run together).
 The whole exchange:
 — mīru elā unnāru? ("How are you?") — nēnu bāgunnānu, dhanyavādamulu. ("I'm well, thank you.")
+
+Sounds you'll need.
+బా (bā) + గా (gā) becomes బాగా (bāgā) (bāgā).
 
 Guided Practice.
 [pause 1 second]

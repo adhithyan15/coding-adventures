@@ -43,6 +43,12 @@ am well**" (*cennāgi* + *iddēne*, "I am"). The whole exchange:
 > — *nīvu hēgiddīrā?* ("How are you?")
 > — *nānu cennāgiddēne, dhanyavāda.* ("I'm well, thank you.")
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಚೆ (*ce* — the letter ಚ is “ch as in *cheese*”) +
+ನ್ನಾ (*nnā*) + ಗಿ (*gi*) → ಚೆನ್ನಾಗಿ.
+
 ## Guided Practice
 
 [PAUSE 1s]

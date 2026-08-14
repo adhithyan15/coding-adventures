@@ -70,6 +70,18 @@ the sound.
 Tamil therefore needs only 18 consonant letters where Devanagari needs 33; its
 native words do not depend on those written distinctions.
 
+## Grammar lens
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**One letter, three sounds — now on the page.** Chapter~1 said Tamil
+picks this sound by position rather than by spelling; here is the letter that
+does it. Devanagari spells *ka*, *kha*, *ga* and *gha* with
+four separate letters. Tamil writes க for all of them: *k* at the
+start of a word and when doubled (க்க), *g* after a nasal
+(ங்க), and a softer *h*-like sound between vowels. That is why Tamil
+needs only 18 consonant letters where Devanagari needs 33 — its native words
+do not depend on those written distinctions.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-CURVES-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-ABUGIDA-VA-KA-03, TA-SOUND-ABUGIDA-VA-KA-04] -->
 

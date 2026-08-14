@@ -31,6 +31,11 @@ Dravidian, on the pronoun stem **\*nān/\*yān** behind Tamil *nāṉ* and Kanna
 *nānu*. No Indo-European cousin: the Dravidian "I/my" is a wholly different word
 from the European *I/my*.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+న (*na*) + ా (long ā) → నా (*nā*).
+
 ## Guided Practice
 
 [PAUSE 1s]

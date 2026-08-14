@@ -34,6 +34,33 @@ say *naṉṟi*, and that is a whole sentence.
 > Its root is *nal*, "good" — the same *nal-* inside *nalla* ("good") and
 > *nanmai* ("a good deed"). Saying *naṉṟi* names the good someone did you.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Say it *naṇ-ṛi*. Tamil hears **three** different *n*
+sounds and this word uses two of them: a **dental** *n* (tongue on the
+teeth) to open, then an **alveolar** one (on the ridge just behind them).
+The ṛ is its own sound again, not the English *r*. English ears
+flatten all of this to “nandri,” which is close enough to be understood.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+நன்றி (*naṉṟi*) grows from the root நல் (*nal*), “good” —
+so it literally means **“goodness.”** To thank, in Tamil, is to name the
+good someone did you.
+
+## Grammar lens
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tamil hears three of every *n*, *l*, and *r*.** You have
+now met ந (dental *n*), ன (alveolar *ṉ*), and ண
+(retroflex *ṇ*) — three letters for three tongue positions (on the
+teeth / on the ridge / curled back). Tamil does the same for *l*
+(ல ள ழ) and *r* (ர ற). English fuses each set into one letter;
+Tamil keeps them apart, and the differences *change meaning*. Learn them
+word by word, not as a chart.
+
 ## Guided Practice
 
 [PAUSE 1s]

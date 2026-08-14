@@ -36,6 +36,12 @@ like *peyar*, *not* related to Sanskrit *nāma* (Hindi *nām*, English *name*).
 Across the family: Kannada *hesaru*, Tamil *peyar*, Telugu *pēru*, Malayalam
 *pēr* — one Dravidian word; only Hindi *nām* / English *name* are Indo-European.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಹ (*ha*) + ೆ (the *e*-sign) → ಹೆ (he); ಸ
+(*sa*); ರು (*ru*). Read ಹೆ·ಸ·ರು → *hesaru*.
+
 ## Guided Practice
 
 [PAUSE 1s]

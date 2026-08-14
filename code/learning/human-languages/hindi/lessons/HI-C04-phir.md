@@ -33,6 +33,12 @@ English cognate — but its *job* is one English shares: it turns a parting into
 promise. English "see you **again**," Hindi *phir milenge* ("we'll meet
 **again**"). The optimism is the same; only the word is Indian.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+फ (*pha*, an aspirated *p*) + ि (the *i*-mātrā,
+written before but read after) + र (*ra*) → फिर.
+
 ## Guided Practice
 
 [PAUSE 1s]

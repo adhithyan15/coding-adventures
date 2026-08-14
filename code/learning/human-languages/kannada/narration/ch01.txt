@@ -37,6 +37,9 @@ Tamil alone kept its own word; Kannada, Telugu, Malayalam, and Hindi all lean on
 Why it's said this way.
 namaskāra is said with the palms pressed together and a small bow of the head — the gesture is the word. It works as hello and goodbye, at any time of day, to almost anyone, and it is respectful without being stiff. (The even more respectful namaskāragaḷu adds a plural-of-honour ending you'll meet later.)
 
+Sounds you'll need.
+Kannada reads left to right, and every consonant carries a built-in “a.” ನ na, ಮ ma, ರ ra. A vowel sign changes that vowel: ಕ ka + the long-“ā” sign becomes ಕಾ kā. And a vowel-less consonant stacks under the next as a conjunct (ottakṣara): ಸ loses its vowel and tucks under ka becomes ಸ್ಕ “ska.” Read ನ, ಮ, ಸ್, ಕಾ, ರ becomes namaskāra.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: read it left to right — na, ma, s, kā, ra becomes "namaskāra"]
@@ -84,6 +87,9 @@ Here the split is stark: Kannada, Telugu, and Hindi all use the Sanskrit dhanyav
 Why it's said this way.
 dhanyavāda is the formal, written "thank you." In warm everyday Kannada people often reach for the English thanks, or simply show gratitude in tone and gesture; the full dhanyavāda carries weight, for when you mean to mark it.
 
+Sounds you'll need.
+New: ಧ dha (an aspirated d — a puff of breath), and the conjunct ನ್ಯ (na stacked with ya becomes “nya”). ವಾ is vā. Read ಧ, ನ್ಯ, ವಾ, ದ becomes dhanyavāda.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: dha, nya, vā, da becomes "dhanyavāda"]
@@ -119,6 +125,9 @@ The word, taken apart.
 
 Grammar Lens: Dravidian often answers by echoing the verb.
 Like its sister Tamil, Kannada frequently answers "yes" by repeating the verb rather than using a stand-alone word: asked "bandiddīyā?" ("have you come?"), a natural yes is "bandiddēne" ("I have come"). Keep haudu as the simple all-purpose "yes," but expect a "yes" to come back as a whole verb — a habit shared right across the Dravidian family.
+
+Sounds you'll need.
+ಹೌ is hau (ಹ ha with the “au” vowel sign hugging it); ದು is du (ದ da with the “u” sign beneath). Read ಹೌ, ದು becomes haudu.
 
 Guided Practice.
 [pause 1 second]
@@ -168,6 +177,9 @@ Language: Telugu. "No / isn't": lēdu (లేదు). Note: native Dravidian, a 
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European.
 Three of the four Dravidian languages share il-; only Telugu picked a different native root. Hindi, from the other family entirely, is unrelated.
 
+Sounds you'll need.
+ಇ is the independent vowel “i” (word-initial, so a full letter). ಲ್ಲ is “lla” — ಲ la vowel-stripped and stacked under another la, a held “ll.” Read ಇ, ಲ್ಲ becomes illa.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: i, lla becomes "illa"]
@@ -204,6 +216,9 @@ The word, taken apart.
 
 Grammar Lens: one shared Dravidian word, two scripts.
 sari is a small proof of how close these languages are: identical word, identical meaning, written in two different scripts — Kannada ಸರಿ, Tamil சரி. As you learn to read each script, watching a shared word change its clothes but not its sound is the fastest way to feel the family resemblance. (This "same word, different script" pattern-matching is exactly what carries you across Kannada, Telugu, and Malayalam.)
+
+Sounds you'll need.
+ಸ is sa; ರಿ is ri (ರ ra with the “i” sign). No conjunct here — two clean, round syllables. Read ಸ, ರಿ becomes sari.
 
 Guided Practice.
 [pause 1 second]

@@ -86,6 +86,9 @@ Sounds you'll need: One letter, three sounds.
 Devanagari separates क, ख, ग, घ. Tamil uses க across that space: k at the start of a word and when doubled (க்க), g after a nasal (ங்க), and a softer h-like sound between vowels. Position, not a new spelling, selects the sound.
 Tamil therefore needs only 18 consonant letters where Devanagari needs 33; its native words do not depend on those written distinctions.
 
+Grammar lens.
+One letter, three sounds — now on the page. Chapter1 said Tamil picks this sound by position rather than by spelling; here is the letter that does it. Devanagari spells ka, kha, ga and gha with four separate letters. Tamil writes க for all of them: k at the start of a word and when doubled (க்க), g after a nasal (ங்க), and a softer h-like sound between vowels. That is why Tamil needs only 18 consonant letters where Devanagari needs 33 — its native words do not depend on those written distinctions.
+
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: வ — "left loop, top arm, descender"]

@@ -17,6 +17,9 @@ The letters in this word.
 The word, taken apart.
 फिर (phir) means "again, then, afterwards." It is a native Indo-Aryan adverb (from Prakrit, ultimately tied to the sense "back, return") with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English "see you again," Hindi phir milenge ("we'll meet again"). The optimism is the same; only the word is Indian.
 
+Sounds you'll need.
+फ (pha, an aspirated p) + ि (the i-mātrā, written before but read after) + र (ra) becomes फिर.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "phir" — mind the aspirated ph]
@@ -46,6 +49,9 @@ The word, taken apart.
 
 Grammar Lens: how Hindi builds the future.
 Hindi marks the future with an ending on the verb stem: mil- ("meet") + -enge ("we/they will") becomes milenge. No helper-word like English "will" — the tense lives in the ending, the way Hindi's person lives in hūṁ/hai/haiṁ.
+
+Sounds you'll need.
+मि (mi) + ले (le) + the anusvāra + गे (ge) becomes मिलेंगे (milenge).
 
 Guided Practice.
 [pause 1 second]
@@ -108,6 +114,9 @@ The word, taken apart.
 Grammar Lens: the present-for-future.
 milte haiṁ is literally "(we) meet" — Hindi, like English ("I'm seeing you tomorrow"), uses the present for a scheduled future. Milte (the habitual participle) + haiṁ (the "are" you learned in Chapter 3).
 
+Sounds you'll need.
+क (ka) + ल (la) becomes कल (kal). Two simple letters, one tricky word.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "kal milte haiṁ"]
@@ -141,6 +150,9 @@ Grammar Lens: the verb agrees with the speaker's gender.
 a man says चलता हूँ (caltā hūṁ).
 a woman says चलती हूँ (caltī hūṁ).
 The -tā / -tī ending marks the speaker's gender — a feature English has no trace of, and one you will meet again and again. (Compare Marathi yeto m. / yete f.)
+
+Sounds you'll need.
+च (ca) + ल (la) + long ā becomes चलता (caltā), with हूँ (hūṃ).
 
 Guided Practice.
 [pause 1 second]

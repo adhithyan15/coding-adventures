@@ -71,6 +71,16 @@ own.
 gesture *is* the word. It serves as both **hello and goodbye**, any time, to
 almost anyone, respectful without being stiff.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Malayalam reads **left to right**, and every consonant carries a built-in
+“a.” ന na, മ ma, ര ra. A **vowel sign** changes it:
+ക ka + long-ā → കാ kā. The *chandrakkala* strips a vowel so
+consonants **join as a conjunct**: സ + ക → സ്ക “ska.”
+The **anusvāram** ം adds a final nasal “-m.” Read
+ന·മ·സ്·കാ·ര·ം → *namaskāram*.
+
 ## Guided Practice
 
 [PAUSE 1s]

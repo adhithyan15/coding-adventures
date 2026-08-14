@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6e105515101ba1df",
+  "sourceHash": "fnv1a64:dc1b0406cbf54722",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c471ad19ff39a991",
+      "sourceHash": "fnv1a64:96291071711dcce0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -140,6 +140,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kannada reads left to right, and every consonant carries a built-in “a.” ನ na, ಮ ma, ರ ra. A vowel sign changes that vowel: ಕ ka + the long-“ā” sign becomes ಕಾ kā. And a vowel-less consonant stacks under the next as a conjunct (ottakṣara): ಸ loses its vowel and tucks under ka becomes ಸ್ಕ “ska.” Read ನ, ಮ, ಸ್, ಕಾ, ರ becomes namaskāra."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -179,7 +190,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -211,7 +222,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9ca8cf2a81ed0c89",
+      "sourceHash": "fnv1a64:ec35b859855f2078",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -328,6 +339,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: ಧ dha (an aspirated d — a puff of breath), and the conjunct ನ್ಯ (na stacked with ya becomes “nya”). ವಾ is vā. Read ಧ, ನ್ಯ, ವಾ, ದ becomes dhanyavāda."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -367,7 +389,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -398,7 +420,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:465099ac93486702",
+      "sourceHash": "fnv1a64:d07d1e50a4a7382f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -478,6 +500,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೌ is hau (ಹ ha with the “au” vowel sign hugging it); ದು is du (ದ da with the “u” sign beneath). Read ಹೌ, ದು becomes haudu."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -517,7 +550,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -548,7 +581,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:69df3208c013ebe2",
+      "sourceHash": "fnv1a64:1f4056f554b4767d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -668,6 +701,17 @@
         },
         {
           "index": 5,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇ is the independent vowel “i” (word-initial, so a full letter). ಲ್ಲ is “lla” — ಲ la vowel-stripped and stacked under another la, a held “ll.” Read ಇ, ಲ್ಲ becomes illa."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -707,7 +751,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -738,7 +782,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e8e15ae1b855bfa9",
+      "sourceHash": "fnv1a64:fa15d715a7e4f762",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -822,6 +866,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ is sa; ರಿ is ri (ರ ra with the “i” sign). No conjunct here — two clean, round syllables. Read ಸ, ರಿ becomes sari."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -861,7 +916,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -41,6 +41,12 @@ person in their ending, so they freely drop "I." But **Malayalam verbs do not
 change for person at all** (you'll see this in Chapter 5) — so the pronoun *ñān*
 must be said. It cannot be left out, because the verb won't tell you who acts.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ഞ (*ña*, a palatal nasal like “ny,” at the very start) + ാ
+(long ā) + ൻ (the word-final *n*, a *chillu*) → ഞാൻ.
+
 ## Guided Practice
 
 [PAUSE 1s]

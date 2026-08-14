@@ -63,6 +63,13 @@ the same way. Bank the idea: in Telugu, grammar is mostly **suffixes**.
 Telugu, Kannada, and Hindi share the Sanskrit stem; Tamil and Malayalam keep
 the native *naṉṟi / nandi*.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: ధ *dha* (aspirated *d*), the conjunct న్య (*na*
+stacked with *ya*), then వా·ద·ము·లు. Read
+ధ·న్య·వా·ద·ము·లు → *dhanyavādamulu*.
+
 ## Guided Practice
 
 [PAUSE 1s]

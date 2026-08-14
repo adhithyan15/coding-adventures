@@ -56,6 +56,15 @@ sentence, the same worldview — never simply depart, always promise a return �
 and in Malayalam and Tamil, almost the same *words*. (Casually, Malayalam also
 uses *śari* — "okay" — to sign off, or repeats *namaskāram*.)
 
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Nearly the Tamil words exactly.** Malayalam, too, will not say a bare
+“I'm leaving.” The everyday goodbye is പോയി വരാം (*pōyi varām*),
+“having gone, I [will] come [back]” — set beside Tamil's *pōy
+varugiṟēṉ* and Kannada's *hōgi baruttēne*: the same sentence, the same
+worldview, and in Malayalam and Tamil almost the same *words*.
+
 ## Guided Practice
 
 [PAUSE 1s]

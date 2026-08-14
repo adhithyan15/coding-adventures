@@ -18,6 +18,9 @@ The word, taken apart.
 ಹೆಸರು (hesaru, "name") is native Dravidian, from Proto-Dravidian pesar — and it hides a famous Kannada sound-law: an old initial p became h. So pesar becomes hesar becomes hesaru. That makes it a cousin of Tamil peyar (same root; Tamil kept the p, Kannada softened it to h) — and, like peyar, not related to Sanskrit nāma (Hindi nām, English name).
 Across the family: Kannada hesaru, Tamil peyar, Telugu pēru, Malayalam pēr — one Dravidian word; only Hindi nām / English name are Indo-European.
 
+Sounds you'll need.
+ಹ (ha) + ೆ (the e-sign) becomes ಹೆ (he); ಸ (sa); ರು (ru). Read ಹೆ, ಸ, ರು becomes hesaru.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "hesaru"]
@@ -46,6 +49,9 @@ The letters in this word.
 
 The word, taken apart.
 ನನ್ನ (nanna, "my") is the possessive of ನಾನು (nānu, "I") — native Dravidian, on the pronoun stem nān, the same one behind Tamil nāṉ / eṉ. It has no Indo-European cousin: the Dravidian "I/my" is a different word from the European I/my.
+
+Sounds you'll need.
+ನ (na) + the conjunct ನ್ನ (nna) becomes nanna — a doubled, held nn.
 
 Guided Practice.
 [pause 1 second]
@@ -104,6 +110,9 @@ The word, taken apart.
 Grammar Lens: respect by the plural.
 nīnu (familiar) vs. nīvu (respectful, and literally plural) — the same politeness-by-plural as Tamil nīṅgaḷ and French vous: one respected person addressed as "you all." For a first meeting, nīvu.
 
+Sounds you'll need.
+ನೀ (n=i) + ನು (nu) becomes n=i nu; ನೀ + ವು (vu) becomes n=i vu.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "nīnu" (familiar), "nīvu" (respectful)]
@@ -128,6 +137,9 @@ The letters in this word.
 
 The word, taken apart.
 ಏನು (ēnu, "what") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why).
+
+Sounds you'll need.
+ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu.
 
 Guided Practice.
 [pause 1 second]

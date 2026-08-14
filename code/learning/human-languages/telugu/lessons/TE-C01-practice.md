@@ -55,6 +55,15 @@ The same worldview inside Tamil's *pōy varugiṟēṉ* and Kannada's *hōgi
 baruttēne*: never simply depart — promise a return. (Casually, Telugu also
 just says *veḷtānu*, "I'll go," or re-uses *namaskāram*.)
 
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**The same “go and come back.”** Telugu, too, avoids a bare “I'm
+leaving.” The everyday goodbye is వెళ్ళి వస్తాను (*veḷḷi vastānu*),
+“having gone, I [will] come [back],” with the reply వెళ్ళి రండి
+(*veḷḷi raṇḍi*), “go, and come back” — the worldview inside Tamil's
+*pōy varugiṟēṉ* and Kannada's *hōgi baruttēne*.
+
 ## Guided Practice
 
 [PAUSE 1s]

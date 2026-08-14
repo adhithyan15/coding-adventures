@@ -37,6 +37,9 @@ Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its own
 Why it's said this way.
 namaskāram is said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff.
 
+Sounds you'll need.
+Malayalam reads left to right, and every consonant carries a built-in “a.” ന na, മ ma, ര ra. A vowel sign changes it: ക ka + long-ā becomes കാ kā. The chandrakkala strips a vowel so consonants join as a conjunct: സ + ക becomes സ്ക “ska.” The anusvāram ം adds a final nasal “-m.” Read ന, മ, സ്, കാ, ര, ം becomes namaskāram.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: na, ma, s, kā, ram becomes "namaskāram"]
@@ -82,6 +85,9 @@ Language: Hindi. "Thanks": dhanyavād / shukriyā. Note: Sanskrit / Perso-Arabic
 Why it's said this way.
 Like naṉṟi in Tamil, nandi is a touch formal — among close family it can feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed and shown in tone. The explicit word is for when you want to mark the gratitude. (In casual speech you'll also hear the English thanks.)
 
+Sounds you'll need.
+ന is na; ന്ദി is “ndi” — a conjunct of ന (na) + ദ (da) into “nd,” with the “i” sign. Read ന, ന്ദി becomes nandi.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: na, ndi becomes "nandi"]
@@ -117,6 +123,9 @@ The word, taken apart.
 
 Grammar Lens: yes and no as "that is" / "not that".
 Malayalam's yes/no pair are demonstratives in disguise: athe ("that [is so]") and alla ("not that"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, "[I] came," for "did you come?"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are.
+
+Sounds you'll need.
+അ is the independent vowel “a” (word-initial). തെ is “the” — ത (tha, a soft th) with the “e” sign, which is written in front of its consonant but read after. Read അ, തെ becomes athe.
 
 Guided Practice.
 [pause 1 second]
@@ -165,6 +174,9 @@ Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: the same root.
 Language: Telugu. "No / isn't": lēdu (లేదు). Note: native, a different root.
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
 
+Sounds you'll need.
+ഇ is the independent vowel “i” (word-initial). ല്ല is “lla” — a conjunct of ല (la) + ല (la), a held “ll.” Read ഇ, ല്ല becomes illa.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: i, lla becomes "illa"]
@@ -201,6 +213,9 @@ The word, taken apart.
 Grammar Lens: one word, four scripts.
 sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason the four are worth seeing side by side.
 
+Sounds you'll need.
+ശ is “śa” (a sh-sound). Having borrowed so much Sanskrit, Malayalam keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which uses one. രി is ri. Read ശ, രി becomes śari.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: śa, ri becomes "śari"]
@@ -234,6 +249,9 @@ The farewell — nearly the Tamil words exactly.
 Malayalam, like Tamil, will not say a bare "I'm leaving." The everyday goodbye is:
 പോയി വരാം (pōyi varām) — literally "having gone, I [will] come [back]."
 Set it beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview — never simply depart, always promise a return — and in Malayalam and Tamil, almost the same words. (Casually, Malayalam also uses śari — "okay" — to sign off, or repeats namaskāram.)
+
+Why it's said this way.
+Nearly the Tamil words exactly. Malayalam, too, will not say a bare “I'm leaving.” The everyday goodbye is പോയി വരാം (pōyi varām), “having gone, I [will] come [back]” — set beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview, and in Malayalam and Tamil almost the same words.
 
 Guided Practice.
 [pause 1 second]
