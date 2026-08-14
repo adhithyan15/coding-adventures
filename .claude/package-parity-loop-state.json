@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11525,
   "last_inventory": {
     "revision": "c6bdc3694a85711a213340ac5f12370703051ff6",
     "schema_version": 3,
@@ -3427,12 +3427,17 @@
     {
       "id": "zip-raw-rfc1951-lua-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Lua",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/lua-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 11525,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11525",
+      "opened_at": "2026-08-14T05:27:10Z",
       "selection_revision": "a74ce9183f5986cbc80ae0c94d72da4042416b7a",
       "selection_notes": "Selected only after PR #11494 merged externally, the collision-clean live inventory classified the new Chief notification approval and Google Cast discovery roots with four portable/native ownership records, and no live PR or remote branch claimed Lua ZIP or the shared RFC 1951 fixture. Lua is the smallest clean standalone remaining ZIP child: Lua 5.4 and LuaRocks are installed, the package already owns exact bit positions, stored/fixed and multi-block framing, symbol 285, and overlapping back-references, and the test toolchain has a pure-Lua independent raw-DEFLATE oracle. Swift is the only other remaining child without stale overlap but has a costlier cross-platform raw-zlib boundary; the historical catch-up residue touches only .NET, Haskell, and JVM. This coherent tranche adds dynamic Huffman, counted consumption, caller caps, stable payload-blind errors, strict ZIP boundaries, all 34 neutral fixtures, and empty capability metadata without duplicating DEFLATE.",
+      "implementation_revision": "4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96",
+      "validation_notes": "Lua 5.4 and the exact Windows BUILD front door pass syntax, Luacheck with zero findings, 68 full Busted tests, 40 focused portable-conformance coverage tests, and 91.08% production line coverage. All 34 neutral raw RFC 1951 cases pass, including dynamic Huffman, HDIST 32 zero reserved slots, stable payload-blind errors, exact suffix consumption, caller caps, symbol 285, full 32 KiB overlap, and strict ZIP suffix-cavity and declared-size rejection. A test-only pure-Lua LibDeflate oracle and 128-stream deterministic differential corpus agree on output and exact counted consumption. LuaRocks make/install/pack pass. Twenty-six fixture/parity/capability tests plus 678 subtests pass; the collision gate reports 1,318 identities, 4,474 slots, 868 singletons, 12,152 singleton gaps, 669 Rust singletons, zero collisions, and zero unknown buckets. Strict state JSON/DAG, diff, credential, dependency, capability, and pure-production authority scans pass. The repository-wide Lua build-tool validator discovers 258 packages and emits no Lua ZIP BUILD diagnostic; its full run retains the unrelated pre-existing lua/programs/conduit-hello undeclared lua/conduit dependency finding. No downstream Lua package imports ZIP, so reader_read is the direct hardened integration boundary.",
+      "publication_notes": "Opened ready-for-review PR #11525 from validated implementation revision 4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96. The loop retains external-review-only merge authority and will monitor the live checks without selecting another tranche.",
       "notes": "Portable Lua child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
