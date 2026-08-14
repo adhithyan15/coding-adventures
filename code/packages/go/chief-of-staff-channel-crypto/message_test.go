@@ -243,13 +243,22 @@ func TestCompactOversizeRecipesAreEnforced(t *testing.T) {
 				return
 			}
 			changed := clone(baseline)
-			length, _ := strconv.ParseUint(recipe.DeclaredLength, 10, 64)
 			switch recipe.Field {
-			case "originator-id":
-				binaryPut32(changed[29:33], uint32(length))
-			case "content-type":
-				binaryPut32(changed[83:87], uint32(length))
+			case "originator-id", "content-type":
+				length, err := strconv.ParseUint(recipe.DeclaredLength, 10, 32)
+				if err != nil || length > uint64(^uint32(0)) {
+					t.Fatalf("invalid uint32 fixture length %q", recipe.DeclaredLength)
+				}
+				offset := 29
+				if recipe.Field == "content-type" {
+					offset = 83
+				}
+				binaryPut32(changed[offset:offset+4], uint32(length))
 			case "ciphertext":
+				length, err := strconv.ParseUint(recipe.DeclaredLength, 10, 64)
+				if err != nil {
+					t.Fatalf("invalid uint64 fixture length %q", recipe.DeclaredLength)
+				}
 				binaryPut64(changed[143:151], length)
 			}
 			_, err := MessageDeserialize(changed)
