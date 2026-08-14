@@ -547,6 +547,10 @@ Prioritized work items:
    diagnostics remain independently unpositioned, nearer foreign shell-named
    elements retain foreign recovery, and incomplete EOF syntax emits no end-tag
    token.
+   Grouped scoped-block end tags now follow the same position contract at
+   foreign integration boundaries; ordinary-scope companion diagnostics remain
+   independently unpositioned, foreign same-name recovery stays distinct, and
+   incomplete EOF syntax emits no end-tag token.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
