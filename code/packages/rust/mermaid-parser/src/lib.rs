@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.106.0";
+pub const VERSION: &str = "0.107.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -816,6 +816,13 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     class_names,
                 });
             }
+            "INLINE_CLASS" => {
+                let (node_id, class_names) = parse_requirement_inline_class(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::AssignClass {
+                    node_ids: vec![node_id],
+                    class_names,
+                });
+            }
             "REQUIREMENT_START" | "ELEMENT_START" => {
                 let is_element = token_name(cursor.current()) == "ELEMENT_START";
                 let declaration = cursor
@@ -1079,6 +1086,17 @@ fn parse_requirement_node_ref(value: &str) -> (String, Vec<String>) {
         .map(|(name, classes)| (name, split_requirement_list(classes)))
         .unwrap_or((value, Vec::new()));
     (unquote_requirement_value(name), classes)
+}
+
+fn parse_requirement_inline_class(token: &Token) -> Result<(String, Vec<String>), ParseError> {
+    let value = token.value.trim_end_matches(';');
+    let (node_id, class_names) = value
+        .split_once(":::")
+        .ok_or_else(|| token_error(token, "invalid requirement inline class assignment"))?;
+    Ok((
+        unquote_requirement_value(node_id),
+        split_requirement_list(class_names),
+    ))
 }
 
 fn split_requirement_list(value: &str) -> Vec<String> {
@@ -7203,7 +7221,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.106.0");
+        assert_eq!(crate::VERSION, "0.107.0");
     }
 
     #[test]

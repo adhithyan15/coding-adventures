@@ -246,6 +246,21 @@ fn requirement_preserves_typography_styles() {
 }
 
 #[test]
+fn requirement_resolves_standalone_inline_class_shorthand() {
+    let source = r#"requirementDiagram
+requirement req {}
+classDef base fill:#f9f,stroke:#333
+classDef emphasized stroke-width:4px,color:blue
+req:::base,emphasized"#;
+    let diagram = parse_requirement_diagram(source).expect("standalone class shorthand");
+    let style = diagram.nodes[0].style.as_ref().expect("shorthand style");
+    assert_eq!(style.fill.as_deref(), Some("#f9f"));
+    assert_eq!(style.stroke.as_deref(), Some("#333"));
+    assert_eq!(style.stroke_width, Some(4.0));
+    assert_eq!(style.text_color.as_deref(), Some("blue"));
+}
+
+#[test]
 fn requirement_relationships_preserve_semantics_and_orientation() {
     let source = r#"requirementDiagram
 requirement a {
