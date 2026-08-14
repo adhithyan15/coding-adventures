@@ -130,6 +130,10 @@ Orchestrator (Rust actor, D18)     ← signature verification + host supervision
 ├── uses ──► File System (D15)
 │             └── channel persistence, vault storage
 │
+├── defines ──► D18F Portable Message Profile
+│                └── immutable D18 envelope, D18M v1 binary/JSON contract,
+│                    rich payload conventions, and cross-language fixtures
+│
 └── extended by ──► Store / Job / Tool Layers
                     ├── D18A Store Layer
                     │    └── repository-owned storage abstraction + Context/Artifact/Skill/Memory stores
@@ -147,6 +151,9 @@ Manager (D14) — host and agent lifecycle uses fork/exec/wait. File System (D15
 channel logs and vault secrets are stored on disk. MSG-CRYPTO-FOUNDATION provides the
 transit-crypto contracts and test vectors; VLT01 owns Vault at-rest encryption and
 Argon2id key derivation. D20 is the JSON specification and is not a crypto dependency.
+D18F is the normative portable profile for the encrypted message envelope described
+below; it preserves the production Rust `D18M` version 1 bytes and keeps them distinct
+from D19's generic `ACTM` actor message.
 
 **Extended by:** D18A Chief of Staff Stores — repository-owned storage abstraction,
 ContextStore, ArtifactStore, SkillStore, and MemoryStore. D18C Chief of Staff Job
@@ -268,6 +275,11 @@ A Message is the atom of communication in the system. Every piece of data that f
 between any two components — a user's request, an agent's response, a credential from
 the vault — is a Message. The Message type comes from D19 (Actor); D18 extends it with
 encryption fields for channel-level confidentiality.
+
+[D18F](D18F-chief-of-staff-message-profile.md) defines the normative cross-language
+field bounds, authenticated framing, binary and JSON encodings, verification order,
+and rich-payload conventions for this encrypted envelope. D19 `ACTM` messages remain
+generic actor transport values and do not substitute for the D18 envelope.
 
 **Analogy:** A Message is a sealed, stamped, postmarked letter. Once it is sealed
 (created), nobody can change its contents. The stamp proves who sent it. The postmark
