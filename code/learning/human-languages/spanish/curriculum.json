@@ -2315,6 +2315,16 @@
       "after": []
     },
     {
+      "id": "ES-PATH-210-DEPENDS",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C56-depende"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
       "id": "ES-PATH-B2-DICE-QUE",
       "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
       "lessons": [
@@ -3472,13 +3482,13 @@
         "ES-PATH-B1-TUVIERA",
         "ES-PATH-B1-SI-TUVIERA",
         "ES-PATH-B1-REVIEW-COND",
-        "ES-PATH-B1-SYNTH-COND"
+        "ES-PATH-B1-SYNTH-COND",
+        "ES-PATH-210-DEPENDS"
       ],
       "omits": [
         "CONDITIONAL-REAL",
         "CONNECTIVE-IF",
-        "MODAL-WOULD",
-        "CONDITION-DEPENDS"
+        "MODAL-WOULD"
       ],
       "relocates": {}
     },
