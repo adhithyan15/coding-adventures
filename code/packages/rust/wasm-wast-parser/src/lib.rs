@@ -84,6 +84,12 @@ pub enum WastParseError {
     /// local-index computation sound by construction, rather than
     /// patching each place that could otherwise be fooled by it.
     TypeUseParamCountMismatch { pos: usize, declared: usize, referenced: usize },
+    /// A `(module binary "...")` **directive** (not `assert_malformed`'s
+    /// deliberately-broken bytes, which stay a raw
+    /// [`script::ModuleSource::Binary`] and are graded, never routed
+    /// through this error) failed to decode as a real `.wasm` binary via
+    /// `wasm-module-parser`.
+    EmbeddedBinaryModuleError { pos: usize, message: String },
 }
 
 impl std::fmt::Display for WastParseError {
@@ -127,6 +133,9 @@ impl std::fmt::Display for WastParseError {
                     f,
                     "at byte {pos}: func declares {declared} param(s) inline but its (type ...) reference has {referenced}"
                 )
+            }
+            WastParseError::EmbeddedBinaryModuleError { pos, message } => {
+                write!(f, "at byte {pos}: embedded (module binary ...) failed to decode: {message}")
             }
         }
     }
