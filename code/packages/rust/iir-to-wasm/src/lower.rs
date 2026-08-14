@@ -3137,6 +3137,11 @@ fn emit_instr(
 
             code.extend(encode_local_get(x_reg));
             encode_gc_instruction(code, &GcInstruction::RefIsNull);
+            // …so it needs the same widening as every other predicate when the
+            // destination slot is declared i64. `is_null` is the fourth member
+            // of the `pair?`/`not`/`equal?` family; it is fixed here alongside
+            // them rather than left as the one that still stores blind.
+            widen_bool_to_slot(code, rd, &slot_is_i64);
             code.extend(encode_local_set(rd));
         }
 
@@ -3913,6 +3918,15 @@ fn emit_instr(
                 //   local.get $arg            ;; i32 (0 or 1)
                 //   i32.eqz                    ;; → i32 (1 → 0, 0 → 1)
                 //   local.set $dest
+                //
+                // The `eqz` must match the ARGUMENT's declared width, exactly
+                // as the `jmp_if_true`/`jmp_if_false` guards do. `not`'s
+                // argument is usually another predicate's result, and those
+                // now widen to i64 when their own slot is i64 — so reading it
+                // back with a hardcoded `i32.eqz` would be the mirror image of
+                // the bug being fixed, ill-typed on the consumer side instead
+                // of the producer side. Both `i32.eqz` and `i64.eqz` yield i32,
+                // which the store below then re-widens if `$dest` needs it.
                 "not" => {
                     let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                         function: fn_name.to_string(),
@@ -3921,7 +3935,11 @@ fn emit_instr(
                     let rd = get_reg(dest)?;
                     let arg = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
                     code.extend(encode_local_get(arg));
-                    code.push(0x45); // i32.eqz
+                    if slot_is_i64(arg) {
+                        code.push(crate::codegen::I64_EQZ);
+                    } else {
+                        code.push(0x45); // i32.eqz
+                    }
                     widen_bool_to_slot(code, rd, &slot_is_i64);
                     code.extend(encode_local_set(rd));
                 }

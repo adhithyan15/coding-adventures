@@ -46,6 +46,19 @@ Three independent places broke it:
 No assertion, gate, or validator rule was weakened: all three fixes are in the
 emitter, which is where the defect was.
 
+The security review of the above found two further members of the same family,
+neither currently reachable by a matrix cell but both fixed here rather than
+filed:
+
+- `is_null` (`ref.is_null`) is the fourth predicate and was the one still
+  storing its i32 blind; it now widens like the other three.
+- `call_builtin "not"` read its argument with a hardcoded `i32.eqz`. Now that
+  a predicate's result widens to i64 when its slot is i64, a hardcoded narrow
+  read would be the mirror image of the bug being fixed — ill-typed on the
+  consumer side instead of the producer side. It now selects `i64.eqz` /
+  `i32.eqz` from the argument's declared width, exactly as the
+  `jmp_if_true` / `jmp_if_false` guards already do.
+
 New `tests/local_slot_widths.rs` pins the two shapes that can be built from
 hand-written IIR (float-operand comparisons, narrow-unsigned bitwise ops),
 plus the two behaviours deliberately left unchanged (an `i64` comparison
