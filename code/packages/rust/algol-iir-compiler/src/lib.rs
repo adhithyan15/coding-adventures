@@ -5564,7 +5564,7 @@ impl Compiler {
                         || binding.array.is_some()
                         || self.active_by_name_binding(dependency).is_some()
                 })
-                || self.for_body_targets_name(effect_root, dependency)
+                || self.for_body_changes_dependency(effect_root, dependency)
         }) {
             return false;
         }
@@ -5590,18 +5590,26 @@ impl Compiler {
         }
     }
 
-    fn for_body_targets_name(&self, node: &GrammarASTNode, name: &str) -> bool {
-        if node.rule_name == "assign_stmt"
-            && direct_nodes(node)
+    fn for_body_changes_dependency(&self, node: &GrammarASTNode, name: &str) -> bool {
+        // Keep transitive dependency checks non-recursive: only a bare
+        // self-assignment is intrinsically preserving without another proof.
+        if node.rule_name == "assign_stmt" {
+            let writes_name = direct_nodes(node)
                 .into_iter()
                 .filter(|child| child.rule_name == "left_part")
                 .filter_map(|left| first_direct_node(left, "variable"))
                 .any(|variable| {
                     array_subscripts(variable).is_none()
                         && self.simple_variable_name(variable).ok().as_deref() == Some(name)
-                })
-        {
-            return true;
+                });
+            if writes_name
+                && first_direct_node(node, "expression")
+                    .and_then(expr_variable_name)
+                    .as_deref()
+                    != Some(name)
+            {
+                return true;
+            }
         }
         if node.rule_name == "for_stmt"
             && first_direct_node(node, "variable").is_some_and(|variable| {
@@ -5612,7 +5620,7 @@ impl Compiler {
         }
         direct_nodes(node)
             .into_iter()
-            .any(|child| self.for_body_targets_name(child, name))
+            .any(|child| self.for_body_changes_dependency(child, name))
     }
 
     fn collect_static_predicate_dependencies(
@@ -9714,6 +9722,25 @@ mod tests {
             "test",
         )
         .expect("an unwritten local may prove an assignment preserves the tracked value");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_self_assigned_dependency_preserves_while_dependency() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact self-assignment leaves a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_dependency_cycle_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("cross-assignment dependencies require iterative effect analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
