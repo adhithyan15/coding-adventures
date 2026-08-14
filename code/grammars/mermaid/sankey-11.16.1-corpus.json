@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/sankey/parser/sankey.jison",
+    "packages/mermaid/src/diagrams/sankey/parser/sankey.spec.ts",
+    "packages/mermaid/src/docs/syntax/sankey.md"
+  ],
+  "valid": [
+    { "id": "stable-header", "source": "sankey\nA,B,1" },
+    { "id": "beta-header", "source": "sankey-beta\nA,B,1" },
+    { "id": "case-insensitive-header", "source": "SANKEY-BETA\nA,B,1" },
+    { "id": "blank-lines-and-comments", "source": "sankey\n\n%% comment\nA,B,1\n\nB,C,2\n" },
+    { "id": "unsafe-properties", "source": "sankey\n__proto__,A,0.597\nA,__proto__,0.403" },
+    { "id": "special-characters", "source": "sankey\nAgricultural 'waste',Bio-conversion,124.729\nDistrict heating,Heating and cooling - homes,22.505\nElectricity grid,Over generation / exports,104.453\nElectricity grid,Lighting & appliances - homes,27.14" },
+    { "id": "quoted-comma-and-quote", "source": "sankey\nGrid,\"Heating, \"\"homes\"\"\",113.726" },
+    { "id": "quoted-and-scientific-weight", "source": "sankey\nA,B,\"1.25\"\nB,C,1e3" },
+    { "id": "empty-node-fields", "source": "sankey\n,A,1\nA,,2\n\"\",B,3" },
+    { "id": "crlf", "source": "sankey-beta\r\nA,B,1\r\nB,C,2\r\n" }
+  ],
+  "invalid": [
+    { "id": "missing-header", "source": "A,B,1" },
+    { "id": "missing-header-newline", "source": "sankey A,B,1" },
+    { "id": "missing-target-column", "source": "sankey\nA,1" },
+    { "id": "extra-column", "source": "sankey\nA,B,1,C" },
+    { "id": "non-numeric-weight", "source": "sankey\nA,B,nope" },
+    { "id": "empty-weight", "source": "sankey\nA,B," }
+  ]
+}

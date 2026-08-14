@@ -4611,11 +4611,11 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut flows: Vec<SankeyFlow> = Vec::new();
 
     while !cursor.at_eof() {
-        let source_id = parse_sankey_field(&mut cursor)?;
+        let source_id = parse_sankey_node_field(&mut cursor)?;
         cursor
             .consume_if("COMMA")
             .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey source"))?;
-        let target_id = parse_sankey_field(&mut cursor)?;
+        let target_id = parse_sankey_node_field(&mut cursor)?;
         cursor
             .consume_if("COMMA")
             .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey target"))?;
@@ -4669,11 +4669,15 @@ fn parse_sankey_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
         return Err(token_error(&token, "expected Sankey CSV field"));
     }
 
-    let value = cursor.advance().value.trim().replace("\"\"", "\"");
-    if value.is_empty() {
-        return Err(token_error(&token, "Sankey CSV fields cannot be empty"));
+    Ok(cursor.advance().value.trim().replace("\"\"", "\""))
+}
+
+fn parse_sankey_node_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if token_name(cursor.current()) == "COMMA" {
+        Ok(String::new())
+    } else {
+        parse_sankey_field(cursor)
     }
-    Ok(value)
 }
 
 // ── GitGraph parser ───────────────────────────────────────────────────────
@@ -5986,6 +5990,14 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     fn sankey_requires_csv_rows_and_header_newline() {
         assert!(parse_sankey("sankey").is_err());
         assert!(parse_sankey("sankey A,B,1").is_err());
+    }
+
+    #[test]
+    fn sankey_preserves_empty_rfc_csv_node_ids() {
+        let d = parse_sankey("sankey\n,A,1\nA,,2\n\"\",B,3").unwrap();
+        assert_eq!(d.flows[0].source, "");
+        assert_eq!(d.flows[1].target, "");
+        assert_eq!(d.flows[2].source, "");
     }
 
     #[test]
