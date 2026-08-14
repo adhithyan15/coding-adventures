@@ -11,26 +11,25 @@
 //! - Memory and table counts do not exceed 1 (WASM 1.0 restriction).
 //! - Data segment memory indices are valid.
 //! - Element segment table indices are valid.
+//! - Every function body is instruction-level well-typed (WASM06/W02 Phase
+//!   2) -- see the [`type_check`] module for the abstract-interpretation
+//!   algorithm.
 //!
 //! ## Why Validate?
 //!
 //! A WASM binary can be syntactically correct (well-formed LEB128, valid
 //! section ordering) but semantically wrong (references a type index that
-//! does not exist). The parser only checks syntax; the validator checks
-//! semantics. This separation of concerns keeps both passes simple.
-//!
-//! ## Validation vs. Type Checking
-//!
-//! A full WASM validator would also do stack-based type checking of every
-//! instruction in every function body. This implementation focuses on
-//! module-level structural validation, which is sufficient for running
-//! well-formed modules produced by standard compilers (Clang, Rust, etc.).
+//! does not exist, or an instruction sequence that pops a type nothing put
+//! there). The parser only checks syntax; the validator checks semantics.
+//! This separation of concerns keeps both passes simple.
 //!
 //! This crate is part of the coding-adventures monorepo, a ground-up
 //! implementation of the computing stack from transistors to operating systems.
 
 use std::collections::HashSet;
 use wasm_types::{ExternalKind, ImportTypeInfo, WasmModule};
+
+mod type_check;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Error Type
@@ -130,6 +129,11 @@ pub struct ValidatedModule {
 /// 8. **Data segment validity** -- Memory indices must be 0 (only one memory).
 /// 9. **Element segment validity** -- Table indices must be 0 (only one table).
 /// 10. **Start function** -- If present, must be a valid function index.
+/// 11. **Instruction-level type checking** -- Every function body's
+///     instruction sequence is well-typed (WASM06/W02 Phase 2): no stack
+///     underflow, no type mismatches, correct local/global indices and
+///     mutability, memory instructions only when a memory exists. See
+///     [`type_check`] for the algorithm.
 ///
 /// # Example
 ///
@@ -327,6 +331,9 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
             )));
         }
     }
+
+    // ── Check 11: Instruction-level type checking (WASM06/W02 Phase 2) ──
+    type_check::type_check_module(module)?;
 
     Ok(ValidatedModule {
         module: module.clone(),

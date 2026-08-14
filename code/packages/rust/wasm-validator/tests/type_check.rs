@@ -1,0 +1,440 @@
+//! # Instruction-level type checker tests (WASM06 / W02 Phase 2)
+//!
+//! Builds real modules via `wasm-wast-parser` (far more readable than
+//! hand-encoded byte arrays) and checks `wasm_validator::validate`'s
+//! verdict. One group of "valid" cases (every one must `Ok`) and one group
+//! of "invalid" cases (every one must `Err`), covering each instruction
+//! family and the control-flow edge cases from `W02-wasm-validator.md` §2.
+
+fn parse(wat: &str) -> wasm_types::WasmModule {
+    wasm_wast_parser::parse_module(wat).expect("test fixture should parse")
+}
+
+fn assert_valid(wat: &str) {
+    let module = parse(wat);
+    wasm_validator::validate(&module).unwrap_or_else(|e| panic!("expected valid, got {e}\n\nwat:\n{wat}"));
+}
+
+fn assert_invalid(wat: &str) {
+    let module = parse(wat);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "expected type checking to reject this module, but it validated\n\nwat:\n{wat}");
+}
+
+// ── Valid modules ───────────────────────────────────────────────────────
+
+#[test]
+fn valid_basic_arithmetic() {
+    assert_valid("(module (func (param i32 i32) (result i32) (i32.add (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_all_four_numeric_types_including_comparisons() {
+    assert_valid(
+        "(module
+           (func (param i64 i64) (result i32) (i64.eq (local.get 0) (local.get 1)))
+           (func (param f32 f32) (result i32) (f32.lt (local.get 0) (local.get 1)))
+           (func (param f64 f64) (result i32) (f64.eq (local.get 0) (local.get 1))))",
+    );
+}
+
+#[test]
+fn valid_locals_including_declared_ones_after_params() {
+    assert_valid(
+        "(module (func (param i32) (result i32)
+             (local i32) (local f64)
+             (local.set 1 (local.get 0))
+             (local.get 1)))",
+    );
+}
+
+#[test]
+fn valid_local_tee_keeps_the_value_on_the_stack() {
+    assert_valid("(module (func (param i32) (result i32 i32) (local.tee 0 (i32.const 5)) (local.get 0)))");
+}
+
+#[test]
+fn valid_mutable_global_get_and_set() {
+    assert_valid(
+        "(module
+           (global $g (mut i32) (i32.const 0))
+           (func (global.set $g (i32.const 5)) (global.get $g) (drop)))",
+    );
+}
+
+#[test]
+fn valid_immutable_global_read_only() {
+    assert_valid("(module (global $g i32 (i32.const 0)) (func (result i32) (global.get $g)))");
+}
+
+#[test]
+fn valid_memory_load_and_store() {
+    assert_valid(
+        "(module (memory 1)
+           (func (i32.store (i32.const 0) (i32.const 42)))
+           (func (result i32) (i32.load (i32.const 0)))
+           (func (result i32) (memory.size))
+           (func (result i32) (memory.grow (i32.const 1))))",
+    );
+}
+
+#[test]
+fn valid_narrow_memory_access_family() {
+    assert_valid(
+        "(module (memory 1)
+           (func (i32.store8 (i32.const 0) (i32.const 1)))
+           (func (result i32) (i32.load8_u (i32.const 0)))
+           (func (result i64) (i64.load32_s (i32.const 0)))
+           (func (i64.store16 (i32.const 0) (i64.const 1))))",
+    );
+}
+
+#[test]
+fn valid_conversion_family_including_sign_extension_and_trunc_sat() {
+    assert_valid(
+        "(module
+           (func (param i64) (result i32) (i32.wrap_i64 (local.get 0)))
+           (func (param i32) (result i64) (i64.extend_i32_s (local.get 0)))
+           (func (param f64) (result f32) (f32.demote_f64 (local.get 0)))
+           (func (param i32) (result f32) (f32.reinterpret_i32 (local.get 0)))
+           (func (param i32) (result i32) (i32.extend8_s (local.get 0)))
+           (func (param i64) (result i64) (i64.extend32_s (local.get 0)))
+           (func (param f32) (result i32) (i32.trunc_sat_f32_s (local.get 0)))
+           (func (param f64) (result i64) (i64.trunc_sat_f64_u (local.get 0))))",
+    );
+}
+
+#[test]
+fn valid_call_and_call_indirect() {
+    assert_valid(
+        "(module
+           (type $t (func (param i32) (result i32)))
+           (func $callee (param i32) (result i32) (local.get 0))
+           (table 1 funcref)
+           (elem (i32.const 0) $callee)
+           (func (result i32) (call $callee (i32.const 1)))
+           (func (result i32) (call_indirect (type $t) (i32.const 1) (i32.const 0))))",
+    );
+}
+
+#[test]
+fn valid_drop_and_select() {
+    assert_valid(
+        "(module (func (result i32)
+             (drop (i64.const 1))
+             (select (i32.const 1) (i32.const 2) (i32.const 1))))",
+    );
+}
+
+#[test]
+fn valid_block_loop_if_with_multi_value_blocktypes() {
+    assert_valid(
+        "(module (func (param i32 i32) (result i32)
+             (local.get 0) (local.get 1)
+             (block (param i32 i32) (result i32)
+               (loop (param i32 i32) (result i32)
+                 (i32.add)))))",
+    );
+}
+
+#[test]
+fn valid_if_with_else_matching_types() {
+    assert_valid(
+        "(module (func (param i32) (result i32)
+             (if (result i32) (local.get 0)
+               (then (i32.const 1))
+               (else (i32.const 2)))))",
+    );
+}
+
+#[test]
+fn valid_if_without_else_when_start_and_end_types_match() {
+    // No else -- legal only because the if's own param/result types are
+    // identical (the implicit else is the identity function).
+    assert_valid(
+        "(module (func (param i32) (result i32)
+             (local.get 0)
+             (if (param i32) (result i32) (i32.const 1)
+               (then (i32.const 2) (i32.add)))))",
+    );
+}
+
+#[test]
+fn valid_br_to_block_end_and_loop_start() {
+    assert_valid(
+        "(module (func (param i32) (result i32)
+             (block $exit (result i32)
+               (local.get 0)
+               (loop $continue (param i32) (result i32)
+                 (br_if $exit (i32.const 99) (i32.eqz (local.get 0)))
+                 (br $continue (i32.sub (local.get 0) (i32.const 1)))))))",
+    );
+}
+
+#[test]
+fn valid_br_table_with_matching_arities() {
+    assert_valid(
+        "(module (func (param i32) (result i32)
+             (block $a (result i32)
+               (block $b (result i32)
+                 (br_table $a $b (i32.const 1) (local.get 0))))))",
+    );
+}
+
+#[test]
+fn valid_return_matches_function_result_types() {
+    assert_valid("(module (func (param i32) (result i32) (return (local.get 0))))");
+}
+
+#[test]
+fn valid_dead_code_after_unreachable_may_have_any_shape() {
+    // The exact shape from W02-wasm-validator.md §2.5's own worked example:
+    // f32.const then i64.add, which would be ill-typed if reachable.
+    assert_valid(
+        "(module (func (param i32) (result i32)
+             (if (result i32) (local.get 0)
+               (then
+                 (br 1 (i32.const 1))
+                 (f32.const 3.14)
+                 (i64.add))
+               (else (i32.const 2)))))",
+    );
+}
+
+#[test]
+fn valid_unreachable_opcode_makes_following_dead_code_permissive() {
+    assert_valid("(module (func (result i32) (unreachable) (f64.const 1) (drop) (i32.const 1)))");
+}
+
+// ── Invalid modules ─────────────────────────────────────────────────────
+
+#[test]
+fn invalid_type_mismatch_in_binary_op() {
+    assert_invalid("(module (func (param f64) (result i32) (i32.add (local.get 0) (i32.const 1))))");
+}
+
+#[test]
+fn invalid_stack_underflow() {
+    assert_invalid("(module (func (result i32) (i32.add)))");
+}
+
+#[test]
+fn invalid_local_index_out_of_bounds() {
+    assert_invalid("(module (func (param i32) (result i32) (local.get 5)))");
+}
+
+#[test]
+fn invalid_global_index_out_of_bounds() {
+    assert_invalid("(module (func (result i32) (global.get 0)))");
+}
+
+#[test]
+fn invalid_write_to_immutable_global() {
+    assert_invalid("(module (global $g i32 (i32.const 0)) (func (global.set $g (i32.const 1))))");
+}
+
+#[test]
+fn invalid_memory_instruction_without_a_memory() {
+    assert_invalid("(module (func (result i32) (i32.load (i32.const 0))))");
+}
+
+#[test]
+fn invalid_memory_size_without_a_memory() {
+    assert_invalid("(module (func (result i32) (memory.size)))");
+}
+
+#[test]
+fn invalid_select_with_mismatched_operand_types() {
+    assert_invalid("(module (func (result i32) (select (i32.const 1) (i64.const 2) (i32.const 1))))");
+}
+
+#[test]
+fn invalid_if_without_else_when_types_differ() {
+    // No else, but the if's own param/result types differ -- illegal,
+    // since the implicit "not taken" path can't produce a value from
+    // nothing.
+    assert_invalid(
+        "(module (func (result i32)
+             (if (result i32) (i32.const 1)
+               (then (i32.const 2)))))",
+    );
+}
+
+#[test]
+fn invalid_br_to_a_block_with_the_wrong_type() {
+    assert_invalid(
+        "(module (func (result i32)
+             (block $b (result i32)
+               (br $b (f64.const 1.0)))))",
+    );
+}
+
+#[test]
+fn invalid_br_table_target_arity_mismatch() {
+    assert_invalid(
+        "(module (func (result i32)
+             (block $a (result i32)
+               (block $b
+                 (br_table $a $b (i32.const 1) (local.get 0))))
+             (i32.const 0)))",
+    );
+}
+
+#[test]
+fn invalid_call_to_out_of_range_function_index() {
+    assert_invalid("(module (func (call 99)))");
+}
+
+#[test]
+fn invalid_call_argument_type_mismatch() {
+    assert_invalid(
+        "(module
+           (func $callee (param i32) (result i32) (local.get 0))
+           (func (drop (call $callee (f64.const 1.0)))))",
+    );
+}
+
+#[test]
+fn invalid_block_leaves_extra_values_on_the_stack() {
+    assert_invalid("(module (func (block (i32.const 1) (i32.const 2))))");
+}
+
+#[test]
+fn invalid_block_declared_result_not_actually_produced() {
+    assert_invalid("(module (func (result i32) (block (result i32))))");
+}
+
+#[test]
+fn invalid_local_set_type_mismatch() {
+    assert_invalid("(module (func (param i32) (local.set 0 (f64.const 1.0))))");
+}
+
+#[test]
+fn invalid_global_set_type_mismatch() {
+    assert_invalid(
+        "(module (global $g (mut i32) (i32.const 0))
+           (func (global.set $g (f64.const 1.0))))",
+    );
+}
+
+#[test]
+fn invalid_memory_alignment_exceeds_natural_alignment() {
+    // i32.load's natural alignment is 4 bytes (align exponent max = 2);
+    // `align=8` (exponent 3) exceeds it.
+    let module = wasm_module_parser::WasmModuleParser::parse(&over_aligned_load_module()).expect("binary module should parse");
+    assert!(wasm_validator::validate(&module).is_err(), "align=8 on i32.load should be rejected");
+}
+
+/// Hand-assembled binary module for the one case `wasm-wast-parser`'s own
+/// text syntax has no way to express directly (an illegally large memarg
+/// alignment) -- see `wasm-module-parser`'s own binary-format tests for
+/// this same low-level-byte-assembly style.
+fn over_aligned_load_module() -> Vec<u8> {
+    let mut bytes = vec![0x00, 0x61, 0x73, 0x6D, 0x01, 0x00, 0x00, 0x00]; // magic + version
+    // Type section: one type, (i32) -> (i32)
+    bytes.extend([0x01, 0x06, 0x01, 0x60, 0x01, 0x7F, 0x01, 0x7F]);
+    // Function section: one function, type 0
+    bytes.extend([0x03, 0x02, 0x01, 0x00]);
+    // Memory section: one memory, min 1
+    bytes.extend([0x05, 0x03, 0x01, 0x00, 0x01]);
+    // Code section: one function body: local.get 0; i32.load align=3(2^3=8) offset=0; end
+    // 0x00 = zero local-declaration groups (required even when empty),
+    // then local.get 0; i32.load align=3(2^3=8, over natural 2^2) offset=0; end
+    let body: Vec<u8> = vec![0x00, 0x20, 0x00, 0x28, 0x03, 0x00, 0x0B];
+    let mut code_section = vec![0x01, body.len() as u8];
+    code_section.extend(body);
+    bytes.push(0x0A);
+    bytes.push(code_section.len() as u8);
+    bytes.extend(code_section);
+    bytes
+}
+
+/// `if.wast`'s own `"param"` case, reproduced in isolation: a multi-value
+/// `if` (declared params, not just results) WITH an `else` branch. This is
+/// the exact shape that caught a real bug: the `else` handler reused the
+/// same `push_ctrl` block/loop/if entry uses, which pops the block's
+/// `start_types` off the ENCLOSING scope -- correct for the original `if`
+/// opening, but wrong for `else`'s re-entry, which reuses the SAME params
+/// (already consumed once) rather than requiring the enclosing code to
+/// supply a second copy. Found running the real vendored `if.wast` through
+/// `wasm-conformance`'s full baseline regen, not by inspection -- it
+/// silently failed the module's OWN `(module ...)` directive, which
+/// cascaded into all 123 of that file's `assert_return` cases failing too
+/// (the module never registered).
+#[test]
+fn valid_if_with_else_and_a_multi_value_param_blocktype() {
+    assert_valid(
+        "(module (func (export \"param\") (param i32) (result i32)
+             (i32.const 1)
+             (if (param i32) (result i32) (local.get 0)
+               (then (i32.const 2) (i32.add))
+               (else (i32.const -2) (i32.add)))))",
+    );
+}
+
+// ── Security regressions ────────────────────────────────────────────────
+//
+// These build a `WasmModule` directly (not via `wasm-wast-parser`, which
+// only ever emits well-formed nested block structure) so the function
+// body's raw bytes can be genuinely malformed -- adversarial input, not
+// something any real encoder would produce, and exactly the kind of thing
+// `validate()` exists to safely reject rather than crash on.
+
+fn module_with_body(func_type: wasm_types::FuncType, code: Vec<u8>) -> wasm_types::WasmModule {
+    wasm_types::WasmModule {
+        types: vec![func_type],
+        functions: vec![0],
+        code: vec![wasm_types::FunctionBody { locals: vec![], code }],
+        ..Default::default()
+    }
+}
+
+/// A `/security-review` finding (WASM06): `control_stack` starts with
+/// exactly one frame (the function body's own implicit outer block),
+/// meant to be closed by exactly one matching `end` -- the LAST byte of a
+/// well-formed body. Without a guard, a 2-byte body `[0x0B, X]` for any
+/// function with empty declared results closes that outer frame on the
+/// FIRST byte, emptying `control_stack` while a byte remains, and every
+/// other opcode handler's `frame!()`/`frame_mut!()` (or `return`'s own
+/// `control_stack` read) would then panic instead of cleanly rejecting
+/// the module -- a validator panicking on adversarial bytecode is itself
+/// a denial-of-service, since safely rejecting bad input is this code's
+/// entire job. `0x0F` (`return`) is the exact byte the report's PoC used.
+#[test]
+fn invalid_premature_end_followed_by_another_opcode_does_not_panic() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0x0B, 0x0F]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "a premature top-level `end` with trailing bytes must be rejected, not silently accepted");
+}
+
+/// Same PoC shape, but with the trailing byte swapped to `drop` (0x1A) --
+/// covers the `frame!()` (immutable) path specifically, since `return`
+/// and `unreachable` are the only handlers that go through `frame_mut!()`
+/// first.
+#[test]
+fn invalid_premature_end_followed_by_drop_does_not_panic() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0x0B, 0x1A]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "a premature top-level `end` with trailing bytes must be rejected, not silently accepted");
+}
+
+/// Two `end`s in a row is a DIFFERENT case (the second `end` finds
+/// `control_stack` already empty via `pop_ctrl`'s own `ok_or_else`, not
+/// via a raw index) -- included to confirm that path was already clean
+/// and stays clean after the fix.
+#[test]
+fn invalid_double_end_does_not_panic() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0x0B, 0x0B]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err());
+}
+
+/// A truncated `ref.null` (`0xD0` as the very last byte, missing its
+/// required heap-type immediate) must be rejected, not silently accepted
+/// by running off the end of `code` without ever dereferencing it.
+#[test]
+fn invalid_truncated_ref_null_heap_type_immediate() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0xD0]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "a truncated ref.null immediate must be rejected");
+}
