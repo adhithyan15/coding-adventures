@@ -1,0 +1,20 @@
+% ============================================================================
+% precipitation-freeze-threshold.query — worked recall queries against
+% precipitation-freeze-threshold.adj (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% temperature, find the precipitation type), and honest abstention on rain
+% (this table only grounds the one precipitation type whose cited span
+% states a numeric freeze threshold).
+% ============================================================================
+
+import "precipitation-freeze-threshold.adj"
+
+% Forward: what freeze threshold does the cited NWS sentence state for freezing rain?
+? precipitation_freeze_threshold_f(freezing_rain, $TemperatureF)
+
+% Backward: which precipitation type has a freeze threshold of 32F?
+? precipitation_freeze_threshold_f($Precip, 32)
+
+% Honest abstention: rain's cited span states no numeric freeze threshold.
+? precipitation_freeze_threshold_f(rain, $TemperatureRain)
