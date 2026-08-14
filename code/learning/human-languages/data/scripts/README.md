@@ -801,11 +801,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   rising exit without lifting. Its three-frame Noto fit preserves that
   stem-before-bowl order and zero-lift evidence while tracing the printed
   straight descender and closed rounded bowl; it records the school hand's open
-  long-descender Latin-p-like shape and entry and exit joins. The remaining
-  **85** prose part
+  long-descender Latin-p-like shape and entry and exit joins. Lowercase **с**
+  follows at 07:04–07:08: the pen begins at the upper right, curves left across
+  the top, descends the left side, sweeps through the bottom, and rises into a
+  small lower-right exit without lifting. Its two-frame Noto fit preserves that
+  counterclockwise open-curve order and zero-lift evidence while tracing the
+  printed wider upright C-like outline; it records the school hand's tall,
+  slightly slanted proportions and rising exit. The remaining **84** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 15,
+  `cyrillic` 14,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
