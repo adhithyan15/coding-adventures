@@ -1,0 +1,68 @@
+% ============================================================================
+% food-group-alternative-form — for the food groups whose OWN definitional
+% sentence also names a non-solid-food form that still counts, that
+% alternative form (adj-facts-stdlib, NUTRITION).
+% ============================================================================
+% A sibling to the already-shipped `food-groups.adj` (`food_group(food,
+% food_group)`, which sorts whole, solid foods into one of the five MyPlate
+% groups). Three of that table's own per-group definitional sentences,
+% already quoted verbatim in its header, ALSO name a non-solid-food
+% alternative that counts toward the SAME group — a fact the solid-food-
+% only schema had no room for:
+%
+%   fruits → hundred_percent_fruit_juice
+%     "The Fruit Group includes all fruits and 100% fruit juice."
+%
+%   vegetables → hundred_percent_vegetable_juice
+%     "Any vegetable or 100% vegetable juice counts as part of the
+%      Vegetable Group."
+%
+%   dairy → lactose_free_milk, fortified_soy_milk, fortified_soy_yogurt
+%     "The Dairy Group includes milk, yogurt, cheese, lactose-free milk and
+%      fortified soy milk and yogurt."
+%
+% Recall is a binding query:
+%
+%     ? food_group_alternative_form(dairy, $Form)
+%       % lactose_free_milk ; fortified_soy_milk ; fortified_soy_yogurt
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `food_group_alternative_form(food_group, alternative_form)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the alternative form WITH its source, on the
+% CPU, with zero model calls, and abstains on grains and protein, since
+% NEITHER of those two groups' own cited definitional sentences names a
+% comparable alternative form — the same honest-abstention-by-simple-
+% absence discipline `coin-penny-discontinued.adj` uses for every coin but
+% the penny. The query also runs BACKWARD — bind an alternative form and
+% recall which group it belongs to:
+%
+%     ? food_group_alternative_form($Group, hundred_percent_fruit_juice)
+%       % fruits
+%
+% Provenance: reproduces, byte-for-byte, the SAME USDA MyPlate per-group
+% spans already quoted inside `food-groups.adj`'s own header — no new
+% WebFetch, only a different schema decoding the alternative-form half of
+% those already-verified quotes. `trust authoritative` — the same tier
+% `food-groups.adj` already carries (USDA MyPlate, a primary U.S.
+% government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table food_group_alternative_form {
+    columns food_group, alternative_form
+
+    row (fruits, hundred_percent_fruit_juice)         % MyPlate: "The Fruit Group includes all fruits and 100% fruit juice."
+    row (vegetables, hundred_percent_vegetable_juice)  % MyPlate: "Any vegetable or 100% vegetable juice counts as part of the Vegetable Group."
+    row (dairy, lactose_free_milk)                     % MyPlate: "The Dairy Group includes milk, yogurt, cheese, lactose-free milk and fortified soy milk and yogurt."
+    row (dairy, fortified_soy_milk)                    % MyPlate: "The Dairy Group includes milk, yogurt, cheese, lactose-free milk and fortified soy milk and yogurt."
+    row (dairy, fortified_soy_yogurt)                  % MyPlate: "The Dairy Group includes milk, yogurt, cheese, lactose-free milk and fortified soy milk and yogurt."
+
+    source "The Fruit Group includes all fruits and 100% fruit juice."
+    locator "https://www.myplate.gov/eat-healthy/fruits"
+    trust authoritative
+
+    cites "Any vegetable or 100% vegetable juice counts as part of the Vegetable Group." locator "https://www.myplate.gov/eat-healthy/vegetables"
+    cites "The Dairy Group includes milk, yogurt, cheese, lactose-free milk and fortified soy milk and yogurt." locator "https://www.myplate.gov/eat-healthy/dairy"
+}
