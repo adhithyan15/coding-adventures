@@ -7112,6 +7112,32 @@ impl HtmlParser {
         let in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
+        if !in_foreign_content && self.current_element_is("frameset") && name != "frameset" {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-frameset",
+                    format!("end tag `</{name}>` in a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
+        if !in_foreign_content
+            && !self.is_fragment
+            && self.document_has_closed_html_frameset()
+            && !self.explicit_html_end_seen
+            && !self.current_element_is("noframes")
+            && name != "html"
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-after-frameset",
+                    format!("end tag `</{name}>` after a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if name == "template"
             && in_foreign_content
             && self.close_open_foreign_element_before_html_boundary(name)
@@ -9646,6 +9672,19 @@ impl HtmlParser {
             .any(|node| node_contains_element_named(node, "frameset"))
     }
 
+    fn document_has_closed_html_frameset(&self) -> bool {
+        if self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.namespace.is_none() && element.name == "frameset")
+        }) {
+            return false;
+        }
+        self.document
+            .children
+            .iter()
+            .any(|node| node_contains_html_element_named(node, "frameset"))
+    }
+
     fn document_has_body_element(&self) -> bool {
         self.document
             .children
@@ -11787,6 +11826,17 @@ fn node_contains_element_named(node: &Node, name: &str) -> bool {
             .children
             .iter()
             .any(|child| node_contains_element_named(child, name))
+}
+
+fn node_contains_html_element_named(node: &Node, name: &str) -> bool {
+    let Node::Element(element) = node else {
+        return false;
+    };
+    (element.namespace.is_none() && element.name == name)
+        || element
+            .children
+            .iter()
+            .any(|child| node_contains_html_element_named(child, name))
 }
 
 fn append_to_last_element_text_ending(
@@ -35131,14 +35181,16 @@ mod tests {
 
     #[test]
     fn rejected_plaintext_does_not_switch_lexer_state_after_frameset() {
-        for (source, code) in [
+        for (source, start_code, end_code) in [
             (
                 "<!doctype html><frameset><plaintext></plaintext>",
                 "unexpected-start-tag-in-frameset",
+                "unexpected-end-tag-in-frameset",
             ),
             (
                 "<!doctype html><frameset></frameset><plaintext></plaintext>",
                 "unexpected-start-tag-after-frameset",
+                "unexpected-end-tag-after-frameset",
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
@@ -35146,14 +35198,14 @@ mod tests {
                 output
                     .parser_diagnostics
                     .iter()
-                    .any(|diagnostic| diagnostic.code == code),
+                    .any(|diagnostic| diagnostic.code == start_code),
                 "source {source:?}"
             );
             assert!(
                 output
                     .parser_diagnostics
                     .iter()
-                    .any(|diagnostic| diagnostic.code == "unexpected-end-tag"),
+                    .any(|diagnostic| diagnostic.code == end_code),
                 "source {source:?}"
             );
         }
@@ -35862,6 +35914,125 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "eof-in-frameset"));
+    }
+
+    #[test]
+    fn positions_rejected_frameset_end_tags_at_token_emission() {
+        for (source, code) in [
+            (
+                "<!doctype html><frameset><!--é-->\r\n</main>",
+                "unexpected-end-tag-in-frameset",
+            ),
+            (
+                "<!doctype html><frameset></frameset><!--é-->\r\n</frameset>",
+                "unexpected-end-tag-after-frameset",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == code)
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+            let line_start = source.rfind('\n').unwrap() + 1;
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: source[line_start..final_delimiter].chars().count() + 1,
+                })
+            );
+            assert!(source.len() > source.chars().count());
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "main".to_string(),
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        for code in [
+            "unexpected-end-tag-in-frameset",
+            "unexpected-end-tag-after-frameset",
+        ] {
+            assert_eq!(
+                unpositioned
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == code)
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+
+        for source in [
+            "<!doctype html><frameset><frameset></frameset></frameset>",
+            "<!doctype html><frameset></frameset></html></frameset>",
+            "<!doctype html><frameset><noframes>x</noframes></frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                !matches!(
+                    diagnostic.code.as_str(),
+                    "unexpected-end-tag-in-frameset" | "unexpected-end-tag-after-frameset"
+                )
+            }));
+        }
+
+        let foreign =
+            parse_html_fragment_for_context_with_diagnostics("<frameset></frameset>", "svg")
+                .unwrap();
+        assert!(foreign.parser_diagnostics.iter().all(|diagnostic| {
+            !matches!(
+                diagnostic.code.as_str(),
+                "unexpected-end-tag-in-frameset" | "unexpected-end-tag-after-frameset"
+            )
+        }));
+
+        let foreign_document =
+            parse_html_with_diagnostics("<!doctype html><svg><frameset></frameset></svg></main>")
+                .unwrap();
+        assert!(foreign_document.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-end-tag-after-frameset"
+        }));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<frameset></frameset></frameset>",
+            "html",
+        )
+        .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-end-tag-after-frameset"
+        }));
     }
 
     #[test]
