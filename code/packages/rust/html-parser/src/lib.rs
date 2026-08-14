@@ -4907,10 +4907,13 @@ impl HtmlParser {
             _ => {
                 self.initial_insertion_mode = false;
                 self.quirks_mode = true;
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "missing-doctype",
-                    "document started without a doctype token",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "missing-doctype",
+                        "document started without a doctype token",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
         }
     }
@@ -37213,6 +37216,97 @@ mod tests {
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn positions_missing_doctype_at_the_first_disallowed_token_emission() {
+        for (source, emission_offset, line, column) in [
+            ("", 0, 1, 1),
+            ("text", 4, 1, 5),
+            ("text<p>", 4, 1, 5),
+            ("<p>", 2, 1, 3),
+            ("</p>", 3, 1, 4),
+            ("<svg>", 4, 1, 5),
+            ("<!--é-->\r\n<?pi data?>\r\n<p>", 26, 3, 3),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "missing-doctype")
+                .collect::<Vec<_>>();
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: emission_offset,
+                    char_offset: source[..emission_offset].chars().count(),
+                    line,
+                    column,
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let allowed_prefix = " é";
+        let text_source = format!("<!--{allowed_prefix}-->\r\ntext");
+        let text = parse_html_with_diagnostics(&text_source).unwrap();
+        let text_diagnostic = text
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "missing-doctype")
+            .unwrap();
+        assert_eq!(
+            text_diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: text_source.len(),
+                char_offset: text_source.chars().count(),
+                line: 2,
+                column: 5,
+            })
+        );
+        assert!(text_source.len() > text_source.chars().count());
+
+        for source in [
+            "<!doctype html><p>",
+            "<!--before--><?pi?><!doctype html><p>",
+            "<!doctype potato><p>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "missing-doctype"),
+                "source {source:?}"
+            );
+        }
+
+        for fragment in [
+            parse_html_fragment_with_diagnostics("<p>").unwrap(),
+            parse_html_fragment_for_context_with_diagnostics("<p>", "html").unwrap(),
+        ] {
+            assert!(fragment
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "missing-doctype"));
+        }
+
+        let mut parser = HtmlParser::new();
+        parser.process_token(Token::StartTag {
+            name: "p".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        parser.process_token(Token::Eof);
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "missing-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
