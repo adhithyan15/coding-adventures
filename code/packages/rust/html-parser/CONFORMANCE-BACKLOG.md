@@ -496,7 +496,10 @@ Prioritized work items:
    unpositioned. Rejected end tags in direct in-frameset and after-frameset
    modes now carry dedicated diagnostics at their proven token emission point,
    while valid closure, foreign content, fragments, after-after-frameset, and
-   plain token streams retain their separate contracts.
+   plain token streams retain their separate contracts. Non-initial doctypes
+   now carry the tokenizer's delimiter or EOF emission point through the shared
+   tree-construction rejection path, including frameset tails, while tokenizer
+   doctype errors and unpositioned token streams retain separate ownership.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
