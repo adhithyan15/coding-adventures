@@ -906,9 +906,11 @@ backend immediately) come before the enabler-dependent items.
   never changed by the body; an exact bare self-assignment does not count as a
   change; conditional dependency assignments whose leaves are all that same
   bare scalar are likewise preserving even with a dynamic selector. A
-  variable-free statically known selector may instead choose one preserving
-  leaf. Computed, dynamically selected differing, and cross-assigned dependency
-  writes remain conservative without recursive effect inference. Conditional
+  variable-free statically known selector, or a known predicate over unchanged
+  ordinary local boolean, integer, and real scalars, may instead choose one
+  preserving leaf. Computed, dynamically selected differing, written-selector,
+  and cross-assigned dependency writes remain conservative without recursive
+  effect inference. Conditional
   assignments whose leaves are all that same bare scalar are permitted. A
   variable-free statically known
   conditional assignment scans only its selected leaf, as may a statically
