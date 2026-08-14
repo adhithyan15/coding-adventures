@@ -44922,6 +44922,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         knxnet_ip_entry(),
         modbus_tcp_entry(),
         coap_entry(),
+        snmp_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49252,6 +49253,47 @@ fn coap_entry() -> IntegrationCatalogEntry {
         label: "IANA CoRE parameters".to_string(),
         url: "https://www.iana.org/assignments/core-parameters/core-parameters.xhtml".to_string(),
         external_id: Some("CoAP Content-Formats".to_string()),
+    });
+    entry
+}
+
+fn snmp_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "snmp",
+        "SNMPv2c",
+        "Read-only local OID telemetry from explicitly configured managed devices.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "snmp",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("snmp_v2c".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Sensor])
+    .with_discovery(&[DiscoveryMechanism::Manual, DiscoveryMechanism::FileConfig])
+    .with_auth(&[AuthMode::ApiKey])
+    .with_notes(&[
+        "The first-party runtime supports one bounded SNMPv2c GET for exact profile-selected OIDs on an explicit local unicast endpoint.",
+        "The community is treated as an ephemeral shared secret; SET, traversal, notifications, public endpoints, and SNMPv3 session ownership remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::VaultLease,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "IETF SNMPv2 protocol operations".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc3416.html".to_string(),
+        external_id: Some("RFC 3416".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IETF SNMP transport mappings".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc3417.html".to_string(),
+        external_id: Some("RFC 3417".to_string()),
     });
     entry
 }
@@ -82039,6 +82081,43 @@ mod tests {
             PrimitiveFamily::DiscoveryIndex,
         ] {
             assert!(!coap.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn snmp_entry_exposes_bounded_secret_backed_read_only_telemetry() {
+        let catalog = first_party_catalog();
+        let snmp = find_entry(&catalog, &IntegrationId::trusted("snmp")).unwrap();
+        assert_eq!(
+            snmp.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(snmp.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(snmp.auth_modes, vec![AuthMode::ApiKey]);
+        assert_eq!(
+            snmp.supported_protocols,
+            vec![ProtocolFamily::Vendor("snmp_v2c".to_string())]
+        );
+        assert_eq!(
+            snmp.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(snmp.target_entity_kinds, vec![EntityKind::Sensor]);
+        for primitive in [
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(snmp.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::DiscoveryIndex,
+        ] {
+            assert!(!snmp.required_primitives.contains(&primitive));
         }
     }
 
