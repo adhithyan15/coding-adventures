@@ -4701,6 +4701,97 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("અ"),
   },
+  // t30apps builds Gujarati આ from the joined અ body, lifts for અ's right
+  // stem, then lifts again for the added trailing ā stem. The fitted medians
+  // retain that three-run order across the wider bundled Noto glyph.
+  [ductusKey("gujarati", "આ")]: {
+    script: "gujarati",
+    glyph: "આ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep clockwise around the open left curve",
+            path: [
+              { x: 55, y: 550 },
+              { x: 115, y: 570 },
+              { x: 180, y: 565 },
+              { x: 240, y: 535 },
+              { x: 295, y: 480 },
+              { x: 310, y: 420 },
+              { x: 295, y: 360 },
+              { x: 255, y: 310 },
+              { x: 205, y: 280 },
+              { x: 155, y: 275 },
+              { x: 110, y: 300 },
+              { x: 75, y: 300 },
+            ],
+          },
+          {
+            label: "continue through the lower body and rise into the middle shoulder",
+            path: [
+              { x: 75, y: 300 },
+              { x: 115, y: 245 },
+              { x: 165, y: 180 },
+              { x: 230, y: 130 },
+              { x: 310, y: 100 },
+              { x: 390, y: 110 },
+              { x: 455, y: 155 },
+              { x: 500, y: 225 },
+              { x: 526, y: 310 },
+              { x: 526, y: 410 },
+            ],
+          },
+          {
+            label: "retrace down and sweep through the small right arch",
+            path: [
+              { x: 526, y: 410 },
+              { x: 526, y: 340 },
+              { x: 555, y: 285 },
+              { x: 610, y: 265 },
+              { x: 660, y: 275 },
+              { x: 708, y: 315 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the first right stem into its foot",
+            path: [
+              { x: 748, y: 570 },
+              { x: 748, y: 450 },
+              { x: 748, y: 320 },
+              { x: 748, y: 190 },
+              { x: 750, y: 110 },
+              { x: 775, y: 60 },
+              { x: 815, y: 35 },
+              { x: 865, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then descend the trailing ā stem into its foot",
+            path: [
+              { x: 1013, y: 570 },
+              { x: 1013, y: 450 },
+              { x: 1013, y: 320 },
+              { x: 1013, y: 190 },
+              { x: 1015, y: 110 },
+              { x: 1040, y: 60 },
+              { x: 1080, y: 35 },
+              { x: 1130, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("આ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

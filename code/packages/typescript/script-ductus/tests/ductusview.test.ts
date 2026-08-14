@@ -271,6 +271,8 @@ const CYRILLIC_YA = ductusFor("я", "cyrillic")!;
 const cyrillicYaOutline = cyrillicOutline("я");
 const GUJARATI_A = ductusFor("અ", "gujarati")!;
 const gujaratiAOutline = gujaratiOutline("અ");
+const GUJARATI_AA = ductusFor("આ", "gujarati")!;
+const gujaratiAaOutline = gujaratiOutline("આ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3457,6 +3459,40 @@ describe("Gujarati અ — joined body before the lifted right stem", () => {
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_A.strokes[1], 1),
+    );
+  });
+});
+
+describe("Gujarati આ — complete અ before the lifted trailing ā stem", () => {
+  const steps = ductusSteps(GUJARATI_AA);
+  const strip = ductusFilmstrip(GUJARATI_AA, gujaratiAaOutline);
+
+  it("shows the joined body before two separately descended stems", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep clockwise around the open left curve",
+      "continue through the lower body and rise into the middle shoulder",
+      "retrace down and sweep through the small right arch",
+      "lift, then descend the first right stem into its foot",
+      "lift again, then descend the trailing ā stem into its foot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all three runs", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_AA.strokes[0], 1),
+      penPathD(GUJARATI_AA.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_AA.strokes[2], 1),
     );
   });
 });
