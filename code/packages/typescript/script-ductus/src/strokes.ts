@@ -3400,6 +3400,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("й"),
   },
+  // RussianIrina writes lowercase к in one continuous school-hand motion:
+  // descend the left stem, rise into the upper arm and return to the middle,
+  // then continue through the lower arm. The fitted path preserves that order
+  // while tracing the bundled printed vertical and its two angular diagonals.
+  [ductusKey("cyrillic", "к")]: {
+    script: "cyrillic",
+    glyph: "к",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 510 },
+              { x: 129, y: 390 },
+              { x: 129, y: 270 },
+              { x: 129, y: 150 },
+              { x: 129, y: 25 },
+            ],
+          },
+          {
+            label: "rise through the upper arm and return to the middle junction",
+            path: [
+              { x: 129, y: 25 },
+              { x: 129, y: 120 },
+              { x: 129, y: 220 },
+              { x: 190, y: 274 },
+              { x: 250, y: 310 },
+              { x: 370, y: 400 },
+              { x: 435, y: 490 },
+              { x: 465, y: 510 },
+              { x: 420, y: 470 },
+              { x: 360, y: 400 },
+              { x: 300, y: 320 },
+              { x: 250, y: 274 },
+              { x: 190, y: 274 },
+            ],
+          },
+          {
+            label: "continue down-right through the lower arm to the baseline",
+            path: [
+              { x: 190, y: 274 },
+              { x: 250, y: 250 },
+              { x: 300, y: 210 },
+              { x: 350, y: 150 },
+              { x: 410, y: 70 },
+              { x: 475, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("к"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

@@ -87,6 +87,7 @@ const CYRILLIC_ZHE = DUCTUS[ductusKey("cyrillic", "ж")];
 const CYRILLIC_ZE = DUCTUS[ductusKey("cyrillic", "з")];
 const CYRILLIC_I = DUCTUS[ductusKey("cyrillic", "и")];
 const CYRILLIC_SHORT_I = DUCTUS[ductusKey("cyrillic", "й")];
+const CYRILLIC_KA = DUCTUS[ductusKey("cyrillic", "к")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1341,6 +1342,21 @@ describe("handwriting ductus", () => {
     expect(breve[0].x).toBeLessThan(breve.at(-1)!.x);
     expect(Math.min(...breve.map((point) => point.y))).toBeLessThan(breve[0].y);
     expect(Math.min(...breve.map((point) => point.y))).toBeLessThan(breve.at(-1)!.y);
+  });
+
+  it("Cyrillic к joins its descending stem to the upper and lower arms", () => {
+    expect(CYRILLIC_KA.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_KA)).toBe(0);
+    expect(CYRILLIC_KA.strokes).toHaveLength(1);
+    expect(CYRILLIC_KA.strokes[0].segments).toHaveLength(3);
+    const [stem, upper, lower] = CYRILLIC_KA.strokes[0].segments.map((segment) => segment.path);
+    expect(stem.at(-1)).toEqual(upper[0]);
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(Math.max(...upper.map((point) => point.y))).toBeGreaterThan(upper.at(-1)!.y);
+    expect(Math.max(...upper.map((point) => point.x))).toBeGreaterThan(upper.at(-1)!.x);
+    expect(lower.at(-1)!.x).toBeGreaterThan(lower[0].x);
+    expect(lower.at(-1)!.y).toBeLessThan(lower[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3280,6 +3296,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*04:17–04:24.*same left-stem-to-rising-diagonal-to-right-stem body.*one continuous pen-down run.*small rising exit.*lifts.*breve above from left to right.*one dipped arc.*two strokes.*one intervening lift.*rounded Latin u.*entry and exit joins.*shallow curved breve.*bundled Noto Sans Cyrillic.*printed backwards-N body.*two straight stems.*separate thicker breve.*body-before-breve order.*left-to-right breve direction.*one-lift evidence.*descend the left stem.*rise through the diagonal.*descend the right stem.*sweep down and up through the breve.*connected cursive restores.*breve remains separate/i,
+    );
+  });
+
+  it("Cyrillic к traces its zero-lift stem and arms to the all-letter native lesson", () => {
+    const src = CYRILLIC_KA.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase к.*04:45–04:51.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*04:45–04:51.*upper left.*descends the left stem to the baseline.*looped upper-right arm.*returns to the middle junction.*lower arm.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded, looped upper arm.*entry and exit joins.*bundled Noto Sans Cyrillic.*straight vertical stem.*two angular diagonal arms.*left-stem-to-upper-arm-to-lower-arm order.*zero-lift evidence.*retrace upward through the middle.*upper diagonal out and back.*lower diagonal.*connected cursive restores.*rounded upper loop/i,
     );
   });
 
