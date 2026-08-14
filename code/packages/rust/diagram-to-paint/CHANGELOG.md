@@ -1,5 +1,17 @@
 # Changelog — diagram-to-paint
 
+## 0.53.0
+
+- Shape structural node text with resolved font size, weight, style, and family.
+
+## 0.52.0
+
+- Lower resolved structural node styles into backend-neutral paint instructions.
+
+## 0.51.0
+
+- Lower structural accessibility metadata into backend-neutral PaintScene metadata.
+
 ## 0.50.0
 
 - Paint horizontal Journey activity spines, dashed task descenders, and layout-resolved score faces.

@@ -1,0 +1,18 @@
+% ============================================================================
+% insulin-glucagon-trigger.query — worked recall queries against
+% insulin-glucagon-trigger.adj (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation for each hormone, and a
+% backward recall (bind a level, find which hormone responds to it).
+% ============================================================================
+
+import "insulin-glucagon-trigger.adj"
+
+% Forward: what glucose level triggers insulin release?
+? secretion_trigger(insulin, $Level)
+
+% Forward: what glucose level triggers glucagon release?
+? secretion_trigger(glucagon, $Level2)
+
+% Backward: which hormone responds to LOW blood glucose?
+? secretion_trigger($Hormone, low)

@@ -110,10 +110,13 @@ pub fn tokenize(src: &str) -> Result<Vec<SpannedToken>, WastParseError> {
             continue;
         }
 
-        // Line comment: `;;` to end of line.
+        // Line comment: `;;` to end of line. A line ends at LF, at CR, or at
+        // CRLF (the CR is the terminator; the following LF is then consumed
+        // as ordinary whitespace on the next iteration) -- the WASM spec
+        // testsuite's comments.wast exercises all three explicitly.
         if c == ';' && bytes.get(i + 1) == Some(&b';') {
             i += 2;
-            while i < bytes.len() && bytes[i] != b'\n' {
+            while i < bytes.len() && bytes[i] != b'\n' && bytes[i] != b'\r' {
                 i += 1;
             }
             continue;
@@ -299,6 +302,21 @@ mod tests {
     #[test]
     fn line_comment_runs_to_newline_only() {
         let toks = tokenize("(a ;; comment (b)\n  c)").unwrap();
+        assert_eq!(atoms(&toks), vec!["a", "c"]);
+    }
+
+    #[test]
+    fn line_comment_terminates_at_a_bare_carriage_return() {
+        // Old-Mac-style line endings (`\r` alone, no `\n`) must also end a
+        // `;;` comment -- the WASM spec testsuite's comments.wast exercises
+        // this exact case (its "f2" function).
+        let toks = tokenize("(a ;; comment (b)\r  c)").unwrap();
+        assert_eq!(atoms(&toks), vec!["a", "c"]);
+    }
+
+    #[test]
+    fn line_comment_terminates_at_crlf() {
+        let toks = tokenize("(a ;; comment (b)\r\n  c)").unwrap();
         assert_eq!(atoms(&toks), vec!["a", "c"]);
     }
 

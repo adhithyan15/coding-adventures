@@ -3347,6 +3347,199 @@ Ready-for-review PR #11354 publishes the validated Go tranche from
 non-draft, and mergeable; CI, CodeQL, and auxiliary checks are queued, so the
 loop returns to monitor-only behavior until those checks reach a terminal state.
 
+## Post-#11354 Refresh and Ruby ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11354 as
+`08ae46bfee81a4df0c05e0422ed0657ba1bcad4d` at
+2026-08-13T20:59:19Z after every required CI, CodeQL, and auxiliary check
+reached terminal success or an expected skip/neutral conclusion. The final
+reviewed head is `6d0e5ec4f91f0de4c0619acdb40ed1bba174ae66`.
+A fresh collision-checked report at live main
+`264347eee15b09d17174a6774923415683aea04e` covers 15 established lanes,
+1,310 normalized identities, and 4,466 slots. It reports 173 high-consensus
+identities with 269 gaps, 860 singletons with 12,040 singleton gaps, 661 Rust
+singletons, zero collisions, and zero unknown buckets.
+
+The Go merge itself is topology-neutral. External PR #11362 added the two new
+Rust roots `modbus-protocol` and `smart-home-modbus-tcp-integration`, accounting
+exactly for two identities, two slots, two singletons, and 28 singleton gaps.
+The pure bounded Modbus read codec now has a portable conformance/port owner.
+The mixed smart-home integration is split between an injected-transport core
+owner for validation, register decoding, deterministic projection, and
+authorization ordering, and a blocked native-authority review for DNS/TCP,
+timeouts, plaintext origin policy, CLI I/O, capability truthfulness, and
+partial-mutation risk. No Modbus write authority will be manufactured. Later
+human-language and ADJ merges through the live revision add no package roots;
+the late pre-publication refresh includes HL12 correction #11378, Spanish
+curriculum step #11377, the existing-root ALGOL change #11380, and the ADJ loop
+state update #11382 without changing the parity topology.
+
+The Go ZIP child is now merged, leaving nine pending children: .NET, Elixir,
+Haskell, JVM, Lua, Perl, Python, Ruby, and Swift. No live PR owns parity state,
+the roadmap, ZIP, or the neutral fixture. The only stale parity-adjacent branch
+still touches .NET, Haskell, and JVM ZIP paths, so it remains unowned residue.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-ruby-lane-parity`.
+Ruby is the smallest clean standalone package/toolchain without live or stale
+overlap. Its ZIP-owned decoder still rejects dynamic Huffman streams, making
+this a genuine codec-contract port: strict dynamic trees, counted consumption,
+caller output caps, stable payload-blind errors, all 34 neutral fixtures, ZIP
+suffix-cavity rejection, and explicit empty capability metadata.
+
+Ready-for-review PR #11386 publishes the validated Ruby tranche from
+`89964cc523610b44367ae5db0ff79b36fa6f39e1`. GitHub reports it open,
+non-draft, and mergeable. CI, CodeQL, and auxiliary checks are queued, so the
+loop returns to monitor-only behavior until those checks reach a terminal
+state. Eight ZIP raw-profile children remain pending under the blocked
+completion umbrella: .NET, Elixir, Haskell, JVM, Lua, Perl, Python, and Swift.
+
+## Post-#11386 Refresh and Elixir ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11386 as
+`2df1499600b500cc4e34b3631fc840bd9abaf261` at
+2026-08-13T21:55:35Z from final reviewed head
+`42004110d93a2dc61738853f5102598c465457fb`. All 20 reported checks reached a
+terminal success, expected skip, or neutral conclusion; the remote branch was
+deleted, and this loop did not exercise merge authority.
+
+A fresh collision-checked report, refreshed after selection at live main
+`d73dadad9531aa88bdc830a53912a208fe4ce76a`, still covers 15 established lanes,
+1,310 normalized identities, and 4,466 slots. It reports 173 high-consensus
+identities with 269 gaps, 860 singletons with 12,040 singleton gaps, 661 Rust
+singletons, zero collisions, and zero unknown buckets. The Ruby merge and the
+intervening ALGOL, wasm-wast-parser, Spanish-curriculum, Mermaid, RISC-V,
+ADJ-facts, and HTML-parser changes modify only existing package roots, so the
+normalized root set and every inventory metric are unchanged. No newly unowned
+identity or authority boundary was discovered, and no additional state owner
+was required before reprioritization.
+
+The Ruby ZIP child is now merged, leaving eight dependency-ready children:
+.NET, Elixir, Haskell, JVM, Lua, Perl, Python, and Swift. No live PR or remote
+parity branch owns ZIP, the neutral fixture, state, or this roadmap. The stale
+historical catch-up branch still touches only .NET, Haskell, and JVM ZIP paths
+and remains unowned residue that must not be reused or cherry-picked.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-elixir-lane-parity`. Elixir is the smallest clean standalone
+remaining package/toolchain without live or historical overlap. Its ZIP-owned
+decoder explicitly rejects dynamic Huffman streams, making this a genuine
+codec-contract port: strict dynamic trees, counted consumption, caller output
+caps, stable payload-blind errors, all 34 neutral fixtures, ZIP suffix-cavity
+and declared-size rejection, and explicit empty capability metadata.
+
+## Post-#11405 Refresh and Perl ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11405 as
+`2fb32016e437d5edb847ba70b023381dd04c8c0b` at
+2026-08-13T23:28:13Z from final reviewed head
+`8394e9eb31649b6998493cd213685dfb44281f23`. All 19 reported checks reached
+terminal success or an expected skip, the remote branch was deleted, and this
+loop did not exercise merge authority.
+
+A fresh collision-checked report, refreshed through identity-neutral live main
+`60fb1384864579944a70229e7ac71fd917e35cee`, covers 15 established
+lanes, 1,312 normalized identities, and 4,468 slots. It reports 173
+high-consensus identities with 269 gaps, 862 singletons with 12,068 singleton
+gaps, 663 Rust singletons, zero canonical collisions, and zero unknown buckets.
+The Elixir merge and the thirteen later commits through that live revision are
+topology-neutral. External PR #11394 added exactly two
+Rust singleton roots, `bacnet-protocol` and
+`smart-home-bacnet-ip-integration`, accounting for the two new identities,
+two new slots, two new singletons, and 28 new singleton gaps.
+
+The backlog now owns the pure bounded Who-Is/I-Am BVLC/NPDU/APDU codec through
+`bacnet-protocol-portable-conformance`. The mixed integration is split between
+an injected-transport portable core for deterministic planning, reply
+isolation, deduplication, discovery projection, authorization ordering, and
+bounded failure behavior, and a blocked native-authority review for UDP bind,
+broadcast, peer and forwarded-origin policy, timeouts, CLI I/O, capability
+truthfulness, and partial-mutation risk. No BACnet property access, control,
+write, BBMD, foreign-device registration, BACnet/SC, or all-language socket
+authority will be manufactured.
+
+The Elixir ZIP child is now merged, leaving seven pending children: .NET,
+Haskell, JVM, Lua, Perl, Python, and Swift. No live PR or remote parity branch
+owns ZIP, the neutral fixture, state, or this roadmap. The stale historical
+catch-up branch still touches only .NET, Haskell, and JVM ZIP paths and remains
+unowned residue that must not be reused or cherry-picked.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-perl-lane-parity`.
+Perl is the smallest clean standalone remaining package/toolchain without live
+or historical overlap. Its ZIP-owned codec already has exact bit positions,
+the complete length/distance tables, and overlapping back-references, but it
+still rejects dynamic Huffman streams and trims declared-size mismatches. This
+coherent tranche adds strict dynamic trees, exact counted consumption, caller
+output caps, stable payload-blind errors, all 34 neutral fixtures, compressed
+suffix-cavity and declared-size rejection, and explicit empty capability
+metadata without duplicating DEFLATE.
+
+## Post-#11435 Refresh and Python ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11435 as
+`1cf98c1ad74502336c30f21f096967aec2a42a87` at
+2026-08-14T02:57:08Z from final reviewed head
+`e604023a121b35b558a01e5041df7a1ca78579f4`. All 19 reported checks reached
+terminal success or an expected skip, the remote branch was deleted, and this
+loop did not exercise merge authority. The Perl ZIP merge modifies only the
+existing Perl `zip` identity and is topology-neutral.
+
+A fresh collision-checked report at exact live main
+`1cf98c1ad74502336c30f21f096967aec2a42a87` covers 15 established lanes,
+1,315 normalized identities, and 4,471 slots. It reports 173 high-consensus
+identities with 269 gaps, 865 singletons with 12,110 singleton gaps, 666 Rust
+singletons, zero canonical collisions, and zero unknown buckets. Compared with
+the stored `60fb1384864579944a70229e7ac71fd917e35cee` snapshot, the exact delta
+is three identities, three slots, three singletons, and 42 singleton gaps;
+every other stored metric is unchanged.
+
+External PR #11429 added the pure Rust `knxnet-ip-protocol` singleton and the
+mixed `smart-home-knxnet-ip-integration` singleton. External PR #11460 added
+the mixed `smart-home-esphome-discovery-integration` singleton. The backlog now
+owns the bounded KNXnet/IP Search Request/Response codec through a portable
+fixture-and-port owner. KNXnet/IP discovery is split between an injected
+portable core for configuration, deterministic request planning, isolated
+response parsing, deduplication, projection, and authorization ordering and a
+blocked native-authority review for UDP bind, multicast, origin policy,
+timeouts, CLI I/O, capability truthfulness, and partial-mutation risk. ESPHome
+discovery has the same portable/native split around injected mDNS results,
+bounded TXT and Noise metadata validation, deterministic projection, the
+shared multicast transport, CLI I/O, and runtime authority. All three new roots
+lack capability manifests; the two native reviews depend on
+`rust-network-substrate-capability-truthfulness`. No tunneling, routing,
+configuration, KNX Secure, ESPHome protobuf session, key provisioning, entity
+read, subscription, or action authority will be manufactured by parity work.
+
+With Perl merged, six ZIP raw-profile children remained: .NET, Haskell, JVM,
+Lua, Python, and Swift. No live PR or remote parity branch owns the neutral
+fixture or any of those paths. The stale historical catch-up branch still
+touches only .NET, Haskell, and JVM ZIP paths and remains unowned residue that
+must not be reused or cherry-picked.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-python-lane-parity`. Python is the smallest effective clean
+standalone tranche: its Python 3.13 test, coverage, Ruff, MyPy, JSON, and raw
+zlib oracle tooling is already available, while Lua lacks equivalent installed
+fixture/oracle tooling and Swift has a costlier foreign-stream boundary. The
+Python ZIP-owned codec still rejects dynamic Huffman streams and trims declared
+size mismatches, making this a genuine contract port: strict dynamic trees,
+exact counted consumption, caller output caps, stable payload-blind errors, all
+34 neutral fixtures, compressed suffix-cavity and declared-size rejection, and
+explicit empty capability metadata without duplicating DEFLATE.
+
+Before implementation publication, the branch was refreshed onto live main
+`7b82442d0e37ec87477846e1dae89c8f72c362d6`. The five intervening Mermaid,
+ADJ, WebAssembly, and human-language commits modify only existing roots and do
+not intersect the parity state, roadmap, neutral fixture, or Python ZIP path.
+The collision-checked report remains exactly 1,315 identities, 4,471 slots,
+865 singletons, 12,110 singleton gaps, 666 Rust singletons, zero collisions,
+and zero unknown buckets, so no new owner preceded continued Python work.
+
+Final publication refreshes advanced through
+`3f3e77ebebeb77cc8458a86a74ab8be11ecf5be8` after later RISC-V, HTML-parser,
+ALGOL, ADJ, WebAssembly-spec, and Mermaid merges. Those commits also modify
+only existing, disjoint roots; the same collision-free inventory counts remain
+current and no new owner was required.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

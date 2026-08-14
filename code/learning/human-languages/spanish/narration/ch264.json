@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 264,
+  "title": "Comer Es Bueno --- The Infinitive as Subject",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1ab652191f2cc175",
+  "lessons": [
+    {
+      "id": "ES-C67-comer-es-bueno",
+      "sequence": 2555,
+      "title": "comer es bueno — the infinitive as the subject",
+      "headword": "comer es bueno",
+      "romanization": "comer es bueno",
+      "gloss": "eating is good — the infinitive standing where a noun would, which is the one job English needs a different form for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3174604d9600cf75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "El libro es grande. A noun, then es, then what it is."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now put an action in the noun's place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the infinitive stands there",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Comer es bueno. — Eating is good. Hablar español es bueno. — Speaking Spanish is good."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive — the plain dictionary form — simply occupies the subject slot, and the sentence carries on as normal. Nothing is added and nothing changes shape."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Note the verb after it: es, singular. An action counts as one thing, however many words are wrapped around it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the trap, and it is entirely an English one."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English uses -ing for this — eating is good — and you have an -ing form now. So it is tempting to reach for comiendo."
+            },
+            {
+              "kind": "speech",
+              "text": "Comiendo es bueno. — wrong."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The gerund never does this job in Spanish. It is for an action underway, leaning on estar; it is not a name for the activity. The infinitive is the name."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the two languages divide the work differently, and Spanish's division is the simpler one: English argues about to eat against eating, and Spanish uses one form for both."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Comer es bueno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Comer es bueno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hablar español es bueno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hablar español es bueno*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-comer-es-bueno-say",
+              "prompt": "Say: eating is good.",
+              "assesses": [
+                "ES-GRAMMAR-INFINITIVE-AS-SUBJECT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "comer es bueno",
+                "comer es bueno."
+              ],
+              "feedback": {
+                "correct": "The plain infinitive, in the subject slot.",
+                "incorrect": "Comer es bueno."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-comer-es-bueno-trap",
+              "prompt": "Is comiendo es bueno correct?",
+              "assesses": [
+                "ES-GRAMMAR-INFINITIVE-NOT-GERUND"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "no",
+                "no, the gerund cannot be a subject"
+              ],
+              "feedback": {
+                "correct": "The gerund is for an action underway.",
+                "incorrect": "No. Comer es bueno."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C67-comer-es-bueno-long",
+              "prompt": "Say: speaking Spanish is good.",
+              "assesses": [
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "hablar espanol es bueno",
+                "hablar espanol es bueno."
+              ],
+              "feedback": {
+                "correct": "Still singular es -- one action.",
+                "incorrect": "Hablar espanol es bueno."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form names an activity — the infinitive or the gerund? (The infinitive.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what is the gerund for? (An action underway, with estar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -8,3 +8,6 @@
 - Add deterministic pretty-JSON result rendering.
 - Add a typed local `install-daemon` action without introducing filesystem or
   process authority into the command parser.
+- Add typed `wire` and `unwire` commands over the authenticated daemon client,
+  including repeatable exact channel bindings and all-or-none Level 1 model
+  settings.

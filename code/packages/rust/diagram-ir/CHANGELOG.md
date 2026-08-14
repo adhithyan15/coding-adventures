@@ -1,5 +1,29 @@
 # Changelog — diagram-ir
 
+## 0.58.0
+
+- Add semantic and resolved styles to structural nodes.
+
+## 0.57.0
+
+- Preserve structural diagram accessibility title and description metadata.
+
+## 0.56.0
+
+- Preserve the six SysML Requirement definition kinds as typed metadata.
+
+## 0.55.0
+
+- Add typed Requirement and element metadata to structural nodes.
+
+## 0.54.0
+
+- Preserve optional layout direction for structural diagrams.
+
+## 0.53.0
+
+- Add Requirement structural diagram and node kinds.
+
 ## 0.52.0
 
 - Carry resolved Journey activity spines, task descenders, and score positions.

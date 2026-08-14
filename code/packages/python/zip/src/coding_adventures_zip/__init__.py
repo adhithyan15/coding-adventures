@@ -99,16 +99,25 @@ Series
     CMP05 (DEFLATE, 1996) — LZ77 + Huffman; ZIP/gzip/PNG/zlib.
     CMP09 (ZIP,     1989) — DEFLATE container; universal archive. (this package)
 """
+
 from __future__ import annotations
 
 import struct
 from dataclasses import dataclass
+from typing import cast
 
 from coding_adventures_lzss import Literal as LzssLiteral
 from coding_adventures_lzss import Match as LzssMatch
 from coding_adventures_lzss import encode as lzss_encode
 
 __all__ = [
+    "RAW_INFLATE_ERROR_CODES",
+    "RAW_INFLATE_MAX_OUTPUT",
+    "RawInflateError",
+    "RawInflateResult",
+    "raw_deflate",
+    "raw_inflate",
+    "raw_inflate_counted",
     "ZipWriter",
     "ZipReader",
     "ZipEntry",
@@ -118,6 +127,45 @@ __all__ = [
     "dos_datetime",
     "DOS_EPOCH",
 ]
+
+RAW_INFLATE_MAX_OUTPUT = 256 * 1024 * 1024
+"""Absolute output ceiling for one in-memory raw RFC 1951 decode."""
+
+RAW_INFLATE_ERROR_CODES: tuple[str, ...] = (
+    "invalid-output-limit",
+    "unexpected-eof",
+    "reserved-block-type",
+    "stored-length-mismatch",
+    "huffman-oversubscribed",
+    "incomplete-code-length-tree",
+    "incomplete-literal-length-tree",
+    "incomplete-distance-tree",
+    "repeat-without-previous",
+    "repeat-overrun",
+    "invalid-literal-length-symbol",
+    "reserved-distance-symbol",
+    "invalid-back-reference",
+    "output-limit-exceeded",
+)
+
+
+class RawInflateError(ValueError):
+    """Stable, payload-blind raw inflate failure."""
+
+    def __init__(self, code: str) -> None:
+        if code not in RAW_INFLATE_ERROR_CODES:
+            raise ValueError("unknown raw inflate error code")
+        self.code = code
+        super().__init__(code)
+
+
+@dataclass(frozen=True)
+class RawInflateResult:
+    """Complete decoded bytes plus exact input bytes reached through BFINAL."""
+
+    output: bytes
+    bytes_consumed: int
+
 
 # =============================================================================
 # CRC-32
@@ -244,11 +292,6 @@ class _BitReader:
         self._bits -= nbits
         return val
 
-    def read_msb(self, nbits: int) -> int | None:
-        """Read ``nbits`` bits and reverse them (for Huffman codes, MSB-first)."""
-        v = self.read_lsb(nbits)
-        return None if v is None else _reverse_bits(v, nbits)
-
     def align(self) -> None:
         """Discard partial byte, aligning to the next byte boundary."""
         discard = self._bits % 8
@@ -288,62 +331,79 @@ def _fixed_ll_encode(sym: int) -> tuple[int, int]:
     raise ValueError(f"fixed_ll_encode: invalid LL symbol {sym}")
 
 
-def _fixed_ll_decode(br: _BitReader) -> int | None:
-    """Decode one LL symbol from ``br`` using the RFC 1951 fixed Huffman table.
-
-    We read bits incrementally — first 7, then up to 9 — and decode in order
-    of increasing code length per the canonical Huffman property.
-    """
-    v7 = br.read_msb(7)
-    if v7 is None:
-        return None
-    if v7 <= 23:
-        return v7 + 256  # 7-bit codes: symbols 256-279
-    extra = br.read_lsb(1)
-    if extra is None:
-        return None
-    v8 = (v7 << 1) | extra
-    if 48 <= v8 <= 191:
-        return v8 - 48          # literals 0-143
-    if 192 <= v8 <= 199:
-        return v8 + 88          # symbols 280-287  (192+88=280)
-    # Need one more bit for 9-bit codes (literals 144-255).
-    extra2 = br.read_lsb(1)
-    if extra2 is None:
-        return None
-    v9 = (v8 << 1) | extra2
-    if 400 <= v9 <= 511:
-        return v9 - 256         # literals 144-255  (400-256=144)
-    return None  # malformed
-
-
 # =============================================================================
 # RFC 1951 DEFLATE — Length / Distance Tables
 # =============================================================================
 #
-# Match lengths (3-255) map to LL symbols 257-284 + extra bits.
+# Match lengths (3-258) map to LL symbols 257-285 + extra bits. The encoder's
+# LZSS tokenizer currently emits at most 255 bytes; the decoder accepts 258.
 # Match distances (1-32768) map to distance codes 0-29 + extra bits.
 
-# (base_length, extra_bits) for LL symbols 257..284
+# (base_length, extra_bits) for LL symbols 257..285
 _LENGTH_TABLE: list[tuple[int, int]] = [
-    (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (9, 0), (10, 0),   # 257-264
-    (11, 1), (13, 1), (15, 1), (17, 1),                                   # 265-268
-    (19, 2), (23, 2), (27, 2), (31, 2),                                   # 269-272
-    (35, 3), (43, 3), (51, 3), (59, 3),                                   # 273-276
-    (67, 4), (83, 4), (99, 4), (115, 4),                                  # 277-280
-    (131, 5), (163, 5), (195, 5), (227, 5),                               # 281-284
+    (3, 0),
+    (4, 0),
+    (5, 0),
+    (6, 0),
+    (7, 0),
+    (8, 0),
+    (9, 0),
+    (10, 0),  # 257-264
+    (11, 1),
+    (13, 1),
+    (15, 1),
+    (17, 1),  # 265-268
+    (19, 2),
+    (23, 2),
+    (27, 2),
+    (31, 2),  # 269-272
+    (35, 3),
+    (43, 3),
+    (51, 3),
+    (59, 3),  # 273-276
+    (67, 4),
+    (83, 4),
+    (99, 4),
+    (115, 4),  # 277-280
+    (131, 5),
+    (163, 5),
+    (195, 5),
+    (227, 5),  # 281-284
+    (258, 0),  # 285
 ]
 
 # (base_offset, extra_bits) for distance codes 0..29
 _DIST_TABLE: list[tuple[int, int]] = [
-    (1, 0), (2, 0), (3, 0), (4, 0),
-    (5, 1), (7, 1), (9, 2), (13, 2),
-    (17, 3), (25, 3), (33, 4), (49, 4),
-    (65, 5), (97, 5), (129, 6), (193, 6),
-    (257, 7), (385, 7), (513, 8), (769, 8),
-    (1025, 9), (1537, 9), (2049, 10), (3073, 10),
-    (4097, 11), (6145, 11), (8193, 12), (12289, 12),
-    (16385, 13), (24577, 13),
+    (1, 0),
+    (2, 0),
+    (3, 0),
+    (4, 0),
+    (5, 1),
+    (7, 1),
+    (9, 2),
+    (13, 2),
+    (17, 3),
+    (25, 3),
+    (33, 4),
+    (49, 4),
+    (65, 5),
+    (97, 5),
+    (129, 6),
+    (193, 6),
+    (257, 7),
+    (385, 7),
+    (513, 8),
+    (769, 8),
+    (1025, 9),
+    (1537, 9),
+    (2049, 10),
+    (3073, 10),
+    (4097, 11),
+    (6145, 11),
+    (8193, 12),
+    (12289, 12),
+    (16385, 13),
+    (24577, 13),
 ]
 
 
@@ -386,8 +446,8 @@ def _deflate_compress(data: bytes) -> bytes:
 
     if not data:
         # Empty stored block: BFINAL=1 BTYPE=00 + LEN=0 + NLEN=0xFFFF.
-        bw.write_lsb(1, 1)        # BFINAL=1
-        bw.write_lsb(0, 2)        # BTYPE=00 (stored)
+        bw.write_lsb(1, 1)  # BFINAL=1
+        bw.write_lsb(0, 2)  # BTYPE=00 (stored)
         bw.align()
         bw.write_lsb(0x0000, 16)  # LEN=0
         bw.write_lsb(0xFFFF, 16)  # NLEN=~0
@@ -430,102 +490,246 @@ def _deflate_compress(data: bytes) -> bytes:
 # RFC 1951 DEFLATE — Decompress
 # =============================================================================
 #
-# Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-# Dynamic Huffman blocks (BTYPE=10) raise ValueError — we only produce BTYPE=01.
+# The decoder accepts stored, fixed-Huffman, dynamic-Huffman, and multi-block
+# streams. It reads one Huffman bit at a time so exact byte consumption never
+# includes an untouched suffix byte.
+
+
+@dataclass(frozen=True)
+class _HuffmanDecoder:
+    table: dict[tuple[int, int], int]
+    complete: bool
+    symbol_count: int
+    one_bit_count: int
+
+
+def _inflate_error(code: str) -> RawInflateError:
+    return RawInflateError(code)
+
+
+def _read_bits(br: _BitReader, nbits: int) -> int:
+    value = br.read_lsb(nbits)
+    if value is None:
+        raise _inflate_error("unexpected-eof")
+    return value
+
+
+def _build_huffman_decoder(lengths: list[int]) -> _HuffmanDecoder:
+    counts = [0] * 16
+    for length in lengths:
+        if length < 0 or length > 15:
+            raise _inflate_error("invalid-literal-length-symbol")
+        if length:
+            counts[length] += 1
+
+    left = 1
+    for length in range(1, 16):
+        left = left * 2 - counts[length]
+        if left < 0:
+            raise _inflate_error("huffman-oversubscribed")
+
+    next_code = [0] * 16
+    code = 0
+    for length in range(1, 16):
+        code = (code + counts[length - 1]) << 1
+        next_code[length] = code
+
+    table: dict[tuple[int, int], int] = {}
+    symbol_count = 0
+    for symbol, length in enumerate(lengths):
+        if not length:
+            continue
+        table[(length, next_code[length])] = symbol
+        next_code[length] += 1
+        symbol_count += 1
+    return _HuffmanDecoder(table, left == 0, symbol_count, counts[1])
+
+
+def _decode_symbol(decoder: _HuffmanDecoder, br: _BitReader, invalid_code: str) -> int:
+    code = 0
+    for length in range(1, 16):
+        code = (code << 1) | _read_bits(br, 1)
+        symbol = decoder.table.get((length, code))
+        if symbol is not None:
+            return symbol
+    raise _inflate_error(invalid_code)
+
+
+def _fixed_ll_lengths() -> list[int]:
+    return [8] * 144 + [9] * 112 + [7] * 24 + [8] * 8
+
+
+def _fixed_distance_lengths() -> list[int]:
+    return [5] * 32
+
+
+_CODE_LENGTH_ORDER = [
+    16,
+    17,
+    18,
+    0,
+    8,
+    7,
+    9,
+    6,
+    10,
+    5,
+    11,
+    4,
+    12,
+    3,
+    13,
+    2,
+    14,
+    1,
+    15,
+]
+
+
+def _decode_code_lengths(
+    decoder: _HuffmanDecoder, br: _BitReader, total: int
+) -> list[int]:
+    lengths: list[int] = []
+    while len(lengths) < total:
+        symbol = _decode_symbol(decoder, br, "invalid-literal-length-symbol")
+        if symbol <= 15:
+            lengths.append(symbol)
+        elif symbol == 16:
+            if not lengths:
+                raise _inflate_error("repeat-without-previous")
+            repeat = _read_bits(br, 2) + 3
+            if repeat > total - len(lengths):
+                raise _inflate_error("repeat-overrun")
+            lengths.extend([lengths[-1]] * repeat)
+        elif symbol in (17, 18):
+            extra_bits, base = (3, 3) if symbol == 17 else (7, 11)
+            repeat = _read_bits(br, extra_bits) + base
+            if repeat > total - len(lengths):
+                raise _inflate_error("repeat-overrun")
+            lengths.extend([0] * repeat)
+        else:
+            raise _inflate_error("invalid-literal-length-symbol")
+    return lengths
+
+
+def _copy_back_reference(
+    out: bytearray, distance: int, length: int, max_output: int
+) -> None:
+    if distance <= 0 or distance > len(out):
+        raise _inflate_error("invalid-back-reference")
+    if length > max_output - len(out):
+        raise _inflate_error("output-limit-exceeded")
+    start = len(out) - distance
+    for index in range(length):
+        out.append(out[start + index])
+
+
+def _decode_compressed_block(
+    literal_length: _HuffmanDecoder,
+    distance: _HuffmanDecoder,
+    br: _BitReader,
+    out: bytearray,
+    max_output: int,
+) -> None:
+    while True:
+        symbol = _decode_symbol(literal_length, br, "invalid-literal-length-symbol")
+        if symbol < 256:
+            if len(out) >= max_output:
+                raise _inflate_error("output-limit-exceeded")
+            out.append(symbol)
+        elif symbol == 256:
+            return
+        elif symbol > 285:
+            raise _inflate_error("invalid-literal-length-symbol")
+        else:
+            base_length, length_bits = _LENGTH_TABLE[symbol - 257]
+            length = base_length + _read_bits(br, length_bits)
+            distance_symbol = _decode_symbol(distance, br, "reserved-distance-symbol")
+            if distance_symbol >= len(_DIST_TABLE):
+                raise _inflate_error("reserved-distance-symbol")
+            base_distance, distance_bits = _DIST_TABLE[distance_symbol]
+            back_distance = base_distance + _read_bits(br, distance_bits)
+            _copy_back_reference(out, back_distance, length, max_output)
+
+
+def raw_deflate(data: bytes) -> bytes:
+    """Compress bytes as a raw RFC 1951 stream without container framing."""
+    return _deflate_compress(data)
+
+
+def raw_inflate_counted(
+    data: bytes, max_output: int = RAW_INFLATE_MAX_OUTPUT
+) -> RawInflateResult:
+    """Strictly decode raw RFC 1951 bytes and report exact input consumption."""
+    if type(max_output) is not int or not 0 <= max_output <= RAW_INFLATE_MAX_OUTPUT:
+        raise _inflate_error("invalid-output-limit")
+
+    br = _BitReader(data)
+    out = bytearray()
+    while True:
+        final = _read_bits(br, 1)
+        block_type = _read_bits(br, 2)
+
+        if block_type == 0:
+            br.align()
+            stored_length = _read_bits(br, 16)
+            complement = _read_bits(br, 16)
+            if (complement ^ 0xFFFF) != stored_length:
+                raise _inflate_error("stored-length-mismatch")
+            if stored_length > max_output - len(out):
+                raise _inflate_error("output-limit-exceeded")
+            for _ in range(stored_length):
+                if len(out) >= max_output:
+                    raise _inflate_error("output-limit-exceeded")
+                out.append(_read_bits(br, 8))
+        elif block_type == 1:
+            literal_length = _build_huffman_decoder(_fixed_ll_lengths())
+            distance = _build_huffman_decoder(_fixed_distance_lengths())
+            _decode_compressed_block(literal_length, distance, br, out, max_output)
+        elif block_type == 2:
+            literal_count = _read_bits(br, 5) + 257
+            distance_count = _read_bits(br, 5) + 1
+            code_length_count = _read_bits(br, 4) + 4
+            if literal_count > 286:
+                raise _inflate_error("invalid-literal-length-symbol")
+
+            code_lengths = [0] * 19
+            for index in range(code_length_count):
+                code_lengths[_CODE_LENGTH_ORDER[index]] = _read_bits(br, 3)
+            code_length_decoder = _build_huffman_decoder(code_lengths)
+            if not code_length_decoder.complete:
+                raise _inflate_error("incomplete-code-length-tree")
+
+            lengths = _decode_code_lengths(
+                code_length_decoder, br, literal_count + distance_count
+            )
+            literal_length = _build_huffman_decoder(lengths[:literal_count])
+            if not literal_length.complete:
+                raise _inflate_error("incomplete-literal-length-tree")
+            distance = _build_huffman_decoder(lengths[literal_count:])
+            permitted_distance = (
+                distance.complete
+                or (distance.symbol_count == 1 and distance.one_bit_count == 1)
+                or distance.symbol_count == 0
+            )
+            if not permitted_distance:
+                raise _inflate_error("incomplete-distance-tree")
+            _decode_compressed_block(literal_length, distance, br, out, max_output)
+        else:
+            raise _inflate_error("reserved-block-type")
+
+        if final:
+            return RawInflateResult(bytes(out), br._pos)
+
+
+def raw_inflate(data: bytes, max_output: int = RAW_INFLATE_MAX_OUTPUT) -> bytes:
+    """Strictly decode a complete raw RFC 1951 stream."""
+    return raw_inflate_counted(data, max_output=max_output).output
 
 
 def _deflate_decompress(data: bytes) -> bytes:
-    """Decompress a raw RFC 1951 DEFLATE bit-stream.
-
-    Raises ``ValueError`` on malformed or unsupported (BTYPE=10) input.
-    """
-    br = _BitReader(data)
-    out = bytearray()
-
-    while True:
-        bfinal = br.read_lsb(1)
-        if bfinal is None:
-            raise ValueError("deflate: unexpected EOF reading BFINAL")
-        btype = br.read_lsb(2)
-        if btype is None:
-            raise ValueError("deflate: unexpected EOF reading BTYPE")
-
-        if btype == 0b00:
-            # ── Stored block ──────────────────────────────────────────────
-            br.align()
-            len_val = br.read_lsb(16)
-            if len_val is None:
-                raise ValueError("deflate: EOF reading stored LEN")
-            nlen = br.read_lsb(16)
-            if nlen is None:
-                raise ValueError("deflate: EOF reading stored NLEN")
-            if (nlen ^ 0xFFFF) != len_val:
-                raise ValueError(
-                    f"deflate: stored block LEN/NLEN mismatch: {len_val} vs {nlen}"
-                )
-            if len(out) + len_val > 256 * 1024 * 1024:
-                raise ValueError("deflate: output size limit exceeded")
-            for _ in range(len_val):
-                b = br.read_lsb(8)
-                if b is None:
-                    raise ValueError("deflate: EOF inside stored block data")
-                out.append(b)
-
-        elif btype == 0b01:
-            # ── Fixed Huffman block ───────────────────────────────────────
-            while True:
-                sym = _fixed_ll_decode(br)
-                if sym is None:
-                    raise ValueError("deflate: EOF decoding fixed Huffman symbol")
-                if 0 <= sym <= 255:
-                    if len(out) >= 256 * 1024 * 1024:
-                        raise ValueError("deflate: output size limit exceeded")
-                    out.append(sym)
-                elif sym == 256:
-                    break  # end-of-block
-                elif 257 <= sym <= 285:
-                    idx = sym - 257
-                    base_len, extra_len_bits = _LENGTH_TABLE[idx]
-                    extra_len = br.read_lsb(extra_len_bits)
-                    if extra_len is None:
-                        raise ValueError("deflate: EOF reading length extra bits")
-                    length = base_len + extra_len
-
-                    dist_code = br.read_msb(5)
-                    if dist_code is None:
-                        raise ValueError("deflate: EOF reading distance code")
-                    if dist_code >= len(_DIST_TABLE):
-                        raise ValueError(f"deflate: invalid dist code {dist_code}")
-                    base_dist, extra_dist_bits = _DIST_TABLE[dist_code]
-                    extra_dist = br.read_lsb(extra_dist_bits)
-                    if extra_dist is None:
-                        raise ValueError("deflate: EOF reading distance extra bits")
-                    offset = base_dist + extra_dist
-
-                    if offset > len(out):
-                        raise ValueError(
-                            f"deflate: back-reference offset {offset} > output len {len(out)}"
-                        )
-                    if len(out) + length > 256 * 1024 * 1024:
-                        raise ValueError("deflate: output size limit exceeded")
-                    # Copy byte-by-byte to handle overlapping matches
-                    # (e.g. offset=1, length=10 encodes a run of one byte × 10).
-                    for _ in range(length):
-                        out.append(out[-offset])
-                else:
-                    raise ValueError(f"deflate: invalid LL symbol {sym}")
-
-        elif btype == 0b10:
-            raise ValueError(
-                "deflate: dynamic Huffman blocks (BTYPE=10) not supported"
-            )
-        else:
-            raise ValueError("deflate: reserved BTYPE=11")
-
-        if bfinal:
-            break
-
-    return bytes(out)
+    """Compatibility wrapper for the historical private decoder."""
+    return raw_inflate(data)
 
 
 # =============================================================================
@@ -645,17 +849,17 @@ class ZipWriter:
         flags: int = 0x0800  # GP flag bit 11 = UTF-8 filename
 
         # ── Local File Header ─────────────────────────────────────────────
-        self._buf += _pack_le32(0x04034B50)                   # signature
+        self._buf += _pack_le32(0x04034B50)  # signature
         self._buf += _pack_le16(version_needed)
         self._buf += _pack_le16(flags)
         self._buf += _pack_le16(method)
-        self._buf += _pack_le16(DOS_EPOCH & 0xFFFF)           # mod_time
-        self._buf += _pack_le16((DOS_EPOCH >> 16) & 0xFFFF)   # mod_date
+        self._buf += _pack_le16(DOS_EPOCH & 0xFFFF)  # mod_time
+        self._buf += _pack_le16((DOS_EPOCH >> 16) & 0xFFFF)  # mod_date
         self._buf += _pack_le32(checksum)
         self._buf += _pack_le32(compressed_size)
         self._buf += _pack_le32(uncompressed_size)
         self._buf += _pack_le16(len(name_bytes))
-        self._buf += _pack_le16(0)                            # extra_field_length = 0
+        self._buf += _pack_le16(0)  # extra_field_length = 0
         self._buf += name_bytes
         self._buf += file_data
 
@@ -681,35 +885,35 @@ class ZipWriter:
         cd_start = len(self._buf)
         for e in self._entries:
             version_needed = 20 if e.method == 8 else 10
-            self._buf += _pack_le32(0x02014B50)                    # signature
-            self._buf += _pack_le16(0x031E)                        # version_made_by (Unix, v30)
+            self._buf += _pack_le32(0x02014B50)  # signature
+            self._buf += _pack_le16(0x031E)  # version_made_by (Unix, v30)
             self._buf += _pack_le16(version_needed)
-            self._buf += _pack_le16(0x0800)                        # flags (UTF-8)
+            self._buf += _pack_le16(0x0800)  # flags (UTF-8)
             self._buf += _pack_le16(e.method)
-            self._buf += _pack_le16(e.dos_datetime & 0xFFFF)       # mod_time
+            self._buf += _pack_le16(e.dos_datetime & 0xFFFF)  # mod_time
             self._buf += _pack_le16((e.dos_datetime >> 16) & 0xFFFF)  # mod_date
             self._buf += _pack_le32(e.crc)
             self._buf += _pack_le32(e.compressed_size)
             self._buf += _pack_le32(e.uncompressed_size)
             self._buf += _pack_le16(len(e.name))
-            self._buf += _pack_le16(0)                             # extra_len
-            self._buf += _pack_le16(0)                             # comment_len
-            self._buf += _pack_le16(0)                             # disk_start
-            self._buf += _pack_le16(0)                             # internal_attrs
+            self._buf += _pack_le16(0)  # extra_len
+            self._buf += _pack_le16(0)  # comment_len
+            self._buf += _pack_le16(0)  # disk_start
+            self._buf += _pack_le16(0)  # internal_attrs
             self._buf += _pack_le32(e.external_attrs)
             self._buf += _pack_le32(e.local_offset)
             self._buf += e.name
         cd_size = len(self._buf) - cd_start
 
         # ── End of Central Directory Record ──────────────────────────────
-        self._buf += _pack_le32(0x06054B50)      # signature
-        self._buf += _pack_le16(0)               # disk_number
-        self._buf += _pack_le16(0)               # cd_disk
-        self._buf += _pack_le16(num_entries)     # entries this disk
-        self._buf += _pack_le16(num_entries)     # entries total
+        self._buf += _pack_le32(0x06054B50)  # signature
+        self._buf += _pack_le16(0)  # disk_number
+        self._buf += _pack_le16(0)  # cd_disk
+        self._buf += _pack_le16(num_entries)  # entries this disk
+        self._buf += _pack_le16(num_entries)  # entries total
         self._buf += _pack_le32(cd_size)
         self._buf += _pack_le32(cd_offset)
-        self._buf += _pack_le16(0)               # comment_len
+        self._buf += _pack_le16(0)  # comment_len
 
         return bytes(self._buf)
 
@@ -734,14 +938,14 @@ def _read_le16(data: bytes, offset: int) -> int | None:
     """Read a little-endian u16 from ``data`` at ``offset``. Returns None on OOB."""
     if offset + 2 > len(data):
         return None
-    return struct.unpack_from("<H", data, offset)[0]
+    return cast(int, struct.unpack_from("<H", data, offset)[0])
 
 
 def _read_le32(data: bytes, offset: int) -> int | None:
     """Read a little-endian u32 from ``data`` at ``offset``. Returns None on OOB."""
     if offset + 4 > len(data):
         return None
-    return struct.unpack_from("<I", data, offset)[0]
+    return cast(int, struct.unpack_from("<I", data, offset)[0])
 
 
 @dataclass
@@ -816,8 +1020,14 @@ class ZipReader:
             if any(
                 v is None
                 for v in [
-                    method, crc32_val, compressed_size, size,
-                    name_len, extra_len, comment_len, local_offset,
+                    method,
+                    crc32_val,
+                    compressed_size,
+                    size,
+                    name_len,
+                    extra_len,
+                    comment_len,
+                    local_offset,
                 ]
             ):
                 raise ValueError("zip: CD entry truncated")
@@ -868,9 +1078,7 @@ class ZipReader:
         if local_flags is None:
             raise ValueError("zip: local header out of bounds")
         if local_flags & 1:
-            raise ValueError(
-                f"zip: entry '{entry.name}' is encrypted; not supported"
-            )
+            raise ValueError(f"zip: entry '{entry.name}' is encrypted; not supported")
 
         # Skip Local Header to reach file data.
         # Re-read name_len + extra_len from the Local Header; they may differ
@@ -884,7 +1092,8 @@ class ZipReader:
         data_end = data_start + entry.compressed_size
         if data_end > len(self._data):
             raise ValueError(
-                f"zip: entry '{entry.name}' data [{data_start}, {data_end}) out of bounds"
+                f"zip: entry '{entry.name}' data "
+                f"[{data_start}, {data_end}) out of bounds"
             )
 
         compressed = self._data[data_start:data_end]
@@ -892,15 +1101,17 @@ class ZipReader:
         if entry.method == 0:
             decompressed = bytes(compressed)
         elif entry.method == 8:
-            decompressed = _deflate_decompress(compressed)
+            result = raw_inflate_counted(compressed, max_output=entry.size)
+            if result.bytes_consumed != len(compressed):
+                raise ValueError("zip: compressed payload contains trailing bytes")
+            decompressed = result.output
         else:
             raise ValueError(
                 f"zip: unsupported compression method {entry.method} for '{entry.name}'"
             )
 
-        # Trim to declared uncompressed size (guard against decompressor over-read).
-        if len(decompressed) > entry.size:
-            decompressed = decompressed[: entry.size]
+        if len(decompressed) != entry.size:
+            raise ValueError("zip: uncompressed size does not match the directory")
 
         # Verify CRC-32.
         actual_crc = crc32(decompressed)
@@ -936,9 +1147,8 @@ class ZipReader:
         for i in range(len(data) - eocd_min_size, scan_start - 1, -1):
             if _read_le32(data, i) == eocd_sig:
                 comment_len = _read_le16(data, i + 20)
-                if (
-                    comment_len is not None
-                    and i + eocd_min_size + comment_len == len(data)
+                if comment_len is not None and i + eocd_min_size + comment_len == len(
+                    data
                 ):
                     return i
         return None

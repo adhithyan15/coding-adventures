@@ -1,5 +1,57 @@
 # Changelog
 
+## 0.110.0
+
+- Resolve quoted Requirement node and class identifiers in style and class statements without splitting on spaces or quoted commas.
+
+## 0.109.0
+
+- Parse quoted and unquoted multiword Requirement identifiers across definitions, relationships, and shorthand classes.
+
+## 0.108.0
+
+- Parse Requirement headers, statements, fields, enum values, and relationships case-insensitively.
+
+## 0.107.0
+
+- Resolve standalone Requirement `:::` class shorthand into structural styles.
+
+## 0.106.0
+
+- Parse Requirement font size, weight, style, and family into structural semantic styles.
+
+## 0.105.0
+
+- Resolve Requirement class definitions, assignments, default styles, and inline shorthand.
+
+## 0.104.0
+
+- Parse Requirement direct node styles into structural semantic IR.
+
+## 0.103.0
+
+- Parse Requirement accessibility statements into structural semantic IR.
+
+## 0.102.0
+
+- Lower all six Requirement definition kinds into typed semantic metadata.
+
+## 0.101.0
+
+- Parse Requirement fields with dedicated grammar tokens and typed semantic metadata.
+
+## 0.100.0
+
+- Preserve Requirement layout direction in structural IR.
+
+## 0.99.0
+
+- Preserve all seven Requirement relationship semantics and reverse-arrow orientation in structural IR.
+
+## 0.98.0
+
+- Parse core Requirement definitions, elements, and typed relationships into structural IR.
+
 ## 0.97.0
 
 - Graduate Journey to full Mermaid 11.16.1 compatibility after pinned corpus and native render coverage.

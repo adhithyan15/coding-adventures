@@ -4486,6 +4486,635 @@
           "ES-GRAMMAR-APOCOPE-PATTERN"
         ]
       }
+    },
+    {
+      "chapter": 230,
+      "title": "Al --- Two Words Spanish Will Not Keep Apart",
+      "label": "ch:al",
+      "canDo": "I can say where I am going, with the article fused on.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-al",
+        "kind": "task",
+        "summary": "I can say where I am going, with the article fused on.",
+        "assesses": [
+          "ES-GRAMMAR-CONTRACTION-AL"
+        ]
+      }
+    },
+    {
+      "chapter": 231,
+      "title": "Del --- And Then the List Stops",
+      "label": "ch:del",
+      "canDo": "I can say whose something is, and I know both contractions exist.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-del",
+        "kind": "task",
+        "summary": "I can say whose something is, and I know both contractions exist.",
+        "assesses": [
+          "ES-GRAMMAR-CONTRACTION-DEL"
+        ]
+      }
+    },
+    {
+      "chapter": 232,
+      "title": "Quién --- The Asking Word for People",
+      "label": "ch:quien",
+      "canDo": "I can ask who somebody is.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-quien",
+        "kind": "task",
+        "summary": "I can ask who somebody is.",
+        "assesses": [
+          "ES-LEX-QUIEN"
+        ]
+      }
+    },
+    {
+      "chapter": 233,
+      "title": "O --- One Letter, One Catch",
+      "label": "ch:o",
+      "canDo": "I can offer a choice between two things.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-o",
+        "kind": "task",
+        "summary": "I can offer a choice between two things.",
+        "assesses": [
+          "ES-LEX-O"
+        ]
+      }
+    },
+    {
+      "chapter": 234,
+      "title": "Ni --- Joining Two Absences",
+      "label": "ch:ni",
+      "canDo": "I can say I want neither of two things.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-ni",
+        "kind": "task",
+        "summary": "I can say I want neither of two things.",
+        "assesses": [
+          "ES-LEX-NI"
+        ]
+      }
+    },
+    {
+      "chapter": 235,
+      "title": "Review --- Four Small Words, One Instinct",
+      "label": "ch:repaso-juntores",
+      "canDo": "I can use the small joining words without hesitating.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-repaso-juntores",
+        "kind": "task",
+        "summary": "I can use the small joining words without hesitating.",
+        "assesses": [
+          "ES-GRAMMAR-CONTRACTION-ONLY-TWO"
+        ]
+      }
+    },
+    {
+      "chapter": 236,
+      "title": "Hablando --- An Action Caught in the Middle",
+      "label": "ch:hablando",
+      "canDo": "I can form the -ando shape of an -ar verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-hablando",
+        "kind": "task",
+        "summary": "I can form the -ando shape of an -ar verb.",
+        "assesses": [
+          "ES-GRAMMAR-GERUND-AR"
+        ]
+      }
+    },
+    {
+      "chapter": 237,
+      "title": "Comiendo, Viviendo --- Two Families, One Ending",
+      "label": "ch:comiendo",
+      "canDo": "I can form the gerund of any regular verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-comiendo",
+        "kind": "task",
+        "summary": "I can form the gerund of any regular verb.",
+        "assesses": [
+          "ES-GRAMMAR-GERUND-ER-IR"
+        ]
+      }
+    },
+    {
+      "chapter": 238,
+      "title": "Estoy Hablando --- The Payoff",
+      "label": "ch:estoy-hablando",
+      "canDo": "I can say what I am doing right now.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-estoy-hablando",
+        "kind": "task",
+        "summary": "I can say what I am doing right now.",
+        "assesses": [
+          "ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND"
+        ]
+      }
+    },
+    {
+      "chapter": 239,
+      "title": "Veo a María --- The Little A That Guards People",
+      "label": "ch:veo-a-maria",
+      "canDo": "I can mark the person on the receiving end of a verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-veo-a-maria",
+        "kind": "task",
+        "summary": "I can mark the person on the receiving end of a verb.",
+        "assesses": [
+          "ES-GRAMMAR-PERSONAL-A"
+        ]
+      }
+    },
+    {
+      "chapter": 240,
+      "title": "Review --- Two Endings and One Little A",
+      "label": "ch:repaso-gerundio",
+      "canDo": "I can say what is happening now, and mark a person correctly.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-repaso-gerundio",
+        "kind": "task",
+        "summary": "I can say what is happening now, and mark a person correctly.",
+        "assesses": [
+          "ES-GRAMMAR-GERUND-TWO-ENDINGS"
+        ]
+      }
+    },
+    {
+      "chapter": 241,
+      "title": "Hablasteis --- The Form You Were Promised",
+      "label": "ch:hablasteis",
+      "canDo": "I can use every person of the -ar preterite.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-hablasteis",
+        "kind": "task",
+        "summary": "I can use every person of the -ar preterite.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRETERITE-2PL"
+        ]
+      }
+    },
+    {
+      "chapter": 242,
+      "title": "Comisteis, Tuvisteis --- The Last Gap Closes",
+      "label": "ch:comisteis",
+      "canDo": "I can use the whole preterite, regular and strong.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-comisteis",
+        "kind": "task",
+        "summary": "I can use the whole preterite, regular and strong.",
+        "assesses": [
+          "ES-GRAMMAR-PRETERITE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 243,
+      "title": "Hablábamos --- The Imperfect Gets Its Plural",
+      "label": "ch:hablabamos",
+      "canDo": "I can use every person of the -aba imperfect.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-hablabamos",
+        "kind": "task",
+        "summary": "I can use every person of the -aba imperfect.",
+        "assesses": [
+          "ES-GRAMMAR-AR-IMPERFECT-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 244,
+      "title": "Comíamos, Éramos, Íbamos --- Every One With an Accent",
+      "label": "ch:comiamos",
+      "canDo": "I can use the whole imperfect, including all three irregulars.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-comiamos",
+        "kind": "task",
+        "summary": "I can use the whole imperfect, including all three irregulars.",
+        "assesses": [
+          "ES-GRAMMAR-IMPERFECT-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 245,
+      "title": "Review --- Two Tenses Finished",
+      "label": "ch:repaso-paradigmas",
+      "canDo": "I can say both past tenses straight through, with no gaps.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-repaso-paradigmas",
+        "kind": "task",
+        "summary": "I can say both past tenses straight through, with no gaps.",
+        "assesses": [
+          "ES-GRAMMAR-PRETERITE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 246,
+      "title": "Para Mí --- The Pronouns That Stand on Their Own",
+      "label": "ch:para-mi",
+      "canDo": "I can use a pronoun after a preposition.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-para-mi",
+        "kind": "task",
+        "summary": "I can use a pronoun after a preposition.",
+        "assesses": [
+          "ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION"
+        ]
+      }
+    },
+    {
+      "chapter": 247,
+      "title": "Conmigo, Contigo --- The Word That Says With Twice",
+      "label": "ch:conmigo",
+      "canDo": "I can say with me and with you.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-conmigo",
+        "kind": "task",
+        "summary": "I can say with me and with you.",
+        "assesses": [
+          "ES-LEX-CONMIGO"
+        ]
+      }
+    },
+    {
+      "chapter": 248,
+      "title": "¡Qué Grande! --- The Same Word, Exclaiming",
+      "label": "ch:que-grande",
+      "canDo": "I can react to something with force, in two words.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-que-grande",
+        "kind": "task",
+        "summary": "I can react to something with force, in two words.",
+        "assesses": [
+          "ES-GRAMMAR-EXCLAMATIVE-QUE"
+        ]
+      }
+    },
+    {
+      "chapter": 249,
+      "title": "María, Ven --- Naming Who You Are Talking To",
+      "label": "ch:maria-ven",
+      "canDo": "I can address somebody by name.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-maria-ven",
+        "kind": "task",
+        "summary": "I can address somebody by name.",
+        "assesses": [
+          "ES-GRAMMAR-VOCATIVE-COMMA"
+        ]
+      }
+    },
+    {
+      "chapter": 250,
+      "title": "Review --- Four Small Things",
+      "label": "ch:repaso-tonicos",
+      "canDo": "I can use the stressed pronouns, exclaim, and address somebody.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-repaso-tonicos",
+        "kind": "task",
+        "summary": "I can use the stressed pronouns, exclaim, and address somebody.",
+        "assesses": [
+          "ES-GRAMMAR-VOCATIVE-COMMA"
+        ]
+      }
+    },
+    {
+      "chapter": 251,
+      "title": "Ahí, Allí --- The Other Two Places",
+      "label": "ch:ahi-alli",
+      "canDo": "I can say where something is, on any of the three sides.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-ahi-alli",
+        "kind": "task",
+        "summary": "I can say where something is, on any of the three sides.",
+        "assesses": [
+          "ES-GRAMMAR-PLACE-THREE-DISTANCES"
+        ]
+      }
+    },
+    {
+      "chapter": 252,
+      "title": "Ahora, Hoy --- Now and Today",
+      "label": "ch:ahora-hoy",
+      "canDo": "I can place what I am saying in time.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-ahora-hoy",
+        "kind": "task",
+        "summary": "I can place what I am saying in time.",
+        "assesses": [
+          "ES-LEX-AHORA"
+        ]
+      }
+    },
+    {
+      "chapter": 253,
+      "title": "Unos, Unas --- The Plural of One",
+      "label": "ch:unos-unas",
+      "canDo": "I can say some of a thing, as against the thing in general.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-unos-unas",
+        "kind": "task",
+        "summary": "I can say some of a thing, as against the thing in general.",
+        "assesses": [
+          "ES-GRAMMAR-INDEFINITE-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 254,
+      "title": "Vuestro --- The Last Possessive",
+      "label": "ch:vuestro",
+      "canDo": "I can use every possessive in the set.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-vuestro",
+        "kind": "task",
+        "summary": "I can use every possessive in the set.",
+        "assesses": [
+          "ES-GRAMMAR-POSSESSIVE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 255,
+      "title": "Vi, Di --- The Shortest Pasts",
+      "label": "ch:vi-di",
+      "canDo": "I can use the preterite of ver and dar.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-vi-di",
+        "kind": "task",
+        "summary": "I can use the preterite of ver and dar.",
+        "assesses": [
+          "ES-GRAMMAR-VER-PRETERITE"
+        ]
+      }
+    },
+    {
+      "chapter": 256,
+      "title": "Review --- Five Sets, Finished",
+      "label": "ch:repaso-parejas",
+      "canDo": "I can use every one of the sets the book had left half-taught.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-repaso-parejas",
+        "kind": "task",
+        "summary": "I can use every one of the sets the book had left half-taught.",
+        "assesses": [
+          "ES-GRAMMAR-POSSESSIVE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 257,
+      "title": "Hablo --- One Form, Two Readings",
+      "label": "ch:hablo-dos",
+      "canDo": "I can use the plain present for both a habit and this moment.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-hablo-dos-lecturas",
+        "kind": "task",
+        "summary": "I can use the plain present for both a habit and this moment.",
+        "assesses": [
+          "ES-GRAMMAR-PRESENT-ACTUAL-AND-DURATIVE"
+        ]
+      }
+    },
+    {
+      "chapter": 258,
+      "title": "Hablo, Hablas, Habla --- The Ending Says Who",
+      "label": "ch:terminacion",
+      "canDo": "I can state why Spanish verbs change their endings, and why the pronoun can go.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-la-terminacion-dice-quien",
+        "kind": "task",
+        "summary": "I can state why Spanish verbs change their endings, and why the pronoun can go.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+        ]
+      }
+    },
+    {
+      "chapter": 259,
+      "title": "Mucha Agua --- When the Quantity Word Agrees",
+      "label": "ch:mucha-agua",
+      "canDo": "I can decide whether a quantity word agrees or freezes.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-mucha-agua",
+        "kind": "task",
+        "summary": "I can decide whether a quantity word agrees or freezes.",
+        "assesses": [
+          "ES-GRAMMAR-QUANTIFIER-AGREES-WITH-NOUN"
+        ]
+      }
+    },
+    {
+      "chapter": 260,
+      "title": "María, España --- The Nouns That Need No Article",
+      "label": "ch:nombres-propios",
+      "canDo": "I can use names and titles with the right article, or none.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-nombres-propios",
+        "kind": "task",
+        "summary": "I can use names and titles with the right article, or none.",
+        "assesses": [
+          "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE"
+        ]
+      }
+    },
+    {
+      "chapter": 261,
+      "title": "Review --- Four Rules You Already Obeyed",
+      "label": "ch:repaso-implicito",
+      "canDo": "I can state four rules I had been following without knowing.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-repaso-lo-implicito",
+        "kind": "task",
+        "summary": "I can state four rules I had been following without knowing.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+        ]
+      }
+    },
+    {
+      "chapter": 262,
+      "title": "Primero, Segundo, Tercero --- Counting in Order",
+      "label": "ch:primero",
+      "canDo": "I can say which one in a line something is.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-primero",
+        "kind": "task",
+        "summary": "I can say which one in a line something is.",
+        "assesses": [
+          "ES-LEX-ORDINALS"
+        ]
+      }
+    },
+    {
+      "chapter": 263,
+      "title": "Uno... Otro --- Splitting a Pair",
+      "label": "ch:uno-otro",
+      "canDo": "I can say something different about each of two things.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-uno-otro",
+        "kind": "task",
+        "summary": "I can say something different about each of two things.",
+        "assesses": [
+          "ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO"
+        ]
+      }
+    },
+    {
+      "chapter": 264,
+      "title": "Comer Es Bueno --- The Infinitive as Subject",
+      "label": "ch:comer-es-bueno",
+      "canDo": "I can name an activity and say something about it.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-comer-es-bueno",
+        "kind": "task",
+        "summary": "I can name an activity and say something about it.",
+        "assesses": [
+          "ES-GRAMMAR-INFINITIVE-AS-SUBJECT"
+        ]
+      }
+    },
+    {
+      "chapter": 265,
+      "title": "Hoy Como en Casa --- The Pieces That Move",
+      "label": "ch:hoy-como",
+      "canDo": "I can move when and where around a sentence, and use the front for emphasis.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-hoy-como-en-casa",
+        "kind": "task",
+        "summary": "I can move when and where around a sentence, and use the front for emphasis.",
+        "assesses": [
+          "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES"
+        ]
+      }
+    },
+    {
+      "chapter": 266,
+      "title": "Review --- Four Last Pieces, and the Thread",
+      "label": "ch:repaso-a1",
+      "canDo": "I can use the last of the A1 structures, and name the thread that runs through them.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-repaso-a1",
+        "kind": "task",
+        "summary": "I can use the last of the A1 structures, and name the thread that runs through them.",
+        "assesses": [
+          "ES-GRAMMAR-WORD-ORDER-EMPHASIS"
+        ]
+      }
     }
   ]
 }

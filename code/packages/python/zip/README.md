@@ -29,8 +29,10 @@ CMP09 (ZIP,     1989) — DEFLATE container; universal archive.  ← YOU ARE HER
 ```
 
 This package depends on `coding-adventures-lzss` for LZ77 tokenization and inlines a
-raw RFC 1951 DEFLATE codec (fixed Huffman, BTYPE=01). The existing `deflate` package uses
-a custom wire format and is intentionally not used here.
+raw RFC 1951 DEFLATE codec. The encoder emits fixed-Huffman blocks while the
+strict decoder accepts stored, fixed-Huffman, dynamic-Huffman, and multi-block
+streams. The existing `deflate` package uses a custom wire format and is
+intentionally not used here.
 
 ## Usage
 
@@ -69,6 +71,23 @@ for entry in reader.entries():
 
 data = reader.read_by_name("hello.txt")
 ```
+
+### Raw RFC 1951
+
+```python
+from coding_adventures_zip import raw_deflate, raw_inflate_counted
+
+compressed = raw_deflate(b"hello" * 10)
+result = raw_inflate_counted(compressed, max_output=1024)
+assert result.output == b"hello" * 10
+assert result.bytes_consumed == len(compressed)
+```
+
+These functions use raw RFC 1951 bytes with no ZIP, zlib, or gzip framing.
+`raw_inflate_counted` stops exactly at the final block, which lets a container
+reject trailing bytes. Its `max_output` may lower, but never raise, the public
+256 MiB hard ceiling. Malformed streams raise `RawInflateError`; both `.code`
+and the exception message are one of the 14 stable payload-blind error IDs.
 
 ### CRC-32
 
@@ -123,6 +142,13 @@ assert c2 == checksum
 | `unzip(data) → dict[str, bytes]` | Extract all files; skip directories |
 | `crc32(data, initial=0) → int` | CRC-32 (polynomial 0xEDB88320) |
 | `dos_datetime(year, month, day, ...) → int` | Encode MS-DOS timestamp |
+| `raw_deflate(data) → bytes` | Encode a raw RFC 1951 stream |
+| `raw_inflate(data, max_output=...) → bytes` | Strictly decode a raw stream |
+| `raw_inflate_counted(data, max_output=...) → RawInflateResult` | Decode and report exact input consumption |
+| `RAW_INFLATE_MAX_OUTPUT` | Absolute 256 MiB raw-decode ceiling |
+| `RAW_INFLATE_ERROR_CODES` | Ordered tuple of the 14 stable error IDs |
+| `RawInflateError` | Typed failure carrying a stable `.code` |
+| `RawInflateResult` | Immutable output and `bytes_consumed` result |
 
 ## Installation
 
@@ -134,6 +160,11 @@ pip install coding-adventures-zip
 
 - **Zip slip**: `unzip()` returns a plain dict; no paths are written to disk.
   Any disk-writing wrapper must strip `..` components and absolute prefixes.
-- **Decompression bombs**: output is capped at 256 MB; a `ValueError` is raised if exceeded.
+- **Decompression bombs**: DEFLATE output is capped at 256 MiB and ZIP readers
+  lower the limit to the entry's declared size before decoding.
+- **Container cavities**: method 8 reads reject trailing compressed bytes and
+  any exact uncompressed-size mismatch before CRC verification.
+- **Payload-blind failures**: raw decoder errors never include attacker bytes,
+  lengths, offsets, names, or paths.
 - **CRC-32 is not cryptographic**: it detects accidental corruption only.
 - **Encryption**: entries with the encrypted flag set raise `ValueError`.

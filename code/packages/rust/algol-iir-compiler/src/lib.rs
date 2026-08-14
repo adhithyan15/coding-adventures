@@ -5318,19 +5318,31 @@ impl Compiler {
                     .iter()
                     .any(|token| token.effective_type_name() == "NAME")
             });
-            let stable_boolean_selector = condition
-                .and_then(expr_variable_name)
-                .filter(|selector| selector != target_name)
-                .filter(|selector| {
-                    self.require_var(selector).is_ok_and(|binding| {
-                        binding.ty == ScalarType::Boolean
-                            && !binding.is_global
-                            && binding.array.is_none()
-                            && self.active_by_name_binding(selector).is_none()
+            let stable_scalar_condition = condition.is_some_and(|condition| {
+                let Some(dependencies) = self.static_predicate_dependencies(condition) else {
+                    return false;
+                };
+                !dependencies.is_empty()
+                    && dependencies.iter().all(|dependency| {
+                        dependency != target_name
+                            && self.require_var(dependency).is_ok_and(|binding| {
+                                matches!(
+                                    binding.ty,
+                                    ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                                )
+                                    && !binding.is_global
+                                    && binding.array.is_none()
+                                    && self.active_by_name_binding(dependency).is_none()
+                            })
+                            && !self.for_body_changes_name(
+                                effect_root,
+                                dependency,
+                                target_name,
+                                effect_root,
+                            )
                     })
-                })
-                .filter(|selector| !for_body_assigns_name(effect_root, selector));
-            if condition_is_variable_free || stable_boolean_selector.is_some() {
+            });
+            if condition_is_variable_free || stable_scalar_condition {
                 let branches: Vec<&GrammarASTNode> = children
                     .into_iter()
                     .filter(|child| {
@@ -5367,8 +5379,14 @@ impl Compiler {
                 });
             if writes_name {
                 let preserves_name = first_direct_node(node, "expression")
-                    .and_then(expr_variable_name)
-                    .is_some_and(|source_name| source_name == name);
+                    .is_some_and(|expression| {
+                        self.expression_preserves_name(
+                            expression,
+                            name,
+                            target_name,
+                            effect_root,
+                        )
+                    });
                 return !preserves_name;
             }
         }
@@ -5383,6 +5401,355 @@ impl Compiler {
         direct_nodes(node)
             .into_iter()
             .any(|child| self.for_body_writes_name(child, name, target_name, effect_root))
+    }
+
+    fn static_predicate_dependencies(&self, node: &GrammarASTNode) -> Option<HashSet<String>> {
+        let mut dependencies = HashSet::new();
+        self.collect_static_predicate_dependencies(node, &mut dependencies)?;
+        Some(dependencies)
+    }
+
+    fn for_body_changes_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
+        if node.rule_name == "assign_stmt" {
+            let writes_name = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "left_part")
+                .filter_map(|left| first_direct_node(left, "variable"))
+                .any(|variable| {
+                    array_subscripts(variable).is_none()
+                        && direct_tokens(variable).into_iter().any(|token| {
+                            token.effective_type_name() == "NAME" && token.value == name
+                        })
+                });
+            if writes_name {
+                return !first_direct_node(node, "expression")
+                    .is_some_and(|expression| {
+                        self.expression_preserves_name(
+                            expression,
+                            name,
+                            target_name,
+                            effect_root,
+                        )
+                    });
+            }
+        }
+        if node.rule_name == "for_stmt"
+            && first_direct_node(node, "variable").is_some_and(|variable| {
+                array_subscripts(variable).is_none()
+                    && direct_tokens(variable).into_iter().any(|token| {
+                        token.effective_type_name() == "NAME" && token.value == name
+                    })
+            })
+        {
+            return true;
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| self.for_body_changes_name(child, name, target_name, effect_root))
+    }
+
+    fn expression_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
+        if expr_variable_name(node).as_deref() == Some(name) {
+            return true;
+        }
+        if self.static_expression_matches_name(node, name, target_name, effect_root) {
+            return true;
+        }
+        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+            || !direct_tokens(node).iter().any(|token| token.value == "if")
+        {
+            return false;
+        }
+        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == node.rule_name)
+            .collect();
+        if branches.len() != 2 {
+            return false;
+        }
+        let condition = first_direct_node(node, "bool_expr");
+        let condition_is_variable_free = condition.is_some_and(|condition| {
+            !recursive_tokens(condition)
+                .iter()
+                .any(|token| token.effective_type_name() == "NAME")
+        });
+        let stable_scalar_condition = condition.is_some_and(|condition| {
+            let Some(dependencies) = self.static_predicate_dependencies(condition) else {
+                return false;
+            };
+            !dependencies.is_empty()
+                && dependencies.iter().all(|dependency| {
+                    dependency != name
+                        && dependency != target_name
+                        && self.require_var(dependency).is_ok_and(|binding| {
+                            matches!(
+                                binding.ty,
+                                ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                            ) && !binding.is_global
+                                && binding.array.is_none()
+                                && self.active_by_name_binding(dependency).is_none()
+                        })
+                        && !self.for_body_changes_name(
+                            effect_root,
+                            dependency,
+                            target_name,
+                            effect_root,
+                        )
+                })
+        });
+        if condition_is_variable_free || stable_scalar_condition {
+            match condition.and_then(|condition| self.static_boolean_value(condition)) {
+                Some(true) => {
+                    return self.expression_preserves_name(
+                        branches[0],
+                        name,
+                        target_name,
+                        effect_root,
+                    )
+                }
+                Some(false) => {
+                    return self.expression_preserves_name(
+                        branches[1],
+                        name,
+                        target_name,
+                        effect_root,
+                    )
+                }
+                None => {}
+            }
+        }
+        branches.into_iter().all(|branch| {
+            self.expression_preserves_name(branch, name, target_name, effect_root)
+        })
+    }
+
+    fn static_expression_matches_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
+        let Ok(binding) = self.require_var(name) else {
+            return false;
+        };
+        if binding.is_global
+            || binding.array.is_some()
+            || self.active_by_name_binding(name).is_some()
+        {
+            return false;
+        }
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(node, name, &mut dependencies);
+        if dependencies.iter().any(|dependency| {
+            dependency == target_name
+                || self.require_var(dependency).is_err()
+                || self.require_var(dependency).is_ok_and(|binding| {
+                    !matches!(
+                        binding.ty,
+                        ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                    ) || binding.is_global
+                        || binding.array.is_some()
+                        || self.active_by_name_binding(dependency).is_some()
+                })
+                || self.for_body_changes_dependency(
+                    effect_root,
+                    dependency,
+                    target_name,
+                    effect_root,
+                )
+        }) {
+            return false;
+        }
+        match binding.ty {
+            ScalarType::Integer => self
+                .static_assigned_integer_value(node)
+                .zip(self.static_integer_slots.get(&binding.slot).copied())
+                .is_some_and(|(assigned, current)| assigned == current),
+            ScalarType::Real => self
+                .static_assigned_real_value(node)
+                .filter(|value| value.is_finite())
+                .zip(
+                    self.static_real_slots
+                        .get(&binding.slot)
+                        .and_then(|value| value.parse::<f64>().ok()),
+                )
+                .is_some_and(|(assigned, current)| assigned.to_bits() == current.to_bits()),
+            ScalarType::Boolean => self
+                .static_boolean_value(node)
+                .zip(self.static_boolean_slots.get(&binding.slot).copied())
+                .is_some_and(|(assigned, current)| assigned == current),
+            ScalarType::String => false,
+        }
+    }
+
+    fn for_body_changes_dependency(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
+        // Keep transitive dependency checks non-recursive: only a bare
+        // self-assignment is intrinsically preserving without another proof.
+        if node.rule_name == "assign_stmt" {
+            let writes_name = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "left_part")
+                .filter_map(|left| first_direct_node(left, "variable"))
+                .any(|variable| {
+                    array_subscripts(variable).is_none()
+                        && self.simple_variable_name(variable).ok().as_deref() == Some(name)
+                });
+            if writes_name
+                && !first_direct_node(node, "expression").is_some_and(|expression| {
+                    self.expression_intrinsically_preserves_name(
+                        expression,
+                        name,
+                        target_name,
+                        effect_root,
+                    )
+                })
+            {
+                return true;
+            }
+        }
+        if node.rule_name == "for_stmt"
+            && first_direct_node(node, "variable").is_some_and(|variable| {
+                self.simple_variable_name(variable).ok().as_deref() == Some(name)
+            })
+        {
+            return true;
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| {
+                self.for_body_changes_dependency(child, name, target_name, effect_root)
+            })
+    }
+
+    fn expression_intrinsically_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
+        if expr_variable_name(node).as_deref() == Some(name) {
+            return true;
+        }
+        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+            || !direct_tokens(node).iter().any(|token| token.value == "if")
+        {
+            return false;
+        }
+        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == node.rule_name)
+            .collect();
+        if branches.len() != 2 {
+            return false;
+        }
+        let condition = first_direct_node(node, "bool_expr");
+        let condition_is_variable_free = condition.is_some_and(|condition| {
+            !recursive_tokens(condition)
+                .iter()
+                .any(|token| token.effective_type_name() == "NAME")
+        });
+        let stable_scalar_condition = condition.is_some_and(|condition| {
+            let Some(dependencies) = self.static_predicate_dependencies(condition) else {
+                return false;
+            };
+            !dependencies.is_empty()
+                && dependencies.iter().all(|dependency| {
+                    dependency != name
+                        && dependency != target_name
+                        && self.require_var(dependency).is_ok_and(|binding| {
+                            matches!(
+                                binding.ty,
+                                ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                            ) && !binding.is_global
+                                && binding.array.is_none()
+                                && self.active_by_name_binding(dependency).is_none()
+                        })
+                        && !body_targets_scalar(effect_root, dependency)
+                })
+        });
+        if condition_is_variable_free || stable_scalar_condition {
+            match condition.and_then(|condition| self.static_boolean_value(condition)) {
+                Some(true) => {
+                    return self.expression_intrinsically_preserves_name(
+                        branches[0],
+                        name,
+                        target_name,
+                        effect_root,
+                    )
+                }
+                Some(false) => {
+                    return self.expression_intrinsically_preserves_name(
+                        branches[1],
+                        name,
+                        target_name,
+                        effect_root,
+                    )
+                }
+                None => {}
+            }
+        }
+        branches.into_iter().all(|branch| {
+            self.expression_intrinsically_preserves_name(
+                branch,
+                name,
+                target_name,
+                effect_root,
+            )
+        })
+    }
+
+    fn collect_static_predicate_dependencies(
+        &self,
+        node: &GrammarASTNode,
+        dependencies: &mut HashSet<String>,
+    ) -> Option<()> {
+        let call_name = (node.rule_name == "proc_call")
+            .then(|| {
+                direct_tokens(node)
+                    .into_iter()
+                    .find(|token| token.effective_type_name() == "NAME")
+                    .map(|token| token.value.clone())
+            })
+            .flatten();
+        if let Some(name) = &call_name {
+            let target = self.resolve_procedure_identity(name);
+            if self.proc_sigs.contains_key(&target) || !is_supported_standard_function(&target) {
+                return None;
+            }
+        }
+        dependencies.extend(
+            direct_tokens(node)
+                .into_iter()
+                .filter(|token| {
+                    token.effective_type_name() == "NAME"
+                        && call_name.as_deref() != Some(token.value.as_str())
+                })
+                .map(|token| token.value.clone()),
+        );
+        for child in direct_nodes(node) {
+            self.collect_static_predicate_dependencies(child, dependencies)?;
+        }
+        Some(())
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
@@ -7104,6 +7471,32 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     out
 }
 
+fn body_targets_scalar(node: &GrammarASTNode, name: &str) -> bool {
+    let targets_name = |variable: &GrammarASTNode| {
+        array_subscripts(variable).is_none()
+            && direct_tokens(variable).into_iter().any(|token| {
+                token.effective_type_name() == "NAME" && token.value == name
+            })
+    };
+    if node.rule_name == "assign_stmt"
+        && direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == "left_part")
+            .filter_map(|left| first_direct_node(left, "variable"))
+            .any(&targets_name)
+    {
+        return true;
+    }
+    if node.rule_name == "for_stmt"
+        && first_direct_node(node, "variable").is_some_and(&targets_name)
+    {
+        return true;
+    }
+    direct_nodes(node)
+        .into_iter()
+        .any(|child| body_targets_scalar(child, name))
+}
+
 fn collect_expression_dependency_names(
     node: &GrammarASTNode,
     target_name: &str,
@@ -7122,36 +7515,6 @@ fn collect_expression_dependency_names(
     for child in direct_nodes(node) {
         collect_expression_dependency_names(child, target_name, dependencies);
     }
-}
-
-fn for_body_assigns_name(node: &GrammarASTNode, name: &str) -> bool {
-    if node.rule_name == "assign_stmt"
-        && direct_nodes(node)
-            .into_iter()
-            .filter(|child| child.rule_name == "left_part")
-            .filter_map(|left| first_direct_node(left, "variable"))
-            .any(|variable| {
-                array_subscripts(variable).is_none()
-                    && direct_tokens(variable).into_iter().any(|token| {
-                        token.effective_type_name() == "NAME" && token.value == name
-                    })
-            })
-    {
-        return true;
-    }
-    if node.rule_name == "for_stmt"
-        && first_direct_node(node, "variable").is_some_and(|variable| {
-            array_subscripts(variable).is_none()
-                && direct_tokens(variable).into_iter().any(|token| {
-                    token.effective_type_name() == "NAME" && token.value == name
-                })
-        })
-    {
-        return true;
-    }
-    direct_nodes(node)
-        .into_iter()
-        .any(|child| for_body_assigns_name(child, name))
 }
 
 fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) {
@@ -9373,6 +9736,69 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_selects_stable_composed_boolean_body_condition() {
+        compile_source(
+            "begin integer i, n; boolean flag, guard; n := 3; flag := false; guard := true; i := 0; for i := i + 1 while i < n do if flag and guard then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("unwritten known boolean locals may compose a body condition");
+    }
+
+    #[test]
+    fn al4_static_while_selects_stable_scalar_body_predicate() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do if guard = 0 then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unwritten known scalar local may control a body predicate");
+    }
+
+    #[test]
+    fn al4_static_while_selects_stable_standard_function_body_predicate() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := -1; i := 0; for i := i + 1 while i < n do if abs(guard) = 0 then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a supported standard function may wrap a stable body predicate dependency");
+    }
+
+    #[test]
+    fn al4_static_while_allows_idempotent_body_predicate_dependency() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := guard end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact self-assignment preserves a body predicate dependency");
+    }
+
+    #[test]
+    fn al4_static_while_allows_conditional_self_assignment_dependency() {
+        compile_source(
+            "begin integer i, n, guard; boolean choose; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else guard end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("equal conditional leaves preserve a body predicate dependency");
+    }
+
+    #[test]
+    fn al4_static_while_selects_preserving_conditional_assignment_branch() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if true then guard else 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a static conditional may select its preserving assignment branch");
+    }
+
+    #[test]
+    fn al4_static_while_selects_stable_conditional_assignment_branch() {
+        compile_source(
+            "begin integer i, n, guard; boolean choose; n := 3; guard := 1; choose := true; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged known selector may choose its preserving assignment branch");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9402,12 +9828,107 @@ mod tests {
     }
 
     #[test]
-    fn al4_computed_self_assignment_while_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_static_computed_self_assignment_preserves_while_dependency() {
+        compile_source(
             "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 0; print(i + 0.25) end",
             "test",
         )
-        .expect_err("only an exact bare self-assignment is treated as idempotent");
+        .expect("a checked static self-only expression may preserve its current value");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_unwritten_dependency_preserves_while_dependency() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do n := limit; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unwritten local may prove an assignment preserves the tracked value");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_self_assigned_dependency_preserves_while_dependency() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact self-assignment leaves a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_conditional_self_assigned_dependency_preserves_while_dependency()
+    {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("equal conditional leaves leave a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_selects_preserving_transitive_dependency_branch() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if true then limit else n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a static selector may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_stable_assignment_selector_preserves_transitive_dependency() {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged known selector may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_written_assignment_selector_remains_conservative_for_transitive_dependency() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a selector written by the body may choose a changing leaf later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_controlled_assignment_selector_remains_conservative_for_transitive_dependency() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if i < 2 then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("the changing loop control may select a different dependency leaf later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_assignment_with_differing_conditional_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("differing conditional dependency leaves require effect inference");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_assignment_dependency_cycle_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("cross-assignment dependencies require iterative effect analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_assignment_with_written_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a written assignment dependency may change the value on a later iteration");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
@@ -9428,6 +9949,75 @@ mod tests {
             "test",
         )
         .expect_err("a selector written by the body may choose another branch later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_written_composed_selector_while_effect_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; boolean flag, guard; n := 3; flag := false; guard := true; i := 0; for i := i + 1 while i < n do begin if flag and guard then n := n + 1; flag := true end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("every selector in a composed condition must remain stable");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_written_scalar_predicate_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a scalar predicate dependency written by the body may change its branch");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_user_function_body_predicate_remains_conservative() {
+        let err = compile_source(
+            "begin integer procedure abs(x); value x; integer x; abs := 1; integer i, n, guard; n := 3; guard := -1; i := 0; for i := i + 1 while i < n do if abs(guard) = 0 then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a user function body predicate is not statically pure");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_computed_predicate_self_assignment_preserves_dependency() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := guard + 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a checked static self-only expression preserves a predicate dependency");
+    }
+
+    #[test]
+    fn al4_differing_conditional_assignment_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; boolean choose; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a differing conditional leaf may change the predicate dependency");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_conditional_changing_assignment_branch_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if false then guard else 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a static conditional selecting a changing leaf must remain a write");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_written_conditional_assignment_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; boolean choose; n := 3; guard := 1; choose := true; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0; choose := false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("an assignment selector written by the body may choose another leaf later");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

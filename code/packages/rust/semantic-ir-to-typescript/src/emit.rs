@@ -525,16 +525,21 @@ pub fn emit_module(m: &Module) -> String {
     out.push_str(RUNTIME);
     // Source-language display convention (SIR display-convention spec): a
     // Ruby-sourced module selects the Ruby boolean form (`true`/`false`) once
-    // at startup via the namespace-imported `__Sir`; every other source
-    // language keeps the default Lisp `#t`/`#f`, so existing Twig output is
-    // unchanged.
+    // at startup via the namespace-imported `__Sir`; an APL-sourced module
+    // selects APL's own high-minus negative-number glyph (`¯`), needed for
+    // any bare/NDArray-wrapped numeric result APL auto-prints (see
+    // `sir-runtime-core`'s `toDisplay`/`displayNdArrayApl`); every other
+    // source language keeps the default Lisp `#t`/`#f` and ASCII `-`, so
+    // existing Twig/JS/Python output is unchanged.
     //
-    // SECURITY: the emitted argument is a hardcoded `"ruby"` literal chosen by
-    // an exact `== "ruby"` comparison — never text derived from
+    // SECURITY: the emitted argument is a hardcoded `"ruby"`/`"apl"` literal
+    // chosen by an exact `==` comparison — never text derived from
     // `source_language` or any other source-controlled field — so this can
     // never inject into the emitted TypeScript.
     if m.metadata.source_language.as_deref() == Some("ruby") {
         out.push_str("__Sir.setDisplayConvention(\"ruby\");\n");
+    } else if m.metadata.source_language.as_deref() == Some("apl") {
+        out.push_str("__Sir.setDisplayConvention(\"apl\");\n");
     }
     // Only OOP-using modules import the OOP runtime, so a pure
     // arithmetic module gains no dependency on it.
@@ -3204,6 +3209,47 @@ mod tests {
             out.contains(r#"__Sir.setDisplayConvention("ruby");"#),
             "ruby module must select the Ruby display convention; got:\n{out}"
         );
+    }
+
+    #[test]
+    fn emit_display_convention_apl_selects_apl_high_minus() {
+        // An APL-sourced module emits the display-convention setter so a
+        // negative number/NDArray renders with APL's own high-minus glyph
+        // (`¯`) — mirrors the Ruby test just above, same shape, different
+        // source language and expected literal.
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("apl")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(
+            out.contains(r#"__Sir.setDisplayConvention("apl");"#),
+            "apl module must select the APL display convention; got:\n{out}"
+        );
+        // Never both — an exhaustive `if`/`else if` in `emit_module`, not
+        // two independent conditions.
+        assert!(!out.contains(r#"setDisplayConvention("ruby")"#));
     }
 
     #[test]

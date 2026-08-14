@@ -79,6 +79,20 @@ const DEVANAGARI_HA = DUCTUS[ductusKey("devanagari", "ह")];
 const CYRILLIC_A = DUCTUS[ductusKey("cyrillic", "а")];
 const CYRILLIC_BE = DUCTUS[ductusKey("cyrillic", "б")];
 const CYRILLIC_VE = DUCTUS[ductusKey("cyrillic", "в")];
+const CYRILLIC_GE = DUCTUS[ductusKey("cyrillic", "г")];
+const CYRILLIC_DE = DUCTUS[ductusKey("cyrillic", "д")];
+const CYRILLIC_IE = DUCTUS[ductusKey("cyrillic", "е")];
+const CYRILLIC_IO = DUCTUS[ductusKey("cyrillic", "ё")];
+const CYRILLIC_ZHE = DUCTUS[ductusKey("cyrillic", "ж")];
+const CYRILLIC_ZE = DUCTUS[ductusKey("cyrillic", "з")];
+const CYRILLIC_I = DUCTUS[ductusKey("cyrillic", "и")];
+const CYRILLIC_SHORT_I = DUCTUS[ductusKey("cyrillic", "й")];
+const CYRILLIC_KA = DUCTUS[ductusKey("cyrillic", "к")];
+const CYRILLIC_EL = DUCTUS[ductusKey("cyrillic", "л")];
+const CYRILLIC_EM = DUCTUS[ductusKey("cyrillic", "м")];
+const CYRILLIC_EN = DUCTUS[ductusKey("cyrillic", "н")];
+const CYRILLIC_O = DUCTUS[ductusKey("cyrillic", "о")];
+const CYRILLIC_PE = DUCTUS[ductusKey("cyrillic", "п")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1214,6 +1228,224 @@ describe("handwriting ductus", () => {
     expect(lower.at(-1)!.y).toBeGreaterThan(lower[0].y);
   });
 
+  it("Cyrillic г climbs, retraces its top bar, and descends without lifting", () => {
+    expect(CYRILLIC_GE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_GE)).toBe(0);
+    expect(CYRILLIC_GE.strokes).toHaveLength(1);
+    expect(CYRILLIC_GE.strokes[0].segments).toHaveLength(2);
+    const outward = CYRILLIC_GE.strokes[0].segments[0].path;
+    const returnPath = CYRILLIC_GE.strokes[0].segments[1].path;
+    expect(outward.at(-1)).toEqual(returnPath[0]);
+    expect(outward[0].y).toBeLessThan(outward.at(-1)!.y);
+    expect(outward[0].x).toBeLessThan(outward.at(-1)!.x);
+    expect(returnPath.at(-1)).toEqual(outward[0]);
+  });
+
+  it("Cyrillic д closes its body before retracing both feet without lifting", () => {
+    expect(CYRILLIC_DE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_DE)).toBe(0);
+    expect(CYRILLIC_DE.strokes).toHaveLength(1);
+    expect(CYRILLIC_DE.strokes[0].segments).toHaveLength(2);
+    const body = CYRILLIC_DE.strokes[0].segments[0].path;
+    const base = CYRILLIC_DE.strokes[0].segments[1].path;
+    expect(body.at(-1)).toEqual(base[0]);
+    expect(body.at(-1)).toEqual(body[0]);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.min(...base.map((point) => point.y))).toBeLessThan(
+      Math.min(...body.map((point) => point.y)),
+    );
+    expect(Math.min(...base.map((point) => point.x))).toBeLessThan(body[0].x);
+  });
+
+  it("Cyrillic е crosses the middle before continuing around its lower bowl", () => {
+    expect(CYRILLIC_IE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_IE)).toBe(0);
+    expect(CYRILLIC_IE.strokes).toHaveLength(1);
+    expect(CYRILLIC_IE.strokes[0].segments).toHaveLength(2);
+    const upper = CYRILLIC_IE.strokes[0].segments[0].path;
+    const lower = CYRILLIC_IE.strokes[0].segments[1].path;
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
+    expect(Math.max(...upper.map((point) => point.y))).toBeGreaterThan(upper[0].y);
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(
+      Math.min(...upper.map((point) => point.y)),
+    );
+    expect(lower.at(-1)!.x).toBeGreaterThan(lower[0].x - 100);
+  });
+
+  it("Cyrillic ё completes its body before two separately lifted dots", () => {
+    expect(CYRILLIC_IO.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_IO)).toBe(2);
+    expect(CYRILLIC_IO.strokes).toHaveLength(3);
+    expect(CYRILLIC_IO.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    expect(penPath(CYRILLIC_IO.strokes[0])).toEqual(penPath(CYRILLIC_IE.strokes[0]));
+    const leftDot = penPath(CYRILLIC_IO.strokes[1]);
+    const rightDot = penPath(CYRILLIC_IO.strokes[2]);
+    expect(leftDot[0].x).toBeLessThan(rightDot[0].x);
+    expect(leftDot[0].y).toBe(rightDot[0].y);
+    expect(leftDot[0].y).toBeGreaterThan(
+      Math.max(...penPath(CYRILLIC_IO.strokes[0]).map((point) => point.y)),
+    );
+  });
+
+  it("Cyrillic ж traces both wings through one continuous central run", () => {
+    expect(CYRILLIC_ZHE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_ZHE)).toBe(0);
+    expect(CYRILLIC_ZHE.strokes).toHaveLength(1);
+    expect(CYRILLIC_ZHE.strokes[0].segments).toHaveLength(2);
+    const left = CYRILLIC_ZHE.strokes[0].segments[0].path;
+    const right = CYRILLIC_ZHE.strokes[0].segments[1].path;
+    expect(left.at(-1)).toEqual(right[0]);
+    expect(Math.min(...left.map((point) => point.x))).toBeLessThan(right[0].x);
+    expect(Math.max(...right.map((point) => point.x))).toBeGreaterThan(left.at(-1)!.x);
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(right.at(-1)!.y).toBeLessThan(right[0].y);
+  });
+
+  it("Cyrillic з joins its smaller upper lobe to its larger lower lobe", () => {
+    expect(CYRILLIC_ZE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_ZE)).toBe(0);
+    expect(CYRILLIC_ZE.strokes).toHaveLength(1);
+    expect(CYRILLIC_ZE.strokes[0].segments).toHaveLength(2);
+    const upper = CYRILLIC_ZE.strokes[0].segments[0].path;
+    const lower = CYRILLIC_ZE.strokes[0].segments[1].path;
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(Math.max(...upper.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...lower.map((point) => point.y)),
+    );
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(
+      Math.min(...upper.map((point) => point.y)),
+    );
+    expect(Math.max(...lower.map((point) => point.x))).toBeGreaterThan(lower[0].x);
+  });
+
+  it("Cyrillic и joins its two descending stems with a rising diagonal", () => {
+    expect(CYRILLIC_I.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_I)).toBe(0);
+    expect(CYRILLIC_I.strokes).toHaveLength(1);
+    expect(CYRILLIC_I.strokes[0].segments).toHaveLength(3);
+    const left = CYRILLIC_I.strokes[0].segments[0].path;
+    const diagonal = CYRILLIC_I.strokes[0].segments[1].path;
+    const right = CYRILLIC_I.strokes[0].segments[2].path;
+    expect(left.at(-1)).toEqual(diagonal[0]);
+    expect(diagonal.at(-1)).toEqual(right[0]);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(diagonal[0].y).toBeLessThan(diagonal.at(-1)!.y);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+  });
+
+  it("Cyrillic й completes its joined body before the lifted breve", () => {
+    expect(CYRILLIC_SHORT_I.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_SHORT_I)).toBe(1);
+    expect(CYRILLIC_SHORT_I.strokes).toHaveLength(2);
+    expect(CYRILLIC_SHORT_I.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    const body = CYRILLIC_SHORT_I.strokes[0].segments;
+    expect(body[0].path.at(-1)).toEqual(body[1].path[0]);
+    expect(body[1].path.at(-1)).toEqual(body[2].path[0]);
+    const breve = CYRILLIC_SHORT_I.strokes[1].segments[0].path;
+    expect(breve[0].x).toBeLessThan(breve.at(-1)!.x);
+    expect(Math.min(...breve.map((point) => point.y))).toBeLessThan(breve[0].y);
+    expect(Math.min(...breve.map((point) => point.y))).toBeLessThan(breve.at(-1)!.y);
+  });
+
+  it("Cyrillic к joins its descending stem to the upper and lower arms", () => {
+    expect(CYRILLIC_KA.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_KA)).toBe(0);
+    expect(CYRILLIC_KA.strokes).toHaveLength(1);
+    expect(CYRILLIC_KA.strokes[0].segments).toHaveLength(3);
+    const [stem, upper, lower] = CYRILLIC_KA.strokes[0].segments.map((segment) => segment.path);
+    expect(stem.at(-1)).toEqual(upper[0]);
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(Math.max(...upper.map((point) => point.y))).toBeGreaterThan(upper.at(-1)!.y);
+    expect(Math.max(...upper.map((point) => point.x))).toBeGreaterThan(upper.at(-1)!.x);
+    expect(lower.at(-1)!.x).toBeGreaterThan(lower[0].x);
+    expect(lower.at(-1)!.y).toBeLessThan(lower[0].y);
+  });
+
+  it("Cyrillic л joins its hooked left leg to the top shoulder and right stem", () => {
+    expect(CYRILLIC_EL.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_EL)).toBe(0);
+    expect(CYRILLIC_EL.strokes).toHaveLength(1);
+    expect(CYRILLIC_EL.strokes[0].segments).toHaveLength(3);
+    const [left, shoulder, right] = CYRILLIC_EL.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(left.at(-1)).toEqual(shoulder[0]);
+    expect(shoulder.at(-1)).toEqual(right[0]);
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(left[0].x).toBeLessThan(left.at(-1)!.x);
+    expect(shoulder.at(-1)!.x).toBeGreaterThan(shoulder[0].x);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
+  it("Cyrillic м joins its two apexes through the central valley", () => {
+    expect(CYRILLIC_EM.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_EM)).toBe(0);
+    expect(CYRILLIC_EM.strokes).toHaveLength(1);
+    expect(CYRILLIC_EM.strokes[0].segments).toHaveLength(4);
+    const [left, down, up, right] = CYRILLIC_EM.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(left.at(-1)).toEqual(down[0]);
+    expect(down.at(-1)).toEqual(up[0]);
+    expect(up.at(-1)).toEqual(right[0]);
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(down.at(-1)!.y).toBeLessThan(down[0].y);
+    expect(up.at(-1)!.y).toBeGreaterThan(up[0].y);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
+  it("Cyrillic н joins its two stems through the middle bridge", () => {
+    expect(CYRILLIC_EN.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_EN)).toBe(0);
+    expect(CYRILLIC_EN.strokes).toHaveLength(1);
+    expect(CYRILLIC_EN.strokes[0].segments).toHaveLength(3);
+    const [left, bridge, right] = CYRILLIC_EN.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(left.at(-1)).toEqual(bridge[0]);
+    expect(bridge.at(-1)).toEqual(right[0]);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(Math.min(...bridge.map((point) => point.y))).toBe(left.at(-1)!.y);
+    expect(bridge.some((point) => point.x > left[0].x && point.y === 274)).toBe(true);
+    expect(bridge.at(-1)!.y).toBeGreaterThan(bridge[0].y);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
+  it("Cyrillic о closes one counterclockwise oval without lifting", () => {
+    expect(CYRILLIC_O.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_O)).toBe(0);
+    expect(CYRILLIC_O.strokes).toHaveLength(1);
+    expect(CYRILLIC_O.strokes[0].segments).toHaveLength(2);
+    const [left, right] = CYRILLIC_O.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(left.at(-1)).toEqual(right[0]);
+    expect(right.at(-1)).toEqual(left[0]);
+    expect(Math.min(...left.map((point) => point.x))).toBeLessThan(left[0].x);
+    expect(Math.max(...left.map((point) => point.y))).toBeGreaterThan(left[0].y);
+    expect(Math.min(...left.map((point) => point.y))).toBeLessThan(left[0].y);
+    expect(Math.max(...right.map((point) => point.x))).toBeGreaterThan(left[0].x);
+  });
+
+  it("Cyrillic п joins its two stems through the top shoulder", () => {
+    expect(CYRILLIC_PE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_PE)).toBe(0);
+    expect(CYRILLIC_PE.strokes).toHaveLength(1);
+    expect(CYRILLIC_PE.strokes[0].segments).toHaveLength(3);
+    const [left, shoulder, right] = CYRILLIC_PE.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(left.at(-1)).toEqual(shoulder[0]);
+    expect(shoulder.at(-1)).toEqual(right[0]);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(shoulder.at(-1)!.x).toBeGreaterThan(shoulder[0].x);
+    expect(shoulder.at(-1)!.y).toBe(shoulder[4].y);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2254,6 +2486,30 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("в", CYRILLIC_VE.source.url)).toBe(
       "_fonts/NotoSansCyrillic-Static.ttf",
     );
+    expect(verifiedLetterFont("г", CYRILLIC_GE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("д", CYRILLIC_DE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("е", CYRILLIC_IE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ё", CYRILLIC_IO.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ж", CYRILLIC_ZHE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("з", CYRILLIC_ZE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("и", CYRILLIC_I.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
+    expect(verifiedLetterFont("й", CYRILLIC_SHORT_I.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -3039,6 +3295,160 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*01:33–01:38.*starts at the baseline.*tall upper loop.*descends to the baseline.*counterclockwise.*lower bowl.*one continuous pen-down run.*zero intervening lifts.*looped Latin cursive b.*bundled Noto Sans Cyrillic.*two stacked bowls.*straight left stem.*baseline-to-upper-loop-to-baseline-to-lower-bowl order.*printed upper bowl.*font's ink.*connected cursive.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic г traces its zero-lift cursive humps to the all-letter native lesson", () => {
+    const src = CYRILLIC_GE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase г.*01:54–01:57.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*01:54–01:57.*rises from the baseline.*main shoulder.*turns at the baseline.*smaller rising-and-falling exit arch.*one continuous pen-down run.*zero intervening lifts.*rounded cursive form.*two humps.*bundled Noto Sans Cyrillic.*block-like printed form.*straight upright.*top bar.*no exit arch.*baseline-to-shoulder-to-baseline lift count.*climb the upright.*reverse to the junction.*descend the upright.*connected cursive restores.*exit arch/i,
+    );
+  });
+
+  it("Cyrillic д traces its zero-lift body and descender to the all-letter native lesson", () => {
+    const src = CYRILLIC_DE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase д.*02:14–02:19.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*02:14–02:19.*circles the rounded body counterclockwise.*upper-right junction.*descends below the baseline.*loops left.*rightward exit.*one continuous pen-down run.*zero intervening lifts.*looped Latin cursive g.*bundled Noto Sans Cyrillic.*block-like printed form.*trapezoidal body.*joined base shelf.*two separated feet.*body-before-descender order.*circle the body.*right stem and foot.*sweep left.*left foot.*finish rightward.*connected cursive restores.*below-baseline loop.*exit join/i,
+    );
+  });
+
+  it("Cyrillic е traces its zero-lift looped form to the all-letter native lesson", () => {
+    const src = CYRILLIC_IE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase е.*02:26–02:30.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*02:26–02:30.*begins at the upper right.*curves left around the upper loop.*crosses through the middle.*counterclockwise.*rounded lower bowl.*one continuous pen-down run.*zero intervening lifts.*tall open epsilon-like form.*small crossing loop.*bundled Noto Sans Cyrillic.*compact printed e.*long middle bar.*open right side.*upper-loop-to-middle-to-lower-bowl order.*curve around the upper bowl.*sweep right.*reverse through the junction.*circle the lower bowl.*connected cursive.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic ё traces its body and two dots to the all-letter native lesson", () => {
+    const src = CYRILLIC_IO.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase ё.*02:51–02:56.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*02:51–02:56.*upper-loop-to-middle-to-lower-bowl body.*one continuous pen-down run.*left dot.*right dot.*three strokes.*two intervening lifts.*tall open epsilon-like body.*small crossing loop.*two dots above.*bundled Noto Sans Cyrillic.*compact printed e.*long middle bar.*two circular dots.*body-before-left-dot-before-right-dot order.*curve around the upper bowl.*sweep and reverse.*circle the lower bowl.*left to right.*connected cursive.*dots remain separate.*substitutes е.*always stressed/i,
+    );
+  });
+
+  it("Cyrillic ж traces its zero-lift wings to the all-letter native lesson", () => {
+    const src = CYRILLIC_ZHE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase ж.*03:16–03:21.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*03:16–03:21.*lower left.*left arch.*tall central loop.*descends through the middle.*right arch.*rightward exit.*without lifting.*one continuous pen-down run.*zero intervening lifts.*rounded, looped form.*joined cursive arches.*bundled Noto Sans Cyrillic.*symmetric printed form.*straight central upright.*four diagonal arms.*lower-left-to-centre-to-right order.*lower-left arm.*retrace the upright.*upper-right arm.*return to the centre.*lower-right arm.*connected cursive.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic з traces its zero-lift lobes to the all-letter native lesson", () => {
+    const src = CYRILLIC_ZE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase з.*03:34–03:39.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*03:34–03:39.*upper left.*smaller upper lobe.*descends through the middle.*larger lower lobe.*curls left along the baseline.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*looped digit 3.*open left side.*exit join.*bundled Noto Sans Cyrillic.*compact printed form.*two open-right lobes.*no exit join.*upper-lobe-to-lower-lobe order.*circle the upper lobe.*middle junction.*circle the lower lobe.*lower-right tip.*connected cursive restores.*small rising exit/i,
+    );
+  });
+
+  it("Cyrillic и traces its zero-lift stems to the all-letter native lesson", () => {
+    const src = CYRILLIC_I.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase и.*03:56–04:02.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*03:56–04:02.*upper left.*descends to the baseline.*rising diagonal.*descends the right stem.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded Latin u.*rising entry side.*exit join.*bundled Noto Sans Cyrillic.*printed backwards-N form.*two straight vertical stems.*no entry or exit joins.*left-stem-to-rising-diagonal-to-right-stem order.*descend the left stem.*baseline.*rise through the diagonal.*descend the right stem.*connected cursive restores.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic й traces its body and breve to the all-letter native lesson", () => {
+    const src = CYRILLIC_SHORT_I.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase й.*04:17–04:24.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*04:17–04:24.*same left-stem-to-rising-diagonal-to-right-stem body.*one continuous pen-down run.*small rising exit.*lifts.*breve above from left to right.*one dipped arc.*two strokes.*one intervening lift.*rounded Latin u.*entry and exit joins.*shallow curved breve.*bundled Noto Sans Cyrillic.*printed backwards-N body.*two straight stems.*separate thicker breve.*body-before-breve order.*left-to-right breve direction.*one-lift evidence.*descend the left stem.*rise through the diagonal.*descend the right stem.*sweep down and up through the breve.*connected cursive restores.*breve remains separate/i,
+    );
+  });
+
+  it("Cyrillic к traces its zero-lift stem and arms to the all-letter native lesson", () => {
+    const src = CYRILLIC_KA.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase к.*04:45–04:51.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*04:45–04:51.*upper left.*descends the left stem to the baseline.*looped upper-right arm.*returns to the middle junction.*lower arm.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded, looped upper arm.*entry and exit joins.*bundled Noto Sans Cyrillic.*straight vertical stem.*two angular diagonal arms.*left-stem-to-upper-arm-to-lower-arm order.*zero-lift evidence.*retrace upward through the middle.*upper diagonal out and back.*lower diagonal.*connected cursive restores.*rounded upper loop/i,
+    );
+  });
+
+  it("Cyrillic л traces its zero-lift legs to the all-letter native lesson", () => {
+    const src = CYRILLIC_EL.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase л.*05:06–05:10.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*05:06–05:10.*near the baseline.*curves left around a small hook.*rises steeply.*high apex.*descends through the right leg.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*pointed apex.*slanted right leg.*entry and exit joins.*bundled Noto Sans Cyrillic.*block-like printed form.*curved left leg.*horizontal top shoulder.*straight right stem.*hooked-left-leg-to-apex-to-right-leg order.*zero-lift evidence.*curve through the left leg.*sweep along the top shoulder.*descend the right stem.*connected cursive restores.*rising exit/i,
+    );
+  });
+
+  it("Cyrillic м traces its zero-lift arches to the all-letter native lesson", () => {
+    const src = CYRILLIC_EM.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase м.*05:26–05:31.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*05:26–05:31.*near the baseline.*small entry hook.*first apex.*central valley.*second apex.*right leg.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*two rounded arches.*entry and exit joins.*bundled Noto Sans Cyrillic.*angular printed form.*two straight upright stems.*deep central V.*entry-to-first-apex-to-valley-to-second-apex-to-baseline order.*zero-lift evidence.*rise through the left stem.*central V.*descend the right stem.*connected cursive restores.*rounded arches/i,
+    );
+  });
+
+  it("Cyrillic н traces its zero-lift bridge to the all-letter native lesson", () => {
+    const src = CYRILLIC_EN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase н.*05:47–05:52.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*05:47–05:52.*upper left.*left stem.*baseline.*turns upward without lifting.*rounded middle bridge.*right shoulder.*right stem.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded bridge.*entry and exit joins.*bundled Noto Sans Cyrillic.*printed H-like form.*two straight vertical stems.*horizontal middle bar.*left-stem-to-middle-bridge-to-right-stem order.*zero-lift evidence.*retrace to the middle junction.*horizontal bar.*upper-right tip.*descend the right stem.*connected cursive restores/i,
+    );
+  });
+
+  it("Cyrillic о traces its zero-lift oval to the all-letter native lesson", () => {
+    const src = CYRILLIC_O.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase о.*05:59–06:03.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*05:59–06:03.*upper right.*left across the top.*left side.*bottom.*right side.*closes the oval.*one continuous counterclockwise pen-down run.*zero intervening lifts.*tall, slightly slanted oval.*bundled Noto Sans Cyrillic.*wider, upright printed oval.*upper-right-to-left-side-to-bottom-to-right-side closure order.*zero-lift evidence.*closed counterclockwise oval.*connected cursive may add.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic п traces its zero-lift shoulder to the all-letter native lesson", () => {
+    const src = CYRILLIC_PE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase п.*06:26–06:31.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*06:26–06:31.*upper left.*left stem.*baseline.*turns upward without lifting.*rounded top shoulder.*right stem.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded Latin n.*entry and exit joins.*bundled Noto Sans Cyrillic.*printed squared arch.*two straight vertical stems.*horizontal top bar.*left-stem-to-top-shoulder-to-right-stem order.*zero-lift evidence.*retrace to the upper-left junction.*top bar.*descend the right stem.*connected cursive restores/i,
     );
   });
 

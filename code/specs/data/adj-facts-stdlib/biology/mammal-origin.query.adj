@@ -1,0 +1,23 @@
+% ============================================================================
+% mammal-origin.query — worked recall queries against mammal-origin.adj
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind an
+% origin, list its mammals), and a full-domain sweep demonstrating no
+% abstention across all seven mammals.
+% ============================================================================
+
+import "mammal-origin.adj"
+
+% Forward: is a kangaroo introduced or marsupial?
+? mammal_origin(kangaroo, $Origin)
+
+% Backward: which mammals are introduced (non-native)?
+? mammal_origin($Animal, introduced)
+
+% Full-domain sweep: every mammal animal-classes.adj ships has an origin on
+% record -- no abstention.
+? mammal_origin(cat, $O1)
+? mammal_origin(bandicoot, $O2)
+? mammal_origin(quoll, $O3)
+? mammal_origin(koala, $O4)

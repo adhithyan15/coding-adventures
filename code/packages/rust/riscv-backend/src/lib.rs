@@ -13,16 +13,21 @@ use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
     encode_div, encode_divu, encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu,
-    encode_lw, encode_or, encode_ori, encode_rem, encode_remu, encode_sll, encode_slli, encode_slt,
+    encode_lbu, encode_lw, encode_or, encode_ori, encode_rem, encode_remu, encode_sb, encode_sll,
+    encode_slli, encode_slt,
     encode_sltu, encode_sra, encode_srai, encode_srl, encode_srli, encode_sub, encode_xor,
     encode_xori, encode_sw, A0, RET_WORD,
     X0_ZERO, X1_RA,
 };
-use riscv_simulator::RiscVSimulator;
+use riscv_simulator::{
+    HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_I64,
+    HOST_ECALL_READ_BYTE, HOST_ECALL_WRITE_BYTE,
+};
 use vm_core::value::Value;
 
 const DEFAULT_MEMORY_SIZE: usize = 64 * 1024;
 const DEFAULT_STEP_LIMIT: usize = 100_000;
+const MEMORY_BOUNDS_EXIT_CODE: i32 = 2;
 const ARG_REGISTERS: [u32; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
 const A1: u32 = 11;
 const SCRATCH_REGISTER: u32 = 31;
@@ -38,12 +43,21 @@ const DIVISION_DIVISOR_NONZERO_REGISTER: u32 = 25;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
 const VALUE_REGISTER_PAIRS: [(u32, u32); 3] = [(5, 6), (7, 28), (29, 30)];
 /// Reserved for scalar results when every temporary pair is live. No current
-/// lowering sequence uses `x9`, and direct calls are still unsupported.
+/// lowering sequence uses `x9`.
 const MIXED_WIDTH_REGISTER: u32 = 9;
 const COMPARISON_HIGH_REGISTER: u32 = 20;
 const STACK_POINTER: u32 = 2;
 const SPILLED_LHS_REGISTER: u32 = 26;
 const SPILLED_RHS_REGISTER: u32 = 27;
+
+/// A typed CIR function participating in one flat RV32I module image.
+///
+/// `compile_module` places the selected entry point first, then resolves its
+/// direct calls to the remaining function bodies with PC-relative `jal` words.
+pub struct ModuleFunction<'a> {
+    pub context: FunctionContext<'a>,
+    pub cir: &'a [CIRInstr],
+}
 
 /// The RV32I backend.  Stateless — every compilation gets fresh allocation.
 #[derive(Debug, Default, Clone, Copy)]
@@ -56,17 +70,27 @@ impl Riscv32Backend {
 }
 
 /// Result of running a compiled RV32I function in the in-tree simulator.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RunResult {
     pub return_value: i32,
     pub return_value_high: u32,
     pub halted: bool,
     pub steps: usize,
+    /// Signed integer values written through the simulator host ABI.
+    pub output: Vec<i64>,
+    /// Bytes written through the simulator character-output service.
+    pub byte_output: Vec<u8>,
+    /// Guest status supplied to the host exit service, if one was used.
+    pub exit_code: Option<i32>,
 }
 
 /// Errors reported by the RISC-V scalar lowering and execution surface.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BackendError {
+    InFunction {
+        function: String,
+        error: Box<BackendError>,
+    },
     UnsupportedOp(String),
     UnsupportedType(String),
     /// A value the module needs to hold in a register is a floating-point
@@ -84,12 +108,16 @@ pub enum BackendError {
     OutOfRegisters,
     TooManyArguments(usize),
     BranchOutOfRange { label: String, offset: i64 },
+    CallOutOfRange { function: String, offset: i64 },
     ExecutionDidNotHalt { steps: usize },
 }
 
 impl fmt::Display for BackendError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InFunction { function, error } => {
+                write!(f, "riscv-backend: function {function:?}: {error}")
+            }
             Self::UnsupportedOp(op) => write!(f, "riscv-backend: unsupported op {op:?}"),
             Self::UnsupportedType(ty) => {
                 write!(f, "riscv-backend: unsupported RV32I scalar type {ty:?}")
@@ -124,6 +152,10 @@ impl fmt::Display for BackendError {
                 f,
                 "riscv-backend: branch to label {label:?} has out-of-range offset {offset}"
             ),
+            Self::CallOutOfRange { function, offset } => write!(
+                f,
+                "riscv-backend: call to function {function:?} has out-of-range offset {offset}"
+            ),
             Self::ExecutionDidNotHalt { steps } => write!(
                 f,
                 "riscv-backend: simulator did not halt within {steps} steps"
@@ -136,7 +168,7 @@ impl std::error::Error for BackendError {}
 
 /// Lower a single typed CIR function to a flat little-endian RV32I binary.
 pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    let mut lowerer = Lowerer::new(ctx, cir)?;
+    let mut lowerer = Lowerer::new(ctx, cir, false, None, None, None, false)?;
     for instr in cir {
         lowerer.lower(instr)?;
         lowerer.consume_value_sources(instr);
@@ -148,6 +180,139 @@ pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, B
     Ok(assemble(&lowerer.words))
 }
 
+/// Lower and link a module of CIR functions into one executable RV32I image.
+///
+/// The entry function begins at address zero so [`run_binary`] can execute the
+/// image directly. Direct calls marshal scalar and 64-bit pair values through
+/// the starter RV32 ABI. Values that remain live in the caller are deliberately
+/// refused until caller-save spilling lands.
+pub fn compile_module(
+    functions: &[ModuleFunction<'_>],
+    entry_point: Option<&str>,
+) -> Result<Vec<u8>, BackendError> {
+    if functions.is_empty() {
+        return Ok(RET_WORD.to_le_bytes().to_vec());
+    }
+    let mut ordered: Vec<&ModuleFunction<'_>> = functions.iter().collect();
+    if let Some(entry_point) = entry_point {
+        let entry_index = ordered
+            .iter()
+            .position(|function| function.context.name == entry_point)
+            .ok_or_else(|| BackendError::UndefinedLabel(entry_point.to_owned()))?;
+        ordered.swap(0, entry_index);
+    }
+
+    let mut function_signatures = HashMap::with_capacity(ordered.len());
+    for function in &ordered {
+        if function_signatures
+            .insert(
+                function.context.name.to_owned(),
+                FunctionSignature {
+                    params: function
+                        .context
+                        .params
+                        .iter()
+                        .map(|(_, ty)| ty.clone())
+                        .collect(),
+                    return_type: function.context.return_type.to_owned(),
+                },
+            )
+            .is_some()
+        {
+            return Err(BackendError::InvalidOperand(format!(
+                "duplicate module function {:?}",
+                function.context.name
+            )));
+        }
+    }
+
+    let direct_call_targets: HashSet<String> = ordered
+        .iter()
+        .flat_map(|function| function.cir)
+        .filter(|instr| instr.op == "call")
+        .filter_map(|instr| match instr.srcs.first() {
+            Some(CIROperand::Var(function)) => Some(function.clone()),
+            _ => None,
+        })
+        .collect();
+    let global_layout = GlobalLayout::collect(&ordered)?;
+    let allocation_layout = ByteAllocationLayout::collect(&ordered, global_layout.byte_len)?;
+
+    let mut lowerers = Vec::with_capacity(ordered.len());
+    for function in &ordered {
+        let mut lowerer = Lowerer::new(
+            &function.context,
+            function.cir,
+            true,
+            Some(&function_signatures),
+            Some(&global_layout),
+            Some(&allocation_layout),
+            direct_call_targets.contains(function.context.name),
+        )?;
+        for instr in function.cir {
+            lowerer.lower(instr).map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+            lowerer.consume_value_sources(instr);
+        }
+        lowerer
+            .resolve_branches()
+            .map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+        if lowerer.words.is_empty() {
+            lowerer.words.push(RET_WORD);
+        }
+        lowerers.push(lowerer);
+    }
+
+    let mut function_offsets = HashMap::with_capacity(ordered.len());
+    let mut offset = 0usize;
+    for (function, lowerer) in ordered.iter().zip(&lowerers) {
+        function_offsets.insert(function.context.name.to_owned(), offset);
+        offset += lowerer.words.len() * 4;
+    }
+
+    let mut bytes = Vec::with_capacity(offset);
+    let mut function_offset = 0usize;
+    for (function, lowerer) in ordered.iter().zip(&mut lowerers) {
+        lowerer
+            .resolve_calls(function_offset, &function_offsets)
+            .map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+        lowerer
+            .resolve_data_addresses(offset)
+            .map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+        bytes.extend_from_slice(&assemble(&lowerer.words));
+        function_offset += lowerer.words.len() * 4;
+    }
+    bytes.resize(bytes.len() + allocation_layout.byte_len, 0);
+    for image in allocation_layout.images.values() {
+        let start = offset + image.offset;
+        bytes[start..start + image.bytes.len()].copy_from_slice(&image.bytes);
+    }
+    if let Some(cursor_offset) = allocation_layout.heap_cursor_offset {
+        let heap_start = offset
+            .checked_add(allocation_layout.byte_len)
+            .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+        let heap_start = u32::try_from(heap_start)
+            .map_err(|_| BackendError::ImmediateOutOfRange(heap_start as i64))?;
+        bytes[offset + cursor_offset..offset + cursor_offset + 4]
+            .copy_from_slice(&heap_start.to_le_bytes());
+    }
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&RET_WORD.to_le_bytes());
+    }
+    Ok(bytes)
+}
+
 /// Run a function binary under the starter RV32I ABI.
 ///
 /// The input binary ends in a normal `ret`.  The runner appends a single
@@ -155,15 +320,32 @@ pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, B
 /// address zero.  This preserves normal function code while giving a flat
 /// binary a deterministic simulator exit point.
 pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendError> {
+    run_binary_with_input(binary, args, &[])
+}
+
+/// Run a function binary with bytes supplied to the simulator character-input service.
+pub fn run_binary_with_input(
+    binary: &[u8],
+    args: &[Value],
+    input: &[u8],
+) -> Result<RunResult, BackendError> {
     if args.len() > ARG_REGISTERS.len() {
         return Err(BackendError::TooManyArguments(args.len()));
     }
 
     let mut program = binary.to_vec();
+    program.resize((program.len() + 3) & !3, 0);
     let return_trampoline = program.len();
+    // A program may have used a host service immediately before returning.
+    // Clear a7 so the runner's terminal ecall keeps its historical halt-only
+    // meaning rather than replaying that last service.
+    program.extend_from_slice(
+        &encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, X0_ZERO, 0).to_le_bytes(),
+    );
     program.extend_from_slice(&encode_ecall().to_le_bytes());
 
     let mut simulator = RiscVSimulator::new(DEFAULT_MEMORY_SIZE);
+    simulator.set_host_input(input);
     simulator.load_program(&program);
     simulator
         .regs
@@ -186,6 +368,23 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
         return_value_high: simulator.regs.read(A1 as usize),
         halted: result.halted,
         steps: result.steps,
+        output: simulator
+            .host_events
+            .iter()
+            .filter_map(|event| match event {
+                HostEvent::WriteI64(value) => Some(*value),
+                HostEvent::WriteByte(_) | HostEvent::ReadByte(_) | HostEvent::Exit(_) => None,
+            })
+            .collect(),
+        byte_output: simulator
+            .host_events
+            .iter()
+            .filter_map(|event| match event {
+                HostEvent::WriteByte(value) => Some(*value),
+                HostEvent::WriteI64(_) | HostEvent::ReadByte(_) | HostEvent::Exit(_) => None,
+            })
+            .collect(),
+        exit_code: simulator.exit_code,
     })
 }
 
@@ -196,12 +395,32 @@ struct Lowerer {
     word_sized_values: HashSet<String>,
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
+    calls: Vec<PendingCall>,
+    global_layout: Option<GlobalLayout>,
+    allocation_layout: Option<ByteAllocationLayout>,
+    function_name: String,
+    pending_globals: Vec<PendingGlobal>,
+    /// The old location of a non-SSA destination while its defining
+    /// instruction is still reading it as a source.
+    pending_reassignment: Option<PendingReassignment>,
     /// Value uses still to be lowered. The allocator uses this to reclaim dead
     /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
+    allow_direct_calls: bool,
+    call_signatures: HashMap<String, FunctionSignature>,
+    canonicalize_wide_return: bool,
     next_internal_label: usize,
     frame_size: i32,
+    return_address_offset: Option<i32>,
+    call_argument_words: usize,
+    call_save_words: usize,
     next_spill_slot: usize,
+}
+
+#[derive(Debug, Clone)]
+struct FunctionSignature {
+    params: Vec<String>,
+    return_type: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -210,6 +429,18 @@ enum ValueLocation {
     Pair { lo: u32, hi: u32 },
     Spill { offset: i32 },
     PairSpill { lo_offset: i32, hi_offset: i32 },
+}
+
+#[derive(Debug, Clone)]
+struct PendingReassignment {
+    name: String,
+    old_location: ValueLocation,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum SavedValue {
+    Word { register: u32, offset: i32 },
+    Pair { lo: u32, hi: u32, offset: i32 },
 }
 
 impl ValueLocation {
@@ -237,20 +468,258 @@ struct PendingBranch {
     kind: BranchKind,
 }
 
-impl Lowerer {
-    fn new(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Self, BackendError> {
-        if ctx.params.len() > ARG_REGISTERS.len() {
-            return Err(BackendError::TooManyArguments(ctx.params.len()));
+#[derive(Debug, Clone)]
+struct PendingCall {
+    word_index: usize,
+    function: String,
+}
+
+#[derive(Debug, Clone)]
+struct PendingGlobal {
+    word_index: usize,
+    slot_offset: usize,
+}
+
+#[derive(Debug, Clone)]
+struct GlobalSlot {
+    offset: usize,
+    ty: String,
+}
+
+#[derive(Debug, Clone, Default)]
+struct GlobalLayout {
+    slots: HashMap<String, GlobalSlot>,
+    byte_len: usize,
+}
+
+#[derive(Debug, Clone)]
+struct ByteAllocation {
+    offset: usize,
+    size: usize,
+}
+
+#[derive(Debug, Clone)]
+struct DynamicByteAllocation {
+    size_offset: usize,
+}
+
+#[derive(Debug, Clone)]
+struct DataImage {
+    offset: usize,
+    bytes: Vec<u8>,
+}
+
+/// Zero-filled byte buffers appended after module globals.
+///
+/// A byte-buffer value is an `i64`/`u64` pair whose low word is its address and
+/// whose high word is its allocation length. Keeping the length in the normal
+/// wide-value representation lets checked buffers cross ordinary moves, calls,
+/// returns, and global storage without a second ABI.
+#[derive(Debug, Clone, Default)]
+struct ByteAllocationLayout {
+    slots: HashMap<(String, String), ByteAllocation>,
+    dynamic_slots: HashMap<(String, String), DynamicByteAllocation>,
+    images: HashMap<String, DataImage>,
+    heap_cursor_offset: Option<usize>,
+    byte_len: usize,
+}
+
+impl ByteAllocationLayout {
+    fn collect(
+        functions: &[&ModuleFunction<'_>],
+        initial_offset: usize,
+    ) -> Result<Self, BackendError> {
+        let mut layout = Self {
+            slots: HashMap::new(),
+            dynamic_slots: HashMap::new(),
+            images: HashMap::new(),
+            heap_cursor_offset: None,
+            byte_len: initial_offset,
+        };
+        for function in functions {
+            let mut constants = HashMap::new();
+            for instr in function.cir {
+                if let (Some(destination), Some(CIROperand::Int(value))) =
+                    (instr.dest.as_ref(), instr.srcs.first())
+                {
+                    if instr.op.starts_with("const_") {
+                        constants.insert(destination.clone(), *value);
+                    }
+                }
+                if instr.op == "str_const" {
+                    let Some(CIROperand::Var(literal)) = instr.srcs.first() else {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(
+                                "str_const srcs[0] must be Var(literal)".to_owned(),
+                            )),
+                        });
+                    };
+                    if instr.dest.is_none() || instr.ty != "str" {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(
+                                "str_const requires a str destination".to_owned(),
+                            )),
+                        });
+                    }
+                    if !layout.images.contains_key(literal) {
+                        let bytes = literal.as_bytes().to_vec();
+                        let offset = layout.byte_len;
+                        layout.byte_len = layout
+                            .byte_len
+                            .checked_add(bytes.len())
+                            .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                        layout
+                            .images
+                            .insert(literal.clone(), DataImage { offset, bytes });
+                    }
+                }
+                if instr.op != "alloc_bytes" {
+                    continue;
+                }
+                let destination = instr.dest.as_ref().ok_or_else(|| BackendError::InFunction {
+                    function: function.context.name.to_owned(),
+                    error: Box::new(BackendError::InvalidOperand(
+                        "alloc_bytes requires a dest".to_owned(),
+                    )),
+                })?;
+                if !matches!(instr.ty.as_str(), "i64" | "u64") {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::UnsupportedType(instr.ty.clone())),
+                    });
+                }
+                let Some(CIROperand::Var(size_name)) = instr.srcs.first() else {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(
+                            "alloc_bytes srcs[0] must be a prior integer const Var".to_owned(),
+                        )),
+                    });
+                };
+                let key = (function.context.name.to_owned(), destination.clone());
+                if layout.slots.contains_key(&key) || layout.dynamic_slots.contains_key(&key) {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(format!(
+                            "alloc_bytes destination {destination:?} is declared more than once"
+                        ))),
+                    });
+                }
+                if let Some(size) = constants.get(size_name).copied() {
+                    let size = usize::try_from(size).map_err(|_| BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(
+                            "alloc_bytes size must be non-negative".to_owned(),
+                        )),
+                    })?;
+                    let offset = layout.byte_len;
+                    layout.byte_len = layout
+                        .byte_len
+                        .checked_add(size)
+                        .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                    layout.slots.insert(key, ByteAllocation { offset, size });
+                } else {
+                    layout.byte_len = align_data_word(layout.byte_len)?;
+                    let size_offset = layout.byte_len;
+                    layout.byte_len = layout
+                        .byte_len
+                        .checked_add(4)
+                        .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                    layout
+                        .dynamic_slots
+                        .insert(key, DynamicByteAllocation { size_offset });
+                }
+            }
         }
+        if !layout.dynamic_slots.is_empty() {
+            layout.byte_len = align_data_word(layout.byte_len)?;
+            layout.heap_cursor_offset = Some(layout.byte_len);
+            layout.byte_len = layout
+                .byte_len
+                .checked_add(4)
+                .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+        }
+        Ok(layout)
+    }
+}
+
+impl GlobalLayout {
+    fn collect(functions: &[&ModuleFunction<'_>]) -> Result<Self, BackendError> {
+        let mut layout = Self::default();
+        for function in functions {
+            for instr in function.cir {
+                if !matches!(instr.op.as_str(), "global_load" | "global_store") {
+                    continue;
+                }
+                let Some(CIROperand::Var(name)) = instr.srcs.first() else {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(format!(
+                            "{} srcs[0] must be Var(global_name)",
+                            instr.op
+                        ))),
+                    });
+                };
+                if !is_rv32_value_type(&instr.ty) {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(unsupported_type_error(
+                            &instr.ty,
+                            &format!("{} global {name:?}", instr.op),
+                        )),
+                    });
+                }
+                if let Some(slot) = layout.slots.get(name) {
+                    if slot.ty != instr.ty {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(format!(
+                                "global {name:?} has incompatible storage types {:?} and {:?}",
+                                slot.ty, instr.ty
+                            ))),
+                        });
+                    }
+                    continue;
+                }
+                let offset = layout.byte_len;
+                layout.byte_len = layout
+                    .byte_len
+                    .checked_add(8)
+                    .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                layout.slots.insert(
+                    name.clone(),
+                    GlobalSlot {
+                        offset,
+                        ty: instr.ty.clone(),
+                    },
+                );
+            }
+        }
+        Ok(layout)
+    }
+}
+
+impl Lowerer {
+    fn new(
+        ctx: &FunctionContext<'_>,
+        cir: &[CIRInstr],
+        allow_direct_calls: bool,
+        call_signatures: Option<&HashMap<String, FunctionSignature>>,
+        global_layout: Option<&GlobalLayout>,
+        allocation_layout: Option<&ByteAllocationLayout>,
+        canonicalize_wide_return: bool,
+    ) -> Result<Self, BackendError> {
         let mut env = Vec::with_capacity(ctx.params.len());
         let mut next_argument = 0;
         for (name, ty) in ctx.params {
             if !is_rv32_value_type(ty) {
                 return Err(unsupported_type_error(ty, &format!("parameter {name:?}")));
             }
-            let location = if matches!(ty.as_str(), "i64" | "u64") {
+            let location = if matches!(ty.as_str(), "i64" | "u64" | "str") {
                 if next_argument + 1 >= ARG_REGISTERS.len() {
-                    return Err(BackendError::TooManyArguments(ctx.params.len()));
+                    return Err(BackendError::TooManyArguments(next_argument + 2));
                 }
                 let pair = ValueLocation::Pair {
                     lo: ARG_REGISTERS[next_argument],
@@ -260,7 +729,7 @@ impl Lowerer {
                 pair
             } else {
                 if next_argument >= ARG_REGISTERS.len() {
-                    return Err(BackendError::TooManyArguments(ctx.params.len()));
+                    return Err(BackendError::TooManyArguments(next_argument + 1));
                 }
                 let word = ValueLocation::Word(ARG_REGISTERS[next_argument]);
                 next_argument += 1;
@@ -272,15 +741,25 @@ impl Lowerer {
             .iter()
             .filter(|instr| instr.dest.is_some())
             .map(|instr| {
-                if instr.op.ends_with("_i64") || instr.op.ends_with("_u64") {
+                if matches!(instr.ty.as_str(), "i64" | "u64" | "str") {
                     2
                 } else {
                     1
                 }
             })
             .sum();
-        let frame_size = if value_word_count > VALUE_REGISTERS.len() {
-            ((value_word_count as i32) * 4 + 15) & !15
+        let call_argument_words = match (allow_direct_calls, call_signatures) {
+            (true, Some(signatures)) => max_call_argument_words(cir, signatures)?,
+            _ => 0,
+        };
+        let call_save_words = max_call_save_words(ctx, cir);
+        let needs_return_address_slot = allow_direct_calls && cir.iter().any(|instr| instr.op == "call");
+        let frame_words = value_word_count
+            + call_argument_words
+            + call_save_words
+            + usize::from(needs_return_address_slot);
+        let frame_size = if frame_words > VALUE_REGISTERS.len() || needs_return_address_slot {
+            ((frame_words as i32) * 4 + 15) & !15
         } else {
             0
         };
@@ -291,16 +770,32 @@ impl Lowerer {
         if frame_size != 0 {
             words.push(encode_addi(STACK_POINTER, STACK_POINTER, -frame_size));
         }
+        let return_address_offset = needs_return_address_slot.then_some(frame_size - 4);
+        if let Some(offset) = return_address_offset {
+            words.push(encode_sw(X1_RA, STACK_POINTER, offset));
+        }
         Ok(Self {
             words,
             env,
             word_sized_values: HashSet::new(),
             labels: HashMap::new(),
             branches: Vec::new(),
+            calls: Vec::new(),
+            global_layout: global_layout.cloned(),
+            allocation_layout: allocation_layout.cloned(),
+            function_name: ctx.name.to_owned(),
+            pending_globals: Vec::new(),
+            pending_reassignment: None,
             remaining_uses: count_value_uses(cir),
+            allow_direct_calls,
+            call_signatures: call_signatures.cloned().unwrap_or_default(),
+            canonicalize_wide_return,
             next_internal_label: 0,
             frame_size,
-            next_spill_slot: 0,
+            return_address_offset,
+            call_argument_words,
+            call_save_words,
+            next_spill_slot: call_argument_words + call_save_words,
         })
     }
 
@@ -314,7 +809,16 @@ impl Lowerer {
         if let Some(ty) = op.strip_prefix("ret_") {
             self.require_scalar_type(ty, op)?;
             match self.var_location(instr, 0, op)? {
-                ValueLocation::Word(src) => self.words.push(encode_addi(A0, src, 0)),
+                ValueLocation::Word(src) => {
+                    self.words.push(encode_addi(A0, src, 0));
+                    if self.canonicalize_wide_return && matches!(ty, "i64" | "u64") {
+                        self.words.push(if is_signed(ty) {
+                            encode_srai(A1, src, 31)
+                        } else {
+                            encode_addi(A1, X0_ZERO, 0)
+                        });
+                    }
+                }
                 ValueLocation::Pair { lo, hi } => {
                     self.words.push(encode_addi(A0, lo, 0));
                     self.words.push(encode_addi(A1, hi, 0));
@@ -360,6 +864,10 @@ impl Lowerer {
             return Ok(());
         }
 
+        if op == "str_const" {
+            return self.lower_str_const(instr);
+        }
+
         if op == "label" {
             let label = self.label_src(instr, 0, op)?;
             self.labels.insert(label, self.words.len() * 4);
@@ -381,6 +889,39 @@ impl Lowerer {
             let condition = self.var_src(instr, 0, op)?;
             self.record_branch(instr, 1, BranchKind::NeZero { rs1: condition }, op)?;
             return Ok(());
+        }
+
+        if op == "call" {
+            return self.lower_direct_call(instr);
+        }
+
+        if op == "call_builtin" {
+            return self.lower_host_builtin(instr);
+        }
+
+        if op == "global_load" {
+            return self.lower_global_load(instr);
+        }
+
+        if op == "global_store" {
+            return self.lower_global_store(instr);
+        }
+
+        if op == "alloc_bytes" {
+            return self.lower_alloc_bytes(instr);
+        }
+
+        if op == "load_byte" {
+            return self.lower_load_byte(instr);
+        }
+
+        if op == "store_byte" {
+            return self.lower_store_byte(instr);
+        }
+
+        if let Some(ty) = op.strip_prefix("mov_") {
+            self.require_scalar_type(ty, op)?;
+            return self.lower_move(instr, ty, op);
         }
 
         for family in ["add", "sub", "mul", "div", "mod", "and", "or", "xor", "shl", "shr"] {
@@ -529,6 +1070,548 @@ impl Lowerer {
         Ok(())
     }
 
+    fn resolve_calls(
+        &mut self,
+        function_offset: usize,
+        function_offsets: &HashMap<String, usize>,
+    ) -> Result<(), BackendError> {
+        for call in &self.calls {
+            let target = function_offsets
+                .get(&call.function)
+                .copied()
+                .ok_or_else(|| BackendError::UndefinedLabel(call.function.clone()))?;
+            let call_site = function_offset + call.word_index * 4;
+            let offset = target as i64 - call_site as i64;
+            if !(-(1 << 20)..(1 << 20)).contains(&offset) {
+                return Err(BackendError::CallOutOfRange {
+                    function: call.function.clone(),
+                    offset,
+                });
+            }
+            self.words[call.word_index] = encode_jal(X1_RA, offset as i32);
+        }
+        Ok(())
+    }
+
+    fn resolve_data_addresses(&mut self, data_offset: usize) -> Result<(), BackendError> {
+        for global in self.pending_globals.clone() {
+            let address = data_offset
+                .checked_add(global.slot_offset)
+                .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+            let address = i32::try_from(address)
+                .map_err(|_| BackendError::ImmediateOutOfRange(address as i64))?;
+            self.load_constant_fixed_at(global.word_index, SCRATCH_REGISTER, address);
+        }
+        Ok(())
+    }
+
+    fn lower_direct_call(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if !self.allow_direct_calls {
+            return Err(BackendError::UnsupportedOp(
+                "call (module linking required)".to_owned(),
+            ));
+        }
+        let Some(CIROperand::Var(function)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "call srcs[0] must be Var(function_name)".to_owned(),
+            ));
+        };
+        let signature = self
+            .call_signatures
+            .get(function)
+            .cloned()
+            .ok_or_else(|| BackendError::UndefinedLabel(function.clone()))?;
+        let arguments = &instr.srcs[1..];
+        if arguments.len() != signature.params.len() {
+            return Err(BackendError::InvalidOperand(format!(
+                "call to {function:?} supplies {} arguments, but its signature requires {}",
+                arguments.len(),
+                signature.params.len()
+            )));
+        }
+        let argument_words: usize = signature.params.iter().map(|ty| abi_word_count(ty)).sum();
+        if argument_words > ARG_REGISTERS.len() {
+            return Err(BackendError::TooManyArguments(argument_words));
+        }
+        // Save live caller values before marshalling outgoing arguments. An
+        // incoming parameter may already occupy a0/a1, which argument loading
+        // is about to overwrite.
+        let saved_values = self.save_live_values_across_call(instr);
+
+        let mut argument_word = 0;
+        for (index, ty) in signature.params.iter().enumerate() {
+            self.stage_call_argument(instr, index + 1, ty, argument_word)?;
+            argument_word += abi_word_count(ty);
+        }
+        for (argument_word, register) in ARG_REGISTERS
+            .iter()
+            .copied()
+            .enumerate()
+            .take(argument_words)
+        {
+            self.words.push(encode_lw(
+                register,
+                STACK_POINTER,
+                (argument_word * 4) as i32,
+            ));
+        }
+        self.calls.push(PendingCall {
+            word_index: self.words.len(),
+            function: function.clone(),
+        });
+        self.words.push(0);
+        let return_type = if instr.ty == "any" {
+            signature.return_type
+        } else {
+            instr.ty.clone()
+        };
+        let result = match (instr.dest.as_deref(), return_type.as_str()) {
+            (None, "void") => Ok(()),
+            (Some(_), "void") => Err(BackendError::InvalidOperand(
+                "void call must not have a destination".to_owned(),
+            )),
+            (Some(_), "i64" | "u64" | "str") => {
+                let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "call")? else {
+                    unreachable!("dest_pair always returns a pair")
+                };
+                self.words.push(encode_addi(lo, A0, 0));
+                self.words.push(encode_addi(hi, A1, 0));
+                Ok(())
+            }
+            (Some(_), ty) => {
+                self.require_operation_type(ty, "call")?;
+                let destination = self.dest(instr, "call")?;
+                self.words.push(encode_addi(destination, A0, 0));
+                Ok(())
+            }
+            (None, _) => Err(BackendError::InvalidOperand(
+                "non-void call requires a destination".to_owned(),
+            )),
+        };
+        // Capture a callee result from a0/a1 before restoring any live caller
+        // parameter that originally occupied those ABI registers.
+        self.restore_live_values_after_call(&saved_values);
+        result
+    }
+
+    fn lower_host_builtin(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        let Some(CIROperand::Var(name)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "call_builtin srcs[0] must be Var(builtin_name)".to_owned(),
+            ));
+        };
+        match name.as_str() {
+            "print_i64" => {
+                if instr.dest.is_some() || instr.ty != "void" || instr.srcs.len() != 2 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin print_i64 requires one argument and returns void".to_owned(),
+                    ));
+                }
+                let value = self.wide_var_location(instr, 1, "call_builtin print_i64")?;
+                self.words.push(encode_addi(A0, value.low(), 0));
+                self.copy_or_extend_high(A1, value, true);
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_I64);
+            }
+            "putchar" => {
+                if instr.dest.is_some() || instr.ty != "void" || instr.srcs.len() != 2 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin putchar requires one argument and returns void".to_owned(),
+                    ));
+                }
+                let value = self.var_src(instr, 1, "call_builtin putchar")?;
+                self.words.push(encode_addi(A0, value, 0));
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_BYTE);
+            }
+            "getchar" => {
+                if instr.dest.is_none() || instr.ty != "i64" || instr.srcs.len() != 1 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin getchar takes no arguments and returns i64".to_owned(),
+                    ));
+                }
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_READ_BYTE);
+                self.words.push(encode_ecall());
+                let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "call_builtin getchar")? else {
+                    unreachable!("getchar returns an i64 pair")
+                };
+                self.words.push(encode_addi(lo, A0, 0));
+                self.words.push(encode_addi(hi, A1, 0));
+                return Ok(());
+            }
+            _ => return Err(BackendError::UnsupportedOp(format!("call_builtin {name}"))),
+        }
+        self.words.push(encode_ecall());
+        Ok(())
+    }
+
+    fn lower_global_load(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(format!(
+                "global_load requires one global name, got {} operands",
+                instr.srcs.len()
+            )));
+        }
+        let slot = self.global_slot(instr, "global_load")?;
+        if matches!(slot.ty.as_str(), "i64" | "u64" | "str") {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "global_load")? else {
+                unreachable!("dest_pair always returns a pair")
+            };
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_lw(lo, SCRATCH_REGISTER, 0));
+            self.words.push(encode_lw(hi, SCRATCH_REGISTER, 4));
+        } else {
+            let destination = self.dest(instr, "global_load")?;
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_lw(destination, SCRATCH_REGISTER, 0));
+            self.mask_unsigned(destination, &slot.ty);
+        }
+        Ok(())
+    }
+
+    fn lower_global_store(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.dest.is_some() {
+            return Err(BackendError::InvalidOperand(
+                "global_store must not have a destination".to_owned(),
+            ));
+        }
+        if instr.srcs.len() != 2 {
+            return Err(BackendError::InvalidOperand(format!(
+                "global_store requires a global name and one value, got {} operands",
+                instr.srcs.len()
+            )));
+        }
+        let slot = self.global_slot(instr, "global_store")?;
+        if matches!(slot.ty.as_str(), "i64" | "u64" | "str") {
+            let source = self.wide_var_location(instr, 1, "global_store")?;
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_sw(source.low(), SCRATCH_REGISTER, 0));
+            self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, source, is_signed(&slot.ty));
+            self.words
+                .push(encode_sw(SECOND_SCRATCH_REGISTER, SCRATCH_REGISTER, 4));
+        } else {
+            let source = self.var_src(instr, 1, "global_store")?;
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_sw(source, SCRATCH_REGISTER, 0));
+        }
+        Ok(())
+    }
+
+    fn lower_alloc_bytes(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(format!(
+                "alloc_bytes requires one size operand, got {}",
+                instr.srcs.len()
+            )));
+        }
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "alloc_bytes")? else {
+            unreachable!("alloc_bytes requires an i64/u64 destination")
+        };
+        if let Some(slot) = self.byte_allocation(instr)? {
+            self.reserve_data_address(slot.offset);
+            self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+            self.load_constant(hi, slot.size as u32);
+            return Ok(());
+        }
+        let dynamic = self.dynamic_byte_allocation(instr, "alloc_bytes")?;
+        let size = self.wide_var_location(instr, 0, "alloc_bytes")?;
+        self.guard_high_word_is_zero(size);
+        let cursor_offset = self.heap_cursor_offset()?;
+        self.reserve_data_address(cursor_offset);
+        self.words
+            .push(encode_lw(SECOND_SCRATCH_REGISTER, SCRATCH_REGISTER, 0));
+        self.words
+            .push(encode_add(DIVISION_TEMP_REGISTER, SECOND_SCRATCH_REGISTER, size.low()));
+        self.words.push(encode_sltu(
+            DIVISION_BORROW_REGISTER,
+            DIVISION_TEMP_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+        ));
+        let no_overflow = self.internal_label("alloc_no_overflow");
+        self.record_named_branch(
+            no_overflow.clone(),
+            BranchKind::EqZero {
+                rs1: DIVISION_BORROW_REGISTER,
+            },
+        );
+        self.emit_memory_exit();
+        self.mark_label(no_overflow);
+        self.load_constant(DIVISION_BORROW_REGISTER, (DEFAULT_MEMORY_SIZE - 15) as u32);
+        self.words.push(encode_sltu(
+            SCRATCH_REGISTER,
+            DIVISION_TEMP_REGISTER,
+            DIVISION_BORROW_REGISTER,
+        ));
+        let fits_memory = self.internal_label("alloc_fits_memory");
+        self.record_named_branch(
+            fits_memory.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+        self.emit_memory_exit();
+        self.mark_label(fits_memory);
+        self.reserve_data_address(cursor_offset);
+        self.words
+            .push(encode_sw(DIVISION_TEMP_REGISTER, SCRATCH_REGISTER, 0));
+        self.reserve_data_address(dynamic.size_offset);
+        self.words.push(encode_sw(size.low(), SCRATCH_REGISTER, 0));
+        self.words
+            .push(encode_addi(lo, SECOND_SCRATCH_REGISTER, 0));
+        self.words.push(encode_addi(hi, size.low(), 0));
+        Ok(())
+    }
+
+    fn lower_str_const(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.ty != "str" || instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(
+                "str_const requires one literal operand and a str destination".to_owned(),
+            ));
+        }
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "str_const")? else {
+            unreachable!("str_const uses an address/length pair")
+        };
+        let image = self.data_image(instr)?;
+        self.reserve_data_address(image.offset);
+        self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+        self.load_constant(hi, image.bytes.len() as u32);
+        Ok(())
+    }
+
+    fn lower_load_byte(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.srcs.len() != 2 {
+            return Err(BackendError::InvalidOperand(format!(
+                "load_byte requires base and offset operands, got {}",
+                instr.srcs.len()
+            )));
+        }
+        if instr.ty == "str" {
+            return Err(BackendError::UnsupportedType("str".to_owned()));
+        }
+        self.require_scalar_type(&instr.ty, "load_byte")?;
+        let base = self.wide_var_location(instr, 0, "load_byte")?;
+        let offset = self.wide_var_location(instr, 1, "load_byte")?;
+        self.guard_byte_access(base, offset, "load_byte")?;
+        self.words
+            .push(encode_add(SCRATCH_REGISTER, base.low(), offset.low()));
+        if matches!(instr.ty.as_str(), "i64" | "u64") {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "load_byte")? else {
+                unreachable!("load_byte wide destination uses a register pair")
+            };
+            self.words.push(encode_lbu(lo, SCRATCH_REGISTER, 0));
+            self.words.push(encode_addi(hi, X0_ZERO, 0));
+        } else {
+            let destination = self.dest(instr, "load_byte")?;
+            self.words.push(encode_lbu(destination, SCRATCH_REGISTER, 0));
+            self.mask_unsigned(destination, &instr.ty);
+        }
+        Ok(())
+    }
+
+    fn lower_store_byte(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.dest.is_some() {
+            return Err(BackendError::InvalidOperand(
+                "store_byte must not have a destination".to_owned(),
+            ));
+        }
+        if instr.srcs.len() != 3 {
+            return Err(BackendError::InvalidOperand(format!(
+                "store_byte requires base, offset, and value operands, got {}",
+                instr.srcs.len()
+            )));
+        }
+        let base = self.wide_var_location(instr, 0, "store_byte")?;
+        let offset = self.wide_var_location(instr, 1, "store_byte")?;
+        let value = self.var_src(instr, 2, "store_byte")?;
+        self.guard_byte_access(base, offset, "store_byte")?;
+        self.words
+            .push(encode_add(SCRATCH_REGISTER, base.low(), offset.low()));
+        self.words.push(encode_sb(value, SCRATCH_REGISTER, 0));
+        Ok(())
+    }
+
+    fn lower_move(&mut self, instr: &CIRInstr, ty: &str, op: &str) -> Result<(), BackendError> {
+        let source_name = match instr.srcs.first() {
+            Some(CIROperand::Var(name)) => name,
+            _ => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} srcs[0] must be Var"
+                )))
+            }
+        };
+        if !matches!(ty, "i64" | "u64" | "str") {
+            let source = self.var_src(instr, 0, op)?;
+            let destination = self.dest(instr, op)?;
+            self.words.push(encode_addi(destination, source, 0));
+            self.mask_unsigned(destination, ty);
+            return Ok(());
+        }
+
+        let destination_name = instr
+            .dest
+            .as_deref()
+            .ok_or_else(|| BackendError::InvalidOperand(format!("{op} requires a dest")))?;
+        let source_is_dead = self.remaining_uses.get(source_name).copied().unwrap_or_default()
+            == value_source_occurrences(instr, source_name);
+        let source = self.lookup_location(source_name)?;
+        if source_is_dead {
+            self.env.push((destination_name.to_owned(), source));
+            if matches!(source, ValueLocation::Word(_) | ValueLocation::Spill { .. }) {
+                self.word_sized_values.insert(destination_name.to_owned());
+            }
+            return Ok(());
+        }
+
+        // A live register pair must first get a stable stack home; its physical
+        // pair can then safely become the destination copy.
+        if let ValueLocation::Pair { lo, hi } = source {
+            self.spill_pair_value(lo, hi);
+        }
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        match self.lookup_location(source_name)? {
+            ValueLocation::Word(source) => {
+                self.words.push(encode_addi(lo, source, 0));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(hi, source, 31)
+                } else {
+                    encode_addi(hi, X0_ZERO, 0)
+                });
+                self.word_sized_values.insert(destination_name.to_owned());
+            }
+            ValueLocation::Spill { offset } => {
+                self.words.push(encode_lw(lo, STACK_POINTER, offset));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(hi, lo, 31)
+                } else {
+                    encode_addi(hi, X0_ZERO, 0)
+                });
+                self.word_sized_values.insert(destination_name.to_owned());
+            }
+            ValueLocation::PairSpill {
+                lo_offset,
+                hi_offset,
+            } => {
+                self.words.push(encode_lw(lo, STACK_POINTER, lo_offset));
+                self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
+            }
+            ValueLocation::Pair { .. } => unreachable!("live pair was spilled above"),
+        }
+        Ok(())
+    }
+
+    fn save_live_values_across_call(&mut self, instr: &CIRInstr) -> Vec<SavedValue> {
+        let mut offset = (self.call_argument_words * 4) as i32;
+        let mut saved = Vec::new();
+        for (name, location) in &self.env {
+            if self.remaining_uses.get(name).copied().unwrap_or_default()
+                <= value_source_occurrences(instr, name)
+            {
+                continue;
+            }
+            match location {
+                ValueLocation::Word(register) => {
+                    self.words.push(encode_sw(*register, STACK_POINTER, offset));
+                    saved.push(SavedValue::Word {
+                        register: *register,
+                        offset,
+                    });
+                    offset += 4;
+                }
+                ValueLocation::Pair { lo, hi } => {
+                    self.words.push(encode_sw(*lo, STACK_POINTER, offset));
+                    self.words.push(encode_sw(*hi, STACK_POINTER, offset + 4));
+                    saved.push(SavedValue::Pair {
+                        lo: *lo,
+                        hi: *hi,
+                        offset,
+                    });
+                    offset += 8;
+                }
+                ValueLocation::Spill { .. } | ValueLocation::PairSpill { .. } => {}
+            }
+        }
+        debug_assert!(
+            (offset - (self.call_argument_words * 4) as i32) / 4
+                <= self.call_save_words as i32
+        );
+        saved
+    }
+
+    fn restore_live_values_after_call(&mut self, saved: &[SavedValue]) {
+        for value in saved {
+            match value {
+                SavedValue::Word { register, offset } => {
+                    self.words.push(encode_lw(*register, STACK_POINTER, *offset));
+                }
+                SavedValue::Pair { lo, hi, offset } => {
+                    self.words.push(encode_lw(*lo, STACK_POINTER, *offset));
+                    self.words.push(encode_lw(*hi, STACK_POINTER, *offset + 4));
+                }
+            }
+        }
+    }
+
+    fn stage_call_argument(
+        &mut self,
+        instr: &CIRInstr,
+        index: usize,
+        ty: &str,
+        word_index: usize,
+    ) -> Result<(), BackendError> {
+        self.require_scalar_type(ty, "call argument")?;
+        let offset = (word_index * 4) as i32;
+        match (self.var_location(instr, index, "call")?, abi_word_count(ty)) {
+            (ValueLocation::Word(register), 1) => {
+                self.words.push(encode_sw(register, STACK_POINTER, offset));
+            }
+            (ValueLocation::Spill { offset: source }, 1) => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, source));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset));
+            }
+            (ValueLocation::Pair { lo, hi }, 2) => {
+                self.words.push(encode_sw(lo, STACK_POINTER, offset));
+                self.words.push(encode_sw(hi, STACK_POINTER, offset + 4));
+            }
+            (
+                ValueLocation::PairSpill {
+                    lo_offset,
+                    hi_offset,
+                },
+                2,
+            ) => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, lo_offset));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset));
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, hi_offset));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset + 4));
+            }
+            (ValueLocation::Word(register), 2) => {
+                self.words.push(encode_sw(register, STACK_POINTER, offset));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(SCRATCH_REGISTER, register, 31)
+                } else {
+                    encode_addi(SCRATCH_REGISTER, X0_ZERO, 0)
+                });
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset + 4));
+            }
+            (ValueLocation::Spill { offset: source }, 2) => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, source));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(SCRATCH_REGISTER, SCRATCH_REGISTER, 31)
+                } else {
+                    encode_addi(SCRATCH_REGISTER, X0_ZERO, 0)
+                });
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset + 4));
+            }
+            (location, words) => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "call argument at srcs[{index}] has location {location:?}, incompatible with {words}-word type {ty:?}"
+                )));
+            }
+        }
+        Ok(())
+    }
+
     fn check_branch_offset(label: &str, offset: i64, max: i64) -> Result<(), BackendError> {
         if offset < -max || offset >= max {
             return Err(BackendError::BranchOutOfRange {
@@ -629,11 +1712,12 @@ impl Lowerer {
                 )))
             }
         };
-        match self.lookup_location(name)? {
+        match self.source_location(name)? {
             ValueLocation::Word(register) => Ok(register),
-            ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
-                "{name:?} is a 64-bit value where a 32-bit value is required"
-            ))),
+            // Source frontends such as Nib normalize function signatures to
+            // i64, while CIR retains narrow body operations (`add_u8`, etc.).
+            // A narrow operation intentionally consumes the low ABI word.
+            ValueLocation::Pair { lo, .. } => Ok(lo),
             ValueLocation::Spill { offset } => {
                 let register = if index == 0 {
                     SPILLED_LHS_REGISTER
@@ -643,9 +1727,15 @@ impl Lowerer {
                 self.words.push(encode_lw(register, STACK_POINTER, offset));
                 Ok(register)
             }
-            ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
-                "{name:?} is a spilled 64-bit value where a 32-bit value is required"
-            ))),
+            ValueLocation::PairSpill { lo_offset, .. } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, lo_offset));
+                Ok(register)
+            }
         }
     }
 
@@ -663,7 +1753,7 @@ impl Lowerer {
                 )))
             }
         };
-        self.lookup_location(name)
+        self.source_location(name)
     }
 
     fn label_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<String, BackendError> {
@@ -676,15 +1766,21 @@ impl Lowerer {
     }
 
     fn allocate(&mut self, name: &str) -> Result<u32, BackendError> {
-        if let Some((_, location)) = self.env.iter().find(|(existing, _)| existing == name) {
+        if let Some(location) = self
+            .env
+            .iter()
+            .find_map(|(existing, location)| (existing == name).then_some(*location))
+        {
             return match location {
-                ValueLocation::Word(reg) => Ok(*reg),
+                ValueLocation::Word(reg) => Ok(reg),
                 ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound as a 64-bit value"
                 ))),
-                ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound in a stack slot"
-                ))),
+                ValueLocation::Spill { .. } => {
+                    let register = self.allocate_value_register()?;
+                    self.reassign(name, location, ValueLocation::Word(register));
+                    Ok(register)
+                }
                 ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound in a wide stack slot"
                 ))),
@@ -696,23 +1792,36 @@ impl Lowerer {
     }
 
     fn allocate_pair(&mut self, name: &str) -> Result<ValueLocation, BackendError> {
-        if let Some((_, location)) = self.env.iter().find(|(existing, _)| existing == name) {
+        if let Some(location) = self
+            .env
+            .iter()
+            .find_map(|(existing, location)| (existing == name).then_some(*location))
+        {
             return match location {
-                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo: *lo, hi: *hi }),
-                ValueLocation::Word(_) => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound as a 32-bit value"
-                ))),
-                ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound in a scalar stack slot"
-                ))),
-                ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound in a wide stack slot"
-                ))),
+                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo, hi }),
+                ValueLocation::Word(_) | ValueLocation::Spill { .. } | ValueLocation::PairSpill { .. } => {
+                    let destination = self.allocate_pair_registers()?;
+                    self.reassign(name, location, destination);
+                    Ok(destination)
+                }
             };
         }
         let location = self.allocate_pair_registers()?;
         self.env.push((name.to_owned(), location));
         Ok(location)
+    }
+
+    fn reassign(&mut self, name: &str, old_location: ValueLocation, new_location: ValueLocation) {
+        debug_assert!(self.pending_reassignment.is_none());
+        for (existing, location) in &mut self.env {
+            if existing == name {
+                *location = new_location;
+            }
+        }
+        self.pending_reassignment = Some(PendingReassignment {
+            name: name.to_owned(),
+            old_location,
+        });
     }
 
     fn allocate_value_register(&mut self) -> Result<u32, BackendError> {
@@ -855,6 +1964,15 @@ impl Lowerer {
         op: &str,
     ) -> Result<ValueLocation, BackendError> {
         match self.var_location(instr, index, op)? {
+            ValueLocation::Spill { offset } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, offset));
+                Ok(ValueLocation::Word(register))
+            }
             ValueLocation::PairSpill {
                 lo_offset,
                 hi_offset,
@@ -868,9 +1986,6 @@ impl Lowerer {
                 self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
                 Ok(ValueLocation::Pair { lo, hi })
             }
-            ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                "{op} requires a wide value at srcs[{index}]"
-            ))),
             location => Ok(location),
         }
     }
@@ -882,6 +1997,15 @@ impl Lowerer {
         op: &str,
     ) -> Result<ValueLocation, BackendError> {
         match self.var_location(instr, index, op)? {
+            ValueLocation::Spill { offset } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, offset));
+                Ok(ValueLocation::Word(register))
+            }
             ValueLocation::PairSpill {
                 lo_offset,
                 hi_offset,
@@ -895,14 +2019,14 @@ impl Lowerer {
                 self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
                 Ok(ValueLocation::Pair { lo, hi })
             }
-            ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                "{op} requires a wide value at srcs[{index}]"
-            ))),
             location => Ok(location),
         }
     }
 
     fn restore_stack_frame(&mut self) {
+        if let Some(offset) = self.return_address_offset {
+            self.words.push(encode_lw(X1_RA, STACK_POINTER, offset));
+        }
         if self.frame_size != 0 {
             self.words
                 .push(encode_addi(STACK_POINTER, STACK_POINTER, self.frame_size));
@@ -914,6 +2038,15 @@ impl Lowerer {
             .iter()
             .find_map(|(existing, location)| (existing == name).then_some(*location))
             .ok_or_else(|| BackendError::UndefinedVariable(name.to_owned()))
+    }
+
+    fn source_location(&self, name: &str) -> Result<ValueLocation, BackendError> {
+        if let Some(reassignment) = &self.pending_reassignment {
+            if reassignment.name == name {
+                return Ok(reassignment.old_location);
+            }
+        }
+        self.lookup_location(name)
     }
 
     fn consume_value_sources(&mut self, instr: &CIRInstr) {
@@ -928,6 +2061,7 @@ impl Lowerer {
                 *remaining = remaining.saturating_sub(1);
             }
         }
+        self.pending_reassignment = None;
     }
 
     fn lower_wide_add(
@@ -1553,6 +2687,155 @@ impl Lowerer {
         }
     }
 
+    fn global_slot(&self, instr: &CIRInstr, op: &str) -> Result<GlobalSlot, BackendError> {
+        let Some(layout) = &self.global_layout else {
+            return Err(BackendError::UnsupportedOp(format!(
+                "{op} (module linking required)"
+            )));
+        };
+        let Some(CIROperand::Var(name)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[0] must be Var(global_name)"
+            )));
+        };
+        let slot = layout
+            .slots
+            .get(name)
+            .cloned()
+            .ok_or_else(|| BackendError::InvalidOperand(format!(
+                "{op}: global {name:?} has no allocated storage"
+            )))?;
+        if slot.ty != instr.ty {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op}: global {name:?} has storage type {:?}, not {:?}",
+                slot.ty, instr.ty
+            )));
+        }
+        Ok(slot)
+    }
+
+    fn byte_allocation(&self, instr: &CIRInstr) -> Result<Option<ByteAllocation>, BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(
+                "alloc_bytes (module linking required)".to_owned(),
+            ));
+        };
+        let destination = instr.dest.as_ref().ok_or_else(|| {
+            BackendError::InvalidOperand("alloc_bytes requires a dest".to_owned())
+        })?;
+        Ok(layout
+            .slots
+            .get(&(self.function_name.clone(), destination.clone()))
+            .cloned())
+    }
+
+    fn dynamic_byte_allocation(
+        &self,
+        instr: &CIRInstr,
+        op: &str,
+    ) -> Result<DynamicByteAllocation, BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(format!(
+                "{op} (module linking required)"
+            )));
+        };
+        let destination = instr.dest.as_ref().ok_or_else(|| {
+            BackendError::InvalidOperand(format!("{op} requires a dest"))
+        })?;
+        layout
+            .dynamic_slots
+            .get(&(self.function_name.clone(), destination.clone()))
+            .cloned()
+            .ok_or_else(|| {
+                BackendError::InvalidOperand(format!(
+                    "{op}: destination {destination:?} has no dynamic allocation"
+                ))
+            })
+    }
+
+    fn data_image(&self, instr: &CIRInstr) -> Result<DataImage, BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(
+                "str_const (module linking required)".to_owned(),
+            ));
+        };
+        let Some(CIROperand::Var(literal)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "str_const srcs[0] must be Var(literal)".to_owned(),
+            ));
+        };
+        layout.images.get(literal).cloned().ok_or_else(|| {
+            BackendError::InvalidOperand(format!("str_const literal {literal:?} has no data image"))
+        })
+    }
+
+    fn heap_cursor_offset(&self) -> Result<usize, BackendError> {
+        self.allocation_layout
+            .as_ref()
+            .and_then(|layout| layout.heap_cursor_offset)
+            .ok_or_else(|| BackendError::InvalidOperand("dynamic alloc_bytes has no heap cursor".to_owned()))
+    }
+
+    fn guard_byte_access(
+        &mut self,
+        base: ValueLocation,
+        offset: ValueLocation,
+        op: &str,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { hi: length, .. } = base else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} base must be an alloc_bytes descriptor"
+            )));
+        };
+        self.guard_high_word_is_zero(offset);
+        self.words.push(encode_sltu(
+            SCRATCH_REGISTER,
+            offset.low(),
+            length,
+        ));
+        let in_bounds = self.internal_label("byte_in_bounds");
+        self.record_named_branch(
+            in_bounds.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+        self.emit_memory_exit();
+        self.mark_label(in_bounds);
+        Ok(())
+    }
+
+    fn guard_high_word_is_zero(&mut self, value: ValueLocation) {
+        let ValueLocation::Pair { hi, .. } = value else {
+            return;
+        };
+        let low_word_only = self.internal_label("byte_offset_low_word");
+        self.record_named_branch(low_word_only.clone(), BranchKind::EqZero { rs1: hi });
+        self.emit_memory_exit();
+        self.mark_label(low_word_only);
+    }
+
+    fn emit_memory_exit(&mut self) {
+        self.load_constant(A0, MEMORY_BOUNDS_EXIT_CODE as u32);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_EXIT);
+        self.words.push(encode_ecall());
+    }
+
+    fn reserve_global_address(&mut self, slot_offset: usize) {
+        self.reserve_data_address(slot_offset);
+    }
+
+    fn reserve_data_address(&mut self, slot_offset: usize) {
+        let word_index = self.words.len();
+        // Keep this pair fixed-width so module-data placement can be resolved
+        // after every function has been lowered.
+        self.words.extend([0, 0]);
+        self.pending_globals.push(PendingGlobal {
+            word_index,
+            slot_offset,
+        });
+    }
+
     fn add_or_extend_high(&mut self, dest: u32, location: ValueLocation, signed: bool) {
         match location {
             ValueLocation::Pair { hi, .. } => self.words.push(encode_add(dest, dest, hi)),
@@ -1599,6 +2882,13 @@ impl Lowerer {
         if lower != 0 {
             self.words.push(encode_addi(rd, rd, lower as i32));
         }
+    }
+
+    fn load_constant_fixed_at(&mut self, word_index: usize, rd: u32, value: i32) {
+        let upper = ((value as i64 + 0x800) >> 12) as i32;
+        let lower = value as i64 - ((upper as i64) << 12);
+        self.words[word_index] = encode_lui(rd, upper as u32);
+        self.words[word_index + 1] = encode_addi(rd, rd, lower as i32);
     }
 
     fn mask_unsigned(&mut self, rd: u32, ty: &str) {
@@ -1678,6 +2968,89 @@ fn count_value_uses(cir: &[CIRInstr]) -> HashMap<String, usize> {
     uses
 }
 
+fn abi_word_count(ty: &str) -> usize {
+    usize::from(matches!(ty, "i64" | "u64" | "str")) + 1
+}
+
+fn max_call_argument_words(
+    cir: &[CIRInstr],
+    signatures: &HashMap<String, FunctionSignature>,
+) -> Result<usize, BackendError> {
+    let mut maximum = 0;
+    for instr in cir.iter().filter(|instr| instr.op == "call") {
+        let Some(CIROperand::Var(function)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "call srcs[0] must be Var(function_name)".to_owned(),
+            ));
+        };
+        let signature = signatures
+            .get(function)
+            .ok_or_else(|| BackendError::UndefinedLabel(function.clone()))?;
+        let words: usize = signature.params.iter().map(|ty| abi_word_count(ty)).sum();
+        if words > ARG_REGISTERS.len() {
+            return Err(BackendError::TooManyArguments(words));
+        }
+        maximum = maximum.max(words);
+    }
+    Ok(maximum)
+}
+
+fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
+    let mut value_types: HashMap<&str, &str> = ctx
+        .params
+        .iter()
+        .map(|(name, ty)| (name.as_str(), ty.as_str()))
+        .collect();
+    for instr in cir {
+        if let Some(destination) = instr.dest.as_deref() {
+            value_types.insert(destination, instr.ty.as_str());
+        }
+    }
+
+    let mut maximum = 0;
+    for (call_index, call) in cir.iter().enumerate() {
+        if call.op != "call" {
+            continue;
+        }
+        let mut live_values = HashSet::new();
+        for instr in &cir[call_index + 1..] {
+            for (index, operand) in instr.srcs.iter().enumerate() {
+                if !is_value_source(instr, index) {
+                    continue;
+                }
+                let CIROperand::Var(name) = operand else {
+                    continue;
+                };
+                if value_types.contains_key(name.as_str()) {
+                    live_values.insert(name.as_str());
+                }
+            }
+        }
+        maximum = maximum.max(
+            live_values
+                .into_iter()
+                .map(|name| storage_word_count(value_types[name]))
+                .sum(),
+        );
+    }
+    maximum
+}
+
+fn storage_word_count(ty: &str) -> usize {
+    if matches!(ty, "i64" | "u64" | "str" | "any") {
+        2
+    } else {
+        1
+    }
+}
+
+fn align_data_word(offset: usize) -> Result<usize, BackendError> {
+    offset
+        .checked_add(3)
+        .map(|aligned| aligned & !3)
+        .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))
+}
+
 fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
     instr
         .srcs
@@ -1692,7 +3065,13 @@ fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
 
 fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
     match instr.op.as_str() {
-        "label" | "jmp" => false,
+        "label" | "jmp" | "str_const" => false,
+        "call" | "call_builtin" => index != 0,
+        "global_load" => false,
+        "global_store" => index == 1,
+        "alloc_bytes" => index == 0,
+        "load_byte" => index < 2,
+        "store_byte" => index < 3,
         "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => index == 0,
         _ => true,
     }
@@ -1753,7 +3132,7 @@ fn unsupported_type_error(ty: &str, site: &str) -> BackendError {
 fn is_rv32_value_type(ty: &str) -> bool {
     matches!(
         ty,
-        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool"
+        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool" | "str"
     )
 }
 

@@ -3,8 +3,16 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use chief_of_staff_channel_endpoints::AgentId;
+use chief_of_staff_host_control_protocol::{
+    ChannelBinding, ChannelBindingAccess, LaunchBindings, LevelOneModelBinding,
+};
 use chief_of_staff_orchestrator_core::{
     ChannelWiringAuthorizer, HostHealth, OrchestratorCore, OrchestratorCoreError,
+    PipelineWiringAuthorizer,
+};
+use chief_of_staff_pipeline_bindings::{
+    HostPipelineBinding, LoadedHostPipelineBinding, PipelineId,
 };
 use chief_of_staff_service_reconciler::{
     HostSupervisor, ReconcileAction, ReconcileReport, SupervisorObservation, SupervisorPhase,
@@ -13,6 +21,7 @@ use chief_of_staff_service_registry::{
     DesiredState, HostName, HostRegistration, HostStatus, LoadedHost, PackagePath, RegistryError,
     RestartPolicy,
 };
+use chief_of_staff_trust_checker::TrustRequestContext;
 use coding_adventures_json_parser::try_parse_json;
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{from_ast, JsonNumber, JsonValue};
@@ -50,6 +59,10 @@ pub enum Operation {
     HealthCheck,
     /// Delete stopped, inactive host intent.
     DeregisterHost,
+    /// Authorize and persist one exact host pipeline binding.
+    WireHostPipeline,
+    /// Authorize and remove one host's current pipeline binding.
+    UnwireHostPipeline,
 }
 
 /// Authentication and per-operation authorization boundary.
@@ -65,6 +78,13 @@ pub trait SessionAuthorizer {
     /// Decide whether this authenticated session may perform one operation.
     fn authorize(&self, session: &Self::Session, operation: Operation)
         -> Result<bool, Self::Error>;
+
+    /// Return the stable non-secret identity represented by an authenticated session.
+    ///
+    /// The daemon binds this identity and the protocol request ID into Trust
+    /// Checker context for topology mutations; request parameters cannot
+    /// override either value.
+    fn requester_id<'a>(&self, session: &'a Self::Session) -> &'a str;
 }
 
 /// Stable payload-blind failure from the injected control plane.
@@ -116,12 +136,26 @@ pub trait ChiefControlPlane {
 
     /// Safely delete stopped intent for an absent or exited host.
     fn deregister_host(&mut self, host_name: &HostName) -> Result<(), ControlPlaneError>;
+
+    /// Authorize and persist one exact host pipeline binding.
+    fn wire_host_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        binding: HostPipelineBinding,
+    ) -> Result<LoadedHostPipelineBinding, ControlPlaneError>;
+
+    /// Authorize and remove one host's current pipeline binding.
+    fn unwire_host_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        host_name: &HostName,
+    ) -> Result<Option<HostPipelineBinding>, ControlPlaneError>;
 }
 
 impl<S, A> ChiefControlPlane for OrchestratorCore<S, A>
 where
     S: HostSupervisor,
-    A: ChannelWiringAuthorizer,
+    A: ChannelWiringAuthorizer + PipelineWiringAuthorizer,
 {
     fn register_host(
         &mut self,
@@ -162,18 +196,36 @@ where
     fn deregister_host(&mut self, host_name: &HostName) -> Result<(), ControlPlaneError> {
         OrchestratorCore::deregister_host(self, host_name).map_err(map_core_error)
     }
+
+    fn wire_host_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        binding: HostPipelineBinding,
+    ) -> Result<LoadedHostPipelineBinding, ControlPlaneError> {
+        OrchestratorCore::wire_host_pipeline(self, context, &binding).map_err(map_core_error)
+    }
+
+    fn unwire_host_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        host_name: &HostName,
+    ) -> Result<Option<HostPipelineBinding>, ControlPlaneError> {
+        OrchestratorCore::unwire_host_pipeline(self, context, host_name).map_err(map_core_error)
+    }
 }
 
 fn map_core_error<S, A>(error: OrchestratorCoreError<S, A>) -> ControlPlaneError {
     match error {
         OrchestratorCoreError::Registry(error) => map_registry_error(error),
-        OrchestratorCoreError::Authorization(_) => ControlPlaneError::Forbidden,
+        OrchestratorCoreError::Authorization(_)
+        | OrchestratorCoreError::PipelineAuthorization(_) => ControlPlaneError::Forbidden,
         OrchestratorCoreError::HostDesiredRunning(_)
         | OrchestratorCoreError::HostStillActive(_)
         | OrchestratorCoreError::ClockRegressed => ControlPlaneError::Conflict,
         OrchestratorCoreError::Reconciliation(_)
         | OrchestratorCoreError::Supervisor { .. }
-        | OrchestratorCoreError::Channel(_) => ControlPlaneError::Internal,
+        | OrchestratorCoreError::Channel(_)
+        | OrchestratorCoreError::Pipeline(_) => ControlPlaneError::Internal,
     }
 }
 
@@ -314,11 +366,27 @@ where
             Ok(false) => return error_response(&request.id, PublicError::Forbidden),
             Err(_) => return error_response(&request.id, PublicError::Internal),
         }
+        let trust_context = if request.method.requires_trust_context() {
+            match TrustRequestContext::new(
+                request.id.clone(),
+                self.authorizer.requester_id(authority),
+            ) {
+                Ok(context) => Some(context),
+                Err(_) => return error_response(&request.id, PublicError::Internal),
+            }
+        } else {
+            None
+        };
         let mut control_plane = match self.control_plane.lock() {
             Ok(control_plane) => control_plane,
             Err(_) => return error_response(&request.id, PublicError::Internal),
         };
-        match dispatch(&mut *control_plane, request.method, &request.params) {
+        match dispatch(
+            &mut *control_plane,
+            request.method,
+            &request.params,
+            trust_context.as_ref(),
+        ) {
             Ok(result) => success_response(&request.id, result),
             Err(error) => error_response(&request.id, error),
         }
@@ -489,6 +557,28 @@ impl DaemonClient {
         )
     }
 
+    /// Authorize and persist one exact host pipeline binding.
+    pub fn wire_host_pipeline(
+        &mut self,
+        binding: &HostPipelineBinding,
+    ) -> Result<JsonValue, DaemonClientError> {
+        self.call("wire_host_pipeline", pipeline_binding_params(binding))
+    }
+
+    /// Authorize and remove one host's current pipeline binding.
+    pub fn unwire_host_pipeline(
+        &mut self,
+        host_name: &HostName,
+    ) -> Result<JsonValue, DaemonClientError> {
+        self.call(
+            "unwire_host_pipeline",
+            object(vec![(
+                "host_name",
+                JsonValue::String(host_name.as_str().to_string()),
+            )]),
+        )
+    }
+
     /// Begin a normal WebSocket closing handshake.
     pub fn close(&mut self) -> Result<(), DaemonClientError> {
         self.socket
@@ -617,6 +707,10 @@ fn registration_params(registration: &HostRegistration, desired_state: DesiredSt
     ])
 }
 
+fn pipeline_binding_params(binding: &HostPipelineBinding) -> JsonValue {
+    pipeline_binding_json(binding)
+}
+
 fn decode_client_response(
     text: &str,
     expected_request_id: &str,
@@ -695,6 +789,8 @@ enum Method {
     ReconcileOnce,
     HealthCheck,
     DeregisterHost,
+    WireHostPipeline,
+    UnwireHostPipeline,
 }
 
 impl Method {
@@ -708,6 +804,8 @@ impl Method {
             "reconcile_once" => Some(Self::ReconcileOnce),
             "health_check" => Some(Self::HealthCheck),
             "deregister_host" => Some(Self::DeregisterHost),
+            "wire_host_pipeline" => Some(Self::WireHostPipeline),
+            "unwire_host_pipeline" => Some(Self::UnwireHostPipeline),
             _ => None,
         }
     }
@@ -722,7 +820,13 @@ impl Method {
             Self::ReconcileOnce => Some(Operation::ReconcileOnce),
             Self::HealthCheck => Some(Operation::HealthCheck),
             Self::DeregisterHost => Some(Operation::DeregisterHost),
+            Self::WireHostPipeline => Some(Operation::WireHostPipeline),
+            Self::UnwireHostPipeline => Some(Operation::UnwireHostPipeline),
         }
+    }
+
+    fn requires_trust_context(self) -> bool {
+        matches!(self, Self::WireHostPipeline | Self::UnwireHostPipeline)
     }
 }
 
@@ -868,6 +972,7 @@ fn dispatch<C: ChiefControlPlane>(
     control_plane: &mut C,
     method: Method,
     params: &[(String, JsonValue)],
+    trust_context: Option<&TrustRequestContext>,
 ) -> Result<JsonValue, PublicError> {
     match method {
         Method::Authenticate => unreachable!("authentication dispatch is connection-local"),
@@ -924,6 +1029,22 @@ fn dispatch<C: ChiefControlPlane>(
                 .map(|()| object(vec![("deregistered", JsonValue::Bool(true))]))
                 .map_err(PublicError::from)
         }
+        Method::WireHostPipeline => {
+            let context = trust_context.ok_or(PublicError::Internal)?;
+            let binding = parse_pipeline_binding(params)?;
+            control_plane
+                .wire_host_pipeline(context, binding)
+                .map(|loaded| loaded_pipeline_binding_json(&loaded))
+                .map_err(PublicError::from)
+        }
+        Method::UnwireHostPipeline => {
+            let context = trust_context.ok_or(PublicError::Internal)?;
+            let host_name = parse_name_only(params)?;
+            control_plane
+                .unwire_host_pipeline(context, &host_name)
+                .map(|binding| unwired_pipeline_json(binding.as_ref()))
+                .map_err(PublicError::from)
+        }
     }
 }
 
@@ -976,6 +1097,120 @@ fn parse_registration(
     ))
 }
 
+fn parse_pipeline_binding(
+    params: &[(String, JsonValue)],
+) -> Result<HostPipelineBinding, PublicError> {
+    if !has_exact_fields(
+        params,
+        &[
+            "pipeline_id",
+            "host_name",
+            "package_path",
+            "package_hash",
+            "restart_policy",
+            "agent_id",
+            "channels",
+            "level_one_model",
+        ],
+    ) {
+        return Err(PublicError::InvalidParams);
+    }
+    let pipeline_id = match field(params, "pipeline_id") {
+        Some(JsonValue::String(value)) => PipelineId::new(decode_hex(value)?),
+        _ => return Err(PublicError::InvalidParams),
+    }
+    .map_err(|_| PublicError::InvalidParams)?;
+    let host_name = parse_host_name(field(params, "host_name"))?;
+    let package_path = match field(params, "package_path") {
+        Some(JsonValue::String(value)) => {
+            PackagePath::new(value.clone()).map_err(|_| PublicError::InvalidParams)?
+        }
+        _ => return Err(PublicError::InvalidParams),
+    };
+    let package_hash = match field(params, "package_hash") {
+        Some(JsonValue::String(value)) => decode_hash(value)?,
+        _ => return Err(PublicError::InvalidParams),
+    };
+    let restart_policy = parse_restart_policy(field(params, "restart_policy"))?;
+    let agent_id = match field(params, "agent_id") {
+        Some(JsonValue::String(value)) => AgentId::new(decode_hex_vec(value)?),
+        _ => return Err(PublicError::InvalidParams),
+    }
+    .map_err(|_| PublicError::InvalidParams)?;
+    let channels = parse_channel_bindings(field(params, "channels"))?;
+    let level_one_model = parse_level_one_model(field(params, "level_one_model"))?;
+    let launch_bindings =
+        LaunchBindings::new(channels, level_one_model).map_err(|_| PublicError::InvalidParams)?;
+    Ok(HostPipelineBinding::new(
+        pipeline_id,
+        HostRegistration::new(host_name, package_path, package_hash, restart_policy),
+        agent_id,
+        launch_bindings,
+    ))
+}
+
+fn parse_channel_bindings(value: Option<&JsonValue>) -> Result<Vec<ChannelBinding>, PublicError> {
+    let Some(JsonValue::Array(values)) = value else {
+        return Err(PublicError::InvalidParams);
+    };
+    values
+        .iter()
+        .map(|value| {
+            let JsonValue::Object(fields) = value else {
+                return Err(PublicError::InvalidParams);
+            };
+            if !has_exact_fields(fields, &["name", "access", "channel_id"]) {
+                return Err(PublicError::InvalidParams);
+            }
+            let name = match field(fields, "name") {
+                Some(JsonValue::String(value)) => value.clone(),
+                _ => return Err(PublicError::InvalidParams),
+            };
+            let access = match field(fields, "access") {
+                Some(JsonValue::String(value)) if value == "read" => ChannelBindingAccess::Read,
+                Some(JsonValue::String(value)) if value == "write" => ChannelBindingAccess::Write,
+                _ => return Err(PublicError::InvalidParams),
+            };
+            let channel_id = match field(fields, "channel_id") {
+                Some(JsonValue::String(value)) => decode_hex(value)?,
+                _ => return Err(PublicError::InvalidParams),
+            };
+            ChannelBinding::new(name, access, channel_id).map_err(|_| PublicError::InvalidParams)
+        })
+        .collect()
+}
+
+fn parse_level_one_model(
+    value: Option<&JsonValue>,
+) -> Result<Option<LevelOneModelBinding>, PublicError> {
+    let fields = match value {
+        Some(JsonValue::Null) => return Ok(None),
+        Some(JsonValue::Object(fields)) => fields,
+        _ => return Err(PublicError::InvalidParams),
+    };
+    if !has_exact_fields(fields, &["model", "temperature", "max_tokens"]) {
+        return Err(PublicError::InvalidParams);
+    }
+    let model = match field(fields, "model") {
+        Some(JsonValue::String(value)) => value.clone(),
+        _ => return Err(PublicError::InvalidParams),
+    };
+    let temperature = match field(fields, "temperature") {
+        Some(JsonValue::Number(JsonNumber::Integer(value))) => *value as f32,
+        Some(JsonValue::Number(JsonNumber::Float(value))) => *value as f32,
+        _ => return Err(PublicError::InvalidParams),
+    };
+    let max_tokens = match field(fields, "max_tokens") {
+        Some(JsonValue::Number(JsonNumber::Integer(value))) => {
+            u32::try_from(*value).map_err(|_| PublicError::InvalidParams)?
+        }
+        _ => return Err(PublicError::InvalidParams),
+    };
+    LevelOneModelBinding::new(model, temperature, max_tokens)
+        .map(Some)
+        .map_err(|_| PublicError::InvalidParams)
+}
+
 fn parse_host_name(value: Option<&JsonValue>) -> Result<HostName, PublicError> {
     match value {
         Some(JsonValue::String(value)) => {
@@ -1003,18 +1238,38 @@ fn parse_desired_state(value: Option<&JsonValue>) -> Result<DesiredState, Public
 }
 
 fn decode_hash(value: &str) -> Result<[u8; 32], PublicError> {
-    if value.len() != 64
+    decode_hex(value)
+}
+
+fn decode_hex<const N: usize>(value: &str) -> Result<[u8; N], PublicError> {
+    if value.len() != N * 2
         || !value
             .bytes()
             .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
     {
         return Err(PublicError::InvalidParams);
     }
-    let mut output = [0_u8; 32];
+    let mut output = [0_u8; N];
     for (index, byte) in output.iter_mut().enumerate() {
         let offset = index * 2;
         *byte =
             (hex_nibble(value.as_bytes()[offset]) << 4) | hex_nibble(value.as_bytes()[offset + 1]);
+    }
+    Ok(output)
+}
+
+fn decode_hex_vec(value: &str) -> Result<Vec<u8>, PublicError> {
+    if value.is_empty()
+        || !value.len().is_multiple_of(2)
+        || !value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        return Err(PublicError::InvalidParams);
+    }
+    let mut output = Vec::with_capacity(value.len() / 2);
+    for pair in value.as_bytes().chunks_exact(2) {
+        output.push((hex_nibble(pair[0]) << 4) | hex_nibble(pair[1]));
     }
     Ok(output)
 }
@@ -1151,6 +1406,107 @@ fn loaded_host_json(host: &LoadedHost) -> JsonValue {
         (
             "revision",
             JsonValue::String(host.revision().as_str().to_string()),
+        ),
+    ])
+}
+
+fn pipeline_binding_json(binding: &HostPipelineBinding) -> JsonValue {
+    let registration = binding.registration();
+    let launch_bindings = binding.launch_bindings();
+    object(vec![
+        (
+            "pipeline_id",
+            JsonValue::String(hex_bytes(binding.pipeline_id().as_bytes())),
+        ),
+        (
+            "host_name",
+            JsonValue::String(registration.host_name().as_str().to_string()),
+        ),
+        (
+            "package_path",
+            JsonValue::String(registration.package_path().as_str().to_string()),
+        ),
+        (
+            "package_hash",
+            JsonValue::String(hex_bytes(registration.package_hash())),
+        ),
+        (
+            "restart_policy",
+            JsonValue::String(restart_policy_name(registration.restart_policy()).to_string()),
+        ),
+        (
+            "agent_id",
+            JsonValue::String(hex_bytes(binding.agent_id().as_bytes())),
+        ),
+        (
+            "channels",
+            JsonValue::Array(
+                launch_bindings
+                    .channels()
+                    .iter()
+                    .map(channel_binding_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "level_one_model",
+            launch_bindings
+                .level_one_model()
+                .map_or(JsonValue::Null, level_one_model_json),
+        ),
+    ])
+}
+
+fn channel_binding_json(binding: &ChannelBinding) -> JsonValue {
+    object(vec![
+        ("name", JsonValue::String(binding.name().to_string())),
+        (
+            "access",
+            JsonValue::String(
+                match binding.access() {
+                    ChannelBindingAccess::Read => "read",
+                    ChannelBindingAccess::Write => "write",
+                }
+                .to_string(),
+            ),
+        ),
+        (
+            "channel_id",
+            JsonValue::String(hex_bytes(&binding.channel_id())),
+        ),
+    ])
+}
+
+fn level_one_model_json(binding: &LevelOneModelBinding) -> JsonValue {
+    object(vec![
+        ("model", JsonValue::String(binding.model().to_string())),
+        (
+            "temperature",
+            JsonValue::Number(JsonNumber::Float(f64::from(binding.temperature()))),
+        ),
+        (
+            "max_tokens",
+            JsonValue::Number(JsonNumber::Integer(i64::from(binding.max_tokens()))),
+        ),
+    ])
+}
+
+fn loaded_pipeline_binding_json(binding: &LoadedHostPipelineBinding) -> JsonValue {
+    object(vec![
+        ("binding", pipeline_binding_json(binding.binding())),
+        (
+            "revision",
+            JsonValue::String(binding.revision().as_str().to_string()),
+        ),
+    ])
+}
+
+fn unwired_pipeline_json(binding: Option<&HostPipelineBinding>) -> JsonValue {
+    object(vec![
+        ("unwired", JsonValue::Bool(binding.is_some())),
+        (
+            "binding",
+            binding.map_or(JsonValue::Null, pipeline_binding_json),
         ),
     ])
 }
@@ -1334,7 +1690,7 @@ fn reconcile_action_name(action: ReconcileAction) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chief_of_staff_orchestrator_core::ChannelWiringRequest;
+    use chief_of_staff_orchestrator_core::{ChannelWiringRequest, PipelineWiringRequest};
     use chief_of_staff_process_supervisor::MonotonicClock;
     use chief_of_staff_service_reconciler::{ReconcileConfig, SupervisorObservation};
     use std::collections::BTreeMap;
@@ -1394,6 +1750,18 @@ mod tests {
             &mut self,
             _context: &chief_of_staff_trust_checker::TrustRequestContext,
             _request: ChannelWiringRequest<'_>,
+        ) -> Result<(), Self::Error> {
+            Ok(())
+        }
+    }
+
+    impl PipelineWiringAuthorizer for NoopWiring {
+        type Error = ();
+
+        fn authorize_pipeline(
+            &mut self,
+            _context: &TrustRequestContext,
+            _request: PipelineWiringRequest<'_>,
         ) -> Result<(), Self::Error> {
             Ok(())
         }
@@ -1459,6 +1827,10 @@ mod tests {
                 Ok(self.allow_operation)
             }
         }
+
+        fn requester_id<'a>(&self, session: &'a Self::Session) -> &'a str {
+            session
+        }
     }
 
     fn core(backend: Arc<InMemoryStorageBackend>) -> OrchestratorCore<FakeSupervisor, NoopWiring> {
@@ -1473,6 +1845,29 @@ mod tests {
 
     fn request(id: &str, method: &str, params: &str) -> String {
         format!("{{\"version\":1,\"id\":\"{id}\",\"method\":\"{method}\",\"params\":{params}}}")
+    }
+
+    fn uuid_v7(tag: u8) -> [u8; 16] {
+        let mut bytes = [tag; 16];
+        bytes[6] = 0x70;
+        bytes[8] = 0x80;
+        bytes
+    }
+
+    fn test_pipeline_binding(registration: HostRegistration) -> HostPipelineBinding {
+        HostPipelineBinding::new(
+            PipelineId::new(uuid_v7(9)).unwrap(),
+            registration,
+            AgentId::new(b"typed-agent".to_vec()).unwrap(),
+            LaunchBindings::new(
+                vec![
+                    ChannelBinding::new("input", ChannelBindingAccess::Read, uuid_v7(1)).unwrap(),
+                    ChannelBinding::new("output", ChannelBindingAccess::Write, uuid_v7(2)).unwrap(),
+                ],
+                Some(LevelOneModelBinding::new("model:one", 0.25, 512).unwrap()),
+            )
+            .unwrap(),
+        )
     }
 
     fn authenticate<C: ChiefControlPlane>(
@@ -1529,6 +1924,30 @@ mod tests {
         assert!(reloaded.contains(&replacement_hash));
         assert!(reloaded.contains("/agents/two"));
 
+        let pipeline_id = hex_bytes(&uuid_v7(9));
+        let wired = api.handle_text(
+            &mut session,
+            &request(
+                "wire",
+                "wire_host_pipeline",
+                &format!(
+                    r#"{{"pipeline_id":"{pipeline_id}","host_name":"agent-one","package_path":"/agents/two","package_hash":"{replacement_hash}","restart_policy":"on_failure","agent_id":"6167656e742d6f6e65","channels":[],"level_one_model":null}}"#
+                ),
+            ),
+        );
+        assert!(wired.contains(r#""pipeline_id""#), "{wired}");
+        assert!(wired.contains(r#""revision""#), "{wired}");
+        let unwired = api.handle_text(
+            &mut session,
+            &request(
+                "unwire",
+                "unwire_host_pipeline",
+                r#"{"host_name":"agent-one"}"#,
+            ),
+        );
+        assert!(unwired.contains(r#""unwired":true"#), "{unwired}");
+        assert!(unwired.contains(&pipeline_id), "{unwired}");
+
         let listed = api.handle_text(&mut session, &request("list", "list_hosts", "{}"));
         assert!(listed.contains(r#""host_name":"agent-one""#));
 
@@ -1571,6 +1990,8 @@ mod tests {
             [
                 Operation::RegisterHost,
                 Operation::ReloadHost,
+                Operation::WireHostPipeline,
+                Operation::UnwireHostPipeline,
                 Operation::ListHosts,
                 Operation::SetDesiredState,
                 Operation::ReconcileOnce,
@@ -1726,6 +2147,50 @@ mod tests {
     }
 
     #[test]
+    fn pipeline_parameters_are_exact_bounded_and_cannot_spoof_requester_context() {
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let api = DaemonApi::new(core(backend), TestAuthorizer::allowing());
+        let mut session = DaemonSession::default();
+        authenticate(&api, &mut session);
+        let pipeline_id = hex_bytes(&uuid_v7(9));
+        let channel_id = hex_bytes(&uuid_v7(1));
+        let hash = "11".repeat(32);
+        let base = format!(
+            r#""pipeline_id":"{pipeline_id}","host_name":"agent-one","package_path":"/agents/one","package_hash":"{hash}","restart_policy":"always","agent_id":"6167656e742d6f6e65""#
+        );
+        let valid = format!(r#"{{{base},"channels":[],"level_one_model":null}}"#);
+        let invalid = [
+            "{}".to_string(),
+            format!(r#"{{{base},"channels":[],"level_one_model":null,"requested_by":"attacker"}}"#),
+            valid.replacen(&pipeline_id, &"00".repeat(16), 1),
+            valid.replacen("6167656e742d6f6e65", "0", 1),
+            format!(
+                r#"{{{base},"channels":[{{"name":"input","access":"execute","channel_id":"{channel_id}"}}],"level_one_model":null}}"#
+            ),
+            format!(
+                r#"{{{base},"channels":[{{"name":"input","access":"read","channel_id":"{channel_id}"}},{{"name":"input","access":"write","channel_id":"{}"}}],"level_one_model":null}}"#,
+                hex_bytes(&uuid_v7(2))
+            ),
+            format!(
+                r#"{{{base},"channels":[],"level_one_model":{{"model":"one","temperature":2.1,"max_tokens":512}}}}"#
+            ),
+            format!(
+                r#"{{{base},"channels":[],"level_one_model":{{"model":"one","temperature":0.5,"max_tokens":0}}}}"#
+            ),
+        ];
+        for params in invalid {
+            let response = api.handle_text(
+                &mut session,
+                &request("pipeline-invalid", "wire_host_pipeline", &params),
+            );
+            assert!(
+                response.contains(r#""code":"invalid_params""#),
+                "{params}: {response}"
+            );
+        }
+    }
+
+    #[test]
     fn websocket_events_are_text_only_and_control_events_are_runtime_owned() {
         let backend = Arc::new(InMemoryStorageBackend::new());
         let api = DaemonApi::new(core(Arc::clone(&backend)), TestAuthorizer::allowing());
@@ -1778,6 +2243,22 @@ mod tests {
         }
 
         fn deregister_host(&mut self, _host_name: &HostName) -> Result<(), ControlPlaneError> {
+            Err(ControlPlaneError::Internal)
+        }
+
+        fn wire_host_pipeline(
+            &mut self,
+            _context: &TrustRequestContext,
+            _binding: HostPipelineBinding,
+        ) -> Result<LoadedHostPipelineBinding, ControlPlaneError> {
+            Err(ControlPlaneError::Internal)
+        }
+
+        fn unwire_host_pipeline(
+            &mut self,
+            _context: &TrustRequestContext,
+            _host_name: &HostName,
+        ) -> Result<Option<HostPipelineBinding>, ControlPlaneError> {
             Err(ControlPlaneError::Internal)
         }
     }
@@ -1926,6 +2407,49 @@ mod tests {
                 self.record("deregister");
                 Err(ControlPlaneError::Forbidden)
             }
+
+            fn wire_host_pipeline(
+                &mut self,
+                context: &TrustRequestContext,
+                binding: HostPipelineBinding,
+            ) -> Result<LoadedHostPipelineBinding, ControlPlaneError> {
+                assert_eq!(context.requested_by(), "operator");
+                assert_eq!(context.request_id(), "9");
+                assert_eq!(binding.pipeline_id().as_bytes(), &uuid_v7(9));
+                assert_eq!(binding.registration().host_name().as_str(), "typed-host");
+                assert_eq!(
+                    binding.registration().package_path().as_str(),
+                    "/agents/typed"
+                );
+                assert_eq!(binding.registration().package_hash(), &[0xab; 32]);
+                assert_eq!(binding.agent_id().as_bytes(), b"typed-agent");
+                let channels = binding.launch_bindings().channels();
+                assert_eq!(channels.len(), 2);
+                assert_eq!(channels[0].name(), "input");
+                assert_eq!(channels[0].access(), ChannelBindingAccess::Read);
+                assert_eq!(channels[0].channel_id(), uuid_v7(1));
+                assert_eq!(channels[1].name(), "output");
+                assert_eq!(channels[1].access(), ChannelBindingAccess::Write);
+                assert_eq!(channels[1].channel_id(), uuid_v7(2));
+                let model = binding.launch_bindings().level_one_model().unwrap();
+                assert_eq!(model.model(), "model:one");
+                assert_eq!(model.temperature(), 0.25);
+                assert_eq!(model.max_tokens(), 512);
+                self.record("wire_pipeline");
+                Err(ControlPlaneError::Forbidden)
+            }
+
+            fn unwire_host_pipeline(
+                &mut self,
+                context: &TrustRequestContext,
+                host_name: &HostName,
+            ) -> Result<Option<HostPipelineBinding>, ControlPlaneError> {
+                assert_eq!(context.requested_by(), "operator");
+                assert_eq!(context.request_id(), "10");
+                assert_eq!(host_name.as_str(), "typed-host");
+                self.record("unwire_pipeline");
+                Ok(None)
+            }
         }
 
         let api = Arc::new(DaemonApi::new(
@@ -2000,6 +2524,18 @@ mod tests {
                 .remote_code(),
             Some("forbidden")
         );
+        let pipeline = test_pipeline_binding(registration);
+        assert_eq!(
+            client
+                .wire_host_pipeline(&pipeline)
+                .unwrap_err()
+                .remote_code(),
+            Some("forbidden")
+        );
+        let unwired = client.unwire_host_pipeline(&host_name).unwrap();
+        let serialized = serialize(&unwired).unwrap();
+        assert!(serialized.contains(r#""unwired":false"#));
+        assert!(serialized.contains(r#""binding":null"#));
         assert_eq!(
             *calls.lock().unwrap(),
             [
@@ -2009,7 +2545,9 @@ mod tests {
                 "set",
                 "reconcile",
                 "health",
-                "deregister"
+                "deregister",
+                "wire_pipeline",
+                "unwire_pipeline"
             ]
         );
         client.close().unwrap();
@@ -2142,6 +2680,20 @@ mod tests {
                 unreachable!()
             }
             fn deregister_host(&mut self, _: &HostName) -> Result<(), ControlPlaneError> {
+                unreachable!()
+            }
+            fn wire_host_pipeline(
+                &mut self,
+                _: &TrustRequestContext,
+                _: HostPipelineBinding,
+            ) -> Result<LoadedHostPipelineBinding, ControlPlaneError> {
+                unreachable!()
+            }
+            fn unwire_host_pipeline(
+                &mut self,
+                _: &TrustRequestContext,
+                _: &HostName,
+            ) -> Result<Option<HostPipelineBinding>, ControlPlaneError> {
                 unreachable!()
             }
         }

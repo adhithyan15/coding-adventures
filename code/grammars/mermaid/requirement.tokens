@@ -1,0 +1,28 @@
+# @version 1
+# Mermaid 11.16.1 requirement diagram token grammar.
+
+skip:
+  WHITESPACE       = /[ \t]+/
+  COMMENT          = /(?:%%|#)[^\r\n]*/
+
+NEWLINE            = /\r?\n/
+HEADER             = /(?i:requirementDiagram)/
+ACC_DESCR_BLOCK    = /(?i:accDescr)[ \t]*\{[^}]*\}/
+ACC_TITLE          = /(?i:accTitle)[ \t]*:[^#\r\n;]+/
+ACC_DESCR          = /(?i:accDescr)[ \t]*:[^#\r\n;]+/
+TITLE              = /(?i:title)[ \t]+[^\r\n;#]+/
+DIRECTION          = /(?i:direction)[ \t]+(?i:TB|BT|LR|RL)/
+CLASSDEF           = /(?i:classDef)[ \t]+[^\r\n;]+[ \t]+[A-Za-z-]+[ \t]*:[^\r\n;]+;?/
+CLASS              = /(?i:class)[ \t]+[^\r\n;]+[ \t]+[^\r\n;]+;?/
+STYLE              = /(?i:style)[ \t]+[^\r\n;]+[ \t]+[A-Za-z-]+[ \t]*:[^\r\n;]+;?/
+REQUIREMENT_START  = /(?i:functionalRequirement|interfaceRequirement|performanceRequirement|physicalRequirement|designConstraint|requirement)[ \t]+(?:"[^"]+"|[^:{\r\n]+?)(?:[:][:][:][^\s{]+)?[ \t]*\{/
+ELEMENT_START      = /(?i:element)[ \t]+(?:"[^"]+"|[^:{\r\n]+?)(?:[:][:][:][^\s{]+)?[ \t]*\{/
+INLINE_CLASS       = /(?:"[^"]+"|[^\r\n:{}]+?)[:][:][:][^\s;]+;?/
+ID_FIELD           = /(?i:id)[ \t]*:[ \t]*(?:"[^"]*"|[^\r\n}]+)/
+TEXT_FIELD         = /(?i:text)[ \t]*:[ \t]*(?:"[^"]*"|[^\r\n}]+)/
+RISK_FIELD         = /(?i:risk)[ \t]*:[ \t]*(?i:low|medium|high)/
+VERIFY_FIELD       = /(?i:verifyMethod)[ \t]*:[ \t]*(?i:analysis|inspection|test|demonstration)/
+TYPE_FIELD         = /(?i:type)[ \t]*:[ \t]*(?:"[^"]*"|[^\r\n}]+)/
+DOCREF_FIELD       = /(?i:docref)[ \t]*:[ \t]*(?:"[^"]*"|[^\r\n}]+)/
+RELATIONSHIP       = /(?:"[^"]+"|[^\r\n<>{},:=-]+?)[ \t]*(?:-[ \t]*(?i:contains|copies|derives|satisfies|verifies|refines|traces)[ \t]*->|<-[ \t]*(?i:contains|copies|derives|satisfies|verifies|refines|traces)[ \t]*-)[ \t]*(?:"[^"]+"|[^\r\n<>{},:=-]+)/
+RBRACE             = "}"

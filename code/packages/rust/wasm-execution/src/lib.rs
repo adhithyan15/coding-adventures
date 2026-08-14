@@ -140,7 +140,25 @@ impl WasmValue {
             },
             WasmValue::F32(v) => TypedVMValue {
                 value_type: 0x7D, // F32
-                value: Value::Float(v as f64),
+                // Reinterpret the f32's raw BITS into an f64 (zero-extend the
+                // u32 pattern, then read it back as f64 bits) -- NOT an
+                // arithmetic `as f64` widen. `GenericVM`'s typed stack only
+                // has one float slot (`Value::Float(f64)`), shared by both
+                // WASM float widths, so every f32 that's merely pushed/popped
+                // (which is EVERY f32 in a running program -- locals, params,
+                // results, operands) round-trips through this f64 box. Rust's
+                // `as` cast between float widths does not guarantee NaN
+                // payload preservation on the narrowing leg back to f32 --
+                // confirmed empirically: `f32::from_bits(0x7fa00000) as f64
+                // as f32` produces `0x7fc00000` (LLVM's fpext/fptrunc
+                // canonicalize the payload to the target's generic quiet
+                // NaN) -- so the old arithmetic cast silently destroyed the
+                // exact NaN bit pattern of ANY f32 value merely passing
+                // through the stack, not just ones an opcode computed on.
+                // Reinterpreting the bits directly is lossless and exactly
+                // reversible by `from_typed` below for every case (NaN,
+                // normal, ±0.0, ±inf) since it does no rounding at all.
+                value: Value::Float(f64::from_bits(v.to_bits() as u64)),
             },
             WasmValue::F64(v) => TypedVMValue {
                 value_type: 0x7C, // F64
@@ -170,7 +188,11 @@ impl WasmValue {
                 _ => Err(TrapError::new("type mismatch: expected i64")),
             },
             0x7D => match &tv.value { // F32
-                Value::Float(v) => Ok(WasmValue::F32(*v as f32)),
+                // Reverse of `to_typed`'s bit-reinterpret above -- truncate
+                // back to the low 32 bits and read them as f32 bits, not an
+                // arithmetic narrowing cast. See that match arm's doc
+                // comment for why this must be a bit reinterpretation.
+                Value::Float(v) => Ok(WasmValue::F32(f32::from_bits(v.to_bits() as u32))),
                 _ => Err(TrapError::new("type mismatch: expected f32")),
             },
             0x7C => match &tv.value { // F64
@@ -928,16 +950,20 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             continue;
         }
 
-        // ── Bulk-memory two-byte opcodes: `0xFC <sub-opcode> [immediates]` ─────
+        // ── `0xFC`-prefixed two-byte opcodes: `0xFC <sub-opcode> [immediates]` ─
         //
-        // Like the `0xFB` GC prefix, the MVP `get_opcode` table doesn't know the
-        // `0xFC` bulk-memory prefix, so we decode it explicitly.  We carry the
-        // sub-opcode in a plain `Int` operand; the `0xFC` handler dispatches on it.
+        // The MVP `get_opcode` table doesn't know the `0xFC` prefix byte (used
+        // by two unrelated proposals sharing the same prefix), so we decode it
+        // explicitly. We carry the sub-opcode in a plain `Int` operand; the
+        // `0xFC` handler dispatches on it.
         //
-        //   sub   instruction   immediates
-        //   0x0A  memory.copy   <dst mem idx> <src mem idx>   (both 0 in our modules)
-        //   0x0B  memory.fill   <mem idx>
+        //   sub          instruction         immediates
+        //   0x00-0x07    *.trunc_sat_*_s/u   (none -- WASM03)
+        //   0x0A         memory.copy         <dst mem idx> <src mem idx> (both 0 in our modules)
+        //   0x0B         memory.fill         <mem idx>
         //
+        // `trunc_sat`'s 8 sub-opcodes need no extra immediate bytes consumed
+        // here (the default `_ => {}` arm already handles that correctly).
         // Only `memory.copy` is emitted today (runtime `str_concat`); `memory.fill`
         // is decoded (its one immediate consumed) so a future user round-trips, but
         // the handler traps on any sub-opcode it doesn't implement.
@@ -1481,8 +1507,48 @@ fn execute_branch(
         push_wasm(vm, v);
     }
 
-    // Pop labels down to target.
-    ctx.label_stack.truncate(label_stack_index);
+    // Pop labels down to (and including, or not, depending on kind — see
+    // below) the target. A WASM11 security-review-shaped bug: a BLOCK's
+    // own `target_pc` IS the literal position of that block's own `end`
+    // opcode (see the `block` handler and `build_control_flow_map`), and
+    // the `end` handler unconditionally pops one label whenever it runs,
+    // whether reached by falling through normally or landed on by a
+    // branch. The original `ctx.label_stack.truncate(label_stack_index)`
+    // (no `+ 1`) removed the target block's label a second time before
+    // that same `end` byte ever ran — a genuine double-pop that silently
+    // corrupted `label_stack` for any branch NOT targeting the innermost
+    // currently-open label (i.e. any branch that unwinds past one or more
+    // already-open outer blocks), popping ONE EXTRA label belonging to
+    // whatever the *next* enclosing block happened to be. This was
+    // invisible for the extremely common "the branched-into block is
+    // effectively the last thing in the function" shape (the accidental
+    // extra pop just triggered the function-end path a little early, with
+    // no observable difference), but produced a real `StackUnderflow` (or
+    // a silently wrong later branch) for anything with real code still to
+    // run after the target block closes — e.g. the official testsuite's
+    // own `switch.wast` dispatch pattern (10 levels of nested named
+    // blocks, `br_table` jumping straight from the innermost out to a
+    // middle level), where this was found. For a BLOCK, `+ 1` (keep the
+    // target label in place) fixes this: landing on its own `end` byte
+    // then pops it EXACTLY ONCE, identical to ordinary fall-through.
+    //
+    // A LOOP needs the OPPOSITE fix, not `+ 1` too — its `target_pc` is
+    // the position of the `loop` OPCODE ITSELF (`loop_pc = vm.pc`,
+    // captured BEFORE `vm.advance_pc()` in the `loop` handler), not an
+    // `end` byte. Branching back to a loop re-executes that `loop` opcode,
+    // which unconditionally PUSHES A FRESH LABEL. Keeping the old label
+    // in place (`+ 1`) here as well — the first version of this fix,
+    // caught by manually reproducing a simple `loop`+`br_if`-break before
+    // pushing, not by the testsuite (no vendored `.wast` file with a
+    // simple bounded loop currently parses) — left BOTH the retained old
+    // label and the freshly re-pushed one on the stack every iteration:
+    // an unbounded per-iteration duplicate, corrupting every later depth
+    // calculation and hanging (an effectively infinite loop, not a clean
+    // trap) rather than terminating. Loops keep the ORIGINAL (no `+ 1`)
+    // behavior instead: remove the old instance now, so the re-push on
+    // the next iteration nets back to exactly one.
+    let keep_target = !label.is_loop;
+    ctx.label_stack.truncate(label_stack_index + usize::from(keep_target));
 
     // Jump.
     vm.jump_to(label.target_pc);
@@ -1801,12 +1867,55 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     // the value stack (bottom → top) is `[dest, src, size]`: pop size, then src,
     // then dest.  It copies `size` bytes from `src` to `dest` within the single
     // linear memory, overlap-safe.  Out-of-range (either endpoint) is a clean trap.
-    // Only sub-opcode 0x0A is implemented; any other 0xFC sub-opcode traps rather
-    // than silently misbehaving.
+    // Sub-opcodes 0x00-0x07 (WASM03) and 0x0A are implemented; any other
+    // 0xFC sub-opcode traps rather than silently misbehaving.
+    //
+    // 0x00-0x07: the "non-trapping float-to-int conversions" proposal's 8
+    // `trunc_sat` instructions -- like `trunc_f32_s`/etc. but never traps:
+    // NaN becomes 0, and an out-of-range magnitude SATURATES to the target
+    // type's MIN/MAX instead of trapping. Rust's own `as` cast from float to
+    // int has used exactly this saturating behavior (NaN -> 0, out-of-range
+    // -> the nearest bound, truncate-toward-zero otherwise) since Rust 1.45
+    // — a direct match for the spec's definition, so no hand-rolled bounds
+    // checking is needed here (contrast the TRAPPING `trunc_f32_s`/etc.
+    // handlers just above, at 0xA8-0xB1, which explicitly reject NaN/
+    // overflow because THEY must trap, not saturate).
     vm.register_context_opcode(0xFC, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let sub = operand_int(instr);
         match sub {
+            0x00 => {
+                let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I32(a as i32));
+            }
+            0x01 => {
+                let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I32(a as u32 as i32));
+            }
+            0x02 => {
+                let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I32(a as i32));
+            }
+            0x03 => {
+                let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I32(a as u32 as i32));
+            }
+            0x04 => {
+                let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I64(a as i64));
+            }
+            0x05 => {
+                let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I64(a as u64 as i64));
+            }
+            0x06 => {
+                let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I64(a as i64));
+            }
+            0x07 => {
+                let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I64(a as u64 as i64));
+            }
             0x0A => {
                 // `as u32 as usize` (never a bare `as usize`): a negative i32 must
                 // truncate to its 32-bit value, NOT sign-extend to a huge usize — the
@@ -2225,6 +2334,43 @@ fn register_numeric_f64(vm: &mut GenericVM) {
 
 // ── Conversion instructions (0xA7-0xBF) ──────────────────────────────────
 
+/// Whether `z` (the SOURCE float, already widened to `f64` -- lossless for
+/// an `f32` input, since every `f32` value is exactly representable in
+/// `f64`) is in i32.trunc_s's valid domain: `-2^31 - 1 < z < 2^31`, per the
+/// WASM spec's `trunc_sN` definition, checked against the REAL value, not a
+/// rounded one. `-2147483649.0` is exactly representable in `f64` (its
+/// magnitude is well under `f64`'s 2^53 exact-integer limit), so this strict
+/// `>` comparison is exact, not an approximation.
+fn trunc_s_i32_in_range(z: f64) -> bool {
+    z > -2147483649.0 && z < 2147483648.0
+}
+
+/// As [`trunc_s_i32_in_range`], for `trunc_u`: valid iff `-1 < z < 2^32`.
+fn trunc_u_i32_in_range(z: f64) -> bool {
+    z > -1.0 && z < 4294967296.0
+}
+
+/// As [`trunc_s_i32_in_range`], for i64.trunc_s: valid iff
+/// `-2^63 - 1 < z < 2^63`. Unlike the i32 case, `-9223372036854775809.0`
+/// (2^63 + 1) is NOT exactly representable in `f64` (its magnitude exceeds
+/// `f64`'s 2^53 exact-integer limit), so the lower bound is written as `z >=
+/// -9223372036854775808.0` (`i64::MIN` as `f64`, exactly representable —
+/// it's a power of two) instead of a strict `>` against an inexact
+/// constant. This is still an EXACT check, not an approximation: `f64`'s
+/// representable-value spacing near `-2^63` is 2^11 = 2048 (`2^(63-52)`),
+/// so no `f64` value exists strictly between `-2^63 - 1` and `-2^63` for
+/// the strict/non-strict distinction to ever matter.
+fn trunc_s_i64_in_range(z: f64) -> bool {
+    (-9223372036854775808.0..9223372036854775808.0).contains(&z)
+}
+
+/// As [`trunc_s_i64_in_range`], for i64.trunc_u: valid iff `-1 < z < 2^64`.
+/// `-1.0` and `18446744073709551616.0` (2^64) are both exactly
+/// representable in `f64`.
+fn trunc_u_i64_in_range(z: f64) -> bool {
+    z > -1.0 && z < 18446744073709551616.0
+}
+
 fn register_conversion(vm: &mut GenericVM) {
     // i32.wrap_i64 (0xA7)
     vm.register_context_opcode(0xA7, |vm, _instr, _code, _ctx| {
@@ -2242,7 +2388,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if !(-2147483648.0..2147483648.0).contains(&a) {
+        if !trunc_s_i32_in_range(a as f64) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as i32));
@@ -2258,7 +2404,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if !(0.0..4294967296.0).contains(&a) {
+        if !trunc_u_i32_in_range(a as f64) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
@@ -2274,7 +2420,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if !(-2147483649.0..2147483648.0).contains(&a) {
+        if !trunc_s_i32_in_range(a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as i32));
@@ -2290,7 +2436,7 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
-        if !(0.0..4294967296.0).contains(&a) {
+        if !trunc_u_i32_in_range(a) {
             return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I32(a as u32 as i32));
@@ -2315,12 +2461,29 @@ fn register_conversion(vm: &mut GenericVM) {
     });
 
     // i64.trunc_f32_s (0xAE), i64.trunc_f32_u (0xAF), i64.trunc_f64_s (0xB0), i64.trunc_f64_u (0xB1)
+    //
+    // A security/conformance investigation for WASM03 (sign-extension/
+    // trunc_sat) found these 4 handlers -- pre-existing, untouched by that
+    // work otherwise -- had NO overflow range check at all beyond NaN,
+    // because they'd never been reachable: `conversions.wast`, the only
+    // vendored file exercising them, failed to even PARSE until WASM03's
+    // opcode-table additions landed. `a as i64`/`a as u64 as i64` alone is
+    // Rust's SATURATING float-to-int cast (see the sign-extension section
+    // above and 0xFC's trunc_sat handler for the same fact used correctly
+    // there) -- these TRAPPING opcodes were silently behaving like their
+    // non-trapping `trunc_sat` counterparts instead, never trapping on
+    // overflow. Fixed with the same `trunc_*_i64_in_range` bounds check the
+    // i32-destination handlers above already used (once corrected -- see
+    // those functions' own doc comments for the exact boundary math).
     vm.register_context_opcode(0xAE, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
         if a.is_nan() {
             return Err(VMError::GenericError(
                 "invalid conversion to integer".into(),
             ));
+        }
+        if !trunc_s_i64_in_range(a as f64) {
+            return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I64(a as i64));
         vm.advance_pc();
@@ -2333,6 +2496,9 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
+        if !trunc_u_i64_in_range(a as f64) {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         push_wasm(vm, WasmValue::I64(a as u64 as i64));
         vm.advance_pc();
         Ok(None)
@@ -2344,6 +2510,9 @@ fn register_conversion(vm: &mut GenericVM) {
                 "invalid conversion to integer".into(),
             ));
         }
+        if !trunc_s_i64_in_range(a) {
+            return Err(VMError::GenericError("integer overflow".into()));
+        }
         push_wasm(vm, WasmValue::I64(a as i64));
         vm.advance_pc();
         Ok(None)
@@ -2354,6 +2523,9 @@ fn register_conversion(vm: &mut GenericVM) {
             return Err(VMError::GenericError(
                 "invalid conversion to integer".into(),
             ));
+        }
+        if !trunc_u_i64_in_range(a) {
+            return Err(VMError::GenericError("integer overflow".into()));
         }
         push_wasm(vm, WasmValue::I64(a as u64 as i64));
         vm.advance_pc();
@@ -2460,6 +2632,57 @@ fn register_conversion(vm: &mut GenericVM) {
     vm.register_context_opcode(0xBF, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         push_wasm(vm, WasmValue::F64(f64::from_bits(a as u64)));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // ── Sign-extension instructions (0xC0-0xC4, WASM03) ────────────────────
+    //
+    // Each takes the operand's LOW N bits, reinterprets them as a two's-
+    // complement SIGNED N-bit integer, and sign-extends that value to fill
+    // the full i32/i64 width -- e.g. `i32.extend8_s` on the i32 bit pattern
+    // 0x000000FF (byte 0xFF, the other 3 bytes irrelevant) produces
+    // 0xFFFFFFFF (-1), the same result `i32.load8_s` would produce loading
+    // that byte from memory. Rust's `as i8`/`as i16` truncate-then-sign-
+    // extend on the subsequent `as i32`/`as i64` cast does exactly this in
+    // one step, matching the spec's `signed_N(x mod 2^N)` definition.
+
+    // i32.extend8_s (0xC0)
+    vm.register_context_opcode(0xC0, |vm, _instr, _code, _ctx| {
+        let a = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        push_wasm(vm, WasmValue::I32(a as i8 as i32));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // i32.extend16_s (0xC1)
+    vm.register_context_opcode(0xC1, |vm, _instr, _code, _ctx| {
+        let a = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        push_wasm(vm, WasmValue::I32(a as i16 as i32));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // i64.extend8_s (0xC2)
+    vm.register_context_opcode(0xC2, |vm, _instr, _code, _ctx| {
+        let a = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+        push_wasm(vm, WasmValue::I64(a as i8 as i64));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // i64.extend16_s (0xC3)
+    vm.register_context_opcode(0xC3, |vm, _instr, _code, _ctx| {
+        let a = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+        push_wasm(vm, WasmValue::I64(a as i16 as i64));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // i64.extend32_s (0xC4)
+    vm.register_context_opcode(0xC4, |vm, _instr, _code, _ctx| {
+        let a = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+        push_wasm(vm, WasmValue::I64(a as i32 as i64));
         vm.advance_pc();
         Ok(None)
     });
@@ -2896,7 +3119,6 @@ fn register_control(vm: &mut GenericVM) {
             stack_height: vm.typed_stack.len(),
             is_loop: false,
         });
-
         if condition != 0 {
             vm.advance_pc();
         } else {
@@ -3592,6 +3814,42 @@ mod tests {
             let typed = v.to_typed();
             let back = WasmValue::from_typed(&typed).unwrap();
             assert_eq!(*v, back);
+        }
+    }
+
+    #[test]
+    fn test_f32_nan_bit_pattern_survives_the_typed_stack_round_trip() {
+        // WASM13: `to_typed`/`from_typed` box every f32 through the
+        // GenericVM's single f64 float slot -- EVERY f32 that's merely
+        // pushed/popped (locals, params, results, operands) round-trips
+        // through here, not just ones an opcode computed on. `assert_eq!`
+        // can't check this (NaN != NaN under IEEE754, the derived
+        // `PartialEq`), so this compares raw bits directly. Covers a range
+        // of real testsuite bit patterns this bug actually lost: distinct
+        // payloads, both signs, both quiet and would-be-signaling patterns
+        // (the top mantissa bit set vs. clear).
+        let patterns: [u32; 6] = [
+            0x7fa00000, // quiet NaN, one payload
+            0xffa00000, // quiet NaN, negative, same payload magnitude
+            0x7fc00000, // the canonical quiet NaN itself (must still round-trip exactly)
+            0x7f800001, // signaling NaN, minimal payload
+            0xff800001, // signaling NaN, negative, minimal payload
+            0x7fffffff, // quiet NaN, all payload bits set
+        ];
+        for bits in patterns {
+            let original = f32::from_bits(bits);
+            assert!(original.is_nan(), "test fixture bug: {bits:#010x} is not actually a NaN");
+            let typed = WasmValue::F32(original).to_typed();
+            let back = WasmValue::from_typed(&typed).unwrap();
+            match back {
+                WasmValue::F32(v) => assert_eq!(
+                    v.to_bits(),
+                    bits,
+                    "NaN payload lost round-tripping {bits:#010x}: got {:#010x}",
+                    v.to_bits()
+                ),
+                other => panic!("expected F32 back, got {other:?}"),
+            }
         }
     }
 
@@ -5867,6 +6125,206 @@ mod tests {
         let bits = 1.0f64.to_bits() as i64;
         let r = eng.call_function(0, &[WasmValue::I64(bits)]).unwrap();
         assert_eq!(r, vec![WasmValue::F64(1.0)]);
+    }
+
+    // ── Sign-extension instructions (WASM03) ─────────────────────────────
+
+    #[test]
+    fn test_i32_extend8_s() {
+        let mut eng = make_conversion_engine(0xC0, ValueType::I32, ValueType::I32);
+        // 0xFF as an i32's low byte: byte 0xFF sign-extends to -1.
+        assert_eq!(eng.call_function(0, &[WasmValue::I32(0xFF)]).unwrap(), vec![WasmValue::I32(-1)]);
+        // The high bytes must be ignored entirely, not just the low byte's sign.
+        assert_eq!(eng.call_function(0, &[WasmValue::I32(0x7F00_007F)]).unwrap(), vec![WasmValue::I32(127)]);
+    }
+
+    #[test]
+    fn test_i32_extend16_s() {
+        let mut eng = make_conversion_engine(0xC1, ValueType::I32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::I32(0xFFFF)]).unwrap(), vec![WasmValue::I32(-1)]);
+        assert_eq!(eng.call_function(0, &[WasmValue::I32(0x7FFF)]).unwrap(), vec![WasmValue::I32(32767)]);
+    }
+
+    #[test]
+    fn test_i64_extend8_s() {
+        let mut eng = make_conversion_engine(0xC2, ValueType::I64, ValueType::I64);
+        assert_eq!(eng.call_function(0, &[WasmValue::I64(0xFF)]).unwrap(), vec![WasmValue::I64(-1)]);
+    }
+
+    #[test]
+    fn test_i64_extend16_s() {
+        let mut eng = make_conversion_engine(0xC3, ValueType::I64, ValueType::I64);
+        assert_eq!(eng.call_function(0, &[WasmValue::I64(0xFFFF)]).unwrap(), vec![WasmValue::I64(-1)]);
+    }
+
+    #[test]
+    fn test_i64_extend32_s() {
+        let mut eng = make_conversion_engine(0xC4, ValueType::I64, ValueType::I64);
+        assert_eq!(eng.call_function(0, &[WasmValue::I64(0xFFFF_FFFF)]).unwrap(), vec![WasmValue::I64(-1)]);
+        assert_eq!(eng.call_function(0, &[WasmValue::I64(0x7FFF_FFFF)]).unwrap(), vec![WasmValue::I64(2147483647)]);
+    }
+
+    // ── Saturating truncation instructions (0xFC 0x00-0x07, WASM03) ──────
+
+    /// Helper mirroring [`make_conversion_engine`], for the two-byte `0xFC
+    /// <sub>` prefix encoding `trunc_sat` uses.
+    fn make_trunc_sat_engine(sub: u8, param: ValueType, result: ValueType) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![param], results: vec![result] };
+        let body = FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0xFC, sub, 0x0B] };
+        WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        })
+    }
+
+    #[test]
+    fn test_i32_trunc_sat_f32_s_ordinary_value() {
+        let mut eng = make_trunc_sat_engine(0x00, ValueType::F32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(-2.9)]).unwrap(), vec![WasmValue::I32(-2)]);
+    }
+
+    #[test]
+    fn test_i32_trunc_sat_f32_s_nan_saturates_to_zero_not_trap() {
+        // The whole point of trunc_sat vs. trunc: NaN must NOT trap.
+        let mut eng = make_trunc_sat_engine(0x00, ValueType::F32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(f32::NAN)]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_i32_trunc_sat_f32_s_overflow_saturates_to_i32_max() {
+        let mut eng = make_trunc_sat_engine(0x00, ValueType::F32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(1e10)]).unwrap(), vec![WasmValue::I32(i32::MAX)]);
+    }
+
+    #[test]
+    fn test_i32_trunc_sat_f32_s_underflow_saturates_to_i32_min() {
+        let mut eng = make_trunc_sat_engine(0x00, ValueType::F32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(-1e10)]).unwrap(), vec![WasmValue::I32(i32::MIN)]);
+    }
+
+    #[test]
+    fn test_i32_trunc_sat_f32_u_negative_saturates_to_zero() {
+        let mut eng = make_trunc_sat_engine(0x01, ValueType::F32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(-5.0)]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_i32_trunc_sat_f64_u_overflow_saturates_to_u32_max() {
+        let mut eng = make_trunc_sat_engine(0x03, ValueType::F64, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F64(1e20)]).unwrap(), vec![WasmValue::I32(-1)]); // 0xFFFFFFFF
+    }
+
+    #[test]
+    fn test_i64_trunc_sat_f64_s_nan_saturates_to_zero() {
+        let mut eng = make_trunc_sat_engine(0x06, ValueType::F64, ValueType::I64);
+        assert_eq!(eng.call_function(0, &[WasmValue::F64(f64::NAN)]).unwrap(), vec![WasmValue::I64(0)]);
+    }
+
+    #[test]
+    fn test_i64_trunc_sat_f64_u_overflow_saturates_to_u64_max() {
+        let mut eng = make_trunc_sat_engine(0x07, ValueType::F64, ValueType::I64);
+        assert_eq!(eng.call_function(0, &[WasmValue::F64(1e30)]).unwrap(), vec![WasmValue::I64(-1)]); // 0xFFFFFFFFFFFFFFFF
+    }
+
+    // ── Regression: TRAPPING trunc must still trap on overflow, unlike
+    //    trunc_sat (WASM03 -- caught by conversions.wast newly parsing) ──
+
+    #[test]
+    fn test_i32_trunc_f32_u_accepts_tiny_negative_near_zero() {
+        // A tiny negative value (trunc toward zero -> 0) is IN RANGE for
+        // trunc_u -- the old `0.0..` lower bound wrongly rejected any
+        // negative input, even ones truncating to a valid 0.
+        let mut eng = make_conversion_engine(0xA9, ValueType::F32, ValueType::I32);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(-1e-10)]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_i32_trunc_f64_s_traps_exactly_at_the_lower_boundary() {
+        // -2147483649.0 is exactly representable in f64 and exactly ONE
+        // past the valid lower bound (-2^31 - 1) -- must trap, not wrap.
+        let mut eng = make_conversion_engine(0xAA, ValueType::F64, ValueType::I32);
+        assert!(eng.call_function(0, &[WasmValue::F64(-2147483649.0)]).is_err());
+    }
+
+    #[test]
+    fn test_i64_trunc_f32_s_traps_on_overflow() {
+        // Before this fix, 0xAE/0xAF/0xB0 had NO overflow check at all
+        // (only NaN), so `a as i64` silently SATURATED instead of trapping
+        // -- unreachable until conversions.wast could parse.
+        let mut eng = make_conversion_engine(0xAE, ValueType::F32, ValueType::I64);
+        assert!(eng.call_function(0, &[WasmValue::F32(1e20)]).is_err());
+    }
+
+    #[test]
+    fn test_i64_trunc_f32_u_traps_on_overflow() {
+        let mut eng = make_conversion_engine(0xAF, ValueType::F32, ValueType::I64);
+        assert!(eng.call_function(0, &[WasmValue::F32(1e20)]).is_err());
+    }
+
+    #[test]
+    fn test_i64_trunc_f64_s_traps_on_overflow() {
+        let mut eng = make_conversion_engine(0xB0, ValueType::F64, ValueType::I64);
+        assert!(eng.call_function(0, &[WasmValue::F64(1e20)]).is_err());
+    }
+
+    #[test]
+    fn test_i64_trunc_f64_u_traps_on_overflow() {
+        let mut eng = make_conversion_engine(0xB1, ValueType::F64, ValueType::I64);
+        assert!(eng.call_function(0, &[WasmValue::F64(1e20)]).is_err());
+    }
+
+    #[test]
+    fn test_i64_trunc_f64_s_accepts_exact_i64_min() {
+        // i64::MIN itself (-2^63) is exactly representable in f64 and IS
+        // valid (the boundary is exclusive one past it, not at it).
+        let mut eng = make_conversion_engine(0xB0, ValueType::F64, ValueType::I64);
+        assert_eq!(
+            eng.call_function(0, &[WasmValue::F64(-9223372036854775808.0)]).unwrap(),
+            vec![WasmValue::I64(i64::MIN)]
+        );
+    }
+
+    #[test]
+    fn test_f32_reinterpret_i32_preserves_the_exact_nan_bit_pattern_end_to_end() {
+        // The real WASM13 regression, exercised through the actual
+        // interpreter (not just `to_typed`/`from_typed` directly): a pure
+        // bit-reinterpretation instruction must return EXACTLY the bits it
+        // was given, never a canonicalized NaN -- these are the literal
+        // values `conversions.wast`'s `f32.reinterpret_i32` cases assert
+        // against. Before the fix, this returned `f32::from_bits`'s input
+        // correctly at the OPCODE level, but the surrounding push/pop
+        // through the typed operand stack silently canonicalized the NaN
+        // payload to `0x7fc00000` on its way back out.
+        let mut eng = make_conversion_engine(0xBE, ValueType::I32, ValueType::F32);
+        let cases: [i32; 2] = [0x7fa00000u32 as i32, 0xffa00000u32 as i32];
+        for bits in cases {
+            let result = eng.call_function(0, &[WasmValue::I32(bits)]).unwrap();
+            match result[0] {
+                WasmValue::F32(v) => assert_eq!(
+                    v.to_bits(),
+                    bits as u32,
+                    "expected f32.reinterpret_i32({bits:#010x}) to preserve the exact bit pattern, got {:#010x}",
+                    v.to_bits()
+                ),
+                other => panic!("expected F32, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn test_i32_reinterpret_f32_preserves_the_exact_nan_bit_pattern_end_to_end() {
+        // The reverse direction of the same real regression.
+        let mut eng = make_conversion_engine(0xBC, ValueType::F32, ValueType::I32);
+        let cases: [u32; 2] = [0x7fa00000, 0xffa00000];
+        for bits in cases {
+            let result = eng.call_function(0, &[WasmValue::F32(f32::from_bits(bits))]).unwrap();
+            assert_eq!(result[0], WasmValue::I32(bits as i32), "expected i32.reinterpret_f32({bits:#010x}) to preserve the exact bit pattern");
+        }
     }
 
     // ══════════════════════════════════════════════════════════════════════

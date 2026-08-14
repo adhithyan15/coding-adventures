@@ -5694,6 +5694,339 @@
       "tex": "spanish/book/chapters/ch229-review-grado.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 230,
+      "sourceHash": "fnv1a64:39c3d8b2984502df",
+      "lessonIds": [
+        "ES-C61-al"
+      ],
+      "tex": "spanish/book/chapters/ch230-al.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 231,
+      "sourceHash": "fnv1a64:d7616a0d10fcd6e1",
+      "lessonIds": [
+        "ES-C61-del"
+      ],
+      "tex": "spanish/book/chapters/ch231-del.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 232,
+      "sourceHash": "fnv1a64:37771abb164fbb1c",
+      "lessonIds": [
+        "ES-C61-quien"
+      ],
+      "tex": "spanish/book/chapters/ch232-quien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 233,
+      "sourceHash": "fnv1a64:04f090cfe8809ea5",
+      "lessonIds": [
+        "ES-C61-o"
+      ],
+      "tex": "spanish/book/chapters/ch233-o.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 234,
+      "sourceHash": "fnv1a64:e64681626d2b0f37",
+      "lessonIds": [
+        "ES-C61-ni"
+      ],
+      "tex": "spanish/book/chapters/ch234-ni.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 235,
+      "sourceHash": "fnv1a64:a41df72dcff87e68",
+      "lessonIds": [
+        "ES-C61-repaso-juntores"
+      ],
+      "tex": "spanish/book/chapters/ch235-review-juntores.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 236,
+      "sourceHash": "fnv1a64:0d1042db01f07d04",
+      "lessonIds": [
+        "ES-C62-hablando"
+      ],
+      "tex": "spanish/book/chapters/ch236-hablando.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 237,
+      "sourceHash": "fnv1a64:72ad6ed8bf42fc55",
+      "lessonIds": [
+        "ES-C62-comiendo"
+      ],
+      "tex": "spanish/book/chapters/ch237-comiendo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 238,
+      "sourceHash": "fnv1a64:71ed50669e3d0bf5",
+      "lessonIds": [
+        "ES-C62-estoy-hablando"
+      ],
+      "tex": "spanish/book/chapters/ch238-estoy-hablando.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 239,
+      "sourceHash": "fnv1a64:736efcae54f9b311",
+      "lessonIds": [
+        "ES-C62-veo-a-maria"
+      ],
+      "tex": "spanish/book/chapters/ch239-veo-a-maria.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 240,
+      "sourceHash": "fnv1a64:a9d724b13b553eed",
+      "lessonIds": [
+        "ES-C62-repaso-gerundio"
+      ],
+      "tex": "spanish/book/chapters/ch240-review-gerundio.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 241,
+      "sourceHash": "fnv1a64:e9eb584c6c24dfe1",
+      "lessonIds": [
+        "ES-C63-hablasteis"
+      ],
+      "tex": "spanish/book/chapters/ch241-hablasteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 242,
+      "sourceHash": "fnv1a64:45568d23e6b5a821",
+      "lessonIds": [
+        "ES-C63-comisteis"
+      ],
+      "tex": "spanish/book/chapters/ch242-comisteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 243,
+      "sourceHash": "fnv1a64:9206396b545f0dbd",
+      "lessonIds": [
+        "ES-C63-hablabamos"
+      ],
+      "tex": "spanish/book/chapters/ch243-hablabamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 244,
+      "sourceHash": "fnv1a64:e13c89415632edf3",
+      "lessonIds": [
+        "ES-C63-comiamos"
+      ],
+      "tex": "spanish/book/chapters/ch244-comiamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 245,
+      "sourceHash": "fnv1a64:b5f01521d3461f71",
+      "lessonIds": [
+        "ES-C63-repaso-paradigmas"
+      ],
+      "tex": "spanish/book/chapters/ch245-review-paradigmas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 246,
+      "sourceHash": "fnv1a64:eae3fc1859435cf9",
+      "lessonIds": [
+        "ES-C64-para-mi"
+      ],
+      "tex": "spanish/book/chapters/ch246-para-mi.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 247,
+      "sourceHash": "fnv1a64:cd39f44829ad4189",
+      "lessonIds": [
+        "ES-C64-conmigo"
+      ],
+      "tex": "spanish/book/chapters/ch247-conmigo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 248,
+      "sourceHash": "fnv1a64:8d5ee228e82a8f7f",
+      "lessonIds": [
+        "ES-C64-que-grande"
+      ],
+      "tex": "spanish/book/chapters/ch248-que-grande.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 249,
+      "sourceHash": "fnv1a64:87bdd7fbc8616db1",
+      "lessonIds": [
+        "ES-C64-maria-ven"
+      ],
+      "tex": "spanish/book/chapters/ch249-maria-ven.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 250,
+      "sourceHash": "fnv1a64:c987a50c7f1e63d0",
+      "lessonIds": [
+        "ES-C64-repaso-tonicos"
+      ],
+      "tex": "spanish/book/chapters/ch250-review-tonicos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 251,
+      "sourceHash": "fnv1a64:032afc5ff03bd540",
+      "lessonIds": [
+        "ES-C65-ahi-alli"
+      ],
+      "tex": "spanish/book/chapters/ch251-ahi-alli.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 252,
+      "sourceHash": "fnv1a64:9d818af2e6a86fd6",
+      "lessonIds": [
+        "ES-C65-ahora-hoy"
+      ],
+      "tex": "spanish/book/chapters/ch252-ahora-hoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 253,
+      "sourceHash": "fnv1a64:ce37a5bcc9708337",
+      "lessonIds": [
+        "ES-C65-unos-unas"
+      ],
+      "tex": "spanish/book/chapters/ch253-unos-unas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 254,
+      "sourceHash": "fnv1a64:8fba5e1c2ddb36d3",
+      "lessonIds": [
+        "ES-C65-vuestro"
+      ],
+      "tex": "spanish/book/chapters/ch254-vuestro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 255,
+      "sourceHash": "fnv1a64:a951790dda8f3a58",
+      "lessonIds": [
+        "ES-C65-vi-di"
+      ],
+      "tex": "spanish/book/chapters/ch255-vi-di.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 256,
+      "sourceHash": "fnv1a64:c7a5da121807d2e6",
+      "lessonIds": [
+        "ES-C65-repaso-parejas"
+      ],
+      "tex": "spanish/book/chapters/ch256-review-parejas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 257,
+      "sourceHash": "fnv1a64:1145aa38b8c051f7",
+      "lessonIds": [
+        "ES-C66-hablo-dos-lecturas"
+      ],
+      "tex": "spanish/book/chapters/ch257-hablo-dos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 258,
+      "sourceHash": "fnv1a64:1e7c8ca4bceb4170",
+      "lessonIds": [
+        "ES-C66-la-terminacion-dice-quien"
+      ],
+      "tex": "spanish/book/chapters/ch258-terminacion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 259,
+      "sourceHash": "fnv1a64:3f2cff0d73dca866",
+      "lessonIds": [
+        "ES-C66-mucha-agua"
+      ],
+      "tex": "spanish/book/chapters/ch259-mucha-agua.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 260,
+      "sourceHash": "fnv1a64:27be1cf0b1818b1a",
+      "lessonIds": [
+        "ES-C66-nombres-propios"
+      ],
+      "tex": "spanish/book/chapters/ch260-nombres-propios.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 261,
+      "sourceHash": "fnv1a64:53c68c0a6fdc0834",
+      "lessonIds": [
+        "ES-C66-repaso-lo-implicito"
+      ],
+      "tex": "spanish/book/chapters/ch261-review-implicito.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 262,
+      "sourceHash": "fnv1a64:225d0bd3d65a403b",
+      "lessonIds": [
+        "ES-C67-primero"
+      ],
+      "tex": "spanish/book/chapters/ch262-primero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 263,
+      "sourceHash": "fnv1a64:3a4cdb8796df5590",
+      "lessonIds": [
+        "ES-C67-uno-otro"
+      ],
+      "tex": "spanish/book/chapters/ch263-uno-otro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 264,
+      "sourceHash": "fnv1a64:1e50fc17280f8b31",
+      "lessonIds": [
+        "ES-C67-comer-es-bueno"
+      ],
+      "tex": "spanish/book/chapters/ch264-comer-es-bueno.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 265,
+      "sourceHash": "fnv1a64:a461728139f76390",
+      "lessonIds": [
+        "ES-C67-hoy-como-en-casa"
+      ],
+      "tex": "spanish/book/chapters/ch265-hoy-como.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 266,
+      "sourceHash": "fnv1a64:2a3765863e94ccf5",
+      "lessonIds": [
+        "ES-C67-repaso-a1"
+      ],
+      "tex": "spanish/book/chapters/ch266-review-a1.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

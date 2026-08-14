@@ -5,6 +5,234 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `biology/cell-division-genetic-outcome.adj` (new) — a sibling to the already-shipped
+  `cell-division-daughter-cells.adj` (`cell_division_daughter_cells(process, count)`, HOW MANY
+  daughter cells mitosis/meiosis each yield). That table's own header deliberately quotes,
+  verbatim, the OTHER clause of each defining NHGRI sentence "for honesty" while explicitly stating
+  it is NOT what the count-only schema extracts: mitosis's daughter cells "have identical genomes,"
+  meiosis's are "haploid... the gametes." New `cell_division_genetic_outcome(process, outcome)`
+  table: mitosis → genetically_identical, meiosis → haploid. Honest abstention on
+  `binary_fission` (the prokaryotic process), matching the parent table's own abstention boundary.
+  New e2e test file `facts_celldivisiongeneticoutcome_e2e.rs` (3 tests: forward recall with
+  citation, backward recall of the haploid process, honest abstention). The parent table DOES carry
+  a manifest objective (`adj.science.6to8.cell_division_daughter_cells`) scoped specifically to the
+  daughter-cell COUNT competency; this sibling decodes a different leftover fact from the same
+  cited spans rather than a new standalone curriculum competency, so — matching this session's
+  established sibling-table precedent — no new manifest objective was added for it. Second slice
+  from the fresh biology/ sweep tranche, queued after `mammal-origin.adj`.
+- `biology/mammal-origin.adj` (new) — a sibling to the already-shipped `animal-classes.adj`
+  (`animal_class(animal, class)`, WHICH vertebrate class an animal belongs to — cat, kangaroo, fox,
+  rabbit, bandicoot, quoll, koala are all just `mammal`). That table's own header already quotes,
+  verbatim, two Australian Museum spans that split those same seven mammals into two disjoint
+  origin groups — a distinction the one-class-per-animal schema had no room for: "introduced
+  mammals such as cats, foxes and rabbits" and "marsupials like kangaroos, bandicoots, quolls and
+  the Koala". New `mammal_origin(animal, origin)` table covers the full seven-mammal domain with no
+  abstention: cat/fox/rabbit → introduced, kangaroo/bandicoot/quoll/koala → marsupial. New e2e test
+  file `facts_mammalorigin_e2e.rs` (3 tests: forward recall with citation, backward recall of all
+  introduced mammals, full-domain coverage with no abstention). No manifest objective, matching
+  `animal-classes.adj`'s own precedent of not having one. First slice from a fresh biology/ sweep
+  tranche (of the domain's remaining ~44 tables), discovered after the prior tranche
+  (vertebrate-thermoregulation.adj / muscle-striation.adj / insulin-glucagon-trigger.adj)
+  completed; two more strong candidates (`cell-division-genetic-outcome.adj`,
+  `muscle-nuclei-count.adj`) are queued next.
+- `biology/insulin-glucagon-trigger.adj` (new) — a sibling to the already-shipped
+  `hormone-glands.adj` (`hormone_gland(hormone, gland)`, WHICH gland secretes a hormone —
+  insulin/glucagon → pancreas, etc.). That table's own header already quotes, verbatim, the
+  trigger condition for the pancreas's two glucose-regulating hormones, and buried in those two
+  spans, alongside the gland the parent table already captures, is a second fact the
+  hormone→gland schema had no room for: WHAT blood-glucose condition triggers each hormone's
+  release. New `secretion_trigger(hormone, blood_glucose_level)` table: insulin → high, glucagon
+  → low. Honestly narrow — abstains on every other hormone in `hormone-glands.adj`, since the
+  source never ties them to a blood-glucose trigger. New e2e test file
+  `facts_insulinglucagontrigger_e2e.rs` (3 tests: forward recall with citation, backward recall of
+  the low-glucose hormone, honest abstention on a hormone with no glucose trigger). No manifest
+  objective, matching `hormone-glands.adj`'s own precedent of not having one. Third slice from the
+  fresh biology/ sweep tranche, queued after `muscle-striation.adj`.
+- `biology/muscle-striation.adj` (new) — a sibling to the already-shipped `muscle-types.adj`
+  (`muscle_trait(muscle, trait)`, ONE distinctive characteristic per muscle type — skeletal →
+  voluntary, smooth → involuntary, cardiac → intercalated_disks). That table's own header already
+  quotes, verbatim, each muscle type's defining NCI SEER sentence, and buried in every one of those
+  three spans, alongside the trait the parent table already captures, is a second, cleanly binary
+  fact the voluntary/trait schema had no room for: whether the tissue is striated. New
+  `muscle_striated(muscle, striated)` table covers the full three-type domain with no abstention:
+  skeletal → yes, smooth → no, cardiac → yes. New e2e test file `facts_musclestriation_e2e.rs` (3
+  tests: forward recall with citation, backward recall of the one non-striated type, full-domain
+  coverage with no abstention). No manifest objective, matching `muscle-types.adj`'s own precedent
+  of not having one. Second slice from the fresh biology/ sweep tranche, queued after
+  `vertebrate-thermoregulation.adj`.
+- `biology/vertebrate-thermoregulation.adj` (new) — a sibling to the already-shipped
+  `vertebrate-groups.adj` (`vertebrate_trait(class, trait)`, ONE distinctive body-covering feature
+  per class — fish → gills, bird → feathers, etc.). That table's own header already quotes,
+  verbatim, the full NPS "Vertebrate Grab Bag" trait list for every class, and buried in every one
+  of those five spans, alongside the body-covering feature the parent table already captures, is a
+  second, cleanly binary fact the one-trait-per-class schema had no room for: whether the class is
+  ectothermic ("cold-blooded") or endothermic ("warm-blooded"). New
+  `vertebrate_thermoregulation(class, type)` table covers the full five-class domain with no
+  abstention: fish → ectothermic, amphibian → ectothermic, reptile → ectothermic, bird →
+  endothermic, mammal → endothermic. New e2e test file `facts_vertebratethermoregulation_e2e.rs` (3
+  tests: forward recall with citation, backward recall of all ectothermic classes, full-domain
+  coverage with no abstention). No manifest objective, matching `vertebrate-groups.adj`'s own
+  precedent of not having one. First slice from a fresh biology/ sweep tranche (49 tables) —
+  discovered after the 1-2-table-domain sweep initiative completed; two more strong candidates
+  (`muscle-striation.adj`, `insulin-glucagon-trigger.adj`) are queued next.
+- `transportation/green-signal-permitted-movement.adj` (new) — a sibling to the already-shipped
+  `traffic-lights.adj` (`traffic_light_meaning(color, meaning)`, green → the single atomic value
+  `proceed`). That table's own header already quotes, verbatim, the MUTCD Section 4D.04 sentence
+  for green, and that same sentence enumerates FOUR distinct permitted movements — that the
+  color-to-meaning schema collapsed into one word: "permitted to proceed straight through or turn
+  right or left or make a U-turn movement." New `green_signal_permitted_movement(movement)` table
+  (keyless — all four movements are simultaneously true for a green signal, unlike a keyed
+  lookup): straight_through, turn_right, turn_left, u_turn. No manifest objective, matching
+  `traffic-lights.adj`'s own precedent of not having one. New e2e test file
+  `facts_greensignalpermittedmovement_e2e.rs` (3 tests: forward recall with citation, all four
+  movements present, full coverage with no abstention). First and only strong candidate from the
+  transportation/ sweep tranche — two leads were rejected: red's "unless entering the intersection
+  to make another movement permitted by another signal indication" exception clause (too
+  thin/note-like, qualifies the already-recorded `stop` value rather than adding an independent
+  fact) and yellow's termination-sequence clause (states only one transition, too thin for a
+  standalone table). transportation/ (1 table) is now effectively closed. **This completes the
+  full 1-2-table-domain sweep initiative** covering geometry/, mathematics/, geography/,
+  metrology/, agriculture/, art/, calendar/, environment/, money/, music/, nutrition/, optics/, and
+  transportation/.
+- `nutrition/food-group-alternative-form.adj` (new) — a sibling to the already-shipped
+  `food-groups.adj` (`food_group(food, food_group)`, which sorts whole, solid foods into one of
+  the five MyPlate groups). Three of that table's own per-group definitional sentences, already
+  quoted verbatim in its header, also name a non-solid-food alternative that counts toward the SAME
+  group — that the solid-food-only schema had no room for: fruits →
+  hundred_percent_fruit_juice ("The Fruit Group includes all fruits and 100% fruit juice."),
+  vegetables → hundred_percent_vegetable_juice ("Any vegetable or 100% vegetable juice counts as
+  part of the Vegetable Group."), dairy → lactose_free_milk, fortified_soy_milk,
+  fortified_soy_yogurt ("The Dairy Group includes milk, yogurt, cheese, lactose-free milk and
+  fortified soy milk and yogurt."). New `food_group_alternative_form(food_group, alternative_form)`
+  table. Honest abstention on grains and protein, whose own cited definitional sentences name no
+  comparable alternative form. New e2e test file `facts_foodgroupalternativeform_e2e.rs` (3 tests:
+  forward recall with citation, backward recall from a bound form, honest abstention on grains). No
+  manifest objective, matching `food-groups.adj`'s own precedent of not having one. Second and
+  final strong slice from the nutrition/ sweep tranche — nutrition/ (1 table) is now EFFECTIVELY
+  CLOSED (2/2 strong candidates shipped).
+- `nutrition/vegetable-subgroup.adj` (new) — a sibling to the already-shipped `food-groups.adj`
+  (`food_group(food, food_group)`, which sorts every vegetable into the SAME coarse `vegetables`
+  bucket). That table's own header already quotes, verbatim, USDA MyPlate's finer vegetable
+  subgroup classification for the same five vegetables — that the one-bucket-per-food schema had
+  no room for: broccoli → dark_green, spinach → dark_green, carrots → red_and_orange, tomatoes →
+  red_and_orange, corn → starchy. New `vegetable_subgroup(vegetable, subgroup)` table covers the
+  full five-vegetable domain with no abstention, since every shipped vegetable has a subgroup in
+  the cited span. New e2e test file `facts_vegetablesubgroup_e2e.rs` (3 tests: forward recall with
+  citation, backward recall from a bound subgroup, full-domain coverage with no abstention). No
+  manifest objective, matching `food-groups.adj`'s own precedent of not having one. First slice
+  from the nutrition/ sweep tranche (a second strong candidate, `food-group-alternative-form.adj`,
+  is queued next).
+- `music/solfege-alt-name.adj` (new) — a sibling to the already-shipped `solfege.adj`
+  (`solfege_degree(syllable, degree)`, ONE scale-degree number per syllable). That table's own
+  `source` field already quotes, verbatim, an alternate spelling or name for two of the seven
+  syllables — that the degree-only schema had no room for: do's cited span also states "(spelt doh
+  in tonic sol-fa)" and ti's cited span also states "(or si)". New `solfege_alt_name(syllable,
+  alt_name)` table: do → doh, ti → si. Honest abstention on the other five syllables (re, mi, fa,
+  sol, la), whose own cited span states no alternate spelling or name. New e2e test file
+  `facts_solfegealtname_e2e.rs` (3 tests: forward recall with citation, backward recall from a
+  bound alternate, honest abstention on mi). No manifest objective, matching `solfege.adj`'s own
+  precedent of not having one. First and only strong candidate from the music/ sweep tranche (the
+  header's own scale-degree-name truth table — tonic, supertonic, mediant, etc. — was checked and
+  confirmed to be non-verbatim author-compiled prose, not a quoted source span, so it's out of
+  scope); music/ (1 table) is now effectively closed after this ships.
+- `money/coin-penny-discontinued.adj` (new) — a sibling to the already-shipped `us-coins.adj`
+  (`coin_cents(coin, cents)`, ONE cent-value per coin). That table's own header already quotes,
+  verbatim, the penny's U.S. Mint Coin Classroom span ("The one-cent coin ceased circulating in
+  2025 after 232 years of production."), and packed inside that SAME quote, alongside the cent
+  value the parent table already captures, are two more atomic facts the value-only schema had no
+  room for: a discontinuation status/year (2025) and a production span (232 years). New
+  `coin_status(coin, status, year, production_years)` table: penny → (discontinued, 2025, 232).
+  Deliberately a SINGLE row — every other coin carries no row at all, since none of their own
+  cited U.S. Mint spans states any circulation-status change; abstention by simple absence, not an
+  invented `circulating` status. New e2e test file `facts_coinpennydiscontinued_e2e.rs` (3 tests:
+  forward recall with citation, recall with status pre-bound, honest abstention on other coins). No
+  manifest objective, matching `us-coins.adj`'s own precedent of not having one. Second and final
+  strong slice from the money/ sweep tranche — money/ (2 tables) is now EFFECTIVELY CLOSED (2/2
+  strong candidates shipped); a moderate candidate (`coin-collectible-denominations.adj`, us-coins
+  .adj's own everyday-vs-collectible partition) was deliberately not pursued, judged too thin
+  (requires inferring a two-way classification from one descriptive sentence).
+- `money/bill-back-vignette.adj` (new) — a sibling to the already-shipped `us-bills.adj`
+  (`bill_portrait(dollars, portrait)`, ONE front-of-note portrait per bill). That table's own
+  header already quotes, verbatim, the SAME U.S. Currency Education Program feature-sheet sentence
+  used for the front portrait, and for six of the seven bills that same sentence also names the
+  back-of-note vignette — that the portrait-only schema had no room for: 1 → great_seal,
+  2 → declaration_signing, 10 → treasury_building, 20 → white_house, 50 → us_capitol,
+  100 → independence_hall. New `bill_back_vignette(dollars, vignette)` table. Honest abstention on
+  the $5 note, whose own cited feature-sheet sentence stops after the front portrait and names no
+  back vignette. New e2e test file `facts_billbackvignette_e2e.rs` (3 tests: forward recall with
+  citation, backward recall from a bound vignette, honest abstention on the $5 note). No manifest
+  objective, matching `us-bills.adj`'s own precedent of not having one. First slice from the
+  money/ sweep tranche.
+- `environment/aqi-category-color.adj` (new) — a sibling to the already-shipped
+  `air-quality-index.adj` (`air_quality_index(min_aqi, category)`, a RANGE/BRACKET lookup keyed by
+  the numeric breakpoint of each of the six EPA AQI bands). That table's own per-row provenance
+  already quotes, verbatim, a leading color word for every one of its six rows — the parent's own
+  header even lays this out explicitly as a "source's colour" column in its truth table, shown
+  "only to make the step visible" but never materialized as a row — that the `min_aqi, category`
+  schema had no room for: good → green, moderate → yellow, unhealthy_for_sensitive_groups →
+  orange, unhealthy → red, very_unhealthy → purple, hazardous → maroon. New
+  `aqi_category_color(category, color)` table covers the full six-category domain with no
+  abstention, since every category's cited span names a color. New e2e test file
+  `facts_aqicategorycolor_e2e.rs` (3 tests: forward recall with citation, backward recall from a
+  bound color, full-domain coverage with no abstention). No manifest objective, matching
+  `air-quality-index.adj`'s own precedent of not having one. First and only strong candidate from
+  the environment/ sweep tranche (environment/'s other table, `ecosystem-factor-type.adj`, was
+  checked and confirmed to have nothing further viable); environment/ (2 tables) is now
+  effectively closed after this ships.
+- `agriculture/farm-animal-secondary-product.adj` (new) — a sibling to the already-shipped
+  `farm-animals.adj` (`farm_animal_product(animal, product)`, ONE clear, source-stated product per
+  animal: chicken eggs, duck eggs, sheep wool, rabbit wool, goat milk). That table's own per-row
+  provenance already quotes, verbatim, a SECOND product for three of the five animals — that the
+  one-product-per-animal schema had no room for: chicken's cited span also states "in eggs or
+  meat," duck's cited span also states "produce meat and eggs," and sheep's cited span also states
+  "produce wool, meat, and milk." New `farm_animal_secondary_product(animal, product)` table:
+  chicken → meat, duck → meat, sheep → meat, sheep → milk. Honest abstention on rabbit and goat,
+  whose own cited spans state only a USE ("used for fiber arts") or a PROCESSING note ("may be
+  pasteurized") for their already-recorded product, not a genuinely different second product. New
+  e2e test file `facts_farmanimalsecondaryproduct_e2e.rs` (3 tests: forward recall with citation,
+  backward recall from a bound product, honest abstention on goat). No manifest objective, matching
+  `farm-animals.adj`'s own precedent of not having one. First slice from the agriculture/ sweep
+  tranche (1 strong candidate found; agriculture/ is now effectively closed after this ships).
+- `metrology/time-unit-composition.adj` (new) — a sibling to the already-shipped `time-units.adj`
+  (`time_unit_seconds(unit, seconds)`, ONE seconds-length per time unit: minute 60, hour 3600, day
+  86400). That table's own `source` field already quotes, verbatim, a unit-to-unit relation for
+  two of the three units — how many of the next smaller unit each one is composed of — that the
+  seconds-only schema had no room for: "1 h = 60 min = 3600 s" and "1 d = 24 h = 86 400 s". New
+  `time_unit_composition(unit, sub_unit, count)` table: hour → (minute, 60), day → (hour, 24).
+  Honest abstention on minute, whose own cited span ("1 min = 60 s") states only its seconds-length
+  with no unit-to-unit relation to a smaller unit on the cited page. New e2e test file
+  `facts_timeunitcomposition_e2e.rs` (3 tests: forward recall with citation, backward recall from a
+  bound sub-unit and count, honest abstention on minute). No manifest objective, matching
+  `time-units.adj`'s own precedent of not having one. First slice from the metrology/ sweep tranche
+  (1 strong + 1 moderate candidate found; the moderate one — a bare aggregate count of SI derived
+  units — was deliberately not shipped, see loop-state notes).
+- `geography/landform-secondary-feature.adj` (new) — a sibling to the already-shipped
+  `landforms.adj` (`landform_description(landform, description)`, ONE defining descriptor per
+  landform: mountain, valley, plateau, plain, canyon). That table's own header already quotes the
+  FULL USGS Feature Type Thesaurus span for every row, but the descriptor-only schema reduced each
+  span to a single atom, leaving a second, structural clause unused for three of the five
+  landforms: valley's span also states "containing a stream with an outlet," plateau's span also
+  states "limited on at least one side by an abrupt descent," and canyon's span also states "the
+  bottom of which generally has a continuous slope." New `landform_secondary_feature(landform,
+  feature)` table: valley → contains_stream_with_outlet, plateau → bounded_by_abrupt_descent,
+  canyon → continuous_slope_at_bottom. Honest abstention on mountain and plain, whose own cited
+  spans state only the single descriptor already captured by the parent table. New e2e test file
+  `facts_landformsecondaryfeature_e2e.rs` (3 tests: forward recall with citation, backward recall
+  from a bound feature, honest abstention on mountain). No manifest objective, matching
+  `landforms.adj`'s own precedent of not having one. Third and last slice from the geography/ sweep
+  tranche — geography/ (5 tables) is now fully exhausted (3/3 candidates shipped:
+  reference-line-hemisphere-split, ocean-deepest, landform-secondary-feature).
+- `geography/ocean-deepest.adj` (new) — a sibling to the already-shipped `oceans.adj`
+  (`ocean_size_rank(ocean, rank)`, ONE size-rank per ocean basin: pacific 1, atlantic 2, indian 3,
+  southern 4, arctic 5). That table's own `source` field already quotes a SECOND superlative,
+  verbatim, in the very same opening sentence used to fix the Pacific's rank — "The Pacific Ocean
+  is the largest and deepest of the world ocean basins" — that the rank-only schema had no room
+  for. New `ocean_is_deepest(ocean, superlative)` table: pacific → deepest. Honest abstention on
+  atlantic, indian, southern, and arctic, whose own cited span states only a size rank, never a
+  depth claim. New e2e test file `facts_oceandeepest_e2e.rs` (3 tests: forward recall with
+  citation, backward recall from a bound superlative, honest abstention on atlantic). No manifest
+  objective, matching `oceans.adj`'s own precedent of not having one. Second slice from the
+  geography/ sweep tranche (after `reference-line-hemisphere-split.adj`).
 - `geography/reference-line-hemisphere-split.adj` (new) — a sibling to the already-shipped
   `reference-lines.adj` (`reference_line(line, marks)`, ONE degree-marking property per line:
   equator, prime_meridian, tropic_of_cancer, tropic_of_capricorn, arctic_circle,

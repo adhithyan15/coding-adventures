@@ -1,0 +1,83 @@
+% ============================================================================
+% bill-back-vignette — for the US paper bills whose SAME cited USCEP feature-
+% sheet span also names what's on the BACK of the note, that vignette
+% (adj-facts-stdlib, MONEY).
+% ============================================================================
+% A sibling to the already-shipped `us-bills.adj` (`bill_portrait(dollars,
+% portrait)`, ONE front-of-note portrait per bill). That table's own header
+% already quotes, VERBATIM, the SAME U.S. Currency Education Program feature-
+% sheet sentence used for the front portrait -- and for six of the seven
+% bills, that SAME sentence also names the back-of-note vignette, which the
+% portrait-only schema had no room for:
+%
+%   1 → great_seal
+%     "...an image of the Great Seal of the United States on the back of the
+%      note."
+%
+%   2 → declaration_signing
+%     "...a vignette depicting the signing of the Declaration of
+%      Independence on the back of the note."
+%
+%   10 → treasury_building
+%     "...a vignette of the United States Treasury Building on the back of
+%      the note."
+%
+%   20 → white_house
+%     "...a vignette of the White House on the back of the note."
+%
+%   50 → us_capitol
+%     "...a vignette of the United States Capitol on the back of the note."
+%
+%   100 → independence_hall
+%     "...a vignette of Independence Hall on the back of the note."
+%
+% Recall is a binding query:
+%
+%     ? bill_back_vignette(20, $Vignette)   % white_house
+%
+% This is a native `table` (ADJ-TABLES): each `row` lowers to a ground
+% relation `bill_back_vignette(dollars, vignette)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query -- the engine returns
+% the vignette WITH its source, on the CPU, with zero model calls, and
+% abstains on the $5 note, since its OWN cited feature-sheet sentence stops
+% after the front portrait ("The $5 note features a portrait of President
+% Abraham Lincoln on the front of the note.") and states no back vignette --
+% the same honest-abstention discipline `farm-animal-secondary-product.adj`
+% uses for rabbit and goat. The query also runs BACKWARD -- bind a vignette
+% and recall which bill carries it:
+%
+%     ? bill_back_vignette($Dollars, white_house)   % 20
+%
+% Provenance: reproduces, byte-for-byte, the SAME six USCEP per-note feature-
+% sheet spans already quoted inside `us-bills.adj`'s own header -- no new
+% WebFetch, only a different schema decoding the back-vignette half of each
+% already-verified quote. The table-level envelope reuses `us-bills.adj`'s
+% own framing source and locator (the "Dollars in Detail" guide enumerating
+% the seven banknotes); `trust authoritative` -- the same tier `us-bills.adj`
+% already carries (U.S. Currency Education Program, a primary U.S.
+% government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table bill_back_vignette {
+    columns dollars, vignette
+
+    row (1, great_seal)               % USCEP: "...an image of the Great Seal of the United States on the back of the note."
+    row (2, declaration_signing)      % USCEP: "...a vignette depicting the signing of the Declaration of Independence on the back of the note."
+    row (10, treasury_building)       % USCEP: "...a vignette of the United States Treasury Building on the back of the note."
+    row (20, white_house)             % USCEP: "...a vignette of the White House on the back of the note."
+    row (50, us_capitol)              % USCEP: "...a vignette of the United States Capitol on the back of the note."
+    row (100, independence_hall)      % USCEP: "...a vignette of Independence Hall on the back of the note."
+
+    source "The Federal Reserve Board issues $1, $2, $5, $10, $20, $50, and $100 banknotes."
+    locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/dollars-in-detail-guide-en-2022.pdf"
+    trust authoritative
+
+    cites "The $1 note features a portrait of George Washington on the front of the note and an image of the Great Seal of the United States on the back of the note." locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/1-1963-present-features-en.pdf"
+    cites "The $2 note features a portrait of Thomas Jefferson on the front of the note and a vignette depicting the signing of the Declaration of Independence on the back of the note." locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/2-1976-present-features-en.pdf"
+    cites "The $10 note features a portrait of Secretary Hamilton on the front of the note and a vignette of the United States Treasury Building on the back of the note." locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/10-2006-present-features-en.pdf"
+    cites "The $20 note features a portrait of President Jackson on the front of the note and a vignette of the White House on the back of the note." locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/20-2003-present-features-en.pdf"
+    cites "The $50 note features a portrait of President Grant on the front of the note and a vignette of the United States Capitol on the back of the note." locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/50-2004-present-features-en.pdf"
+    cites "The $100 note features a portrait of Benjamin Franklin on the front of the note and a vignette of Independence Hall on the back of the note." locator "https://www.uscurrency.gov/sites/default/files/downloadable-materials/files/en/100-2013-present-features-en.pdf"
+}

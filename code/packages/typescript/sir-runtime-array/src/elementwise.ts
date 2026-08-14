@@ -23,8 +23,14 @@ import { ndarray, isScalar, type NDArray } from "./ndarray.js";
  * accepts an "array" operand normalizes through this first, so a raw number
  * never reaches `.data`/`.shape` and throws a confusing `TypeError` instead of
  * behaving correctly.
+ *
+ * Exported (not `elementwise`-private) because the same bare-scalar-operand
+ * shape reaches other SIR22-addendum entry points too — e.g. APL's monadic
+ * `⍳n` (`indexGenerator` in `./iota.js`), whose `count` operand is a plain
+ * SIR `Expr` the emitter renders as-is, so a literal `⍳6` arrives as the
+ * bare number `6`, not a pre-wrapped scalar `NDArray`.
  */
-function toArrayValue(v: number | NDArray): NDArray {
+export function toArrayValue(v: number | NDArray): NDArray {
   return typeof v === "number" ? { shape: [], data: Float64Array.of(v) } : v;
 }
 

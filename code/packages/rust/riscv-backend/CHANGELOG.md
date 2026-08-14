@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Added typed CIR move lowering for scalar and full-width values. Dead moves
+  retain their source location, while live wide sources gain a stable spill
+  home before the pair copy. Nib `let` bindings can now flow through direct
+  module calls and execute in the simulator.
+- Added caller-save handling around direct module calls. Register-resident
+  scalar and pair values that remain live after a `jal` now round-trip through
+  reserved caller-frame slots, while values already spilled stay in place.
+  Direct and Nib source-to-simulator fixtures cover live scalar values, and a
+  direct fixture covers a live wide pair.
+- Added signature-aware direct-call argument lowering. Module calls stage
+  scalar and `i64`/`u64` pair values in the caller frame before loading
+  `a0` through `a7`, so ABI-register moves cannot overwrite a later argument.
+  Narrow CIR operations may consume the low word of an ABI-normalized wide
+  parameter, enabling Nib functions such as `add(left: u8, right: u8)` to run
+  end to end in the simulator.
+- Added module-local direct-call linking for zero-argument CIR calls.
+  `compile_module` puts the entry function at address zero, patches `jal`
+  targets after layout, and saves `ra` in every caller frame. `lang-aot` now
+  emits one linked RV32I image rather than concatenating independent functions.
 - Reworked mixed-width temporary allocation around three non-overlapping RV32
   register-pair slots. Scalars and full-width values can now interleave without
   constructing overlapping pairs; dead occupants are reclaimed and live scalar

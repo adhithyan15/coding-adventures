@@ -56,6 +56,8 @@ The current parser surface includes:
   boundaries in documents that rely on implied wrapper elements
 - initial line-feed stripping for `pre`, `listing`, and `textarea`
 - parser diagnostics for unmatched end tags
+- optional tokenizer emission positions on parser diagnostics, without
+  fabricating source spans for plain token-stream callers
 - body-fragment parsing that returns DOM nodes without the implied
   `html/head/body` shell while preserving lexer/parser diagnostics
 - browser-facing document extraction for title, base URL/target, head metadata,

@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 249,
+  "title": "María, Ven --- Naming Who You Are Talking To",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cac453291b9c3c79",
+  "lessons": [
+    {
+      "id": "ES-C64-maria-ven",
+      "sequence": 2480,
+      "title": "María, ven — naming who you are talking to",
+      "headword": "María, ven",
+      "romanization": "María, ven",
+      "gloss": "María, come — naming the person you are speaking to, and the comma that is the whole of the grammar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de9887469704e879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ven — come. ¿Cómo estás? — how are you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both are aimed at somebody. Now say who."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the comma is the grammar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "María, ven. ¿Cómo estás, María? Profesor, ¿puedo hablar?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The name can go at the front or at the end, and either way it is fenced off by a comma. That comma is not decoration — it is the entire grammatical marking. There is nothing else to learn here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had a whole case for this — a set of endings whose only job was addressing somebody. Spanish replaced all of it with a pause."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the shortest possible summary of what became of Latin's endings. Twice now you have watched the same thing: the endings went, and something small and audible took over the work — a preposition for the personal a, and here a comma."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And notice the person you address takes no a. Veo a María has María on the receiving end of the seeing; María, ven has her doing the coming. Same name, opposite roles, and the comma is what tells them apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "María, ven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *María, ven*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Veo a María, then María, ven, and hear the difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Veo a María*, then *María, ven*, and hear the difference]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C64-maria-ven-say",
+              "prompt": "Tell Maria to come, naming her first.",
+              "assesses": [
+                "ES-GRAMMAR-VOCATIVE-COMMA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "maria ven",
+                "maria, ven"
+              ],
+              "feedback": {
+                "correct": "Name, comma, command.",
+                "incorrect": "Maria, ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C64-maria-ven-mark",
+              "prompt": "What marks the person being addressed?",
+              "assesses": [
+                "ES-GRAMMAR-VOCATIVE-COMMA"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "a comma",
+                "the comma"
+              ],
+              "feedback": {
+                "correct": "That is the whole of it.",
+                "incorrect": "A comma -- nothing else."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C64-maria-ven-noa",
+              "prompt": "Does the person you address take the personal a?",
+              "assesses": [
+                "ES-GRAMMAR-VOCATIVE-NOT-OBJECT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "no",
+                "no, she is not on the receiving end"
+              ],
+              "feedback": {
+                "correct": "Veo a Maria, but Maria, ven.",
+                "incorrect": "No -- she is doing the coming, not receiving it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Spanish replace Latin's addressing case with? (A comma.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And does the addressed person take an a? (No.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

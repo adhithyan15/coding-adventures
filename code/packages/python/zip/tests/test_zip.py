@@ -3,6 +3,7 @@
 Covers TC-1 through TC-12 from the CMP09 specification, plus CRC-32 known
 vectors, DEFLATE round-trips, dos_datetime encoding, and read_by_name.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -17,7 +18,6 @@ from coding_adventures_zip import (
     unzip,
     zip_bytes,
 )
-
 
 # =============================================================================
 # CRC-32
@@ -282,12 +282,12 @@ def test_dos_datetime_epoch() -> None:
     # 1980-01-01 00:00:00 → year_offset=0, month=1, day=1
     # date = (0<<9)|(1<<5)|1 = 33
     dt = dos_datetime(1980, 1, 1, 0, 0, 0)
-    assert dt >> 16 == 33   # date field
+    assert dt >> 16 == 33  # date field
     assert dt & 0xFFFF == 0  # time field
 
 
 def test_dos_epoch_constant() -> None:
-    assert DOS_EPOCH == dos_datetime(1980, 1, 1, 0, 0, 0)
+    assert dos_datetime(1980, 1, 1, 0, 0, 0) == DOS_EPOCH
 
 
 # =============================================================================
@@ -306,41 +306,58 @@ def test_deflate_decompress_stored_block() -> None:
     n = len(payload)
     # First byte encodes BFINAL=1, BTYPE=00 (00 in bits 1-2) → 0x01.
     # Then LEN as LE u16, NLEN as LE u16, then data.
-    block = bytes([0x01]) + n.to_bytes(2, "little") + (n ^ 0xFFFF).to_bytes(2, "little") + payload
+    block = (
+        bytes([0x01])
+        + n.to_bytes(2, "little")
+        + (n ^ 0xFFFF).to_bytes(2, "little")
+        + payload
+    )
 
-    from coding_adventures_zip import _deflate_decompress  # type: ignore[attr-defined]
+    from coding_adventures_zip import _deflate_decompress
+
     result = _deflate_decompress(block)
     assert result == payload
 
 
 def test_deflate_compress_empty_direct() -> None:
     """_deflate_compress(b'') produces a valid stored block that decompresses."""
-    from coding_adventures_zip import _deflate_compress, _deflate_decompress  # type: ignore[attr-defined]
+    from coding_adventures_zip import (
+        _deflate_compress,
+        _deflate_decompress,
+    )
+
     compressed = _deflate_compress(b"")
     result = _deflate_decompress(compressed)
     assert result == b""
 
 
-def test_deflate_decompress_btype10_raises() -> None:
-    """BTYPE=10 (dynamic Huffman) is not supported."""
-    from coding_adventures_zip import _deflate_decompress  # type: ignore[attr-defined]
-    # BFINAL=1, BTYPE=10 → bits 0-2 = 0b101 = 0x05
-    with pytest.raises(ValueError, match="BTYPE=10"):
-        _deflate_decompress(bytes([0x05]))
+def test_deflate_decompress_dynamic_block() -> None:
+    """Historical wrapper now accepts the required dynamic-Huffman profile."""
+    from coding_adventures_zip import _deflate_decompress
+
+    encoded = bytes.fromhex(
+        "0dc28911c0200c03b0d8f97028ec3f6ed129cab7dd96a0c2445bdb93809663a5d303f6b265e20c2b79ea03379d227e"
+    )
+    expected = bytes.fromhex(
+        "0406030b000e070909010906010a04070007000000000501010908030108050302030401000401000207090009020a0a020605020d060c01020b020302090201"
+    )
+    assert _deflate_decompress(encoded) == expected
 
 
 def test_deflate_decompress_btype11_raises() -> None:
     """BTYPE=11 (reserved) is not supported."""
-    from coding_adventures_zip import _deflate_decompress  # type: ignore[attr-defined]
+    from coding_adventures_zip import _deflate_decompress
+
     # BFINAL=1, BTYPE=11 → bits 0-2 = 0b111 = 0x07
-    with pytest.raises(ValueError, match="reserved BTYPE"):
+    with pytest.raises(ValueError, match="reserved-block-type"):
         _deflate_decompress(bytes([0x07]))
 
 
 def test_deflate_decompress_eof_raises() -> None:
     """Empty input raises on missing BFINAL."""
-    from coding_adventures_zip import _deflate_decompress  # type: ignore[attr-defined]
-    with pytest.raises(ValueError, match="EOF"):
+    from coding_adventures_zip import _deflate_decompress
+
+    with pytest.raises(ValueError, match="unexpected-eof"):
         _deflate_decompress(b"")
 
 
@@ -394,13 +411,17 @@ def test_zip_align_with_partial_bits() -> None:
     """_BitReader.align() is exercised via the stored-block decompressor path."""
     # Stored block decompression calls br.align() after reading BFINAL+BTYPE.
     # This exercises the align() path when bits % 8 != 0.
-    from coding_adventures_zip import _deflate_compress, _deflate_decompress  # type: ignore[attr-defined]
-    data = b"hello"
-    compressed = _deflate_compress(data)
+    from coding_adventures_zip import _deflate_decompress
+
     # The fixed Huffman compressed stream doesn't use align() during decompress.
     # We can manually create a stored block that hits align() mid-stream.
     payload = b"abc"
     n = len(payload)
     # Stored block (BFINAL=1, BTYPE=00): byte = 0x01 (1 in bits 0-2, rest padding)
-    block = bytes([0x01]) + n.to_bytes(2, "little") + (n ^ 0xFFFF).to_bytes(2, "little") + payload
+    block = (
+        bytes([0x01])
+        + n.to_bytes(2, "little")
+        + (n ^ 0xFFFF).to_bytes(2, "little")
+        + payload
+    )
     assert _deflate_decompress(block) == payload

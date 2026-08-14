@@ -3588,6 +3588,191 @@
       "output": "spanish/book/chapters/ch229-review-grado.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 230,
+      "output": "spanish/book/chapters/ch230-al.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 231,
+      "output": "spanish/book/chapters/ch231-del.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 232,
+      "output": "spanish/book/chapters/ch232-quien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 233,
+      "output": "spanish/book/chapters/ch233-o.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 234,
+      "output": "spanish/book/chapters/ch234-ni.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 235,
+      "output": "spanish/book/chapters/ch235-review-juntores.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 236,
+      "output": "spanish/book/chapters/ch236-hablando.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 237,
+      "output": "spanish/book/chapters/ch237-comiendo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 238,
+      "output": "spanish/book/chapters/ch238-estoy-hablando.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 239,
+      "output": "spanish/book/chapters/ch239-veo-a-maria.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 240,
+      "output": "spanish/book/chapters/ch240-review-gerundio.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 241,
+      "output": "spanish/book/chapters/ch241-hablasteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 242,
+      "output": "spanish/book/chapters/ch242-comisteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 243,
+      "output": "spanish/book/chapters/ch243-hablabamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 244,
+      "output": "spanish/book/chapters/ch244-comiamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 245,
+      "output": "spanish/book/chapters/ch245-review-paradigmas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 246,
+      "output": "spanish/book/chapters/ch246-para-mi.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 247,
+      "output": "spanish/book/chapters/ch247-conmigo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 248,
+      "output": "spanish/book/chapters/ch248-que-grande.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 249,
+      "output": "spanish/book/chapters/ch249-maria-ven.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 250,
+      "output": "spanish/book/chapters/ch250-review-tonicos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 251,
+      "output": "spanish/book/chapters/ch251-ahi-alli.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 252,
+      "output": "spanish/book/chapters/ch252-ahora-hoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 253,
+      "output": "spanish/book/chapters/ch253-unos-unas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 254,
+      "output": "spanish/book/chapters/ch254-vuestro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 255,
+      "output": "spanish/book/chapters/ch255-vi-di.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 256,
+      "output": "spanish/book/chapters/ch256-review-parejas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 257,
+      "output": "spanish/book/chapters/ch257-hablo-dos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 258,
+      "output": "spanish/book/chapters/ch258-terminacion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 259,
+      "output": "spanish/book/chapters/ch259-mucha-agua.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 260,
+      "output": "spanish/book/chapters/ch260-nombres-propios.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 261,
+      "output": "spanish/book/chapters/ch261-review-implicito.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 262,
+      "output": "spanish/book/chapters/ch262-primero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 263,
+      "output": "spanish/book/chapters/ch263-uno-otro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 264,
+      "output": "spanish/book/chapters/ch264-comer-es-bueno.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 265,
+      "output": "spanish/book/chapters/ch265-hoy-como.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 266,
+      "output": "spanish/book/chapters/ch266-review-a1.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

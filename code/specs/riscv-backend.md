@@ -62,7 +62,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | Twig `42` | `const_i64 v=42; ret_i64 v` | `[0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00]` |
 | `ret_void` only | `ret_void` | `[0x67, 0x80, 0x00, 0x00]` |
 | Empty CIR | (none) | `[0x67, 0x80, 0x00, 0x00]` |
-| BASIC `PRINT 42` | `const_f64 42.0; call __basic_print_real; ...` | (refused — Dartmouth BASIC's only numeric type is REAL, and RV32I has no floating-point registers) |
+| BASIC `PRINT 42` | target-only `const_i64 42; call __basic_print_int; ...` | host byte output `42\\n` |
 
 ## Backend trait surface
 
@@ -85,6 +85,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | `ImmediateOutOfRange(i64)` | A compatibility `i64` literal cannot fit in RV32 |
 | `OutOfRegisters` | A wide register-pair allocation cannot fit the starter pool |
 | `TooManyArguments(usize)` | More than eight starter-ABI parameters or arguments |
+| `CallOutOfRange` | A linked direct-call target is beyond the `jal` range |
 | `ExecutionDidNotHalt` | Simulator step limit was exceeded |
 
 ## Tests
@@ -108,6 +109,52 @@ sequence. Wider constants and `add` / `sub` / `mul` now use low/high register pa
 the simulator runner exposes the pair through `a0` and `a1`. Other wide
 operations remain intentionally rejected until their pair-aware sequences are
 implemented.
+
+## Simulator host ABI
+
+Programs running under the in-tree simulator can request host services with
+`ecall` while `mtvec` is zero. `a7` selects the service and arguments use the
+standard `a0` / `a1` registers:
+
+| Service | `a7` | Arguments | Effect |
+|---------|------|-----------|--------|
+| Exit | `1` | `a0`: signed status | Halts the guest and records `Exit(status)` |
+| Write signed integer | `2` | `a1:a0`: signed `i64` | Records `WriteI64(value)` and continues |
+| Write byte | `3` | `a0`: low byte | Records `WriteByte(value)` and continues |
+| Read byte | `4` | none | Returns the next input byte in `a1:a0`, or signed `-1` at EOF |
+| f64 add/sub/mul/div | `5`-`8` | lhs bits: `a1:a0`; rhs bits: `a3:a2` | Returns IEEE-754 f64 result bits in `a1:a0` |
+| f64 comparison | `9` | lhs bits: `a1:a0`; rhs bits: `a3:a2` | Returns signed `-1`, `0`, or `1` in `a1:a0` |
+| i64 to f64 | `10` | signed i64: `a1:a0` | Returns IEEE-754 f64 bits in `a1:a0` |
+| f64 to i64 truncation | `11` | f64 bits: `a1:a0` | Returns truncated signed i64 in `a1:a0` |
+
+Installing an M-mode trap vector leaves architectural `ecall` trap behavior
+unchanged. `riscv_backend::run_binary` exposes `WriteI64` values through
+`RunResult::output` and clears `a7` before its private return trampoline, so
+a program's last host service cannot be replayed as the terminal halt.
+
+`call_builtin "print_i64", value` lowers to the write service. This gives Nib
+programs a source-to-RV32I-to-simulator printing path without requiring an
+external runtime image.
+
+`call_builtin "putchar", value` and `call_builtin "getchar"` lower to the
+byte services. `run_binary_with_input` supplies deterministic input bytes and
+`RunResult::byte_output` exposes produced bytes for source-level tests.
+
+The f64 services are a simulator-host soft-float ABI for RV32I binaries, not
+the RISC-V F/D instruction-set extensions. They use raw IEEE-754 bits split
+low/high across consecutive integer argument registers so a later backend
+lowering can execute floating-point IIR on the in-tree simulator while keeping
+the emitted instruction stream RV32I.
+
+## Module globals
+
+`compile_module` collects `global_load` and `global_store` names in stable
+first-seen order across the linked CIR module. Each name owns an aligned,
+zero-initialized eight-byte slot appended after the text image. Scalar globals
+use the low word; `i64` and `u64` globals use both words. The global name and
+its CIR type must agree at every access. Lowered code materializes the final
+slot address after module layout, so calls share one storage location while
+the selected entry function can seed language-level static initializers.
 
 ## Prioritized backlog
 
@@ -148,16 +195,66 @@ implemented.
 16. [x] **Complete wide spill coverage:** mixed scalar/pair allocation uses
    coherent pair slots, reclaims dead values of either width, and spills live
    scalar or wide values as needed under arbitrary temporary pressure.
-17. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
-   binaries, and preserve the RISC-V calling convention across calls.
-18. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
-   output, then lower language print primitives through that ABI.
-19. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
-   loader for programs needing strings or arrays.
-20. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
-   such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
-   floating-point ABI or an integer-only lowering path before those programs
-   can run on the simulator.
+17. [x] **Calls and modules:** module-local calls link as PC-relative `jal`,
+   preserve `ra`, marshal scalar or `i64`/`u64` pair arguments through `a0`
+   through `a7`, and save register-resident scalar or pair values live across a
+   call. Nib argument and live-value calls execute from the selected entry
+   function in the simulator.
+18. [x] **Host runtime ABI:** simulator `ecall` services expose exit and signed
+   64-bit integer output; `print_i64` lowers through that ABI and Nib output is
+   captured by the source-to-simulator fixture.
+19. [x] **Module globals:** collect typed `global_load` / `global_store` names
+   across a linked module, append zero-initialized 64-bit slots after code, and
+   lower scalar and pair accesses. Nib `static` values survive linked calls in
+   the source-to-simulator fixture.
+20. [x] **Static byte buffers:** lower compile-time `alloc_bytes` requests plus
+    zero-extending `load_byte` and truncating `store_byte` operations into an
+    appended, zero-filled module-data region for tape-like payloads. Brainfuck
+    mutation now compiles through `lang-aot` and executes in the simulator.
+21. [x] **Dynamic byte allocation and bounds:** module-local non-constant
+    `alloc_bytes` requests use a zero-filled bump heap under the in-tree
+    simulator. Byte accesses retain their allocation length and halt through
+    host exit status `2` when the offset is out of range.
+22. [x] **Wide reassignment:** allow a word-sized `i64`/`u64` value to widen or
+    spill when an in-place wide operation reuses its destination; Brainfuck
+    pointer motion now reaches the byte bounds guard from source.
+23. [x] **Escaped byte-buffer ABI:** byte buffers use the low/high words of
+    their existing `i64`/`u64` representation for address/length, so checked
+    access survives moves, calls, returns, and globals without a separate ABI.
+24. [x] **Data images:** append deduplicated initialized UTF-8 byte images to
+    the module alongside code. `str_const` produces their address/length pair,
+    giving string and array runtimes addressable initialized program data.
+25. [x] **Host character I/O:** byte-oriented input/output services back
+    `getchar` / `putchar`; Brainfuck `.` now emits observable simulator output.
+26. [x] **BASIC integral literal output:** target-only lowering rewrites a
+   finite whole-number literal passed directly to `PRINT` from the frontend's
+   `f64` representation to the integer print ABI, allowing it to execute in
+   the simulator without pretending fractional REAL values are supported.
+27. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
+   `a0` through `a7`, including word-sized wide values, and preserve the narrow
+   CIR view of ABI-normalized wide parameters.
+28. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
+   copies with a live wide source. Nib `let` bindings can now flow into direct
+   calls and execute in the simulator.
+29. [x] **Incoming parameter call preservation:** save values live across a
+   direct call before argument marshalling overwrites incoming `a0` through
+   `a7` ABI registers. Recursive integer formatting keeps its caller state.
+30. [x] **BASIC integral expressions:** give BASIC a target-specific checked
+   integer representation for variables, `+`/`-`/`*` arithmetic, control flow,
+   and `LET`, so non-literal whole-number programs do not depend on the `f64`
+   frontend representation.
+31. [x] **Simulator soft-float host ABI:** IEEE-754 f64 bit pairs use a
+   deterministic `ecall` service family for arithmetic, comparison, and i64
+   conversions; this is the substrate for executable RV32I soft-float code.
+32. [ ] **RISC-V soft-float lowering:** represent f64 CIR values as bit pairs
+   and lower arithmetic, comparisons, and conversions through the simulator
+   host ABI without changing integer-only RV32I output.
+33. [ ] **BASIC fractional REAL execution:** route the Dartmouth BASIC real
+   formatter and fractional arithmetic through the RISC-V soft-float lowering
+   and add a source-to-simulator fixture.
+34. [ ] **BASIC exact division:** prove or preserve a whole-number result for
+   `/` in the integer subset without silently changing Dartmouth BASIC's REAL
+   division semantics when a quotient is fractional.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying

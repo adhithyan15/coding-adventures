@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.62.0
+
+- Preserve quoted Requirement identifiers in style and class statement tokens for semantic parsing.
+
+## 0.61.0
+
+- Tokenize Requirement definitions, relationships, and shorthand classes with quoted or unquoted multiword identifiers.
+
+## 0.60.0
+
+- Match Requirement keywords and enum values case-insensitively, following the pinned upstream lexer.
+
+## 0.59.0
+
+- Tokenize standalone Requirement `:::` class shorthand statements.
+
+## 0.58.0
+
+- Tokenize Requirement typography style declarations.
+
+## 0.57.0
+
+- Tokenize Requirement class definitions, assignments, and inline shorthand.
+
+## 0.56.0
+
+- Tokenize Requirement direct node style statements.
+
+## 0.55.0
+
+- Tokenize Requirement accessibility title and description statements.
+
+## 0.54.0
+
+- Tokenize Requirement definition fields by semantic role and enum domain.
+
+## 0.53.0
+
+- Add portable Mermaid 11.16.1 requirement-diagram tokens.
+
 ## 0.52.0
 
 - Enforce Journey's documented one-to-five task-score domain in the portable token grammar.

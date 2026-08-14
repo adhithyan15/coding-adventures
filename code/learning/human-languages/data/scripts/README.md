@@ -715,10 +715,90 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   loop, descends to the baseline, and continues counterclockwise around the
   lower bowl without lifting. Its two-frame font fit preserves that one-run
   order while routing the cursive ascender through Noto Sans Cyrillic's compact
-  printed upper bowl and straight left stem. The remaining **100** prose part
+  printed upper bowl and straight left stem. Lowercase **г** follows at
+  01:54–01:57 as one rounded two-hump cursive run: rise from the baseline,
+  descend and turn there, then continue through a smaller exit arch without
+  lifting. Its two-frame Noto fit preserves that zero-lift evidence by climbing
+  the block glyph's upright, sweeping and retracing its top bar, and descending;
+  it records that the printed form omits the cursive exit arch. Lowercase **д**
+  follows at 02:14–02:19: its rounded body closes counterclockwise before the
+  same run descends below the baseline, loops left, and rises into a rightward
+  exit. Its two-frame Noto fit preserves that body-before-descender order and
+  zero-lift evidence while tracing the block glyph's trapezoidal body, joined
+  base shelf, and two retraced feet; it records that the printed form replaces
+  the cursive descender loop with those feet. Lowercase **е** follows at
+  02:26–02:30: the pen begins at the upper right, curves left around the upper
+  loop, crosses through the middle, and continues counterclockwise around the
+  rounded lower bowl without lifting. Its two-frame Noto fit preserves that
+  upper-loop-to-middle-to-lower-bowl order while routing the tall open school
+  hand through the compact printed glyph's upper bowl and long middle bar.
+  Lowercase **ё** follows at 02:51–02:56: the pen completes that same looped
+  body first, then lifts for the left dot and lifts again for the right dot.
+  Its four-frame Noto fit preserves the source's body-before-left-dot-before-
+  right-dot order and two-lift evidence while tracing the compact printed e
+  body and both circular dots. Lowercase **ж** follows at 03:16–03:21: the pen
+  rises from the lower left through a rounded left arch and tall central loop,
+  descends through the middle, continues into a rounded right arch, and
+  finishes through a smaller rightward exit without lifting. Its two-frame
+  Noto fit preserves that left-to-centre-to-right order and zero-lift evidence
+  while tracing the printed glyph's straight central upright and four diagonal
+  arms. Lowercase **з** follows at 03:34–03:39: the pen circles the smaller
+  upper lobe to the right, descends through the middle, and continues around
+  the larger lower lobe into a rising exit without lifting. Its two-frame Noto
+  fit preserves that upper-lobe-to-lower-lobe order and zero-lift evidence
+  while tracing the compact printed double-lobe glyph; it records that the
+  printed form omits the school hand's exit join. Lowercase **и** follows at
+  03:56–04:02: the pen descends the left stem, turns directly into a rising
+  diagonal, descends the right stem, and finishes through a small rising exit
+  without lifting. Its three-frame Noto fit preserves that stem-to-diagonal-to-
+  stem order and zero-lift evidence while tracing the printed backwards-N
+  glyph; it records that the printed form omits the school hand's rounded entry
+  and exit joins. Lowercase **й** follows at 04:17–04:24: the pen completes the
+  same joined body as **и**, lifts once, then draws the breve from left to right
+  as one dipped arc. Its four-frame Noto fit preserves that body-before-breve
+  order, left-to-right breve direction, and one-lift evidence while tracing the
+  printed backwards-N body and separate curved mark. Lowercase **к** follows at
+  04:45–04:51: the pen descends the left stem, rises through a looped upper-right
+  arm and returns to the middle, then continues through the lower-right arm and
+  a small rising exit without lifting. Its three-frame Noto fit preserves that
+  stem-to-upper-arm-to-lower-arm order and zero-lift evidence while tracing the
+  printed vertical and two angular diagonals; it records that the school hand
+  rounds the upper arm and carries entry and exit joins. Lowercase **л** follows
+  at 05:06–05:10: the pen curves left around a small baseline hook, rises
+  steeply to a high apex, descends through the right leg, and finishes through
+  a small rising exit without lifting. Its three-frame Noto fit preserves that
+  hooked-left-leg-to-apex-to-right-leg order and zero-lift evidence while
+  tracing the printed curved left leg, horizontal top shoulder, and straight
+  right stem; it records the school hand's pointed apex, slanted right leg, and
+  entry and exit joins. Lowercase **м** follows at 05:26–05:31: the pen curves
+  left around a small entry hook, rises to the first apex, descends through the
+  central valley, rises to the second apex, descends through the right leg, and
+  finishes through a small rising exit without lifting. Its four-frame Noto fit
+  preserves that entry-to-first-apex-to-valley-to-second-apex-to-baseline order
+  and zero-lift evidence while tracing the printed straight upright stems and
+  deep central V; it records the school hand's rounded arches and entry and exit
+  joins. Lowercase **н** follows at 05:47–05:52: the pen descends the left stem,
+  turns upward through a rounded middle bridge, rises to the right shoulder,
+  descends the right stem, and finishes through a small rising exit without
+  lifting. Its three-frame Noto fit preserves that left-stem-to-middle-bridge-
+  to-right-stem order and zero-lift evidence while tracing the printed straight
+  verticals and horizontal middle bar; it records the school hand's rounded
+  bridge and entry and exit joins. Lowercase **о** follows at 05:59–06:03: the
+  pen begins at the upper right, curves left across the top, descends the left
+  side, sweeps through the bottom, rises along the right side, and closes the
+  oval without lifting. Its two-frame Noto fit preserves that counterclockwise
+  closure order and zero-lift evidence while tracing the printed wider upright
+  oval; it records the school hand's taller, slightly slanted proportions.
+  Lowercase **п** follows at 06:26–06:31: the pen descends the left stem, turns
+  upward through a rounded top shoulder, descends the right stem, and finishes
+  through a small rising exit without lifting. Its three-frame Noto fit
+  preserves that left-stem-to-top-shoulder-to-right-stem order and zero-lift
+  evidence while tracing the printed straight uprights and horizontal top bar;
+  it records the school hand's rounded Latin-n-like shape and entry and exit
+  joins. The remaining **86** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 30,
+  `cyrillic` 16,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

@@ -4,4 +4,6 @@ requires 'coding-adventures-lzss', '0.01';
 # Test dependencies
 on 'test' => sub {
     requires 'Test2::V0';
+    requires 'JSON::PP';
+    requires 'Compress::Raw::Zlib';
 };

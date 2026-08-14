@@ -9986,6 +9986,524 @@
       "jsonHash": "fnv1a64:229adc43e001b837"
     },
     {
+      "language": "spanish",
+      "chapter": 230,
+      "sourceHash": "fnv1a64:cbace5daee5ed0c1",
+      "lessonIds": [
+        "ES-C61-al"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch230.txt",
+      "json": "spanish/narration/ch230.json",
+      "textHash": "fnv1a64:5d55440fb2cc1c01",
+      "jsonHash": "fnv1a64:ebafc227e78f8bc3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 231,
+      "sourceHash": "fnv1a64:7920ede0bf513631",
+      "lessonIds": [
+        "ES-C61-del"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch231.txt",
+      "json": "spanish/narration/ch231.json",
+      "textHash": "fnv1a64:70cf2a0eeb578284",
+      "jsonHash": "fnv1a64:de16a581508d5952"
+    },
+    {
+      "language": "spanish",
+      "chapter": 232,
+      "sourceHash": "fnv1a64:15565afa851e3c2b",
+      "lessonIds": [
+        "ES-C61-quien"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch232.txt",
+      "json": "spanish/narration/ch232.json",
+      "textHash": "fnv1a64:6bd79f787562e6b2",
+      "jsonHash": "fnv1a64:ea272a87ce536cf8"
+    },
+    {
+      "language": "spanish",
+      "chapter": 233,
+      "sourceHash": "fnv1a64:2397e74b8bdc3694",
+      "lessonIds": [
+        "ES-C61-o"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch233.txt",
+      "json": "spanish/narration/ch233.json",
+      "textHash": "fnv1a64:f35e6eace0eff875",
+      "jsonHash": "fnv1a64:6303787c5c05e31a"
+    },
+    {
+      "language": "spanish",
+      "chapter": 234,
+      "sourceHash": "fnv1a64:c4bab23d76f47b77",
+      "lessonIds": [
+        "ES-C61-ni"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch234.txt",
+      "json": "spanish/narration/ch234.json",
+      "textHash": "fnv1a64:eafe6e67af6800f4",
+      "jsonHash": "fnv1a64:460827701ddbd154"
+    },
+    {
+      "language": "spanish",
+      "chapter": 235,
+      "sourceHash": "fnv1a64:19acd77f81640095",
+      "lessonIds": [
+        "ES-C61-repaso-juntores"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch235.txt",
+      "json": "spanish/narration/ch235.json",
+      "textHash": "fnv1a64:b8273280d62256ee",
+      "jsonHash": "fnv1a64:f70088c477cb9626"
+    },
+    {
+      "language": "spanish",
+      "chapter": 236,
+      "sourceHash": "fnv1a64:fedacdbaf3a7819c",
+      "lessonIds": [
+        "ES-C62-hablando"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch236.txt",
+      "json": "spanish/narration/ch236.json",
+      "textHash": "fnv1a64:9ae266baab6c5556",
+      "jsonHash": "fnv1a64:ab596c89efee765b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 237,
+      "sourceHash": "fnv1a64:00140a20ba3d5a26",
+      "lessonIds": [
+        "ES-C62-comiendo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch237.txt",
+      "json": "spanish/narration/ch237.json",
+      "textHash": "fnv1a64:73e7962eb723c2a0",
+      "jsonHash": "fnv1a64:b8f14f6c1dc0e9bd"
+    },
+    {
+      "language": "spanish",
+      "chapter": 238,
+      "sourceHash": "fnv1a64:d6559e2d88545e34",
+      "lessonIds": [
+        "ES-C62-estoy-hablando"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch238.txt",
+      "json": "spanish/narration/ch238.json",
+      "textHash": "fnv1a64:7c2fd47c97ed5ecd",
+      "jsonHash": "fnv1a64:a9324ebba52da6b3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 239,
+      "sourceHash": "fnv1a64:ba5f45225c5a8a77",
+      "lessonIds": [
+        "ES-C62-veo-a-maria"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch239.txt",
+      "json": "spanish/narration/ch239.json",
+      "textHash": "fnv1a64:eef16709242cbe7e",
+      "jsonHash": "fnv1a64:40877ae63227c2b2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 240,
+      "sourceHash": "fnv1a64:be29c40a0c616742",
+      "lessonIds": [
+        "ES-C62-repaso-gerundio"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch240.txt",
+      "json": "spanish/narration/ch240.json",
+      "textHash": "fnv1a64:1f6f1827b0c3519f",
+      "jsonHash": "fnv1a64:d880c42c4f6f83fb"
+    },
+    {
+      "language": "spanish",
+      "chapter": 241,
+      "sourceHash": "fnv1a64:80b20521595b5b7f",
+      "lessonIds": [
+        "ES-C63-hablasteis"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch241.txt",
+      "json": "spanish/narration/ch241.json",
+      "textHash": "fnv1a64:36aa20885e3fd29f",
+      "jsonHash": "fnv1a64:326d16093498cd9b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 242,
+      "sourceHash": "fnv1a64:39e81f483da71d6e",
+      "lessonIds": [
+        "ES-C63-comisteis"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch242.txt",
+      "json": "spanish/narration/ch242.json",
+      "textHash": "fnv1a64:22d98b9cbe596d18",
+      "jsonHash": "fnv1a64:19dc2f8cfb6e0816"
+    },
+    {
+      "language": "spanish",
+      "chapter": 243,
+      "sourceHash": "fnv1a64:dee87df459e79d98",
+      "lessonIds": [
+        "ES-C63-hablabamos"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch243.txt",
+      "json": "spanish/narration/ch243.json",
+      "textHash": "fnv1a64:2d0790c51d295d20",
+      "jsonHash": "fnv1a64:c212be298944cf0b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 244,
+      "sourceHash": "fnv1a64:e24f264b4bb8356c",
+      "lessonIds": [
+        "ES-C63-comiamos"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch244.txt",
+      "json": "spanish/narration/ch244.json",
+      "textHash": "fnv1a64:8f7d4b866b76a49c",
+      "jsonHash": "fnv1a64:359dff0ace3cc30c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 245,
+      "sourceHash": "fnv1a64:243419ed2b1bec22",
+      "lessonIds": [
+        "ES-C63-repaso-paradigmas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch245.txt",
+      "json": "spanish/narration/ch245.json",
+      "textHash": "fnv1a64:1211a57a1d5fa89d",
+      "jsonHash": "fnv1a64:01038f476a6d84bd"
+    },
+    {
+      "language": "spanish",
+      "chapter": 246,
+      "sourceHash": "fnv1a64:630b6b98c981594c",
+      "lessonIds": [
+        "ES-C64-para-mi"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch246.txt",
+      "json": "spanish/narration/ch246.json",
+      "textHash": "fnv1a64:01643f7ee9c63def",
+      "jsonHash": "fnv1a64:f87a438ac970a5b3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 247,
+      "sourceHash": "fnv1a64:1bc40300d7405f1d",
+      "lessonIds": [
+        "ES-C64-conmigo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch247.txt",
+      "json": "spanish/narration/ch247.json",
+      "textHash": "fnv1a64:f7cf72f8c3bc32b2",
+      "jsonHash": "fnv1a64:af10487e43460d81"
+    },
+    {
+      "language": "spanish",
+      "chapter": 248,
+      "sourceHash": "fnv1a64:131244a54a8cd9d3",
+      "lessonIds": [
+        "ES-C64-que-grande"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch248.txt",
+      "json": "spanish/narration/ch248.json",
+      "textHash": "fnv1a64:82d222e9b7f694fc",
+      "jsonHash": "fnv1a64:b3392f314e0919af"
+    },
+    {
+      "language": "spanish",
+      "chapter": 249,
+      "sourceHash": "fnv1a64:cac453291b9c3c79",
+      "lessonIds": [
+        "ES-C64-maria-ven"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch249.txt",
+      "json": "spanish/narration/ch249.json",
+      "textHash": "fnv1a64:6b1463fe486e0bf7",
+      "jsonHash": "fnv1a64:566ad5b2125bf705"
+    },
+    {
+      "language": "spanish",
+      "chapter": 250,
+      "sourceHash": "fnv1a64:b042a039aa1c399b",
+      "lessonIds": [
+        "ES-C64-repaso-tonicos"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch250.txt",
+      "json": "spanish/narration/ch250.json",
+      "textHash": "fnv1a64:6b6ecdc55ffc8f7c",
+      "jsonHash": "fnv1a64:acd6e43652756add"
+    },
+    {
+      "language": "spanish",
+      "chapter": 251,
+      "sourceHash": "fnv1a64:4fbb0bf04ff7c2fb",
+      "lessonIds": [
+        "ES-C65-ahi-alli"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch251.txt",
+      "json": "spanish/narration/ch251.json",
+      "textHash": "fnv1a64:148c14468cfa0699",
+      "jsonHash": "fnv1a64:231caf637a99905c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 252,
+      "sourceHash": "fnv1a64:d810c561436ec332",
+      "lessonIds": [
+        "ES-C65-ahora-hoy"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch252.txt",
+      "json": "spanish/narration/ch252.json",
+      "textHash": "fnv1a64:83abb38e7ce94927",
+      "jsonHash": "fnv1a64:37bc10a7102110e2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 253,
+      "sourceHash": "fnv1a64:fe66e11ddaabe289",
+      "lessonIds": [
+        "ES-C65-unos-unas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch253.txt",
+      "json": "spanish/narration/ch253.json",
+      "textHash": "fnv1a64:ed1c3ea0e685cda6",
+      "jsonHash": "fnv1a64:2a0ba66abfc16ef0"
+    },
+    {
+      "language": "spanish",
+      "chapter": 254,
+      "sourceHash": "fnv1a64:ff47fdb0ded5efb0",
+      "lessonIds": [
+        "ES-C65-vuestro"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch254.txt",
+      "json": "spanish/narration/ch254.json",
+      "textHash": "fnv1a64:2ad232a61e19dfbf",
+      "jsonHash": "fnv1a64:de6923e6ca1f11bc"
+    },
+    {
+      "language": "spanish",
+      "chapter": 255,
+      "sourceHash": "fnv1a64:b17bee498495fff0",
+      "lessonIds": [
+        "ES-C65-vi-di"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch255.txt",
+      "json": "spanish/narration/ch255.json",
+      "textHash": "fnv1a64:ec84c23a65d0e22e",
+      "jsonHash": "fnv1a64:4af1bb0ddfe18154"
+    },
+    {
+      "language": "spanish",
+      "chapter": 256,
+      "sourceHash": "fnv1a64:305d9c3812c48942",
+      "lessonIds": [
+        "ES-C65-repaso-parejas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch256.txt",
+      "json": "spanish/narration/ch256.json",
+      "textHash": "fnv1a64:ee284a841b041b85",
+      "jsonHash": "fnv1a64:1481f3319c38637b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 257,
+      "sourceHash": "fnv1a64:ea6ae5461e52c794",
+      "lessonIds": [
+        "ES-C66-hablo-dos-lecturas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch257.txt",
+      "json": "spanish/narration/ch257.json",
+      "textHash": "fnv1a64:e5a68302a8541218",
+      "jsonHash": "fnv1a64:2164f17cfa294120"
+    },
+    {
+      "language": "spanish",
+      "chapter": 258,
+      "sourceHash": "fnv1a64:2a4a2f85c0380807",
+      "lessonIds": [
+        "ES-C66-la-terminacion-dice-quien"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch258.txt",
+      "json": "spanish/narration/ch258.json",
+      "textHash": "fnv1a64:79c9df988a8dc1d6",
+      "jsonHash": "fnv1a64:4e8a56723743d7bb"
+    },
+    {
+      "language": "spanish",
+      "chapter": 259,
+      "sourceHash": "fnv1a64:a061b7ebd2b2598f",
+      "lessonIds": [
+        "ES-C66-mucha-agua"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch259.txt",
+      "json": "spanish/narration/ch259.json",
+      "textHash": "fnv1a64:fbfbdd9575dd5672",
+      "jsonHash": "fnv1a64:a57f32ee0efd42f3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 260,
+      "sourceHash": "fnv1a64:d170c122b4cf33da",
+      "lessonIds": [
+        "ES-C66-nombres-propios"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch260.txt",
+      "json": "spanish/narration/ch260.json",
+      "textHash": "fnv1a64:62a96ab026de4e79",
+      "jsonHash": "fnv1a64:4cb105ce59ecf8ab"
+    },
+    {
+      "language": "spanish",
+      "chapter": 261,
+      "sourceHash": "fnv1a64:a7294df88d8e06ed",
+      "lessonIds": [
+        "ES-C66-repaso-lo-implicito"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch261.txt",
+      "json": "spanish/narration/ch261.json",
+      "textHash": "fnv1a64:0b4e076d475dc9b3",
+      "jsonHash": "fnv1a64:3afddcf2debfbb3e"
+    },
+    {
+      "language": "spanish",
+      "chapter": 262,
+      "sourceHash": "fnv1a64:004c3be7e3f556fd",
+      "lessonIds": [
+        "ES-C67-primero"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch262.txt",
+      "json": "spanish/narration/ch262.json",
+      "textHash": "fnv1a64:f2dab00327438185",
+      "jsonHash": "fnv1a64:2c78ed6ea82a06b5"
+    },
+    {
+      "language": "spanish",
+      "chapter": 263,
+      "sourceHash": "fnv1a64:b972b520d907b317",
+      "lessonIds": [
+        "ES-C67-uno-otro"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch263.txt",
+      "json": "spanish/narration/ch263.json",
+      "textHash": "fnv1a64:84eb7e1b74d25df7",
+      "jsonHash": "fnv1a64:5dd7ab14d071c9dd"
+    },
+    {
+      "language": "spanish",
+      "chapter": 264,
+      "sourceHash": "fnv1a64:1ab652191f2cc175",
+      "lessonIds": [
+        "ES-C67-comer-es-bueno"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch264.txt",
+      "json": "spanish/narration/ch264.json",
+      "textHash": "fnv1a64:19625a45a9ff38f0",
+      "jsonHash": "fnv1a64:ab54629661000f25"
+    },
+    {
+      "language": "spanish",
+      "chapter": 265,
+      "sourceHash": "fnv1a64:a73b530fcd41d858",
+      "lessonIds": [
+        "ES-C67-hoy-como-en-casa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch265.txt",
+      "json": "spanish/narration/ch265.json",
+      "textHash": "fnv1a64:6dd10ef7bcc30cf3",
+      "jsonHash": "fnv1a64:a62ab5a6db741b63"
+    },
+    {
+      "language": "spanish",
+      "chapter": 266,
+      "sourceHash": "fnv1a64:3a3195e1d9d5fd7d",
+      "lessonIds": [
+        "ES-C67-repaso-a1"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch266.txt",
+      "json": "spanish/narration/ch266.json",
+      "textHash": "fnv1a64:0a20b17946796ee7",
+      "jsonHash": "fnv1a64:7bb930e838d0e670"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",

@@ -2007,11 +2007,11 @@ smart-home ownership composition completed:
   behind an injected provider; the primitive performs no filesystem, network,
   terminal, environment, or device access.
 
-Production still composes `DenyChannelWiring` until a reviewed provider and
-exact channel/pipeline request adapter are connected. The next bounded slices
-are orchestrator-core composition followed by authenticated daemon API and CLI
-wire/unwire operations; this primitive does not weaken the current fail-closed
-production default.
+Production now composes this checker with exact config-backed agent, channel,
+package-hash, and model-tier authority. Authenticated daemon API and CLI
+wire/unwire operations carry the exact request into that boundary. Fully
+assigned Tier 0 mutations execute; omitted authority fails closed, and an
+optional reviewed notification helper is the only enabled interactive path.
 
 ## Current Chief Trust-Checked Channel Mutation Slice
 
@@ -2034,10 +2034,35 @@ topology boundary without enabling an unreviewed production approval path:
   provider failures all occur before durable channel storage mutation and keep
   nested diagnostics out of display output.
 
-Production continues to compose `DenyChannelWiring`. The next P0 is to expose
-bounded pipeline wire/unwire requests through the authenticated daemon API and
-CLI with an explicit reviewed provider/tier-policy composition; this adapter
-does not treat the loopback bearer token as approval.
+Production composes this adapter and its pipeline counterpart through the exact
+config-backed resolver. The authenticated daemon API derives requester identity
+from its session and the CLI exposes typed wire/unwire requests; neither treats
+the loopback bearer token as approval. Missing tier assignments and unavailable
+interactive providers still fail before durable mutation.
+
+## Current Chief Tier 1 Notification Approval Slice
+
+This slice opens only the reviewed D18 Tier 1 interaction path:
+
+- `chief-of-staff-notification-approval` launches one absolute configured helper
+  directly, without a shell or inherited environment.
+- A versioned bounded standard-input protocol carries the exact non-secret
+  request identity, requester, timeout, effective tier, and every resource.
+  Identifiers are lowercase-hex encoded so platform parsers never infer escaping.
+- After presenting the notification, the helper must acknowledge readiness
+  before it may return a canonical approval or denial line. Early exit,
+  malformed or oversized output, incomplete prompt delivery, launch/I/O failure,
+  and process-control failure all fail closed.
+- Only a helper that accepted the complete prompt, acknowledged notification
+  presentation, remained alive through the canonical five-second decision window,
+  and returned no decision produces the existing Tier 1 timeout auto-approval result.
+- The optional `[privilege].tier_1_notification_command` resolves against the
+  explicit daemon home. Omitting it preserves the previous unavailable-provider
+  behavior, and biometric Tier 2 plus hardware-key Tier 3 remain unavailable.
+- Real-process tests exercise approval, denial, live timeout, maximum-size exact
+  prompts, blocked prompt input, malformed output, early exit, missing helpers,
+  and unsupported higher-tier requests across the same standard process API used
+  in production.
 
 ## Current Chief HTTP Request Clock Slice
 
@@ -2254,8 +2279,103 @@ This broadens local HVAC, energy, and industrial telemetry coverage while the
 independent camera, cloud, radio, and credential prerequisites below remain
 honestly blocked.
 
-The protocol- and vendor-specific backlog below remains valid after those
-central ownership steps:
+## Current BACnet/IP Breadth Slice
+
+The next breadth slice adds vendor-neutral building-automation discovery while
+keeping unauthenticated BACnet control outside the runtime boundary:
+
+- `bacnet-protocol` owns bounded BACnet/IP BVLC/NPDU framing for Who-Is and
+  strict I-Am decoding, including forwarded-NPDU origin correlation.
+- `smart-home-bacnet-ip-integration` sends one probe to an explicit IPv4
+  destination, collects at most 64 replies within a bounded timeout, and
+  projects verified device instances into the shared D23 discovery catalog.
+- Discovery authorization runs before UDP socket creation. Malformed replies
+  are isolated as partial failures, and conflicting endpoints claiming one
+  device instance are reported without replacing the deterministic first
+  observation.
+- The runtime exposes no property reads, writes, controls, BBMD management,
+  foreign-device registration, or BACnet/SC session ownership. Those require
+  separate authenticated ownership and operation-specific policy.
+
+This expands local HVAC, lighting, access, and energy discovery without
+weakening the independent credential, camera-resource, or radio-host blocks.
+
+## Current KNXnet/IP Breadth Slice
+
+The next breadth slice adds vendor-neutral KNX interface discovery without
+pretending that discovery provides an authorized building-control session:
+
+- `knxnet-ip-protocol` owns strict KNXnet/IP Search Request and Search Response
+  framing, including UDP/IPv4 HPAI correlation, Device Information Blocks, and
+  Supported Service Family parsing.
+- `smart-home-knxnet-ip-integration` binds one explicit local IPv4 interface,
+  sends one request to an explicit destination, collects at most 64 replies
+  within a bounded timeout, and projects verified serial-number identities into
+  the shared D23 discovery catalog.
+- Discovery authorization runs before UDP socket creation. Responses must
+  advertise the exact source control endpoint, malformed packets remain partial
+  failures, and conflicting endpoints claiming one serial number do not replace
+  the deterministic first observation.
+- The runtime exposes no ETS project import, group-address interpretation,
+  tunneling, routing telegrams, configuration writes, or KNX IP Secure session
+  ownership. Those require separate project/key custody and operation-specific
+  policy.
+
+This broadens local lighting, HVAC, shading, access, and energy interface
+discovery while keeping actual KNX bus access outside the unauthenticated
+discovery boundary.
+
+## Current ESPHome mDNS Breadth Slice
+
+The next breadth slice adds concrete ESPHome native-API node discovery without
+claiming ownership of an encrypted protobuf session:
+
+- `smart-home-esphome-discovery-integration` targets the production
+  `_esphomelib._tcp.local` service through the shared mDNS scanner and requires
+  stable MAC, firmware version, configuration hash, board, host, and port data.
+- Optional platform, network, project, and native-API security TXT records are
+  bounded and validated. Noise advertisements must name the exact ESPHome
+  NNpsk0 suite, and zero-PSK provisioning is accepted only with explicit Noise
+  support.
+- D23 discovery authorization runs before socket I/O. One scan accepts at most
+  64 replies, uses a bounded timeout and record TTL, and isolates malformed or
+  conflicting advertisements as partial failures without replacing the
+  deterministic first identity observation.
+- The runtime opens no native-API TCP connection and performs no protobuf
+  handshake, key provisioning, entity enumeration, subscriptions, or actions.
+  Those require a separately supervised session owner and ephemeral
+  Vault-backed encryption-key custody.
+
+This broadens the DIY/local-device ecosystem using production discovery
+primitives while preserving the native session and secret boundaries.
+
+## Current Google Cast mDNS Breadth Slice
+
+The next breadth slice adds concrete Google Cast receiver discovery without
+claiming ownership of a CastV2 TLS channel or media session:
+
+- `smart-home-google-cast-discovery-integration` targets the official
+  `_googlecast._tcp.local` service through the shared mDNS scanner and requires
+  the Open Screen receiver UUID, protocol version, capability bitfield, status,
+  friendly name, endpoint, and optional model contract.
+- Receiver UUIDs normalize to one exact 128-bit identity. Protocol versions are
+  bounded to the documented 2 through 99 range, status is limited to idle or
+  busy, and known audio, video, and developer-mode capability bits are
+  projected without rejecting future unknown bits.
+- D23 discovery authorization runs before socket I/O. One scan accepts at most
+  64 replies, uses a bounded timeout and record TTL, and isolates malformed or
+  conflicting advertisements as partial failures without replacing the
+  deterministic first identity observation.
+- The runtime opens no Cast TCP connection and performs no TLS handshake,
+  receiver authentication, application launch, session or queue management, or
+  media command. Those require a separately supervised Cast channel owner and
+  operation-specific policy.
+
+This broadens local TV, display, and speaker discovery while preserving the
+authenticated session and control boundary.
+
+The protocol- and vendor-specific backlog below remains valid after these
+breadth steps:
 
 No additional camera snapshot slice is currently executable without a concrete
 authentication prerequisite. Blue Iris documents `/image/{camera}` and secure

@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] — 2026-08-13 — element-section allocation cap (WASM15)
+
+### Fixed — `parse_element_section`'s `func_count` could trigger a multi-gigabyte allocation
+
+`parse_element_section` read a per-entry `func_count: u32leb` directly from
+the (untrusted) byte stream and pre-allocated a `Vec<u32>` with it —
+`Vec::with_capacity(func_count)`, with no cap. A crafted count like
+`0xFFFFFFFF` (four bytes) requested capacity for ~4.29 billion `u32`s
+(~17 GiB) before the loop ever reached its first, failing per-index read
+on a truncated stream — a real, if minor, DoS vector purely from parsing
+a `.wasm` module's element section header.
+
+Found by a security review of an unrelated PR (WASM12), which noticed
+this call site didn't follow the same `MAX_PREALLOC` cap the type
+section's `params`/`results` vectors already use a few lines away (added
+back in `0.2.0`'s predecessor work). Fixed identically:
+`Vec::with_capacity(func_count.min(MAX_PREALLOC))` — the `Vec` still
+grows correctly for a real, larger element list; only the up-front
+reservation is bounded. New regression test constructs a truncated
+element section with `func_count = u32::MAX` and confirms parsing
+returns a clean `Err` (missing-byte) rather than attempting the
+allocation.
+
 ## [0.2.0] — 2026-06-04
 
 ### Added — WasmGC struct types in the type section (LANG77 / McCarthy L3b-3a-3c)

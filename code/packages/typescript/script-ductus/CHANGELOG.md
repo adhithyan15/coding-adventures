@@ -2,6 +2,90 @@
 
 ## Unreleased
 
+### Added — cited Cyrillic п ductus (HL-C09EP)
+
+- Render **п** as one joined left-stem-to-top-shoulder-to-right-stem run with zero lifts.
+- Preserve RussianIrina's 06:26–06:31 rounded school-hand shoulder while fitting Noto Sans Cyrillic's squared arch, straight uprights, and horizontal top bar.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,090 tests.
+
+### Added — cited Cyrillic о ductus (HL-C09EO)
+
+- Render **о** as one joined upper-right-to-left-side-to-bottom-to-right-side counterclockwise oval with zero lifts.
+- Preserve RussianIrina's 05:59–06:03 tall, slightly slanted school-hand closure while fitting Noto Sans Cyrillic's wider upright printed oval.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,083 tests.
+
+### Added — cited Cyrillic н ductus (HL-C09EN)
+
+- Render **н** as one joined left-stem-to-middle-bridge-to-right-stem run with zero lifts.
+- Preserve RussianIrina's 05:47–05:52 rounded school-hand bridge while fitting Noto Sans Cyrillic's straight vertical stems and horizontal middle bar.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,076 tests.
+
+### Added — cited Cyrillic м ductus (HL-C09EM)
+
+- Render **м** as one joined baseline-to-first-apex-to-valley-to-second-apex-to-baseline run with zero lifts.
+- Preserve RussianIrina's 05:26–05:31 rounded two-arch school-hand order while fitting Noto Sans Cyrillic's straight upright stems and deep central V.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,069 tests.
+
+### Added — cited Cyrillic л ductus (HL-C09EL)
+
+- Render **л** as one joined baseline-hook-to-left-leg-to-top-shoulder-to-right-stem run with zero lifts.
+- Preserve RussianIrina's 05:06–05:10 pointed school-hand order while fitting Noto Sans Cyrillic's curved left leg, horizontal shoulder, and straight right stem.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,062 tests.
+
+### Added — cited Cyrillic к ductus (HL-C09EK)
+
+- Render **к** as one joined left-stem-to-upper-arm-to-lower-arm run with zero lifts.
+- Preserve RussianIrina's 04:45–04:51 looped school-hand order while fitting Noto Sans Cyrillic's printed vertical and two angular diagonals.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,055 tests.
+
+### Added — cited Cyrillic й ductus (HL-C09EJ)
+
+- Render **й** as the three-movement joined **и** body followed by a lifted left-to-right breve.
+- Preserve RussianIrina's 04:17–04:24 body-before-breve school-hand order while fitting Noto Sans Cyrillic's printed backwards-N body and separate curved mark.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,048 tests.
+
+### Added — cited Cyrillic и ductus (HL-C09EI)
+
+- Render **и** as one joined left-stem-to-rising-diagonal-to-right-stem run with zero lifts.
+- Preserve RussianIrina's 03:56–04:02 school-hand order while fitting Noto Sans Cyrillic's printed backwards-N glyph and documenting its omitted entry and exit joins.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,041 tests.
+
+### Added — cited Cyrillic з ductus (HL-C09EH)
+
+- Render **з** as one joined smaller-upper-lobe-to-larger-lower-lobe run with zero lifts.
+- Preserve RussianIrina's 03:34–03:39 school-hand order while fitting Noto Sans Cyrillic's compact printed double-lobe glyph and documenting its omitted exit join.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,034 tests.
+
+### Added — cited Cyrillic ж ductus (HL-C09EG)
+
+- Render **ж** as one joined left-wings-to-central-upright-to-right-wings run with zero lifts.
+- Preserve RussianIrina's 03:16–03:21 rounded left-to-centre-to-right school-hand order while fitting Noto Sans Cyrillic's straight upright and four diagonal arms.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,027 tests.
+
+### Added — cited Cyrillic ё ductus (HL-C09EF)
+
+- Render **ё** as the joined е body followed by separately lifted left and right dots, for three strokes and two lifts.
+- Preserve RussianIrina's 02:51–02:56 body-before-left-dot-before-right-dot order while fitting Noto Sans Cyrillic's compact printed e and circular dots.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,020 tests.
+
+### Added — cited Cyrillic е ductus (HL-C09EE)
+
+- Render **е** as an upper bowl and middle crossing followed by a joined counterclockwise lower bowl in one zero-lift printed fit.
+- Preserve RussianIrina's 02:26–02:30 cursive order while fitting the source's tall open form through Noto Sans Cyrillic's compact bowl and long middle bar.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,013 tests.
+
+### Added — cited Cyrillic д ductus (HL-C09ED)
+
+- Render **д** as a counterclockwise closed body followed by a joined base shelf and two retraced feet in one zero-lift printed fit.
+- Preserve RussianIrina's 02:14–02:19 cursive body-to-descender order while documenting that the bundled block glyph replaces the source's below-baseline loop with a shelf and two feet.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,006 tests.
+
+### Added — cited Cyrillic г ductus (HL-C09EC)
+
+- Render **г** as a baseline-to-top-bar climb followed by a retraced top and descending upright in one zero-lift printed fit.
+- Preserve RussianIrina's 01:54–01:57 cursive lift count while documenting that the bundled block glyph omits the source's smaller exit arch.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 977 tests.
+
 ### Added — cited Cyrillic в ductus (HL-C09EB)
 
 - Render **в** as a baseline-to-upper-loop return followed by a counterclockwise lower bowl in one zero-lift stroke.

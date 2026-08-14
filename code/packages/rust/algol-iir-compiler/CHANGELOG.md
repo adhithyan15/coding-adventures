@@ -1,5 +1,92 @@
 # Changelog
 
+## 0.168.0 — 2026-08-13 — stable transitive assignment selectors
+
+An unchanged ordinary local boolean, integer, or real selector with a known
+value may now choose the preserving leaf of a transitive assignment dependency.
+Written, controlled, nonlocal, array, by-name, string, and otherwise unsupported
+selectors remain conservative without recursive effect inference.
+
+## 0.167.0 — 2026-08-13 — static transitive assignment selectors
+
+A variable-free statically known conditional selector may now choose the
+preserving leaf of a transitive assignment dependency. Dynamic selectors with
+differing leaves and unsupported effects remain conservative.
+
+## 0.166.0 — 2026-08-13 — conditional transitive idempotence
+
+Transitive assignment dependencies now remain stable when every leaf of a
+conditional expression is the same bare scalar, even with a dynamic selector.
+Differing leaves and computed or cyclic dependency effects still fail closed.
+
+## 0.165.0 — 2026-08-13 — transitive idempotent assignment dependencies
+
+Checked static idempotent assignments may now depend on an ordinary local
+scalar that is itself only exactly self-assigned in the loop body. Computed or
+cross-assigned dependency writes, loop controls, and unsupported bindings still
+fail closed without recursive effect inference.
+
+## 0.164.0 — 2026-08-13 — stable idempotent assignment dependencies
+
+Checked static idempotent assignments may now reference known ordinary local
+numeric or boolean scalars that are never assignment or loop-control targets
+in the body. Written, controlled, global, array, by-name, string, unknown, and
+non-matching dependencies remain conservative.
+
+## 0.163.0 — 2026-08-13 — checked static idempotent assignments
+
+Capped `while` body-effect analysis now recognizes a self-only static numeric
+or boolean expression as idempotent when its checked value exactly matches the
+tracked scalar. Expressions with any other dependency, unknown values,
+non-finite reals, strings, arrays, globals, and by-name targets fail closed.
+
+## 0.162.0 — 2026-08-13 — stable conditional assignment selectors
+
+Capped `while` body-effect analysis may now select a conditional assignment
+leaf using a statically known predicate over local boolean, integer, and real
+scalars that the body does not change. Written, controlled, global, array,
+by-name, string, and otherwise unknown selector dependencies fail closed.
+
+## 0.161.0 — 2026-08-13 — static conditional assignment effects
+
+Capped `while` body-effect analysis now examines only the selected leaf of a
+variable-free statically known conditional assignment. A selected exact scalar
+self-assignment preserves the dependency; a selected changing leaf and dynamic
+selectors with differing leaves remain conservative.
+
+## 0.160.0 — 2026-08-13 — conditional self-assignment dependencies
+
+Capped `while` body-effect analysis now recognizes a conditional assignment as
+idempotent when both leaves are the same bare scalar. Differing or computed
+leaves remain conservative.
+
+## 0.159.0 — 2026-08-13 — idempotent while-predicate dependencies
+
+Capped `while` body-effect analysis now treats an exact scalar self-assignment
+as preserving a static body-predicate dependency. Computed assignments and
+nested controlled variables remain conservative.
+
+## 0.158.0 — 2026-08-13 — stable standard-function while predicates
+
+Capped `while` body-effect analysis now permits supported deterministic
+standard functions to wrap stable scalar predicate dependencies. User-shadowed
+and unsupported calls remain conservative.
+
+## 0.157.0 — 2026-08-13 — stable scalar while predicates
+
+Capped `while` dependency analysis now selects a body branch controlled by a
+statically known predicate over local boolean, integer, and real scalars when
+an all-path scan proves the body never writes any dependency. Written, global,
+array, by-name, controlled, string, and otherwise unknown dependencies remain
+conservative.
+
+## 0.156.0 — 2026-08-13 — composed stable conditional while effects
+
+Capped `while` dependency analysis now selects a body branch controlled by a
+statically known boolean composition when every referenced selector is a local
+bare boolean that the whole body never writes. Mixed, written, nonlocal, array,
+by-name, and otherwise unknown selector sets remain conservative.
+
 ## 0.155.0 — 2026-08-13 — stable conditional while effects
 
 Capped `while` dependency analysis now selects a body branch controlled by a

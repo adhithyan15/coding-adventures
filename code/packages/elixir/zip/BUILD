@@ -1,1 +1,1 @@
-cd ../lzss && mix deps.get --quiet && cd ../zip && mix deps.get --quiet && mix test --cover
+cd ../lzss && mix deps.get --quiet && cd ../zip && mix deps.get --quiet && mix format --check-formatted && MIX_ENV=test mix compile --warnings-as-errors && mix test --cover

@@ -15,6 +15,21 @@ constructs typed host-lifecycle requests, checks response versions and IDs, and
 retains stable remote error codes without exposing remote details through its
 diagnostic display.
 
+`wire_host_pipeline` and `unwire_host_pipeline` are independently authorized
+session operations. For either mutation, the API constructs Trust Checker
+context from the protocol request ID and the authenticated session's stable
+requester identity; request JSON cannot supply or override that identity. The
+wire request carries the exact registered package identity, a lowercase-hex
+UUID-v7 pipeline ID, a lowercase-hex agent ID, canonical named channel
+directions and UUIDs, and optional bounded Level 1 model settings. The control
+plane then performs exact-resource Trust Checker authorization before durable
+pipeline claims or bindings can change.
+
+Successful wire responses return the complete canonical binding and its
+revision. Unwire is idempotent and reports whether a binding existed, returning
+the removed binding when it did. All nested objects reject duplicate, missing,
+or unknown fields, and typed client calls construct the matching schema.
+
 `reload_host` is separately authorized from registration. It can atomically
 replace package identity only after stopped durable intent and fresh inactive
 supervisor evidence; a running replacement is launched by later reconciliation.

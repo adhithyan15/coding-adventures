@@ -1,0 +1,62 @@
+% ============================================================================
+% mammal-origin — for each Australian mammal in animal-classes.adj, whether
+% it is introduced (non-native) or marsupial, as the SAME Australian Museum
+% spans also state (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `animal-classes.adj`
+% (`animal_class(animal, class)`, WHICH vertebrate class an animal belongs
+% to — cat, kangaroo, fox, rabbit, bandicoot, quoll, koala are all just
+% `mammal`). That table's own header already quotes, verbatim, two
+% Australian Museum spans that split those same seven mammals into two
+% disjoint origin groups — a distinction the one-class-per-animal schema had
+% no room for:
+%
+%   "introduced mammals such as cats, foxes and rabbits"
+%     → cat, fox, rabbit are INTRODUCED (non-native) mammals.
+%
+%   "marsupials like kangaroos, bandicoots, quolls and the Koala"
+%     → kangaroo, bandicoot, quoll, koala are MARSUPIAL mammals.
+%
+% Recall is a binding query:
+%
+%     ? mammal_origin(kangaroo, $Origin)   % marsupial
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation `mammal_origin(animal,
+% origin)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the origin WITH its source, on the CPU,
+% with zero model calls. All seven mammals `animal-classes.adj` ships have an
+% origin stated in this SAME cited span, so this sibling covers the full
+% seven-mammal domain with no abstention. The query also runs BACKWARD —
+% bind an origin and recall which mammals share it:
+%
+%     ? mammal_origin($Animal, introduced)
+%       % cat ; fox ; rabbit
+%
+% Provenance: reproduces, byte-for-byte, the SAME two Australian Museum
+% spans already quoted inside `animal-classes.adj`'s own header — no new
+% WebFetch, only a different schema decoding the origin half of each
+% already-verified quote. `trust authoritative` — the same tier
+% `animal-classes.adj` already carries (Australian Museum, a natural-history
+% museum and primary reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table mammal_origin {
+    columns animal, origin
+
+    row (cat, introduced)        % Australian Museum: "introduced mammals such as cats, foxes and rabbits"
+    row (fox, introduced)        % Australian Museum: "introduced mammals such as cats, foxes and rabbits"
+    row (rabbit, introduced)     % Australian Museum: "introduced mammals such as cats, foxes and rabbits"
+    row (kangaroo, marsupial)    % Australian Museum: "marsupials like kangaroos, bandicoots, quolls and the Koala"
+    row (bandicoot, marsupial)   % Australian Museum: "marsupials like kangaroos, bandicoots, quolls and the Koala"
+    row (quoll, marsupial)       % Australian Museum: "marsupials like kangaroos, bandicoots, quolls and the Koala"
+    row (koala, marsupial)       % Australian Museum: "marsupials like kangaroos, bandicoots, quolls and the Koala"
+
+    source "introduced mammals such as cats, foxes and rabbits"
+    locator "https://australian.museum/learn/animals/mammals/"
+    trust authoritative
+
+    cites "marsupials like kangaroos, bandicoots, quolls and the Koala" locator "https://australian.museum/learn/animals/mammals/"
+}

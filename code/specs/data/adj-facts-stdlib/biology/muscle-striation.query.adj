@@ -1,0 +1,21 @@
+% ============================================================================
+% muscle-striation.query — worked recall queries against
+% muscle-striation.adj (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind `no`,
+% find the one non-striated type), and a full-domain sweep demonstrating no
+% abstention across all three muscle-tissue types.
+% ============================================================================
+
+import "muscle-striation.adj"
+
+% Forward: is cardiac muscle striated?
+? muscle_striated(cardiac, $Striated)
+
+% Backward: which muscle type is NOT striated?
+? muscle_striated($Muscle, no)
+
+% Full-domain sweep: every muscle-tissue type this stdlib ships has a
+% striation fact on record -- no abstention.
+? muscle_striated(skeletal, $S1)
+? muscle_striated(smooth, $S2)

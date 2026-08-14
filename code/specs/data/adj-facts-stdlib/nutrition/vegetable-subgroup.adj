@@ -1,0 +1,58 @@
+% ============================================================================
+% vegetable-subgroup — which of USDA MyPlate's official vegetable subgroups
+% each shipped vegetable is listed under (adj-facts-stdlib, NUTRITION).
+% ============================================================================
+% A sibling to the already-shipped `food-groups.adj` (`food_group(food,
+% food_group)`, which sorts every vegetable into the SAME coarse `vegetables`
+% bucket). That table's own header already quotes, VERBATIM, a finer USDA
+% classification for the SAME five vegetables — MyPlate doesn't just call
+% them "vegetables", it lists each one under one of its named subgroups —
+% but the one-bucket-per-food schema had no room for it:
+%
+%   broccoli → dark_green
+%   spinach  → dark_green
+%   carrots  → red_and_orange
+%   tomatoes → red_and_orange
+%   corn     → starchy
+%     "broccoli and spinach are listed Dark-Green Vegetables; carrots and
+%      tomatoes are listed Red and Orange Vegetables; corn — "Corn, yellow
+%      or white" — is a listed Starchy Vegetable."
+%
+% Recall is a binding query:
+%
+%     ? vegetable_subgroup(broccoli, $Subgroup)   % dark_green
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation
+% `vegetable_subgroup(vegetable, subgroup)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% subgroup WITH its source, on the CPU, with zero model calls. Every
+% vegetable `food-groups.adj` ships has a subgroup in this SAME cited span,
+% so this sibling covers the full five-vegetable domain with no abstention.
+% The query also runs BACKWARD — bind a subgroup and recall which
+% vegetables belong to it:
+%
+%     ? vegetable_subgroup($Vegetable, dark_green)   % broccoli ; spinach
+%
+% Provenance: reproduces, byte-for-byte, the SAME USDA MyPlate span already
+% quoted inside `food-groups.adj`'s own header — no new WebFetch, only a
+% different schema decoding the subgroup half of that already-verified
+% quote. `trust authoritative` — the same tier `food-groups.adj` already
+% carries (USDA MyPlate, a primary U.S. government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vegetable_subgroup {
+    columns vegetable, subgroup
+
+    row (broccoli, dark_green)        % MyPlate: "broccoli and spinach are listed Dark-Green Vegetables"
+    row (spinach, dark_green)         % MyPlate: "broccoli and spinach are listed Dark-Green Vegetables"
+    row (carrots, red_and_orange)     % MyPlate: "carrots and tomatoes are listed Red and Orange Vegetables"
+    row (tomatoes, red_and_orange)    % MyPlate: "carrots and tomatoes are listed Red and Orange Vegetables"
+    row (corn, starchy)               % MyPlate: "corn — "Corn, yellow or white" — is a listed Starchy Vegetable"
+
+    source "broccoli and spinach are listed Dark-Green Vegetables; carrots and tomatoes are listed Red and Orange Vegetables; corn is a listed Starchy Vegetable"
+    locator "https://www.myplate.gov/eat-healthy/vegetables"
+    trust authoritative
+}

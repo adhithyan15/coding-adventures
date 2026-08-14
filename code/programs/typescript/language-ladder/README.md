@@ -729,6 +729,94 @@ around the lower bowl without lifting. RussianIrina demonstrates that one-run
 school hand at 01:33–01:38; the Noto Sans Cyrillic fit preserves its
 baseline-to-upper-loop-to-lower-bowl order while routing the cursive ascender
 through the printed glyph's compact upper bowl and straight left stem.
+The two-frame Cyrillic **г** filmstrip climbs from the baseline through the
+upright and top bar, then retraces the top and descends without lifting. The
+same native-teacher lesson demonstrates a rounded two-hump cursive г at
+01:54–01:57; the Noto Sans Cyrillic fit preserves its zero-lift evidence while
+documenting that the isolated block glyph has no smaller exit arch.
+The two-frame Cyrillic **д** filmstrip circles its closed body counterclockwise,
+then descends through the right foot, sweeps across the base shelf, retraces the
+left foot, and finishes rightward without lifting. The same lesson demonstrates
+a looped cursive д at 02:14–02:19; the Noto Sans Cyrillic fit preserves its
+body-before-descender order and zero-lift evidence while documenting that the
+isolated block glyph has a shelf and two feet instead of a descender loop.
+The two-frame Cyrillic **е** filmstrip curves around the upper bowl and sweeps
+right through the middle, then reverses through the junction and continues
+counterclockwise around the lower bowl without lifting. The same lesson
+demonstrates the tall looped school hand at 02:26–02:30; the Noto Sans Cyrillic
+fit preserves its zero-lift upper-loop-to-middle-to-lower-bowl order while
+routing it through the compact printed glyph's long middle bar.
+The four-frame Cyrillic **ё** filmstrip completes that same joined body, then
+lifts for the left dot and lifts again for the right dot. The native-teacher
+lesson demonstrates this body-before-left-dot-before-right-dot order at
+02:51–02:56; the Noto Sans Cyrillic fit preserves its two-lift evidence while
+tracing the compact printed e body and both circular dots.
+The two-frame Cyrillic **ж** filmstrip traces the left wings and rises through
+the centre, then retraces the central upright and continues through the right
+wings without lifting. The native-teacher lesson demonstrates its rounded
+left-to-centre-to-right school-hand order at 03:16–03:21; the Noto Sans Cyrillic
+fit preserves that zero-lift evidence while tracing the printed glyph's straight
+central upright and four diagonal arms.
+The two-frame Cyrillic **з** filmstrip circles the smaller upper lobe and
+descends through the middle, then continues around the larger lower lobe and
+finishes at the lower right without lifting. The native-teacher lesson
+demonstrates its joined upper-lobe-to-lower-lobe school-hand order at
+03:34–03:39; the Noto Sans Cyrillic fit preserves that zero-lift evidence while
+tracing the compact printed double-lobe glyph and records that the printed form
+omits the school hand's rising exit join.
+The three-frame Cyrillic **и** filmstrip descends the left stem, rises through
+the joined diagonal, then descends the right stem without lifting. The native-
+teacher lesson demonstrates its rounded left-stem-to-diagonal-to-right-stem
+school-hand order at 03:56–04:02; the Noto Sans Cyrillic fit preserves that
+zero-lift evidence while tracing the printed backwards-N glyph and records that
+the printed form omits the school hand's entry and exit joins.
+The four-frame Cyrillic **й** filmstrip completes the same joined body as **и**,
+then lifts once and draws the breve above from left to right as one dipped arc.
+The native-teacher lesson demonstrates that body-before-breve order at
+04:17–04:24; the Noto Sans Cyrillic fit preserves the one-lift evidence and
+left-to-right breve direction while tracing the printed backwards-N body and
+separate curved mark.
+The three-frame Cyrillic **к** filmstrip descends the left stem, rises through
+the upper arm and returns to the middle, then continues through the lower arm
+without lifting. The native-teacher lesson demonstrates its looped
+stem-to-upper-arm-to-lower-arm school-hand order at 04:45–04:51; the Noto Sans
+Cyrillic fit preserves that zero-lift evidence while tracing the printed
+vertical and two angular diagonals and records the source's rounded upper loop
+and entry and exit joins.
+The three-frame Cyrillic **л** filmstrip curves from the baseline hook up the
+left leg, sweeps along the top shoulder, then descends the right stem without
+lifting. The native-teacher lesson demonstrates its pointed
+hooked-left-leg-to-apex-to-right-leg school-hand order at 05:06–05:10; the Noto
+Sans Cyrillic fit preserves that zero-lift evidence while tracing the printed
+curved left leg, horizontal top shoulder, and straight right stem and records
+the source's slanted right leg and entry and exit joins.
+The four-frame Cyrillic **м** filmstrip rises through the left stem, descends to
+the central valley, rises to the second apex, then descends the right stem
+without lifting. The native-teacher lesson demonstrates its rounded two-arch
+school-hand order at 05:26–05:31; the Noto Sans Cyrillic fit preserves that
+zero-lift evidence while tracing the printed straight upright stems and deep
+central V and records the source's entry and exit joins.
+The three-frame Cyrillic **н** filmstrip descends the left stem, retraces to the
+middle bridge and rises to the upper right, then descends the right stem without
+lifting. The native-teacher lesson demonstrates its rounded
+left-stem-to-middle-bridge-to-right-stem school-hand order at 05:47–05:52; the
+Noto Sans Cyrillic fit preserves that zero-lift evidence while tracing the
+printed straight vertical stems and horizontal middle bar and records the
+source's rounded bridge and entry and exit joins.
+The two-frame Cyrillic **о** filmstrip curves left over the top and descends the
+left side, then sweeps through the bottom and rises along the right side to
+close without lifting. The native-teacher lesson demonstrates its
+counterclockwise upper-right-to-left-side-to-bottom-to-right-side school-hand
+order at 05:59–06:03; the Noto Sans Cyrillic fit preserves that zero-lift
+evidence while tracing the printed wider upright oval and records the source's
+taller, slightly slanted proportions.
+The three-frame Cyrillic **п** filmstrip descends the left stem, retraces to the
+top shoulder and sweeps right, then descends the right stem without lifting.
+The native-teacher lesson demonstrates its rounded
+left-stem-to-top-shoulder-to-right-stem school-hand order at 06:26–06:31; the
+Noto Sans Cyrillic fit preserves that zero-lift evidence while tracing the
+printed squared arch, straight uprights, and horizontal top bar and records the
+source's entry and exit joins.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

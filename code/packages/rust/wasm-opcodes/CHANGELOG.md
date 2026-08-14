@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-08-13 - sign-extension opcodes (WASM03)
+
+### Added
+
+- The 5 single-byte opcodes from the "sign-extension operators" proposal
+  (widely implemented, MVP-adjacent, still single-byte unlike later
+  0xFC-prefixed proposals): `i32.extend8_s` (0xC0), `i32.extend16_s`
+  (0xC1), `i64.extend8_s` (0xC2), `i64.extend16_s` (0xC3),
+  `i64.extend32_s` (0xC4). Each pops one int, sign-extends its low N bits
+  to the full i32/i64 width, pushes one int -- category `"conversion"`,
+  matching every other unary numeric conversion already in the table.
+- 1 new unit test (`test_sign_extension_opcodes`) round-tripping all 5 by
+  both byte and name; the existing `test_conversions_stack_effects`
+  automatically covers their pop=1/push=1/no-immediates invariant since
+  they share the `"conversion"` category.
+
+### Not added (deliberately)
+
+- The same proposal's 8 `trunc_sat` opcodes are NOT in this table -- they
+  use a two-byte `0xFC <sub-opcode>` encoding this crate's single-byte
+  `OpcodeInfo`/`get_opcode(byte: u8)` model doesn't fit (consistent with
+  this crate's existing, pre-2.0 scoping decision to leave `0xFC`-prefixed
+  opcodes to their callers -- see the module doc comment). `wasm-wast-parser`
+  and `wasm-execution` special-case the `0xFC` prefix directly, the same
+  way they already did for bulk-memory's `memory.copy`/`memory.fill`.
+
+### Fixed (also this release, no version-worthy behavior change here)
+
+- `Cargo.toml`'s `version` had drifted to `0.1.0` while this changelog's
+  last real entry was already `0.2.0` -- corrected to continue from the
+  changelog's actual history, not a code change.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

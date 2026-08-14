@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 248,
+  "title": "¡Qué Grande! --- The Same Word, Exclaiming",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:131244a54a8cd9d3",
+  "lessons": [
+    {
+      "id": "ES-C64-que-grande",
+      "sequence": 2475,
+      "title": "¡Qué grande! — the same word, exclaiming",
+      "headword": "¡Qué grande!",
+      "romanization": "¡Qué grande!",
+      "gloss": "how big! — the asking word doing a second job, keeping its accent because it is still the word carrying the force",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9656b52009a60c90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Qué es esto? asks. And you have had the upside-down exclamation mark since the writing chapters, with nothing much to put between the pair."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here is what goes there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: qué in front of an adjective",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¡Qué grande! — How big! ¡Qué bien! — How good! / Great!"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No verb needed, nothing else needed. Qué plus an adjective or an adverb, between the two marks, and you have said something with force."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "¡Qué bien! in particular is worth having on the tip of your tongue. It is what Spanish says when English says nice! or great!, and it costs two words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the accent. It is there in ¿qué? and it is here in ¡qué!, and by now you know why: that mark has never been about questions. It marks the word carrying the force of the sentence."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You saw the same thing when a reported question kept its accent inside a sentence with no question marks at all. Asking and exclaiming are two jobs, and the accent is the one thing they share."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Plain que — no accent — is the joint you use for reporting and for relative clauses. It carries nothing, so it is marked with nothing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¡Qué grande!, ¡Qué bien!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¡Qué grande!*, *¡Qué bien!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿qué? then ¡qué!, and hear that only the frame changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿qué?* then *¡qué!*, and hear that only the frame changed]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C64-que-grande-say",
+              "prompt": "Somebody shows you something enormous. React, in two words.",
+              "assesses": [
+                "ES-GRAMMAR-EXCLAMATIVE-QUE"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "que grande",
+                "¡que grande!"
+              ],
+              "feedback": {
+                "correct": "Two marks, two words.",
+                "incorrect": "Que grande!"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C64-que-grande-good",
+              "prompt": "Say the Spanish for great! or nice!",
+              "assesses": [
+                "ES-GRAMMAR-EXCLAMATIVE-QUE"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "que bien",
+                "¡que bien!"
+              ],
+              "feedback": {
+                "correct": "Worth having ready.",
+                "incorrect": "Que bien!"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C64-que-grande-accent",
+              "prompt": "What has that accent always marked -- questions, or something else?",
+              "assesses": [
+                "ES-GRAMMAR-QUESTION-ACCENT"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "the word carrying the force",
+                "not questions; the word doing the work"
+              ],
+              "feedback": {
+                "correct": "Which is why it survives into exclamations and reports.",
+                "incorrect": "The word carrying the force, not the question."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows qué in an exclamation? (An adjective or an adverb — no verb needed.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And does it keep its accent? (Yes — it is still the word doing the work.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

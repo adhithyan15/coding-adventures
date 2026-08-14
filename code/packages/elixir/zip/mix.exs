@@ -4,7 +4,7 @@ defmodule CodingAdventures.Zip.MixProject do
   def project do
     [
       app: :coding_adventures_zip,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -18,7 +18,8 @@ defmodule CodingAdventures.Zip.MixProject do
 
   defp deps do
     [
-      {:coding_adventures_lzss, path: "../lzss"}
+      {:coding_adventures_lzss, path: "../lzss"},
+      {:jason, "~> 1.4", only: :test}
     ]
   end
 end

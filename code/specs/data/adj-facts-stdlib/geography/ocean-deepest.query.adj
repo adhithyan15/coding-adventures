@@ -1,0 +1,20 @@
+% ============================================================================
+% ocean-deepest.query.adj — a worked recall over the geography
+% ocean-deepest library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which ocean is the
+% deepest?": it states no geography fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `ocean_is_deepest` rows and returns the depth superlative +
+% the table's source/locator/trust. An ocean the cited span gives no depth
+% superlative for abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ocean-deepest.query.adj
+% ============================================================================
+
+import "ocean-deepest.adj"
+
+? ocean_is_deepest(pacific, $Superlative)     % expect deepest
+? ocean_is_deepest($Ocean, deepest)           % reverse bind — expect pacific
+? ocean_is_deepest(atlantic, $Superlative)    % expect abstain — the cited sentence names no depth superlative for the Atlantic

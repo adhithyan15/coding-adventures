@@ -900,18 +900,37 @@ backend immediately) come before the enabler-dependent items.
   first integer or finite binary64 control value whose predicate is false when
   its value and predicate reference only the control and statically known
   ordinary local scalars that
-  the body does not change. Read-only body uses and exact scalar
-  self-assignments are permitted; computed assignment targets and nested
+  the body does not change. Read-only body uses, exact scalar
+  self-assignments, checked numeric or boolean expressions that equal the
+  tracked scalar and otherwise reference only known ordinary locals that are
+  never changed by the body; an exact bare self-assignment does not count as a
+  change; conditional dependency assignments whose leaves are all that same
+  bare scalar are likewise preserving even with a dynamic selector. A
+  variable-free statically known selector, or a known predicate over unchanged
+  ordinary local boolean, integer, and real scalars, may instead choose one
+  preserving leaf. Computed, dynamically selected differing, written-selector,
+  and cross-assigned dependency writes remain conservative without recursive
+  effect inference. Conditional
+  assignments whose leaves are all that same bare scalar are permitted. A
+  variable-free statically known
+  conditional assignment scans only its selected leaf, as may a statically
+  known predicate over unchanged ordinary local boolean, integer, and real scalars, so an
+  unselected changing leaf does not invalidate an exact selected
+  self-assignment; computed assignment targets and nested
   controlled variables count as writes. A variable-free static body condition,
-  or a statically known bare boolean local that the body never writes, scans
-  only its selected branch; dynamic, written, nonlocal, and compound selectors
-  scan both paths. The proof is limited to
+  or a statically known predicate whose referenced dependencies are all local
+  boolean, integer, or real scalars that the body never changes, scans only its
+  selected branch; exact and equal-leaf conditional scalar self-assignments
+  preserve such dependencies;
+  dynamic, computed-written, nonlocal, array, by-name, controlled,
+  string, and otherwise unknown dependency sets scan both paths. The proof is
+  limited to
   4,096 iterations; globals, arrays, by-name values, written dependencies,
   unknown expressions, rounded-away real progress, and nonterminating or
   longer loops leave the final controlled value unknown. Exact supported
   standard-function calls may wrap these dependencies in the value or
-  predicate; user declarations still shadow the built-ins and make that call
-  dynamic.
+  loop predicate or a statically selected body predicate; user declarations
+  still shadow the built-ins and make that call dynamic.
   Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;

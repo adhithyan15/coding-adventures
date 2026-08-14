@@ -1,6 +1,6 @@
 /** Tests for @coding-adventures/sir-runtime-core. */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import * as sir from "../src/index.js";
 import { SirError } from "@coding-adventures/sir-runtime-exceptions";
 
@@ -88,6 +88,70 @@ describe("predicates and display", () => {
     expect(sir.toDisplay(true)).toBe("#t");
   });
 
+  describe("display convention: APL high-minus + NDArray (SIR22)", () => {
+    // An APL-sourced program selects `setDisplayConvention("apl")` so a
+    // negative number renders with APL's own high-minus glyph (`¯`, not
+    // ASCII `-`) and an `NDArray`-shaped value (the `{ shape, data }`
+    // `@coding-adventures/sir-runtime-array` constructs — duck-typed here,
+    // never imported, since this package has no dependency on that one)
+    // renders the way a real APL session echoes a bare auto-printed
+    // result. Restore the default afterwards so module state does not
+    // leak into other tests.
+    afterEach(() => {
+      sir.setDisplayConvention("lisp");
+    });
+
+    it("negative and non-negative numbers", () => {
+      sir.setDisplayConvention("apl");
+      expect(sir.toDisplay(-3)).toBe("¯3");
+      expect(sir.toDisplay(3)).toBe("3");
+      expect(sir.toDisplay(0)).toBe("0");
+      expect(sir.toDisplay(-3.5)).toBe("¯3.5");
+    });
+
+    it("the default (non-apl) convention keeps ASCII minus", () => {
+      expect(sir.toDisplay(-3)).toBe("-3");
+    });
+
+    it("rank-0 (scalar) NDArray", () => {
+      sir.setDisplayConvention("apl");
+      const scalar = { shape: [], data: Float64Array.of(6) };
+      expect(sir.toDisplay(scalar as unknown as sir.Val)).toBe("6");
+    });
+
+    it("rank-1 (vector) NDArray, including a negative element", () => {
+      sir.setDisplayConvention("apl");
+      const vec = { shape: [3], data: Float64Array.of(1, -2, 3) };
+      expect(sir.toDisplay(vec as unknown as sir.Val)).toBe("1 ¯2 3");
+    });
+
+    it("an empty rank-1 NDArray prints as the empty string", () => {
+      sir.setDisplayConvention("apl");
+      const empty = { shape: [0], data: new Float64Array(0) };
+      expect(sir.toDisplay(empty as unknown as sir.Val)).toBe("");
+    });
+
+    it("rank-2 (matrix) NDArray, column-major storage rendered row-major", () => {
+      sir.setDisplayConvention("apl");
+      // A 2x3 matrix [[1,2,3],[4,5,6]] stored column-major:
+      // data[col*rows + row], rows=2 -> [1,4,2,5,3,6].
+      const matrix = {
+        shape: [2, 3],
+        data: Float64Array.of(1, 4, 2, 5, 3, 6),
+      };
+      expect(sir.toDisplay(matrix as unknown as sir.Val)).toBe("1 2 3\n4 5 6");
+    });
+
+    it("an NDArray-shaped value under the default convention is not duck-typed", () => {
+      // The NDArray branch is gated on the "apl" convention specifically —
+      // a non-APL-sourced program should never accidentally special-case
+      // an object that merely happens to have `shape`/`data` fields.
+      const scalar = { shape: [], data: Float64Array.of(6) };
+      expect(sir.toDisplay(scalar as unknown as sir.Val)).toBe(
+        String(scalar)
+      );
+    });
+  });
 });
 
 // SIR28 §7: the old `print`/`puts` functions (and their dedicated tests)

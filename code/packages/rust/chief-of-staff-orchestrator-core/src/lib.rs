@@ -10,8 +10,12 @@ use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::{
     ChannelDefinition, ChannelDefinitionStore, ChannelEndpointError,
 };
+use chief_of_staff_host_control_protocol::ChannelBindingAccess;
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::PackageKeyring;
+use chief_of_staff_pipeline_bindings::{
+    HostPipelineBinding, LoadedHostPipelineBinding, PipelineBindingError, PipelineBindingStore,
+};
 use chief_of_staff_process_supervisor::{
     HostLaunchBindingProvider, MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig,
     SessionIdSource,
@@ -89,6 +93,76 @@ pub trait ChannelWiringAuthorizer {
     ) -> Result<(), Self::Error>;
 }
 
+/// Exact durable host-binding mutation presented to a trust-checking adapter.
+#[derive(Clone, Copy, Debug)]
+pub enum PipelineWiringRequest<'a> {
+    /// Authorize creation of this complete immutable host launch authority.
+    Wire(&'a HostPipelineBinding),
+    /// Authorize removal of this current durable host launch authority.
+    Unwire(&'a HostPipelineBinding),
+}
+
+/// Stable operation represented by a pipeline wiring request.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PipelineWiringOperation {
+    /// Create one durable host launch binding.
+    Wire,
+    /// Remove one durable host launch binding.
+    Unwire,
+}
+
+impl<'a> PipelineWiringRequest<'a> {
+    /// Return the complete durable binding presented for authorization.
+    pub fn binding(self) -> &'a HostPipelineBinding {
+        match self {
+            Self::Wire(binding) | Self::Unwire(binding) => binding,
+        }
+    }
+
+    /// Return the exact binding operation.
+    pub fn operation(self) -> PipelineWiringOperation {
+        match self {
+            Self::Wire(_) => PipelineWiringOperation::Wire,
+            Self::Unwire(_) => PipelineWiringOperation::Unwire,
+        }
+    }
+}
+
+/// Injected privilege and human-approval boundary for pipeline launch authority.
+pub trait PipelineWiringAuthorizer {
+    /// Concrete authorization failure retained for programmatic handling.
+    type Error;
+
+    /// Approve this exact mutation or fail before any binding-store change.
+    fn authorize_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        request: PipelineWiringRequest<'_>,
+    ) -> Result<(), Self::Error>;
+}
+
+/// Authoritative privilege lookup for one exact pipeline-binding mutation.
+pub trait PipelinePrivilegeResolver {
+    /// Concrete lookup failure retained for programmatic recovery.
+    type Error;
+
+    /// Resolve the maximum current tier of this exact pipeline binding.
+    ///
+    /// Implementations must include every referenced channel and selected model
+    /// or package policy in this result; the exact binding is separately bound
+    /// into the approval resource fingerprint.
+    fn pipeline_tier(
+        &mut self,
+        request: PipelineWiringRequest<'_>,
+    ) -> Result<PrivilegeTier, Self::Error>;
+
+    /// Resolve the current tier assigned to the bound agent identity.
+    fn pipeline_agent_tier(
+        &mut self,
+        agent_id: &chief_of_staff_channel_endpoints::AgentId,
+    ) -> Result<PrivilegeTier, Self::Error>;
+}
+
 /// Authoritative privilege lookup for one exact channel mutation.
 pub trait ChannelPrivilegeResolver {
     /// Concrete lookup failure retained for programmatic recovery.
@@ -116,6 +190,34 @@ pub enum TrustChannelWiringError<ResolverError, ProviderError> {
     Request(TrustRequestError),
     /// Approval was denied, timed out, too weak, or unavailable.
     Approval(TrustCheckerError<ProviderError>),
+}
+
+/// Fail-closed error from Trust Checker pipeline-binding authorization.
+#[derive(Debug)]
+pub enum TrustPipelineWiringError<ResolverError, ProviderError> {
+    /// Authoritative resource-tier resolution failed.
+    Resolver(ResolverError),
+    /// The resolved exact request violated a Trust Checker bound.
+    Request(TrustRequestError),
+    /// Approval was denied, timed out, too weak, or unavailable.
+    Approval(TrustCheckerError<ProviderError>),
+}
+
+impl<R, P> Display for TrustPipelineWiringError<R, P> {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Resolver(_) => "orchestrator-core: pipeline privilege resolution failed",
+            Self::Request(_) => "orchestrator-core: pipeline trust request invalid",
+            Self::Approval(_) => "orchestrator-core: pipeline approval failed",
+        })
+    }
+}
+
+impl<R, P> std::error::Error for TrustPipelineWiringError<R, P>
+where
+    R: std::error::Error + 'static,
+    P: std::error::Error + 'static,
+{
 }
 
 impl<R, P> Display for TrustChannelWiringError<R, P> {
@@ -209,6 +311,45 @@ where
     }
 }
 
+impl<P, R> PipelineWiringAuthorizer for TrustCheckingChannelWiring<P, R>
+where
+    P: ApprovalProvider,
+    R: PipelinePrivilegeResolver,
+{
+    type Error = TrustPipelineWiringError<R::Error, P::Error>;
+
+    fn authorize_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        request: PipelineWiringRequest<'_>,
+    ) -> Result<(), Self::Error> {
+        let binding = request.binding();
+        let resources = vec![
+            TrustResource::new(
+                pipeline_mutation_resource_id(request),
+                self.resolver
+                    .pipeline_tier(request)
+                    .map_err(TrustPipelineWiringError::Resolver)?,
+            )
+            .map_err(TrustPipelineWiringError::Request)?,
+            TrustResource::new(
+                agent_resource_id(binding.agent_id().as_bytes()),
+                self.resolver
+                    .pipeline_agent_tier(binding.agent_id())
+                    .map_err(TrustPipelineWiringError::Resolver)?,
+            )
+            .map_err(TrustPipelineWiringError::Request)?,
+        ];
+        let trust_request = context
+            .with_resources(resources)
+            .map_err(TrustPipelineWiringError::Request)?;
+        self.checker
+            .authorize(&trust_request)
+            .map(|_| ())
+            .map_err(TrustPipelineWiringError::Approval)
+    }
+}
+
 fn mutation_resource_id(request: ChannelWiringRequest<'_>) -> String {
     let operation = match request.operation() {
         ChannelWiringOperation::Create => "create",
@@ -217,6 +358,17 @@ fn mutation_resource_id(request: ChannelWiringRequest<'_>) -> String {
     format!(
         "channel:{operation}:sha256:{}",
         sha256_hex(&canonical_mutation_bytes(request))
+    )
+}
+
+fn pipeline_mutation_resource_id(request: PipelineWiringRequest<'_>) -> String {
+    let operation = match request.operation() {
+        PipelineWiringOperation::Wire => "wire",
+        PipelineWiringOperation::Unwire => "unwire",
+    };
+    format!(
+        "pipeline:{operation}:sha256:{}",
+        sha256_hex(&canonical_pipeline_mutation_bytes(request))
     )
 }
 
@@ -245,6 +397,46 @@ fn canonical_mutation_bytes(request: ChannelWiringRequest<'_>) -> Vec<u8> {
         chief_of_staff_channel_endpoints::ChannelLifecycle::Active => 0,
         chief_of_staff_channel_endpoints::ChannelLifecycle::Destroyed => 1,
     });
+    bytes
+}
+
+fn canonical_pipeline_mutation_bytes(request: PipelineWiringRequest<'_>) -> Vec<u8> {
+    let binding = request.binding();
+    let registration = binding.registration();
+    let mut bytes = b"chief-pipeline-wiring-v1\0".to_vec();
+    bytes.push(match request.operation() {
+        PipelineWiringOperation::Wire => 0,
+        PipelineWiringOperation::Unwire => 1,
+    });
+    bytes.extend_from_slice(binding.pipeline_id().as_bytes());
+    put_bounded_bytes(&mut bytes, registration.host_name().as_str().as_bytes());
+    put_bounded_bytes(&mut bytes, registration.package_path().as_str().as_bytes());
+    bytes.extend_from_slice(registration.package_hash());
+    bytes.push(match registration.restart_policy() {
+        chief_of_staff_service_registry::RestartPolicy::Always => 0,
+        chief_of_staff_service_registry::RestartPolicy::OnFailure => 1,
+        chief_of_staff_service_registry::RestartPolicy::Never => 2,
+    });
+    put_bounded_bytes(&mut bytes, binding.agent_id().as_bytes());
+    let launch = binding.launch_bindings();
+    bytes.extend_from_slice(&(launch.channels().len() as u32).to_be_bytes());
+    for channel in launch.channels() {
+        put_bounded_bytes(&mut bytes, channel.name().as_bytes());
+        bytes.push(match channel.access() {
+            ChannelBindingAccess::Read => 0,
+            ChannelBindingAccess::Write => 1,
+        });
+        bytes.extend_from_slice(&channel.channel_id());
+    }
+    match launch.level_one_model() {
+        None => bytes.push(0),
+        Some(model) => {
+            bytes.push(1);
+            put_bounded_bytes(&mut bytes, model.model().as_bytes());
+            bytes.extend_from_slice(&model.temperature().to_bits().to_be_bytes());
+            bytes.extend_from_slice(&model.max_tokens().to_be_bytes());
+        }
+    }
     bytes
 }
 
@@ -298,8 +490,12 @@ pub enum OrchestratorCoreError<SupervisorError, AuthorizationError> {
     },
     /// Durable channel topology validation, storage, or CAS failure.
     Channel(ChannelEndpointError),
+    /// Durable pipeline launch binding validation, storage, or CAS failure.
+    Pipeline(PipelineBindingError),
     /// The injected trust boundary denied or failed a topology mutation.
     Authorization(AuthorizationError),
+    /// The injected trust boundary denied or failed a pipeline binding mutation.
+    PipelineAuthorization(AuthorizationError),
     /// Deregistration was requested before durable intent became stopped.
     HostDesiredRunning(HostName),
     /// Deregistration was requested while supervisor authority remained active.
@@ -322,8 +518,12 @@ impl<S, A> Display for OrchestratorCoreError<S, A> {
                 )
             }
             Self::Channel(_) => formatter.write_str("orchestrator-core: channel failure"),
+            Self::Pipeline(_) => formatter.write_str("orchestrator-core: pipeline binding failure"),
             Self::Authorization(_) => {
                 formatter.write_str("orchestrator-core: channel authorization failed")
+            }
+            Self::PipelineAuthorization(_) => {
+                formatter.write_str("orchestrator-core: pipeline authorization failed")
             }
             Self::HostDesiredRunning(host_name) => write!(
                 formatter,
@@ -613,6 +813,60 @@ where
     }
 }
 
+impl<S, A> OrchestratorCore<S, A>
+where
+    S: HostSupervisor,
+    A: PipelineWiringAuthorizer,
+{
+    /// Authorize then idempotently create one exact durable host pipeline binding.
+    pub fn wire_host_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        binding: &HostPipelineBinding,
+    ) -> Result<LoadedHostPipelineBinding, OrchestratorCoreError<S::Error, A::Error>> {
+        self.authorizer
+            .authorize_pipeline(context, PipelineWiringRequest::Wire(binding))
+            .map_err(OrchestratorCoreError::PipelineAuthorization)?;
+        PipelineBindingStore::new(self.backend.as_ref())
+            .wire(binding)
+            .map_err(OrchestratorCoreError::Pipeline)
+    }
+
+    /// Load durable launch authority without treating it as current process authority.
+    pub fn load_host_pipeline(
+        &self,
+        host_name: &HostName,
+    ) -> Result<Option<LoadedHostPipelineBinding>, OrchestratorCoreError<S::Error, A::Error>> {
+        PipelineBindingStore::new(self.backend.as_ref())
+            .load(host_name)
+            .map_err(OrchestratorCoreError::Pipeline)
+    }
+
+    /// Authorize then revision-CAS remove the current host pipeline binding.
+    ///
+    /// Absence is an idempotent no-op and therefore requires no approval.
+    pub fn unwire_host_pipeline(
+        &mut self,
+        context: &TrustRequestContext,
+        host_name: &HostName,
+    ) -> Result<Option<HostPipelineBinding>, OrchestratorCoreError<S::Error, A::Error>> {
+        let store = PipelineBindingStore::new(self.backend.as_ref());
+        let Some(loaded) = store
+            .load(host_name)
+            .map_err(OrchestratorCoreError::Pipeline)?
+        else {
+            return Ok(None);
+        };
+        self.authorizer
+            .authorize_pipeline(context, PipelineWiringRequest::Unwire(loaded.binding()))
+            .map_err(OrchestratorCoreError::PipelineAuthorization)?;
+        store
+            .unwire(&loaded)
+            .map_err(OrchestratorCoreError::Pipeline)?;
+        Ok(Some(loaded.binding().clone()))
+    }
+}
+
 /// Production process-supervised specialization of the transport-independent core.
 pub type ProcessOrchestratorCore<A> = OrchestratorCore<ProcessHostSupervisor, A>;
 
@@ -651,7 +905,11 @@ mod tests {
     use chief_of_staff_channel_endpoints::{
         AgentId, ChannelLifecycle, OriginatorIdentity, ReceiverIdentity,
     };
+    use chief_of_staff_host_control_protocol::{
+        ChannelBinding, LaunchBindings, LevelOneModelBinding,
+    };
     use chief_of_staff_host_data_plane::UnavailableHostDataPlaneDispatcher;
+    use chief_of_staff_pipeline_bindings::PipelineId;
     use chief_of_staff_process_supervisor::{
         DenyHostLaunchBindings, HostProgram, UuidV7SessionIdSource,
     };
@@ -757,6 +1015,8 @@ mod tests {
     enum WiringEvent {
         Create(ChannelId),
         Destroy(ChannelId),
+        Wire(PipelineId),
+        Unwire(PipelineId),
     }
 
     struct FakeAuthorizer {
@@ -796,6 +1056,7 @@ mod tests {
 
     struct FixedTierResolver {
         channel: PrivilegeTier,
+        pipeline: PrivilegeTier,
         agents: BTreeMap<Vec<u8>, PrivilegeTier>,
         fail: bool,
     }
@@ -804,6 +1065,7 @@ mod tests {
         fn tier0() -> Self {
             Self {
                 channel: PrivilegeTier::Tier0,
+                pipeline: PrivilegeTier::Tier0,
                 agents: BTreeMap::new(),
                 fail: false,
             }
@@ -827,6 +1089,35 @@ mod tests {
         fn agent_tier(&mut self, agent_id: &AgentId) -> Result<PrivilegeTier, Self::Error> {
             if self.fail {
                 return Err(FakeError("private tier resolution detail"));
+            }
+            Ok(self
+                .agents
+                .get(agent_id.as_bytes())
+                .copied()
+                .unwrap_or(PrivilegeTier::Tier0))
+        }
+    }
+
+    impl PipelinePrivilegeResolver for FixedTierResolver {
+        type Error = FakeError;
+
+        fn pipeline_tier(
+            &mut self,
+            _request: PipelineWiringRequest<'_>,
+        ) -> Result<PrivilegeTier, Self::Error> {
+            if self.fail {
+                Err(FakeError("private pipeline tier resolution detail"))
+            } else {
+                Ok(self.pipeline)
+            }
+        }
+
+        fn pipeline_agent_tier(
+            &mut self,
+            agent_id: &AgentId,
+        ) -> Result<PrivilegeTier, Self::Error> {
+            if self.fail {
+                return Err(FakeError("private pipeline tier resolution detail"));
             }
             Ok(self
                 .agents
@@ -878,6 +1169,33 @@ mod tests {
         }
     }
 
+    impl PipelineWiringAuthorizer for FakeAuthorizer {
+        type Error = FakeError;
+
+        fn authorize_pipeline(
+            &mut self,
+            context: &TrustRequestContext,
+            request: PipelineWiringRequest<'_>,
+        ) -> Result<(), Self::Error> {
+            assert_eq!(context.request_id(), "wire-request");
+            let event = match request {
+                PipelineWiringRequest::Wire(binding) => WiringEvent::Wire(binding.pipeline_id()),
+                PipelineWiringRequest::Unwire(binding) => {
+                    WiringEvent::Unwire(binding.pipeline_id())
+                }
+            };
+            self.events
+                .lock()
+                .expect("authorization mutex poisoned")
+                .push(event);
+            if self.allow {
+                Ok(())
+            } else {
+                Err(FakeError("denied"))
+            }
+        }
+    }
+
     fn name(value: &str) -> HostName {
         HostName::new(value).expect("valid host name")
     }
@@ -899,6 +1217,10 @@ mod tests {
         ChannelId(bytes)
     }
 
+    fn pipeline_id(byte: u8) -> PipelineId {
+        PipelineId::new(channel_id(byte).0).expect("valid pipeline id")
+    }
+
     fn wiring_context() -> TrustRequestContext {
         TrustRequestContext::new("wire-request", "operator:local").unwrap()
     }
@@ -918,6 +1240,76 @@ mod tests {
             KeyEpoch(1),
         )
         .expect("valid channel definition")
+    }
+
+    fn pipeline_channels(
+        backend: &dyn StorageBackend,
+        agent_id: &AgentId,
+    ) -> (ChannelId, ChannelId) {
+        let read = channel_id(31);
+        let write = channel_id(32);
+        let store = ChannelDefinitionStore::new(backend);
+        store
+            .create(
+                &ChannelDefinition::new(
+                    read,
+                    OriginatorIdentity {
+                        agent_id: AgentId::new(b"request-source".to_vec()).unwrap(),
+                        public_key: [3; 32],
+                    },
+                    vec![ReceiverIdentity {
+                        agent_id: agent_id.clone(),
+                        public_key: [4; 32],
+                    }],
+                    200,
+                    KeyEpoch(1),
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        store
+            .create(
+                &ChannelDefinition::new(
+                    write,
+                    OriginatorIdentity {
+                        agent_id: agent_id.clone(),
+                        public_key: [5; 32],
+                    },
+                    vec![ReceiverIdentity {
+                        agent_id: AgentId::new(b"report-sink".to_vec()).unwrap(),
+                        public_key: [6; 32],
+                    }],
+                    201,
+                    KeyEpoch(1),
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        (read, write)
+    }
+
+    fn pipeline_binding(
+        pipeline_id: PipelineId,
+        registration: HostRegistration,
+        agent_id: AgentId,
+        channels: (ChannelId, ChannelId),
+        model: &str,
+    ) -> HostPipelineBinding {
+        HostPipelineBinding::new(
+            pipeline_id,
+            registration,
+            agent_id,
+            LaunchBindings::new(
+                vec![
+                    ChannelBinding::new("requests", ChannelBindingAccess::Read, channels.0 .0)
+                        .unwrap(),
+                    ChannelBinding::new("reports", ChannelBindingAccess::Write, channels.1 .0)
+                        .unwrap(),
+                ],
+                Some(LevelOneModelBinding::new(model, 0.25, 256).unwrap()),
+            )
+            .unwrap(),
+        )
     }
 
     fn core<A>(
@@ -1469,6 +1861,7 @@ mod tests {
         );
         let resolver = FixedTierResolver {
             channel: PrivilegeTier::Tier0,
+            pipeline: PrivilegeTier::Tier0,
             agents,
             fail: false,
         };
@@ -1526,6 +1919,7 @@ mod tests {
         let backend = Arc::new(InMemoryStorageBackend::new());
         let resolver = FixedTierResolver {
             channel: PrivilegeTier::Tier0,
+            pipeline: PrivilegeTier::Tier0,
             agents: BTreeMap::new(),
             fail: true,
         };
@@ -1584,6 +1978,198 @@ mod tests {
     }
 
     #[test]
+    fn pipeline_bindings_are_authorized_before_wire_and_unwire() {
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let mut core = core(
+            Arc::clone(&backend),
+            FakeSupervisor::default(),
+            FakeAuthorizer::allowing(Arc::clone(&events)),
+            Arc::new(TestClock::new([])),
+        );
+        let registration = registration("pipeline-host", 41);
+        core.register_host(registration.clone(), DesiredState::Stopped)
+            .unwrap();
+        let agent_id = AgentId::new(b"pipeline-agent".to_vec()).unwrap();
+        let channels = pipeline_channels(backend.as_ref(), &agent_id);
+        let binding = pipeline_binding(
+            pipeline_id(41),
+            registration.clone(),
+            agent_id,
+            channels,
+            "local/model",
+        );
+
+        let first = core
+            .wire_host_pipeline(&wiring_context(), &binding)
+            .unwrap();
+        let repeated = core
+            .wire_host_pipeline(&wiring_context(), &binding)
+            .unwrap();
+        assert_eq!(first, repeated);
+        assert_eq!(
+            core.load_host_pipeline(registration.host_name())
+                .unwrap()
+                .unwrap()
+                .binding(),
+            &binding
+        );
+        assert_eq!(
+            core.unwire_host_pipeline(&wiring_context(), registration.host_name())
+                .unwrap(),
+            Some(binding.clone())
+        );
+        assert_eq!(
+            core.unwire_host_pipeline(&wiring_context(), registration.host_name())
+                .unwrap(),
+            None
+        );
+        assert_eq!(
+            events
+                .lock()
+                .expect("authorization mutex poisoned")
+                .as_slice(),
+            [
+                WiringEvent::Wire(pipeline_id(41)),
+                WiringEvent::Wire(pipeline_id(41)),
+                WiringEvent::Unwire(pipeline_id(41)),
+            ]
+        );
+    }
+
+    #[test]
+    fn denied_pipeline_mutations_leave_bindings_and_claims_unchanged() {
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let registration = registration("denied-pipeline-host", 42);
+        let agent_id = AgentId::new(b"denied-pipeline-agent".to_vec()).unwrap();
+        ServiceRegistry::new(backend.as_ref())
+            .register(&HostEntry::registered(
+                registration.clone(),
+                DesiredState::Stopped,
+            ))
+            .unwrap();
+        let channels = pipeline_channels(backend.as_ref(), &agent_id);
+        let denied_binding = pipeline_binding(
+            pipeline_id(42),
+            registration.clone(),
+            agent_id.clone(),
+            channels,
+            "local/model",
+        );
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let mut denied = core(
+            Arc::clone(&backend),
+            FakeSupervisor::default(),
+            FakeAuthorizer::denying(Arc::clone(&events)),
+            Arc::new(TestClock::new([])),
+        );
+        assert!(matches!(
+            denied.wire_host_pipeline(&wiring_context(), &denied_binding),
+            Err(OrchestratorCoreError::PipelineAuthorization(FakeError(
+                "denied"
+            )))
+        ));
+        assert_eq!(
+            denied.load_host_pipeline(registration.host_name()).unwrap(),
+            None
+        );
+
+        let allowed_binding = pipeline_binding(
+            pipeline_id(43),
+            registration.clone(),
+            agent_id,
+            channels,
+            "local/model",
+        );
+        let mut allowed = core(
+            Arc::clone(&backend),
+            FakeSupervisor::default(),
+            FakeAuthorizer::allowing(Arc::new(Mutex::new(Vec::new()))),
+            Arc::new(TestClock::new([])),
+        );
+        allowed
+            .wire_host_pipeline(&wiring_context(), &allowed_binding)
+            .expect("denial must not leave an immutable channel claim");
+        assert!(matches!(
+            denied.unwire_host_pipeline(&wiring_context(), registration.host_name()),
+            Err(OrchestratorCoreError::PipelineAuthorization(FakeError(
+                "denied"
+            )))
+        ));
+        assert_eq!(
+            denied
+                .load_host_pipeline(registration.host_name())
+                .unwrap()
+                .unwrap()
+                .binding(),
+            &allowed_binding
+        );
+    }
+
+    #[test]
+    fn trust_checker_binds_exact_pipeline_authority_and_tiers() {
+        let registration = registration("trusted-pipeline-host", 44);
+        let agent_id = AgentId::new(b"trusted-pipeline-agent".to_vec()).unwrap();
+        let channels = (channel_id(44), channel_id(45));
+        let binding = pipeline_binding(
+            pipeline_id(44),
+            registration.clone(),
+            agent_id.clone(),
+            channels,
+            "local/model-a",
+        );
+        let mut agents = BTreeMap::new();
+        agents.insert(agent_id.as_bytes().to_vec(), PrivilegeTier::Tier1);
+        let resolver = FixedTierResolver {
+            channel: PrivilegeTier::Tier0,
+            pipeline: PrivilegeTier::Tier2,
+            agents,
+            fail: false,
+        };
+        let mut authorizer = TrustCheckingChannelWiring::new(
+            RecordingApprovalProvider::approving(ApprovalAssurance::Biometric),
+            resolver,
+        );
+        authorizer
+            .authorize_pipeline(&wiring_context(), PipelineWiringRequest::Wire(&binding))
+            .unwrap();
+        let (provider, _) = authorizer.into_parts();
+        let (request, requirement) = &provider.requests[0];
+        assert_eq!(request.effective_tier(), PrivilegeTier::Tier2);
+        assert_eq!(request.resources().len(), 2);
+        assert_eq!(
+            request.resources()[0].resource_id(),
+            pipeline_mutation_resource_id(PipelineWiringRequest::Wire(&binding))
+        );
+        assert_eq!(
+            request.resources()[1].resource_id(),
+            agent_resource_id(agent_id.as_bytes())
+        );
+        assert_eq!(
+            *requirement,
+            chief_of_staff_trust_checker::ApprovalRequirement::Biometric {
+                timeout: Duration::from_secs(30)
+            }
+        );
+
+        let changed_model = pipeline_binding(
+            binding.pipeline_id(),
+            registration,
+            agent_id,
+            channels,
+            "local/model-b",
+        );
+        assert_ne!(
+            pipeline_mutation_resource_id(PipelineWiringRequest::Wire(&binding)),
+            pipeline_mutation_resource_id(PipelineWiringRequest::Wire(&changed_model))
+        );
+        assert_ne!(
+            pipeline_mutation_resource_id(PipelineWiringRequest::Wire(&binding)),
+            pipeline_mutation_resource_id(PipelineWiringRequest::Unwire(&binding))
+        );
+    }
+
+    #[test]
     fn stable_errors_do_not_render_nested_payloads() {
         let host = name("agent-host");
         let errors: Vec<OrchestratorCoreError<FakeError, FakeError>> = vec![
@@ -1593,7 +2179,11 @@ mod tests {
                 source: FakeError("secret supervisor payload"),
             },
             OrchestratorCoreError::Channel(ChannelEndpointError::DefinitionNotFound),
+            OrchestratorCoreError::Pipeline(PipelineBindingError::ChannelUnavailable),
             OrchestratorCoreError::Authorization(FakeError("secret authorization payload")),
+            OrchestratorCoreError::PipelineAuthorization(FakeError(
+                "secret pipeline authorization payload",
+            )),
             OrchestratorCoreError::HostDesiredRunning(host.clone()),
             OrchestratorCoreError::HostStillActive(host),
             OrchestratorCoreError::ClockRegressed,

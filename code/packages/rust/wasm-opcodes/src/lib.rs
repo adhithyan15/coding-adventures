@@ -9,9 +9,13 @@
 //!
 //! A WebAssembly binary is a sequence of *sections*. The code section holds
 //! function bodies, each of which is a flat byte sequence of *instructions*.
-//! The first byte of every instruction is its **opcode** — a value 0x00–0xBF
-//! in WASM 1.0 (multi-byte opcodes via 0xFC prefix exist in later proposals,
-//! but are out of scope here).
+//! The first byte of every instruction is its **opcode** — a single-byte
+//! value in WASM 1.0's core range (0x00–0xBF) plus the widely-implemented,
+//! still-single-byte "sign-extension operators" proposal (0xC0–0xC4). True
+//! multi-byte opcodes via the 0xFC prefix (the "non-trapping float-to-int
+//! conversions" proposal, SIMD, etc.) are out of scope for this table —
+//! callers that need those (`wasm-wast-parser`'s instruction encoder,
+//! `wasm-execution`'s decoder) special-case the 0xFC prefix byte directly.
 //!
 //! ```text
 //! Function body byte stream example:
@@ -506,6 +510,21 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "i64.reinterpret_f64",opcode: 0xBD, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
     OpcodeInfo { name: "f32.reinterpret_i32",opcode: 0xBE, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
     OpcodeInfo { name: "f64.reinterpret_i64",opcode: 0xBF, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
+
+    // ── Sign-extension instructions ───────────────────────────────────────────
+    //
+    // Added by the "sign-extension operators" proposal (widely implemented,
+    // MVP-adjacent) — still single-byte, unlike the later proposals' 0xFC-
+    // prefixed opcodes (see this crate's own module doc comment). Each takes
+    // the LOW N bits of the operand and sign-extends them to fill the full
+    // i32/i64 width, treating those low bits as two's-complement signed —
+    // e.g. `i32.extend8_s` on 0xFF (255) produces -1 (0xFFFFFFFF), the same
+    // value `i32.load8_s` would produce loading that byte from memory.
+    OpcodeInfo { name: "i32.extend8_s",  opcode: 0xC0, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
+    OpcodeInfo { name: "i32.extend16_s", opcode: 0xC1, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
+    OpcodeInfo { name: "i64.extend8_s",  opcode: 0xC2, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
+    OpcodeInfo { name: "i64.extend16_s", opcode: 0xC3, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
+    OpcodeInfo { name: "i64.extend32_s", opcode: 0xC4, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
 ];
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -561,7 +580,8 @@ pub fn get_opcode_by_name(name: &str) -> Option<&'static OpcodeInfo> {
 mod tests {
     use super::*;
 
-    // 1. Total opcode count covers all WASM 1.0 MVP instructions.
+    // 1. Total opcode count covers all WASM 1.0 MVP instructions plus the
+    //    sign-extension proposal's 5 (WASM03).
     //
     // The WASM 1.0 MVP spec defines 172 instructions across the byte range
     // 0x00–0xBF.  The gaps (e.g. 0x06–0x0A, 0x12–0x1F, 0x25–0x27) are
@@ -572,8 +592,8 @@ mod tests {
     fn test_total_count() {
         println!("Total opcodes: {}", OPCODES.len());
         assert!(
-            OPCODES.len() >= 172,
-            "Expected >= 172 WASM 1.0 MVP opcodes, got {}",
+            OPCODES.len() >= 177,
+            "Expected >= 177 opcodes (172 MVP + 5 sign-extension), got {}",
             OPCODES.len()
         );
     }
@@ -730,5 +750,24 @@ mod tests {
     fn test_f64_reinterpret_i64() {
         let info = get_opcode(0xBF).expect("0xBF should be f64.reinterpret_i64");
         assert_eq!(info.name, "f64.reinterpret_i64");
+    }
+
+    // Additional (WASM03): the 5 sign-extension opcodes round-trip by both
+    // byte and name, at their real spec-assigned bytes (0xC0-0xC4).
+    #[test]
+    fn test_sign_extension_opcodes() {
+        let expected = [
+            (0xC0u8, "i32.extend8_s"),
+            (0xC1, "i32.extend16_s"),
+            (0xC2, "i64.extend8_s"),
+            (0xC3, "i64.extend16_s"),
+            (0xC4, "i64.extend32_s"),
+        ];
+        for (byte, name) in expected {
+            let by_byte = get_opcode(byte).unwrap_or_else(|| panic!("{byte:#04x} should be {name}"));
+            assert_eq!(by_byte.name, name);
+            let by_name = get_opcode_by_name(name).unwrap_or_else(|| panic!("{name} should be found"));
+            assert_eq!(by_name.opcode, byte);
+        }
     }
 }

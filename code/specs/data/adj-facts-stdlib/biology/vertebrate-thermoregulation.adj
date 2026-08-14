@@ -1,0 +1,79 @@
+% ============================================================================
+% vertebrate-thermoregulation — for each of the five vertebrate classes,
+% whether it is warm- or cold-blooded, as the SAME NPS span also states
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `vertebrate-groups.adj`
+% (`vertebrate_trait(class, trait)`, ONE distinctive body-covering feature
+% per class — fish → gills, bird → feathers, etc.). That table's own header
+% already quotes, VERBATIM, the FULL NPS "Vertebrate Grab Bag" trait list for
+% every class, and buried in every one of those five spans, alongside the
+% body-covering feature the parent table already captures, is a second,
+% cleanly binary fact: whether the class is ectothermic (cold-blooded) or
+% endothermic (warm-blooded) — a fact the one-trait-per-class schema had no
+% room for:
+%
+%   fish → ectothermic
+%     "Fish: backbone, ectothermic, scales, gills, fins, jelly-like eggs"
+%
+%   amphibian → ectothermic
+%     "Amphibians: backbone, ectothermic, moist thin skin, lungs, no claws,
+%      jelly-like eggs"
+%
+%   reptile → ectothermic
+%     "Reptiles: backbone, ectothermic, dry scaly skin, clawed toes,
+%      leathery eggs, lungs"
+%
+%   bird → endothermic
+%     "Birds: backbone, endothermic, feathers, hollow bones, hard-shelled
+%      eggs, lungs"
+%
+%   mammal → endothermic
+%     "Mammals: backbone, endothermic, hair / fur, diaphragm, lungs,
+%      produces milk"
+%
+% Recall is a binding query:
+%
+%     ? vertebrate_thermoregulation(bird, $Type)   % endothermic
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation
+% `vertebrate_thermoregulation(class, type)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% thermoregulation type WITH its source, on the CPU, with zero model calls.
+% All five classes `vertebrate-groups.adj` ships have a thermoregulation
+% type in this SAME cited span, so this sibling covers the full five-class
+% domain with no abstention. The query also runs BACKWARD — bind a type and
+% recall which classes share it:
+%
+%     ? vertebrate_thermoregulation($Class, ectothermic)
+%       % fish ; amphibian ; reptile
+%
+% Provenance: reproduces, byte-for-byte, the SAME five NPS spans already
+% quoted inside `vertebrate-groups.adj`'s own header — no new WebFetch, only
+% a different schema decoding the thermoregulation half of each already-
+% verified quote. `trust authoritative` — the same tier `vertebrate-
+% groups.adj` already carries (U.S. National Park Service, a primary U.S.
+% government teaching resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vertebrate_thermoregulation {
+    columns class, type
+
+    row (fish, ectothermic)         % NPS: "Fish: backbone, ectothermic, scales, gills, fins, jelly-like eggs"
+    row (amphibian, ectothermic)    % NPS: "Amphibians: backbone, ectothermic, moist thin skin, lungs, no claws, jelly-like eggs"
+    row (reptile, ectothermic)      % NPS: "Reptiles: backbone, ectothermic, dry scaly skin, clawed toes, leathery eggs, lungs"
+    row (bird, endothermic)         % NPS: "Birds: backbone, endothermic, feathers, hollow bones, hard-shelled eggs, lungs"
+    row (mammal, endothermic)       % NPS: "Mammals: backbone, endothermic, hair / fur, diaphragm, lungs, produces milk"
+
+    source "Fish: backbone, ectothermic, scales, gills, fins, jelly-like eggs"
+    locator "https://www.nps.gov/teachers/classrooms/vertebrate-grab-bag.htm"
+    trust authoritative
+
+    cites "Amphibians: backbone, ectothermic, moist thin skin, lungs, no claws, jelly-like eggs" locator "https://www.nps.gov/teachers/classrooms/vertebrate-grab-bag.htm"
+    cites "Reptiles: backbone, ectothermic, dry scaly skin, clawed toes, leathery eggs, lungs" locator "https://www.nps.gov/teachers/classrooms/vertebrate-grab-bag.htm"
+    cites "Birds: backbone, endothermic, feathers, hollow bones, hard-shelled eggs, lungs" locator "https://www.nps.gov/teachers/classrooms/vertebrate-grab-bag.htm"
+    cites "Mammals: backbone, endothermic, hair / fur, diaphragm, lungs, produces milk" locator "https://www.nps.gov/teachers/classrooms/vertebrate-grab-bag.htm"
+}

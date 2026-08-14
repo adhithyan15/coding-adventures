@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.50.0";
+pub const VERSION: &str = "0.53.0";
 
 use std::collections::HashMap;
 
@@ -1042,9 +1042,15 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
+    let mut scene_metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        scene_metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        scene_metadata.insert("accessibility.description".into(), description.clone());
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
-    const HEADER_H: f64 = 40.0;
 
     // Groups are backend-neutral containers. Draw outer groups first so nested
     // groups, relationships, and nodes naturally layer above them.
@@ -1158,6 +1164,16 @@ where
 
     // ── Node boxes ───────────────────────────────────────────────────────────
     for node in &diagram.nodes {
+        let header_height = node
+            .compartments
+            .first()
+            .map(|compartment| compartment.y_offset)
+            .unwrap_or(node.height);
+        let mut node_font = lf.clone();
+        node_font.size = node.style.font_size;
+        node_font.weight = node.style.font_weight;
+        node_font.italic = node.style.font_italic;
+        node_font.family.clone_from(&node.style.font_family);
         // Outer rect
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
@@ -1165,10 +1181,10 @@ where
             y: node.y,
             width: node.width,
             height: node.height,
-            fill: Some("#f9fafb".into()),
-            stroke: Some("#374151".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(4.0),
+            fill: Some(node.style.fill.clone()),
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            corner_radius: Some(node.style.corner_radius),
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
@@ -1177,11 +1193,11 @@ where
             &[
                 Point {
                     x: node.x,
-                    y: node.y + HEADER_H,
+                    y: node.y + header_height,
                 },
                 Point {
                     x: node.x + node.width,
-                    y: node.y + HEADER_H,
+                    y: node.y + header_height,
                 },
             ],
             "#d1d5db",
@@ -1198,14 +1214,9 @@ where
             node.x,
             node.y + 8.0,
             node.width,
-            HEADER_H - 8.0,
-            options.title_font.clone(),
-            Color {
-                r: 17,
-                g: 24,
-                b: 39,
-                a: 255,
-            },
+            header_height - 8.0,
+            node_font.clone(),
+            css_to_color(&node.style.text_color),
         ));
         // Compartments
         for comp in &node.compartments {
@@ -1230,16 +1241,11 @@ where
                 text_children.push(text_node(
                     row,
                     node.x + 8.0,
-                    comp_y + 8.0 + i as f64 * (ls + 4.0),
+                    comp_y + 8.0 + i as f64 * (node.style.font_size * 1.4),
                     node.width - 16.0,
-                    ls * 1.2,
-                    lf.clone(),
-                    Color {
-                        r: 55,
-                        g: 65,
-                        b: 81,
-                        a: 255,
-                    },
+                    node.style.font_size * 1.2,
+                    node_font.clone(),
+                    css_to_color(&node.style.text_color),
                 ));
             }
         }
@@ -1279,7 +1285,7 @@ where
         background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!scene_metadata.is_empty()).then_some(scene_metadata),
     }
 }
 
@@ -3371,7 +3377,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.50.0");
+        assert_eq!(crate::VERSION, "0.53.0");
     }
 
     #[test]

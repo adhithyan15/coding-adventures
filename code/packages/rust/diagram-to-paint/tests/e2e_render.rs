@@ -26,8 +26,8 @@ mod apple {
     use layout_ir::font_spec;
     use mermaid_parser::{
         parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_journey, parse_pie,
-        parse_quadrant_chart, parse_sankey, parse_sequence_diagram, parse_state_diagram,
-        parse_to_diagram as parse_mermaid_to_diagram,
+        parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
+        parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
@@ -734,6 +734,57 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_mermaid_requirement_to_png() {
+        let diagram = parse_requirement_diagram(
+            "ReQuIrEmEnTdIaGrAm\nAcCtItLe: Native requirement graph\nAcCdEsCr: Requirement graph rendered through Metal\nDiReCtIoN lr\nClAsSdEf \"important class\" fill:#fff1a8,stroke:#b45309,stroke-width:4px,color:#7c2d12,font-size:22px,font-weight:bold,font-style:italic,font-family:Helvetica\nReQuIrEmEnT \"Test requirement\" {\nID: 1\nTeXt: Test\nRiSk: LOW\nVeRiFyMeThOd: TeSt\n}\nClAsS \"Test requirement\" \"important class\"\nElEmEnT \"System element\" {\nTyPe: service\n}\n\"System element\" - SaTiSfIeS -> \"Test requirement\"",
+        )
+        .expect("Mermaid requirement parse failed");
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[1].x > layout.nodes[0].x);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_requirement_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+        assert!(!scene.instructions.is_empty());
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#fff1a8")
+                    && rect.stroke.as_deref() == Some("#b45309")
+                    && rect.stroke_width == Some(4.0)
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 22.0
+        )));
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native requirement graph");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Requirement graph rendered through Metal"
+        );
     }
 
     #[test]
