@@ -11,6 +11,7 @@ import arabic from "../../../../learning/human-languages/data/scripts/arabic.jso
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
 import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic.json";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
+import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
@@ -222,6 +223,14 @@ const devanagariAlphabetSource = (glyph: string): StrokeSource => {
   const letter = devanagari.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Devanagari ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const gujaratiAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = gujarati.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Gujarati ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -4617,6 +4626,80 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: cyrillicAlphabetSource("я"),
+  },
+  // t30apps animates Gujarati અ as a joined body first, then a separately
+  // descending right stem. The fitted medians preserve that one-lift order
+  // while following the broader joins and foot of the bundled Noto glyph.
+  [ductusKey("gujarati", "અ")]: {
+    script: "gujarati",
+    glyph: "અ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep clockwise around the open left curve",
+            path: [
+              { x: 55, y: 550 },
+              { x: 115, y: 570 },
+              { x: 180, y: 565 },
+              { x: 240, y: 535 },
+              { x: 295, y: 480 },
+              { x: 310, y: 420 },
+              { x: 295, y: 360 },
+              { x: 255, y: 310 },
+              { x: 205, y: 280 },
+              { x: 155, y: 275 },
+              { x: 110, y: 300 },
+              { x: 75, y: 300 },
+            ],
+          },
+          {
+            label: "continue through the lower body and rise into the middle shoulder",
+            path: [
+              { x: 75, y: 300 },
+              { x: 115, y: 245 },
+              { x: 165, y: 180 },
+              { x: 230, y: 130 },
+              { x: 310, y: 100 },
+              { x: 390, y: 110 },
+              { x: 455, y: 155 },
+              { x: 500, y: 225 },
+              { x: 526, y: 310 },
+              { x: 526, y: 410 },
+            ],
+          },
+          {
+            label: "retrace down and sweep through the small right arch",
+            path: [
+              { x: 526, y: 410 },
+              { x: 526, y: 340 },
+              { x: 555, y: 285 },
+              { x: 610, y: 265 },
+              { x: 660, y: 275 },
+              { x: 708, y: 315 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the right stem into its foot",
+            path: [
+              { x: 748, y: 570 },
+              { x: 748, y: 450 },
+              { x: 748, y: 320 },
+              { x: 748, y: 190 },
+              { x: 750, y: 110 },
+              { x: 775, y: 60 },
+              { x: 815, y: 35 },
+              { x: 865, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("અ"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

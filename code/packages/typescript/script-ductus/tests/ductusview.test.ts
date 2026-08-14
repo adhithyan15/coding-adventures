@@ -72,6 +72,11 @@ const cyrillicOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const gujaratiOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansGujarati-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -264,6 +269,8 @@ const CYRILLIC_YU = ductusFor("ю", "cyrillic")!;
 const cyrillicYuOutline = cyrillicOutline("ю");
 const CYRILLIC_YA = ductusFor("я", "cyrillic")!;
 const cyrillicYaOutline = cyrillicOutline("я");
+const GUJARATI_A = ductusFor("અ", "gujarati")!;
+const gujaratiAOutline = gujaratiOutline("અ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3418,6 +3425,38 @@ describe("Cyrillic я — one joined rise-to-loop-to-leg run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_YA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati અ — joined body before the lifted right stem", () => {
+  const steps = ductusSteps(GUJARATI_A);
+  const strip = ductusFilmstrip(GUJARATI_A, gujaratiAOutline);
+
+  it("shows the three-part body before the lifted stem and foot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep clockwise around the open left curve",
+      "continue through the lower body and rise into the middle shoulder",
+      "retrace down and sweep through the small right arch",
+      "lift, then descend the right stem into its foot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind both runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_A.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_A.strokes[1], 1),
     );
   });
 });

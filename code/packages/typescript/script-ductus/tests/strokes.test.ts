@@ -109,6 +109,7 @@ const CYRILLIC_SOFT_SIGN = DUCTUS[ductusKey("cyrillic", "ь")];
 const CYRILLIC_E = DUCTUS[ductusKey("cyrillic", "э")];
 const CYRILLIC_YU = DUCTUS[ductusKey("cyrillic", "ю")];
 const CYRILLIC_YA = DUCTUS[ductusKey("cyrillic", "я")];
+const GUJARATI_A = DUCTUS[ductusKey("gujarati", "અ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1742,6 +1743,21 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.x).toBeLessThan(bowl[0].x);
     expect(leg.at(-1)!.x).toBeLessThan(leg[0].x);
     expect(leg.at(-1)!.y).toBeLessThan(leg[0].y);
+  });
+
+  it("Gujarati અ draws the joined body before the lifted right stem", () => {
+    expect(GUJARATI_A.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_A)).toBe(1);
+    expect(GUJARATI_A.strokes).toHaveLength(2);
+    expect(GUJARATI_A.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    const [left, lower, arch] = GUJARATI_A.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const stem = GUJARATI_A.strokes[1].segments[0].path;
+    expect(left.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(arch[0]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(stem.at(-1)!.x).toBeGreaterThan(stem[0].x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3923,6 +3939,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*12:13–12:21.*baseline.*curved entry.*upper-right junction.*upper loop counterclockwise.*returns to the junction.*long diagonal leg.*baseline exit.*without lifting.*one continuous pen-down run.*zero intervening lifts.*rising entry.*upper loop.*descending diagonal leg.*bundled Noto Sans Cyrillic.*printed я-like form.*straight full-height right upright.*broad upper bowl.*angular lower-left leg.*curved rising entry.*narrow loop.*slanted leg.*exit join.*rise-to-loop-to-leg order.*counterclockwise loop direction.*zero-lift evidence.*climb the right stem.*circle the upper bowl counterclockwise.*descend the diagonal leg without lifting.*connected cursive restores/i,
+    );
+  });
+
+  it("Gujarati અ traces its body-before-stem order to the teaching animation", () => {
+    const src = GUJARATI_A.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*અ animation.*first and second SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /two ordered pen-down runs.*first SVG path.*upper-left tip.*clockwise.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*separate right stem.*lower-right foot.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-right-stem order.*one-lift evidence/i,
     );
   });
 

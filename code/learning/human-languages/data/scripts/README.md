@@ -897,10 +897,18 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   without lifting. Its four-frame Noto fit preserves that zero-lift
   rise-to-loop-to-leg order while tracing the printed straight right upright,
   broad upper bowl, and angular lower-left leg; it records the school hand's
-  curved entry, narrow loop, slanted leg, and exit join. The remaining **70**
+  curved entry, narrow loop, slanted leg, and exit join. Gujarati **અ** then
+  opens the next actionable inventory: t30apps.com's version-1.0 animation
+  writes the joined left curve, lower body, middle shoulder, and small right
+  arch first, lifts once, then descends the separate right stem into its foot.
+  Its four-frame Noto Sans Gujarati path preserves that body-before-right-stem
+  order and one-lift evidence while fitting the font's broader printed
+  proportions. The source and learner notes retain the app's explicit warning
+  that its depicted form and order are one variant, not a universal standard.
+  The remaining **69**
   prose part orders across three scripts
   (`arabic` 3,
-  `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
+  `gujarati` 32, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;
