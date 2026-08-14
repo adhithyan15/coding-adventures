@@ -34,10 +34,10 @@ fn main() {
     let mut arguments = env::args().skip(1);
     let output = arguments
         .next()
-        .expect("usage: generate_d18f_fixtures OUTPUT GENERATOR_COMMIT");
-    let generator_commit = arguments
+        .expect("usage: generate_d18f_fixtures OUTPUT GENERATOR_BLOB_SHA1");
+    let generator_blob_sha1 = arguments
         .next()
-        .expect("usage: generate_d18f_fixtures OUTPUT GENERATOR_COMMIT");
+        .expect("usage: generate_d18f_fixtures OUTPUT GENERATOR_BLOB_SHA1");
     assert!(arguments.next().is_none(), "unexpected extra argument");
 
     let signing_seed = [0x11; 32];
@@ -150,7 +150,10 @@ fn main() {
             "spec".into(),
             string("code/specs/D18F-chief-of-staff-message-profile.md"),
         ),
-        ("generator_commit".into(), string(generator_commit)),
+        (
+            "generator_blob_sha1".into(),
+            string(generator_blob_sha1),
+        ),
         (
             "warning".into(),
             string("All private keys and channel master keys are deterministic test-only material. Never use them outside conformance tests."),

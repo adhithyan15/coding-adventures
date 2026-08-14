@@ -17,14 +17,15 @@ expected bytes with its own implementation during a conformance test.
 
 ## Regeneration
 
-The manifest records the commit containing the generator source. From the
-repository root, regenerate it with:
+The manifest records the Git blob hash of the exact generator source. Unlike a
+commit ID, that identifier survives rebases and squash merges. From the
+repository root, compute the blob hash and regenerate with:
 
 ```sh
 cargo run --manifest-path code/packages/rust/Cargo.toml \
   -p chief-of-staff-channel-crypto \
   --example generate_d18f_fixtures -- \
-  code/fixtures/chief-of-staff-message/v1/manifest.json GENERATOR_COMMIT
+  code/fixtures/chief-of-staff-message/v1/manifest.json GENERATOR_BLOB_SHA1
 ```
 
 Review byte changes deliberately. Changing any existing positive vector is a

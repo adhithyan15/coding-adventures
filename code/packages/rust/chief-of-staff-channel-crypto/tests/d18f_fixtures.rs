@@ -17,7 +17,7 @@ fn positive_fixtures_lock_binary_header_json_and_verification() {
     let root = object(&manifest);
     assert_eq!(string(root, "fixture_format"), "D18F-message-fixtures-v1");
     assert!(string(root, "warning").contains("test-only"));
-    assert_eq!(string(root, "generator_commit").len(), 40);
+    assert_eq!(string(root, "generator_blob_sha1").len(), 40);
 
     let keys = object(field(root, "keys"));
     let public_key: [u8; 32] = decode_hex(string(keys, "originator_public_key_hex"))

@@ -444,10 +444,11 @@ The fixture package lives under:
 code/fixtures/chief-of-staff-message/v1/
 ```
 
-Its checked-in manifest will identify this spec, fixture version, generator
-commit, public test keys, channel master keys explicitly marked as test-only,
-input fields/plaintext, canonical authenticated header, `D18M` bytes, canonical
-JSON, and expected error code.
+Its checked-in manifest identifies this spec, fixture version, the generator
+source's Git blob hash, public test keys, channel master keys explicitly marked
+as test-only, input fields/plaintext, canonical authenticated header, `D18M`
+bytes, canonical JSON, and expected error code. The content-addressed source
+identifier remains stable across rebases and squash merges.
 
 Positive cases cover empty, UTF-8 text, JSON, arbitrary binary, multipart, key
 epochs, and a multi-message stream. Negative cases mutate every authenticated
