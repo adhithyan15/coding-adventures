@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11494,
+  "active_pr": 11525,
   "last_inventory": {
-    "revision": "3f3e77ebebeb77cc8458a86a74ab8be11ecf5be8",
+    "revision": "c6bdc3694a85711a213340ac5f12370703051ff6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1315,
-    "implementation_package_slots": 4471,
+    "implementation_identities": 1318,
+    "implementation_package_slots": 4474,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 865,
-    "singleton_missing_slots": 12110,
-    "rust_singletons": 666,
+    "singleton_packages": 868,
+    "singleton_missing_slots": 12152,
+    "rust_singletons": 669,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3230,6 +3230,63 @@
       "notes": "Discovered after the Go ZIP tranche rebased onto collision-clean 0d608f5054, where PR #11341 added the Rust-only chief-of-staff-trust-checker singleton. The package is a zero-authority, transport-independent policy evaluator over an injected approval provider, not a native approval-device implementation. Define language-neutral fixtures for bounded exact resources, maximum-tier reduction, canonical Tier 0 through Tier 3 requirements and timeouts, Tier 1 timeout approval, fail-closed Tier 2/3 behavior, minimum assurance, typed redacted provider failures, and deterministic authorization receipts. Add explicit empty capability metadata and port the pure policy contract across established lanes; notification, biometrics, hardware keys, clocks, and platform interaction remain injected native boundaries."
     },
     {
+      "id": "chief-notification-approval-protocol-portable-conformance",
+      "title": "Fixture and port the bounded Chief Tier 1 notification protocol",
+      "status": "pending",
+      "depends_on": ["chief-trust-checker-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11481 added the mixed Rust-only chief-of-staff-notification-approval singleton. Define a neutral corpus for the bounded CHIEF-TIER1-NOTIFICATION/1 request and transcript protocol: lowercase-hex request and principal fields, exact resource count/tier records, timeout encoding, complete prompt framing, ready acknowledgement followed by approve or deny, eight-byte response-line ceilings, deterministic stable failure mapping, and the rule that only an acknowledged live timeout becomes TimedOut. Keep executable resolution, processes, clocks, pipes, threads, and native notification UI injected outside this pure core and require explicit empty core capability metadata."
+    },
+    {
+      "id": "chief-notification-approval-native-authority-review",
+      "title": "Review Chief notification helper process and platform authority",
+      "status": "pending",
+      "depends_on": ["chief-notification-approval-protocol-portable-conformance", "chief-process-supervisor-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review absolute normalized helper resolution; direct shell-free, environment-cleared spawn with only the version marker; bounded stdin/stdout pipes, worker threads, monotonic deadline, kill and reap behavior; descendant handle retention; platform notification UI; redaction; and truthful nonempty runtime/test capability profiles. Preserve Tier-1-only behavior, fail closed on adapter faults, and do not manufacture cross-language process or native-UI adapters."
+    },
+    {
+      "id": "chief-biometric-approval-protocol-portable-conformance",
+      "title": "Fixture and port the bounded Chief Tier 2 biometric protocol",
+      "status": "pending",
+      "depends_on": ["chief-notification-approval-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11506 added the mixed Rust-only chief-of-staff-biometric-approval singleton. Define a neutral corpus for CHIEF-TIER2-BIOMETRIC/1: lowercase-hex request, requester, and resource identifiers; exact effective-tier, timeout, resource-count, ordering, and end framing; the 32-byte response-line ceiling; mandatory ready acknowledgement; exact deny; and the rule that only approve biometric establishes Biometric assurance. Require fresh private per-request transcripts, reject replay and weaker approvals, preserve payload-blind failure mapping, and map only an acknowledged live timeout to TimedOut with Trust Checker denial. Keep executable resolution, processes, pipes, threads, monotonic deadlines, native UI, authenticator behavior, and credential custody injected outside this pure core, and require explicit empty core capability metadata."
+    },
+    {
+      "id": "chief-biometric-approval-native-authority-review",
+      "title": "Review Chief biometric helper process and authenticator authority",
+      "status": "pending",
+      "depends_on": ["chief-biometric-approval-protocol-portable-conformance", "chief-process-supervisor-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review absolute-path helper provenance and integrity, including replacement, symlink, reparse-point, and TOCTOU risks; direct no-shell spawn; environment clearing; per-request pipe isolation and replay claims; worker threads and monotonic deadlines; kill, reap, and descendant-pipe retention; redaction; platform UI and authenticator success semantics; and external-helper credential custody. Add a truthful nonempty hardware-key-reviewed capability profile covering proc:exec for the configured absolute helper, proc:signal for its owned child, env:write for CHIEF_APPROVAL_PROTOCOL, time:read for the monotonic deadline, and time:sleep for bounded receive waits. Preserve Tier-2-only fail-closed behavior and do not manufacture all-language process or biometric adapters."
+    },
+    {
+      "id": "smart-home-google-cast-discovery-portable-core-conformance",
+      "title": "Extract and port the injected Google Cast discovery core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11487 added the mixed Rust-only smart-home-google-cast-discovery-integration singleton. Define a closed corpus over injected discovery results for exact _googlecast._tcp.local matching; bounded endpoint, timeout, TTL, and 64-response configuration; 128-bit receiver identity; protocol version 2 through 99; decimal capabilities; idle/busy status; bounded friendly-name and optional model TXT values; deterministic first-observation deduplication and partial failures; caller-supplied time; authorization-before-scan ordering; stable D23 projection; and upsert summaries. Keep sockets, clocks, runtime mutation, and CLI I/O outside the portable core, and do not extend discovery parity into Cast TCP, TLS, authentication, application, session, queue, or media control."
+    },
+    {
+      "id": "smart-home-google-cast-discovery-native-authority-review",
+      "title": "Review Google Cast mDNS and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-google-cast-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review the shared mDNS socket, bind, send, receive, peer/origin policy, timeout, datagram, and 64-response bounds; authorization before transport; redacted diagnostics; truthful nonempty runtime/test capability profiles; argv/stdout/stderr; and sequential discovery-upsert partial-mutation risk. Preserve discovery-only behavior and do not add Cast TCP sessions, credentials, launches, queues, or media commands."
+    },
+    {
       "id": "path-raster-language-neutral-conformance",
       "title": "Define language-neutral deterministic path-raster conformance",
       "status": "pending",
@@ -3370,10 +3427,17 @@
     {
       "id": "zip-raw-rfc1951-lua-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Lua",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/lua-zip-raw-rfc1951",
+      "pr_number": 11525,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11525",
+      "opened_at": "2026-08-14T05:27:10Z",
+      "selection_revision": "a74ce9183f5986cbc80ae0c94d72da4042416b7a",
+      "selection_notes": "Selected only after PR #11494 merged externally, the collision-clean live inventory classified the new Chief notification approval and Google Cast discovery roots with four portable/native ownership records, and no live PR or remote branch claimed Lua ZIP or the shared RFC 1951 fixture. Lua is the smallest clean standalone remaining ZIP child: Lua 5.4 and LuaRocks are installed, the package already owns exact bit positions, stored/fixed and multi-block framing, symbol 285, and overlapping back-references, and the test toolchain has a pure-Lua independent raw-DEFLATE oracle. Swift is the only other remaining child without stale overlap but has a costlier cross-platform raw-zlib boundary; the historical catch-up residue touches only .NET, Haskell, and JVM. This coherent tranche adds dynamic Huffman, counted consumption, caller caps, stable payload-blind errors, strict ZIP boundaries, all 34 neutral fixtures, and empty capability metadata without duplicating DEFLATE.",
+      "implementation_revision": "4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96",
+      "validation_notes": "Lua 5.4 and the exact Windows BUILD front door pass syntax, Luacheck with zero findings, 68 full Busted tests, 40 focused portable-conformance coverage tests, and 91.08% production line coverage. All 34 neutral raw RFC 1951 cases pass, including dynamic Huffman, HDIST 32 zero reserved slots, stable payload-blind errors, exact suffix consumption, caller caps, symbol 285, full 32 KiB overlap, and strict ZIP suffix-cavity and declared-size rejection. A test-only pure-Lua LibDeflate oracle and 128-stream deterministic differential corpus agree on output and exact counted consumption. LuaRocks make/install/pack pass. Twenty-six fixture/parity/capability tests plus 678 subtests pass; the collision gate reports 1,318 identities, 4,474 slots, 868 singletons, 12,152 singleton gaps, 669 Rust singletons, zero collisions, and zero unknown buckets. Strict state JSON/DAG, diff, credential, dependency, capability, and pure-production authority scans pass. The repository-wide Lua build-tool validator discovers 258 packages and emits no Lua ZIP BUILD diagnostic; its full run retains the unrelated pre-existing lua/programs/conduit-hello undeclared lua/conduit dependency finding. No downstream Lua package imports ZIP, so reader_read is the direct hardened integration boundary.",
+      "publication_notes": "Opened ready-for-review PR #11525 from validated implementation revision 4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96. The loop retains external-review-only merge authority and will monitor the live checks without selecting another tranche.",
       "notes": "Portable Lua child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
@@ -3398,7 +3462,7 @@
     {
       "id": "zip-raw-rfc1951-python-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Python",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/python-zip-raw-rfc1951",
       "pr_number": 11494,
@@ -3407,8 +3471,11 @@
       "selection_revision": "1cf98c1ad74502336c30f21f096967aec2a42a87",
       "selection_notes": "Selected only after PR #11435 merged externally, the collision-clean live inventory classified the new KNXnet/IP protocol, KNXnet/IP integration, and ESPHome discovery roots with five portable/native ownership records, and no live PR or remote branch claimed Python ZIP or the shared RFC 1951 fixture. Python is the smallest effective clean standalone remaining ZIP child because its Python 3.13 quality toolchain and stdlib JSON/zlib oracle are already available, while the nominally smaller Lua lane lacks equivalent installed fixture and raw-zlib tooling and the stale cross-lane residue touches only .NET, Haskell, and JVM paths. Python ZIP already owns stored/fixed framing and exact bit positions but rejects dynamic Huffman and trims declared-size mismatches, so this coherent tranche adds the shared counted, capped, stable-error raw RFC 1951 contract and all 34 neutral fixtures without duplicating DEFLATE.",
       "implementation_revision": "46d954ac53b844c491839174060644f0ee88a262",
+      "final_review_revision": "62f0041c99d57b00ad593423ea9603eeafbaa2d6",
+      "merged_at": "2026-08-14T04:28:18Z",
+      "merge_revision": "75b8490ed7ec2bb2a59a5b5519feec033641097a",
       "validation_notes": "Python 3.13.14 passes the exact Windows BUILD front door: Ruff check and format, strict MyPy, and all 76 tests with 93.40% branch-inclusive coverage. Every one of the 34 neutral raw RFC 1951 cases passes, including dynamic trees, HDIST 32, symbol 285, malformed trees, reserved symbols, exact suffix consumption, caller caps, stable payload-blind errors, CRC-32, dynamic ZIP integration, declared-size rejection, compatibility wrappers, and a full 32 KiB foreign stream. Independent review differentially matched output and exact consumption for 800 deterministic stdlib-zlib raw streams. Twenty-six repository fixture/parity/capability tests plus 678 subtests pass; the refreshed collision gate remains 1,315 identities, 4,471 slots, 865 singletons, 12,110 singleton gaps, 666 Rust singletons, zero collisions, and zero unknown buckets. Wheel and sdist builds plus Twine checks pass; pip-audit reports no known vulnerability and skips only the unpublished local LZSS package and editable ZIP distribution. Strict state JSON/DAG, diff, credential, production-authority, runtime-dependency, and downstream scans pass. The global all-Python build-tool validator retains unrelated pre-existing Windows prerequisite findings and stale Starlark grammar-path warnings, while the Python ZIP BUILD itself passes cleanly and no downstream Python package imports ZIP.",
-      "publication_notes": "Opened ready-for-review PR #11494 from validated implementation revision 46d954ac53b844c491839174060644f0ee88a262 and pre-publication branch head b2009a49026a947390dc2dfbd0fd4f84c299cb9a. The loop retains merge authority with external review and will monitor live checks without merging.",
+      "publication_notes": "Opened ready-for-review PR #11494 from validated implementation revision 46d954ac53b844c491839174060644f0ee88a262. External review merged final head 62f0041c99d57b00ad593423ea9603eeafbaa2d6 as 75b8490ed7ec2bb2a59a5b5519feec033641097a at 2026-08-14T04:28:18Z after all 20 reported checks reached terminal success, expected skip, or neutral conclusions. The remote branch was deleted and this loop did not exercise merge authority.",
       "notes": "Portable Python child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {

@@ -1,5 +1,5 @@
 package = "coding-adventures-zip"
-version = "0.1.0-1"
+version = "0.2.0-1"
 source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }

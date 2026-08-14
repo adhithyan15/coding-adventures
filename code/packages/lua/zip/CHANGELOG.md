@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.0] - 2026-08-14
+
+### Added
+
+- Public `raw_deflate`, `raw_inflate`, and `raw_inflate_counted` APIs for the
+  required ZIP-owned raw RFC 1951 profile.
+- Stored, fixed-Huffman, dynamic-Huffman, and multi-block decoding, including
+  canonical tree validation, symbol 285, overlapping copies, and the full
+  32 KiB distance window.
+- Stable payload-blind error identifiers, an exact consumed-byte result, and a
+  caller-lowerable 256 MiB output ceiling with checks before every write.
+- All 34 language-neutral conformance cases plus independent pure-Lua encoder
+  interoperability and full-window coverage.
+
+### Changed
+
+- ZIP method 8 now rejects compressed suffix cavities and exact uncompressed
+  size mismatches before CRC validation instead of silently trimming output.
+- Both build front doors now run syntax, lint, full tests, and focused LuaCov
+  coverage while keeping JSON and LibDeflate dependencies test-only.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

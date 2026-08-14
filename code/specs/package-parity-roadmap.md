@@ -3540,6 +3540,107 @@ ALGOL, ADJ, WebAssembly-spec, and Mermaid merges. Those commits also modify
 only existing, disjoint roots; the same collision-free inventory counts remain
 current and no new owner was required.
 
+## Post-#11494 Refresh and Lua ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11494 as
+`75b8490ed7ec2bb2a59a5b5519feec033641097a` at
+2026-08-14T04:28:18Z from final reviewed head
+`62f0041c99d57b00ad593423ea9603eeafbaa2d6`. Its 20 reported checks ended
+with 14 successes, five expected skips, and one neutral umbrella conclusion;
+the remote branch was deleted and this loop did not exercise merge authority.
+The Python ZIP merge modifies only the existing Python `zip` identity and is
+topology-neutral.
+
+A fresh collision-checked report at exact live main
+`a74ce9183f5986cbc80ae0c94d72da4042416b7a` covers 15 established lanes,
+1,317 normalized identities, and 4,473 slots. It reports 173 high-consensus
+identities with 269 gaps, 867 singletons with 12,138 singleton gaps, 668 Rust
+singletons, zero canonical collisions, and zero unknown buckets. Compared with
+the stored `3f3e77ebebeb77cc8458a86a74ab8be11ecf5be8` snapshot, the exact delta
+is two identities, two slots, two singletons, and 28 singleton gaps; every
+other stored metric is unchanged. Later RISC-V PR #11501 and HTML-parser PR
+#11503 modify only existing roots and are topology-neutral.
+
+External PR #11481 added the mixed Rust
+`chief-of-staff-notification-approval` singleton. Its bounded versioned Tier 1
+stdin/stdout transcript is now owned by
+`chief-notification-approval-protocol-portable-conformance`; absolute helper
+selection, shell-free process creation, cleared environment, pipes, worker
+threads, deadlines, kill/reap behavior, and native notification UI are owned
+by the blocked `chief-notification-approval-native-authority-review`. External
+PR #11487 added the mixed Rust
+`smart-home-google-cast-discovery-integration` singleton. Its injected-result
+configuration, Cast TXT validation, stable identity, bounded deduplication,
+authorization ordering, and D23 projection are owned by
+`smart-home-google-cast-discovery-portable-core-conformance`; the shared mDNS
+socket, timeouts, CLI I/O, capability truthfulness, and partial-mutation risk
+are owned by the blocked
+`smart-home-google-cast-discovery-native-authority-review`. Both roots lack
+capability manifests. Parity does not manufacture cross-language process/UI
+adapters or extend Cast discovery into TCP sessions, credentials, application
+launch, queues, or media control.
+
+With Python merged, five ZIP raw-profile children remain: .NET, Haskell, JVM,
+Lua, and Swift. No open PR or live remote branch owns the shared fixture,
+state, roadmap, or any remaining ZIP path. The ancient no-PR catch-up branch
+still overlaps only .NET, Haskell, and JVM and must not be reused or
+cherry-picked.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-lua-lane-parity`.
+Lua is the smallest clean standalone remaining child and has a complete local
+Lua 5.4/LuaRocks test toolchain plus a pure-Lua independent raw-DEFLATE oracle.
+Its ZIP-owned codec already implements exact bit positions, stored/fixed and
+multi-block framing, symbol 285, and overlapping back-references, but still
+rejects dynamic Huffman streams and trims declared-size mismatches. This
+coherent tranche adds strict dynamic trees, exact counted consumption, caller
+output caps, stable payload-blind errors, all 34 neutral fixtures, compressed
+suffix-cavity and declared-size rejection, and explicit empty capability
+metadata without duplicating DEFLATE. Swift remains the clean fallback; .NET,
+Haskell, and JVM stay deferred while the historical overlap is independently
+re-derived rather than reused.
+
+### Post-#11506 Late-Main Refresh
+
+Before publication, the Lua branch was rebased cleanly onto exact live main
+`d11ab15e7455487161485ec71c330d10d63cfaa8`. External PR #11506 added the
+mixed Rust `chief-of-staff-biometric-approval` singleton from final reviewed
+head `fe646ae53304b9cf50a777a7a0b9aa7317f4f910`, merged as
+`88ae29a4fb9c88c10c74466a79bba1a3a356d959` at
+2026-08-14T05:08:13Z. Every other commit since the preceding inventory
+modifies existing, disjoint roots and is topology-neutral.
+
+A final pre-publication refresh advanced the inventory pin to
+`c6bdc3694a85711a213340ac5f12370703051ff6` after PR #11515, PR #11358, and
+PR #11516 merged. Their ALGOL, human-language curriculum, and Mermaid changes
+add no package root and touch no parity or Lua ZIP surface, so the exact report
+metrics and ownership classification below remain unchanged.
+
+The refreshed collision-checked report covers 15 established lanes, 1,318
+normalized identities, and 4,474 slots. It reports 173 high-consensus
+identities with 269 gaps, 868 singletons with 12,152 singleton gaps, 669 Rust
+singletons, zero canonical collisions, and zero unknown buckets. The exact
+delta from `a74ce9183f5986cbc80ae0c94d72da4042416b7a` is one identity, one slot,
+one singleton, 14 singleton gaps, and one Rust singleton, entirely explained
+by the new biometric root.
+
+The bounded `CHIEF-TIER2-BIOMETRIC/1` request and response transcript is now
+owned by `chief-biometric-approval-protocol-portable-conformance`, downstream
+of the shared notification and trust-checker protocol work. Absolute helper
+provenance, shell-free process creation, environment isolation, pipes,
+threads, monotonic deadlines, kill/reap behavior, native UI and authenticator
+semantics, and external credential custody are owned by the blocked
+`chief-biometric-approval-native-authority-review`. The Rust package has no
+capability manifest, so its current default falsely presents concrete process,
+environment, and timing authority as zero; the native review must add a
+nonempty hardware-key-reviewed profile. The source-backed minimum is
+`proc:exec`, `proc:signal`, `env:write`, `time:read`, and `time:sleep`; native
+biometric sensor, UI, and credential authority remains with the separately
+reviewed helper rather than being fabricated in every language.
+
+These two owners were recorded before publication. They do not alter the
+dependency-shaped Lua ZIP selection: the rebased branch remains path-disjoint,
+pure in memory, and the only active parity tranche.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
