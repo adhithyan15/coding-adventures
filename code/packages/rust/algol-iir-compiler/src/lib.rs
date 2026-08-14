@@ -5464,6 +5464,9 @@ impl Compiler {
         if expr_variable_name(node).as_deref() == Some(name) {
             return true;
         }
+        if self.static_expression_matches_name(node, name) {
+            return true;
+        }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
             || !direct_tokens(node).iter().any(|token| token.value == "if")
         {
@@ -5530,6 +5533,43 @@ impl Compiler {
         branches.into_iter().all(|branch| {
             self.expression_preserves_name(branch, name, target_name, effect_root)
         })
+    }
+
+    fn static_expression_matches_name(&self, node: &GrammarASTNode, name: &str) -> bool {
+        let Ok(binding) = self.require_var(name) else {
+            return false;
+        };
+        if binding.is_global
+            || binding.array.is_some()
+            || self.active_by_name_binding(name).is_some()
+        {
+            return false;
+        }
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(node, name, &mut dependencies);
+        if !dependencies.is_empty() {
+            return false;
+        }
+        match binding.ty {
+            ScalarType::Integer => self
+                .static_assigned_integer_value(node)
+                .zip(self.static_integer_slots.get(&binding.slot).copied())
+                .is_some_and(|(assigned, current)| assigned == current),
+            ScalarType::Real => self
+                .static_assigned_real_value(node)
+                .filter(|value| value.is_finite())
+                .zip(
+                    self.static_real_slots
+                        .get(&binding.slot)
+                        .and_then(|value| value.parse::<f64>().ok()),
+                )
+                .is_some_and(|(assigned, current)| assigned.to_bits() == current.to_bits()),
+            ScalarType::Boolean => self
+                .static_boolean_value(node)
+                .zip(self.static_boolean_slots.get(&binding.slot).copied())
+                .is_some_and(|(assigned, current)| assigned == current),
+            ScalarType::String => false,
+        }
     }
 
     fn collect_static_predicate_dependencies(
@@ -9616,13 +9656,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_computed_self_assignment_while_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_static_computed_self_assignment_preserves_while_dependency() {
+        compile_source(
             "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 0; print(i + 0.25) end",
             "test",
         )
-        .expect_err("only an exact bare self-assignment is treated as idempotent");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a checked static self-only expression may preserve its current value");
     }
 
     #[test]
@@ -9676,13 +9715,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_computed_predicate_self_assignment_remains_conservative() {
-        let err = compile_source(
+    fn al4_static_computed_predicate_self_assignment_preserves_dependency() {
+        compile_source(
             "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := guard + 0 end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a computed assignment may change a body predicate dependency");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a checked static self-only expression preserves a predicate dependency");
     }
 
     #[test]
