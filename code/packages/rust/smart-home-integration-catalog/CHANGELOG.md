@@ -1,5 +1,9 @@
 # Changelog
 
+- Promote Google Cast to a first-party bounded `_googlecast._tcp` mDNS
+  discovery runtime while keeping Cast TLS channels, sessions, and media
+  commands out of scope.
+
 - Promote ESPHome to a first-party bounded `_esphomelib._tcp` mDNS discovery
   runtime while keeping native API sessions, key custody, and controls out of
   scope.

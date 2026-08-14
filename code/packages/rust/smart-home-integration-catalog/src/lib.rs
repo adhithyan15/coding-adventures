@@ -45186,15 +45186,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Account-backed source browsing remains separate work; local playback, volume, grouping, and queue controls are available without HEOS account credentials.",
         ]),
-        media_entry(
-            "cast",
-            "Google Cast",
-            "Local Cast media-player integration.",
-            ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
-            2,
-            "cast",
-        ),
+        google_cast_entry(),
         camera_entry(
             "onvif",
             "ONVIF",
@@ -49153,6 +49145,47 @@ fn esphome_entry() -> IntegrationCatalogEntry {
     entry
 }
 
+fn google_cast_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "cast",
+        "Google Cast",
+        "Bounded mDNS discovery for local CastV2 receivers.",
+        IntegrationCategory::CameraMedia,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        2,
+        "cast",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("google_cast_v2".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only bounded _googlecast._tcp mDNS receiver discovery and advertised capability classification.",
+        "Cast TLS, receiver authentication, application launch, sessions, queues, and media commands remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Google Cast discovery".to_string(),
+        url: "https://developers.google.com/cast/docs/discovery".to_string(),
+        external_id: Some("_googlecast._tcp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Chromium Open Screen receiver info".to_string(),
+        url: "https://github.com/chromium/openscreen/blob/876b5381036e91ca05e21b1446f453ebccfc3acf/cast/common/public/receiver_info.h".to_string(),
+        external_id: Some("876b5381036e91ca05e21b1446f453ebccfc3acf".to_string()),
+    });
+    entry
+}
+
 fn modbus_tcp_entry() -> IntegrationCatalogEntry {
     base_entry(
         "modbus_tcp",
@@ -49274,43 +49307,6 @@ fn bluetooth_entry(
     .with_primitives(&[
         PrimitiveFamily::BluetoothLowEnergy,
         PrimitiveFamily::LocalPairing,
-        PrimitiveFamily::Supervision,
-    ])
-}
-
-fn media_entry(
-    id: &'static str,
-    name: &'static str,
-    summary: &'static str,
-    connectivity: ConnectivityClass,
-    status: ImplementationStatus,
-    priority: u8,
-    ha_domain: &'static str,
-) -> IntegrationCatalogEntry {
-    base_entry(
-        id,
-        name,
-        summary,
-        IntegrationCategory::CameraMedia,
-        connectivity,
-        status,
-        priority,
-        ha_domain,
-    )
-    .with_capabilities(&["smart_home.read", "smart_home.command.media"])
-    .with_entities(&[EntityKind::Unknown])
-    .with_discovery(&[
-        DiscoveryMechanism::Mdns,
-        DiscoveryMechanism::Ssdp,
-        DiscoveryMechanism::Manual,
-    ])
-    .with_auth(&[AuthMode::None, AuthMode::LocalToken])
-    .with_primitives(&[
-        PrimitiveFamily::Mdns,
-        PrimitiveFamily::Ssdp,
-        PrimitiveFamily::LocalHttp,
-        PrimitiveFamily::LocalToken,
-        PrimitiveFamily::CommandMapping,
         PrimitiveFamily::Supervision,
     ])
 }
@@ -81893,6 +81889,45 @@ mod tests {
         }
         for primitive in [PrimitiveFamily::CommandMapping, PrimitiveFamily::VaultLease] {
             assert!(!esphome.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn google_cast_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let cast = find_entry(&catalog, &IntegrationId::trusted("cast")).unwrap();
+        assert_eq!(
+            cast.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(cast.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(cast.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            cast.supported_protocols,
+            vec![ProtocolFamily::Vendor("google_cast_v2".to_string())]
+        );
+        assert_eq!(
+            cast.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(cast.target_entity_kinds, vec![EntityKind::Unknown]);
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(cast.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::LocalToken,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!cast.required_primitives.contains(&primitive));
         }
     }
 
