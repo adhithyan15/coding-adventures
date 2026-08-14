@@ -3,6 +3,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use chief_of_staff_trust_checker::{
+    TIER_1_AUTO_APPROVE_TIMEOUT, TIER_2_BIOMETRIC_TIMEOUT, TIER_3_HARDWARE_KEY_TIMEOUT,
+};
 use coding_adventures_toml_parser::{try_parse_toml, TomlParseError};
 use core::fmt::{self, Display, Formatter};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -856,7 +859,7 @@ impl DataPlaneConfig {
 }
 
 impl PrivilegeConfig {
-    /// Return the non-zero Tier 1 auto-approval timeout.
+    /// Return the canonical Tier 1 auto-approval timeout.
     pub fn tier_1_auto_approve_timeout(&self) -> Duration {
         self.tier_1_auto_approve_timeout
     }
@@ -876,12 +879,12 @@ impl PrivilegeConfig {
         self.tier_3_hardware_key_command.as_ref()
     }
 
-    /// Return the non-zero biometric interaction timeout.
+    /// Return the canonical Tier 2 biometric interaction timeout.
     pub fn biometric_timeout(&self) -> Duration {
         self.biometric_timeout
     }
 
-    /// Return the non-zero hardware-key interaction timeout.
+    /// Return the canonical Tier 3 hardware-key interaction timeout.
     pub fn hardware_key_timeout(&self) -> Duration {
         self.hardware_key_timeout
     }
@@ -991,8 +994,10 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     let storage_path = ConfigPath::parse(expect_string(document.take(VAULT, "storage_path")?)?)?;
     let default_lease_ttl = positive_secs(document.take(VAULT, "default_lease_ttl")?)?;
     let container = expect_bool(document.take(VAULT, "container")?)?;
-    let tier_1_auto_approve_timeout =
-        positive_secs(document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?)?;
+    let tier_1_auto_approve_timeout = canonical_secs(
+        document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?,
+        TIER_1_AUTO_APPROVE_TIMEOUT,
+    )?;
     let tier_1_notification_command = document
         .take_optional(PRIVILEGE, "tier_1_notification_command")
         .map(expect_string)
@@ -1011,8 +1016,14 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         .transpose()?
         .map(ConfigPath::parse)
         .transpose()?;
-    let biometric_timeout = positive_secs(document.take(PRIVILEGE, "biometric_timeout")?)?;
-    let hardware_key_timeout = positive_secs(document.take(PRIVILEGE, "hardware_key_timeout")?)?;
+    let biometric_timeout = canonical_secs(
+        document.take(PRIVILEGE, "biometric_timeout")?,
+        TIER_2_BIOMETRIC_TIMEOUT,
+    )?;
+    let hardware_key_timeout = canonical_secs(
+        document.take(PRIVILEGE, "hardware_key_timeout")?,
+        TIER_3_HARDWARE_KEY_TIMEOUT,
+    )?;
     let agent_tiers = document
         .take_optional(PRIVILEGE, "agent_tiers")
         .map(parse_agent_privilege_tiers)
@@ -1893,6 +1904,14 @@ fn positive_secs(value: RawValue) -> Result<Duration, ConfigError> {
     positive_integer(value).map(Duration::from_secs)
 }
 
+fn canonical_secs(value: RawValue, canonical: Duration) -> Result<Duration, ConfigError> {
+    let parsed = positive_secs(value)?;
+    if parsed != canonical {
+        return Err(ConfigError::InvalidValue);
+    }
+    Ok(canonical)
+}
+
 fn positive_integer(value: RawValue) -> Result<u64, ConfigError> {
     let RawValue::Integer(value) = value else {
         return Err(ConfigError::InvalidType);
@@ -2232,8 +2251,16 @@ hardware_key_timeout = 60
         assert_eq!(config.vault().default_lease_ttl(), Duration::from_secs(30));
         assert!(config.vault().container());
         assert_eq!(
+            config.privilege().tier_1_auto_approve_timeout(),
+            TIER_1_AUTO_APPROVE_TIMEOUT
+        );
+        assert_eq!(
+            config.privilege().biometric_timeout(),
+            TIER_2_BIOMETRIC_TIMEOUT
+        );
+        assert_eq!(
             config.privilege().hardware_key_timeout(),
-            Duration::from_secs(60)
+            TIER_3_HARDWARE_KEY_TIMEOUT
         );
         assert!(config.privilege().tier_1_notification_command().is_none());
         assert!(config.privilege().tier_2_biometric_command().is_none());
@@ -2242,6 +2269,36 @@ hardware_key_timeout = 60
         assert!(config.data_plane().ollama_models().is_empty());
         assert!(config.data_plane().smart_home_tool_grants().is_empty());
         assert!(config.smart_home().is_none());
+    }
+
+    #[test]
+    fn privilege_deadlines_are_canonical_and_fail_closed() {
+        for (declared, replacement) in [
+            (
+                "tier_1_auto_approve_timeout = 5",
+                "tier_1_auto_approve_timeout = 4",
+            ),
+            (
+                "tier_1_auto_approve_timeout = 5",
+                "tier_1_auto_approve_timeout = 6",
+            ),
+            ("biometric_timeout = 30", "biometric_timeout = 29"),
+            ("biometric_timeout = 30", "biometric_timeout = 31"),
+            ("hardware_key_timeout = 60", "hardware_key_timeout = 59"),
+            ("hardware_key_timeout = 60", "hardware_key_timeout = 61"),
+        ] {
+            assert_eq!(
+                parse_config(&VALID.replace(declared, replacement)),
+                Err(ConfigError::InvalidValue)
+            );
+        }
+        assert_eq!(
+            parse_config(&VALID.replace(
+                "tier_1_auto_approve_timeout = 5",
+                "tier_1_auto_approve_timeout = true"
+            )),
+            Err(ConfigError::InvalidType)
+        );
     }
 
     #[test]

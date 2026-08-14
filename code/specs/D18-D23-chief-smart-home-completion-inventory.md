@@ -2117,6 +2117,24 @@ This slice opens only the reviewed D18 Tier 3 interaction path:
   malformed output, early exit, timeout-as-denial, missing helpers, and
   unsupported lower tiers.
 
+## Current Chief Canonical Approval Deadline Slice
+
+This slice removes the configuration ambiguity between declared and enforced
+privilege deadlines:
+
+- `chief-of-staff-trust-checker` exports the canonical five-second Tier 1,
+  thirty-second Tier 2, and sixty-second Tier 3 deadlines from the same source
+  used to construct every exact approval requirement.
+- The closed daemon schema retains all three required declarations for explicit
+  operator readability and compatibility, but rejects any shorter or longer
+  value before production composition.
+- Validated config getters and the production provider prompt are therefore
+  proven to carry the same deadline. Tier 1 timeout remains the sole
+  auto-approval path; Tier 2 and Tier 3 timeout remain denial.
+- Payload-blind invalid-value errors reveal neither helper paths nor request
+  data, and no new filesystem, process, environment, network, or secret boundary
+  is introduced.
+
 ## Current Chief HTTP Request Clock Slice
 
 This slice closes the remaining request-time ambiguity in the shared

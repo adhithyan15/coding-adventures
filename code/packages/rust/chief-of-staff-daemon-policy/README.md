@@ -21,6 +21,9 @@ return biometric assurance. A third independently optional command uses
 `chief-of-staff-hardware-key-approval`; only its reviewed physical-authenticator
 helper may return hardware-key assurance. Each missing helper keeps only its tier
 unavailable.
+The validated configuration deadlines are the same Trust Checker-owned
+5/30/60-second constants carried in each exact provider prompt; configuration
+cannot advertise a shorter or longer production policy.
 The local bearer authenticates the requester but never acts as privilege approval.
 
 The package generates credential material but performs no terminal or network

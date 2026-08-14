@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Export the canonical Tier 1, Tier 2, and Tier 3 approval deadlines so
+  configuration adapters cannot drift from the enforced policy.
 - Raise the bounded resource count to represent the complete maximum-size D18 channel membership.
 - Add validated request context for authoritative resource-resolution adapters.
 

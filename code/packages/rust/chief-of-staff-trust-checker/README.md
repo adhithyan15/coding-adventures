@@ -18,6 +18,10 @@ The core preserves the D18 tier policy:
 - Tier 2 requires biometric assurance within thirty seconds.
 - Tier 3 requires hardware-key assurance within sixty seconds.
 
+These three deadlines are exported as the canonical policy constants consumed
+by configuration adapters. A deployment may declare the values for explicit
+schema readability, but it cannot silently change the Trust Checker contract.
+
 Denied Tier 1 requests and every Tier 2/3 denial or timeout fail closed. An
 approval weaker than the required assurance also fails closed. The provider
 owns notification, biometric, hardware-key, clock, and platform interaction;

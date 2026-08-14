@@ -11,9 +11,12 @@ use std::time::Duration;
 const MAX_RESOURCES: usize = 1_026;
 const MAX_CONTEXT_IDENTIFIER_BYTES: usize = 128;
 const MAX_RESOURCE_IDENTIFIER_BYTES: usize = 320;
-const TIER1_TIMEOUT: Duration = Duration::from_secs(5);
-const TIER2_TIMEOUT: Duration = Duration::from_secs(30);
-const TIER3_TIMEOUT: Duration = Duration::from_secs(60);
+/// Canonical Tier 1 notification window before timeout becomes approval.
+pub const TIER_1_AUTO_APPROVE_TIMEOUT: Duration = Duration::from_secs(5);
+/// Canonical Tier 2 biometric approval window before timeout becomes denial.
+pub const TIER_2_BIOMETRIC_TIMEOUT: Duration = Duration::from_secs(30);
+/// Canonical Tier 3 hardware-key approval window before timeout becomes denial.
+pub const TIER_3_HARDWARE_KEY_TIMEOUT: Duration = Duration::from_secs(60);
 
 /// One exact non-secret resource whose privilege contributes to a request.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -219,13 +222,13 @@ impl ApprovalRequirement {
         match tier {
             PrivilegeTier::Tier0 => Self::None,
             PrivilegeTier::Tier1 => Self::Notification {
-                timeout: TIER1_TIMEOUT,
+                timeout: TIER_1_AUTO_APPROVE_TIMEOUT,
             },
             PrivilegeTier::Tier2 => Self::Biometric {
-                timeout: TIER2_TIMEOUT,
+                timeout: TIER_2_BIOMETRIC_TIMEOUT,
             },
             PrivilegeTier::Tier3 => Self::HardwareKey {
-                timeout: TIER3_TIMEOUT,
+                timeout: TIER_3_HARDWARE_KEY_TIMEOUT,
             },
         }
     }
@@ -678,19 +681,19 @@ mod tests {
         assert_eq!(
             ApprovalRequirement::for_tier(PrivilegeTier::Tier1),
             ApprovalRequirement::Notification {
-                timeout: Duration::from_secs(5)
+                timeout: TIER_1_AUTO_APPROVE_TIMEOUT
             }
         );
         assert_eq!(
             ApprovalRequirement::for_tier(PrivilegeTier::Tier2),
             ApprovalRequirement::Biometric {
-                timeout: Duration::from_secs(30)
+                timeout: TIER_2_BIOMETRIC_TIMEOUT
             }
         );
         assert_eq!(
             ApprovalRequirement::for_tier(PrivilegeTier::Tier3),
             ApprovalRequirement::HardwareKey {
-                timeout: Duration::from_secs(60)
+                timeout: TIER_3_HARDWARE_KEY_TIMEOUT
             }
         );
     }

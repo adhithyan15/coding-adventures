@@ -25,6 +25,10 @@ Optional `tier_1_notification_command`, `tier_2_biometric_command`, and
 operator-reviewed helper executable. The config package only validates and
 resolves these paths; production policy owns their distinct shell-free protocols
 and keeps the corresponding interactive tier closed when its field is absent.
+The adjacent deadline declarations remain required for an explicit readable
+schema, but only the Trust Checker-owned canonical values of five, thirty, and
+sixty seconds are accepted. Any shorter or longer declaration fails validation
+instead of claiming a policy that production will not enforce.
 
 An optional closed `[smart_home]` table enables a second, Home
 Assistant-compatible loopback listener owned by the Chief process. It requires a
