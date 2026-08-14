@@ -44924,6 +44924,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         coap_entry(),
         snmp_entry(),
         nut_entry(),
+        upnp_ssdp_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49335,6 +49336,44 @@ fn nut_entry() -> IntegrationCatalogEntry {
         label: "Network UPS Tools LIST VAR client interface".to_string(),
         url: "https://networkupstools.org/docs/man/upscli_list_start.html".to_string(),
         external_id: Some("upscli_list_start".to_string()),
+    });
+    entry
+}
+
+fn upnp_ssdp_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "upnp_ssdp",
+        "UPnP SSDP",
+        "Bounded local discovery for standards-compliant UPnP devices and services.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "upnp",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("upnp_ssdp".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime performs one bounded M-SEARCH from an explicit local IPv4 interface and strictly correlates ST, USN, source, and LOCATION.",
+        "Device-description fetches, event subscriptions, SOAP actions, control, public endpoints, and long-lived discovery sockets remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Ssdp,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "OCF UPnP Device Architecture 2.0".to_string(),
+        url:
+            "https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf"
+                .to_string(),
+        external_id: Some("UPnP Device Architecture 2.0".to_string()),
     });
     entry
 }
@@ -82196,6 +82235,46 @@ mod tests {
             PrimitiveFamily::DiscoveryIndex,
         ] {
             assert!(!nut.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn upnp_ssdp_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let upnp = find_entry(&catalog, &IntegrationId::trusted("upnp_ssdp")).unwrap();
+        assert_eq!(
+            upnp.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(upnp.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(upnp.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            upnp.supported_protocols,
+            vec![ProtocolFamily::Vendor("upnp_ssdp".to_string())]
+        );
+        assert_eq!(
+            upnp.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(upnp.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(upnp.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!upnp.required_primitives.contains(&primitive));
         }
     }
 
