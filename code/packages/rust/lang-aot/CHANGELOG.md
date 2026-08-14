@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.226.8 - 2026-08-13 (ALGOL conditional transitive idempotence)
+
+The seven-backend ALGOL matrix now proves that equal conditional
+self-assignment leaves preserve a transitive dependency of a checked while-body
+assignment even when the selector is dynamic.
+
 ## 0.226.7 - 2026-08-13 (ALGOL transitive idempotent dependencies)
 
 The seven-backend ALGOL matrix now proves that an exactly self-assigned local

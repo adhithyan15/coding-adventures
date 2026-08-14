@@ -904,11 +904,13 @@ backend immediately) come before the enabler-dependent items.
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
   never changed by the body; an exact bare self-assignment does not count as a
-  change. Computed and cross-assigned dependency writes remain conservative
-  without recursive effect inference. Conditional assignments whose leaves are
-  all that same bare scalar are permitted. A variable-free statically known conditional
-  assignment scans only its selected leaf, as may a statically known predicate
-  over unchanged ordinary local boolean, integer, and real scalars, so an
+  change; conditional dependency assignments whose leaves are all that same
+  bare scalar are likewise preserving even with a dynamic selector. Computed,
+  differing, and cross-assigned dependency writes remain conservative without
+  recursive effect inference. Conditional assignments whose leaves are all
+  that same bare scalar are permitted. A variable-free statically known
+  conditional assignment scans only its selected leaf, as may a statically
+  known predicate over unchanged ordinary local boolean, integer, and real scalars, so an
   unselected changing leaf does not invalidate an exact selected
   self-assignment; computed assignment targets and nested
   controlled variables count as writes. A variable-free static body condition,
