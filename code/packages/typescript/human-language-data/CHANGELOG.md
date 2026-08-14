@@ -144,6 +144,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   endings fell away and something audible had to take over -- a stressed
   pronoun, a doubled preposition, and a comma.
 
+### Added - source-verified Cyrillic з (HL-C09EH)
+
+- Verify lowercase з as one continuous smaller-upper-lobe-to-larger-lower-lobe run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced joined lobe order while fitting the bundled compact printed glyph and documenting its omitted rising exit join.
+- Reduce measured HL-C09 debt to 94 entries and queue Cyrillic и next.
+
 ### Added - source-verified Cyrillic ж (HL-C09EG)
 
 - Verify lowercase ж as one continuous lower-left-to-centre-to-right run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
