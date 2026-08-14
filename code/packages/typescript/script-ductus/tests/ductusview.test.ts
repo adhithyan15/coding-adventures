@@ -258,6 +258,8 @@ const CYRILLIC_YERY = ductusFor("ы", "cyrillic")!;
 const cyrillicYeryOutline = cyrillicOutline("ы");
 const CYRILLIC_SOFT_SIGN = ductusFor("ь", "cyrillic")!;
 const cyrillicSoftSignOutline = cyrillicOutline("ь");
+const CYRILLIC_E = ductusFor("э", "cyrillic")!;
+const cyrillicEOutline = cyrillicOutline("э");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3321,6 +3323,38 @@ describe("Cyrillic ь — one joined stem-and-bowl run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_SOFT_SIGN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic э — outer curve before a lifted middle tongue", () => {
+  const steps = ductusSteps(CYRILLIC_E);
+  const strip = ductusFilmstrip(CYRILLIC_E, cyrillicEOutline);
+
+  it("keeps the backwards-C run before the right-to-left tongue", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep right across the upper curve",
+      "continue down around the outer right side",
+      "sweep left through the lower curve",
+      "lift, then draw the middle tongue right-to-left",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the final tongue", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicEOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CYRILLIC_E.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_E.strokes[1], 1),
     );
   });
 });
