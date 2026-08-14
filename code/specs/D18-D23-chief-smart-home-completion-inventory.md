@@ -2427,6 +2427,29 @@ claiming ownership of a CastV2 TLS channel or media session:
 This broadens local TV, display, and speaker discovery while preserving the
 authenticated session and control boundary.
 
+## Current CoAP Telemetry Breadth Slice
+
+The next breadth slice adds vendor-neutral constrained-device telemetry without
+turning unauthenticated CoAP into a control or public-network surface:
+
+- `coap-protocol` owns strict bounded Confirmable GET framing, URI-Path and
+  Accept options, token and acknowledgement correlation, response option
+  decoding, and the empty ACK required by one bounded separate response.
+- `smart-home-coap-integration` polls one explicit private, link-local, or
+  loopback unicast endpoint and projects profile-selected text or JSON number,
+  boolean, and text values into normalized D23 sensor entities.
+- D23 read authorization runs before UDP socket creation. Profiles contain at
+  most 32 points, payloads are capped at 4 KiB, exact content formats are
+  required, and a malformed or mismatched profile cannot mutate the runtime.
+- The runtime exposes no PUT, POST, DELETE, Observe, multicast discovery,
+  blockwise transfer, proxying, DTLS, OSCORE, or public-network endpoint. Those
+  require separately authenticated session, subscription, and operation policy
+  boundaries.
+
+This broadens local environmental, utility, appliance, and embedded sensor
+telemetry while preserving every independent credential, camera-resource, and
+radio-host prerequisite below.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

@@ -44921,6 +44921,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         bacnet_ip_entry(),
         knxnet_ip_entry(),
         modbus_tcp_entry(),
+        coap_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49213,6 +49214,46 @@ fn modbus_tcp_entry() -> IntegrationCatalogEntry {
         "The first-party runtime supports only read holding-register and read input-register functions.",
         "Register writes remain unavailable because classic Modbus TCP provides no peer authentication.",
     ])
+}
+
+fn coap_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "coap",
+        "CoAP",
+        "Read-only local scalar telemetry from explicitly configured constrained devices.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "coap",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("coap".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Sensor])
+    .with_discovery(&[DiscoveryMechanism::Manual, DiscoveryMechanism::FileConfig])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports bounded Confirmable GET requests to explicit local unicast endpoints with strict text and JSON scalar decoding.",
+        "Writes, Observe, multicast, blockwise transfer, proxying, DTLS, OSCORE, and public-network endpoints remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "IETF CoAP RFC 7252".to_string(),
+        url: "https://datatracker.ietf.org/doc/html/rfc7252".to_string(),
+        external_id: Some("RFC 7252".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IANA CoRE parameters".to_string(),
+        url: "https://www.iana.org/assignments/core-parameters/core-parameters.xhtml".to_string(),
+        external_id: Some("CoAP Content-Formats".to_string()),
+    });
+    entry
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -81962,6 +82003,43 @@ mod tests {
         assert!(!modbus
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
+    }
+
+    #[test]
+    fn coap_entry_exposes_bounded_read_only_udp_telemetry() {
+        let catalog = first_party_catalog();
+        let coap = find_entry(&catalog, &IntegrationId::trusted("coap")).unwrap();
+        assert_eq!(
+            coap.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(coap.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(coap.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            coap.supported_protocols,
+            vec![ProtocolFamily::Vendor("coap".to_string())]
+        );
+        assert_eq!(
+            coap.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(coap.target_entity_kinds, vec![EntityKind::Sensor]);
+        for primitive in [
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(coap.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::DiscoveryIndex,
+        ] {
+            assert!(!coap.required_primitives.contains(&primitive));
+        }
     }
 
     #[test]
