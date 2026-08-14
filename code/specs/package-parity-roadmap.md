@@ -179,10 +179,10 @@ contract around a Qt/Cairo/C++ native shell. Both now have explicit backlog
 owners; neither is treated as an unclassified blind all-language port.
 
 The D18F shared fixture lock now fixes that channel-crypto contract across
-implementations. Rust is the production baseline, while TypeScript and Python
-are portable consumers: all three reproduce the exact authenticated header,
-`D18M` v1 bytes, canonical JSON, rich payload ciphertext, verification order,
-and stable errors. The remaining Go, Ruby, and Elixir ports continue against
+implementations. Rust is the production baseline, while TypeScript, Python,
+and Go are portable consumers: all four reproduce the exact authenticated
+header, `D18M` v1 bytes, canonical JSON, rich payload ciphertext, verification
+order, and stable errors. The remaining Ruby and Elixir ports continue against
 the same corpus rather than inventing language-specific envelopes.
 
 The `9bb12864` refresh also added `chief-of-staff-channel-store`. It is an
