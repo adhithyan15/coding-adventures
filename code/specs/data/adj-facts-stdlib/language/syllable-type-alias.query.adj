@@ -1,0 +1,17 @@
+% ============================================================================
+% syllable-type-alias.query.adj — worked recall over the
+% syllable-type-alias library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is another name
+% for the VCe syllable pattern?" (direct) or "which syllable type is also
+% called magic e?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries. A syllable type
+% that is not the one tabled here abstains honestly — the engine never
+% invents an alias.
+% ============================================================================
+
+import "syllable-type-alias.adj"
+
+? syllable_type_alias(vce_long_vowel, $Alias)               % expect magic_e
+? syllable_type_alias($SyllableType, magic_e)                % reverse bind — expect vce_long_vowel
+? syllable_type_alias(closed_syllable, $Alias)                % expect abstain -- a real syllable type the same source article covers, but not one silent-e-word.adj tables
