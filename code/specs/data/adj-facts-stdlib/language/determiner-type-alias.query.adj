@@ -1,0 +1,17 @@
+% ============================================================================
+% determiner-type-alias.query.adj — worked recall over the
+% determiner-type-alias library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is another name
+% for a demonstrative determiner?" (direct) or "which determiner type is
+% also called a demonstrative adjective?" (reverse) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding queries.
+% A determiner type that is not the one tabled here abstains honestly —
+% the engine never invents an alias.
+% ============================================================================
+
+import "determiner-type-alias.adj"
+
+? determiner_type_alias(demonstrative_determiner, $Alias)          % expect demonstrative_adjective
+? determiner_type_alias($Type, demonstrative_adjective)            % reverse bind — expect demonstrative_determiner
+? determiner_type_alias(article, $Alias)                           % expect abstain -- a real, already-tabled determiner type, but its own sentence states no alias
