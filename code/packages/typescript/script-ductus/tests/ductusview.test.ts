@@ -240,6 +240,8 @@ const CYRILLIC_TE = ductusFor("т", "cyrillic")!;
 const cyrillicTeOutline = cyrillicOutline("т");
 const CYRILLIC_U = ductusFor("у", "cyrillic")!;
 const cyrillicUOutline = cyrillicOutline("у");
+const CYRILLIC_EF = ductusFor("ф", "cyrillic")!;
+const cyrillicEfOutline = cyrillicOutline("ф");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3006,6 +3008,38 @@ describe("Cyrillic у — one joined upper-body-and-descender run", () => {
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_U.strokes[0], 1),
     );
+  });
+});
+
+describe("Cyrillic ф — stem first, then one joined two-bowl run", () => {
+  const steps = ductusSteps(CYRILLIC_EF);
+  const strip = ductusFilmstrip(CYRILLIC_EF, cyrillicEfOutline);
+
+  it("shows the long stem before the lifted left-to-right bowl sequence", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the long central stem below the baseline",
+      "lift and curve over and around the left bowl",
+      "sweep through the lower-left curve to the centre",
+      "continue through the lower-right curve",
+      "rise over the right bowl to the upper junction",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 1, 1]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind both runs", () => {
+    const paths = byTag(strip.frames[4], "path");
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    const pen = paths.find((path) => path.attrs.class === "ductus__pen")!;
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicEfOutline.path,
+    );
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(CYRILLIC_EF.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(CYRILLIC_EF.strokes[1], 1));
   });
 });
 

@@ -3909,6 +3909,79 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("у"),
   },
+  // RussianIrina writes lowercase ф in two runs: the long central stem first,
+  // then, after one lift, a linked left-loop-to-right-loop body. The fitted
+  // path preserves that order while expanding the loops into the printed bowls.
+  [ductusKey("cyrillic", "ф")]: {
+    script: "cyrillic",
+    glyph: "ф",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the long central stem below the baseline",
+            path: [
+              { x: 368, y: 720 },
+              { x: 368, y: 500 },
+              { x: 368, y: 265 },
+              { x: 368, y: 0 },
+              { x: 368, y: -200 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift and curve over and around the left bowl",
+            path: [
+              { x: 368, y: 265 },
+              { x: 368, y: 470 },
+              { x: 325, y: 500 },
+              { x: 240, y: 505 },
+              { x: 160, y: 440 },
+              { x: 95, y: 350 },
+              { x: 95, y: 265 },
+            ],
+          },
+          {
+            label: "sweep through the lower-left curve to the centre",
+            path: [
+              { x: 95, y: 265 },
+              { x: 95, y: 180 },
+              { x: 160, y: 95 },
+              { x: 240, y: 35 },
+              { x: 325, y: 25 },
+              { x: 368, y: 25 },
+            ],
+          },
+          {
+            label: "continue through the lower-right curve",
+            path: [
+              { x: 368, y: 25 },
+              { x: 411, y: 25 },
+              { x: 500, y: 35 },
+              { x: 580, y: 100 },
+              { x: 640, y: 180 },
+              { x: 640, y: 265 },
+            ],
+          },
+          {
+            label: "rise over the right bowl to the upper junction",
+            path: [
+              { x: 640, y: 265 },
+              { x: 640, y: 350 },
+              { x: 580, y: 430 },
+              { x: 500, y: 500 },
+              { x: 411, y: 500 },
+              { x: 368, y: 470 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ф"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
