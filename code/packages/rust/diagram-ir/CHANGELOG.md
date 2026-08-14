@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.57.0
+
+- Preserve structural diagram accessibility title and description metadata.
+
 ## 0.56.0
 
 - Preserve the six SysML Requirement definition kinds as typed metadata.

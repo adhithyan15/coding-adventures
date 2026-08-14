@@ -12,7 +12,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H:   f64 = 40.0;
@@ -35,7 +35,13 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
     let canvas_h = canvas_height(&nodes, &groups);
     let rels = layout_relationships(diagram, &nodes);
     LayoutedStructuralDiagram {
-        width: canvas_w, height: canvas_h, groups, nodes, relationships: rels,
+        width: canvas_w,
+        height: canvas_h,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        groups,
+        nodes,
+        relationships: rels,
     }
 }
 
@@ -370,6 +376,8 @@ mod tests {
         StructuralDiagram {
             kind: StructuralKind::Class,
             title: Some("Domain".into()),
+            accessibility_title: None,
+            accessibility_description: None,
             direction: None,
             nodes: vec![
                 StructuralNode {
@@ -404,7 +412,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.5.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.6.0"); }
 
     #[test]
     fn two_nodes_laid_out() {

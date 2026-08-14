@@ -7,6 +7,9 @@ skip:
 
 NEWLINE            = /\r?\n/
 HEADER             = /requirementDiagram/
+ACC_DESCR_BLOCK    = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE          = /accTitle[ \t]*:[^#\r\n;]+/
+ACC_DESCR          = /accDescr[ \t]*:[^#\r\n;]+/
 TITLE              = /title[ \t]+[^\r\n;#]+/
 DIRECTION          = /direction[ \t]+(?:TB|BT|LR|RL)/
 REQUIREMENT_START  = /(?:functionalRequirement|interfaceRequirement|performanceRequirement|physicalRequirement|designConstraint|requirement)[ \t]+(?:"[^"]+"|[^\s{]+)[ \t]*\{/

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.103.0
+
+- Parse Requirement accessibility statements into structural semantic IR.
+
 ## 0.102.0
 
 - Lower all six Requirement definition kinds into typed semantic metadata.

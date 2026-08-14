@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.102.0";
+pub const VERSION: &str = "0.103.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -743,6 +743,8 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     })?;
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut direction = None;
     let mut nodes = Vec::new();
     let mut relationships = Vec::new();
@@ -755,6 +757,33 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
             "TITLE" => {
                 let value = cursor.advance().value.clone();
                 title = Some(value.trim_start_matches("title").trim().to_string());
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("accessibility block requires '{'");
+                let close = value.rfind('}').expect("accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
             }
             "DIRECTION" => {
                 let value = cursor.advance().value.clone();
@@ -854,6 +883,8 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
         title,
+        accessibility_title,
+        accessibility_description,
         direction,
         nodes,
         groups: Vec::new(),
@@ -1278,6 +1309,8 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
         title,
+        accessibility_title: None,
+        accessibility_description: None,
         direction: None,
         nodes,
         groups: vec![],
@@ -4596,6 +4629,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
         title,
+        accessibility_title: None,
+        accessibility_description: None,
         direction: None,
         nodes,
         groups: vec![],
@@ -4799,6 +4834,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         title,
+        accessibility_title: None,
+        accessibility_description: None,
         direction: None,
         nodes,
         groups,
@@ -6871,7 +6908,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.102.0");
+        assert_eq!(crate::VERSION, "0.103.0");
     }
 
     #[test]

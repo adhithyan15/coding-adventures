@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Carry structural accessibility metadata into resolved IR.
+
 ## 0.5.0
 
 - Carry typed Requirement definition kinds through structural layout inputs.

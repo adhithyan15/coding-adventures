@@ -26,8 +26,8 @@ mod apple {
     use layout_ir::font_spec;
     use mermaid_parser::{
         parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_journey, parse_pie,
-        parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram, parse_state_diagram,
-        parse_to_diagram as parse_mermaid_to_diagram,
+        parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
+        parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
@@ -739,7 +739,7 @@ mod apple {
     #[test]
     fn render_mermaid_requirement_to_png() {
         let diagram = parse_requirement_diagram(
-            "requirementDiagram\ndirection LR\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nsystem - satisfies -> test_req",
+            "requirementDiagram\naccTitle: Native requirement graph\naccDescr: Requirement graph rendered through Metal\ndirection LR\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nsystem - satisfies -> test_req",
         )
         .expect("Mermaid requirement parse failed");
         let layout = layout_structural_diagram(&diagram);
@@ -750,7 +750,12 @@ mod apple {
         let scene = diagram_to_paint_structural(
             &layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 12.0),
                 title_font: font_spec("Helvetica", 16.0),
@@ -763,6 +768,12 @@ mod apple {
         write_png(&pixels, "/tmp/mermaid_requirement_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native requirement graph");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Requirement graph rendered through Metal"
+        );
     }
 
     #[test]
