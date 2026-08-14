@@ -1,0 +1,639 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: SA-C17-night
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 800
+chapter: 17
+type: word
+headword: "रात्रिः"
+gloss: "night"
+romanization: "rātriḥ"
+concept_tag: SA-NOUN-NIGHT
+prerequisites: [SA-C17-day]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-01]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-02]
+practises:
+  knowledge: [SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-day]
+---
+
+# रात्रिः (rātriḥ) — night
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The other half of the day.
+
+## You'll want to know: रात्रिः
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-02]; assesses=[] -->
+
+**रात्रिः** (*rātriḥ*) — "night."
+
+Where दिनम् is the bright, रात्रिः is its opposite, and the pair is one of the
+oldest ways any language divides the world. In the hymns it is a name as much as
+a noun: Rātrī is addressed directly, a presence rather than an absence of light.
+
+The ending here is *-iḥ*, which is neither of the two you have met. Sanskrit has
+more than two families, and this is your first sight of a third. You do not need
+it yet — only the honest note that the system is bigger than the part you have
+seen.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Day and night, and a quiet warning: the *-am* / *-aḥ* division you learned is
+real but not the whole map.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *rātriḥ* — "night"]
+- [YOU SAY: the pair together — *dinam*, *rātriḥ*]
+- [YOU SAY: which ending is new to you here]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-02] -->
+
+[PAUSE 3s] What is रात्रिः in the hymns, beyond a noun? (A presence addressed by name.)
+What does its ending tell you? (That there are more than two noun families.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: SA-C17-time-words
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 840
+chapter: 17
+type: grammar
+headword: "कालशब्दाः"
+gloss: "where a time word stands"
+romanization: "kāla-śabdāḥ"
+concept_tag: SA-GRAMMAR-TIME-WORDS
+prerequisites: [SA-C17-always]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-05]
+introduces:
+  knowledge: [SA-GRAMMAR-C17-TIME-WORDS]
+practises:
+  knowledge: [SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-05, SA-GRAMMAR-C17-TIME-WORDS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-always]
+---
+
+# कालशब्दाः (kāla-śabdāḥ) — where a time word stands
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You have five time words. This is where they go.
+
+## You'll want to know: कालशब्दाः
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C17-TIME-WORDS]; assesses=[] -->
+
+Three of this chapter's words — अद्य, ह्यः, सदा — are not nouns at all. Look for
+an *-am* or *-aḥ* or *-iḥ* on them and you will not find one. They attach to a
+sentence, say *when*, and keep the same shape wherever they land.
+
+Sanskrit lets them stand almost anywhere. सदा पठति and पठति सदा both say "he
+always reads," and neither is more correct than the other. You have been given a
+lot of attention to endings, and this is the payoff: they are carrying the work
+that word order carries in English.
+
+The two that *are* nouns, दिनम् and रात्रिः, behave like any other noun, and take
+adjectives in front of them the way गृहम् does.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You can now say when something happens, and you have met the single most
+important fact about Sanskrit word order: it is loose because the endings are
+strict.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-05, SA-GRAMMAR-C17-TIME-WORDS] -->
+
+[PAUSE 1s]
+- [YOU SAY: "he always reads," both ways round]
+- [YOU SAY: "a good day" — *uttama dinam*]
+- [YOU SAY: which three of the five never change]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-05, SA-GRAMMAR-C17-TIME-WORDS] -->
+
+[PAUSE 3s] Which three words never change their ending? (अद्य, ह्यः, सदा.) Why can
+Sanskrit move words around freely? (Because the endings carry the grammar, not
+the order.)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: SA-C17-today
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 810
+chapter: 17
+type: word
+headword: "अद्य"
+gloss: "today"
+romanization: "adya"
+concept_tag: SA-ADV-TODAY
+prerequisites: [SA-C17-night]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-02]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-03]
+practises:
+  knowledge: [SA-LEX-C17-TIME-02, SA-LEX-C17-TIME-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-night]
+---
+
+# अद्य (adya) — today
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Naming the day you are standing in.
+
+## You'll want to know: अद्य
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-03]; assesses=[] -->
+
+**अद्य** (*adya*) — "today."
+
+Take it apart and the older shape shows: *a-* ("this") plus the same *dy-* that
+sits inside दिनम् and द्यौः. **This day** — said so often that the two halves
+fused and stopped being separable for ordinary speakers.
+
+This is how a great many everyday words are built, in Sanskrit and elsewhere.
+English *today* is *to* + *day*, and *tomorrow* is *to* + *morrow*: the same
+trick, a thousand years later, in a different family.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A word you can now see through. When a short everyday word looks unanalysable,
+it is usually a fused phrase that got worn smooth.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-02, SA-LEX-C17-TIME-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *adya* — "today"]
+- [YOU SAY: the two pieces inside it — *a-* and *dy-*]
+- [YOU SAY: the English word built the same way (*today*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-02, SA-LEX-C17-TIME-03] -->
+
+[PAUSE 3s] What are the two pieces of अद्य? (*A-*, "this," and the *dy-* of "day.")
+What English word is built the same way? (*Today*.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: SA-C17-yesterday
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 820
+chapter: 17
+type: word
+headword: "ह्यः"
+gloss: "yesterday"
+romanization: "hyaḥ"
+concept_tag: SA-ADV-YESTERDAY
+prerequisites: [SA-C17-today]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-03]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-04]
+practises:
+  knowledge: [SA-LEX-C17-TIME-03, SA-LEX-C17-TIME-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-today]
+---
+
+# ह्यः (hyaḥ) — yesterday
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The day behind you — and a word with relatives you already speak.
+
+## You'll want to know: ह्यः
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-04]; assesses=[] -->
+
+**ह्यः** (*hyaḥ*) — "yesterday."
+
+This one is a gift, because its cousins are everywhere. The same ancestral word
+gave Latin *heri*, which became Spanish *ayer* and French *hier*; and it gave
+Germanic *gester-*, which is the **yester-** still sitting inside English
+*yesterday*.
+
+So ह्यः, *heri*, *ayer* and *yester-* are four survivals of one word for
+"the day before this one," spoken continuously for as long as any of these
+languages have existed. Very few words let you see that far back this clearly.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A word that is genuinely easier to keep because of what it is related to. When
+a Sanskrit word has a visible European cousin, learn them as one thing.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-03, SA-LEX-C17-TIME-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *hyaḥ* — "yesterday"]
+- [YOU SAY: its Latin cousin — *heri*]
+- [YOU SAY: the English word that still carries it (*yester*day)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-03, SA-LEX-C17-TIME-04] -->
+
+[PAUSE 3s] Which Latin word is ह्यः related to? (*Heri*.) What English word still
+carries the same root? (*Yester*day.) What does the family all mean? (The day
+before this one.)
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: SA-C18-from-where
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 880
+chapter: 18
+type: word
+headword: "कुतः"
+gloss: "from where?"
+romanization: "kutaḥ"
+concept_tag: SA-Q-FROM-WHERE
+prerequisites: [SA-C18-how-many]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-03]
+introduces:
+  knowledge: [SA-LEX-C18-ASK-04]
+practises:
+  knowledge: [SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-how-many]
+---
+
+# कुतः (kutaḥ) — from where?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can ask where something is. This asks where it came from.
+
+## You'll want to know: कुतः
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-04]; assesses=[] -->
+
+**कुतः** (*kutaḥ*) — "from where? whence?"
+
+You already have **कुत्र** (*kutra*), "where?" Now compare the two endings:
+
+*कुत्र* — where, at what place. *कुतः* — from where, out of what place.
+
+The *-tas* ending means "from," and Sanskrit uses it far beyond question words.
+English once had this distinction too and has mostly lost it: *where* against
+*whence*, *there* against *thence*. Sanskrit keeps them working.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Four *k-* words, and a distinction English has let go of. When a language keeps
+a difference yours has dropped, that is worth noticing rather than flattening.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kutaḥ* — "from where?"]
+- [YOU SAY: it against *kutra*, "where?"]
+- [YOU SAY: the English pair that used to make the same distinction (*where*, *whence*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04] -->
+
+[PAUSE 3s] What does the *-tas* ending add? ("From.") Which English word matches कुतः?
+(*Whence*.)
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+id: SA-C18-how-many
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 870
+chapter: 18
+type: word
+headword: "कति"
+gloss: "how many?"
+romanization: "kati"
+concept_tag: SA-Q-HOW-MANY
+prerequisites: [SA-C18-why]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-02]
+introduces:
+  knowledge: [SA-LEX-C18-ASK-03]
+practises:
+  knowledge: [SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-why]
+---
+
+# कति (kati) — how many?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can count to five. This asks how many there are.
+
+## You'll want to know: कति
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-03]; assesses=[] -->
+
+**कति** (*kati*) — "how many?"
+
+*K-* at the front again, and this time the relatives are visible outside Sanskrit
+too: Latin *quot*, "how many," is the same word, and it survives in English
+**quota** and **quotient** — both of them, at root, answers to *how many*.
+
+Pair it with the numbers you already have and it is immediately useful: कति
+गृहाणि, "how many houses?"
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three *k-* words now, and one of them has handed you two English words as a
+souvenir.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kati* — "how many?"]
+- [YOU SAY: its Latin cousin — *quot*]
+- [YOU SAY: the two English words built on it (*quota*, *quotient*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03] -->
+
+[PAUSE 3s] Which Latin word is कति related to? (*Quot*.) Which English words carry it?
+(*Quota*, *quotient*.)
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+id: SA-C18-k-words
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 890
+chapter: 18
+type: grammar
+headword: "क-शब्दाः"
+gloss: "every question begins with k-"
+romanization: "ka-śabdāḥ"
+concept_tag: SA-GRAMMAR-K-QUESTIONS
+prerequisites: [SA-C18-from-where]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-04]
+introduces:
+  knowledge: [SA-GRAMMAR-C18-K-QUESTIONS]
+practises:
+  knowledge: [SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-from-where]
+---
+
+# क-शब्दाः (ka-śabdāḥ) — every question begins with k-
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Every question word you have met, gathered in one place, so you can see they are one word wearing different endings.
+
+## You'll want to know: क-शब्दाः
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C18-K-QUESTIONS]; assesses=[] -->
+
+Line them up:
+
+*कः* — who? · *किम्* — what? · *कुत्र* — where? · *कुतः* — from where? · *कथम्* —
+how? · *कदा* — when? · *कति* — how many?
+
+Seven questions, one opening consonant. Sanskrit builds them all on a single
+interrogative stem **क-** and distinguishes them entirely by what follows.
+
+The family reaches much further than Sanskrit. That *k-* is the ancestral
+*\\*kʷ-*, which became Latin *qu-* — *quis*, *quid*, *quando*, *quot* — and, by a
+regular sound change, Germanic *hw-*, which English writes **wh-**: *who*,
+*what*, *where*, *when*, *how*.
+
+So *कः* and *who*, *किम्* and *what*, *कदा* and *when* are not lookalikes. They
+are the same words, separated by five thousand years.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You now hold every basic question in Sanskrit, and one fact that makes them
+nearly impossible to forget: if it opens with क्, it is asking you something.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS] -->
+
+[PAUSE 1s]
+- [YOU SAY: all seven, in a row]
+- [YOU SAY: the English *wh-* word for each]
+- [YOU SAY: what the *k-* became in Latin (*qu-*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS] -->
+
+[PAUSE 3s] What do all seven share? (An opening क्.) What did that consonant become in
+Latin, and in English? (*Qu-*, and *wh-*.) Are कः and *who* related? (Yes — the
+same word, five thousand years apart.)
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+id: SA-C18-when
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 850
+chapter: 18
+type: word
+headword: "कदा"
+gloss: "when?"
+romanization: "kadā"
+concept_tag: SA-Q-WHEN
+prerequisites: [SA-C17-time-words]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-C18-ASK-01]
+practises:
+  knowledge: [SA-LEX-C18-ASK-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-time-words]
+---
+
+# कदा (kadā) — when?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can say when. This chapter is for asking when.
+
+## You'll want to know: कदा
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-01]; assesses=[] -->
+
+**कदा** (*kadā*) — "when?"
+
+Set it beside the word you just learned and something jumps out:
+
+*सदा* — always. *कदा* — when?
+
+One letter apart, and the difference is the whole of this chapter. Sanskrit
+builds its question words on **क्** (*k-*), and it builds several of its answering
+words on **स्** (*s-*) or **त्** (*t-*). Ask with *k-*, answer with *t-*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Your first *k-* word met deliberately. There are four more in this chapter, and
+by the end the pattern will be doing the remembering for you.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kadā* — "when?"]
+- [YOU SAY: it against its answer — *kadā*, *sadā*]
+- [YOU SAY: "when does he read?" — *kadā paṭhati*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01] -->
+
+[PAUSE 3s] What single letter separates कदा from सदा? (*K-* against *s-*.) Which letter
+opens a Sanskrit question word? (*K-*.)
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+id: SA-C18-why
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 860
+chapter: 18
+type: word
+headword: "किमर्थम्"
+gloss: "why?"
+romanization: "kimartham"
+concept_tag: SA-Q-WHY
+prerequisites: [SA-C18-when]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-01]
+introduces:
+  knowledge: [SA-LEX-C18-ASK-02]
+practises:
+  knowledge: [SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-when]
+---
+
+# किमर्थम् (kimartham) — why?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The hardest question in any language, and Sanskrit builds it out of two words you can almost read.
+
+## You'll want to know: किमर्थम्
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-02]; assesses=[] -->
+
+**किमर्थम्** (*kimartham*) — "why?"
+
+It is transparently two pieces:
+
+*किम्* ("what") + *अर्थम्* ("for the purpose of, for the sake of")
+
+— literally **"for what purpose?"** Sanskrit does not have a single opaque word
+for *why*; it asks what the aim was, and lets the shape of the question show.
+
+*अर्थ* (*artha*) is worth keeping on its own. It means purpose, aim, meaning,
+and wealth all at once, and it is one of the four goals of life in the classical
+scheme. A word for "why" built on it is asking, quite seriously, *what is this
+for?*
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A compound you can take apart on sight — and *k-* again at the front, exactly as
+promised.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kimartham* — "why?"]
+- [YOU SAY: its two pieces — *kim* and *artham*]
+- [YOU SAY: what अर्थ means on its own (purpose, aim, meaning, wealth)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-02] -->
+
+[PAUSE 3s] What are the two pieces of किमर्थम्? (*Kim*, "what," and *artham*, "for the
+purpose of.") What does अर्थ mean by itself? (Purpose, aim, meaning, wealth.)
+`;export{l as a,r as c,d as i,t as l,h as n,s as o,p as r,a as s,_ as t};
