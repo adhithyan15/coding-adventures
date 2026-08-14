@@ -1,0 +1,17 @@
+% ============================================================================
+% greek-alphabet-standardization.query.adj — worked recall over the
+% greek-alphabet-standardization library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "when did the
+% Euclidean Greek alphabet become standard?" (direct) or "which alphabet
+% variant became standard by the 4th century BC?" (reverse) — it states
+% no fact of its own — it only `import`s the grounded table and asks
+% binding queries. An alphabet variant that is not the one tabled here
+% abstains honestly — the engine never invents a period.
+% ============================================================================
+
+import "greek-alphabet-standardization.adj"
+
+? greek_alphabet_standardization(euclidean_alphabet, $Period)              % expect fourth_century_bc
+? greek_alphabet_standardization($AlphabetName, fourth_century_bc)            % reverse bind — expect euclidean_alphabet
+? greek_alphabet_standardization(attic_alphabet, $Period)                  % expect abstain -- a real, distinct Greek alphabet variant, but not named in the cited span
