@@ -1,0 +1,20 @@
+% ============================================================================
+% optic-focal-point-location.query — worked recall queries against
+% optic-focal-point-location.adj (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% location, find the element), and honest abstention on concave_lens
+% (this table only grounds the three elements whose cited span states
+% where the focal point sits).
+% ============================================================================
+
+import "optic-focal-point-location.adj"
+
+% Forward: where does the cited OpenStax span put a convex lens's focal point?
+? optic_focal_point_location(convex_lens, $Location)
+
+% Backward: which element has its focal point behind it?
+? optic_focal_point_location($Optic, behind_the_mirror)
+
+% Honest abstention: concave_lens's cited span describes ray divergence, not a focal-point location.
+? optic_focal_point_location(concave_lens, $LocationLens)
