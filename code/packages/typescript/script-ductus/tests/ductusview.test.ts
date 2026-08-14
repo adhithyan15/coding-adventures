@@ -218,6 +218,8 @@ const CYRILLIC_ZE = ductusFor("з", "cyrillic")!;
 const cyrillicZeOutline = cyrillicOutline("з");
 const CYRILLIC_I = ductusFor("и", "cyrillic")!;
 const cyrillicIOutline = cyrillicOutline("и");
+const CYRILLIC_SHORT_I = ductusFor("й", "cyrillic")!;
+const cyrillicShortIOutline = cyrillicOutline("й");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2671,6 +2673,38 @@ describe("Cyrillic и — one continuous stem-diagonal-stem run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_I.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic й — joined body followed by a lifted breve", () => {
+  const steps = ductusSteps(CYRILLIC_SHORT_I);
+  const strip = ductusFilmstrip(CYRILLIC_SHORT_I, cyrillicShortIOutline);
+
+  it("shows the three-part body before the separately drawn breve", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "rise diagonally to the upper right",
+      "descend the right stem and finish at the baseline",
+      "lift, then draw the breve from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("keeps the joined body visible over the exact breve-bearing glyph", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicShortIOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CYRILLIC_SHORT_I.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_SHORT_I.strokes[1], 1),
     );
   });
 });

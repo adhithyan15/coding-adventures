@@ -86,6 +86,7 @@ const CYRILLIC_IO = DUCTUS[ductusKey("cyrillic", "ё")];
 const CYRILLIC_ZHE = DUCTUS[ductusKey("cyrillic", "ж")];
 const CYRILLIC_ZE = DUCTUS[ductusKey("cyrillic", "з")];
 const CYRILLIC_I = DUCTUS[ductusKey("cyrillic", "и")];
+const CYRILLIC_SHORT_I = DUCTUS[ductusKey("cyrillic", "й")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1328,6 +1329,20 @@ describe("handwriting ductus", () => {
     expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
   });
 
+  it("Cyrillic й completes its joined body before the lifted breve", () => {
+    expect(CYRILLIC_SHORT_I.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_SHORT_I)).toBe(1);
+    expect(CYRILLIC_SHORT_I.strokes).toHaveLength(2);
+    expect(CYRILLIC_SHORT_I.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    const body = CYRILLIC_SHORT_I.strokes[0].segments;
+    expect(body[0].path.at(-1)).toEqual(body[1].path[0]);
+    expect(body[1].path.at(-1)).toEqual(body[2].path[0]);
+    const breve = CYRILLIC_SHORT_I.strokes[1].segments[0].path;
+    expect(breve[0].x).toBeLessThan(breve.at(-1)!.x);
+    expect(Math.min(...breve.map((point) => point.y))).toBeLessThan(breve[0].y);
+    expect(Math.min(...breve.map((point) => point.y))).toBeLessThan(breve.at(-1)!.y);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2389,6 +2404,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("и", CYRILLIC_I.source.url)).toBe(
       "_fonts/NotoSansCyrillic-Static.ttf",
     );
+    expect(verifiedLetterFont("й", CYRILLIC_SHORT_I.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -3251,6 +3269,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*03:56–04:02.*upper left.*descends to the baseline.*rising diagonal.*descends the right stem.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded Latin u.*rising entry side.*exit join.*bundled Noto Sans Cyrillic.*printed backwards-N form.*two straight vertical stems.*no entry or exit joins.*left-stem-to-rising-diagonal-to-right-stem order.*descend the left stem.*baseline.*rise through the diagonal.*descend the right stem.*connected cursive restores.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic й traces its body and breve to the all-letter native lesson", () => {
+    const src = CYRILLIC_SHORT_I.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase й.*04:17–04:24.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*04:17–04:24.*same left-stem-to-rising-diagonal-to-right-stem body.*one continuous pen-down run.*small rising exit.*lifts.*breve above from left to right.*one dipped arc.*two strokes.*one intervening lift.*rounded Latin u.*entry and exit joins.*shallow curved breve.*bundled Noto Sans Cyrillic.*printed backwards-N body.*two straight stems.*separate thicker breve.*body-before-breve order.*left-to-right breve direction.*one-lift evidence.*descend the left stem.*rise through the diagonal.*descend the right stem.*sweep down and up through the breve.*connected cursive restores.*breve remains separate/i,
     );
   });
 
