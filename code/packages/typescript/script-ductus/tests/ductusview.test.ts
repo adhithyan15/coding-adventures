@@ -244,6 +244,8 @@ const CYRILLIC_EF = ductusFor("ф", "cyrillic")!;
 const cyrillicEfOutline = cyrillicOutline("ф");
 const CYRILLIC_HA = ductusFor("х", "cyrillic")!;
 const cyrillicHaOutline = cyrillicOutline("х");
+const CYRILLIC_TSE = ductusFor("ц", "cyrillic")!;
+const cyrillicTseOutline = cyrillicOutline("ц");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3073,6 +3075,35 @@ describe("Cyrillic х — two facing curves fitted through one printed crossing"
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(CYRILLIC_HA.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(CYRILLIC_HA.strokes[1], 1));
+  });
+});
+
+describe("Cyrillic ц — one joined stem-to-stem-to-tail run", () => {
+  const steps = ductusSteps(CYRILLIC_TSE);
+  const strip = ductusFilmstrip(CYRILLIC_TSE, cyrillicTseOutline);
+
+  it("keeps the square printed body and descender in source order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "sweep along the base and rise through the right stem",
+      "retrace the right stem and cross the tail shoulder",
+      "descend the short tail below the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined path", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicTseOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_TSE.strokes[0], 1),
+    );
   });
 });
 
