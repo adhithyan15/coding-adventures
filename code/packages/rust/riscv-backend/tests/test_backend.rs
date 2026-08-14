@@ -1254,6 +1254,63 @@ fn linked_module_executes_static_byte_buffer_loads_and_stores() {
 }
 
 #[test]
+fn linked_module_loads_initialized_string_data_images() {
+    let main = vec![
+        ci(
+            "str_const",
+            Some("message"),
+            vec![CIROperand::Var("HI".into())],
+            "str",
+        ),
+        ci("const_i64", Some("zero"), vec![CIROperand::Int(0)], "i64"),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "load_byte",
+            Some("first"),
+            vec![
+                CIROperand::Var("message".into()),
+                CIROperand::Var("zero".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "load_byte",
+            Some("second"),
+            vec![
+                CIROperand::Var("message".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "add_i64",
+            Some("result"),
+            vec![
+                CIROperand::Var("first".into()),
+                CIROperand::Var("second".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &[], "i64"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("data-image execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, i32::from(b'H') + i32::from(b'I'));
+    assert_eq!(result.return_value_high, 0);
+}
+
+#[test]
 fn linked_module_allocates_a_runtime_sized_byte_buffer() {
     let params = vec![("size".to_owned(), "i64".to_owned())];
     let main = vec![
@@ -1629,16 +1686,16 @@ fn rejects_float_arithmetic_comparison_return_and_parameters() {
 #[test]
 fn non_float_unsupported_types_keep_the_generic_refusal() {
     // The float refusal must not swallow the ordinary "no lowering yet" case:
-    // a `str` is unsupported for a different reason and keeps its own error.
+    // an aggregate is unsupported for a different reason and keeps its own error.
     let cir = vec![ci(
-        "const_str",
+        "const_array",
         Some("s"),
-        vec![CIROperand::Var("hello".into())],
-        "str",
+        vec![CIROperand::Int(0)],
+        "array<i64>",
     )];
     assert_eq!(
-        compile(&ctx("main", &[], "i32"), &cir).expect_err("no string lowering"),
-        BackendError::UnsupportedType("str".to_owned())
+        compile(&ctx("main", &[], "i32"), &cir).expect_err("no array lowering"),
+        BackendError::UnsupportedType("array".to_owned())
     );
 }
 
