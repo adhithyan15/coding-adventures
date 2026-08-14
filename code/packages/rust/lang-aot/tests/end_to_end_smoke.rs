@@ -956,6 +956,40 @@ fn basic_integral_literal_print_executes_in_the_riscv_simulator() {
 }
 
 #[test]
+fn basic_integral_let_arithmetic_and_if_execute_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("expressions.bas");
+    let bin = dir.path().join("expressions.bin");
+    std::fs::write(
+        &src,
+        b"10 LET A = 30\n20 LET B = 12\n30 LET C = A + B\n40 IF C = 42 THEN 60\n50 PRINT 0\n60 PRINT C\n70 END\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic)
+        .expect("integral BASIC LET, arithmetic, and IF must lower to RV32I");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the BASIC RV32I binary must execute in the simulator");
+    assert!(run.halted);
+    assert_eq!(run.byte_output, b"42\n");
+}
+
+#[test]
+fn basic_integral_division_remains_rejected_on_riscv32() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("division.bas");
+    let bin = dir.path().join("division.bin");
+    std::fs::write(&src, b"10 PRINT 3 / 2\n20 END\n").unwrap();
+
+    let err = lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic)
+        .expect_err("BASIC division can produce a fractional REAL value");
+    assert!(format!("{err}").contains("division"));
+    assert!(!bin.exists());
+}
+
+#[test]
 fn basic_fractional_literal_remains_rejected_on_riscv32() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("fraction.bas");
@@ -971,7 +1005,7 @@ fn basic_fractional_literal_remains_rejected_on_riscv32() {
         "the target must name its refusal; got: {msg}"
     );
     assert!(
-        msg.contains("finite integral literals"),
+        msg.contains("whole-number literals"),
         "the refusal must describe the supported BASIC RV32I subset; got: {msg}"
     );
     assert!(
