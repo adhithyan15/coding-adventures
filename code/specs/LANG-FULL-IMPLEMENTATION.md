@@ -902,7 +902,9 @@ backend immediately) come before the enabler-dependent items.
   ordinary local scalars that
   the body does not change. Read-only body uses, exact scalar
   self-assignments, and conditional assignments whose leaves are all that same
-  bare scalar are permitted; computed assignment targets and nested
+  bare scalar are permitted. A variable-free statically known conditional
+  assignment scans only its selected leaf, so an unselected changing leaf does
+  not invalidate an exact selected self-assignment; computed assignment targets and nested
   controlled variables count as writes. A variable-free static body condition,
   or a statically known predicate whose referenced dependencies are all local
   boolean, integer, or real scalars that the body never changes, scans only its
