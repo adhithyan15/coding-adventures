@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.63.0
+
+- Tokenize GitGraph titles and single-line or multiline accessibility metadata.
+
 ## 0.62.0
 
 - Preserve quoted Requirement identifiers in style and class statement tokens for semantic parsing.

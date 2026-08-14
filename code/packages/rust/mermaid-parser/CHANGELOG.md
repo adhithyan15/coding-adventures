@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.112.0
+
+- Parse GitGraph titles and accessibility metadata into temporal semantic IR.
+
 ## 0.111.0
 
 - Graduate Requirement diagrams to full Mermaid 11.16.1 compatibility with a pinned upstream acceptance corpus.

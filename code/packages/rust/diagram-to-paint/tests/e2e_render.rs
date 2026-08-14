@@ -564,12 +564,12 @@ mod apple {
     #[test]
     fn render_mermaid_gitgraph_to_png() {
         let git = parse_gitgraph(
-            "gitGraph LR:\ncommit id: \"root\"\nbranch feature\ncheckout feature\ncommit id: \"work\" msg: \"Build parser\"\ncherry-pick id: \"root\" parent: \"work\"\ncheckout main\nmerge feature tag: \"v1\"",
+            "gitGraph LR:\ntitle GitGraph pipeline\naccTitle: Native GitGraph\naccDescr: GitGraph rendered through Metal\ncommit id: \"root\"\nbranch feature\ncheckout feature\ncommit id: \"work\" msg: \"Build parser\"\ncherry-pick id: \"root\" parent: \"work\"\ncheckout main\nmerge feature tag: \"v1\"",
         )
         .expect("Mermaid GitGraph parse failed");
         let temporal = diagram_ir::TemporalDiagram {
             kind: diagram_ir::TemporalKind::Git,
-            title: Some("GitGraph pipeline".to_string()),
+            title: git.title.clone(),
             body: diagram_ir::TemporalBody::Git(git),
         };
         let layout = layout_temporal_diagram(&temporal, 800.0);
@@ -600,6 +600,12 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native GitGraph");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "GitGraph rendered through Metal"
+        );
     }
 
     #[test]

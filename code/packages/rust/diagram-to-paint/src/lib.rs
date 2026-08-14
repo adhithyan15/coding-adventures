@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.53.0";
+pub const VERSION: &str = "0.54.0";
 
 use std::collections::HashMap;
 
@@ -2329,6 +2329,28 @@ where
 
     for item in &diagram.items {
         match item {
+            LayoutedTemporalItem::TemporalTitle {
+                x,
+                y,
+                width,
+                height,
+                label,
+            } => {
+                text_children.push(text_node(
+                    label,
+                    *x + 8.0,
+                    *y + 6.0,
+                    *width - 16.0,
+                    *height - 12.0,
+                    options.title_font.clone(),
+                    Color {
+                        r: 17,
+                        g: 24,
+                        b: 39,
+                        a: 255,
+                    },
+                ));
+            }
             LayoutedTemporalItem::JourneyTitle {
                 x,
                 y,
@@ -3377,7 +3399,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.53.0");
+        assert_eq!(crate::VERSION, "0.54.0");
     }
 
     #[test]
