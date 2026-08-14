@@ -597,8 +597,10 @@ A conforming implementation preserves all of these properties:
 
 ## Required conformance corpus
 
-The shared D18P fixture manifest will be generated from the Rust compatibility
-baseline and consumed unchanged by all six languages. It must cover at least:
+The shared D18P fixture manifest is generated from the Rust compatibility
+baseline at `code/fixtures/chief-of-staff-channel/v1/manifest.json` and is
+consumed unchanged by every language lane. The completed six-language corpus
+must cover at least:
 
 - canonical active and destroyed D18C records, unsorted receiver input, binary
   agent IDs, maximum bounds, and membership failures
@@ -629,8 +631,8 @@ production defaults.
 Issue #131 is complete only after this sequence:
 
 1. Merge this normative D18P profile.
-2. Add one shared fixture manifest and a Rust adapter proving the profile is
-   byte- and behavior-compatible with the shipped production implementation.
+2. **Complete:** the shared fixture manifest and Rust adapter prove the profile
+   is byte- and behavior-compatible with the shipped production implementation.
 3. Implement the deterministic definition/store/role kernel in TypeScript,
    Python, Go, Ruby, and Elixir, using idiomatic immutable values and injected
    atomic storage/crypto sources.
@@ -654,8 +656,12 @@ The Rust compatibility sources are:
 ```text
 code/packages/rust/chief-of-staff-channel-crypto/src/wire.rs
 code/packages/rust/chief-of-staff-channel-store/src/lib.rs
+code/packages/rust/chief-of-staff-channel-store/src/profile.rs
 code/packages/rust/chief-of-staff-channel-endpoints/src/lib.rs
+code/packages/rust/chief-of-staff-channel-endpoints/src/profile.rs
+code/packages/rust/chief-of-staff-channel-endpoints/tests/d18p_fixtures.rs
 code/packages/rust/storage-core/src/lib.rs
+code/fixtures/chief-of-staff-channel/v1/manifest.json
 ```
 
 D18F remains normative for the encrypted message:

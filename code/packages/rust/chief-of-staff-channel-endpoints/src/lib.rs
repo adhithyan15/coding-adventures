@@ -8,6 +8,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18P definition codec and stable endpoint failure classification.
+pub mod profile;
+
 use std::collections::BTreeMap;
 
 use chief_of_staff_channel_crypto::wire::{

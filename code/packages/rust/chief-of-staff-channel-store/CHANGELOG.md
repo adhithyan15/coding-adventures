@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose the production D18S state and D18A cursor codecs, normative content
+  types and bounds, and stable D18P error codes through a public compatibility
+  module.
 - Consume the channel-crypto package's structurally immutable message envelope
   through its read-only accessors.
 
