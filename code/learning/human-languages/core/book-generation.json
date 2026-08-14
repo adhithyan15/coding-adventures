@@ -2491,6 +2491,13 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 16,
+      "output": "sanskrit/book/chapters/ch16-places.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "output": "spanish/book/chapters/ch01-first-words.tex"
