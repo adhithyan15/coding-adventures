@@ -191,6 +191,48 @@ fn requirement_rejects_styles_for_unknown_nodes() {
 }
 
 #[test]
+fn requirement_resolves_default_named_and_inline_classes_in_source_order() {
+    let source = r#"requirementDiagram
+classDef default fill:#f8fafc,stroke:#64748b
+classDef important fill:#fff1a8,stroke:#b45309
+requirement req:::important {
+id: REQ-1
+}
+element system {}
+class system important
+classDef emphasized stroke-width:4px,color:#7c2d12
+class req,system emphasized
+style system fill:#dcfce7"#;
+    let diagram = parse_requirement_diagram(source).expect("requirement style classes");
+
+    let requirement_style = diagram.nodes[0].style.as_ref().expect("requirement style");
+    assert_eq!(requirement_style.fill.as_deref(), Some("#fff1a8"));
+    assert_eq!(requirement_style.stroke.as_deref(), Some("#b45309"));
+    assert_eq!(requirement_style.stroke_width, Some(4.0));
+    assert_eq!(requirement_style.text_color.as_deref(), Some("#7c2d12"));
+
+    let element_style = diagram.nodes[1].style.as_ref().expect("element style");
+    assert_eq!(element_style.fill.as_deref(), Some("#dcfce7"));
+    assert_eq!(element_style.stroke.as_deref(), Some("#b45309"));
+    assert_eq!(element_style.stroke_width, Some(4.0));
+    assert_eq!(element_style.text_color.as_deref(), Some("#7c2d12"));
+}
+
+#[test]
+fn requirement_applies_classes_declared_after_assignment() {
+    let diagram = parse_requirement_diagram(
+        "requirementDiagram\nrequirement req {}\nclass req late\nclassDef late fill:#f96,stroke:#333;",
+    )
+    .expect("deferred requirement class");
+    let style = diagram.nodes[0]
+        .style
+        .as_ref()
+        .expect("deferred class style");
+    assert_eq!(style.fill.as_deref(), Some("#f96"));
+    assert_eq!(style.stroke.as_deref(), Some("#333"));
+}
+
+#[test]
 fn requirement_relationships_preserve_semantics_and_orientation() {
     let source = r#"requirementDiagram
 requirement a {

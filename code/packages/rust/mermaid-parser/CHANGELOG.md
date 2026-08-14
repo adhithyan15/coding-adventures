@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.105.0
+
+- Resolve Requirement class definitions, assignments, default styles, and inline shorthand.
+
 ## 0.104.0
 
 - Parse Requirement direct node styles into structural semantic IR.

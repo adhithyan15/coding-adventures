@@ -739,7 +739,7 @@ mod apple {
     #[test]
     fn render_mermaid_requirement_to_png() {
         let diagram = parse_requirement_diagram(
-            "requirementDiagram\naccTitle: Native requirement graph\naccDescr: Requirement graph rendered through Metal\ndirection LR\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nstyle test_req fill:#fff1a8,stroke:#b45309,stroke-width:4px,color:#7c2d12\nsystem - satisfies -> test_req",
+            "requirementDiagram\naccTitle: Native requirement graph\naccDescr: Requirement graph rendered through Metal\ndirection LR\nclassDef important fill:#fff1a8,stroke:#b45309,stroke-width:4px,color:#7c2d12\nrequirement test_req:::important {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nsystem - satisfies -> test_req",
         )
         .expect("Mermaid requirement parse failed");
         let layout = layout_structural_diagram(&diagram);
