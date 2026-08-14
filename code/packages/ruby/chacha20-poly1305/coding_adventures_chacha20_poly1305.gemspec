@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "coding_adventures_chacha20_poly1305"
   spec.version       = CodingAdventures::Chacha20Poly1305::VERSION
   spec.authors       = ["Adhithya Rajasekaran"]
-  spec.summary       = "ChaCha20-Poly1305 AEAD cipher (RFC 8439) implemented from scratch"
+  spec.summary       = "ChaCha20-Poly1305 and XChaCha20-Poly1305 implemented from scratch"
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.3.0"

@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-08-14
+
+### Added
+
+- HChaCha20 subkey derivation from the pinned SE04 construction
+- Raw XChaCha20 with 24-byte nonces and caller-selected counters
+- XChaCha20-Poly1305 authenticated encryption and decryption
+- Exact draft HChaCha20 and Appendix A.3.1 vector coverage
+- Negative, invalid-length, empty-message, and multi-block coverage
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

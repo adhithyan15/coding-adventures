@@ -95,6 +95,35 @@ module CodingAdventures
         result.pack("C*")
       end
 
+      # Derive a 32-byte HChaCha20 subkey using the construction pinned by
+      # SE04. Unlike a normal ChaCha20 block, HChaCha20 does not add the
+      # initial state back after the 20-round permutation.
+      #
+      # @param key [String] 256-bit (32-byte) secret key.
+      # @param nonce [String] 128-bit (16-byte) nonce prefix.
+      # @return [String] 32-byte derived subkey.
+      def hchacha20_subkey(key, nonce)
+        raise ArgumentError, "Key must be 32 bytes, got #{key.bytesize}" unless key.bytesize == 32
+        raise ArgumentError, "Nonce must be 16 bytes, got #{nonce.bytesize}" unless nonce.bytesize == 16
+
+        state = [*CHACHA20_CONSTANTS, *key.unpack("V8"), *nonce.unpack("V4")]
+        chacha20_rounds(state)
+        state.values_at(0, 1, 2, 3, 12, 13, 14, 15).pack("V8")
+      end
+
+      # Encrypt (or decrypt) data using raw XChaCha20.
+      #
+      # Raw XChaCha20 provides confidentiality but no authenticity. Use the
+      # XChaCha20-Poly1305 methods for messages and stored records.
+      def xchacha20_encrypt(input, key, nonce, counter = 0)
+        subkey, derived_nonce = derive_xchacha20_material(key, nonce)
+        chacha20_encrypt(input, subkey, derived_nonce, counter)
+      ensure
+        # Best-effort only: Ruby does not guarantee erasure of copied or moved
+        # string buffers.
+        subkey&.replace("\x00" * subkey.bytesize)
+      end
+
       # Compute a Poly1305 one-time MAC tag.
       #
       # Poly1305 evaluates a polynomial over a prime field to produce a 16-byte
@@ -226,6 +255,33 @@ module CodingAdventures
         chacha20_encrypt(ciphertext, key, nonce, 1)
       end
 
+      # Encrypt and authenticate using XChaCha20-Poly1305 and a 24-byte nonce.
+      # Random nonces have negligible collision risk at realistic volumes, but
+      # the complete nonce must still be unique for each key.
+      def xchacha20_poly1305_encrypt(plaintext, key, nonce, aad = "".b)
+        subkey, derived_nonce = derive_xchacha20_material(key, nonce)
+        aead_encrypt(plaintext, subkey, derived_nonce, aad)
+      ensure
+        # Best-effort only: Ruby does not guarantee erasure of copied or moved
+        # string buffers.
+        subkey&.replace("\x00" * subkey.bytesize)
+      end
+
+      # Authenticate and decrypt an XChaCha20-Poly1305 ciphertext.
+      # Authentication failure is inherited from +aead_decrypt+, which checks
+      # the complete tag before releasing plaintext.
+      def xchacha20_poly1305_decrypt(ciphertext, key, nonce, aad, tag)
+        # Reject a malformed tag before deriving secret material.
+        raise ArgumentError, "Tag must be 16 bytes, got #{tag.bytesize}" unless tag.bytesize == 16
+
+        subkey, derived_nonce = derive_xchacha20_material(key, nonce)
+        aead_decrypt(ciphertext, subkey, derived_nonce, aad, tag)
+      ensure
+        # Best-effort only: Ruby does not guarantee erasure of copied or moved
+        # string buffers.
+        subkey&.replace("\x00" * subkey.bytesize)
+      end
+
       private
 
       # -----------------------------------------------------------------------
@@ -280,6 +336,22 @@ module CodingAdventures
         state[b] = rotl32(state[b], 7)
       end
 
+      # Apply the shared ChaCha20 20-round permutation in place.
+      def chacha20_rounds(state)
+        10.times do
+          # Column rounds
+          quarter_round(state, 0, 4, 8, 12)
+          quarter_round(state, 1, 5, 9, 13)
+          quarter_round(state, 2, 6, 10, 14)
+          quarter_round(state, 3, 7, 11, 15)
+          # Diagonal rounds
+          quarter_round(state, 0, 5, 10, 15)
+          quarter_round(state, 1, 6, 11, 12)
+          quarter_round(state, 2, 7, 8, 13)
+          quarter_round(state, 3, 4, 9, 14)
+        end
+      end
+
       # -----------------------------------------------------------------------
       # ChaCha20 Block Function
       # -----------------------------------------------------------------------
@@ -316,18 +388,7 @@ module CodingAdventures
         initial_state = state.dup
 
         # 20 rounds = 10 double-rounds
-        10.times do
-          # Column rounds
-          quarter_round(state, 0, 4, 8, 12)
-          quarter_round(state, 1, 5, 9, 13)
-          quarter_round(state, 2, 6, 10, 14)
-          quarter_round(state, 3, 7, 11, 15)
-          # Diagonal rounds
-          quarter_round(state, 0, 5, 10, 15)
-          quarter_round(state, 1, 6, 11, 12)
-          quarter_round(state, 2, 7, 8, 13)
-          quarter_round(state, 3, 4, 9, 14)
-        end
+        chacha20_rounds(state)
 
         # Add original state back
         16.times { |i| state[i] = (state[i] + initial_state[i]) & MASK32 }
@@ -340,6 +401,16 @@ module CodingAdventures
       # Used for AEAD key generation where we need string slicing.
       def chacha20_block_bytes(key, counter, nonce)
         chacha20_block(key, counter, nonce).pack("C*")
+      end
+
+      # Derive the subkey and RFC 8439 nonce shared by all XChaCha operations.
+      def derive_xchacha20_material(key, nonce)
+        raise ArgumentError, "Key must be 32 bytes, got #{key.bytesize}" unless key.bytesize == 32
+        raise ArgumentError, "Nonce must be 24 bytes, got #{nonce.bytesize}" unless nonce.bytesize == 24
+
+        subkey = hchacha20_subkey(key, nonce.byteslice(0, 16))
+        derived_nonce = "\x00\x00\x00\x00".b + nonce.byteslice(16, 8)
+        [subkey, derived_nonce]
       end
 
       # -----------------------------------------------------------------------
