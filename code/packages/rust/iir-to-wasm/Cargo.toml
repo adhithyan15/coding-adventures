@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.48.1"
+version = "0.48.2"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule. v0.48.1: a security review of 0.48.0 found the dispatch-loop's last-block fallthrough fallback still emitted `br 0` assuming LOOP was already closed — it wasn't, so this redispatched to the same block forever (a hang, not a trap) for any function whose final block falls through a bare conditional jump; fixed to `br 1`, plus two currently-unreachable sibling constants for consistency; v0.48.0: dispatch-loop branch-depth formulas (jmp/jmp_if_true/jmp_if_false/auto-redispatch) corrected by +1 — they were empirically tuned against a since-fixed `wasm-execution::execute_branch` double-pop bug (WASM11), which made re-enter-the-LOOP branches land one label too shallow and silently fall into the wrong basic block for nested COND/if-chains; v0.47.0: a `str` variable reassigned a RUNTIME string (ALGOL's `s := pick(1)`) no longer keeps the dead compile-time literal from its declaration — the by-dest literal table left a stale `s -> \"\"` entry after a non-foldable `str_concat`, so `str_eq`/`str_len`/`print_str` silently answered from the dead initialiser and the concat itself never ran; v0.45.0: linear memory actually grows past 64 KiB (memory.grow + $__ensure_capacity) instead of trapping; v0.43.0: runtime str_concat now reserves linear memory and __array_bump even without arrays; v0.42.0: runtime str_slice i64 index truncation guard; v0.39.0: runtime str_cmp; v0.36.0: array<str>; v0.30.0: runtime string call results and parameters."
+description = "IIR → WASM backend — lowers IIRModule to WasmModule. v0.48.2 marks an impossible value-returning dispatch-loop fallthrough unreachable so strict WASM validation sees a complete result path; v0.48.1 fixed the last-block fallback branch depth; v0.48.0 corrected dispatch-loop branch-depth formulas after the WASM11 interpreter fix."
 
 [lib]
 name = "iir_to_wasm"

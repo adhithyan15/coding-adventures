@@ -524,24 +524,57 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
         }
 
         match byte {
-            // ── `0xFC`-prefixed non-trapping (saturating) conversions (WASM03) ──
+            // ── `0xFC`-prefixed saturating conversions and bulk memory ──
             0xFC => {
-                let sub = *code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated 0xFC opcode")))?;
-                offset += 1;
-                let name = match sub {
-                    0x00 => "i32.trunc_sat_f32_s",
-                    0x01 => "i32.trunc_sat_f32_u",
-                    0x02 => "i32.trunc_sat_f64_s",
-                    0x03 => "i32.trunc_sat_f64_u",
-                    0x04 => "i64.trunc_sat_f32_s",
-                    0x05 => "i64.trunc_sat_f32_u",
-                    0x06 => "i64.trunc_sat_f64_s",
-                    0x07 => "i64.trunc_sat_f64_u",
+                let (sub, size) = decode_unsigned(code, offset)
+                    .map_err(|e| ValidationError::Other(format!("bad 0xFC sub-opcode: {e}")))?;
+                offset += size;
+                match sub {
+                    0x00..=0x07 => {
+                        let name = [
+                            "i32.trunc_sat_f32_s",
+                            "i32.trunc_sat_f32_u",
+                            "i32.trunc_sat_f64_s",
+                            "i32.trunc_sat_f64_u",
+                            "i64.trunc_sat_f32_s",
+                            "i64.trunc_sat_f32_u",
+                            "i64.trunc_sat_f64_s",
+                            "i64.trunc_sat_f64_u",
+                        ][sub as usize];
+                        let (input, output) = conversion_types(name)
+                            .expect("trunc_sat names are all in conversion_types");
+                        pop_expect(&mut stack, frame!(), input)?;
+                        push_val(&mut stack, output);
+                    }
+                    0x0A => {
+                        if !ctx.has_memory {
+                            err!("memory.copy requires a declared memory");
+                        }
+                        let (dst_memory, dst_size) = decode_idx(code, offset)?;
+                        let (src_memory, src_size) = decode_idx(code, offset + dst_size)?;
+                        offset += dst_size + src_size;
+                        if dst_memory != 0 || src_memory != 0 {
+                            err!("memory.copy references unsupported nonzero memory index");
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                    }
+                    0x0B => {
+                        if !ctx.has_memory {
+                            err!("memory.fill requires a declared memory");
+                        }
+                        let (memory, memory_size) = decode_idx(code, offset)?;
+                        offset += memory_size;
+                        if memory != 0 {
+                            err!("memory.fill references unsupported nonzero memory index");
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // byte value
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                    }
                     other => err!("unsupported 0xFC sub-opcode {other:#x}"),
-                };
-                let (input, output) = conversion_types(name).expect("trunc_sat names are all in conversion_types");
-                pop_expect(&mut stack, frame!(), input)?;
-                push_val(&mut stack, output);
+                }
             }
 
             // ── `0xFB`-prefixed WasmGC opcodes -- out of W02 Phase 2's MVP-only
@@ -611,6 +644,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated ref.null heap-type immediate")))?;
                 offset += 1;
                 stack.push(StackType::Unknown);
+            }
+            0xD1 => {
+                // ref.is_null: accepts any reference and produces an i32.
+                // Reference subtyping remains outside this validator phase,
+                // so ref-producing instructions use Unknown on the stack.
+                pop_val(&mut stack, frame!())?;
+                push_val(&mut stack, ValueType::I32);
             }
 
             // ── Control ──────────────────────────────────────────────────────

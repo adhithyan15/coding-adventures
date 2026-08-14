@@ -668,6 +668,12 @@ For `end`, the behavior depends on context:
 
 `global.set` on an immutable global raises `IMMUTABLE_GLOBAL_WRITE`.
 
+#### Supported Reference Instructions
+
+The repository's WasmGC subset uses `ref.null` and `ref.is_null`. Until full
+reference subtyping is implemented, `ref.null` pushes the polymorphic unknown
+reference type; `ref.is_null` pops one reference value and pushes I32.
+
 #### Memory Instructions
 
 Memory instructions require the module to have at least one memory (imported or local).
@@ -683,6 +689,12 @@ If no memory exists, these instructions are invalid.
 | `i64.store8`, `i64.store16`, `i64.store32` | I32 I64 | — |
 | `memory.size` | — | I32 |
 | `memory.grow` | I32 | I32 |
+| `memory.copy` | I32 I32 I32 (destination, source, length) | — |
+| `memory.fill` | I32 I32 I32 (destination, byte, length) | — |
+
+The bulk-memory instructions encode memory indices as unsigned LEB128 values.
+This validator supports the single-memory form, so every encoded memory index
+must be zero; a nonzero index is rejected.
 
 The `memarg` immediate (alignment + offset) is read but only the alignment is
 validated — it must not exceed the natural alignment of the access width:
