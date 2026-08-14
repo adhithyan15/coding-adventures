@@ -45,6 +45,7 @@
 use std::fmt;
 use std::path::Path;
 
+use interpreter_ir::instr::Operand;
 use interpreter_ir::module::IIRModule;
 
 /// McCarthy Lisp on the universal JIT backend (W15).
@@ -1199,7 +1200,10 @@ pub fn compile_file_to_riscv32_bin(
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let mut module = compile_source_to_iir(language, &source, stem)?;
+    if language == Language::DartmouthBasic {
+        lower_basic_integral_print_literals_for_riscv(&mut module)?;
+    }
 
     // Route through aot_core::infer + aot_core::specialise, then let the
     // RISC-V backend lay out the whole module. This keeps the selected entry
@@ -1228,6 +1232,95 @@ pub fn compile_file_to_riscv32_bin(
     )?;
 
     std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Lower the first Dartmouth BASIC numeric slice supported by RV32I.
+///
+/// Dartmouth BASIC represents every numeric source expression as `f64`, even
+/// a literal such as `PRINT 42`. RV32I has no floating-point register file,
+/// but a finite whole-number literal passed directly to `PRINT` has an exact
+/// integer rendering. This target-only pass switches that narrow path to the
+/// existing integer print helper and removes the now-unreachable real-format
+/// helpers before IIR becomes CIR.
+///
+/// It intentionally refuses arithmetic, variables, and fractional literals.
+/// Those require a complete integer-subset representation or a floating-point
+/// ABI, rather than an implicit and potentially lossy conversion here.
+fn lower_basic_integral_print_literals_for_riscv(
+    module: &mut IIRModule,
+) -> Result<(), LangAotError> {
+    const REAL_HELPERS: &[&str] = &[
+        "__basic_print_fixed_mag",
+        "__basic_print_real_e",
+        "__basic_print_real",
+    ];
+
+    let module_name = module.name.clone();
+    let Some(main) = module.get_function_mut("main") else {
+        return Err(LangAotError::RiscvBackendError(format!(
+            "module {:?}: Dartmouth BASIC entry function \"main\" is missing",
+            module_name
+        )));
+    };
+
+    let mut integral_literals = std::collections::HashSet::new();
+    for instr in &mut main.instructions {
+        if instr.op != "const" || instr.type_hint != "f64" {
+            continue;
+        }
+
+        let Some(Operand::Float(value)) = instr.srcs.first() else {
+            continue;
+        };
+        if !value.is_finite()
+            || value.fract() != 0.0
+            || *value < i64::MIN as f64
+            || *value > i64::MAX as f64
+        {
+            continue;
+        }
+
+        let Some(dest) = &instr.dest else {
+            continue;
+        };
+        instr.srcs[0] = Operand::Int(*value as i64);
+        instr.type_hint = "i64".to_string();
+        integral_literals.insert(dest.clone());
+    }
+
+    for instr in &mut main.instructions {
+        if instr.op != "call" || instr.srcs.len() != 2 {
+            continue;
+        }
+        let Some("__basic_print_real") = instr.srcs.first().and_then(Operand::as_var) else {
+            continue;
+        };
+        let Some(argument) = instr.srcs.get(1).and_then(Operand::as_var) else {
+            continue;
+        };
+        if integral_literals.contains(argument) {
+            instr.srcs[0] = Operand::Var("__basic_print_int".to_string());
+        }
+    }
+
+    let remaining_real = main.instructions.iter().find(|instr| {
+        instr.type_hint == "f64"
+            || instr.srcs.iter().any(|operand| matches!(operand, Operand::Float(_)))
+            || (instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real"))
+    });
+    if let Some(instr) = remaining_real {
+        return Err(LangAotError::RiscvBackendError(format!(
+            "module {:?}: Dartmouth BASIC RV32I supports only PRINT of finite integral literals; \
+             function \"main\" still uses REAL operation {:?}",
+            module_name, instr.op
+        )));
+    }
+
+    module
+        .functions
+        .retain(|function| !REAL_HELPERS.contains(&function.name.as_str()));
     Ok(())
 }
 

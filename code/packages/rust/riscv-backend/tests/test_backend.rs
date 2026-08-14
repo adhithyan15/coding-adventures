@@ -1094,6 +1094,82 @@ fn linked_module_preserves_a_scalar_live_across_a_call() {
 }
 
 #[test]
+fn linked_module_preserves_an_incoming_parameter_across_a_call() {
+    let echo = vec![ci(
+        "ret_i32",
+        None,
+        vec![CIROperand::Var("value".into())],
+        "i32",
+    )];
+    let preserve = vec![
+        ci("const_i32", Some("two"), vec![CIROperand::Int(2)], "i32"),
+        ci(
+            "call",
+            Some("echoed"),
+            vec![
+                CIROperand::Var("echo".into()),
+                CIROperand::Var("two".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "add_i32",
+            Some("answer"),
+            vec![
+                CIROperand::Var("input".into()),
+                CIROperand::Var("echoed".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let main = vec![
+        ci("const_i32", Some("forty"), vec![CIROperand::Int(40)], "i32"),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("preserve".into()),
+                CIROperand::Var("forty".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let preserve_params = [("input".to_string(), "i32".to_string())];
+    let echo_params = [("value".to_string(), "i32".to_string())];
+    let functions = [
+        ModuleFunction {
+            context: ctx("echo", &echo_params, "i32"),
+            cir: &echo,
+        },
+        ModuleFunction {
+            context: ctx("preserve", &preserve_params, "i32"),
+            cir: &preserve,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+}
+
+#[test]
 fn linked_module_preserves_a_wide_value_live_across_a_call() {
     let helper = vec![
         ci("const_u64", Some("answer"), vec![CIROperand::Int(42)], "u64"),
