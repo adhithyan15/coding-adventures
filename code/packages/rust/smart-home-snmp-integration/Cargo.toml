@@ -1,0 +1,18 @@
+[package]
+name = "smart-home-snmp-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Authorized bounded read-only SNMPv2c telemetry for Smart Home"
+license = "MIT"
+
+[dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+snmp-protocol = { path = "../snmp-protocol" }
+udp-client = { path = "../udp-client" }
+
+[[bin]]
+name = "smart-home-snmp-integration"
+path = "src/main.rs"

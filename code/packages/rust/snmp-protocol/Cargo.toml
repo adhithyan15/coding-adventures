@@ -1,0 +1,8 @@
+[package]
+name = "snmp-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Strict bounded SNMPv2c GET request and response framing"
+license = "MIT"
+
+[dependencies]

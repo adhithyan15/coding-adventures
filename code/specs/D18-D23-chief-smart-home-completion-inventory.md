@@ -2450,6 +2450,35 @@ This broadens local environmental, utility, appliance, and embedded sensor
 telemetry while preserving every independent credential, camera-resource, and
 radio-host prerequisite below.
 
+## Current SNMP Telemetry Breadth Slice
+
+The next breadth slice adds read-only managed-device telemetry for UPSes,
+PDUs, network equipment, environmental monitors, and building controllers
+without treating community-based SNMPv2c as an authenticated control surface:
+
+- `snmp-protocol` owns strict bounded BER, OID, GetRequest-PDU, and
+  Response-PDU framing for at most 32 exact variable bindings in one 1472-byte
+  UDP datagram.
+- `smart-home-snmp-integration` polls one explicit private, link-local, or
+  loopback unicast endpoint and projects profile-selected integer, boolean,
+  UTF-8 text, OID, IPv4, counter, gauge, time-tick, and exact Counter64 decimal
+  values into normalized D23 sensor entities.
+- D23 read authorization runs before UDP socket creation. The response must
+  match the exact community, request id, binding count, OID order, BER shape,
+  and configured value syntax before any runtime mutation.
+- Only an opaque `VaultRef` is durable. The leased community remains in
+  redacted, zeroized live-host, request, and response buffers and is absent
+  from metadata, errors, CLI arguments, and output. SNMPv2c is limited to local
+  read-only polling because it provides no confidentiality or integrity.
+- The runtime exposes no SET, GET-NEXT, GET-BULK, traps, informs, retries,
+  multicast, broadcast, public endpoints, MIB inference, SNMPv1, or SNMPv3.
+  Authenticated SNMPv3 requires a separately owned USM/session and key-lifetime
+  boundary.
+
+This broadens local infrastructure and equipment telemetry while preserving
+every independent credential, camera-resource, and radio-host prerequisite
+below.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

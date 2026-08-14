@@ -1,5 +1,9 @@
 # Changelog
 
+- Promote SNMPv2c to a first-party bounded read-only local UDP telemetry
+  runtime with redacted live-host community ownership while keeping SET,
+  notifications, public endpoints, and SNMPv3 sessions out of scope.
+
 - Promote CoAP to a first-party bounded read-only local UDP telemetry runtime
   while keeping writes, Observe, multicast, blockwise transfer, and unsecured
   public-network access out of scope.
