@@ -180,6 +180,7 @@ pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, B
     let mut lowerer = Lowerer::new(ctx, cir, false, None, None, None, false)?;
     for instr in cir {
         lowerer.lower(instr)?;
+        lowerer.store_f64_home(instr)?;
         lowerer.consume_value_sources(instr);
     }
     lowerer.resolve_branches()?;
@@ -260,6 +261,10 @@ pub fn compile_module(
         )?;
         for instr in function.cir {
             lowerer.lower(instr).map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+            lowerer.store_f64_home(instr).map_err(|error| BackendError::InFunction {
                 function: function.context.name.to_owned(),
                 error: Box::new(error),
             })?;
@@ -415,6 +420,9 @@ struct Lowerer {
     /// Value uses still to be lowered. The allocator uses this to reclaim dead
     /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
+    /// Values read by a backward branch's loop body stay allocated across the
+    /// static end of that body, because the emitted code can execute it again.
+    loop_carried_values: HashSet<String>,
     allow_direct_calls: bool,
     call_signatures: HashMap<String, FunctionSignature>,
     canonicalize_wide_return: bool,
@@ -423,6 +431,10 @@ struct Lowerer {
     return_address_offset: Option<i32>,
     call_argument_words: usize,
     call_save_words: usize,
+    /// f64 values, plus pair values in a function with a backward branch, have
+    /// stable frame homes. This makes values available at control-flow joins
+    /// and on later dynamic loop iterations.
+    f64_homes: HashMap<String, ValueLocation>,
     next_spill_slot: usize,
 }
 
@@ -763,10 +775,13 @@ impl Lowerer {
         };
         let call_argument_words = direct_call_argument_words.max(max_host_argument_words(cir));
         let call_save_words = max_call_save_words(ctx, cir);
+        let f64_home_names = f64_home_names(ctx, cir);
+        let f64_home_words = f64_home_names.len() * 2;
         let needs_return_address_slot = allow_direct_calls && cir.iter().any(|instr| instr.op == "call");
         let frame_words = value_word_count
             + call_argument_words
             + call_save_words
+            + f64_home_words
             + usize::from(needs_return_address_slot);
         let frame_size = if frame_words > VALUE_REGISTERS.len() || needs_return_address_slot {
             ((frame_words as i32) * 4 + 15) & !15
@@ -784,6 +799,23 @@ impl Lowerer {
         if let Some(offset) = return_address_offset {
             words.push(encode_sw(X1_RA, STACK_POINTER, offset));
         }
+        let mut f64_homes = HashMap::with_capacity(f64_home_names.len());
+        let mut home_slot = call_argument_words + call_save_words;
+        for name in f64_home_names {
+            let lo_offset = (home_slot * 4) as i32;
+            f64_homes.insert(name, ValueLocation::PairSpill { lo_offset, hi_offset: lo_offset + 4 });
+            home_slot += 2;
+        }
+        for (name, location) in &env {
+            let Some(ValueLocation::PairSpill { lo_offset, hi_offset }) = f64_homes.get(name) else {
+                continue;
+            };
+            let ValueLocation::Pair { lo, hi } = location else {
+                unreachable!("f64 parameters always arrive in a register pair")
+            };
+            words.push(encode_sw(*lo, STACK_POINTER, *lo_offset));
+            words.push(encode_sw(*hi, STACK_POINTER, *hi_offset));
+        }
         Ok(Self {
             words,
             env,
@@ -797,6 +829,7 @@ impl Lowerer {
             pending_globals: Vec::new(),
             pending_reassignment: None,
             remaining_uses: count_value_uses(cir),
+            loop_carried_values: loop_carried_values(cir),
             allow_direct_calls,
             call_signatures: call_signatures.cloned().unwrap_or_default(),
             canonicalize_wide_return,
@@ -805,7 +838,8 @@ impl Lowerer {
             return_address_offset,
             call_argument_words,
             call_save_words,
-            next_spill_slot: call_argument_words + call_save_words,
+            f64_homes,
+            next_spill_slot: home_slot,
         })
     }
 
@@ -1249,6 +1283,7 @@ impl Lowerer {
                 "call_builtin srcs[0] must be Var(builtin_name)".to_owned(),
             ));
         };
+        let saved_values = self.save_live_values_across_call(instr);
         match name.as_str() {
             "print_i64" => {
                 if instr.dest.is_some() || instr.ty != "void" || instr.srcs.len() != 2 {
@@ -1295,11 +1330,13 @@ impl Lowerer {
                 };
                 self.words.push(encode_addi(lo, A0, 0));
                 self.words.push(encode_addi(hi, A1, 0));
+                self.restore_live_values_after_call(&saved_values);
                 return Ok(());
             }
             _ => return Err(BackendError::UnsupportedOp(format!("call_builtin {name}"))),
         }
         self.words.push(encode_ecall());
+        self.restore_live_values_after_call(&saved_values);
         Ok(())
     }
 
@@ -2145,14 +2182,16 @@ impl Lowerer {
         self.env.retain(|(name, location)| {
             !matches!(location, ValueLocation::Word(register)
                 if is_scalar_value_register(*register)
-                    && self.remaining_uses.get(name).copied().unwrap_or_default() == 0)
+                    && self.remaining_uses.get(name).copied().unwrap_or_default() == 0
+                    && !self.loop_carried_values.contains(name))
         });
     }
 
     fn release_dead_pair_values(&mut self) {
         self.env.retain(|(name, location)| {
             !matches!(location, ValueLocation::Pair { .. }
-                if self.remaining_uses.get(name).copied().unwrap_or_default() == 0)
+                if self.remaining_uses.get(name).copied().unwrap_or_default() == 0
+                    && !self.loop_carried_values.contains(name))
         });
     }
 
@@ -2186,19 +2225,25 @@ impl Lowerer {
     }
 
     fn spill_pair_value(&mut self, lo: u32, hi: u32) {
-        let lo_offset = (self.next_spill_slot * 4) as i32;
-        let hi_offset = lo_offset + 4;
-        self.next_spill_slot += 2;
-        self.words.push(encode_sw(lo, STACK_POINTER, lo_offset));
-        self.words.push(encode_sw(hi, STACK_POINTER, hi_offset));
-        for (_, location) in &mut self.env {
+        let needs_fallback_slot = self.env.iter().any(|(name, location)| {
+            matches!(location, ValueLocation::Pair { lo: pair_lo, hi: pair_hi }
+                if *pair_lo == lo && *pair_hi == hi)
+                && !self.f64_homes.contains_key(name)
+        });
+        let fallback_slot = needs_fallback_slot.then(|| {
+            let lo_offset = (self.next_spill_slot * 4) as i32;
+            self.next_spill_slot += 2;
+            self.words.push(encode_sw(lo, STACK_POINTER, lo_offset));
+            self.words.push(encode_sw(hi, STACK_POINTER, lo_offset + 4));
+            ValueLocation::PairSpill { lo_offset, hi_offset: lo_offset + 4 }
+        });
+        for (name, location) in &mut self.env {
             if matches!(location, ValueLocation::Pair { lo: pair_lo, hi: pair_hi }
                 if *pair_lo == lo && *pair_hi == hi)
             {
-                *location = ValueLocation::PairSpill {
-                    lo_offset,
-                    hi_offset,
-                };
+                *location = self.f64_homes.get(name).copied().unwrap_or_else(|| {
+                    fallback_slot.expect("pair values need a fallback slot")
+                });
             }
         }
     }
@@ -2214,7 +2259,7 @@ impl Lowerer {
                 let register = if index == 0 {
                     SPILLED_LHS_REGISTER
                 } else {
-                    SPILLED_RHS_REGISTER
+                    DIVISION_TEMP_REGISTER
                 };
                 self.words.push(encode_lw(register, STACK_POINTER, offset));
                 Ok(ValueLocation::Word(register))
@@ -2247,7 +2292,7 @@ impl Lowerer {
                 let register = if index == 0 {
                     SPILLED_LHS_REGISTER
                 } else {
-                    SPILLED_RHS_REGISTER
+                    DIVISION_DIVISOR_LOW_REGISTER
                 };
                 self.words.push(encode_lw(register, STACK_POINTER, offset));
                 Ok(ValueLocation::Word(register))
@@ -2307,7 +2352,47 @@ impl Lowerer {
                 *remaining = remaining.saturating_sub(1);
             }
         }
-        self.pending_reassignment = None;
+        if let Some(reassignment) = self.pending_reassignment.take() {
+            if let Some(home) = self.f64_homes.get(&reassignment.name).copied() {
+                for (name, location) in &mut self.env {
+                    if *name == reassignment.name {
+                        *location = home;
+                    }
+                }
+            }
+        }
+    }
+
+    fn store_f64_home(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        let Some(name) = instr.dest.as_deref() else { return Ok(()); };
+        let Some(ValueLocation::PairSpill { lo_offset, hi_offset }) = self.f64_homes.get(name).copied() else { return Ok(()); };
+        match self.lookup_location(name)? {
+            ValueLocation::Pair { lo, hi } => {
+                self.words.push(encode_sw(lo, STACK_POINTER, lo_offset));
+                self.words.push(encode_sw(hi, STACK_POINTER, hi_offset));
+            }
+            ValueLocation::Word(register) => {
+                self.words.push(encode_sw(register, STACK_POINTER, lo_offset));
+                self.words.push(if is_signed(&instr.ty) { encode_srai(SCRATCH_REGISTER, register, 31) } else { encode_addi(SCRATCH_REGISTER, X0_ZERO, 0) });
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, hi_offset));
+            }
+            ValueLocation::PairSpill { lo_offset: source_lo, hi_offset: source_hi } => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, source_lo));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, lo_offset));
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, source_hi));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, hi_offset));
+            }
+            ValueLocation::Spill { offset } => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, offset));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, lo_offset));
+                self.words.push(if is_signed(&instr.ty) { encode_srai(SCRATCH_REGISTER, SCRATCH_REGISTER, 31) } else { encode_addi(SCRATCH_REGISTER, X0_ZERO, 0) });
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, hi_offset));
+            }
+        }
+        for (existing, location) in &mut self.env {
+            if existing == name { *location = ValueLocation::PairSpill { lo_offset, hi_offset }; }
+        }
+        Ok(())
     }
 
     fn lower_wide_add(
@@ -2362,16 +2447,18 @@ impl Lowerer {
         };
         let lhs = self.wide_var_location(instr, 0, op)?;
         let rhs = self.wide_var_location(instr, 1, op)?;
+        self.words.push(encode_addi(DIVISION_COUNTER_REGISTER, rhs.low(), 0));
+        let rhs_lo = DIVISION_COUNTER_REGISTER;
 
         // (a_hi * 2^32 + a_lo) * (b_hi * 2^32 + b_lo), modulo 2^64.
         // Only the low word of each cross product contributes to the result.
         self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, lhs, signed);
         self.copy_or_extend_high(SCRATCH_REGISTER, rhs, signed);
-        self.words.push(encode_mul(lo, lhs.low(), rhs.low()));
-        self.words.push(encode_mulhu(hi, lhs.low(), rhs.low()));
+        self.words.push(encode_mul(lo, lhs.low(), rhs_lo));
+        self.words.push(encode_mulhu(hi, lhs.low(), rhs_lo));
         self.words.push(encode_mul(SCRATCH_REGISTER, lhs.low(), SCRATCH_REGISTER));
         self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
-        self.words.push(encode_mul(SCRATCH_REGISTER, SECOND_SCRATCH_REGISTER, rhs.low()));
+        self.words.push(encode_mul(SCRATCH_REGISTER, SECOND_SCRATCH_REGISTER, rhs_lo));
         self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
         Ok(())
     }
@@ -3214,6 +3301,62 @@ fn count_value_uses(cir: &[CIRInstr]) -> HashMap<String, usize> {
     uses
 }
 
+fn loop_carried_values(cir: &[CIRInstr]) -> HashSet<String> {
+    let labels: HashMap<&str, usize> = cir.iter().enumerate().filter_map(|(index, instr)| {
+        (instr.op == "label").then(|| instr.srcs.first().and_then(CIROperand::as_var).map(|name| (name, index))).flatten()
+    }).collect();
+    let mut values = HashSet::new();
+    for (jump_index, instr) in cir.iter().enumerate() {
+        let label_index = match instr.op.as_str() {
+            "jmp" => instr.srcs.first().and_then(CIROperand::as_var).and_then(|name| labels.get(name)),
+            "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => instr.srcs.get(1).and_then(CIROperand::as_var).and_then(|name| labels.get(name)),
+            _ => None,
+        };
+        let Some(&label_index) = label_index else { continue; };
+        if label_index >= jump_index { continue; }
+        for body_instr in &cir[label_index..=jump_index] {
+            for (index, operand) in body_instr.srcs.iter().enumerate() {
+                if is_value_source(body_instr, index) {
+                    if let CIROperand::Var(name) = operand { values.insert(name.clone()); }
+                }
+            }
+        }
+    }
+    values
+}
+
+fn defines_f64_pair(instr: &CIRInstr) -> bool {
+    instr.dest.is_some() && instr.ty == "f64" && comparison_parts(&instr.op).is_none()
+}
+
+fn f64_home_names(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Vec<String> {
+    let loop_homes = has_backward_branch(cir);
+    let mut names = Vec::new();
+    for (name, ty) in ctx.params {
+        if (ty == "f64" || (loop_homes && is_pair_type(ty))) && !names.contains(name) { names.push(name.clone()); }
+    }
+    for instr in cir {
+        if let Some(name) = &instr.dest {
+            if (defines_f64_pair(instr) || (loop_homes && is_pair_type(&instr.ty))) && !names.contains(name) { names.push(name.clone()); }
+        }
+    }
+    names
+}
+
+fn has_backward_branch(cir: &[CIRInstr]) -> bool {
+    let labels: HashMap<&str, usize> = cir.iter().enumerate().filter_map(|(index, instr)| {
+        (instr.op == "label").then(|| instr.srcs.first().and_then(CIROperand::as_var).map(|name| (name, index))).flatten()
+    }).collect();
+    cir.iter().enumerate().any(|(index, instr)| {
+        let label = match instr.op.as_str() {
+            "jmp" => instr.srcs.first().and_then(CIROperand::as_var),
+            "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => instr.srcs.get(1).and_then(CIROperand::as_var),
+            _ => None,
+        };
+        label.and_then(|name| labels.get(name)).is_some_and(|target| *target < index)
+    })
+}
+
 fn abi_word_count(ty: &str) -> usize {
     usize::from(is_pair_type(ty)) + 1
 }
@@ -3276,7 +3419,7 @@ fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
 
     let mut maximum = 0;
     for (call_index, call) in cir.iter().enumerate() {
-        if call.op != "call" && max_host_argument_words(std::slice::from_ref(call)) == 0 {
+        if call.op != "call" && call.op != "call_builtin" && max_host_argument_words(std::slice::from_ref(call)) == 0 {
             continue;
         }
         let mut live_values = HashSet::new();

@@ -996,7 +996,7 @@ fn basic_fractional_real_arithmetic_executes_in_the_riscv_simulator() {
     let bin = dir.path().join("fraction.bin");
     std::fs::write(
         &src,
-        b"10 LET A = 1.25\n20 LET B = A + .5\n30 PRINT B\n40 END\n",
+        b"10 LET A = 1.25\n20 LET B = A + .5\n30 PRINT B\n40 PRINT 0.0001234567\n50 END\n",
     )
     .unwrap();
 
@@ -1007,7 +1007,7 @@ fn basic_fractional_real_arithmetic_executes_in_the_riscv_simulator() {
     let run = riscv_backend::run_binary(&bytes, &[])
         .expect("the fractional BASIC RV32I binary must execute in the simulator");
     assert!(run.halted);
-    assert_eq!(run.byte_output, b"1.75\n");
+    assert_eq!(run.byte_output, b"1.75\n1.23457E-04\n");
 }
 
 // Phase 7 of the historical-arch backend migration: a Twig `42`

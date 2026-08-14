@@ -259,11 +259,16 @@ the selected entry function can seed language-level static initializers.
 35. [x] **BASIC fractional REAL execution:** run Dartmouth BASIC fractional
    arithmetic through the RISC-V soft-float lowering and render the final f64
    through a host byte-output ABI, with a source-to-simulator
-   `LET A = 1.25; PRINT A + .5` fixture.
-36. [ ] **Guest-side BASIC REAL formatter:** support mutable f64 values across
-   control-flow joins so the existing BASIC formatter can execute in RV32I
-   guest code instead of using the host rendering ABI.
-37. [ ] **BASIC exact division:** prove or preserve a whole-number result for
+   `LET A = 1.25; PRINT A + .5` fixture. This was the initial compatibility
+   milestone; the guest formatter supersedes it for BASIC `PRINT`.
+36. [x] **Guest-side BASIC REAL formatter:** execute the existing normal and
+   scientific BASIC REAL formatter helpers in RV32I guest code, including a
+   source-to-simulator `1.75` / `1.23457E-04` byte-output fixture.
+37. [x] **Loop-aware value lifetimes:** give f64 values and pair values in
+   backward-branch functions stable frame homes, retaining them across dynamic
+   loop iterations and control-flow joins. The BASIC formatter's mutable trim
+   and digit-count loops are covered by the REAL source-to-simulator fixture.
+38. [ ] **BASIC exact division:** prove or preserve a whole-number result for
    `/` in the integer subset without silently changing Dartmouth BASIC's REAL
    division semantics when a quotient is fractional.
 
