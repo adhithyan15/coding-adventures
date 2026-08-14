@@ -1,0 +1,19 @@
+% ============================================================================
+% dwarf-planet-criterion-status.query — worked recall queries against
+% dwarf-planet-criterion-status.adj (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% status, find the criteria), and honest abstention on a non-criterion atom
+% (this table only grounds the three IAU planet criteria).
+% ============================================================================
+
+import "dwarf-planet-criterion-status.adj"
+
+% Forward: does a dwarf planet clear its orbit, per the cited NASA sentence?
+? dwarf_planet_criterion_status(cleared_orbit, $Status)
+
+% Backward: which criterion does a dwarf planet fail to meet?
+? dwarf_planet_criterion_status($Criterion, not_met)
+
+% Honest abstention: "mass" is not one of the three IAU planet criteria.
+? dwarf_planet_criterion_status(mass, $StatusMass)
