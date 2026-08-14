@@ -4751,15 +4751,18 @@ impl HtmlParser {
                         let eof_open_element_limit = self
                             .first_authored_open_template_index()
                             .unwrap_or(self.open_elements.len());
+                        let has_disallowed_eof_state = self
+                            .has_disallowed_authored_open_element_for_eof_before(
+                                eof_open_element_limit,
+                            )
+                            || self.has_pending_formatting_at_seeded_table_context();
                         if (self.is_fragment
                             || self.open_element_prefix_has_name(eof_open_element_limit, "body")
                             || self.open_element_prefix_current_is(
                                 eof_open_element_limit,
                                 "plaintext",
                             ))
-                            && self.has_disallowed_authored_open_element_for_eof_before(
-                                eof_open_element_limit,
-                            )
+                            && has_disallowed_eof_state
                         {
                             if self.eof_open_element_prefix_is_in_table(eof_open_element_limit) {
                                 self.diagnostics.push(
@@ -9489,6 +9492,22 @@ impl HtmlParser {
                     && is_disallowed_open_element_for_body_end(element)
             })
         })
+    }
+
+    fn has_pending_formatting_at_seeded_table_context(&self) -> bool {
+        !self.pending_formatting_reconstruction.is_empty()
+            && self
+                .open_elements
+                .last()
+                .and_then(|path| element_ref_at_path(&self.document, path))
+                .is_some_and(|element| {
+                    element.namespace.is_none()
+                        && has_fragment_context_marker(element)
+                        && matches!(
+                            element.name.as_str(),
+                            "table" | "tbody" | "thead" | "tfoot" | "tr"
+                        )
+                })
     }
 
     fn first_authored_open_template_index(&self) -> Option<usize> {
@@ -40483,6 +40502,119 @@ mod tests {
         let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
         unpositioned.process_token(Token::StartTag {
             name: "table".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-in-table")
+                .unwrap()
+                .position,
+            None
+        );
+    }
+
+    #[test]
+    fn positions_eof_for_pending_formatting_in_seeded_table_structure() {
+        for (source, context) in [
+            ("<a>", "table"),
+            ("<caption><a>", "tbody"),
+            ("<col><a>", "tbody"),
+            ("<colgroup><a>", "tbody"),
+            ("<tbody><a>", "tbody"),
+            ("<tfoot><a>", "tbody"),
+            ("<thead><a>", "tbody"),
+            ("</table><a>", "tbody"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "source {source:?} in {context:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }),
+                "source {source:?} in {context:?}"
+            );
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
+        }
+
+        for (source, context) in [
+            ("<td><table><tbody><a><tr>", "tbody"),
+            ("<td><table><a><tr></tr><tr>", "tr"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "eof-in-table")
+                    .count(),
+                1,
+                "source {source:?} in {context:?}"
+            );
+        }
+
+        let unicode_source = "<!--é-->\r\n<a>té";
+        let unicode =
+            parse_html_fragment_for_context_with_diagnostics(unicode_source, "table").unwrap();
+        let diagnostic = unicode
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-table")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: unicode_source.len(),
+                char_offset: unicode_source.chars().count(),
+                line: 2,
+                column: "<a>té".chars().count() + 1,
+            })
+        );
+
+        for (source, context) in [
+            ("<a><caption>x", "table"),
+            ("<a><tbody><tr>", "table"),
+            ("<a><tr>", "tbody"),
+            ("<a><td>", "tr"),
+            ("<a>", "td"),
+            ("<a>", "caption"),
+            ("<a><template>", "table"),
+            ("<g>", "svg table"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "eof-in-table"),
+                "source {source:?} in {context:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "a".to_string(),
             attributes: Vec::new(),
             self_closing: false,
         });

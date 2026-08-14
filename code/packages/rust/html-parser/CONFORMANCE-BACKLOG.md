@@ -518,6 +518,10 @@ Prioritized work items:
    proven EOF point exactly once, while open cells, captions, foreign
    table-named elements, and directly supplied tokens retain separate
    diagnostic ownership.
+   Seeded HTML table fragments also diagnose EOF when fostered formatting
+   remains logically open at the marked table, section, or row context;
+   transitions into authored table descendants retain their existing EOF
+   ownership.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
