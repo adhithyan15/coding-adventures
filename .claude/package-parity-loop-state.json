@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11435,
   "last_inventory": {
     "revision": "60fb1384864579944a70229e7ac71fd917e35cee",
     "schema_version": 3,
@@ -3332,12 +3332,17 @@
     {
       "id": "zip-raw-rfc1951-perl-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Perl",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/perl-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 11435,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11435",
+      "opened_at": "2026-08-14T00:21:13Z",
       "selection_revision": "2fb32016e437d5edb847ba70b023381dd04c8c0b",
       "selection_notes": "Selected only after PR #11405 merged externally and the collision-clean live inventory classified both new BACnet roots with portable codec/core owners plus a blocked native UDP/CLI authority review. Perl is the smallest clean standalone remaining ZIP child with no live or historical branch overlap; the stale cross-lane ZIP residue touches only .NET, Haskell, and JVM paths. Perl ZIP already owns stored/fixed framing, exact bit positions, complete length/distance tables, and array back-references, but rejects dynamic Huffman blocks and trims declared-size mismatches, so this coherent tranche adds the shared counted, capped, stable-error raw RFC 1951 contract and all 34 neutral fixtures without duplicating DEFLATE.",
+      "implementation_revision": "b40cb4945cedfc96052faccb5e5c53e3d0bccd2a",
+      "validation_notes": "The hash-verified Strawberry Perl 5.42.2.1 toolchain passes all 74 package tests, the Windows BUILD front door, syntax, MakeMaker test and disttest, and all 34 neutral raw RFC 1951 cases. Independent test-only zlib decoding, dynamic ZIP read, suffix-cavity and declared-size rejection, caller caps, typed payload-blind errors, full 32 KiB overlap, and incremental CRC-32 pass. Production coverage is 97.7% statements, 77.7% branches, 51.1% conditions, 98.3% subroutines, and 87.1% total. Twenty-six repository fixture/parity/capability tests plus 678 subtests pass; the collision gate remains 1,312 identities, 4,468 slots, 862 singletons, 12,068 singleton gaps, 663 Rust singletons, zero collisions, and zero unknown buckets. Strict state DAG/JSON, diff, credential, pure-production authority, and runtime-dependency scans pass. The all-Perl build-tool dry run discovers 256 packages; its BUILD metadata validator retains two unrelated pre-existing Windows dependency findings in ir-to-wasm-validator and nib-wasm-compiler. Advisory CPAN audit findings are confined to the local Perl/test toolchain and test-only zlib rather than the pure production boundary. No Perl downstream imports ZIP, so reader_read is the direct hardened integration boundary.",
+      "publication_notes": "Opened ready-for-review PR #11435 from validated implementation revision b40cb4945cedfc96052faccb5e5c53e3d0bccd2a. Initial live checks are queued, so subsequent parity-loop runs must monitor this PR only unless an actual failure or main conflict appears.",
       "notes": "Portable Perl child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
