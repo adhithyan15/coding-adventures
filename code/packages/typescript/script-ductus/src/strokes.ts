@@ -4122,6 +4122,64 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ч"),
   },
+  // RussianIrina writes lowercase ш in one run: descend each stem from left
+  // to right and rise through the two rounded joins. The fitted path squares
+  // those joins into the printed glyph's horizontal baseline bars.
+  [ductusKey("cyrillic", "ш")]: {
+    script: "cyrillic",
+    glyph: "ш",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 126, y: 536 },
+              { x: 126, y: 270 },
+              { x: 126, y: 37 },
+            ],
+          },
+          {
+            label: "cross the first base join and rise through the middle stem",
+            path: [
+              { x: 126, y: 37 },
+              { x: 286, y: 37 },
+              { x: 447, y: 37 },
+              { x: 447, y: 270 },
+              { x: 447, y: 536 },
+            ],
+          },
+          {
+            label: "retrace the middle stem to the baseline",
+            path: [
+              { x: 447, y: 536 },
+              { x: 447, y: 270 },
+              { x: 447, y: 37 },
+            ],
+          },
+          {
+            label: "cross the second base join and rise through the right stem",
+            path: [
+              { x: 447, y: 37 },
+              { x: 607, y: 37 },
+              { x: 768, y: 37 },
+              { x: 768, y: 270 },
+              { x: 768, y: 536 },
+            ],
+          },
+          {
+            label: "retrace the right stem to the baseline",
+            path: [
+              { x: 768, y: 536 },
+              { x: 768, y: 270 },
+              { x: 768, y: 37 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ш"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

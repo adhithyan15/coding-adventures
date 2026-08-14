@@ -248,6 +248,8 @@ const CYRILLIC_TSE = ductusFor("ц", "cyrillic")!;
 const cyrillicTseOutline = cyrillicOutline("ц");
 const CYRILLIC_CHE = ductusFor("ч", "cyrillic")!;
 const cyrillicCheOutline = cyrillicOutline("ч");
+const CYRILLIC_SHA = ductusFor("ш", "cyrillic")!;
+const cyrillicShaOutline = cyrillicOutline("ш");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3133,6 +3135,42 @@ describe("Cyrillic ч — one joined short-stem-to-bowl-to-long-stem run", () =>
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_CHE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic ш — one joined three-stem run", () => {
+  const steps = ductusSteps(CYRILLIC_SHA);
+  const strip = ductusFilmstrip(CYRILLIC_SHA, cyrillicShaOutline);
+
+  it("keeps all three stems and both base joins in source order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "cross the first base join and rise through the middle stem",
+      "retrace the middle stem to the baseline",
+      "cross the second base join and rise through the right stem",
+      "retrace the right stem to the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined path", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicShaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_SHA.strokes[0], 1),
     );
   });
 });
