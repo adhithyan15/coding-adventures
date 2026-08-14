@@ -3784,6 +3784,28 @@ authority. The newly recorded CoAP owners remain high-leverage pending work but
 do not shorten the four-child ZIP blocker; Swift is therefore the next serial
 delivery.
 
+## Swift ZIP RFC 1951 Implementation
+
+The Swift tranche was rebased cleanly onto live `origin/main`
+`09877072d243dcadc76f1ea6b7afeaff7124768e`. The six intervening ALGOL,
+Mermaid, HTML, ADJ, WASM, and human-language commits are path-disjoint and add
+no package root, so the collision-clean inventory remains 1,321 identities,
+4,477 slots, 871 singletons, 672 Rust singletons, zero collisions, and zero
+unknown buckets.
+
+Implementation revision `0911c7e129f3c9cf0d60836654f4bf7f7a68dd7d`
+adds the strict public raw inflater/deflater surface, canonical dynamic-Huffman
+decoding, exact consumed-byte reporting, caller-lowerable output bounds, stable
+payload-blind failures, strict method-8 ZIP cavity and declared-size checks,
+all 34 neutral fixtures, and explicit empty capability metadata. Both BUILD
+front doors pass under Swift 6.3.3 with 36 tests; the release build treats
+warnings as errors, and LLVM reports 93.76% production line coverage. The
+neutral fixture, capability, and parity suites pass 26 tests plus 678 subtests,
+the Swift build-tool dry run validates all 164 discovered Swift roots, and the
+state DAG, dependency, credential, authority, package-manifest, and diff checks
+are clean. Production remains pure in-memory with only the local LZSS
+dependency; Foundation, fixture reads, Process, and zlib remain test-only.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
