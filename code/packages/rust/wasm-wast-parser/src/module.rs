@@ -1149,6 +1149,24 @@ fn encode_one_inner(exprs: &[SExpr], i: usize, icx: &mut InstrCtx, out: &mut Vec
 /// `following` it needs as immediates — never operands, which flat form
 /// never carries at this position (see [`encode_instr_list`]'s doc
 /// comment). Returns how many elements of `following` were consumed.
+/// The `0xFC` sub-opcode for one of the "non-trapping float-to-int
+/// conversions" proposal's 8 `trunc_sat` instructions, or `None` for any
+/// other name. Order matches the spec's own table exactly: `i32` before
+/// `i64`, `f32` before `f64`, `_s` before `_u`.
+fn trunc_sat_sub_opcode(name: &str) -> Option<u8> {
+    match name {
+        "i32.trunc_sat_f32_s" => Some(0x00),
+        "i32.trunc_sat_f32_u" => Some(0x01),
+        "i32.trunc_sat_f64_s" => Some(0x02),
+        "i32.trunc_sat_f64_u" => Some(0x03),
+        "i64.trunc_sat_f32_s" => Some(0x04),
+        "i64.trunc_sat_f32_u" => Some(0x05),
+        "i64.trunc_sat_f64_s" => Some(0x06),
+        "i64.trunc_sat_f64_u" => Some(0x07),
+        _ => None,
+    }
+}
+
 fn encode_stream_instr(
     name: &str,
     following: &[SExpr],
@@ -1156,6 +1174,19 @@ fn encode_stream_instr(
     icx: &mut InstrCtx,
     out: &mut Vec<u8>,
 ) -> Result<usize, WastParseError> {
+    // `i32/i64.trunc_sat_f32/f64_s/u` -- the "non-trapping float-to-int
+    // conversions" proposal's 8 opcodes, encoded as the two-byte `0xFC
+    // <sub-opcode>` prefix form (see this crate's own module doc comment
+    // for why `wasm_opcodes` deliberately doesn't model 0xFC opcodes: they
+    // don't fit its single-byte `OpcodeInfo` table). Intercepted before the
+    // `get_opcode_by_name` lookup below, which would otherwise reject them
+    // as unknown. No immediates beyond the sub-opcode byte itself, so this
+    // mirrors the default (no-immediate) arm at the bottom of this match.
+    if let Some(sub) = trunc_sat_sub_opcode(name) {
+        out.push(0xFC);
+        out.push(sub);
+        return Ok(0);
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
     match name {
@@ -1372,6 +1403,17 @@ fn encode_flat_instr(
     icx: &mut InstrCtx,
     out: &mut Vec<u8>,
 ) -> Result<(), WastParseError> {
+    // See `encode_stream_instr`'s matching comment: trunc_sat's 0xFC-prefixed
+    // encoding doesn't fit `wasm_opcodes`' single-byte table, so it's
+    // intercepted here too, before the `get_opcode_by_name` lookup. Its one
+    // folded operand recurses through `encode_instr_list` exactly like the
+    // default (no-immediate) arm below, just emitting two opcode bytes.
+    if let Some(sub) = trunc_sat_sub_opcode(name) {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFC);
+        out.push(sub);
+        return Ok(());
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
 
@@ -1792,6 +1834,50 @@ mod tests {
         let m = parse_module("(module (func (result i32) (i32.add (i32.const 1) (i32.const 2))))").unwrap();
         // i32.const 1; i32.const 2; i32.add; end
         assert_eq!(code_of(&m, 0), &[0x41, 0x01, 0x41, 0x02, 0x6A, 0x0B]);
+    }
+
+    #[test]
+    fn sign_extension_opcodes_encode_flat_and_folded_the_same_as_any_other_no_immediate_instruction() {
+        // Real single-byte opcodes (0xC0-0xC4) go through the exact same
+        // `wasm_opcodes::get_opcode_by_name` path every other no-immediate
+        // instruction does -- no special-casing needed once WASM03 adds
+        // them to the opcode table.
+        let flat = parse_module("(module (func (param i32) (result i32) local.get 0 i32.extend8_s))").unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xC0, 0x0B]);
+
+        let folded = parse_module("(module (func (param i64) (result i64) (i64.extend32_s (local.get 0))))").unwrap();
+        assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xC4, 0x0B]);
+    }
+
+    #[test]
+    fn trunc_sat_opcodes_encode_as_the_0xfc_prefixed_two_byte_form() {
+        // Unlike sign-extension, trunc_sat isn't in `wasm_opcodes`' table at
+        // all (deliberately -- see that crate's own module doc comment) --
+        // this crate's `desugar`-adjacent interception in `encode_stream_instr`/
+        // `encode_flat_instr` must emit the real `0xFC <sub>` bytes.
+        let flat = parse_module("(module (func (param f32) (result i32) local.get 0 i32.trunc_sat_f32_s))").unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFC, 0x00, 0x0B]);
+
+        let folded = parse_module("(module (func (param f64) (result i64) (i64.trunc_sat_f64_u (local.get 0))))").unwrap();
+        assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xFC, 0x07, 0x0B]);
+    }
+
+    #[test]
+    fn all_eight_trunc_sat_names_map_to_the_spec_assigned_sub_opcode() {
+        let expected = [
+            ("i32.trunc_sat_f32_s", 0x00u8),
+            ("i32.trunc_sat_f32_u", 0x01),
+            ("i32.trunc_sat_f64_s", 0x02),
+            ("i32.trunc_sat_f64_u", 0x03),
+            ("i64.trunc_sat_f32_s", 0x04),
+            ("i64.trunc_sat_f32_u", 0x05),
+            ("i64.trunc_sat_f64_s", 0x06),
+            ("i64.trunc_sat_f64_u", 0x07),
+        ];
+        for (name, sub) in expected {
+            assert_eq!(trunc_sat_sub_opcode(name), Some(sub), "{name}");
+        }
+        assert_eq!(trunc_sat_sub_opcode("i32.trunc_f32_s"), None, "the TRAPPING variant must not match");
     }
 
     #[test]
