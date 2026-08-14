@@ -178,12 +178,13 @@ and key-custody boundaries. The latter has a reusable deterministic host-bridge
 contract around a Qt/Cairo/C++ native shell. Both now have explicit backlog
 owners; neither is treated as an unclassified blind all-language port.
 
-The D18F shared fixture lock now fixes that channel-crypto contract across
-implementations. Rust is the production baseline, while TypeScript, Python,
-Go, and Ruby are portable consumers: all five reproduce the exact authenticated
-header, `D18M` v1 bytes, canonical JSON, rich payload ciphertext, verification
-order, and stable errors. The remaining Elixir port continues against the same
-corpus rather than inventing a language-specific envelope.
+The D18F shared fixture lock now fixes that channel-crypto contract across all
+six supported implementations. Rust is the production baseline, while
+TypeScript, Python, Go, Ruby, and Elixir are portable consumers: all six
+reproduce the exact authenticated header, `D18M` v1 bytes, canonical JSON, rich
+payload ciphertext, verification order, and stable errors. The only remaining
+D18F portability work is a final six-language conformance gate over the shared
+corpus.
 
 The `9bb12864` refresh also added `chief-of-staff-channel-store`. It is an
 authority-free orchestration layer over injected storage and cryptography:
