@@ -891,10 +891,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   that zero-lift stem-to-connector-to-oval order while tracing the printed
   straight left upright, horizontal middle bar, and wide closed oval; it
   records the school hand's looped entry, diagonal connector, and cursive oval.
-  The remaining **71** prose part
-  orders across four scripts
+  Lowercase **я** closes the Cyrillic lowercase inventory at 12:13–12:21: the
+  pen rises from a curved baseline entry, circles the upper loop
+  counterclockwise, descends the long diagonal leg, and turns into a short exit
+  without lifting. Its four-frame Noto fit preserves that zero-lift
+  rise-to-loop-to-leg order while tracing the printed straight right upright,
+  broad upper bowl, and angular lower-left leg; it records the school hand's
+  curved entry, narrow loop, slanted leg, and exit join. The remaining **70**
+  prose part orders across three scripts
   (`arabic` 3,
-  `cyrillic` 1,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

@@ -108,6 +108,7 @@ const CYRILLIC_YERY = DUCTUS[ductusKey("cyrillic", "ы")];
 const CYRILLIC_SOFT_SIGN = DUCTUS[ductusKey("cyrillic", "ь")];
 const CYRILLIC_E = DUCTUS[ductusKey("cyrillic", "э")];
 const CYRILLIC_YU = DUCTUS[ductusKey("cyrillic", "ю")];
+const CYRILLIC_YA = DUCTUS[ductusKey("cyrillic", "я")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1724,6 +1725,23 @@ describe("handwriting ductus", () => {
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     expect(connector.at(-1)!.x).toBeGreaterThan(connector[0].x);
     expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
+  it("Cyrillic я joins the rising stem, counterclockwise bowl, and diagonal leg", () => {
+    expect(CYRILLIC_YA.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_YA)).toBe(0);
+    expect(CYRILLIC_YA.strokes).toHaveLength(1);
+    expect(CYRILLIC_YA.strokes[0].segments).toHaveLength(4);
+    const [stem, bowl, join, leg] = CYRILLIC_YA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(stem.at(-1)).toEqual(bowl[0]);
+    expect(bowl.at(-1)).toEqual(join[0]);
+    expect(join.at(-1)).toEqual(leg[0]);
+    expect(stem.at(-1)!.y).toBeGreaterThan(stem[0].y);
+    expect(bowl.at(-1)!.x).toBeLessThan(bowl[0].x);
+    expect(leg.at(-1)!.x).toBeLessThan(leg[0].x);
+    expect(leg.at(-1)!.y).toBeLessThan(leg[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3894,6 +3912,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*11:44–11:58.*small looped entry.*descends the tall left stem.*baseline.*rising diagonal connector.*continues directly into the right oval.*upper-left side.*across the top.*descends the right side.*rounds the bottom.*rises along the left side.*without lifting.*one continuous pen-down run.*zero intervening lifts.*left stem down.*joined connector.*clockwise right oval.*bundled Noto Sans Cyrillic.*printed ю-like form.*straight full-height left upright.*horizontal middle bar.*wide closed oval.*looped entry.*diagonal connector.*narrow cursive oval.*stem-to-connector-to-oval order.*clockwise oval direction.*zero-lift evidence.*descend the left stem.*retrace to the middle.*circle the right oval clockwise.*close it without lifting.*connected cursive restores/i,
+    );
+  });
+
+  it("Cyrillic я traces its zero-lift rise-to-loop-to-leg order to the native lesson", () => {
+    const src = CYRILLIC_YA.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase я.*12:13–12:21.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*12:13–12:21.*baseline.*curved entry.*upper-right junction.*upper loop counterclockwise.*returns to the junction.*long diagonal leg.*baseline exit.*without lifting.*one continuous pen-down run.*zero intervening lifts.*rising entry.*upper loop.*descending diagonal leg.*bundled Noto Sans Cyrillic.*printed я-like form.*straight full-height right upright.*broad upper bowl.*angular lower-left leg.*curved rising entry.*narrow loop.*slanted leg.*exit join.*rise-to-loop-to-leg order.*counterclockwise loop direction.*zero-lift evidence.*climb the right stem.*circle the upper bowl counterclockwise.*descend the diagonal leg without lifting.*connected cursive restores/i,
     );
   });
 

@@ -21,6 +21,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic я ductus (HL-C09FF)
+
+- Render **я** in four joined movements across its rising right stem, counterclockwise upper bowl, lower join, and diagonal leg with zero lifts.
+- Preserve RussianIrina's 12:13–12:21 school-hand order while fitting the bundled printed outline.
+- Show the exact Noto Sans Cyrillic glyph behind every filmstrip frame, complete the lowercase Cyrillic inventory, and queue Gujarati next.
+
 ### Added — cited Cyrillic ю ductus (HL-C09FE)
 
 - Render **ю** in five joined movements across its left stem, middle connector, and clockwise oval with zero lifts.

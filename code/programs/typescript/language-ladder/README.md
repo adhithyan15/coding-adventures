@@ -928,6 +928,13 @@ entry, diagonal connector, and clockwise cursive oval at 11:44–11:58; the Noto
 Sans Cyrillic fit preserves that zero-lift stem-to-connector-to-oval order
 while tracing the printed straight upright, horizontal middle bar, and wide
 closed oval.
+The four-frame Cyrillic **я** filmstrip climbs the right stem from the baseline,
+curves counterclockwise around the upper bowl, sweeps left through the lower
+join, then descends the diagonal leg without lifting. The native-teacher lesson
+demonstrates its curved entry, upper loop, long diagonal leg, and short exit at
+12:13–12:21; the Noto Sans Cyrillic fit preserves that zero-lift
+rise-to-loop-to-leg order while tracing the printed straight right upright,
+broad upper bowl, and angular lower-left leg.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

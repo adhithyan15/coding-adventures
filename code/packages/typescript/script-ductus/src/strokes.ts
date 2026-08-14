@@ -4559,6 +4559,65 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ю"),
   },
+  // RussianIrina writes lowercase я in one run: rise from the baseline,
+  // circle the upper loop counterclockwise, then descend the diagonal leg.
+  // The printed fit uses its right upright as that rise and preserves the
+  // source's zero-lift rise-to-loop-to-leg order.
+  [ductusKey("cyrillic", "я")]: {
+    script: "cyrillic",
+    glyph: "я",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the right stem from the baseline to the top",
+            path: [
+              { x: 449, y: 0 },
+              { x: 449, y: 140 },
+              { x: 449, y: 300 },
+              { x: 449, y: 440 },
+              { x: 449, y: 499 },
+            ],
+          },
+          {
+            label: "curve counterclockwise around the upper bowl",
+            path: [
+              { x: 449, y: 499 },
+              { x: 360, y: 499 },
+              { x: 265, y: 499 },
+              { x: 175, y: 475 },
+              { x: 115, y: 425 },
+              { x: 105, y: 370 },
+              { x: 120, y: 325 },
+              { x: 180, y: 290 },
+              { x: 280, y: 243 },
+              { x: 405, y: 243 },
+            ],
+          },
+          {
+            label: "sweep left through the bowl's lower join",
+            path: [
+              { x: 405, y: 243 },
+              { x: 340, y: 243 },
+              { x: 277, y: 225 },
+              { x: 187, y: 218 },
+            ],
+          },
+          {
+            label: "descend the diagonal leg to the lower-left tip",
+            path: [
+              { x: 187, y: 218 },
+              { x: 155, y: 170 },
+              { x: 120, y: 120 },
+              { x: 85, y: 70 },
+              { x: 35, y: 0 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("я"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
