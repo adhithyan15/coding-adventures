@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "elixir/chief-of-staff-channel-store",
+  "capabilities": [],
+  "justification": "Pure deterministic profile and state transitions over an injected atomic storage boundary, caller-supplied bytes, identifiers, clocks, keys, and opaque grants."
+}
