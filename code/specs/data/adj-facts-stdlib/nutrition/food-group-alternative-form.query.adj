@@ -1,0 +1,21 @@
+% ============================================================================
+% food-group-alternative-form.query.adj — a worked recall over the
+% nutrition food-group-alternative-form library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "does juice count as a
+% fruit?": it states no nutrition fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `food_group_alternative_form` rows and returns the
+% alternative form + the table's source/locator/trust. Grains, whose own
+% cited definitional sentence names no comparable alternative form,
+% abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli food-group-alternative-form.query.adj
+% ============================================================================
+
+import "food-group-alternative-form.adj"
+
+? food_group_alternative_form(fruits, $Form)                              % expect hundred_percent_fruit_juice
+? food_group_alternative_form($Group, hundred_percent_vegetable_juice)     % expect vegetables
+? food_group_alternative_form(grains, $Form)                              % expect abstain — grains' own cited span names no alternative form
