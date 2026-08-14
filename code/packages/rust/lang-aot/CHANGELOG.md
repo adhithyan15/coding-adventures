@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.226.13 - 2026-08-13 (ALGOL static conditional selector assignments)
+
+The seven-backend ALGOL matrix now proves that a variable-free static
+conditional selector assignment may discard a changing leaf while preserving
+the known transitive selector through its selected bare-self leaf.
+
 ## 0.226.12 - 2026-08-13 (ALGOL conditional transitive selector idempotence)
 
 The seven-backend ALGOL matrix now proves that equal bare-self conditional

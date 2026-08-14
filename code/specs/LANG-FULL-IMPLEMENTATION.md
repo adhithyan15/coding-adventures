@@ -910,7 +910,9 @@ backend immediately) come before the enabler-dependent items.
   ordinary local boolean, integer, and real scalars, may instead choose one
   preserving leaf; an exact bare self-assignment does not make such a selector
   unstable, nor does a conditional assignment whose leaves are all that same
-  bare selector. Computed selector assignments, differing selector leaves,
+  bare selector. A variable-free statically known conditional selector
+  assignment may instead scan only its selected leaf. Computed selector
+  assignments, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
   cross-assigned dependency writes remain conservative without recursive
   effect inference. Conditional
