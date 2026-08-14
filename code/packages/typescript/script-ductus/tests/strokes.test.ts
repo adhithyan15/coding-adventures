@@ -90,6 +90,7 @@ const CYRILLIC_SHORT_I = DUCTUS[ductusKey("cyrillic", "й")];
 const CYRILLIC_KA = DUCTUS[ductusKey("cyrillic", "к")];
 const CYRILLIC_EL = DUCTUS[ductusKey("cyrillic", "л")];
 const CYRILLIC_EM = DUCTUS[ductusKey("cyrillic", "м")];
+const CYRILLIC_EN = DUCTUS[ductusKey("cyrillic", "н")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1391,6 +1392,23 @@ describe("handwriting ductus", () => {
     expect(left[0].y).toBeLessThan(left.at(-1)!.y);
     expect(down.at(-1)!.y).toBeLessThan(down[0].y);
     expect(up.at(-1)!.y).toBeGreaterThan(up[0].y);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
+  it("Cyrillic н joins its two stems through the middle bridge", () => {
+    expect(CYRILLIC_EN.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_EN)).toBe(0);
+    expect(CYRILLIC_EN.strokes).toHaveLength(1);
+    expect(CYRILLIC_EN.strokes[0].segments).toHaveLength(3);
+    const [left, bridge, right] = CYRILLIC_EN.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(left.at(-1)).toEqual(bridge[0]);
+    expect(bridge.at(-1)).toEqual(right[0]);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(Math.min(...bridge.map((point) => point.y))).toBe(left.at(-1)!.y);
+    expect(bridge.some((point) => point.x > left[0].x && point.y === 274)).toBe(true);
+    expect(bridge.at(-1)!.y).toBeGreaterThan(bridge[0].y);
     expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
   });
 
@@ -3364,6 +3382,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*05:26–05:31.*near the baseline.*small entry hook.*first apex.*central valley.*second apex.*right leg.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*two rounded arches.*entry and exit joins.*bundled Noto Sans Cyrillic.*angular printed form.*two straight upright stems.*deep central V.*entry-to-first-apex-to-valley-to-second-apex-to-baseline order.*zero-lift evidence.*rise through the left stem.*central V.*descend the right stem.*connected cursive restores.*rounded arches/i,
+    );
+  });
+
+  it("Cyrillic н traces its zero-lift bridge to the all-letter native lesson", () => {
+    const src = CYRILLIC_EN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase н.*05:47–05:52.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*05:47–05:52.*upper left.*left stem.*baseline.*turns upward without lifting.*rounded middle bridge.*right shoulder.*right stem.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded bridge.*entry and exit joins.*bundled Noto Sans Cyrillic.*printed H-like form.*two straight vertical stems.*horizontal middle bar.*left-stem-to-middle-bridge-to-right-stem order.*zero-lift evidence.*retrace to the middle junction.*horizontal bar.*upper-right tip.*descend the right stem.*connected cursive restores/i,
     );
   });
 
