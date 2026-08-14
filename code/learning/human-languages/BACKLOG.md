@@ -560,7 +560,7 @@ Riding alongside, not blocking the rungs:
 |---|---|---|---|
 | HL-C115 | Not started | `letter-ductus` filmstrip figures. **Both blockers merged**: `script-ductus` exposes the filmstrip to the book generator and `path-raster` renders it to PNG. | Declared in `core/figure-generation.json`, byte-gated, proved on Tamil's cited letters and Devanagari's अ and आ. |
 | HL-C118 | Not started | Cited ductus for Telugu, Kannada, Malayalam and the rest of Devanagari. **No citation → no pen path → no figure**; the gap is reported, never filled by invention. | Every authored pen path font-verified and carrying a `strokeOrderSource`. |
-| HL-C134 | Not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. Bites when a tranche needs to place a word or a letter in the opening chapters. | No protected handwritten chapter; Hindi's 11 writing lessons reach the page. |
+| HL-C134 | **In progress** — owner has authorised rewriting the drafts (2026-08-13); parity measured, migration not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. **Not a config change**: the `.tex` says more than the lesson markdown does, and `data/scripts/handwritten_parity.py` measures how much — **88 prose blocks** across the six that generating as-is would delete, almost all of them `sounds`. Carry the prose back into the lessons chapter by chapter, then flip that chapter. | Parity is 0 for a chapter before it moves out of `handwritten`; no protected chapter remains; Hindi's 11 writing lessons reach the page. |
 | HL-C148 | Not started | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
 | HL-C149 | **Done** | **Derive the corpus-count pins instead of hard-coding them.** Twenty snapshot assertions across six test files hard-coded counts that every content tranche moves — so every tranche conflicted with every other PR that moved any of them, and this repo lands a PR every few minutes. Converted to the shape each number actually has: **floors** for content volume, **ceilings** for inherited debt (stricter than the pin was — a ratchet that cannot slip back), **ratios** for debt that grows with honest content. The running annotations stay; only the digits churned. | Mutation-tested both ways: deleting one lesson still fails the floors, and adding 42 lessons passes without touching a test file. |
 | HL-C150 | **NEXT** | **The six tracks teach core words about thirty chapters after they first use them.** Measured on merged main, before any new content: **46 forward references** across the six. Tamil's chapter 1 practice uses வா, taught in chapter 32. Chapter 3 uses இரு, taught in chapter 32. Malayalam's chapter 1 uses ഉണ്ട്, taught in chapter 32. Kannada's chapter 4 uses ಬಾ, taught in chapter 32. This is the corpus's shape, not one wave's mistake — and wave I was about to add six more of it by appending its chapter at the end. Move the words that the opening chapters already lean on to where they are used. | `forwardReferences` in the six falls toward zero; no core word is taught more than a few chapters after its first use; every book still builds. |
@@ -610,24 +610,19 @@ Worth carrying forward as its own small item: the forward-reference detector
 matches substrings, so its raw count overstates. Sharpening it to word boundaries
 would make the ceiling in `continuity.test.ts` mean what it says.
 
-### Discovered while running the loop (2026-08-13)
+**HL-C134 is the unblocker, and it is bigger than it looks.** The owner
+authorised rewriting the handwritten chapters on 2026-08-13, which removes the
+consent question but not the engineering one. Moving a chapter from `handwritten`
+to `targets` regenerates it from the lesson markdown — and the markdown is a
+subset of what is in the `.tex`. Pronunciation guidance especially was written
+straight into LaTeX and never went back: of the 88 blocks at risk, the
+overwhelming majority are `sounds`.
 
-**HL-C149 was found by wave I, not predicted.** The tranche was authored, verified
-and pushed green, then went `DIRTY` before it could merge: main had landed five
-chapters in other tracks, and both sides had moved the same fourteen
-corpus-snapshot pins. Neither side's numbers described the merged corpus, so the
-conflict could not be resolved by choosing — the wave had to be reset onto the
-new base and every measurement re-derived.
-
-That is not a one-off. **Nineteen waves means nineteen of these**, and the window
-between authoring a tranche and merging it is longer than the gap between merges
-on this repo. So HL-C149 is scheduled BEFORE wave II: it is the difference
-between each remaining wave costing one PR and costing one PR plus a rebase.
-
-The rule it protects is worth stating, because the tempting fix is worse: do NOT
-resolve a conflicted snapshot by taking either side. A pin is a measurement, and
-a measurement of neither corpus is not a compromise, it is a wrong number with a
-confident annotation attached. Regenerate from the merged base.
+Every gate would have stayed green through that deletion, because nothing
+compared the two representations. `handwritten_parity.py` now does, report-only
+per the HL05/HL08 precedent, and it is the precondition for the migration rather
+than part of it: a chapter may be flipped when its parity is zero, and not
+before.
 
 ### The loop this order is executed by
 
