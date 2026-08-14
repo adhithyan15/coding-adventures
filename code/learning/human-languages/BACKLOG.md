@@ -9,6 +9,32 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C164 — a new generated chapter must declare its script in book-generation.json
+
+Discovered while authoring Sanskrit chapter 16 (2026-08-14). A target entry
+written as
+
+```json
+{ "language": "sanskrit", "chapter": 16, "output": "…/ch16-places.tex" }
+```
+
+builds at `exit=0` and emits **888 missing-character warnings**: every
+Devanagari run falls through to Latin Modern, because the renderer only wraps
+script runs in `\sk{…}` when the target says so. The sibling entries carry two
+more keys:
+
+```json
+"unicodeScript": "Devanagari", "scriptCommand": "sk"
+```
+
+The lesson markdown and frontmatter are **identical either way** — nothing in the
+lesson tells you it is missing, and `exit=0` plus clean gates do not either. Only
+the `Missing character` count in the log catches it, which is why the book build
+is checked on warning counts and not just on its exit code.
+
+**Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
+new chapter target is registered.
+
 ## HL-C161 — Sanskrit's ledger is blocked on CHAPTERS, and the ratio proves it
 
 **Measured 2026-08-14, and this row exists because the attempt was reverted
