@@ -8,12 +8,15 @@ operations require that session. The session exposes only the stable non-secret
 `operator:local` requester identity used to construct Trust Checker context;
 the bearer credential itself is never retained in that context.
 
-Channel and pipeline topology changes remain denied by default. The adapter
-deliberately does not turn a local bearer credential into privilege approval: a
-later Trust Checker must authorize the exact immutable topology mutation. The
-orchestrator core now provides that Trust Checker adapter, but production
-retains this denial until an explicit reviewed approval provider and
-authoritative tier resolver are composed.
+Channel and pipeline topology changes use an exact immutable tier resolver built
+from the validated daemon config. Every referenced agent, channel, package hash,
+and selected model must be explicitly assigned; missing authority fails closed.
+Trust Checker can authorize a fully declared Tier 0 request without interaction.
+The current production approval provider deliberately returns unavailable for
+every interactive request, so Tier 1, Tier 2, and Tier 3 cannot be silently
+downgraded while platform notification, biometric, and hardware-key adapters are
+still absent. The local bearer authenticates the requester but never acts as
+privilege approval.
 
 The package generates credential material but performs no filesystem, terminal,
 environment, or network access. Outer composition owns protected persistence and

@@ -23,10 +23,13 @@ The configured credential parent and trusted public-key files must already
 exist. The daemon creates or initializes the configured state directory, binds
 only the loopback address accepted by `chief-of-staff-daemon-config`, performs
 one reconciliation before serving, and then reconciles at the configured health
-interval. Channel topology mutation remains denied until the Trust Checker is
-implemented. Host launch bindings come only from the shared durable pipeline
-binding store; absent, stale, destroyed, directionally unauthorized, or
-cross-pipeline records fail before process creation.
+interval. Channel and pipeline mutations resolve every referenced agent,
+channel, package hash, and selected model through exact `[privilege]` tier maps.
+Fully declared Tier 0 mutations can proceed through Trust Checker; missing maps
+and all Tier 1 through Tier 3 requests remain denied until their reviewed
+platform approval providers exist. Host launch bindings come only from the
+shared durable pipeline binding store; absent, stale, destroyed, directionally
+unauthorized, or cross-pipeline records fail before process creation.
 
 A non-empty optional `[data_plane]` table is provisioned before serving. Raw
 32-byte channel secrets are loaded through the owner-only no-link reader, model
