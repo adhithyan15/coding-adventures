@@ -838,6 +838,13 @@ left-stem-to-first-arch-to-middle-stem-to-second-arch-to-right-stem school-hand
 order at 07:29–07:36; the Noto Sans Cyrillic fit preserves that initial descent
 and zero-lift evidence while tracing the printed central stem and horizontal
 top bar and records the source's two-arch Latin-m-like shape and rising exit.
+The four-frame Cyrillic **у** filmstrip descends the left arm, rises through the
+right arm, retraces through the junction into the long descender, then curves
+left through its terminal without lifting. The native-teacher lesson
+demonstrates its narrow rounded upper body, looped descender, crossing, and
+rising exit at 07:50–07:55; the Noto Sans Cyrillic fit preserves that
+left-arm-to-right-arm-to-descender order and zero-lift evidence while tracing
+the printed straight upper arms and broad unlooped left-curving terminal.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

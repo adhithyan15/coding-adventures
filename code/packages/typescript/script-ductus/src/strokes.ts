@@ -3852,6 +3852,63 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("т"),
   },
+  // RussianIrina writes lowercase у as one joined y-like school-hand run:
+  // descend the left arm, rise through the right arm, then retrace into a
+  // looped descender and exit. The fitted path preserves that zero-lift order
+  // while following the printed arms and its unlooped left-curving terminal.
+  [ductusKey("cyrillic", "у")]: {
+    script: "cyrillic",
+    glyph: "у",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left arm to the middle junction",
+            path: [
+              { x: 47, y: 500 },
+              { x: 80, y: 430 },
+              { x: 115, y: 340 },
+              { x: 155, y: 240 },
+              { x: 215, y: 100 },
+            ],
+          },
+          {
+            label: "turn and rise through the right arm",
+            path: [
+              { x: 215, y: 100 },
+              { x: 260, y: 95 },
+              { x: 315, y: 220 },
+              { x: 365, y: 350 },
+              { x: 460, y: 500 },
+            ],
+          },
+          {
+            label: "retrace to the junction and descend below the baseline",
+            path: [
+              { x: 460, y: 500 },
+              { x: 410, y: 400 },
+              { x: 360, y: 270 },
+              { x: 310, y: 145 },
+              { x: 260, y: 60 },
+              { x: 235, y: -40 },
+              { x: 220, y: -85 },
+            ],
+          },
+          {
+            label: "curve left through the descender terminal",
+            path: [
+              { x: 220, y: -85 },
+              { x: 205, y: -125 },
+              { x: 175, y: -165 },
+              { x: 135, y: -195 },
+              { x: 85, y: -200 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("у"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
