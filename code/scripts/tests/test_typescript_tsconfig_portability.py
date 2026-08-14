@@ -405,12 +405,13 @@ console.log(prose, nested);
         # reach them. A new TypeScript project is a new row here by
         # construction; the count is the contract that says so out loud.
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
-        self.assertEqual(summary.total_projects, 461)
+        # +1: chief-of-staff-channel-crypto, the portable D18F message profile.
+        self.assertEqual(summary.total_projects, 462)
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
         self.assertEqual(summary.inherited_out_dir, 132)
-        self.assertEqual(summary.standalone_emit_projects, 144)
-        self.assertEqual(summary.isolated_standalone_projects, 144)
+        self.assertEqual(summary.standalone_emit_projects, 145)
+        self.assertEqual(summary.isolated_standalone_projects, 145)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -429,7 +430,8 @@ console.log(prose, nested);
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
-        self.assertEqual(summary.locked_compilers, 452)
+        # +1: chief-of-staff-channel-crypto locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 453)
 
 
 if __name__ == "__main__":

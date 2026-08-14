@@ -178,6 +178,13 @@ and key-custody boundaries. The latter has a reusable deterministic host-bridge
 contract around a Qt/Cairo/C++ native shell. Both now have explicit backlog
 owners; neither is treated as an unclassified blind all-language port.
 
+The D18F shared fixture lock now fixes that channel-crypto contract across
+implementations. Rust is the production baseline, and TypeScript is the first
+portable consumer: both reproduce the exact authenticated header, `D18M` v1
+bytes, canonical JSON, rich payload ciphertext, verification order, and stable
+errors. The remaining Python, Go, Ruby, and Elixir ports continue against the
+same corpus rather than inventing language-specific envelopes.
+
 The `9bb12864` refresh also added `chief-of-staff-channel-store`. It is an
 authority-free orchestration layer over injected storage and cryptography:
 two-phase CAS reservation, crash recovery, nonce-safe abandoned gaps,

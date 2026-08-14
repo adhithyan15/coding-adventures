@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/chief-of-staff-channel-crypto",
+  "version": "0.1.0",
+  "description": "Portable D18F immutable encrypted-message profile for Chief of Staff channels",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/chacha20-poly1305": "file:../chacha20-poly1305",
+    "@coding-adventures/ed25519": "file:../ed25519",
+    "@coding-adventures/sha256": "file:../sha256",
+    "@coding-adventures/uuid": "file:../uuid"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}
