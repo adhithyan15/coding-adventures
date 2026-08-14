@@ -17,9 +17,14 @@ does -- it has `sounds` blocks, `cousinweb` etymologies, `grammarlens`
 explanations and `cognates` tables that were written straight into the LaTeX and
 never went back into the lesson.
 
-Measured, the first time this ran: **56 blocks** across the six tracks. Fifty-six
-pieces of the owner's writing that a one-line config change would have thrown
-away, with every gate still green -- because no gate compares the two.
+Measured per chapter: **88 blocks** across the six tracks. Eighty-eight pieces of
+the owner's writing that a one-line config change would have thrown away, with
+every gate still green -- because no gate compares the two.
+
+The first run reported 56. That was a per-TRACK aggregate, which lets a surplus
+in one chapter cancel a deficit in another -- and chapters are flipped one at a
+time, so the cancellation is meaningless. Per chapter, the way the migration will
+actually happen, it is 88.
 
 WHAT IS COMPARED, AND WHY IT IS COUNTS AND NOT TEXT
 ---------------------------------------------------
@@ -45,7 +50,7 @@ safe to flip and which are not yet.
 
 REPORT-ONLY, ON PURPOSE
 ------------------------
-It fails on 56 blocks of pre-existing debt today. Per the HL05 and HL08
+It fails on 88 blocks of pre-existing debt today. Per the HL05 and HL08
 precedent, a gate that fails on inherited debt teaches authors to route around
 it, so this prints and exits 0. It becomes blocking per track as that track's
 prose is carried across -- at which point the number for that track is zero and
