@@ -7422,10 +7422,13 @@ impl HtmlParser {
             && !self.current_element_is(name)
             && is_adoption_agency_element(name)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                format!("end tag `</{name}>` did not match the current foreign element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
 
             if self.close_open_foreign_element_before_html_boundary(name) {
                 return;
@@ -38728,20 +38731,16 @@ mod tests {
 
     #[test]
     fn reports_adoption_agency_reprocessing_from_foreign_content() {
-        for (source, name) in [
-            ("<!doctype html><a><svg><tr><input></a>", "a"),
-            ("<!doctype html><b><math><mi></b>", "b"),
+        for name in [
+            "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "strike", "strong",
+            "tt", "u",
         ] {
-            let output = parse_html_with_diagnostics(source).unwrap();
+            let source = format!("<!doctype html><{name}><math><mi></{name}>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
-                    ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        format!(
-                            "end tag `</{name}>` did not match the current foreign element"
-                        ),
-                    ),
+                    generic_foreign_end_tag_mismatch(&source, name),
                     ParserDiagnostic::new(
                         "unexpected-non-current-formatting-end-tag",
                         format!(
@@ -38780,15 +38779,12 @@ mod tests {
                 .all(|diagnostic| { diagnostic.code != "unexpected-end-tag-in-foreign-content" }));
         }
 
-        let unmatched =
-            parse_html_with_diagnostics("<!doctype html><svg><g></a></g></svg>").unwrap();
+        let unmatched_source = "<!doctype html><svg><g></a></g></svg>";
+        let unmatched = parse_html_with_diagnostics(unmatched_source).unwrap();
         assert_eq!(
             unmatched.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-end-tag-in-foreign-content",
-                    "end tag `</a>` did not match the current foreign element",
-                ),
+                generic_foreign_end_tag_mismatch(unmatched_source, "a"),
                 ParserDiagnostic::new(
                     "unexpected-end-tag",
                     "end tag `</a>` did not match an open element",
@@ -38799,34 +38795,23 @@ mod tests {
         assert_eq!(unmatched_svg.name, "svg");
         assert_eq!(element(&unmatched_svg.children[0]).name, "g");
 
-        let foreign_match =
-            parse_html_with_diagnostics(
-                "<!doctype html><svg><a><g></a><circle></circle></svg>",
-            )
-            .unwrap();
+        let foreign_match_source = "<!doctype html><svg><a><g></a><circle></circle></svg>";
+        let foreign_match = parse_html_with_diagnostics(foreign_match_source).unwrap();
         assert_eq!(
             foreign_match.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                "end tag `</a>` did not match the current foreign element",
-            )]
+            vec![generic_foreign_end_tag_mismatch(foreign_match_source, "a")]
         );
         let foreign_svg = element(&body(&foreign_match.document).children[0]);
         assert_eq!(foreign_svg.name, "svg");
         assert_eq!(element(&foreign_svg.children[0]).name, "a");
         assert_eq!(element(&foreign_svg.children[1]).name, "circle");
 
-        let fragment = parse_html_fragment_for_context_with_diagnostics(
-            "<a><g></a><circle></circle>",
-            "svg svg",
-        )
-        .unwrap();
+        let fragment_source = "<a><g></a><circle></circle>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "svg svg").unwrap();
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                "end tag `</a>` did not match the current foreign element",
-            )]
+            vec![generic_foreign_end_tag_mismatch(fragment_source, "a")]
         );
         assert_eq!(element(&fragment.nodes[0]).name, "a");
         assert_eq!(element(&fragment.nodes[1]).name, "circle");
@@ -38839,6 +38824,60 @@ mod tests {
                 "end tag `</a>` did not match an open element",
             )]
         );
+    }
+
+    #[test]
+    fn positions_adoption_agency_foreign_end_tag_mismatches_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<b><math><mi></b>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics[0],
+            generic_foreign_end_tag_mismatch(source, "b")
+        );
+        assert_eq!(output.parser_diagnostics[1].position, None);
+        assert!(source.len() > source.chars().count());
+
+        let eof_source = "<!doctype html><b><math><mi></b";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-end-tag-in-foreign-content" }));
+        assert_eq!(
+            eof_output.parser_diagnostics.last(),
+            Some(&eof_with_unclosed_elements(eof_source))
+        );
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "mi".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "b".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
