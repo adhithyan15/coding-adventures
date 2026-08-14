@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.107.0
+
+- Resolve standalone Requirement `:::` class shorthand into structural styles.
+
 ## 0.106.0
 
 - Parse Requirement font size, weight, style, and family into structural semantic styles.

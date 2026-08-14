@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.59.0
+
+- Tokenize standalone Requirement `:::` class shorthand statements.
+
 ## 0.58.0
 
 - Tokenize Requirement typography style declarations.
