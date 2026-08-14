@@ -1,0 +1,20 @@
+% ============================================================================
+% space-rock-alt-name.query — worked recall queries against
+% space-rock-alt-name.adj (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind an
+% alt name, find the stage), and honest abstention on meteoroid (this
+% table only grounds the one stage whose cited span states an alternate
+% everyday name).
+% ============================================================================
+
+import "space-rock-alt-name.adj"
+
+% Forward: what everyday names does the cited NASA sentence give a meteor?
+? space_rock_alt_name(meteor, $AltName)
+
+% Backward: which stage is called a "fireball"?
+? space_rock_alt_name($Stage, fireball)
+
+% Honest abstention: meteoroid's cited span names no alternate everyday term.
+? space_rock_alt_name(meteoroid, $AltNameMeteoroid)
