@@ -5728,6 +5728,21 @@ impl Compiler {
         name: &str,
         effect_root: &GrammarASTNode,
     ) -> bool {
+        self.body_changes_stable_selector_with_depth(
+            node,
+            name,
+            effect_root,
+            MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH,
+        )
+    }
+
+    fn body_changes_stable_selector_with_depth(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        effect_root: &GrammarASTNode,
+        remaining_dependency_depth: usize,
+    ) -> bool {
         let targets_name = |variable: &GrammarASTNode| {
             array_subscripts(variable).is_none()
                 && direct_tokens(variable).into_iter().any(|token| {
@@ -5746,6 +5761,7 @@ impl Compiler {
                         expression,
                         name,
                         effect_root,
+                        remaining_dependency_depth,
                     )
                 });
             }
@@ -5757,7 +5773,14 @@ impl Compiler {
         }
         direct_nodes(node)
             .into_iter()
-            .any(|child| self.body_changes_stable_selector(child, name, effect_root))
+            .any(|child| {
+                self.body_changes_stable_selector_with_depth(
+                    child,
+                    name,
+                    effect_root,
+                    remaining_dependency_depth,
+                )
+            })
     }
 
     fn selector_expression_intrinsically_preserves_name(
@@ -5765,8 +5788,9 @@ impl Compiler {
         node: &GrammarASTNode,
         name: &str,
         effect_root: &GrammarASTNode,
+        remaining_dependency_depth: usize,
     ) -> bool {
-        if expr_variable_name(node).as_deref() == Some(name) {
+        if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
@@ -5802,10 +5826,19 @@ impl Compiler {
                                 && binding.array.is_none()
                                 && self.active_by_name_binding(dependency).is_none()
                         })
-                        && !body_changes_bare_self_assignment_dependency(
-                            effect_root,
-                            dependency,
-                        )
+                        && if remaining_dependency_depth == 0 {
+                            !body_changes_bare_self_assignment_dependency(
+                                effect_root,
+                                dependency,
+                            )
+                        } else {
+                            !self.body_changes_stable_selector_with_depth(
+                                effect_root,
+                                dependency,
+                                effect_root,
+                                remaining_dependency_depth - 1,
+                            )
+                        }
                 })
         });
         if condition_is_variable_free || stable_scalar_condition {
@@ -5815,6 +5848,7 @@ impl Compiler {
                         branches[0],
                         name,
                         effect_root,
+                        remaining_dependency_depth,
                     )
                 }
                 Some(false) => {
@@ -5822,13 +5856,19 @@ impl Compiler {
                         branches[1],
                         name,
                         effect_root,
+                        remaining_dependency_depth,
                     )
                 }
                 None => {}
             }
         }
         branches.into_iter().all(|branch| {
-            self.selector_expression_intrinsically_preserves_name(branch, name, effect_root)
+            self.selector_expression_intrinsically_preserves_name(
+                branch,
+                name,
+                effect_root,
+                remaining_dependency_depth,
+            )
         })
     }
 
@@ -7706,6 +7746,9 @@ const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
 
 /// Bound abstract execution of self-contained `while` controls.
 const MAX_STATIC_WHILE_ITERATIONS: usize = 4_096;
+
+/// Bound nested selector-dependency proofs so cyclic assignments fail closed.
+const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 1;
 
 /// Hard cap for the number of switch-list arms emitted while lowering one IIR
 /// function. Nested switch designators form a graph; without this cap an
@@ -10106,6 +10149,35 @@ mod tests {
             "test",
         )
         .expect("equal bare-self leaves leave a conditional selector dependency stable");
+    }
+
+    #[test]
+    fn al4_stable_nested_selector_preserves_conditional_selector_dependency() {
+        compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := flag end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged known scalar may select the preserving nested dependency leaf");
+    }
+
+    #[test]
+    fn al4_written_nested_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a written nested selector may expose the changing dependency leaf");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_deeper_nested_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag, gate; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := gate end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("selector dependency proofs beyond the fixed depth must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
