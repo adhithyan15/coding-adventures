@@ -3824,8 +3824,20 @@ shared shards from the platform union, and selects only the current runner's
 state for execution. The Windows Rust bridge is therefore never omitted from
 the matrix but is built and ordered only where it applies; older v1 plans
 continue to use the top-level graph. The branch was rebased cleanly onto
-`5d2880ed274452721355981ac320ca7cb522745f`; auto-merge remains disabled until
+`952c9ce7f162467039818f00347186f04dc7bb9c`; auto-merge remains disabled until
 the replacement CI run is entirely acceptable and GitHub reports no conflict.
+
+The following Windows run built Swift ZIP and the native Direct2D bridge, then
+exercised six inherited affected-package gaps. The focused follow-up restores
+the complete grammar-tools CLI dependency set, removes two `cmd.exe`-literal
+editable-extra quotes, and adds the missing symbolic-ir Windows front door.
+Windows peer close tests now accept either EOF or `ConnectionReset`; IRC clamps
+Windows to its supported single reactor instead of requesting unavailable
+`SO_REUSEPORT`; and the exposed GDI/Direct2D/C bridge code is warning-clean under
+strict Windows Clippy. The three Python front doors, full embeddable and IRC
+tests, paint backend tests, strict Clippy gates, and release C bridge build all
+pass locally. Auto-merge remains disabled until the replacement head has no CI
+failure or merge conflict.
 
 ## Autonomous Loop Protocol
 
