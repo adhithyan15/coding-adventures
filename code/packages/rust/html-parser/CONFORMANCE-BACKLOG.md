@@ -503,6 +503,9 @@ Prioritized work items:
    Complete-document missing-doctype diagnostics now carry the first token's
    delimiter or EOF emission point, while fragments and directly supplied
    tokens retain their separate contracts.
+   Nonconforming initial doctypes now carry their own delimiter or EOF emission
+   point without absorbing malformed-doctype tokenizer diagnostics or later
+   doctype rejection paths.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
