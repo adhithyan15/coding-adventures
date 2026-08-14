@@ -1,0 +1,19 @@
+% ============================================================================
+% muscle-nuclei-count.query — worked recall queries against
+% muscle-nuclei-count.adj (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% nuclei value, find the muscle type), and honest abstention on smooth
+% muscle (not part of this cited span).
+% ============================================================================
+
+import "muscle-nuclei-count.adj"
+
+% Forward: how many nuclei does a skeletal muscle fiber have?
+? muscle_nuclei_count(skeletal, $Nuclei)
+
+% Backward: which muscle type has a single nucleus per cell?
+? muscle_nuclei_count($Muscle, single_nucleus)
+
+% Honest abstention: smooth muscle is not part of this cited span.
+? muscle_nuclei_count(smooth, $NucleiSmooth)
