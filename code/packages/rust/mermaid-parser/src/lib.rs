@@ -5808,6 +5808,18 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn gitgraph_parses_vertical_directions() {
+        assert_eq!(
+            parse_gitgraph("gitGraph TB:\ncommit").unwrap().direction,
+            DiagramDirection::Tb
+        );
+        assert_eq!(
+            parse_gitgraph("gitGraph BT:\ncommit").unwrap().direction,
+            DiagramDirection::Bt
+        );
+    }
+
+    #[test]
     fn gitgraph_branch_creation_checks_out_the_new_branch() {
         let d = parse_gitgraph(
             "gitGraph\ncommit id: \"root\"\nbranch feature\ncommit id: \"work\"",

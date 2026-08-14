@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.57.0
+
+- Lower resolved horizontal and vertical GitGraph lane endpoints and labels into PaintInstructions.
+
 ## 0.56.0
 
 - Lower GitGraph normal, reverse, highlight, merge, and cherry-pick symbols into backend-neutral geometry.
