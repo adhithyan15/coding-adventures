@@ -5883,6 +5883,60 @@
       "tex": "spanish/book/chapters/ch250-review-tonicos.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 251,
+      "sourceHash": "fnv1a64:032afc5ff03bd540",
+      "lessonIds": [
+        "ES-C65-ahi-alli"
+      ],
+      "tex": "spanish/book/chapters/ch251-ahi-alli.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 252,
+      "sourceHash": "fnv1a64:9d818af2e6a86fd6",
+      "lessonIds": [
+        "ES-C65-ahora-hoy"
+      ],
+      "tex": "spanish/book/chapters/ch252-ahora-hoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 253,
+      "sourceHash": "fnv1a64:ce37a5bcc9708337",
+      "lessonIds": [
+        "ES-C65-unos-unas"
+      ],
+      "tex": "spanish/book/chapters/ch253-unos-unas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 254,
+      "sourceHash": "fnv1a64:8fba5e1c2ddb36d3",
+      "lessonIds": [
+        "ES-C65-vuestro"
+      ],
+      "tex": "spanish/book/chapters/ch254-vuestro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 255,
+      "sourceHash": "fnv1a64:a951790dda8f3a58",
+      "lessonIds": [
+        "ES-C65-vi-di"
+      ],
+      "tex": "spanish/book/chapters/ch255-vi-di.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 256,
+      "sourceHash": "fnv1a64:c7a5da121807d2e6",
+      "lessonIds": [
+        "ES-C65-repaso-parejas"
+      ],
+      "tex": "spanish/book/chapters/ch256-review-parejas.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

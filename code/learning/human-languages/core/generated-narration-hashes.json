@@ -10280,6 +10280,90 @@
       "jsonHash": "fnv1a64:acd6e43652756add"
     },
     {
+      "language": "spanish",
+      "chapter": 251,
+      "sourceHash": "fnv1a64:4fbb0bf04ff7c2fb",
+      "lessonIds": [
+        "ES-C65-ahi-alli"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch251.txt",
+      "json": "spanish/narration/ch251.json",
+      "textHash": "fnv1a64:148c14468cfa0699",
+      "jsonHash": "fnv1a64:231caf637a99905c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 252,
+      "sourceHash": "fnv1a64:d810c561436ec332",
+      "lessonIds": [
+        "ES-C65-ahora-hoy"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch252.txt",
+      "json": "spanish/narration/ch252.json",
+      "textHash": "fnv1a64:83abb38e7ce94927",
+      "jsonHash": "fnv1a64:37bc10a7102110e2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 253,
+      "sourceHash": "fnv1a64:fe66e11ddaabe289",
+      "lessonIds": [
+        "ES-C65-unos-unas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch253.txt",
+      "json": "spanish/narration/ch253.json",
+      "textHash": "fnv1a64:ed1c3ea0e685cda6",
+      "jsonHash": "fnv1a64:2a0ba66abfc16ef0"
+    },
+    {
+      "language": "spanish",
+      "chapter": 254,
+      "sourceHash": "fnv1a64:ff47fdb0ded5efb0",
+      "lessonIds": [
+        "ES-C65-vuestro"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch254.txt",
+      "json": "spanish/narration/ch254.json",
+      "textHash": "fnv1a64:2ad232a61e19dfbf",
+      "jsonHash": "fnv1a64:de6923e6ca1f11bc"
+    },
+    {
+      "language": "spanish",
+      "chapter": 255,
+      "sourceHash": "fnv1a64:b17bee498495fff0",
+      "lessonIds": [
+        "ES-C65-vi-di"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch255.txt",
+      "json": "spanish/narration/ch255.json",
+      "textHash": "fnv1a64:ec84c23a65d0e22e",
+      "jsonHash": "fnv1a64:4af1bb0ddfe18154"
+    },
+    {
+      "language": "spanish",
+      "chapter": 256,
+      "sourceHash": "fnv1a64:305d9c3812c48942",
+      "lessonIds": [
+        "ES-C65-repaso-parejas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch256.txt",
+      "json": "spanish/narration/ch256.json",
+      "textHash": "fnv1a64:ee284a841b041b85",
+      "jsonHash": "fnv1a64:1481f3319c38637b"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",

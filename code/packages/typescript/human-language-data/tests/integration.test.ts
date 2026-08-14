@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(250); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(256); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -975,6 +975,24 @@ describe("real curriculum", () => {
       "ES-C64-repaso-tonicos-comma",
       "ES-C64-repaso-tonicos-for",
       "ES-C64-repaso-tonicos-with",
+      "ES-C65-ahi-alli-far",
+      "ES-C65-ahi-alli-pair",
+      "ES-C65-ahi-alli-yours",
+      "ES-C65-ahora-hoy-inside",
+      "ES-C65-ahora-hoy-now",
+      "ES-C65-ahora-hoy-today",
+      "ES-C65-repaso-parejas-bare",
+      "ES-C65-repaso-parejas-dar",
+      "ES-C65-repaso-parejas-hora",
+      "ES-C65-unos-unas-bare",
+      "ES-C65-unos-unas-fem",
+      "ES-C65-unos-unas-say",
+      "ES-C65-vi-di-accent",
+      "ES-C65-vi-di-gave",
+      "ES-C65-vi-di-saw",
+      "ES-C65-vuestro-count",
+      "ES-C65-vuestro-say",
+      "ES-C65-vuestro-which",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

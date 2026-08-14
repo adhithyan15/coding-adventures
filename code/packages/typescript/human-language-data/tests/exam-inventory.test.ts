@@ -150,7 +150,7 @@ describe("the committed A1 inventory", () => {
     // no longer partly-true nulls. Removing them from the list is the point of the
     // list rather than an erosion of it: it names nulls whose note has to explain
     // which half exists, and these two no longer have a missing half.
-    const partiallyTrue = ["A1-ART-03", "A1-POS-02", "A1-ADV-01", "A1-ADV-02", "A1-V-08"];
+    const partiallyTrue = ["A1-N-01", "A1-Q-03", "A1-V-03"];
     for (const id of partiallyTrue) {
       const point = inventory.points.find((candidate) => candidate.id === id);
       expect(point, id).toBeDefined();
@@ -304,8 +304,16 @@ describe("what the corpus actually covers", () => {
     // Chapters 246-250 then closed the stressed pronouns, the exclamative `que`
     // and the vocative.
     //
-    // Still untaught: the ordinals, subject-verb agreement as a stated rule,
-    // the ver/dar preterite, and A1-V-03's present-tense readings.
+    // Chapters 251-255 then finished every set the book had taught only half of:
+    // ahi/alli beside aqui, ahora/hoy beside manana, unos/unas beside un/una,
+    // vuestro beside nuestro, and the ver/dar preterite. A1-Q-04 closed with
+    // no new content at all -- `bastante` was taught at ch227 and its probe had
+    // simply never been wired, which is its own kind of measurement error.
+    //
+    // The eight that remain are a DIFFERENT problem. Four of them -- A1-SN-03,
+    // A1-Q-03, A1-N-01, A1-V-03 -- are things the book demonstrates on nearly
+    // every page and never states, so they need lessons that make explicit what
+    // the reader already does by reflex. The rest are unbuilt structures.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
@@ -313,8 +321,8 @@ describe("what the corpus actually covers", () => {
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(71); // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(84); // 53/85 -> 56 -> 60 -> 64/85
+    expect(coverage.covered).toBe(77); // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(91); // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
@@ -328,12 +336,12 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 71/85 points covered (84%)");
+    expect(report).toContain("spanish A1: 77/85 points covered (91%)");
     // Worst category first: the line after the summary should be the emptiest
     // category, not the alphabetically first one. It USED to be
     // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the
     // ordering moved on its own to the next-worst — which is the whole point of
     // sorting by shortfall rather than by name.
-    expect(report.split("\n")[2]).toContain("1/4  Los cuantificadores");
+    expect(report.split("\n")[2]).toContain("2/4  Los cuantificadores");
   });
 });

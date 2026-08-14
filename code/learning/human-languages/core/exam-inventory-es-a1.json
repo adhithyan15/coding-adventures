@@ -125,8 +125,11 @@
       "id": "A1-ART-03",
       "category": "El articulo",
       "label": "indefinite article: un, una, unos, unas",
-      "probe": null,
-      "note": "Singular un/una are taught at ch3; plural unos/unas are not taught."
+      "probe": [
+        "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+        "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE",
+        "ES-GRAMMAR-INDEFINITE-PLURAL"
+      ]
     },
     {
       "id": "A1-ART-04",
@@ -177,8 +180,10 @@
       "id": "A1-POS-02",
       "category": "Los posesivos",
       "label": "unstressed possessives, several possessors: nuestro, vuestro",
-      "probe": null,
-      "note": "nuestro is taught at ch69; vuestro is not taught."
+      "probe": [
+        "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+        "ES-GRAMMAR-POSSESSIVE-VUESTRO"
+      ]
     },
     {
       "id": "A1-POS-03",
@@ -217,7 +222,9 @@
       "id": "A1-Q-04",
       "category": "Los cuantificadores",
       "label": "bastante",
-      "probe": null
+      "probe": [
+        "ES-LEX-BASTANTE"
+      ]
     },
     {
       "id": "A1-PRON-01",
@@ -298,15 +305,21 @@
       "id": "A1-ADV-01",
       "category": "El adverbio",
       "label": "place deictics: aqui, ahi, alli",
-      "probe": null,
-      "note": "aqui is taught at ch12; ahi and alli are not."
+      "probe": [
+        "ES-LEX-AQUI",
+        "ES-LEX-AHI",
+        "ES-LEX-ALLI"
+      ]
     },
     {
       "id": "A1-ADV-02",
       "category": "El adverbio",
       "label": "time deictics: ahora, hoy, manana",
-      "probe": null,
-      "note": "manana is taught at ch13; ahora and hoy are not."
+      "probe": [
+        "ES-LEX-AHORA",
+        "ES-LEX-HOY",
+        "ES-LEX-MANANA"
+      ]
     },
     {
       "id": "A1-ADV-03",
@@ -431,8 +444,12 @@
       "id": "A1-V-08",
       "category": "El verbo",
       "label": "preterite: ser, ir, ver, dar",
-      "probe": null,
-      "note": "ser and ir are taught (ch103, ch203); ver and dar are not."
+      "probe": [
+        "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+        "ES-GRAMMAR-SER-IR-PRETERITE-PLURAL",
+        "ES-GRAMMAR-VER-PRETERITE",
+        "ES-GRAMMAR-DAR-PRETERITE"
+      ]
     },
     {
       "id": "A1-V-09",
