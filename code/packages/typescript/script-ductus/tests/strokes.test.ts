@@ -102,6 +102,7 @@ const CYRILLIC_HA = DUCTUS[ductusKey("cyrillic", "х")];
 const CYRILLIC_TSE = DUCTUS[ductusKey("cyrillic", "ц")];
 const CYRILLIC_CHE = DUCTUS[ductusKey("cyrillic", "ч")];
 const CYRILLIC_SHA = DUCTUS[ductusKey("cyrillic", "ш")];
+const CYRILLIC_SHCHA = DUCTUS[ductusKey("cyrillic", "щ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1609,6 +1610,24 @@ describe("handwriting ductus", () => {
     expect(firstRise.at(-1)!.y).toBeGreaterThan(firstRise[0].y);
     expect(secondRise.at(-1)!.y).toBeGreaterThan(secondRise[0].y);
     expect(right.at(-1)!.y).toBeLessThan(right[0].y);
+  });
+
+  it("Cyrillic щ keeps three stems, two joins, and the tail in one run", () => {
+    expect(CYRILLIC_SHCHA.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_SHCHA)).toBe(0);
+    expect(CYRILLIC_SHCHA.strokes).toHaveLength(1);
+    expect(CYRILLIC_SHCHA.strokes[0].segments).toHaveLength(6);
+    const [left, firstRise, middle, secondRise, right, tail] =
+      CYRILLIC_SHCHA.strokes[0].segments.map((segment) => segment.path);
+    expect(left.at(-1)).toEqual(firstRise[0]);
+    expect(firstRise.at(-1)).toEqual(middle[0]);
+    expect(middle.at(-1)).toEqual(secondRise[0]);
+    expect(secondRise.at(-1)).toEqual(right[0]);
+    expect(right.at(-1)).toEqual(tail[0]);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(firstRise.at(-1)!.y).toBeGreaterThan(firstRise[0].y);
+    expect(secondRise.at(-1)!.y).toBeGreaterThan(secondRise[0].y);
+    expect(tail.at(-1)!.y).toBeLessThan(left.at(-1)!.y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3713,6 +3732,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*09:49–09:57.*upper left.*descends the left stem.*baseline.*rounded diagonal join.*top of the middle stem.*descends the middle stem.*second rounded diagonal join.*top of the right stem.*descends the right stem.*small rising exit without lifting.*one continuous pen-down run.*zero intervening lifts.*left stem down.*first joined rise.*middle stem down.*second joined rise.*right stem down.*curled exit.*bundled Noto Sans Cyrillic.*printed ш-like form.*three straight full-height vertical stems.*two horizontal baseline bars.*without diagonal rounded joins.*curled baselines.*exit join.*left-to-middle-to-right order.*zero-lift evidence.*descend the left stem.*first bottom bar.*rise then retrace the middle stem.*second bottom bar.*rise then retrace the right stem without lifting.*connected cursive restores/i,
+    );
+  });
+
+  it("Cyrillic щ traces its joined three-stem-to-tail order to the native lesson", () => {
+    const src = CYRILLIC_SHCHA.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase щ.*10:17–10:25.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*10:17–10:25.*upper left.*descends the left stem.*baseline.*rounded diagonal join.*top of the middle stem.*descends the middle stem.*second rounded diagonal join.*top of the right stem.*descends the right stem.*small lower tail loop.*rising exit without lifting.*one continuous pen-down run.*zero intervening lifts.*left stem down.*first joined rise.*middle stem down.*second joined rise.*right stem down.*looped tail.*bundled Noto Sans Cyrillic.*printed щ-like form.*three straight full-height vertical stems.*two horizontal baseline bars.*short separate-looking right descender.*without diagonal rounded joins.*exit loop.*left-to-middle-to-right-to-tail order.*zero-lift evidence.*descend the left stem.*first bottom bar.*rise then retrace the middle stem.*second bottom bar.*rise then retrace the right stem.*tail shoulder.*descend the short tail without lifting.*connected cursive restores/i,
     );
   });
 

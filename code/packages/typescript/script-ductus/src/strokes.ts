@@ -4180,6 +4180,73 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ш"),
   },
+  // RussianIrina writes lowercase щ like ш and continues from the right stem
+  // directly into its looped tail. The fitted path squares the joins and keeps
+  // the printed descender connected through the tail shoulder.
+  [ductusKey("cyrillic", "щ")]: {
+    script: "cyrillic",
+    glyph: "щ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 536 },
+              { x: 129, y: 270 },
+              { x: 129, y: 37 },
+            ],
+          },
+          {
+            label: "cross the first base join and rise through the middle stem",
+            path: [
+              { x: 129, y: 37 },
+              { x: 287, y: 37 },
+              { x: 445, y: 37 },
+              { x: 445, y: 270 },
+              { x: 445, y: 536 },
+            ],
+          },
+          {
+            label: "retrace the middle stem to the baseline",
+            path: [
+              { x: 445, y: 536 },
+              { x: 445, y: 270 },
+              { x: 445, y: 37 },
+            ],
+          },
+          {
+            label: "cross the second base join and rise through the right stem",
+            path: [
+              { x: 445, y: 37 },
+              { x: 603, y: 37 },
+              { x: 760, y: 37 },
+              { x: 760, y: 270 },
+              { x: 760, y: 536 },
+            ],
+          },
+          {
+            label: "retrace the right stem and cross the tail shoulder",
+            path: [
+              { x: 760, y: 536 },
+              { x: 760, y: 270 },
+              { x: 760, y: 37 },
+              { x: 845, y: 37 },
+            ],
+          },
+          {
+            label: "descend the short tail below the baseline",
+            path: [
+              { x: 845, y: 37 },
+              { x: 845, y: -50 },
+              { x: 845, y: -140 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("щ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
