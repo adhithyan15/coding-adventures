@@ -1,5 +1,46 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.6 — 2026-08-13 — multi-value block/loop/if blocktypes (WASM04)
+
+`block.wast`, `if.wast`, and `loop.wast` never parsed at all — every one
+of their `(block (param ...) (result ...) ...)` / `(loop (param ...)
+(result ...) ...)` / `(if (param ...) (result ...) ...)` headers (the
+multi-value extension's blocktype-as-type-index form) hit "unknown
+instruction" or a mismatched-signature error, since `encode_structured_instr`
+and `encode_stream_structured_instr` only ever emitted the MVP's single-byte
+`0x40`/valtype blocktype encoding.
+
+- Added `encode_blocktype`: scans a leading `(type $t)`/`(param ...)`/
+  `(result ...)` run (the same `is_type_or_param_or_result` predicate
+  `call_indirect`'s own inline signature already used) and emits either the
+  MVP single-byte shorthand (empty, or one result, no params) or a SLEB128
+  type-section index — resolving an explicit `(type $t)` via `type_names`,
+  or deduplicating an inline signature via `dedup_type` exactly like an
+  anonymous `call_indirect`/`func` signature would.
+- Wired into both the folded (`encode_structured_instr`) and flat
+  (`encode_stream_structured_instr`) instruction paths.
+- **Deeper pre-existing bug found and fixed**: `resolve_func_signature_ref`
+  (used by `build_func` for a func's OWN signature, and by the explicit
+  `(import ... (func ...))` fixup pass) scanned its entire input slice
+  unbounded via `.iter().find(...)`. Safe for the import call site (always
+  signature-only), but once a FLAT-form function body could contain a
+  LATER block's own unnested `(param ...)`/`(result ...)` fields, those got
+  mis-scanned as part of the FUNC's own signature, corrupting its inferred
+  `param_count` and tripping the existing `TypeUseParamCountMismatch` guard
+  on perfectly valid functions. Fixed by bounding the scan to the same
+  leading `is_leading_field`-delimited region `build_func`'s own mismatch
+  pre-scan already uses, with an explicit optional-`$name`-atom skip so
+  both call sites' differing conventions (the import site's `desc[1..]`
+  can start with an un-stripped `$name`; `build_func`'s never does) resolve
+  correctly.
+- 6 new tests covering: an unaffected empty/single-result blocktype
+  baseline, a param-only block (proving body position, not just "doesn't
+  crash"), block-to-block `dedup_type` reuse (two structurally-identical
+  blocktypes share one type entry), the flat-syntax loop header (a
+  separate code path from folded), an `if`'s multi-value blocktype, and an
+  explicit `(type $t)` blocktype resolving to the already-declared type
+  (no new entry).
+
 ## 0.1.5 — 2026-08-13 — sign-extension + saturating-truncation opcodes (WASM03)
 
 `i32.wast`/`i64.wast` used `i32.extend8_s`/`i32.extend16_s`/

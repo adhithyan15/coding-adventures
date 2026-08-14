@@ -12,6 +12,10 @@ pub const HOST_ECALL_SERVICE_REGISTER: usize = 17; // a7
 pub const HOST_ECALL_ARGUMENT_LOW_REGISTER: usize = 10; // a0
 /// High 32-bit argument register for the simulator ABI.
 pub const HOST_ECALL_ARGUMENT_HIGH_REGISTER: usize = 11; // a1
+/// Low 32-bit second-argument register for binary host services.
+pub const HOST_ECALL_ARGUMENT2_LOW_REGISTER: usize = 12; // a2
+/// High 32-bit second-argument register for binary host services.
+pub const HOST_ECALL_ARGUMENT2_HIGH_REGISTER: usize = 13; // a3
 
 /// Halt the guest and expose `a0` as its signed exit status.
 pub const HOST_ECALL_EXIT: u32 = 1;
@@ -21,6 +25,20 @@ pub const HOST_ECALL_WRITE_I64: u32 = 2;
 pub const HOST_ECALL_WRITE_BYTE: u32 = 3;
 /// Read one host input byte into `a1:a0`, or return `-1` on end of input.
 pub const HOST_ECALL_READ_BYTE: u32 = 4;
+/// Add f64 bit pairs in `a1:a0` and `a3:a2`, returning bits in `a1:a0`.
+pub const HOST_ECALL_F64_ADD: u32 = 5;
+/// Subtract f64 bit pairs in `a1:a0` and `a3:a2`, returning bits in `a1:a0`.
+pub const HOST_ECALL_F64_SUB: u32 = 6;
+/// Multiply f64 bit pairs in `a1:a0` and `a3:a2`, returning bits in `a1:a0`.
+pub const HOST_ECALL_F64_MUL: u32 = 7;
+/// Divide f64 bit pairs in `a1:a0` and `a3:a2`, returning bits in `a1:a0`.
+pub const HOST_ECALL_F64_DIV: u32 = 8;
+/// Compare f64 bit pairs in `a1:a0` and `a3:a2`, returning `-1`, `0`, or `1`.
+pub const HOST_ECALL_F64_CMP: u32 = 9;
+/// Convert a signed i64 pair in `a1:a0` to f64 bits in `a1:a0`.
+pub const HOST_ECALL_I64_TO_F64: u32 = 10;
+/// Truncate f64 bits in `a1:a0` to a signed i64 pair in `a1:a0`.
+pub const HOST_ECALL_F64_TO_I64_TRUNC: u32 = 11;
 
 /// Observable services performed by a guest through the simulator host ABI.
 ///
@@ -171,6 +189,55 @@ impl RiscVSimulator {
                     self.pc += 4;
                     return mnemonic;
                 }
+                HOST_ECALL_F64_ADD | HOST_ECALL_F64_SUB | HOST_ECALL_F64_MUL | HOST_ECALL_F64_DIV => {
+                    let lhs = self.host_f64_argument(
+                        HOST_ECALL_ARGUMENT_LOW_REGISTER,
+                        HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+                    );
+                    let rhs = self.host_f64_argument(
+                        HOST_ECALL_ARGUMENT2_LOW_REGISTER,
+                        HOST_ECALL_ARGUMENT2_HIGH_REGISTER,
+                    );
+                    let result = match self.regs.read(HOST_ECALL_SERVICE_REGISTER) {
+                        HOST_ECALL_F64_ADD => lhs + rhs,
+                        HOST_ECALL_F64_SUB => lhs - rhs,
+                        HOST_ECALL_F64_MUL => lhs * rhs,
+                        HOST_ECALL_F64_DIV => lhs / rhs,
+                        _ => unreachable!("matched f64 binary host service"),
+                    };
+                    self.set_host_f64_result(result);
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                HOST_ECALL_F64_CMP => {
+                    let lhs = self.host_f64_argument(
+                        HOST_ECALL_ARGUMENT_LOW_REGISTER,
+                        HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+                    );
+                    let rhs = self.host_f64_argument(
+                        HOST_ECALL_ARGUMENT2_LOW_REGISTER,
+                        HOST_ECALL_ARGUMENT2_HIGH_REGISTER,
+                    );
+                    let result = if lhs < rhs { -1 } else if lhs > rhs { 1 } else { 0 };
+                    self.set_host_i64_result(result);
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                HOST_ECALL_I64_TO_F64 => {
+                    let value = self.host_i64_argument();
+                    self.set_host_f64_result(value as f64);
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                HOST_ECALL_F64_TO_I64_TRUNC => {
+                    let value = self.host_f64_argument(
+                        HOST_ECALL_ARGUMENT_LOW_REGISTER,
+                        HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+                    );
+                    self.set_host_i64_result(value as i64);
+                    self.pc += 4;
+                    return mnemonic;
+                }
                 _ => {}
             }
         }
@@ -181,6 +248,34 @@ impl RiscVSimulator {
         self.halted = result.halted;
 
         mnemonic
+    }
+
+    fn host_f64_argument(&self, low_register: usize, high_register: usize) -> f64 {
+        let bits = self.regs.read(low_register) as u64
+            | ((self.regs.read(high_register) as u64) << 32);
+        f64::from_bits(bits)
+    }
+
+    fn host_i64_argument(&self) -> i64 {
+        let low = self.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER) as u64;
+        let high = self.regs.read(HOST_ECALL_ARGUMENT_HIGH_REGISTER) as u64;
+        ((high << 32) | low) as i64
+    }
+
+    fn set_host_f64_result(&mut self, value: f64) {
+        let bits = value.to_bits();
+        self.regs
+            .write(HOST_ECALL_ARGUMENT_LOW_REGISTER, bits as u32);
+        self.regs
+            .write(HOST_ECALL_ARGUMENT_HIGH_REGISTER, (bits >> 32) as u32);
+    }
+
+    fn set_host_i64_result(&mut self, value: i64) {
+        let bits = value as u64;
+        self.regs
+            .write(HOST_ECALL_ARGUMENT_LOW_REGISTER, bits as u32);
+        self.regs
+            .write(HOST_ECALL_ARGUMENT_HIGH_REGISTER, (bits >> 32) as u32);
     }
 
     /// Run a list of instruction words (convenience for tests).
@@ -358,6 +453,50 @@ mod tests {
         );
         assert_eq!(sim.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER), u32::MAX);
         assert_eq!(sim.regs.read(HOST_ECALL_ARGUMENT_HIGH_REGISTER), u32::MAX);
+    }
+
+    #[test]
+    fn host_ecall_softfloat_services_operate_on_ieee754_bit_pairs() {
+        fn set_pair(sim: &mut RiscVSimulator, low_register: usize, high_register: usize, value: u64) {
+            sim.regs.write(low_register, value as u32);
+            sim.regs.write(high_register, (value >> 32) as u32);
+        }
+        fn read_pair(sim: &RiscVSimulator) -> u64 {
+            sim.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER) as u64
+                | ((sim.regs.read(HOST_ECALL_ARGUMENT_HIGH_REGISTER) as u64) << 32)
+        }
+
+        let mut sim = RiscVSimulator::new(256);
+        sim.load_program(&assemble(&[encode_ecall()]));
+
+        set_pair(&mut sim, HOST_ECALL_ARGUMENT_LOW_REGISTER, HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+            1.5f64.to_bits());
+        set_pair(&mut sim, HOST_ECALL_ARGUMENT2_LOW_REGISTER, HOST_ECALL_ARGUMENT2_HIGH_REGISTER,
+            2.25f64.to_bits());
+        sim.regs.write(HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_F64_ADD);
+        assert_eq!(sim.step(), "ecall");
+        assert_eq!(f64::from_bits(read_pair(&sim)), 3.75);
+
+        sim.pc = 0;
+        set_pair(&mut sim, HOST_ECALL_ARGUMENT_LOW_REGISTER, HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+            1.5f64.to_bits());
+        sim.regs.write(HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_F64_CMP);
+        assert_eq!(sim.step(), "ecall");
+        assert_eq!(read_pair(&sim) as i64, -1);
+
+        sim.pc = 0;
+        set_pair(&mut sim, HOST_ECALL_ARGUMENT_LOW_REGISTER, HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+            (-42i64) as u64);
+        sim.regs.write(HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_I64_TO_F64);
+        assert_eq!(sim.step(), "ecall");
+        assert_eq!(f64::from_bits(read_pair(&sim)), -42.0);
+
+        sim.pc = 0;
+        set_pair(&mut sim, HOST_ECALL_ARGUMENT_LOW_REGISTER, HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+            (-42.75f64).to_bits());
+        sim.regs.write(HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_F64_TO_I64_TRUNC);
+        assert_eq!(sim.step(), "ecall");
+        assert_eq!(read_pair(&sim) as i64, -42);
     }
 
     #[test]

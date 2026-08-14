@@ -4897,10 +4897,13 @@ impl HtmlParser {
                     public_identifier.as_deref(),
                     system_identifier.as_deref(),
                 ) {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "nonconforming-doctype",
-                        "initial doctype did not match the HTML Standard's allowed form",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "nonconforming-doctype",
+                            "initial doctype did not match the HTML Standard's allowed form",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 self.initial_insertion_mode = false;
             }
@@ -37323,22 +37326,67 @@ mod tests {
     }
 
     #[test]
-    fn reports_nonconforming_initial_doctypes() {
+    fn positions_nonconforming_initial_doctypes_at_token_emission() {
         for source in [
             "<!doctype potato>",
             "<!doctype html public 'legacy'>",
             "<!doctype html system 'legacy'>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let emission_offset = source.rfind('>').unwrap();
             assert_eq!(
                 output.parser_diagnostics,
                 vec![ParserDiagnostic::new(
                     "nonconforming-doctype",
                     "initial doctype did not match the HTML Standard's allowed form"
-                )],
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: emission_offset,
+                    char_offset: emission_offset,
+                    line: 1,
+                    column: emission_offset + 1,
+                }))],
                 "source {source:?}"
             );
         }
+
+        let eof_source = "<!doctype potaté";
+        let eof = parse_html_with_diagnostics(eof_source).unwrap();
+        assert_eq!(
+            eof.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "nonconforming-doctype",
+                "initial doctype did not match the HTML Standard's allowed form"
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: eof_source.len(),
+                char_offset: eof_source.chars().count(),
+                line: 1,
+                column: eof_source.chars().count() + 1,
+            }))]
+        );
+        assert!(eof
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-doctype"));
+
+        let prefixed = "\r\n<!--é--><?pi?>\r\n<!doctype html public 'legacy'>";
+        let emission_offset = prefixed.rfind('>').unwrap();
+        let prefixed_output = parse_html_with_diagnostics(prefixed).unwrap();
+        assert_eq!(
+            prefixed_output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "nonconforming-doctype",
+                "initial doctype did not match the HTML Standard's allowed form"
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: emission_offset,
+                char_offset: prefixed[..emission_offset].chars().count(),
+                line: 3,
+                column: "<!doctype html public 'legacy'".chars().count() + 1,
+            }))]
+        );
+        assert!(emission_offset > prefixed[..emission_offset].chars().count());
 
         for source in [
             "<!doctype html>",
@@ -37347,6 +37395,52 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output.parser_diagnostics.is_empty(), "source {source:?}");
         }
+
+        let malformed = parse_html_with_diagnostics("<!doctype html public id>").unwrap();
+        assert!(malformed
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nonconforming-doctype"));
+        assert!(malformed.lexer_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "missing-quote-before-doctype-public-identifier"
+        }));
+
+        let later = parse_html_with_diagnostics("<!doctype html><!doctype potato>").unwrap();
+        assert!(later
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nonconforming-doctype"));
+        assert!(later
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-doctype"));
+
+        for fragment in [
+            parse_html_fragment_with_diagnostics("<!doctype potato>").unwrap(),
+            parse_html_fragment_for_context_with_diagnostics("<!doctype potato>", "html")
+                .unwrap(),
+        ] {
+            assert!(fragment
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "nonconforming-doctype"));
+        }
+
+        let mut parser = HtmlParser::new();
+        parser.process_token(Token::Doctype {
+            name: Some("potato".to_string()),
+            public_identifier: None,
+            system_identifier: None,
+            force_quirks: false,
+        });
+        parser.process_token(Token::Eof);
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "nonconforming-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]

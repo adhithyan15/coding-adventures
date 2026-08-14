@@ -2,6 +2,51 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.7] — 2026-08-13 (WASM04 — multi-value block/loop/if blocktypes)
+
+### Fixed — `block_arity` resolved a type-index blocktype against the wrong table
+
+`block`/`loop`/`if`'s blocktype immediate can now be a signed LEB128
+type-section index, not just the MVP's single-byte empty/valtype encoding
+(paired with `wasm-wast-parser` 0.1.6, which now emits this form). Wiring
+it into the interpreter surfaced two bugs, both latent until a multi-value
+blocktype could ever be decoded at all:
+
+- `block_arity` resolved a type-index blocktype against `ctx.func_types`
+  (indexed by FUNCTION index — one entry per function, sized to the
+  function count) instead of `ctx.types` (the module's real, deduplicated
+  TYPE SECTION, the actual index space a blocktype's type-index refers
+  to). `call_indirect`'s handler already had this exact wrong-table bug
+  fixed once; `block_arity` had the same bug, just never reachable
+  before now. Fixed by changing its signature to take the real type
+  section and return `(param_arity, result_arity)` instead of a bare
+  result-only arity.
+- `execute_branch` hardcoded a branch-to-a-loop's arity to `0`, with an
+  explicit `// MVP` comment — correct then, since a loop's blocktype could
+  never declare params before the multi-value extension. A branch to a
+  loop's label re-enters its START, which needs the loop's declared PARAM
+  arity preserved on the stack (re-entry re-consumes them), not its result
+  arity (which is what a branch to a block/`if`'s END needs instead).
+  Added `Label::param_arity` and threaded it through every `Label`
+  construction site (`block`/`loop`/`if`'s handlers, the implicit
+  function-body label in both `call_function_inner` and the top-level
+  entry point), and fixed `execute_branch`'s loop-vs-block arity split.
+- 4 new regression tests, including a hand-built case (not lifted from the
+  testsuite) that forces a branch to a loop's label through an
+  intervening inner scope with real scratch data that must be discarded —
+  the shape that actually exercises `param_arity`, since the official
+  testsuite's own `params`/`params-break` cases happen to never need real
+  stack surgery on this interpreter's unwind step. Verified via
+  TEMP-REVERT-CHECK that all 4 fail (one cleanly, one by hanging) with
+  either bug reintroduced.
+- Baseline effect: `block.wast`, `if.wast`, and `loop.wast` previously
+  failed to PARSE AT ALL (multi-value blocktypes were unrecognized
+  syntax); all three now pass in full (`assert_return` 52/52, 123/123,
+  78/78). `br.wast` and `func.wast` also gained 1 and 3 previously-failing
+  `assert_return` cases respectively. `fac.wast` newly parses too. Zero
+  regressions — see `wasm-conformance`'s own `0.1.9` changelog entry for
+  the full per-file diff.
+
 ## [0.6.6] — 2026-08-13 (WASM13 — f32 NaN payloads silently canonicalized on every stack push/pop)
 
 ### Fixed — `WasmValue::to_typed`/`from_typed` destroyed f32 NaN bit patterns

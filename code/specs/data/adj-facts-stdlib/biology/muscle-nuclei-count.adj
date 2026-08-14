@@ -1,0 +1,71 @@
+% ============================================================================
+% muscle-nuclei-count — for skeletal and cardiac muscle, whether the muscle
+% fiber is multinucleated or has a single nucleus, as the SAME SEER spans
+% already quoted in tissue-types.adj also state (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `tissue-types.adj`
+% (`tissue_example(tissue, example)`, a representative example/location for
+% each of the four basic tissue types — muscle → cardiac_or_skeletal). That
+% table's own header already quotes, verbatim, two NCI SEER sentences
+% describing skeletal and cardiac muscle fibers in more detail than the
+% tissue-example schema captures, and buried in those spans, alongside the
+% striation fact already decoded by the sibling `muscle-striation.adj` (off
+% the DIFFERENT parent table `muscle-types.adj`, which cites the SAME SEER
+% muscle page), is a second, independent leftover fact: how many nuclei
+% each fiber has.
+%
+%   skeletal → multinucleated
+%     "Skeletal muscle fibers are cylindrical, MULTINUCLEATED, striated,
+%      and under voluntary control."
+%
+%   cardiac → single_nucleus
+%     "Cardiac muscle has branching fibers, ONE NUCLEUS PER CELL,
+%      striations, and intercalated disks."
+%
+% Recall is a binding query:
+%
+%     ? muscle_nuclei_count(skeletal, $Nuclei)   % multinucleated
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation `muscle_nuclei_count(
+% muscle, nuclei)` carrying the citation, so the lookup above is the
+% ordinary SLD binding query — the engine returns the nuclei-count fact
+% WITH its source, on the CPU, with zero model calls. Only skeletal and
+% cardiac muscle have a nuclei-count fact stated in this cited span
+% (smooth muscle, tabled by the sibling `muscle-striation.adj`, is not part
+% of `tissue-types.adj`'s own muscle citation at all), so this sibling is
+% HONESTLY NARROW: it grounds exactly these two muscle types and abstains
+% on smooth muscle or any other word. The query also runs BACKWARD — bind
+% a nuclei value and recall which muscle type has it:
+%
+%     ? muscle_nuclei_count($Muscle, single_nucleus)
+%       % cardiac
+%
+% Provenance: reproduces, byte-for-byte, the SAME two NCI SEER Training
+% Modules sentences already quoted inside `tissue-types.adj`'s own header
+% (its `muscle → cardiac_or_skeletal` row) — no new WebFetch, only a
+% different schema decoding the nuclei-count half of each already-verified
+% quote. This is a DIFFERENT leftover fact from the one `muscle-striation.
+% adj` already decoded off `muscle-types.adj` (a different existing parent
+% table that happens to cite the same underlying SEER muscle page) — not a
+% duplicate, since each parent table is its own distinct library with its
+% own citation envelope, and "striated" and "nuclei count" are two
+% independent facts sitting in the same source sentences. `trust
+% authoritative` — the same tier `tissue-types.adj` already carries (U.S.
+% National Cancer Institute, a primary U.S. government teaching resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table muscle_nuclei_count {
+    columns muscle, nuclei
+
+    row (skeletal, multinucleated)    % SEER: "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    row (cardiac, single_nucleus)     % SEER: "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+
+    source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+    trust authoritative
+
+    cites "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+}
