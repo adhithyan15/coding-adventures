@@ -881,6 +881,14 @@ school-hand order and rising exit at 09:49–09:57; the Noto Sans Cyrillic fit
 preserves that zero-lift evidence while tracing the printed three straight
 stems and horizontal baseline bars and records the source's diagonal rounded
 joins, curled baseline, and rising exit.
+The six-frame Cyrillic **щ** filmstrip descends the left stem, crosses the first
+baseline join and rises then retraces the middle stem, crosses the second join
+and rises then retraces the right stem, crosses the tail shoulder, and descends
+the short tail without lifting. The native-teacher lesson demonstrates its
+rounded left-to-middle-to-right-to-looped-tail order at 10:17–10:25; the Noto
+Sans Cyrillic fit preserves that zero-lift evidence while tracing the printed
+three straight stems, horizontal baseline bars, and short right descender and
+records the source's diagonal rounded joins and looped exit.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
