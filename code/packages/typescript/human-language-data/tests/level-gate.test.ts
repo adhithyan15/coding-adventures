@@ -77,7 +77,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
-    expect(spanish.vocabulary).toBe(174); // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
+    expect(spanish.vocabulary).toBe(178); // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268)
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

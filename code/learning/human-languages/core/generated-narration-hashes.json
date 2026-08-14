@@ -10734,6 +10734,23 @@
       "jsonHash": "fnv1a64:481bb6a3221d89d0"
     },
     {
+      "language": "spanish",
+      "chapter": 268,
+      "sourceHash": "fnv1a64:c4552351bcf8bf45",
+      "lessonIds": [
+        "ES-C268-donde-esta",
+        "ES-C268-billete",
+        "ES-C268-habitacion",
+        "ES-C268-problema"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch268.txt",
+      "json": "spanish/narration/ch268.json",
+      "textHash": "fnv1a64:71d8a1a08e52b419",
+      "jsonHash": "fnv1a64:900c83a2dd1f372a"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:6df1383fd4404bac",
