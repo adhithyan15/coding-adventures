@@ -4740,10 +4740,13 @@ impl HtmlParser {
                         }
                         let authored_template_count = self.authored_open_template_count();
                         for _ in 0..authored_template_count {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "eof-in-template",
-                                "end of file was reached while parsing a template",
-                            ));
+                            self.diagnostics.push(
+                                ParserDiagnostic::new(
+                                    "eof-in-template",
+                                    "end of file was reached while parsing a template",
+                                )
+                                .at_emission(self.current_token_emission_position),
+                            );
                         }
                         let eof_open_element_limit = self
                             .first_authored_open_template_index()
@@ -40403,7 +40406,7 @@ mod tests {
     }
 
     #[test]
-    fn reports_eof_once_for_each_authored_open_template() {
+    fn positions_eof_once_for_each_authored_open_template() {
         for (source, expected_count) in [
             ("<!doctype html><template>", 1),
             ("<!doctype html><template><div>", 1),
@@ -40413,23 +40416,76 @@ mod tests {
             ("<!doctype html><select><template>", 1),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            assert_eq!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .filter(|diagnostic| diagnostic.code == "eof-in-template")
-                    .count(),
-                expected_count,
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-in-template")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), expected_count, "source {source:?}");
+            assert!(
+                diagnostics.iter().all(|diagnostic| {
+                    diagnostic.position
+                        == Some(SourcePosition {
+                            byte_offset: source.len(),
+                            char_offset: source.chars().count(),
+                            line: 1,
+                            column: source.chars().count() + 1,
+                        })
+                }),
                 "source {source:?}"
+            );
+        }
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<template><template>té";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        let diagnostics = unicode
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "eof-in-template")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 2);
+        assert!(diagnostics.iter().all(|diagnostic| {
+            diagnostic.position
+                == Some(SourcePosition {
+                    byte_offset: unicode_source.len(),
+                    char_offset: unicode_source.chars().count(),
+                    line: 2,
+                    column: "<template><template>té".chars().count() + 1,
+                })
+        }));
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let script_source = "<!doctype html><template><script><!--é";
+        let script = parse_html_with_diagnostics(script_source).unwrap();
+        assert!(script
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-script-html-comment-like-text"));
+        for code in ["eof-in-text-mode", "eof-in-template"] {
+            let diagnostic = script
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == code)
+                .unwrap();
+            assert_eq!(
+                diagnostic.position,
+                Some(SourcePosition {
+                    byte_offset: script_source.len(),
+                    char_offset: script_source.chars().count(),
+                    line: 1,
+                    column: script_source.chars().count() + 1,
+                })
             );
         }
 
         let table =
             parse_html_with_diagnostics("<!doctype html><table><tr><template><td>").unwrap();
-        assert!(table
+        let table_diagnostic = table
             .parser_diagnostics
             .iter()
-            .any(|diagnostic| diagnostic.code == "eof-in-table"));
+            .find(|diagnostic| diagnostic.code == "eof-in-table")
+            .unwrap();
+        assert_eq!(table_diagnostic.position, None);
         assert!(table
             .parser_diagnostics
             .iter()
@@ -40450,10 +40506,12 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "eof-in-table"));
-        assert!(cell
+        let unclosed_diagnostic = cell
             .parser_diagnostics
             .iter()
-            .any(|diagnostic| diagnostic.code == "eof-with-unclosed-elements"));
+            .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+            .unwrap();
+        assert_eq!(unclosed_diagnostic.position, None);
 
         for source in [
             "<!doctype html><template></template>",
@@ -40472,6 +40530,29 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "eof-in-template"));
+
+        let foreign = parse_html_with_diagnostics("<!doctype html><svg><template>").unwrap();
+        assert!(foreign
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-template"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "template".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-in-template")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]

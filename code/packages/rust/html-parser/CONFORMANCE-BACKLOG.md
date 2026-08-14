@@ -511,6 +511,9 @@ Prioritized work items:
    script data, and scripting-enabled fallback elements. Properly closed and
    plaintext elements, seeded text fragment contexts, tokenizer-owned script
    EOF errors, and directly supplied token streams retain separate contracts.
+   Source-driven template EOF recovery likewise carries that same proven EOF
+   point once per authored open template, including nested template
+   reprocessing, while seeded and foreign template contexts remain distinct.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
