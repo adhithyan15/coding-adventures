@@ -7,3 +7,5 @@
   authenticated loopback WebSocket dispatch, and deterministic output.
 - Add `install-daemon` composition for launchd, systemd user services, and
   Windows Task Scheduler.
+- Expose the CLI core's typed authenticated pipeline `wire` and `unwire`
+  commands without adding credentials or endpoints to argv.

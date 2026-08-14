@@ -21,6 +21,102 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic п ductus (HL-C09EP)
+
+- Render **п** in three joined movements across one source-aligned stroke.
+- Descend the left stem, retrace to the top shoulder and sweep right, then descend the right stem without lifting.
+- Preserve the native-teacher lesson's rounded shoulder order while fitting Noto Sans Cyrillic's squared printed arch, and reduce measured HL-C09 debt to 86 entries.
+
+### Added — cited Cyrillic о ductus (HL-C09EO)
+
+- Render **о** in two joined movements across one source-aligned stroke.
+- Curve left over the top and descend the left side, then sweep through the bottom and rise to close the oval without lifting.
+- Preserve the native-teacher lesson's counterclockwise closure order while fitting Noto Sans Cyrillic's upright printed form, and reduce measured HL-C09 debt to 87 entries.
+
+### Added — cited Cyrillic н ductus (HL-C09EN)
+
+- Render **н** in three joined movements across one source-aligned stroke.
+- Descend the left stem, retrace to the middle bridge and rise to the upper right, then descend the right stem without lifting.
+- Preserve the native-teacher lesson's rounded bridge order while fitting Noto Sans Cyrillic's H-like printed form, and reduce measured HL-C09 debt to 88 entries.
+
+### Added — cited Cyrillic м ductus (HL-C09EM)
+
+- Render **м** in four joined movements across one source-aligned stroke.
+- Rise through the left stem, descend to the central valley, rise to the second apex, then descend the right stem without lifting.
+- Preserve the native-teacher lesson's rounded two-arch order while fitting Noto Sans Cyrillic's angular printed form, and reduce measured HL-C09 debt to 89 entries.
+
+### Added — cited Cyrillic л ductus (HL-C09EL)
+
+- Render **л** in three joined movements across one source-aligned stroke.
+- Curve from the baseline hook up the left leg, sweep along the top shoulder, then descend the right stem without lifting.
+- Preserve the native-teacher lesson's pointed hook-to-apex-to-right-leg order while fitting Noto Sans Cyrillic's block-like printed form, and reduce measured HL-C09 debt to 90 entries.
+
+### Added — cited Cyrillic к ductus (HL-C09EK)
+
+- Render **к** in three joined movements across one source-aligned stroke.
+- Descend the left stem, rise through the upper arm and return to the middle, then continue through the lower arm without lifting.
+- Preserve the native-teacher lesson's looped stem-to-upper-arm-to-lower-arm order while fitting Noto Sans Cyrillic's angular printed form, and reduce measured HL-C09 debt to 91 entries.
+
+### Added — cited Cyrillic й ductus (HL-C09EJ)
+
+- Render **й** in four movements across two source-aligned strokes.
+- Complete the joined **и** body first, lift once, then draw the breve above from left to right.
+- Preserve the native-teacher lesson's body-before-breve order while fitting Noto Sans Cyrillic's printed backwards-N body and separate curved mark, and reduce measured HL-C09 debt to 92 entries.
+
+### Added — cited Cyrillic и ductus (HL-C09EI)
+
+- Render **и** in three joined movements across one source-aligned stroke.
+- Descend the left stem, rise through the diagonal, then descend the right stem without lifting.
+- Preserve the native-teacher lesson's rounded stem-to-diagonal-to-stem order while fitting Noto Sans Cyrillic's printed backwards-N glyph, and reduce measured HL-C09 debt to 93 entries.
+
+### Added — cited Cyrillic з ductus (HL-C09EH)
+
+- Render **з** in two joined movements across one source-aligned stroke.
+- Circle the smaller upper lobe and descend through the middle, then continue around the larger lower lobe and finish at the lower right without lifting.
+- Preserve the native-teacher lesson's upper-lobe-to-lower-lobe order while fitting Noto Sans Cyrillic's compact printed double-lobe glyph, and reduce measured HL-C09 debt to 94 entries.
+
+### Added — cited Cyrillic ж ductus (HL-C09EG)
+
+- Render **ж** in two joined movements across one source-aligned stroke.
+- Trace the left wings and rise through the centre, then retrace the central upright and continue through the right wings without lifting.
+- Preserve the native-teacher lesson's rounded left-to-centre-to-right order while fitting Noto Sans Cyrillic's straight upright and diagonal arms, and reduce measured HL-C09 debt to 95 entries.
+
+### Added — cited Cyrillic ё ductus (HL-C09EF)
+
+- Render **ё** in four movements across three source-aligned strokes.
+- Complete the joined е body, lift for the left dot, then lift again for the right dot.
+- Preserve the native-teacher lesson's body-before-left-dot-before-right-dot order while fitting its tall school hand through Noto Sans Cyrillic's compact printed e and circular dots, and reduce measured HL-C09 debt to 96 entries.
+
+### Added — cited Cyrillic е ductus (HL-C09EE)
+
+- Render **е** in two joined movements across one source-aligned stroke.
+- Curve around the upper bowl and sweep through the middle, then reverse through the junction and continue counterclockwise around the lower bowl without lifting.
+- Preserve the native-teacher lesson's zero-lift looped order while fitting its tall school hand through Noto Sans Cyrillic's compact printed e, and reduce measured HL-C09 debt to 97 entries.
+
+### Added — cited Cyrillic д ductus (HL-C09ED)
+
+- Render **д** in two joined movements across one source-aligned stroke.
+- Circle the closed body counterclockwise, then descend through the right foot, sweep across the base shelf, retrace the left foot, and finish rightward without lifting.
+- Preserve the native-teacher lesson's zero-lift cursive body-to-descender order while documenting the block-font fit's shelf-and-feet replacement, and reduce measured HL-C09 debt to 98 entries.
+
+### Added — cited Cyrillic г ductus (HL-C09EC)
+
+- Render **г** in two joined movements across one source-aligned stroke.
+- Climb from the baseline through the upright and top bar, then retrace the top and descend without lifting.
+- Preserve the native-teacher lesson's zero-lift cursive evidence while documenting the block-font fit's omitted exit arch, and reduce measured HL-C09 debt to 99 entries.
+
+### Added — cited Cyrillic в ductus (HL-C09EB)
+
+- Render **в** in two joined movements across one source-aligned stroke.
+- Climb from the baseline through the upper loop, descend to the baseline, then continue counterclockwise around the lower bowl without lifting.
+- Preserve the native-teacher lesson's zero-lift school-hand order, fit its tall cursive ascender through Noto Sans Cyrillic's compact printed upper bowl and left stem, and reduce measured HL-C09 debt to 100 entries.
+
+### Added — cited Cyrillic б ductus (HL-C09EA)
+
+- Render **б** in two joined movements across one source-aligned stroke.
+- Circle the lower body counterclockwise, then continue through the rising shoulder and rightward top flag without lifting.
+- Preserve the native-teacher lesson's zero-lift body-to-flag order, fit its handwritten diagonal transition to Noto Sans Cyrillic's printed upper-left shoulder, and reduce measured HL-C09 debt to 101 entries.
+
 ### Added — cited Cyrillic а ductus (HL-C09DZ)
 
 - Render **а** in two joined movements across one source-aligned stroke.

@@ -1,5 +1,96 @@
 # Changelog — wasm-conformance
 
+## 0.1.8 — 2026-08-13 — baseline regenerated after the f32 NaN payload bug was fixed (WASM13)
+
+No code changes in this crate — `wasm-execution` 0.6.6 fixed a real bug
+(every f32 value silently lost its exact NaN bit pattern passing through
+the interpreter's typed operand stack, an arithmetic-cast round-trip
+artifact, not just an issue for values an opcode computed on) surfaced
+running this crate's own harness against the real testsuite. Baseline
+regenerated: `assert_return` 13495/13518 (99.8%) → 13512/13518 (100.0%,
++17). Verified via a full per-file diff that exactly 4 files changed
+(`conversions.wast`, `float_literals.wast`, `float_misc.wast`,
+`local_tee.wast`), every one going from some real fails to zero — no
+regressions, no partial fixes. See `wasm-execution`'s own `0.6.6`
+changelog entry for the full bug writeup.
+
+## 0.1.7 — 2026-08-13 — baseline regenerated after sign-extension/trunc_sat opcodes were added (WASM03)
+
+No code changes in this crate — `wasm-opcodes` 0.2.1, `wasm-wast-parser`
+0.1.5, and `wasm-execution` 0.6.5 added the sign-extension and trunc_sat
+opcode families (plus fixed a real, pre-existing boundary bug in the
+trapping `trunc_*` handlers those additions exposed) surfaced running this
+crate's own harness against the real testsuite. Baseline regenerated:
+`i32.wast`/`i64.wast`/`conversions.wast` go from full parse failures to
+parsing and running (98.9%+ passing across them); `assert_return`
+12235/12254 (99.8%) → 13495/13518 (99.8%, +1260 across the newly-parseable
+files); `assert_trap` 331/331 (100%) → 418/418 (100%). Verified via a full
+per-file diff that these 3 newly-parseable files are the only ones whose
+tally changed anywhere in the corpus. See `wasm-execution`'s own `0.6.5`
+changelog entry for the full bug writeup, including the 4 remaining
+`conversions.wast` fails (an unrelated, already-tracked NaN-payload gap,
+WASM13).
+
+## 0.1.6 — 2026-08-13 — baseline regenerated after inline-import shorthand was fixed (WASM02)
+
+No code changes in this crate — `wasm-wast-parser` 0.1.4 fixed a real bug
+(`func`/`table`/`memory`/`global` **inline-import shorthand** wasn't
+recognized, and fixing it exposed a deeper pre-existing indexing bug once
+a module could combine an import with a same-kind real definition)
+surfaced running this crate's own harness against the real testsuite.
+Baseline regenerated: `func_ptrs.wast` goes from a full parse failure to
+100% passing every directive kind it has; `assert_return` 12219/12238
+(99.8%) → 12235/12254 (99.8%, +16). Verified via a full per-file diff that
+`func_ptrs.wast` is the only file whose tally changed anywhere in the
+corpus. See `wasm-wast-parser`'s own `0.1.4` changelog entry for the full
+bug writeup.
+
+## 0.1.5 — 2026-08-13 — baseline regenerated after (module quote/binary ...) directives were fixed (WASM12)
+
+No code changes in this crate — `wasm-wast-parser` 0.1.3 fixed a real bug
+(`(module quote/binary ...)` **directives** silently built an empty
+module instead of the module the source actually described) surfaced
+running this crate's own harness against the real testsuite. Baseline
+regenerated: `assert_return` 12215/12238 (99.8%) → 12219/12238 (99.8%,
++4); `assert_malformed` 145/147 → 33/35 graded (46 → 158
+`NotYetSupported`) — a real, understood reclassification, not a
+regression: many quote-module `assert_malformed` cases were previously
+`Pass` only because the quote text failed to parse for the WRONG reason
+(the missing-wrapper bug, not the case's actual intended malformation);
+now that it parses correctly, this repo's still-missing instruction-level
+type-checker genuinely can't tell those specific cases apart from a valid
+module, so they honestly report `NotYetSupported` instead. Verified via a
+full per-file diff against the previous baseline: every changed file's
+`fail` count went down or stayed the same, never up. See
+`wasm-wast-parser`'s own `0.1.3` changelog entry for the full bug writeup.
+
+## 0.1.4 — 2026-08-13 — baseline regenerated after a branch double-pop bug fix (WASM11)
+
+No code changes in this crate — `wasm-execution` 0.6.4 fixed a real bug
+(a branch to an outer block double-popped `label_stack`, corrupting
+control flow for any branch that unwound past one or more already-open
+outer blocks) surfaced by running this crate's own harness against the
+real testsuite's `switch.wast`. Baseline regenerated: `assert_return`
+12171/12238 (99.4%) → 12215/12238 (99.8%).
+
+## 0.1.3 — 2026-08-13 — baseline regenerated after a local-index bug fix (WASM14)
+
+No code changes in this crate — `wasm-wast-parser` 0.1.2 fixed a real bug
+(a declared local aliasing parameter index 0 when a function references
+its signature only via `(type $sig)`) surfaced by running this crate's
+own harness against the real testsuite. Baseline regenerated:
+`assert_return` 12169/12238 (99.4%) → 12171/12238 (99.5%).
+
+## 0.1.2 — 2026-08-13 — baseline regenerated after 3 real assert_return bug fixes (WASM07)
+
+No code changes in this crate — `wasm-execution` 0.6.3 and `wasm-runtime`
+0.5.1 fixed 3 real bugs (an implicit function-body branch label, an
+`instance.memory`/`tables` loss after any trapped call, and
+`call_indirect` checking against the wrong index space) surfaced by
+running this crate's own harness against the real testsuite. Baseline
+regenerated: `assert_return` 12030/12238 (98.3%) → 12169/12238 (99.4%).
+See those crates' own changelogs for the full bug writeups.
+
 ## 0.1.1 — 2026-08-13 — assert_exhaustion is graded for real (WASM01)
 
 `wasm-execution` 0.6.2 added a real call-depth guard, closing the exact

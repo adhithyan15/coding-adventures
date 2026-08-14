@@ -141,16 +141,29 @@ describe("the committed A1 inventory", () => {
     }
   });
 
-  it("gives every unmapped point a reason where one is worth having", () => {
-    // Not every null needs prose — "the gerund is not taught" is self-evident.
-    // But the ones that are PARTLY there are the misleading ones, so they carry
-    // a note saying which half exists.
-    const partiallyTrue = ["A1-ART-03", "A1-POS-02", "A1-ADV-01", "A1-ADV-02", "A1-V-04", "A1-V-06", "A1-V-08"];
-    for (const id of partiallyTrue) {
-      const point = inventory.points.find((candidate) => candidate.id === id);
-      expect(point, id).toBeDefined();
-      expect(point!.probe).toBeNull();
-      expect(point!.note, id).toBeTruthy();
+  it("classifies every unmapped point, so a new null cannot slip in unnoticed", () => {
+    // This test used to hold a hand-written list of nulls that were PARTLY true
+    // and therefore needed a note saying which half existed. Chapters 257-261
+    // closed the last of those, and emptying the list left `for (const id of
+    // [])` behind — a loop that never runs, in a test with no other assertion,
+    // passing unconditionally. The invariant it existed for was enforced by
+    // nothing, and a future null probe with no note would have sailed through.
+    //
+    // So it is derived now instead of listed. Pinning the exact set of nulls
+    // means any NEW one fails here and has to be classified deliberately —
+    // which is the whole job this test was meant to do.
+    const unmapped = inventory.points.filter((point) => point.probe === null).map((point) => point.id);
+    // A1 is complete, so this is now the empty set -- and it stays an assertion
+    // rather than a vacuous loop: adding ANY new null probe fails here and has
+    // to be justified, which is exactly what this test is for.
+    expect(unmapped.sort()).toEqual([]);
+
+    // None of the four is partly true: each is absent outright, so none needs a
+    // note explaining which half exists. If a partly-true null is ever added,
+    // the assertion above fails first and forces that decision into the open.
+    for (const id of unmapped) {
+      const point = inventory.points.find((candidate) => candidate.id === id)!;
+      expect(point.probe, `${id} must stay null or gain a probe deliberately`).toBeNull();
     }
   });
 });
@@ -279,22 +292,56 @@ describe("what the corpus actually covers", () => {
     // demonstratives, which had been absent ENTIRELY (este/ese/aquel and the
     // neuters, 3 of 3 points), taking it to 56/85.
     //
-    // Still untaught and still counted against us: `muy`, the `al`/`del`
-    // contractions, the gerund, `quien`, and the personal `a`.
+    // Chapters 226-229 then taught the degree words -- `muy`, `bastante`, `mal`
+    // -- closing four more points across three categories, and taking
+    // `El sintagma adjetival` off the floor at last.
+    //
+    // Chapters 230-235 then closed the contractions, `quien`, and both missing
+    // coordinators -- which finished `Coordinacion` outright.
+    //
+    // Chapters 236-240 then taught the gerund and the personal `a`. A third
+    // point, A1-V-03, was DELIBERATELY left open: chapter 238 teaches the
+    // progressive and contrasts it with the plain present, which is adjacent to
+    // that point but is not it, and closing it with progressive atoms would be
+    // exactly the gaming this gate exists to catch.
+    //
+    // Chapters 241-245 then paid HL-C127's debt: the vosotros preterite and the
+    // imperfect plural, both of which chapter 204 promised the reader in print.
+    // Both past tenses are now complete paradigms.
+    //
+    // Chapters 246-250 then closed the stressed pronouns, the exclamative `que`
+    // and the vocative.
+    //
+    // Chapters 251-255 then finished every set the book had taught only half of:
+    // ahi/alli beside aqui, ahora/hoy beside manana, unos/unas beside un/una,
+    // vuestro beside nuestro, and the ver/dar preterite. A1-Q-04 closed with
+    // no new content at all -- `bastante` was taught at ch227 and its probe had
+    // simply never been wired, which is its own kind of measurement error.
+    //
+    // The eight that remain are a DIFFERENT problem. Four of them -- A1-SN-03,
+    // A1-Q-03, A1-N-01, A1-V-03 -- are things the book demonstrates on nearly
+    // every page and never states, so they need lessons that make explicit what
+    // the reader already does by reflex. The rest are unbuilt structures.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
     // move because a probe was loosened or a point deleted — if this assertion
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
+    //
+    // Chapters 257-261 then closed the last four of the "demonstrated but never
+    // stated" points, which is why `partiallyTrue` is now empty: no null probe
+    // remains that is PARTLY true. The four that are still null are absent
+    // outright -- the ordinals, `uno...otro`, word-order flexibility, and the
+    // infinitive as subject -- and need no note to say which half exists.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(56);
-    expect(coverage.percent).toBe(66);
+    expect(coverage.covered).toBe(85); // ...and 262-266 close the last four. A1 is COMPLETE: every point the inventory enumerates is taught. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(100); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
     expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 3 }); // closed by chapters 221-225
-    expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 0 });
+    expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 1 }); // closed by ch226-229: muy, poco and bastante are all taught now
     expect(coverage.byCategory["La oracion simple"]).toEqual({ enumerated: 6, covered: 6 });
   });
 
@@ -303,9 +350,37 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 56/85 points covered (66%)");
-    // Worst category first: the line after the summary should be the emptiest
-    // category, not the alphabetically first one.
-    expect(report.split("\n")[2]).toContain("0/1  El sintagma adjetival");
+    expect(report).toContain("spanish A1: 85/85 points covered (100%)");
+    // Worst category first, not alphabetical. This USED to be checkable against
+    // the real corpus, whose emptiest category kept changing as the campaign
+    // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`
+    // at 1/4, then 2/4, then 3/4. A1 is now COMPLETE: every category is at
+    // 100%, so the ordering falls back to the alphabetical tie-break, and
+    // asserting the real report's first line would pin that tie-break while
+    // claiming to pin the sort.
+    //
+    // The property therefore moves to data that can still falsify it. This is
+    // not a weakening — the real report simply stopped being a test case for
+    // ordering the moment there was nothing left to order.
+    const uneven = measureExamCoverage(
+      {
+        ...FIXTURE,
+        points: [
+          // The names matter. "Poor"/"Rich" would order the same way
+          // alphabetically as by shortfall, so the assertion could not tell the
+          // sort from the tie-break — a security review proved that by deleting
+          // the shortfall comparator and watching this test still pass. These
+          // names make the two orderings CONTRADICT: alphabetically Alpha comes
+          // first, by shortfall Zeta does.
+          { id: "F-1", category: "Alpha", label: "covered", probe: ["ES-A"] },
+          { id: "F-2", category: "Alpha", label: "covered", probe: ["ES-B"] },
+          { id: "F-3", category: "Zeta", label: "uncovered", probe: null },
+        ],
+      },
+      [lesson("ES-1", ["ES-A"]), lesson("ES-2", ["ES-B"])],
+    );
+    const unevenReport = formatExamCoverage(uneven).split("\n");
+    expect(unevenReport[2]).toContain("0/1  Zeta");
+    expect(unevenReport[3]).toContain("2/2  Alpha");
   });
 });

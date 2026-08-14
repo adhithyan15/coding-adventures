@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.50.0";
+pub const VERSION: &str = "0.58.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -726,6 +726,7 @@ pub enum StructuralKind {
     Class,
     Er,
     C4,
+    Requirement,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -736,6 +737,8 @@ pub enum StructuralNodeKind {
     Abstract,
     Enum,
     Entity,
+    Requirement,
+    Element,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -753,11 +756,60 @@ pub struct Compartment {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum RequirementRisk {
+    Low,
+    Medium,
+    High,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub enum RequirementKind {
+    #[default]
+    Requirement,
+    Functional,
+    Interface,
+    Performance,
+    Physical,
+    DesignConstraint,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum RequirementVerifyMethod {
+    Analysis,
+    Inspection,
+    Test,
+    Demonstration,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct RequirementMetadata {
+    pub kind: RequirementKind,
+    pub external_id: Option<String>,
+    pub text: Option<String>,
+    pub risk: Option<RequirementRisk>,
+    pub verify_method: Option<RequirementVerifyMethod>,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct RequirementElementMetadata {
+    pub element_type: Option<String>,
+    pub document_reference: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum StructuralNodeMetadata {
+    Requirement(RequirementMetadata),
+    RequirementElement(RequirementElementMetadata),
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct StructuralNode {
     pub id: String,
     pub label: String,
     pub stereotype: Option<String>,
     pub node_kind: StructuralNodeKind,
+    pub metadata: Option<StructuralNodeMetadata>,
+    pub style: Option<DiagramStyle>,
     pub compartments: Vec<Compartment>,
     pub parent_group: Option<String>,
 }
@@ -795,6 +847,9 @@ pub struct StructuralRelationship {
 pub struct StructuralDiagram {
     pub kind: StructuralKind,
     pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub direction: Option<DiagramDirection>,
     pub nodes: Vec<StructuralNode>,
     pub groups: Vec<StructuralGroup>,
     pub relationships: Vec<StructuralRelationship>,
@@ -816,6 +871,7 @@ pub struct LayoutedStructuralNode {
     pub height: f64,
     pub header: String,
     pub stereotype: Option<String>,
+    pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,
 }
 
@@ -846,6 +902,8 @@ pub struct LayoutedStructuralRelationship {
 pub struct LayoutedStructuralDiagram {
     pub width: f64,
     pub height: f64,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
     pub groups: Vec<LayoutedStructuralGroup>,
     pub nodes: Vec<LayoutedStructuralNode>,
     pub relationships: Vec<LayoutedStructuralRelationship>,
@@ -887,6 +945,8 @@ pub struct JourneyConfig {
     pub actor_colors: Vec<String>,
     pub section_fills: Vec<String>,
     pub section_colors: Vec<String>,
+    pub left_margin: Option<f64>,
+    pub max_label_width: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1076,6 +1136,7 @@ pub enum LayoutedTemporalItem {
         y: f64,
         width: f64,
         height: f64,
+        score_y: f64,
         score: u8,
         label: String,
         people: Vec<String>,
@@ -1088,8 +1149,20 @@ pub enum LayoutedTemporalItem {
     JourneyActor {
         x: f64,
         y: f64,
+        width: f64,
+        height: f64,
         color: String,
         label: String,
+    },
+    JourneyActivityLine {
+        x1: f64,
+        y: f64,
+        x2: f64,
+    },
+    JourneyTaskLine {
+        x: f64,
+        y1: f64,
+        y2: f64,
     },
 }
 
@@ -1182,7 +1255,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.50.0");
+        assert_eq!(VERSION, "0.58.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1290,12 +1363,17 @@ mod tests {
             label: "A".into(),
             stereotype: None,
             node_kind: StructuralNodeKind::Class,
+            metadata: None,
+            style: None,
             compartments: vec![],
             parent_group: None,
         };
         let d = StructuralDiagram {
             kind: StructuralKind::Class,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            direction: None,
             nodes: vec![node],
             groups: vec![],
             relationships: vec![],

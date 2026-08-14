@@ -2,6 +2,292 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.6] — 2026-08-13 (WASM13 — f32 NaN payloads silently canonicalized on every stack push/pop)
+
+### Fixed — `WasmValue::to_typed`/`from_typed` destroyed f32 NaN bit patterns
+
+`GenericVM`'s typed operand stack has exactly ONE float slot
+(`Value::Float(f64)`), shared by both WASM float widths — so every `f32`
+value that's merely pushed or popped (locals, params, results, operands;
+not just values an opcode actually computed on) round-trips through this
+f64 box via `to_typed`/`from_typed`. Those conversions used an ARITHMETIC
+`as f64` widen on the way in and `as f32` narrow on the way back out.
+Confirmed empirically that Rust's `as` cast between float widths does
+**not** guarantee NaN payload preservation on the narrowing leg: `f32::
+from_bits(0x7fa00000) as f64 as f32` produces `0x7fc00000` — LLVM's
+`fpext`/`fptrunc` canonicalize the payload to the target type's generic
+quiet NaN. So ANY f32 NaN merely sitting on the stack silently lost its
+exact bit pattern by the time it came back off, independent of which
+opcode touched it.
+
+This was invisible for most NaN-producing operations because the WASM
+spec itself only requires them to produce a value in the `nan:arithmetic`
+CLASS (any quiet NaN, exact payload unspecified) — `wasm-conformance`'s
+grading already accepts that loosely, so canonicalization to `0x7fc00000`
+still graded `Pass`. It was NOT invisible for `f32.reinterpret_i32`/
+`i32.reinterpret_f32` (pure bit reinterpretation, where the testsuite
+asserts an EXACT value, not a class) and for any case that round-trips a
+NaN through a `local.tee`/param/result boundary without touching it
+arithmetically at all — both are supposed to preserve the bits exactly by
+construction, and both went through `to_typed`/`from_typed` regardless.
+
+Fixed by making both conversions bit-preserving reinterpretations
+(`f64::from_bits(v.to_bits() as u64)` / `f32::from_bits(v.to_bits() as
+u32)`) instead of arithmetic casts — lossless for every case (NaN,
+normal, ±0.0, ±inf), not just NaN, since it does no rounding at all.
+Confirmed `virtual-machine`'s own `GenericVM` never interprets
+`Value::Float` numerically outside a `Display` impl (used for debug
+printing only), so re-purposing that f64 slot as an opaque bit-carrier
+for f32 values has no effect on anything else built on `GenericVM`.
+
+Verified via TEMP-REVERT-CHECK: reverting the fix (restoring the
+arithmetic casts) makes all 3 new regression tests fail with exactly the
+`0x7fc00000` canonicalization this changelog describes; restoring the fix
+makes them pass again.
+
+Baseline: `assert_return` 13495/13518 (99.8%) → 13512/13518 (100.0%,
++17) — closes 4 files' worth of previously-tracked NaN-payload gaps in
+one fix: `conversions.wast` (the 4 `reinterpret` cases WASM03 surfaced),
+`float_literals.wast`, `float_misc.wast`, and `local_tee.wast`'s
+"as-unary-operand" case — this WASM13 backlog item's own two originally-
+named repro cases. Verified via a full per-file diff against the previous
+baseline that these 4 files are the ONLY ones whose tally changed, and
+every one of their fails went to exactly 0 (not just down).
+
+New tests: a direct `to_typed`/`from_typed` round-trip over 6 real NaN bit
+patterns (distinct payloads, both signs, quiet and would-be-signaling,
+plus the canonical NaN itself as a sanity check that the fix doesn't
+break the ALREADY-canonical case); end-to-end `f32.reinterpret_i32`/
+`i32.reinterpret_f32` tests through the actual interpreter using the
+exact bit patterns the real testsuite asserts against.
+
+## [0.6.5] — 2026-08-13 (WASM03 — sign-extension, trunc_sat, and a real trapping-trunc boundary bug)
+
+### Added
+
+- The 5 sign-extension opcodes (0xC0-0xC4): each pops an int, sign-extends
+  its low 8/16/32 bits to the full width via Rust's own `as i8 as i32`-style
+  truncate-then-sign-extend cast (exactly matching the spec's `signed_N`
+  definition), pushes the result.
+- The 8 `trunc_sat` sub-opcodes (`0xFC 0x00`-`0x07`, decoding already
+  existed for the `0xFC` prefix from bulk-memory's `memory.copy`/
+  `memory.fill` — only the sub-opcode dispatch needed extending): the
+  non-trapping float-to-int conversions. Implemented as a straight `as`
+  cast with no bounds checking at all, because Rust's own float→int `as`
+  cast has used SATURATING semantics (NaN → 0, out-of-range → the nearest
+  bound) since Rust 1.45 — a direct, built-in match for the spec's
+  definition, needing no hand-rolled boundary logic.
+
+### Fixed — the TRAPPING `trunc_f32/f64_s/u` handlers (0xA8-0xB1) had real, pre-existing boundary bugs
+
+Investigating why `conversions.wast` (only parseable for the first time
+after this release's own opcode additions) still had `assert_trap`/
+`assert_return` failures after the two additions above found these
+**already-existing**, entirely unrelated bugs, invisible until now because
+`conversions.wast` was the only vendored file exercising these boundary
+cases and it could never parse before:
+
+- `i32.trunc_f32_u`/`i32.trunc_f64_u` (0xA9/0xAB) used an inclusive `0.0..`
+  lower bound, so any negative input — even a tiny one that truncates
+  toward zero to a perfectly valid `0` — incorrectly trapped.
+- `i32.trunc_f64_s` (0xAA) used an inclusive lower bound (`-2147483649.0..`)
+  where the spec requires a STRICT exclusion — `-2147483649.0` itself (one
+  past the valid range) was wrongly accepted instead of trapping.
+- All four i64-destination handlers — `i64.trunc_f32_s`/`i64.trunc_f32_u`/
+  `i64.trunc_f64_s`/`i64.trunc_f64_u` (0xAE/0xAF/0xB0/0xB1) — had **no
+  overflow check at all**, only a NaN check — `a as i64`/`a as u64 as i64`
+  alone is that same Rust-1.45+ SATURATING cast the new `trunc_sat`
+  handlers correctly rely on above, so these TRAPPING opcodes were silently
+  behaving like their non-trapping `trunc_sat` counterparts instead of
+  trapping on overflow, the opposite of their contract.
+
+Fixed with 4 new shared boundary-check functions (`trunc_s_i32_in_range`,
+`trunc_u_i32_in_range`, `trunc_s_i64_in_range`, `trunc_u_i64_in_range`),
+each doc-commented with the exact spec inequality and why the chosen f64
+literal constants are exact (not approximations) for that specific
+boundary — see their own doc comments for the precision reasoning, which
+differs between the i32 case (plain strict inequalities against
+exactly-representable `f64` constants) and the i64 case (the true boundary
+constant itself isn't exactly representable in `f64`, but no representable
+`f64` value exists in the gap where it would matter, so a carefully chosen
+inclusive/exclusive form is still exact). `f32` sources are widened to
+`f64` first (lossless) before applying the same checks, avoiding a second,
+separate set of `f32`-precision boundary constants.
+
+Baseline: `i32.wast`/`i64.wast` go from full parse failures to 100% passing
+every directive kind they have; `conversions.wast` goes from a full parse
+failure to `assert_trap` 67/67 (100%) and `assert_return` 522/526 (99.2%,
++1253 across the three newly-parseable files against the pre-WASM03
+baseline). The 4 remaining `conversions.wast` `assert_return` fails are
+`f32.reinterpret_i32`/`i32.reinterpret_f32` NaN-bit-pattern cases —
+unrelated to this release, corroborating evidence for the already-tracked
+WASM13 (NaN payload preservation) backlog item, not fixed here. Verified
+via a full per-file diff against the previous baseline that these 3 newly-
+parseable files are the ONLY files whose tally changed anywhere in the
+corpus.
+
+New tests: 5 sign-extension round-trips, 8 `trunc_sat` cases (ordinary
+value, NaN-saturates-not-traps, overflow/underflow saturation for both
+signed and unsigned, both `i32` and `i64` destinations), and 7 regression
+tests for the trapping-trunc boundary fix (the exact tiny-negative,
+exact-lower-boundary, and previously-never-trapping-on-overflow cases the
+old code got wrong, plus the i64::MIN exact-boundary acceptance case).
+
+## [0.6.4] — 2026-08-13 (WASM11 — a real branch double-pop bug)
+
+`execute_branch` (the shared handler behind `br`/`br_if`/`br_table`) used
+to `ctx.label_stack.truncate(label_stack_index)` — removing the TARGET
+label — and then jump to `label.target_pc`. For a `block`/`if` label,
+`target_pc` is the literal position of that block's own `end` opcode (not
+one past it — see `block`'s handler and `build_control_flow_map`), and
+the `end` handler unconditionally pops one label whenever it runs,
+whether reached by ordinary fall-through or landed on by a branch.
+Removing the target via `truncate` and THEN landing on its own `end`
+byte popped it a SECOND time — a genuine double-pop that silently
+removed one extra label (belonging to whatever the next enclosing block
+happened to be) on any branch that unwound past one or more already-open
+outer blocks. This was invisible for the extremely common "the
+branched-into block is effectively the last thing in the function"
+shape (the accidental extra pop just triggered the function-end path a
+little early, with no observable difference), but produced a real
+`StackUnderflow` trap for anything with real code still to run after the
+target block closes — found running the official WebAssembly spec
+testsuite's own `switch.wast` (a `br_table` dispatching through 10
+levels of nested named blocks — some targets land in the MIDDLE of the
+nesting, not just the innermost or outermost), not by inspection.
+
+Fixed by keeping a `block`/`if` target's label ON `label_stack` when
+branching to it (`truncate(label_stack_index + 1)` instead of
+`truncate(label_stack_index)`), so landing on its own `end` byte pops it
+EXACTLY once — identical to what ordinary, non-branching fall-through to
+that same `end` already does. A `loop` target keeps the ORIGINAL
+behavior (`truncate(label_stack_index)`, no `+ 1`): a loop's
+`target_pc` is the position of the `loop` OPCODE ITSELF (not an `end`
+byte), so branching back to it re-executes that opcode, which
+unconditionally re-pushes a fresh label — keeping the old one too, as an
+early draft of this fix did uniformly for both kinds, left both the
+retained old label and the freshly re-pushed one on the stack every
+iteration: an unbounded per-iteration duplicate that hung (an
+effectively infinite loop, not a clean trap) instead of terminating,
+caught by hand-testing a simple bounded `loop`+`br_if`-break before ever
+reaching the testsuite (no vendored `.wast` file with a simple bounded
+loop currently parses).
+
+This ALSO surfaced a real, since-fixed bug in `iir-to-wasm`'s own
+"dispatch-loop" codegen strategy (used for any IIR function with
+control flow — COND/if-chains lower to labels/jumps, compiled to one
+outer exit `block` wrapping a `loop` wrapping N nested per-block
+`block`s + a `br_table`): its branch-depth formulas for "re-enter the
+LOOP to redispatch" were empirically tuned against THIS crate's old
+double-pop bug, not real WASM semantics — so fixing `execute_branch`
+alone made every such branch land one label too shallow, silently
+falling into the wrong basic block (confirmed via `lang-aot`'s
+`mccarthy_is_uniform_across_every_backend`: the WASM backend computed
+`0` instead of `22` for a 2-clause COND). See `iir-to-wasm`'s own
+CHANGELOG for that fix's detail; both fixes are needed together for this
+PR to be safe to ship.
+
+4 new regression tests (`tests/wasm11_regression.rs`): the exact
+`switch.wast` "stmt" shape reproduced in isolation (all 9 real
+assert_return cases), a minimal out-of-depth-order `br_table` case, a
+bounded `loop`+`br_if`-break that must terminate (not hang), and two
+sequential loops on the same call confirming a loop's own label count
+stays stable across iterations. Baseline: `assert_return` 12171/12238
+(99.4%) → 12215/12238 (99.8%).
+
+## [0.6.3] — 2026-08-13 (WASM07 — two real assert_return correctness bugs + a security-review fix)
+
+Investigating why `wasm-conformance`'s `assert_return` pass rate sat at
+98.3% (208 real failures, not opcode-coverage gaps) surfaced two genuine
+bugs in this crate, found by running the official spec testsuite, not by
+inspection.
+
+- **A WASM function body is itself an implicit outer `block`, whose label
+  is the function's own end — this crate never modeled that.** `br`/
+  `br_if`/`br_table` at a depth that walks out of every *explicit* block
+  (including a completely ordinary, spec-legal bare top-level `(br 0)`,
+  meaning "return" — `func.wast`'s own `break-empty`/`break-i32`/etc.
+  cases are exactly this) had no label on `ctx.label_stack` to resolve
+  against, and traps with a spurious "branch target N out of range"
+  instead of returning. Fixed by pushing an implicit label at call entry
+  (`arity` = the function's own result count, `target_pc` one past the
+  last instruction) — in **both** independent call-entry code paths this
+  crate has (`call_function_inner`, used for nested `call`/
+  `call_indirect`, and the separate, duplicated dispatch loop inside the
+  public `WasmExecutionEngine::call_function`, the one true top-level
+  entry point) since neither reuses the other's instruction-decode-and-
+  dispatch logic.
+- **`call_indirect $type`'s immediate indexes the module's TYPE SECTION —
+  a completely different index space from `ctx.func_types`, which is
+  indexed by FUNCTION index** (one entry per function, resolved to
+  whichever type that function happens to declare; two functions can
+  easily share a type, or a type can go unused by any function at all).
+  The type check compared the callee's real type against
+  `func_types[type_idx]` — an arbitrary, usually-unrelated function's
+  type, not the type the call site actually declared — so legitimate
+  `call_indirect` calls across dozens of real testsuite cases
+  (`load.wast`/`local_tee.wast`/`nop.wast`/`call.wast`'s many
+  `as-call_indirect-*` cases, `func.wast`'s `signature-*-duplicate`
+  cases) spuriously trapped "indirect call type mismatch" even though the
+  callee's real type matched exactly. Fixed the same way
+  `struct_field_counts` already solves an analogous "the parser doesn't
+  yet surface this to the engine" gap: a new engine-level
+  `type_section: Vec<FuncType>` field (empty by default — deliberately
+  **not** added to `WasmEngineConfig`, which would have forced every one
+  of this crate's ~40 hand-built single/few-function unit-test modules to
+  supply it) with a `set_type_section` setter, threaded into
+  `WasmExecutionContext.types`. Left unset, the check is skipped
+  (permissive — "no type info available" is not the same claim as "the
+  type section is empty"); `wasm-runtime`'s real embedding path always
+  sets it now (see that crate's own changelog).
+- **A security review of this PR's `wasm-runtime` fix (a trapped call must
+  not permanently lose an instance's memory/tables — see that crate's own
+  changelog) found the identical bug pattern one layer further in.**
+  `WasmExecutionEngine::call_function` (the public, top-level entry point)
+  also `mem::take`s `self.host_functions` before running, and its own
+  restore line (`self.host_functions = ctx.host_functions;`) used to sit
+  AFTER `execute_with_context(...)?` — skipped on any trap, exactly the
+  same bug the `wasm-runtime` fix addressed one call frame further out.
+  Since `wasm-runtime::instantiate()` wires real WASI imports (`fd_write`,
+  `random_get`, `clock_time_get`, `environ_get`, `proc_exit`, ...)
+  through this exact field, ANY instance that trapped even once would
+  silently and permanently lose every WASI import for the rest of its
+  life — the `wasm-runtime` fix alone only restored `instance.memory`/
+  `instance.tables` (pointer-aliased into the engine, never moved, so
+  they survived a trap fine even with the old code) but not
+  `host_functions` (genuinely moved via `mem::take`, one layer further
+  in). Fixed the same way: capture the `Result` from
+  `execute_with_context` first, restore `self.globals`/
+  `self.host_functions`/`self.last_gc_state` unconditionally, THEN
+  propagate the trap.
+- 5 new regression tests (`tests/wasm07_regression.rs`): a bare top-level
+  `br 0` returning correctly through both call-entry paths, a
+  `call_indirect` case specifically shaped so the old bug (grabbing an
+  unrelated function's type) is unmissable, verified both unset
+  (permissive) and set (the real check) against the module's own actual
+  parsed type section, a case confirming a genuine type mismatch still
+  traps once the real type section is wired in, and a host-imported
+  function confirmed to survive an unrelated trapped call and remain
+  callable afterward.
+
+Together with the matching `wasm-runtime` 0.5.1 fix (a trapped call
+losing an instance's memory/tables forever after — see that crate's own
+changelog), these three bugs closed 139 of the 208 real `assert_return`
+failures the pre-fix baseline had: 12030/12238 (98.3%) → 12169/12238
+(99.4%). The remaining 69 are tracked in the session backlog, not blindly
+chased further in this PR: a distinct StackUnderflow bug in named-label
+depth resolution through 3+ levels of nested blocks (`switch.wast`,
+`labels.wast`'s `if`/`if2`, `func.wast`'s `break-br_table-nested-*`),
+`comments.wast`'s CR/CRLF line-comment-terminator handling in the `quote`
+re-parse path, a handful of NaN-payload-preservation gaps beyond the
+0.6.1 fixes, `call.wast`'s `even`/`odd` (the already-documented, accepted
+WASM01 trade-off), and `br.wast`'s one remaining case (a genuine
+multi-value block signature, already tracked as WASM04) — each is its
+own investigation, not a continuation of these three.
+
+178 tests passing (up from 173: 5 new `wasm07_regression.rs` cases),
+clippy clean.
+
 ## [0.6.2] — 2026-08-13 (WASM01 — a real call-depth guard)
 
 `call_function` had NO limit on WASM call nesting: `call`/`call_indirect`

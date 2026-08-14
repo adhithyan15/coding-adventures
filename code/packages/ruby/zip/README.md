@@ -59,6 +59,21 @@ data = reader.read_by_name("hello.txt")
 CodingAdventures::Zip.crc32("hello world")  # => 0x0D4A1185
 ```
 
+### Raw RFC 1951
+
+```ruby
+compressed = CodingAdventures::Zip.raw_deflate("hello hello hello".b)
+result = CodingAdventures::Zip.raw_inflate_counted(compressed)
+
+result.output          # => "hello hello hello"
+result.bytes_consumed  # exact raw payload bytes, excluding any suffix
+```
+
+The inflater accepts stored, fixed-Huffman, and dynamic-Huffman blocks, including
+multi-block and full 32 KiB-window streams. `max_output:` may lower the 256 MiB
+hard ceiling. Failures raise `RawInflateError` with one stable, payload-blind
+`code`; no partial output is returned.
+
 ## API
 
 | Symbol | Description |
@@ -74,6 +89,11 @@ CodingAdventures::Zip.crc32("hello world")  # => 0x0D4A1185
 | `Zip.zip(entries, compress: true)` | One-shot compress. |
 | `Zip.unzip(data)` | One-shot decompress → Hash. |
 | `Zip.crc32(data, initial: 0)` | CRC-32 (polynomial 0xEDB88320). |
+| `Zip.raw_deflate(data)` | Encode raw RFC 1951 bytes with fixed Huffman coding. |
+| `Zip.raw_inflate(data, max_output: ...)` | Strictly decode a complete raw RFC 1951 stream. |
+| `Zip.raw_inflate_counted(data, max_output: ...)` | Decode and report exact input bytes consumed. |
+| `Zip::RAW_INFLATE_MAX_OUTPUT` | Hard 256 MiB in-memory output ceiling. |
+| `Zip::RawInflateError` | Typed failure carrying a stable error `code`. |
 | `Zip.dos_datetime(...)` | MS-DOS timestamp. |
 | `Zip::DOS_EPOCH` | `0x00210000` — 1980-01-01 00:00:00. |
 
@@ -83,3 +103,8 @@ CodingAdventures::Zip.crc32("hello world")  # => 0x0D4A1185
 bundle install
 bundle exec rake test
 ```
+
+The package is pure in-memory computation and requires no filesystem, network,
+process, environment, clock, entropy, or credential authority. Test fixtures use
+the filesystem and Ruby's `zlib` only as independent test oracles. CRC-32 detects
+accidental corruption; it is not an authentication mechanism.

@@ -1,0 +1,52 @@
+% ============================================================================
+% coin-penny-discontinued — for the ONE US coin whose OWN cited U.S. Mint
+% quote states it stopped circulating, when and after how long
+% (adj-facts-stdlib, MONEY).
+% ============================================================================
+% A sibling to the already-shipped `us-coins.adj` (`coin_cents(coin, cents)`,
+% ONE cent-value per coin). That table's own header already quotes, VERBATIM,
+% the penny's U.S. Mint Coin Classroom span -- and packed inside that SAME
+% quote, alongside the cent value the parent table already captures, are two
+% more atomic facts the value-only schema had no room for:
+%
+%   penny → discontinued, 2025, 232
+%     "The one-cent coin ceased circulating in 2025 after 232 years of
+%      production."
+%
+% Recall is a binding query:
+%
+%     ? coin_status(penny, $Status, $Year, $ProductionYears)
+%       % discontinued, 2025, 232
+%
+% This is a native `table` (ADJ-TABLES): each `row` lowers to a ground
+% relation `coin_status(coin, status, year, production_years)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query -- the
+% engine returns the answer WITH its source, on the CPU, with zero model
+% calls. Every OTHER coin `us-coins.adj` carries (nickel, dime, quarter,
+% half_dollar, dollar) has NO row here at all, since none of their own cited
+% U.S. Mint spans states any circulation-status change -- honest abstention
+% by simple absence, the same discipline `farm-animal-secondary-product.adj`
+% and `bill-back-vignette.adj` use for the animals/bills their own cited
+% spans say nothing extra about. This table is deliberately a SINGLE row:
+% inventing a `circulating` status for the other five coins would assert
+% something their cited spans never say.
+%
+% Provenance: reproduces, byte-for-byte, the SAME U.S. Mint Coin Classroom
+% span already quoted inside `us-coins.adj`'s own header -- no new WebFetch,
+% only a different schema decoding the discontinuation-year and production-
+% span facts already sitting unused inside that one already-verified quote.
+% `trust authoritative` -- the same tier `us-coins.adj` already carries (the
+% U.S. Mint, the agency that mints US circulating coins).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table coin_status {
+    columns coin, status, year, production_years
+
+    row (penny, discontinued, 2025, 232)
+
+    source "The one-cent coin ceased circulating in 2025 after 232 years of production."
+    locator "https://kids.usmint.gov/about-the-mint/penny"
+    trust authoritative
+}

@@ -16,6 +16,7 @@ use coding_adventures_html_lexer::{
     Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState,
     Token, TokenizerError,
 };
+pub use coding_adventures_html_lexer::{PositionedToken, SourcePosition};
 use dom_core::{Attribute, Document, DocumentType, Element, Node};
 use std::fmt;
 
@@ -589,6 +590,8 @@ pub struct FragmentOutput {
 pub struct ParserDiagnostic {
     pub code: String,
     pub message: String,
+    /// Proven tokenizer emission point for the triggering token, when known.
+    pub position: Option<SourcePosition>,
 }
 
 impl ParserDiagnostic {
@@ -596,7 +599,13 @@ impl ParserDiagnostic {
         Self {
             code: code.into(),
             message: message.into(),
+            position: None,
         }
+    }
+
+    fn at_emission(mut self, position: Option<SourcePosition>) -> Self {
+        self.position = position;
+        self
     }
 }
 
@@ -764,7 +773,10 @@ pub fn parse_html_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser, true)?;
-    parser.process_token(Token::Eof);
+    parser.process_positioned_token(PositionedToken {
+        token: Token::Eof,
+        position: lexer.position(),
+    });
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -793,7 +805,10 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser, true)?;
-    parser.process_token(Token::Eof);
+    parser.process_positioned_token(PositionedToken {
+        token: Token::Eof,
+        position: lexer.position(),
+    });
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -825,7 +840,10 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser, true)?;
-    parser.process_token(Token::Eof);
+    parser.process_positioned_token(PositionedToken {
+        token: Token::Eof,
+        position: lexer.position(),
+    });
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -4401,6 +4419,7 @@ pub struct HtmlParser {
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
     foreign_cdata_text: Option<String>,
+    current_token_emission_position: Option<SourcePosition>,
 }
 
 impl Default for HtmlParser {
@@ -4428,6 +4447,7 @@ impl Default for HtmlParser {
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
             foreign_cdata_text: None,
+            current_token_emission_position: None,
         }
     }
 }
@@ -4485,6 +4505,7 @@ impl HtmlParser {
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
             foreign_cdata_text: None,
+            current_token_emission_position: None,
         }
     }
 
@@ -4517,12 +4538,24 @@ impl HtmlParser {
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
             foreign_cdata_text: None,
+            current_token_emission_position: None,
         }
     }
 
     pub fn parse_tokens(&mut self, tokens: impl IntoIterator<Item = Token>) -> Document {
         for token in tokens {
             self.process_token(token);
+        }
+        self.finish_document()
+    }
+
+    /// Parse tokens that retain their tokenizer emission positions.
+    pub fn parse_positioned_tokens(
+        &mut self,
+        tokens: impl IntoIterator<Item = PositionedToken>,
+    ) -> Document {
+        for token in tokens {
+            self.process_positioned_token(token);
         }
         self.finish_document()
     }
@@ -4630,7 +4663,9 @@ impl HtmlParser {
 
     fn process_token(&mut self, token: Token) {
         self.process_initial_insertion_mode(&token);
-        self.process_document_tail_mode(&token);
+        if self.process_document_tail_mode(&token) {
+            return;
+        }
         if matches!(token, Token::Eof) {
             self.flush_foreign_cdata_text();
         }
@@ -4661,10 +4696,13 @@ impl HtmlParser {
                             || self.has_document_element()
                             || self.has_non_comment_document_content()
                         {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "unexpected-doctype",
-                                "doctype token outside the initial document position was ignored",
-                            ));
+                            self.diagnostics.push(
+                                ParserDiagnostic::new(
+                                    "unexpected-doctype",
+                                    "doctype token outside the initial document position was ignored",
+                                )
+                                .at_emission(self.current_token_emission_position),
+                            );
                             return;
                         }
                         self.quirks_mode = force_quirks
@@ -4682,10 +4720,13 @@ impl HtmlParser {
                     }
                     Token::Eof => {
                         if !self.is_fragment && self.has_open_element("frameset") {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "eof-in-frameset",
-                                "end of file was reached while parsing a frameset",
-                            ));
+                            self.diagnostics.push(
+                                ParserDiagnostic::new(
+                                    "eof-in-frameset",
+                                    "end of file was reached while parsing a frameset",
+                                )
+                                .at_emission(self.current_token_emission_position),
+                            );
                         }
                         if self.current_element_is_authored_text_mode_element() {
                             self.diagnostics.push(ParserDiagnostic::new(
@@ -4737,17 +4778,22 @@ impl HtmlParser {
         }
     }
 
-    fn process_document_tail_mode(&mut self, token: &Token) {
+    fn process_positioned_token(&mut self, token: PositionedToken) {
+        self.current_token_emission_position = Some(token.position);
+        self.process_token(token.token);
+        self.current_token_emission_position = None;
+    }
+
+    fn process_document_tail_mode(&mut self, token: &Token) -> bool {
         if self.is_fragment && self.open_fragment_context_name() != Some("html") {
-            return;
+            return false;
         }
         if self.document_has_closed_frameset() {
-            self.process_closed_frameset_tail_mode(token);
-            return;
+            return self.process_closed_frameset_tail_mode(token);
         }
 
         if matches!(self.document_tail_mode, DocumentTailMode::InBody) {
-            return;
+            return false;
         }
         let allowed_in_both_modes = matches!(
             token,
@@ -4768,13 +4814,16 @@ impl HtmlParser {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
         } else if !allowed {
             let mode = self.document_tail_mode;
-            self.diagnostics.push(ParserDiagnostic::new(
-                mode.diagnostic_code(),
-                format!(
-                    "unexpected token was reprocessed from the {} insertion mode",
-                    mode.name()
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    mode.diagnostic_code(),
+                    format!(
+                        "unexpected token was reprocessed from the {} insertion mode",
+                        mode.name()
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             match token {
                 Token::EndTag { name } if name == "body" => {
                     self.document_tail_mode = DocumentTailMode::AfterBody;
@@ -4795,11 +4844,12 @@ impl HtmlParser {
                 }
             }
         }
+        false
     }
 
-    fn process_closed_frameset_tail_mode(&mut self, token: &Token) {
+    fn process_closed_frameset_tail_mode(&mut self, token: &Token) -> bool {
         if !self.explicit_html_end_seen || self.current_element_is("noframes") {
-            return;
+            return false;
         }
 
         let allowed = matches!(
@@ -4816,11 +4866,16 @@ impl HtmlParser {
             );
 
         if !allowed {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-token-after-after-frameset",
-                "unexpected token was ignored in the after after frameset insertion mode",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-token-after-after-frameset",
+                    "unexpected token was ignored in the after after frameset insertion mode",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return true;
         }
+        false
     }
 
     fn process_initial_insertion_mode(&mut self, token: &Token) {
@@ -4852,17 +4907,23 @@ impl HtmlParser {
             _ => {
                 self.initial_insertion_mode = false;
                 self.quirks_mode = true;
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "missing-doctype",
-                    "document started without a doctype token",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "missing-doctype",
+                        "document started without a doctype token",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
         }
     }
 
-    fn process_lexer_token(&mut self, token: Token, final_drain: bool) {
+    fn process_lexer_token(&mut self, token: PositionedToken, final_drain: bool) {
+        self.current_token_emission_position = Some(token.position);
+        let token = token.token;
         if self.foreign_cdata_text.is_some() {
             self.consume_foreign_cdata_token(token);
+            self.current_token_emission_position = None;
             return;
         }
 
@@ -4876,6 +4937,7 @@ impl HtmlParser {
             }
             token => self.process_token(token),
         }
+        self.current_token_emission_position = None;
     }
 
     fn start_foreign_cdata_text(&mut self, cdata: &str, final_drain: bool) {
@@ -5043,12 +5105,32 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.current_element_is("frameset")
-            && !matches!(name.as_str(), "frame" | "frameset" | "noframes")
+            && !matches!(name.as_str(), "frame" | "frameset" | "html" | "noframes")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-in-frameset",
-                format!("start tag `<{name}>` in a frameset was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-in-frameset",
+                    format!("start tag `<{name}>` in a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
+        if !in_foreign_content
+            && !self.is_fragment
+            && self.document_has_closed_frameset()
+            && !self.current_element_is("noframes")
+            && name == "frameset"
+        {
+            if !self.explicit_html_end_seen {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-start-tag-after-frameset",
+                        "start tag `<frameset>` after a frameset was ignored",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+            }
             return;
         }
         if !in_foreign_content
@@ -5058,10 +5140,13 @@ impl HtmlParser {
             && name != "html"
             && name != "frameset"
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-after-frameset",
-                format!("start tag `<{name}>` after a frameset was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-after-frameset",
+                    format!("start tag `<{name}>` after a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if !in_foreign_content
@@ -5071,10 +5156,13 @@ impl HtmlParser {
             && name != "html"
             && name != "frameset"
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-after-frameset",
-                format!("start tag `<{name}>` after a frameset was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-after-frameset",
+                    format!("start tag `<{name}>` after a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if !in_foreign_content
@@ -5812,10 +5900,13 @@ impl HtmlParser {
 
         if self.document_has_closed_frameset() && !self.current_element_is("noframes") {
             if text.chars().any(|character| !is_html_whitespace(character)) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-char-after-frameset",
-                    "non-whitespace character data was ignored after the frameset",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-char-after-frameset",
+                        "non-whitespace character data was ignored after the frameset",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             let whitespace = text
                 .chars()
@@ -5957,10 +6048,13 @@ impl HtmlParser {
 
         let text = if self.in_frameset_text_context() {
             if text.chars().any(|character| !is_html_whitespace(character)) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-char-in-frameset",
-                    "non-whitespace character data was ignored in the frameset",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-char-in-frameset",
+                        "non-whitespace character data was ignored in the frameset",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             let whitespace = text
                 .chars()
@@ -7024,6 +7118,32 @@ impl HtmlParser {
         let in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
             && !self.current_node_is_mathml_integration_point();
+        if !in_foreign_content && self.current_element_is("frameset") && name != "frameset" {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-frameset",
+                    format!("end tag `</{name}>` in a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
+        if !in_foreign_content
+            && !self.is_fragment
+            && self.document_has_closed_html_frameset()
+            && !self.explicit_html_end_seen
+            && !self.current_element_is("noframes")
+            && name != "html"
+        {
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-after-frameset",
+                    format!("end tag `</{name}>` after a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
+            return;
+        }
         if name == "template"
             && in_foreign_content
             && self.close_open_foreign_element_before_html_boundary(name)
@@ -9558,6 +9678,19 @@ impl HtmlParser {
             .any(|node| node_contains_element_named(node, "frameset"))
     }
 
+    fn document_has_closed_html_frameset(&self) -> bool {
+        if self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(|element| element.namespace.is_none() && element.name == "frameset")
+        }) {
+            return false;
+        }
+        self.document
+            .children
+            .iter()
+            .any(|node| node_contains_html_element_named(node, "frameset"))
+    }
+
     fn document_has_body_element(&self) -> bool {
         self.document
             .children
@@ -10110,16 +10243,17 @@ fn drain_parser_tokens(
     parser: &mut HtmlParser,
     final_drain: bool,
 ) -> Result<(), ParseError> {
-    for token in lexer.drain_tokens() {
-        if matches!(token, Token::Eof) {
+    for positioned_token in lexer.drain_positioned_tokens() {
+        if matches!(positioned_token.token, Token::Eof) {
             continue;
         }
+        let token = &positioned_token.token;
         let resets_to_data = matches!(token, Token::EndTag { .. });
-        let start_tag_name = match &token {
+        let start_tag_name = match token {
             Token::StartTag { name, .. } if !is_void_element(name) => Some(name.clone()),
             _ => None,
         };
-        parser.process_lexer_token(token, final_drain);
+        parser.process_lexer_token(positioned_token, final_drain);
 
         let next_context = if let Some(name) = start_tag_name {
             (parser.current_namespace().is_none() && parser.current_element_is(&name))
@@ -11698,6 +11832,17 @@ fn node_contains_element_named(node: &Node, name: &str) -> bool {
             .children
             .iter()
             .any(|child| node_contains_element_named(child, name))
+}
+
+fn node_contains_html_element_named(node: &Node, name: &str) -> bool {
+    let Node::Element(element) = node else {
+        return false;
+    };
+    (element.namespace.is_none() && element.name == name)
+        || element
+            .children
+            .iter()
+            .any(|child| node_contains_html_element_named(child, name))
 }
 
 fn append_to_last_element_text_ending(
@@ -35042,14 +35187,16 @@ mod tests {
 
     #[test]
     fn rejected_plaintext_does_not_switch_lexer_state_after_frameset() {
-        for (source, code) in [
+        for (source, start_code, end_code) in [
             (
                 "<!doctype html><frameset><plaintext></plaintext>",
                 "unexpected-start-tag-in-frameset",
+                "unexpected-end-tag-in-frameset",
             ),
             (
                 "<!doctype html><frameset></frameset><plaintext></plaintext>",
                 "unexpected-start-tag-after-frameset",
+                "unexpected-end-tag-after-frameset",
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
@@ -35057,14 +35204,14 @@ mod tests {
                 output
                     .parser_diagnostics
                     .iter()
-                    .any(|diagnostic| diagnostic.code == code),
+                    .any(|diagnostic| diagnostic.code == start_code),
                 "source {source:?}"
             );
             assert!(
                 output
                     .parser_diagnostics
                     .iter()
-                    .any(|diagnostic| diagnostic.code == "unexpected-end-tag"),
+                    .any(|diagnostic| diagnostic.code == end_code),
                 "source {source:?}"
             );
         }
@@ -35186,6 +35333,326 @@ mod tests {
     }
 
     #[test]
+    fn ignores_repeated_frameset_starts_after_a_closed_frameset() {
+        let after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset id=first><frame></frameset><frameset id=second><frame></frameset><!--tail-->",
+        )
+        .unwrap();
+        let document_html = html(&after_frameset.document);
+        assert_eq!(document_html.children.len(), 3);
+        assert_eq!(
+            element(&document_html.children[1]).attribute("id"),
+            Some("first")
+        );
+        assert!(matches!(document_html.children[2], Node::Comment(_)));
+        assert_eq!(
+            after_frameset
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-after-frameset")
+                .count(),
+            2
+        );
+
+        let after_after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset id=first><frame></frameset></html><frameset id=second><frame></frameset><!--tail-->",
+        )
+        .unwrap();
+        let document_html = html(&after_after_frameset.document);
+        assert_eq!(document_html.children.len(), 2);
+        assert_eq!(
+            element(&document_html.children[1]).attribute("id"),
+            Some("first")
+        );
+        assert!(matches!(
+            after_after_frameset.document.children.last(),
+            Some(Node::Comment(_))
+        ));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<frameset id=first><frame></frameset><frameset id=second><frame></frameset>",
+            "html",
+        )
+        .unwrap();
+        assert!(find_element_by_id(&fragment.nodes, "first").is_some());
+        assert!(find_element_by_id(&fragment.nodes, "second").is_some());
+    }
+
+    #[test]
+    fn positions_after_frameset_start_tag_diagnostics_at_token_emission() {
+        for target in ["frameset", "frame", "main"] {
+            let source = format!(
+                "<!doctype html><frameset></frameset><!--é-->\r\n<{target}>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-after-frameset")
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "target {target:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: target.chars().count() + 2,
+                })
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        for target in ["frameset", "frame", "main"] {
+            let mut parser = HtmlParser::new();
+            for token in [
+                Token::StartTag {
+                    name: "html".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "frameset".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: "frameset".to_string(),
+                },
+                Token::StartTag {
+                    name: target.to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::Eof,
+            ] {
+                parser.process_token(token);
+            }
+
+            let diagnostics = parser
+                .diagnostics()
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-after-frameset")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "target {target:?}");
+            assert_eq!(diagnostics[0].position, None);
+        }
+
+        let in_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset><!--é-->\r\n<main>",
+        )
+        .unwrap();
+        assert!(in_frameset.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-start-tag-in-frameset"
+                && diagnostic.position.is_some()
+        }));
+        assert!(in_frameset.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-after-frameset"
+        }));
+
+        let after_after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset></html><frame>",
+        )
+        .unwrap();
+        assert!(after_after_frameset.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-token-after-after-frameset"
+                && diagnostic.position.is_some()
+        }));
+        assert!(after_after_frameset.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-after-frameset"
+        }));
+
+        let allowed = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset><html><noframes>x</noframes>",
+        )
+        .unwrap();
+        assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-after-frameset"
+        }));
+    }
+
+    #[test]
+    fn positions_in_frameset_start_tag_diagnostics_at_token_emission() {
+        for target in ["main", "div", "body"] {
+            let source = format!("<!doctype html><frameset><!--é-->\r\n<{target}>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-frameset")
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "target {target:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: target.chars().count() + 2,
+                })
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "main".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-frameset")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
+
+        for source in [
+            "<!doctype html><frameset><frame>",
+            "<!doctype html><frameset><frameset></frameset>",
+            "<!doctype html><frameset><noframes>x</noframes>",
+            "<!doctype html><frameset><html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-start-tag-in-frameset"
+                }),
+                "source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn positions_non_initial_doctype_diagnostics_at_token_emission() {
+        for source in [
+            "<!doctype html><frameset><!--é-->\r\n<!doctype html>",
+            "<!doctype html><frameset></frameset><!--é-->\r\n<!doctype html>",
+            "<!doctype html><frameset></frameset></html><!--é-->\r\n<!doctype html>",
+            "<!doctype html><body><!--é-->\r\n<!doctype html>",
+            "<!doctype html><svg><!--é-->\r\n<!doctype html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: "<!doctype html>".chars().count(),
+                }),
+                "source {source:?}"
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        let eof_source = "<!doctype html><frameset><!--é-->\r\n<!doctype html";
+        let eof = parse_html_with_diagnostics(eof_source).unwrap();
+        let eof_diagnostics = eof
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(eof_diagnostics.len(), 1);
+        assert_eq!(
+            eof_diagnostics[0].position,
+            Some(SourcePosition {
+                byte_offset: eof_source.len(),
+                char_offset: eof_source.chars().count(),
+                line: 2,
+                column: "<!doctype html".chars().count() + 1,
+            })
+        );
+        assert!(eof
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-doctype"));
+
+        let fragment_source = "<!--é-->\r\n<!doctype html>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "html").unwrap();
+        let fragment_diagnostics = fragment
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(fragment_diagnostics.len(), 1);
+        assert_eq!(
+            fragment_diagnostics[0].position,
+            Some(SourcePosition {
+                byte_offset: fragment_source.len() - 1,
+                char_offset: fragment_source.chars().count() - 1,
+                line: 2,
+                column: "<!doctype html>".chars().count(),
+            })
+        );
+
+        let initial = parse_html_with_diagnostics("<!doctype html><frameset></frameset>").unwrap();
+        assert!(initial
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-doctype"));
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
+    }
+
+    #[test]
     fn reports_frameset_start_tags_rejected_after_body_content() {
         for source in [
             "<!doctype html><body><frameset>",
@@ -35216,7 +35683,8 @@ mod tests {
 
     #[test]
     fn ignores_non_whitespace_text_directly_inside_framesets() {
-        let output = parse_html_with_diagnostics("<!DOCTYPE html><frameset>test").unwrap();
+        let source = "<!DOCTYPE html><frameset>test";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let html = html(&output.document);
         let frameset = element(&html.children[1]);
@@ -35228,18 +35696,31 @@ mod tests {
                 ParserDiagnostic::new(
                     "unexpected-char-in-frameset",
                     "non-whitespace character data was ignored in the frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
                 ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
             ]
         );
     }
 
     #[test]
     fn preserves_only_whitespace_from_mixed_frameset_text() {
-        let output = parse_html_with_diagnostics("<!DOCTYPE html><frameset> te st").unwrap();
+        let source = "<!DOCTYPE html><frameset> te st";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let html = html(&output.document);
         let frameset = element(&html.children[1]);
@@ -35250,19 +35731,185 @@ mod tests {
                 ParserDiagnostic::new(
                     "unexpected-char-in-frameset",
                     "non-whitespace character data was ignored in the frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
                 ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
             ]
         );
     }
 
     #[test]
+    fn positions_in_frameset_character_diagnostics_at_text_emission() {
+        let source = "<!doctype html><frameset><!--é-->\r\n aβ <frame>γ ";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-char-in-frameset")
+            .collect::<Vec<_>>();
+        let line_start = source.rfind('\n').unwrap() + 1;
+        let first_emission = source.find("<frame>").unwrap();
+        let expected_position = |byte_offset| {
+            Some(SourcePosition {
+                byte_offset,
+                char_offset: source[..byte_offset].chars().count(),
+                line: 2,
+                column: source[line_start..byte_offset].chars().count() + 1,
+            })
+        };
+
+        assert_eq!(diagnostics.len(), 2);
+        assert_eq!(diagnostics[0].position, expected_position(first_emission));
+        assert_eq!(diagnostics[1].position, expected_position(source.len()));
+        assert!(first_emission > source[..first_emission].chars().count());
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let unpositioned = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-char-in-frameset")
+            .collect::<Vec<_>>();
+        assert_eq!(unpositioned.len(), 1);
+        assert_eq!(unpositioned[0].position, None);
+
+        for source in [
+            "<!doctype html><frameset> \r\n\t<frame>",
+            "<!doctype html><frameset><noframes>text</noframes>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-char-in-frameset"
+            }));
+        }
+
+        let source = "<!doctype html><frameset></frameset>x";
+        let after_frameset = parse_html_with_diagnostics(source).unwrap();
+        let diagnostic = after_frameset
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-char-after-frameset")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: source.len(),
+                char_offset: source.chars().count(),
+                line: 1,
+                column: source.chars().count() + 1,
+            })
+        );
+    }
+
+    #[test]
+    fn positions_after_frameset_character_diagnostics_at_text_emission() {
+        let source =
+            "<!doctype html><frameset></frameset><!--é-->\r\n aβ <noframes>x</noframes>γ ";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-char-after-frameset")
+            .collect::<Vec<_>>();
+        let line_start = source.find('\n').unwrap() + 1;
+        let first_emission = source.find("<noframes>").unwrap();
+        let expected_position = |byte_offset| {
+            Some(SourcePosition {
+                byte_offset,
+                char_offset: source[..byte_offset].chars().count(),
+                line: 2,
+                column: source[line_start..byte_offset].chars().count() + 1,
+            })
+        };
+
+        assert_eq!(diagnostics.len(), 2);
+        assert_eq!(diagnostics[0].position, expected_position(first_emission));
+        assert_eq!(diagnostics[1].position, expected_position(source.len()));
+        assert!(first_emission > source[..first_emission].chars().count());
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::Text("x".to_string()),
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let unpositioned = parser
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-char-after-frameset")
+            .unwrap();
+        assert_eq!(unpositioned.position, None);
+
+        let after_after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset></html>text",
+        )
+        .unwrap();
+        assert!(after_after_frameset.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-token-after-after-frameset"
+                && diagnostic.position.is_some()
+        }));
+        assert!(after_after_frameset.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-char-after-frameset"
+        }));
+
+        for source in [
+            "<!doctype html><frameset></frameset> \r\n\t<!--tail--><?pi?>",
+            "<!doctype html><frameset></frameset><noframes>text</noframes>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-char-after-frameset"
+            }));
+        }
+    }
+
+    #[test]
     fn top_level_frameset_keeps_filtered_trailing_html_text() {
-        let output =
-            parse_html_with_diagnostics("<!DOCTYPE html><frameset></frameset> te st").unwrap();
+        let source = "<!DOCTYPE html><frameset></frameset> te st";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let html = html(&output.document);
         assert_eq!(element(&html.children[1]).name, "frameset");
@@ -35272,7 +35919,13 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-char-after-frameset",
                 "non-whitespace character data was ignored after the frameset"
-            )]
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: source.len(),
+                char_offset: source.chars().count(),
+                line: 1,
+                column: source.chars().count() + 1,
+            }))]
         );
     }
 
@@ -35288,10 +35941,213 @@ mod tests {
                 vec![ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
-                )],
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }))],
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn positions_frameset_eof_diagnostics_at_eof_emission() {
+        let source = "<!doctype html><!--é-->\r\n<frameset><frameset> ";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostic = output
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-frameset")
+            .unwrap();
+        let line_start = source.rfind('\n').unwrap() + 1;
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: source.len(),
+                char_offset: source.chars().count(),
+                line: 2,
+                column: source[line_start..].chars().count() + 1,
+            })
+        );
+        assert!(source.len() > source.chars().count());
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        assert_eq!(
+            parser
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-in-frameset")
+                .unwrap()
+                .position,
+            None
+        );
+
+        for source in [
+            "<!doctype html><frameset></frameset>",
+            "<!doctype html><frameset></frameset></html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-in-frameset"));
+        }
+
+        let noframes_source = "<!doctype html><frameset><noframes>text";
+        let noframes = parse_html_with_diagnostics(noframes_source).unwrap();
+        assert!(noframes.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "eof-in-frameset"
+                && diagnostic.position.is_some_and(|position| {
+                    position.byte_offset == noframes_source.len()
+                })
+        }));
+        assert!(noframes.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "eof-in-text-mode" && diagnostic.position.is_none()
+        }));
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<frameset>", "html").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-frameset"));
+    }
+
+    #[test]
+    fn positions_rejected_frameset_end_tags_at_token_emission() {
+        for (source, code) in [
+            (
+                "<!doctype html><frameset><!--é-->\r\n</main>",
+                "unexpected-end-tag-in-frameset",
+            ),
+            (
+                "<!doctype html><frameset></frameset><!--é-->\r\n</frameset>",
+                "unexpected-end-tag-after-frameset",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == code)
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+            let line_start = source.rfind('\n').unwrap() + 1;
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: source[line_start..final_delimiter].chars().count() + 1,
+                })
+            );
+            assert!(source.len() > source.chars().count());
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "main".to_string(),
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        for code in [
+            "unexpected-end-tag-in-frameset",
+            "unexpected-end-tag-after-frameset",
+        ] {
+            assert_eq!(
+                unpositioned
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == code)
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+
+        for source in [
+            "<!doctype html><frameset><frameset></frameset></frameset>",
+            "<!doctype html><frameset></frameset></html></frameset>",
+            "<!doctype html><frameset><noframes>x</noframes></frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                !matches!(
+                    diagnostic.code.as_str(),
+                    "unexpected-end-tag-in-frameset" | "unexpected-end-tag-after-frameset"
+                )
+            }));
+        }
+
+        let foreign =
+            parse_html_fragment_for_context_with_diagnostics("<frameset></frameset>", "svg")
+                .unwrap();
+        assert!(foreign.parser_diagnostics.iter().all(|diagnostic| {
+            !matches!(
+                diagnostic.code.as_str(),
+                "unexpected-end-tag-in-frameset" | "unexpected-end-tag-after-frameset"
+            )
+        }));
+
+        let foreign_document =
+            parse_html_with_diagnostics("<!doctype html><svg><frameset></frameset></svg></main>")
+                .unwrap();
+        assert!(foreign_document.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-end-tag-after-frameset"
+        }));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<frameset></frameset></frameset>",
+            "html",
+        )
+        .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-end-tag-after-frameset"
+        }));
     }
 
     #[test]
@@ -36360,6 +37216,97 @@ mod tests {
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn positions_missing_doctype_at_the_first_disallowed_token_emission() {
+        for (source, emission_offset, line, column) in [
+            ("", 0, 1, 1),
+            ("text", 4, 1, 5),
+            ("text<p>", 4, 1, 5),
+            ("<p>", 2, 1, 3),
+            ("</p>", 3, 1, 4),
+            ("<svg>", 4, 1, 5),
+            ("<!--é-->\r\n<?pi data?>\r\n<p>", 26, 3, 3),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "missing-doctype")
+                .collect::<Vec<_>>();
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: emission_offset,
+                    char_offset: source[..emission_offset].chars().count(),
+                    line,
+                    column,
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let allowed_prefix = " é";
+        let text_source = format!("<!--{allowed_prefix}-->\r\ntext");
+        let text = parse_html_with_diagnostics(&text_source).unwrap();
+        let text_diagnostic = text
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "missing-doctype")
+            .unwrap();
+        assert_eq!(
+            text_diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: text_source.len(),
+                char_offset: text_source.chars().count(),
+                line: 2,
+                column: 5,
+            })
+        );
+        assert!(text_source.len() > text_source.chars().count());
+
+        for source in [
+            "<!doctype html><p>",
+            "<!--before--><?pi?><!doctype html><p>",
+            "<!doctype potato><p>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "missing-doctype"),
+                "source {source:?}"
+            );
+        }
+
+        for fragment in [
+            parse_html_fragment_with_diagnostics("<p>").unwrap(),
+            parse_html_fragment_for_context_with_diagnostics("<p>", "html").unwrap(),
+        ] {
+            assert!(fragment
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "missing-doctype"));
+        }
+
+        let mut parser = HtmlParser::new();
+        parser.process_token(Token::StartTag {
+            name: "p".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        parser.process_token(Token::Eof);
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "missing-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
@@ -39688,6 +40635,88 @@ mod tests {
     }
 
     #[test]
+    fn positions_after_body_and_after_html_diagnostics_at_token_emission() {
+        for (source, code) in [
+            (
+                "<!doctype html>\r\n<body>é</body><!--ß--><main>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html>\r\n<body>é</body></html><!--ß--><main>",
+                "unexpected-token-after-html",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == code)
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: source[source.rfind('\n').unwrap() + 1..final_delimiter]
+                        .chars()
+                        .count()
+                        + 1,
+                })
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        for (include_html_end, code) in [
+            (false, "unexpected-token-after-body"),
+            (true, "unexpected-token-after-html"),
+        ] {
+            let mut parser = HtmlParser::new();
+            for token in [
+                Token::StartTag {
+                    name: "html".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "body".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: "body".to_string(),
+                },
+            ] {
+                parser.process_token(token);
+            }
+            if include_html_end {
+                parser.process_token(Token::EndTag {
+                    name: "html".to_string(),
+                });
+            }
+            parser.process_token(Token::StartTag {
+                name: "main".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+            parser.process_token(Token::Eof);
+
+            assert_eq!(
+                parser
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == code)
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+    }
+
+    #[test]
     fn reports_an_after_body_end_tag_in_a_seeded_html_fragment_context() {
         let output =
             parse_html_fragment_for_context_with_diagnostics("<body>X</body></body>", "html")
@@ -39702,7 +40731,13 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-token-after-body",
                 "unexpected token was reprocessed from the after body insertion mode"
-            )]
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: 20,
+                char_offset: 20,
+                line: 1,
+                column: 21,
+            }))]
         );
     }
 
@@ -39728,7 +40763,13 @@ mod tests {
                 ParserDiagnostic::new(
                     "unexpected-token-after-body",
                     "unexpected token was reprocessed from the after body insertion mode"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: 22,
+                    char_offset: 22,
+                    line: 1,
+                    column: 23,
+                })),
             ]
         );
 
@@ -39764,7 +40805,13 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-token-after-body",
                 "unexpected token was reprocessed from the after body insertion mode"
-            )]
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: 33,
+                char_offset: 33,
+                line: 1,
+                column: 34,
+            }))]
         );
         assert_eq!(body(&reentered_after_body.document).children[0], Node::text("A"));
         let reentered_div = element(&body(&reentered_after_body.document).children[1]);
@@ -39957,6 +41004,9 @@ mod tests {
             ("<!doctype html><frameset></frameset></html>text", 1),
             ("<!doctype html><frameset></frameset></html><p>", 1),
             ("<!doctype html><frameset></frameset></html></p>", 1),
+            ("<!doctype html><frameset></frameset></html><frameset>", 1),
+            ("<!doctype html><frameset></frameset></html><frame>", 1),
+            ("<!doctype html><frameset></frameset></html></frameset>", 1),
             (
                 "<!doctype html><frameset></frameset></html><plaintext></plaintext>",
                 2,
@@ -39974,6 +41024,11 @@ mod tests {
                 expected_count,
                 "source {source:?}"
             );
+            assert_eq!(
+                output.parser_diagnostics.len(),
+                expected_count,
+                "source {source:?} should emit exactly one tail diagnostic per token"
+            );
         }
 
         let allowed = parse_html_with_diagnostics(
@@ -39983,6 +41038,87 @@ mod tests {
         assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-token-after-after-frameset"
         }));
+
+        for source in [
+            "<!doctype html><frameset></frameset><frame>",
+            "<!doctype html><frameset></frameset></frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(output.parser_diagnostics.len(), 1, "source {source:?}");
+            assert_ne!(
+                output.parser_diagnostics[0].code,
+                "unexpected-token-after-after-frameset",
+                "direct after-frameset recovery should retain its own diagnostic"
+            );
+        }
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<frameset></frameset></html><frame>",
+            "html",
+        )
+        .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-token-after-after-frameset"
+        }));
+    }
+
+    #[test]
+    fn positions_after_after_frameset_diagnostics_at_token_emission() {
+        let source = "<!doctype html>\r\n<frameset></frameset></html><!--é-->\n<frame>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostic = output
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-token-after-after-frameset")
+            .unwrap();
+        let final_delimiter = source.rfind('>').unwrap();
+
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: final_delimiter,
+                char_offset: source[..final_delimiter].chars().count(),
+                line: 3,
+                column: 7,
+            })
+        );
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::EndTag {
+                name: "html".to_string(),
+            },
+            Token::StartTag {
+                name: "frame".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-token-after-after-frameset")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]

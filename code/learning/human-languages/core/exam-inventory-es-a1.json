@@ -10,8 +10,10 @@
       "id": "A1-N-01",
       "category": "El sustantivo",
       "label": "proper nouns: personal names, forms of address, place names",
-      "probe": null,
-      "note": "Forms of address are taught (tu/usted, ch5) but as pronouns, not as the noun class."
+      "probe": [
+        "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE",
+        "ES-GRAMMAR-TITLE-TAKES-ARTICLE"
+      ]
     },
     {
       "id": "A1-N-02",
@@ -97,8 +99,10 @@
       "id": "A1-ADJ-06",
       "category": "El adjetivo",
       "label": "degree: absolute superlative with muy",
-      "probe": null,
-      "note": "muy is not taught anywhere in the track."
+      "probe": [
+        "ES-LEX-MUY",
+        "ES-GRAMMAR-DEGREE-MUY"
+      ]
     },
     {
       "id": "A1-ART-01",
@@ -114,14 +118,20 @@
       "id": "A1-ART-02",
       "category": "El articulo",
       "label": "contractions al and del",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-CONTRACTION-AL",
+        "ES-GRAMMAR-CONTRACTION-DEL"
+      ]
     },
     {
       "id": "A1-ART-03",
       "category": "El articulo",
       "label": "indefinite article: un, una, unos, unas",
-      "probe": null,
-      "note": "Singular un/una are taught at ch3; plural unos/unas are not taught."
+      "probe": [
+        "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+        "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE",
+        "ES-GRAMMAR-INDEFINITE-PLURAL"
+      ]
     },
     {
       "id": "A1-ART-04",
@@ -172,8 +182,10 @@
       "id": "A1-POS-02",
       "category": "Los posesivos",
       "label": "unstressed possessives, several possessors: nuestro, vuestro",
-      "probe": null,
-      "note": "nuestro is taught at ch69; vuestro is not taught."
+      "probe": [
+        "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+        "ES-GRAMMAR-POSSESSIVE-VUESTRO"
+      ]
     },
     {
       "id": "A1-POS-03",
@@ -199,20 +211,26 @@
       "id": "A1-Q-02",
       "category": "Los cuantificadores",
       "label": "ordinal numerals to tenth",
-      "probe": null
+      "probe": [
+        "ES-LEX-ORDINALS"
+      ]
     },
     {
       "id": "A1-Q-03",
       "category": "Los cuantificadores",
       "label": "poco and mucho, with gender and number variation",
-      "probe": null,
-      "note": "Both words are taught (ch6, ch220) but their agreement is not."
+      "probe": [
+        "ES-GRAMMAR-QUANTIFIER-AGREES-WITH-NOUN",
+        "ES-GRAMMAR-QUANTIFIER-FROZEN-AFTER-VERB"
+      ]
     },
     {
       "id": "A1-Q-04",
       "category": "Los cuantificadores",
       "label": "bastante",
-      "probe": null
+      "probe": [
+        "ES-LEX-BASTANTE"
+      ]
     },
     {
       "id": "A1-PRON-01",
@@ -266,49 +284,67 @@
       "id": "A1-PRON-06",
       "category": "El pronombre",
       "label": "interrogative pronouns: que, quien, cuanto",
-      "probe": null,
-      "note": "que and cuantos are taught; quien is not."
+      "probe": [
+        "ES-LEX-QUE",
+        "ES-LEX-QUIEN",
+        "ES-LEX-CUANTOS-ANOS"
+      ]
     },
     {
       "id": "A1-PRON-07",
       "category": "El pronombre",
       "label": "exclamative que with adjectives and adverbs",
-      "probe": null,
-      "note": "The inverted exclamation mark is taught at ch11; the construction is not."
+      "probe": [
+        "ES-GRAMMAR-EXCLAMATIVE-QUE"
+      ]
     },
     {
       "id": "A1-PRON-08",
       "category": "El pronombre",
       "label": "stressed pronouns after a preposition: mi, ti, el",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION",
+        "ES-LEX-CONMIGO"
+      ]
     },
     {
       "id": "A1-ADV-01",
       "category": "El adverbio",
       "label": "place deictics: aqui, ahi, alli",
-      "probe": null,
-      "note": "aqui is taught at ch12; ahi and alli are not."
+      "probe": [
+        "ES-LEX-AQUI",
+        "ES-LEX-AHI",
+        "ES-LEX-ALLI"
+      ]
     },
     {
       "id": "A1-ADV-02",
       "category": "El adverbio",
       "label": "time deictics: ahora, hoy, manana",
-      "probe": null,
-      "note": "manana is taught at ch13; ahora and hoy are not."
+      "probe": [
+        "ES-LEX-AHORA",
+        "ES-LEX-HOY",
+        "ES-LEX-MANANA"
+      ]
     },
     {
       "id": "A1-ADV-03",
       "category": "El adverbio",
       "label": "quantity adverbs: poco, mucho, bastante",
-      "probe": null,
-      "note": "bastante is not taught."
+      "probe": [
+        "ES-LEX-POCO",
+        "ES-LEX-MUCHO",
+        "ES-LEX-BASTANTE"
+      ]
     },
     {
       "id": "A1-ADV-04",
       "category": "El adverbio",
       "label": "manner adverbs: bien, mal",
-      "probe": null,
-      "note": "bien is taught at ch1; mal is not."
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-MAL"
+      ]
     },
     {
       "id": "A1-ADV-05",
@@ -369,14 +405,19 @@
       "id": "A1-V-03",
       "category": "El verbo",
       "label": "present indicative: actual and durative values",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-PRESENT-ACTUAL-AND-DURATIVE"
+      ]
     },
     {
       "id": "A1-V-04",
       "category": "El verbo",
       "label": "imperfect: regular forms and ser, ir, ver",
-      "probe": null,
-      "note": "Only the singular is taught (ch107, ch109); the plural of the imperfect is absent."
+      "probe": [
+        "ES-GRAMMAR-AR-IMPERFECT-PLURAL",
+        "ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL",
+        "ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL"
+      ]
     },
     {
       "id": "A1-V-05",
@@ -391,8 +432,11 @@
       "id": "A1-V-06",
       "category": "El verbo",
       "label": "preterite: the regular paradigm, all persons",
-      "probe": null,
-      "note": "Five of six persons are taught; the vosotros forms are owed (HL-C127)."
+      "probe": [
+        "ES-GRAMMAR-AR-PRETERITE-2PL",
+        "ES-GRAMMAR-ER-IR-PRETERITE-2PL",
+        "ES-GRAMMAR-PRETERITE-COMPLETE"
+      ]
     },
     {
       "id": "A1-V-07",
@@ -407,8 +451,12 @@
       "id": "A1-V-08",
       "category": "El verbo",
       "label": "preterite: ser, ir, ver, dar",
-      "probe": null,
-      "note": "ser and ir are taught (ch103, ch203); ver and dar are not."
+      "probe": [
+        "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+        "ES-GRAMMAR-SER-IR-PRETERITE-PLURAL",
+        "ES-GRAMMAR-VER-PRETERITE",
+        "ES-GRAMMAR-DAR-PRETERITE"
+      ]
     },
     {
       "id": "A1-V-09",
@@ -447,8 +495,10 @@
       "id": "A1-V-13",
       "category": "El verbo",
       "label": "the gerund",
-      "probe": null,
-      "note": "The gerund is not taught anywhere in the track."
+      "probe": [
+        "ES-GRAMMAR-GERUND-AR",
+        "ES-GRAMMAR-GERUND-ER-IR"
+      ]
     },
     {
       "id": "A1-V-14",
@@ -481,20 +531,27 @@
       "id": "A1-SN-03",
       "category": "El sintagma nominal",
       "label": "subject-verb agreement as a stated rule",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+      ]
     },
     {
       "id": "A1-SN-04",
       "category": "El sintagma nominal",
       "label": "the vocative",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-VOCATIVE-COMMA"
+      ]
     },
     {
       "id": "A1-SADJ-01",
       "category": "El sintagma adjetival",
       "label": "degree modifiers: muy, poco, bastante",
-      "probe": null,
-      "note": "None of the three is taught as a degree modifier."
+      "probe": [
+        "ES-LEX-MUY",
+        "ES-LEX-POCO",
+        "ES-LEX-BASTANTE"
+      ]
     },
     {
       "id": "A1-SV-01",
@@ -525,8 +582,9 @@
       "id": "A1-SV-04",
       "category": "El sintagma verbal",
       "label": "direct object: people take the preposition a, things do not",
-      "probe": null,
-      "note": "The personal a is not taught."
+      "probe": [
+        "ES-GRAMMAR-PERSONAL-A"
+      ]
     },
     {
       "id": "A1-SV-05",
@@ -541,7 +599,10 @@
       "id": "A1-SV-06",
       "category": "El sintagma verbal",
       "label": "circumstantial complements and word-order flexibility",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES",
+        "ES-GRAMMAR-WORD-ORDER-EMPHASIS"
+      ]
     },
     {
       "id": "A1-OS-01",
@@ -605,14 +666,17 @@
       "id": "A1-CO-02",
       "category": "Coordinacion",
       "label": "negative coordination with ni",
-      "probe": null
+      "probe": [
+        "ES-LEX-NI"
+      ]
     },
     {
       "id": "A1-CO-03",
       "category": "Coordinacion",
       "label": "disjunctive coordination with o",
-      "probe": null,
-      "note": "o appears in a chapter-5 headword but is never taught as a coordinator."
+      "probe": [
+        "ES-LEX-O"
+      ]
     },
     {
       "id": "A1-CO-04",
@@ -626,13 +690,17 @@
       "id": "A1-CO-05",
       "category": "Coordinacion",
       "label": "distributive coordination: uno... otro",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO"
+      ]
     },
     {
       "id": "A1-SUB-01",
       "category": "Subordinacion",
       "label": "infinitive clause as subject",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-INFINITIVE-AS-SUBJECT"
+      ]
     },
     {
       "id": "A1-SUB-02",

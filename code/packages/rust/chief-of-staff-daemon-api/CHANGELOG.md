@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add independently session-authorized `wire_host_pipeline` and
+  `unwire_host_pipeline` operations plus typed client calls.
+- Bind topology approval context to the authenticated requester identity and
+  protocol request ID rather than accepting caller-supplied identity fields.
+- Parse and emit exact bounded pipeline, package, agent, channel, and optional
+  model bindings before invoking the Trust-Checker-backed core mutation.
 - Add an independently authorized `reload_host` operation and typed client call.
 - Preserve stopped/inactive reload conflicts as stable public conflict responses.
 

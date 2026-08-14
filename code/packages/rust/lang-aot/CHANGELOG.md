@@ -1,5 +1,142 @@
 # Changelog — `lang-aot`
 
+## 0.226.10 - 2026-08-13 (ALGOL stable transitive assignment selectors)
+
+The seven-backend ALGOL matrix now proves that an unchanged known local selector
+may choose a preserving transitive dependency leaf while its unreachable
+sibling would change the dependency.
+
+## 0.226.9 - 2026-08-13 (ALGOL static transitive assignment selectors)
+
+The seven-backend ALGOL matrix now proves that a variable-free static selector
+may choose a preserving transitive dependency leaf while its unreachable
+sibling would change the dependency.
+
+## 0.226.8 - 2026-08-13 (ALGOL conditional transitive idempotence)
+
+The seven-backend ALGOL matrix now proves that equal conditional
+self-assignment leaves preserve a transitive dependency of a checked while-body
+assignment even when the selector is dynamic.
+
+## 0.226.7 - 2026-08-13 (ALGOL transitive idempotent dependencies)
+
+The seven-backend ALGOL matrix now proves that an exactly self-assigned local
+may remain a stable dependency of a checked idempotent assignment during capped
+while analysis.
+
+## 0.226.6 - 2026-08-13 (ALGOL stable idempotent assignment dependencies)
+
+The seven-backend ALGOL matrix now proves that an unwritten known local may
+establish a checked assignment as idempotent for capped while analysis.
+
+## 0.226.5 - 2026-08-13 (ALGOL checked static idempotent assignments)
+
+The seven-backend ALGOL matrix now proves that a checked self-only expression
+such as `n := n + 0` preserves a capped while dependency when it exactly equals
+the tracked value.
+
+## 0.226.4 - 2026-08-13 (ALGOL stable conditional assignment selectors)
+
+The seven-backend ALGOL matrix now proves that an unchanged statically known
+local selector may choose a preserving conditional assignment leaf while its
+unselected sibling would change the capped while dependency.
+
+## 0.226.3 - 2026-08-13 (ALGOL static conditional assignment effects)
+
+The seven-backend ALGOL matrix now proves that a statically selected exact
+self-assignment leaf preserves a capped while body-predicate dependency even
+when the unselected conditional leaf would change it.
+
+## 0.226.2 - 2026-08-13 (ALGOL conditional self-assignment dependencies)
+
+The seven-backend ALGOL matrix now proves that a dynamic conditional with the
+same bare scalar on both leaves preserves a static while-predicate dependency.
+
+## 0.226.1 - 2026-08-13 (ALGOL idempotent while-predicate dependencies)
+
+The seven-backend ALGOL matrix now proves that an exact self-assignment keeps a
+statically selected body-predicate dependency stable.
+
+## 0.226.0 - 2026-08-13 (the BEAM column joins the matrix)
+
+The cross-language matrix gains **BEAM** as an eighth backend — `Backend::Beam`,
+a `run_beam` arm compiling to `.beam` bytecode and executing it under a real
+`erl`, gated on `erl` being present like the other external-toolchain columns.
+The enum's doc comment used to describe itself as "a non-BEAM backend"; that is
+no longer true.
+
+Scoped deliberately to the Lisp-shaped end. BEAM is the one target with **no raw
+memory** — no linear address space, every term immutable — so it takes the
+cons/immutable half of the IIR natively and refuses the rest at validation
+rather than approximating it. That refusal is the point: a program needing
+`box`/`unbox` or `str_len` is rejected before emission, never miscompiled.
+
+Of the 47 Twig programs, **19 carry `Beam`** in their `backends` list. Each was
+established by EXECUTING the emitted module under `erl`, not by compiling it —
+all 19 that compiled also ran, and the matrix then confirmed their values. The
+remaining 28 are refused and do not list the backend: 12 on `str_len`, 7 on
+other string ops, 9 on `box`.
+
+McCarthy Lisp was already covered — `run_beam` is backend 6 of 9 in the
+conformance suite and green — so this closes the gap on the cross-language side.
+
+Five defects in the new column came out of security review, all in the
+harness's core "never silently skip / never silently pass" property:
+
+* **No `& 0xFF` on the result.** The first version masked BEAM's printed value
+  to a byte to mimic `exit()` truncation. That can only ever turn a WRONG value
+  into a passing one — and `SYMBOL_ID_BASE` is `1 << 29`, exactly 0 mod 256, so
+  a leaked symbol tag would mask straight onto an expected 0 or 42. BEAM is the
+  one column that observes the full-width value; it now fails loudly outside
+  `0..=255` instead of throwing that away.
+* **The result is sentinel-delimited.** `main()` runs before the `io:format`
+  and shares stdout, so a program printing "5" and returning 42 produced "542",
+  which parsed cleanly and was confidently wrong.
+* **A non-zero `erl` exit is a failure** even when stdout parses. OTP writes
+  `=ERROR REPORT` to stdout, not stderr, so the status is the reliable signal.
+* **`Beam` is registered with the single-cell env var** (`LANG_MATRIX_ONLY_CELL`)
+  and with the round-trip guard test that exists to catch exactly this. Without
+  it, re-verifying a real BEAM failure spawned a child that died on an env-parse
+  panic, and the parent reported THAT instead of the actual defect.
+* **`erl_ok()` joins the skip invariant and gains a per-column floor**, so a host
+  without Erlang no longer reports its legitimate skips as a runner opting out,
+  and a transient spawn failure cannot silently turn the column off.
+
+Also collapses **102 copies** of the per-test `toolchain_available` match into
+one `toolchain_available(backend)` function. Every test block carried its own
+identical copy, so adding a `Backend` variant meant editing them all — and any
+block landing on main while a backend branch was open broke that branch's build
+on merge, which happened three times while this one was open. A new variant now
+needs exactly one edit.
+
+The executed matrix stays at 4 confirmed failures (ALGOL strings on
+NativeAot/Clr, COBOL COMPUTE on Clr/Jvm); the new column adds none.
+## 0.225.15 - 2026-08-13 (ALGOL stable function while predicates)
+
+The seven-backend ALGOL matrix now proves that a supported standard function
+may wrap an unwritten scalar in a statically selected body predicate.
+
+## 0.225.14 - 2026-08-13 (ALGOL stable scalar while predicates)
+
+The seven-backend ALGOL matrix now proves that a known predicate over an
+unwritten integer local can make a dependency-writing body branch unreachable.
+
+## 0.225.13 - 2026-08-13 (ALGOL composed stable while effects)
+
+The seven-backend ALGOL matrix now proves that a known composition of unwritten
+boolean locals can make a dependency-writing body branch unreachable.
+
+## 0.225.12 - 2026-08-13 (ALGOL stable conditional while effects)
+
+The seven-backend ALGOL matrix now proves that an unreachable dependency write
+behind a stable false boolean local does not invalidate a capped `while` exit.
+
+## 0.225.11 - 2026-08-13 (ALGOL static conditional while effects)
+
+The seven-backend ALGOL matrix now proves that an unreachable dependency write
+behind a variable-free false body condition does not invalidate a capped
+`while` exit.
+
 ## 0.225.10 - 2026-08-13 (ALGOL idempotent while dependencies)
 
 The seven-backend ALGOL matrix now proves that an exact scalar self-assignment

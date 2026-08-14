@@ -11,19 +11,20 @@
 //!
 //! ## A deliberate asymmetry: eager vs. lazy module building
 //!
-//! A plain `(module ...)` directive is built **eagerly** — encoded to a
-//! real [`WasmModule`] right here, propagating any real syntax error up
-//! through this function's own `Result`, since `assert_return`/
+//! A `(module ...)` directive is built **eagerly**, whichever of its three
+//! source forms it uses (plain text, `quote` text, or `binary` bytes) —
+//! encoded to a real [`WasmModule`] right here, propagating any real syntax
+//! error up through this function's own `Result`, since `assert_return`/
 //! `assert_trap` need an already-valid module to invoke against.
 //!
 //! `assert_invalid`/`assert_malformed`'s module, by contrast, is kept as a
-//! **raw, unparsed [`SExpr`]** — because for these two directive kinds,
-//! failing to parse or encode is exactly the thing the harness is
+//! **raw, unparsed [`ModuleSource`]** — because for these two directive
+//! kinds, failing to parse or encode is exactly the thing the harness is
 //! *testing for*. Eagerly building it here would turn every legitimate
 //! `assert_malformed` fixture into a hard error that aborts the whole
-//! script. The harness calls [`crate::module::parse_module_expr`] itself,
-//! at the point it actually wants to observe whether that call succeeds or
-//! fails.
+//! script. The harness calls [`crate::module::parse_module_expr`] (or the
+//! `quote`/`binary` equivalents) itself, at the point it actually wants to
+//! observe whether that call succeeds or fails.
 
 use crate::module::parse_module_expr;
 use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i32, parse_i64};
@@ -110,7 +111,7 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
         expected: "a directive keyword",
     })?;
     match head {
-        "module" => Ok(Directive::Module(parse_module_expr(e)?)),
+        "module" => Ok(Directive::Module(build_module_directive(e)?)),
         "register" => {
             let name = expect_str(expect_get(items, 1)?)?;
             let module_name = items.get(2).and_then(|m| m.as_atom()).map(|s| s.to_string());
@@ -245,6 +246,28 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
     }
 }
 
+/// Build a real [`WasmModule`] for an eagerly-built `(module ...)`
+/// **directive** -- as opposed to `assert_invalid`/`assert_malformed`'s
+/// module, which stays a raw [`ModuleSource`] (see this file's module doc
+/// comment). Routes through whichever of the three source kinds the
+/// directive actually used: plain text via [`parse_module_expr`], `quote`
+/// text via this crate's own [`crate::module::parse_module`] (which accepts
+/// both the explicit `(module ...)` form and the WAT "abbreviated module"
+/// bare-field-list form -- the official testsuite's `comments.wast` and
+/// `block.wast` use the latter for their `module quote` directives), and
+/// `binary` bytes via `wasm-module-parser`.
+fn build_module_directive(e: &SExpr) -> Result<WasmModule, WastParseError> {
+    match parse_module_source(e)? {
+        ModuleSource::Text(expr) => parse_module_expr(&expr),
+        ModuleSource::Quote(bytes) => {
+            let text = std::str::from_utf8(&bytes).map_err(|_| WastParseError::InvalidUtf8 { pos: e.pos() })?;
+            crate::module::parse_module(text)
+        }
+        ModuleSource::Binary(bytes) => wasm_module_parser::WasmModuleParser::parse(&bytes)
+            .map_err(|err| WastParseError::EmbeddedBinaryModuleError { pos: e.pos(), message: err.to_string() }),
+    }
+}
+
 fn parse_module_source(e: &SExpr) -> Result<ModuleSource, WastParseError> {
     let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "a module form" })?;
     // Skip `module`, an optional `$name`, then look for a `binary`/`quote`
@@ -371,6 +394,37 @@ mod tests {
             Directive::AssertMalformed { module: ModuleSource::Binary(bytes), .. } => {
                 assert_eq!(bytes, &[0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00]);
             }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_quote_directive_builds_a_real_module_from_the_abbreviated_form() {
+        // Matches the official testsuite's comments.wast/block.wast shape:
+        // the quoted strings concatenate to bare fields with no enclosing
+        // `(module ...)` -- this directive kind (unlike assert_malformed's
+        // ModuleSource::Quote) must actually BUILD a usable module, since
+        // `assert_return` invokes an export from it.
+        let dirs = parse_script(r#"(module quote "(func (export \"f\") (result i32) (i32.const 42))")"#).unwrap();
+        match &dirs[0] {
+            Directive::Module(m) => {
+                assert_eq!(m.functions.len(), 1);
+                assert_eq!(m.exports[0].name, "f");
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn module_binary_directive_builds_a_real_module_from_decoded_bytes() {
+        // The WASM magic + version bytes alone decode to a valid, empty
+        // module -- proves this directive kind actually routes `binary`
+        // bytes through wasm-module-parser instead of silently discarding
+        // them (the way the old code did, since `parse_module_expr`
+        // doesn't recognize a bare "binary" atom as a field).
+        let dirs = parse_script(r#"(module binary "\00\61\73\6d\01\00\00\00")"#).unwrap();
+        match &dirs[0] {
+            Directive::Module(m) => assert_eq!(m, &wasm_types::WasmModule::default()),
             other => panic!("unexpected directive: {other:?}"),
         }
     }

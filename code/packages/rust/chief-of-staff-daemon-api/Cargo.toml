@@ -6,10 +6,14 @@ description = "Authenticated WebSocket control API for the D18 Chief daemon"
 license = "MIT"
 
 [dependencies]
-chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
 chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-trust-checker = { path = "../chief-of-staff-trust-checker" }
 coding-adventures-json-parser = { path = "../json-parser" }
 coding-adventures-json-serializer = { path = "../json-serializer" }
 coding-adventures-json-value = { path = "../json-value" }

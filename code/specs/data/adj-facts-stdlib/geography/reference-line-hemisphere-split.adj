@@ -1,0 +1,70 @@
+% ============================================================================
+% reference-line-hemisphere-split — for the two lines whose SAME cited
+% source also names the hemispheres they divide, that split
+% (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `reference-lines.adj` (`reference_line(line,
+% marks)`, ONE degree-marking property per line: equator, prime_meridian,
+% tropic_of_cancer, tropic_of_capricorn, arctic_circle, antarctic_circle).
+% That table's own `source` and `cites` fields already quote, VERBATIM, a
+% SECOND fact for two of those six lines — which pair of hemispheres each
+% line divides the Earth into — but the `marks`-only schema (which only
+% carries the degree fact) had no room for it:
+%
+%   equator → northern_southern
+%     source: "The equator is the most well known parallel. At 0 degrees
+%     latitude, it equally divides the Earth into the Northern and Southern
+%     hemispheres." (NOAA National Ocean Service, "What is latitude?")
+%
+%   prime_meridian → eastern_western
+%     cites: "The prime meridian, which runs through Greenwich, England, has
+%     a longitude of 0 degrees. It divides the Earth into the eastern and
+%     western hemispheres." (NOAA National Ocean Service, "What is
+%     longitude?")
+%
+% Recall is a binding query:
+%
+%     ? reference_line_hemisphere_split(equator, $Hemispheres)   % northern_southern
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `reference-lines.adj`'s own `reference_line`): each `row` lowers to a
+% ground relation `reference_line_hemisphere_split(line, hemispheres)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the hemisphere split WITH its source, on the
+% CPU, with zero model calls, and abstains on every other reference line
+% `reference-lines.adj` carries, since neither of the two tropics nor either
+% polar circle has a hemisphere-split fact stated in their own cited spans
+% (the tropics and polar circles mark latitude limits, not a hemisphere
+% division).
+%
+% Only TWO of `reference-lines.adj`'s six lines have a genuinely distinct
+% hemisphere-split fact in the ALREADY-cited spans; this table is
+% deliberately narrow rather than inventing a split the source does not
+% state. The query also runs BACKWARD — bind a hemisphere pair and recall
+% which line divides it:
+%
+%     ? reference_line_hemisphere_split($Line, eastern_western)   % prime_meridian
+%
+% Provenance: reproduces, byte-for-byte, the SAME equator and prime-meridian
+% spans already quoted inside `reference-lines.adj`'s own `source` and
+% `cites` fields, from the SAME two NOAA National Ocean Service pages that
+% table already cites — no new WebFetch, only a different schema decoding
+% the hemisphere-split half of each already-verified quote. `trust
+% authoritative` — the same tier `reference-lines.adj` already carries (NOAA,
+% a U.S. federal .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table reference_line_hemisphere_split {
+    columns line, hemispheres
+
+    row (equator, northern_southern)          % NOAA "What is latitude?" (latitude.html)
+    row (prime_meridian, eastern_western)      % NOAA "What is longitude?" (longitude.html)
+
+    source "The equator is the most well known parallel. At 0 degrees latitude, it equally divides the Earth into the Northern and Southern hemispheres."
+    locator "https://oceanservice.noaa.gov/facts/latitude.html"
+    trust authoritative
+
+    cites "The prime meridian, which runs through Greenwich, England, has a longitude of 0 degrees. It divides the Earth into the eastern and western hemispheres." locator "https://oceanservice.noaa.gov/facts/longitude.html"
+}

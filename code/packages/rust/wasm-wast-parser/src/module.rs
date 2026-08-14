@@ -35,13 +35,44 @@ use wasm_types::{
     Import, ImportTypeInfo, Limits, MemoryType, TableType, ValueType, WasmModule, FUNCREF,
 };
 
-/// Parse a single `(module ...)` text form (the plain-`.wat` entry point).
+/// Parse a whole WAT source text: the plain-`.wat` entry point, and also
+/// what a `.wast` script's `(module quote "...")` directive re-parses its
+/// concatenated string content as (see `script.rs`'s own doc comment on
+/// eager vs. lazy module building).
+///
+/// The WAT text format allows a source to be written two ways, and this
+/// accepts both:
+/// - **Explicit**: a single top-level `(module ...)` form (what every other
+///   caller in this crate already produces).
+/// - **Abbreviated**: the enclosing `module` keyword omitted entirely, with
+///   the module's fields written directly at the top level. This is the
+///   form the official spec testsuite's `comments.wast`/`block.wast`/etc.
+///   use for their `(module quote "(func ...)" "(func ...)" ...)`
+///   directives — the concatenated text is `(func ...)(func ...)`, not
+///   `(module (func ...)(func ...))`. Other files (`align.wast`,
+///   `global.wast`) instead quote the explicit form. Both are real,
+///   independently-valid WAT — treating the concatenated text as "exactly
+///   one `(module ...)` form" (the old behavior) silently discarded every
+///   abbreviated-form field as an unrecognized top-level item, producing an
+///   empty module that trivially "passed" validation while every export it
+///   was supposed to have was simply missing.
 pub fn parse_module(src: &str) -> Result<WasmModule, WastParseError> {
     let exprs = parse_source(src)?;
-    let module_expr = exprs
-        .first()
-        .ok_or(WastParseError::UnexpectedEof)?;
-    parse_module_expr(module_expr)
+    if let [single] = exprs.as_slice() {
+        if single.as_list().and_then(|items| items.first()).and_then(|i| i.as_atom()) == Some("module") {
+            return parse_module_expr(single);
+        }
+    }
+    if exprs.is_empty() {
+        return Err(WastParseError::UnexpectedEof);
+    }
+    let owned_fields: Vec<&SExpr> = exprs.iter().collect();
+    let desugared = desugar_inline_imports(&owned_fields);
+    let fields: Vec<&SExpr> = desugared.iter().collect();
+    let mut ctx = ModuleCtx::default();
+    collect_symbols(&fields, &mut ctx)?;
+    build(&fields, &mut ctx)?;
+    Ok(ctx.module)
 }
 
 /// As [`parse_module`], but starting from an already-parsed
@@ -65,16 +96,64 @@ pub fn parse_module_expr(module_expr: &SExpr) -> Result<WasmModule, WastParseErr
     }
     // Skip the leading `module` atom and an optional module-name identifier
     // (`(module $name ...)`), neither of which affects encoding.
-    let fields: Vec<&SExpr> = items
+    let owned_fields: Vec<&SExpr> = items
         .iter()
         .skip(1)
         .skip_while(|e| matches!(e, SExpr::Atom(s, _) if s.starts_with('$')))
         .collect();
+    let desugared = desugar_inline_imports(&owned_fields);
+    let fields: Vec<&SExpr> = desugared.iter().collect();
 
     let mut ctx = ModuleCtx::default();
     collect_symbols(&fields, &mut ctx)?;
     build(&fields, &mut ctx)?;
     Ok(ctx.module)
+}
+
+/// Desugars WAT's **inline-import shorthand** — `(func $f? (import "m" "n")
+/// ...rest)`, and the same for `table`/`memory`/`global` — into the
+/// equivalent explicit form, `(import "m" "n" (func $f? ...rest))`, so
+/// `collect_symbols`/`build` only ever have to understand ONE import shape.
+/// This is a pure syntactic rewrite per the WAT spec (§ module abbreviations):
+/// `(func $f (import "m" "n") (type $t))` means EXACTLY `(import "m" "n"
+/// (func $f (type $t)))`, not a real function body.
+///
+/// Only recognizes the import form immediately following an optional
+/// `$name` (i.e. as the field's very first substantive item) — the shape
+/// every inline-import case in the vendored testsuite actually uses.
+/// Combining inline import with inline export on the same field (`(func
+/// (export "e") (import "m" "n") ...)`, also spec-legal) isn't handled;
+/// no vendored file currently needs it, and it isn't the gap this fixes.
+fn desugar_inline_imports(fields: &[&SExpr]) -> Vec<SExpr> {
+    fields.iter().map(|f| desugar_one_inline_import(f)).collect()
+}
+
+fn desugar_one_inline_import(f: &SExpr) -> SExpr {
+    let Some(items) = f.as_list() else { return (*f).clone() };
+    let pos = f.pos();
+    let kind = items.first().and_then(|e| e.as_atom()).unwrap_or("");
+    if !matches!(kind, "func" | "table" | "memory" | "global") {
+        return (*f).clone();
+    }
+    let mut i = 1;
+    if matches!(items.get(i), Some(SExpr::Atom(s, _)) if s.starts_with('$')) {
+        i += 1;
+    }
+    match items.get(i) {
+        Some(candidate) if candidate.is_keyword_list("import") => {
+            let import_items = candidate.as_list().unwrap();
+            if import_items.len() != 3 {
+                return (*f).clone(); // malformed; let normal parsing surface a real error
+            }
+            let module_name = import_items[1].clone();
+            let field_name = import_items[2].clone();
+            let mut desc_items: Vec<SExpr> = items[..i].to_vec(); // kind atom + optional $name
+            desc_items.extend(items[i + 1..].iter().cloned()); // everything after (import ...)
+            let desc = SExpr::List(desc_items, pos);
+            SExpr::List(vec![SExpr::Atom("import".to_string(), pos), module_name, field_name, desc], pos)
+        }
+        _ => (*f).clone(),
+    }
 }
 
 #[derive(Default)]
@@ -195,6 +274,23 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
     // Imports: always occupy the lowest indices in their respective index
     // spaces, in textual import order, regardless of interleaving with
     // non-import definitions -- the WAT spec's own rule.
+    //
+    // `ctx.module.functions`/`tables`/`memories`/`globals` mirror the real
+    // WASM BINARY format's function/table/memory/global SECTIONS, which
+    // never include imports (an import's type info lives solely in
+    // `ctx.module.imports`; see `wasm-module-parser`'s own section parsers,
+    // which never touch these arrays while parsing the import section
+    // either). So this loop must NOT push placeholder entries into them --
+    // only `func_i`/`table_i`/`memory_i`/`global_i` below (dedicated,
+    // per-kind counters, since imports of different kinds interleave in
+    // one textual pass) track "how many imports of this kind have been
+    // seen so far," which IS the func-space/table-space/etc. index imports
+    // occupy (they're always the lowest indices, so the k-th import of a
+    // kind gets index k directly, no offset).
+    let mut import_func_i = 0u32;
+    let mut import_table_i = 0u32;
+    let mut import_memory_i = 0u32;
+    let mut import_global_i = 0u32;
     for f in fields {
         if f.is_keyword_list("import") {
             let items = f.as_list().unwrap();
@@ -207,39 +303,28 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let name = desc.get(1).and_then(|e| e.as_atom());
             match kind {
                 "func" => {
-                    // This loop only pushes to `ctx.module.functions` for
-                    // func-kind imports, so its current length already IS
-                    // the running func-space index -- no separate counter
-                    // needed.
-                    let idx = ctx.module.functions.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.func_names, n, idx, f.pos(), "func")?;
+                        insert_unique(&mut ctx.func_names, n, import_func_i, f.pos(), "func")?;
                     }
-                    ctx.module.functions.push(0); // placeholder type index, fixed in pass 2
+                    import_func_i += 1;
                 }
                 "table" => {
-                    let idx = ctx.table_names.len() as u32 + ctx.module.tables.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.table_names, n, idx, f.pos(), "table")?;
+                        insert_unique(&mut ctx.table_names, n, import_table_i, f.pos(), "table")?;
                     }
-                    ctx.module.tables.push(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None } });
+                    import_table_i += 1;
                 }
                 "memory" => {
-                    let idx = ctx.memory_names.len() as u32 + ctx.module.memories.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.memory_names, n, idx, f.pos(), "memory")?;
+                        insert_unique(&mut ctx.memory_names, n, import_memory_i, f.pos(), "memory")?;
                     }
-                    ctx.module.memories.push(MemoryType { limits: Limits { min: 0, max: None } });
+                    import_memory_i += 1;
                 }
                 "global" => {
-                    let idx = ctx.global_names.len() as u32 + ctx.module.globals.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.global_names, n, idx, f.pos(), "global")?;
+                        insert_unique(&mut ctx.global_names, n, import_global_i, f.pos(), "global")?;
                     }
-                    ctx.module.globals.push(Global {
-                        global_type: GlobalType { value_type: ValueType::I32, mutable: false },
-                        init_expr: vec![0x0B],
-                    });
+                    import_global_i += 1;
                 }
                 _ => {}
             }
@@ -248,13 +333,24 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
         }
     }
 
-    // Non-import definitions, in textual order.
+    // Non-import definitions, in textual order. Each one's NAME resolves to
+    // a func-space/table-space/etc. index (`num_import_X + ctx.module.X.len()`
+    // -- the fixed import count from the pass above, plus how many REAL
+    // definitions of this kind have been pushed to the (now import-free)
+    // storage array so far), but the storage array itself is indexed
+    // real-definitions-only, matching the binary format `wasm-module-parser`
+    // itself produces -- `build`'s pass 2 relies on this same split (see
+    // `build_func`'s own doc comment).
+    let num_import_funcs = import_func_i;
+    let num_import_tables = import_table_i;
+    let num_import_memories = import_memory_i;
+    let num_import_globals = import_global_i;
     for f in fields {
         if f.is_keyword_list("func") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.functions.len() as u32;
+                    let idx = num_import_funcs + ctx.module.functions.len() as u32;
                     insert_unique(&mut ctx.func_names, name, idx, f.pos(), "func")?;
                 }
             }
@@ -264,7 +360,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.tables.len() as u32;
+                    let idx = num_import_tables + ctx.module.tables.len() as u32;
                     insert_unique(&mut ctx.table_names, name, idx, f.pos(), "table")?;
                 }
             }
@@ -273,7 +369,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.memories.len() as u32;
+                    let idx = num_import_memories + ctx.module.memories.len() as u32;
                     insert_unique(&mut ctx.memory_names, name, idx, f.pos(), "memory")?;
                 }
             }
@@ -282,7 +378,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.globals.len() as u32;
+                    let idx = num_import_globals + ctx.module.globals.len() as u32;
                     insert_unique(&mut ctx.global_names, name, idx, f.pos(), "global")?;
                 }
             }
@@ -405,7 +501,6 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let num_import_globals = ctx.module.imports.iter().filter(|i| i.kind == ExternalKind::Global).count();
 
     let mut import_all_i = 0usize; // index into ctx.module.imports (every kind, textual order)
-    let mut import_func_i = 0usize; // func-space index of the next func-kind import
     let mut func_i = 0usize;
     let mut table_i = 0usize;
     let mut memory_i = 0usize;
@@ -425,10 +520,13 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 // arm at all is proof both hold for this form.
                 let desc = items[3].as_list().unwrap();
                 if desc[0].as_atom().unwrap() == "func" {
+                    // A func import's resolved type lives ONLY in its own
+                    // `ctx.module.imports[..].type_info` -- `ctx.module.functions`
+                    // never has an entry for it (that array mirrors the
+                    // binary format's function section, which is real-funcs-only;
+                    // see `collect_symbols`'s doc comment on this same split).
                     let type_idx = resolve_func_signature_ref(&desc[1..], ctx)?;
                     ctx.module.imports[import_all_i].type_info = ImportTypeInfo::Function(type_idx);
-                    ctx.module.functions[import_func_i] = type_idx;
-                    import_func_i += 1;
                 }
                 // table/memory/global import shells are already correct
                 // from pass 1 -- no fixup needed for those kinds.
@@ -436,7 +534,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             }
             "func" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
-                build_func(&items[name_skip..], ctx, num_import_funcs + func_i)?;
+                build_func(&items[name_skip..], ctx, num_import_funcs + func_i, func_i)?;
                 func_i += 1;
             }
             "export" => {
@@ -464,30 +562,35 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             "memory" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
                 let rest = &items[name_skip..];
-                let idx = num_import_memories + memory_i;
-                let (limits_start, _) = handle_inline_export(rest, "memory", idx, ctx)?;
-                ctx.module.memories[idx].limits = parse_limits(&rest[limits_start..])?;
+                // `space_idx` (imports counted in) is what exports address
+                // this memory by; `memory_i` (real-only) is where its entry
+                // actually lives in `ctx.module.memories` -- see
+                // `collect_symbols`'s doc comment on why these differ once
+                // a module has any memory import.
+                let space_idx = num_import_memories + memory_i;
+                let (limits_start, _) = handle_inline_export(rest, "memory", space_idx, ctx)?;
+                ctx.module.memories[memory_i].limits = parse_limits(&rest[limits_start..])?;
                 memory_i += 1;
             }
             "table" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
                 let rest = &items[name_skip..];
-                let idx = num_import_tables + table_i;
-                let (limits_start, _) = handle_inline_export(rest, "table", idx, ctx)?;
-                build_table_limits_and_elements(&rest[limits_start..], idx as u32, ctx)?;
+                let space_idx = num_import_tables + table_i;
+                let (limits_start, _) = handle_inline_export(rest, "table", space_idx, ctx)?;
+                build_table_limits_and_elements(&rest[limits_start..], space_idx as u32, table_i as u32, ctx)?;
                 table_i += 1;
             }
             "global" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
                 let rest = &items[name_skip..];
-                let idx = num_import_globals + global_i;
-                let (type_start, _) = handle_inline_export(rest, "global", idx, ctx)?;
+                let space_idx = num_import_globals + global_i;
+                let (type_start, _) = handle_inline_export(rest, "global", space_idx, ctx)?;
                 let gt = parse_global_type(expect_get(rest, type_start)?)?;
                 let init_instrs = rest.get(type_start + 1..).unwrap_or(&[]);
                 let mut code = Vec::new();
                 encode_instr_list(init_instrs, &mut InstrCtx::empty(ctx), &mut code)?;
                 code.push(0x0B);
-                ctx.module.globals[idx] = Global { global_type: gt, init_expr: code };
+                ctx.module.globals[global_i] = Global { global_type: gt, init_expr: code };
                 global_i += 1;
             }
             "elem" => build_elem(&items[1..], ctx)?,
@@ -545,48 +648,202 @@ fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Resul
     Ok(dedup_type(&mut ctx.module, ty))
 }
 
-fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<(), WastParseError> {
+/// Whether `f` belongs to a WASM function's leading `param`/`result`/
+/// `type`/`local` region -- shared verbatim by `build_func`'s mismatch
+/// pre-scan and its main index-assignment loop so the two can never
+/// silently disagree on where that region ends (a round-3 security
+/// review found they'd drifted apart once already).
+fn is_leading_field(f: &SExpr) -> bool {
+    f.is_keyword_list("param") || f.is_keyword_list("result") || f.is_keyword_list("type") || f.is_keyword_list("local")
+}
+
+/// Count how many params one `(param ...)` s-expression's `items` (the
+/// full list, including the leading `"param"` atom) declares, and the
+/// name of the ONE it declares if it's the named form -- `(param $x i32)`
+/// is a single named param (a name + its type), not two; `(param i32
+/// i32)` is two unnamed ones. Shared by `build_func`'s mismatch pre-scan
+/// and its main index-assignment loop for the same reason `is_leading_field`
+/// is: a round-4 security review flagged two independently-maintained
+/// copies of this same arithmetic as exactly the kind of drift that
+/// produced this bug's first two rounds.
+fn count_literal_param(items: &[SExpr]) -> (u32, Option<String>) {
+    if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
+        (1, Some(items[1].as_atom().unwrap().to_string()))
+    } else {
+        ((items.len() - 1) as u32, None)
+    }
+}
+
+/// `func_idx` is this function's index in the **func space** (imports,
+/// which occupy the lowest indices, counted in) -- what exports, calls, and
+/// `ctx.module.functions` itself all address a function by. `code_idx` is
+/// separate: `ctx.module.code` holds bodies for REAL functions only (an
+/// import has no body to encode), so it's indexed 0.. among just those,
+/// with no offset for however many func imports precede this one. The two
+/// coincide (`code_idx == func_idx`) in every module with zero func
+/// imports, which is why this distinction went unexercised until inline
+/// import shorthand (`(func $f (import "m" "n") ...)`, desugared by
+/// `desugar_inline_imports`) gave a real module both a func import AND a
+/// subsequent real function body for the first time in this crate's own
+/// tests and the vendored corpus alike -- `ctx.module.code[func_idx]` panics
+/// with an out-of-bounds index the moment that combination occurs.
+fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: usize) -> Result<(), WastParseError> {
     // Inline export shorthand: `(func $f (export "e") ...)`.
     let (after_export, _) = handle_inline_export(fields, "func", func_idx, ctx)?;
     let fields = &fields[after_export..];
 
     let type_idx = resolve_func_signature_ref(fields, ctx)?;
-    ctx.module.functions[func_idx] = type_idx;
+    ctx.module.functions[code_idx] = type_idx;
 
-    // Local scope: params first (from the signature just resolved,
-    // re-walking the param forms here only for their OPTIONAL names --
-    // `parse_func_signature` already captured the types), then declared
-    // `(local ...)` forms.
+    // Local scope: params first, then declared `(local ...)` forms right
+    // after them. The FIRST declared local's index must be the function's
+    // REAL param count -- `ctx.module.types[type_idx].params.len()` --
+    // not a count built by re-walking this function's own literal
+    // `(param ...)` forms below. Those two can differ: a function that
+    // references an out-of-line signature via `(type $sig)` (`func.wast`'s
+    // own "type-use-1".."type-use-5" cases, none of which repeat `(param
+    // ...)` inline) has ZERO literal `(param ...)` forms in `fields` at
+    // all, even though its real type has params occupying local indices
+    // 0..N. Seeding the local-index counter from 0 in that case makes the
+    // first declared `(local ...)` silently alias parameter index 0
+    // instead of starting after the params -- a real, previously-wrong
+    // computed VALUE (not a trap), since `local.get $var` then reads the
+    // param's value instead of the local's own zero-initialized default.
+    // The loop below still walks literal `(param ...)` forms (when
+    // present) to capture their OPTIONAL `$name`s at the correct
+    // POSITIONAL index, which is unaffected by this fix either way.
+    //
+    // `resolved_type` is `None` for an out-of-range numeric `(type N)`
+    // reference (no `(type ...)` section entry at all) -- a real, already
+    // regression-tested case (`func_with_out_of_range_numeric_type_reference_does_not_panic`)
+    // this text-level parser deliberately does NOT reject: bounds-checking
+    // a type index is `wasm-validator`'s job, not this parser's, and this
+    // already-structurally-invalid module will fail validation regardless,
+    // for the missing type, not for anything computed here. `param_count`
+    // falls back to 0 for local-index purposes in that case (unaffected
+    // either way, since there's no real type to disagree with).
+    //
+    // A round-4 security review found the mismatch check just below this
+    // had DRIFTED from that same documented contract: it compared against
+    // `param_count`'s 0-fallback too, so `(func (type 0) (param i32))`
+    // with NO `(type ...)` section at all got hard-rejected at parse time
+    // instead of the "still parses, fails validation instead" behavior
+    // the crate promises for an out-of-range type index. Gating the check
+    // on `resolved_type.is_some()` restores that contract: an unresolvable
+    // type reference is `wasm-validator`'s problem either way, never this
+    // check's.
+    let resolved_type = ctx.module.types.get(type_idx as usize);
+    let param_count = resolved_type.map(|t| t.params.len()).unwrap_or(0) as u32;
+
+    // Reject a func that gives BOTH an explicit `(type $sig)` reference
+    // AND its own literal `(param ...)` forms whose arity disagrees with
+    // `$sig`'s real params -- see `WastParseError::TypeUseParamCountMismatch`'s
+    // own doc comment for why local-index computation below depends on
+    // this invariant holding, not just on it being the common case. When
+    // a func has NO `(type ...)` reference at all, `resolve_func_signature_ref`
+    // synthesizes its type directly FROM these same literal params, so
+    // `param_count` and `literal_param_count` are equal by construction
+    // and this is always a no-op in that case.
+    //
+    // A round-2 security review found this pre-scan's original "stop"
+    // condition (break on the first field that isn't `param`/`result`/
+    // `type`) DIVERGED from the main assignment loop below, which also
+    // treats `local` as part of the same leading region (this text-level
+    // parser doesn't enforce that `(param ...)` forms all precede `(local
+    // ...)` forms -- that's `wasm-validator`'s job, same division of
+    // responsibility documented throughout this file). A `func` with a
+    // `(local ...)` BEFORE some of its trailing `(param ...)` forms made
+    // this scan stop early, undercounting `literal_param_count` (or never
+    // even setting `saw_literal_param`) and silently skipping the check
+    // below -- while the main loop still processed those later params,
+    // seeding `next_local` from a stale, too-small count. `is_leading_field`
+    // below is shared verbatim by both this pre-scan and the main loop's
+    // own `else if`/`else { break }` structure, so the two can no longer
+    // silently disagree on where the leading region ends. `count_literal_param`
+    // is likewise the SAME function both this pre-scan and the main loop
+    // call for the named-vs-unnamed counting logic, for the same reason:
+    // two independently-maintained copies of "the same" arithmetic is
+    // exactly the pattern that produced this bug's first two rounds.
+    let mut literal_param_count = 0u32;
+    let mut saw_literal_param = false;
+    for f in fields.iter().take_while(|f| is_leading_field(f)) {
+        if f.is_keyword_list("param") {
+            saw_literal_param = true;
+            literal_param_count += count_literal_param(f.as_list().unwrap()).0;
+        }
+    }
+    if resolved_type.is_some() && saw_literal_param && literal_param_count != param_count {
+        return Err(WastParseError::TypeUseParamCountMismatch {
+            pos: fields.first().map(|f| f.pos()).unwrap_or(0),
+            declared: literal_param_count as usize,
+            referenced: param_count as usize,
+        });
+    }
+
     let mut local_names: HashMap<String, u32> = HashMap::new();
-    let mut next_local = 0u32;
+    let mut param_position = 0u32;
+    // `next_local` isn't seeded until the FIRST `(local ...)` form is
+    // actually reached -- see below for why.
+    let mut next_local: Option<u32> = None;
     let mut locals_decl: Vec<ValueType> = Vec::new();
     let mut instr_start = 0usize;
     for (i, f) in fields.iter().enumerate() {
         if f.is_keyword_list("param") {
-            let items = f.as_list().unwrap();
-            if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), next_local);
-                next_local += 1;
-            } else {
-                next_local += (items.len() - 1) as u32;
+            let (count, name) = count_literal_param(f.as_list().unwrap());
+            if let Some(name) = name {
+                local_names.insert(name, param_position);
             }
+            param_position += count;
             instr_start = i + 1;
         } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
             instr_start = i + 1;
         } else if f.is_keyword_list("local") {
+            // A security review found a residual edge case in the fix
+            // above: `param_position` (literal `(param ...)` forms
+            // counted as written) and `param_count` (the type's real,
+            // resolved param count) are only guaranteed to agree when a
+            // function's literal params match its `(type $sig)`
+            // reference exactly -- `resolve_func_signature_ref` doesn't
+            // enforce that itself (that's `wasm-validator`'s job, same
+            // division of responsibility as the out-of-range `(type N)`
+            // case above). A syntactically-valid but semantically
+            // inconsistent module (literal params disagreeing in count
+            // with a same-function `(type $sig)` reference) could
+            // otherwise make a declared local alias whichever of the two
+            // counts was smaller. Seeding from `max` the first time a
+            // `(local ...)` is actually reached (not the loop iteration
+            // that resolves `type_idx`) guarantees a declared local can
+            // never collide with a position either count considers a
+            // parameter, in every case -- including the ordinary one
+            // this fix exists for, where `param_position` stays 0.
+            let next_local = next_local.get_or_insert_with(|| param_position.max(param_count));
             let items = f.as_list().unwrap();
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), next_local);
+                local_names.insert(items[1].as_atom().unwrap().to_string(), *next_local);
                 locals_decl.push(parse_value_type(&items[2])?);
-                next_local += 1;
+                *next_local += 1;
             } else {
                 for t in &items[1..] {
                     locals_decl.push(parse_value_type(t)?);
-                    next_local += 1;
+                    *next_local += 1;
                 }
             }
             instr_start = i + 1;
         } else {
+            // A round-5 security review found `is_leading_field`'s own
+            // doc comment overclaimed this dispatch actually CALLS it --
+            // it re-implements the identical 4-way test inline instead,
+            // which happened to still agree today but is exactly the kind
+            // of silent-drift risk rounds 2-4 spent closing for the
+            // arity-counting logic. This assertion makes that claim
+            // actually true (not just documented): any future edit that
+            // adds a leading-field kind to one without the other trips
+            // this in every `cargo test` run, immediately, rather than
+            // waiting for a security review to notice again.
+            debug_assert!(
+                !is_leading_field(f),
+                "is_leading_field and this dispatch's own param/result/type/local arms must stay in sync"
+            );
             break;
         }
     }
@@ -595,7 +852,7 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     let mut code = Vec::new();
     encode_instr_list(&fields[instr_start..], &mut icx, &mut code)?;
     code.push(0x0B);
-    ctx.module.code[func_idx] = FunctionBody { locals: locals_decl, code };
+    ctx.module.code[code_idx] = FunctionBody { locals: locals_decl, code };
     Ok(())
 }
 
@@ -610,10 +867,19 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
 ///   running the real WebAssembly/testsuite corpus (e.g. `br.wast`,
 ///   `call_indirect.wast`) -- every one of them uses this shorthand for
 ///   their auxiliary function-pointer table.
-fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
+///
+/// `table_idx` is the table-space index (imports counted in) -- what an
+/// `Element`'s own `table_index` field addresses, matching how the binary
+/// format's element section references a table. `storage_idx` is separate:
+/// `ctx.module.tables` holds entries for REAL (non-import) tables only, so
+/// it's indexed 0.. among just those, with no offset for however many table
+/// imports precede this one -- the same split `build_func`'s own doc
+/// comment explains for functions/code, needed here for the identical
+/// reason once a module can combine a table import with a real table.
+fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()));
     if starts_with_limit_number {
-        ctx.module.tables[table_idx as usize].limits = parse_limits(rest)?;
+        ctx.module.tables[storage_idx as usize].limits = parse_limits(rest)?;
         return Ok(());
     }
 
@@ -638,7 +904,7 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, ctx: &mut Mod
         .map(|f| resolve_idx(&ctx.func_names, f, "func"))
         .collect::<Result<_, _>>()?;
     let count = function_indices.len() as u32;
-    ctx.module.tables[table_idx as usize].limits = Limits { min: count, max: Some(count) };
+    ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
         offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
@@ -883,6 +1149,24 @@ fn encode_one_inner(exprs: &[SExpr], i: usize, icx: &mut InstrCtx, out: &mut Vec
 /// `following` it needs as immediates — never operands, which flat form
 /// never carries at this position (see [`encode_instr_list`]'s doc
 /// comment). Returns how many elements of `following` were consumed.
+/// The `0xFC` sub-opcode for one of the "non-trapping float-to-int
+/// conversions" proposal's 8 `trunc_sat` instructions, or `None` for any
+/// other name. Order matches the spec's own table exactly: `i32` before
+/// `i64`, `f32` before `f64`, `_s` before `_u`.
+fn trunc_sat_sub_opcode(name: &str) -> Option<u8> {
+    match name {
+        "i32.trunc_sat_f32_s" => Some(0x00),
+        "i32.trunc_sat_f32_u" => Some(0x01),
+        "i32.trunc_sat_f64_s" => Some(0x02),
+        "i32.trunc_sat_f64_u" => Some(0x03),
+        "i64.trunc_sat_f32_s" => Some(0x04),
+        "i64.trunc_sat_f32_u" => Some(0x05),
+        "i64.trunc_sat_f64_s" => Some(0x06),
+        "i64.trunc_sat_f64_u" => Some(0x07),
+        _ => None,
+    }
+}
+
 fn encode_stream_instr(
     name: &str,
     following: &[SExpr],
@@ -890,6 +1174,19 @@ fn encode_stream_instr(
     icx: &mut InstrCtx,
     out: &mut Vec<u8>,
 ) -> Result<usize, WastParseError> {
+    // `i32/i64.trunc_sat_f32/f64_s/u` -- the "non-trapping float-to-int
+    // conversions" proposal's 8 opcodes, encoded as the two-byte `0xFC
+    // <sub-opcode>` prefix form (see this crate's own module doc comment
+    // for why `wasm_opcodes` deliberately doesn't model 0xFC opcodes: they
+    // don't fit its single-byte `OpcodeInfo` table). Intercepted before the
+    // `get_opcode_by_name` lookup below, which would otherwise reject them
+    // as unknown. No immediates beyond the sub-opcode byte itself, so this
+    // mirrors the default (no-immediate) arm at the bottom of this match.
+    if let Some(sub) = trunc_sat_sub_opcode(name) {
+        out.push(0xFC);
+        out.push(sub);
+        return Ok(0);
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
     match name {
@@ -1106,6 +1403,17 @@ fn encode_flat_instr(
     icx: &mut InstrCtx,
     out: &mut Vec<u8>,
 ) -> Result<(), WastParseError> {
+    // See `encode_stream_instr`'s matching comment: trunc_sat's 0xFC-prefixed
+    // encoding doesn't fit `wasm_opcodes`' single-byte table, so it's
+    // intercepted here too, before the `get_opcode_by_name` lookup. Its one
+    // folded operand recurses through `encode_instr_list` exactly like the
+    // default (no-immediate) arm below, just emitting two opcode bytes.
+    if let Some(sub) = trunc_sat_sub_opcode(name) {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFC);
+        out.push(sub);
+        return Ok(());
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
 
@@ -1409,6 +1717,108 @@ mod tests {
     }
 
     #[test]
+    fn func_inline_import_shorthand_desugars_to_a_real_import() {
+        // `(func $f (import "m" "n") (type $t))` means EXACTLY
+        // `(import "m" "n" (func $f (type $t)))` -- matches the official
+        // testsuite's func_ptrs.wast shape ($print).
+        let m = parse_module(
+            r#"(module
+                 (type $t (func (param i32)))
+                 (func $print (import "spectest" "print_i32") (type $t)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.functions.len(), 0, "the import has no entry in the real-funcs-only function section");
+        assert_eq!(m.code.len(), 0);
+        assert_eq!(m.imports.len(), 1);
+        assert_eq!(m.imports[0].module_name, "spectest");
+        assert_eq!(m.imports[0].name, "print_i32");
+        assert!(matches!(m.imports[0].kind, ExternalKind::Function));
+        assert!(matches!(m.imports[0].type_info, ImportTypeInfo::Function(0)));
+    }
+
+    #[test]
+    fn func_import_followed_by_a_real_func_resolves_both_correctly() {
+        // The regression this crate's own conformance run against func_ptrs.wast
+        // caught: `ctx.module.functions`/`code` used to be indexed by the
+        // COMBINED func-space index (imports counted in) even though those
+        // arrays only ever hold REAL functions -- a module with one func
+        // import followed by any real func panicked with an out-of-bounds
+        // index the first time this combination was ever exercised.
+        let m = parse_module(
+            r#"(module
+                 (func $print (import "spectest" "print_i32") (param i32))
+                 (func $real (export "real") (result i32) (i32.const 7))
+                 (func (export "call_print") (call $print (i32.const 1))))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert_eq!(m.functions.len(), 2, "one real-funcs-only entry per non-import func");
+        assert_eq!(m.code.len(), 2);
+        assert_eq!(code_of(&m, 0), &[0x41, 0x07, 0x0B]); // $real: i32.const 7; end
+        // `call $print` must resolve to func-space index 0 (the import,
+        // the lowest index in its space) -- 0x10 = call, 0x00 = funcidx 0.
+        assert_eq!(code_of(&m, 1), &[0x41, 0x01, 0x10, 0x00, 0x0B]);
+        let real_export = m.exports.iter().find(|e| e.name == "real").unwrap();
+        assert_eq!(real_export.index, 1, "the real func's own func-space index (after the 1 import)");
+    }
+
+    #[test]
+    fn global_inline_import_shorthand_followed_by_a_real_global_resolves_both_correctly() {
+        // Matches the official testsuite's global.wast shape: unnamed
+        // inline-import globals (no `$name`) followed by real globals.
+        let m = parse_module(
+            r#"(module
+                 (global (import "spectest" "global_i32") i32)
+                 (global $g (export "g") i32 (i32.const 42)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert!(matches!(m.imports[0].type_info, ImportTypeInfo::Global(GlobalType { value_type: ValueType::I32, mutable: false })));
+        assert_eq!(m.globals.len(), 1, "one real-globals-only entry, not one per import too");
+        assert_eq!(m.globals[0].init_expr, vec![0x41, 0x2A, 0x0B]); // i32.const 42; end
+        let export = m.exports.iter().find(|e| e.name == "g").unwrap();
+        assert_eq!(export.index, 1, "the real global's own global-space index (after the 1 import)");
+    }
+
+    #[test]
+    fn table_import_followed_by_a_real_table_resolves_both_correctly() {
+        // Same storage-vs-space-index split as func/global, exercised for
+        // table since `build_table_limits_and_elements` shares the identical
+        // code path this fix touches.
+        let m = parse_module(
+            r#"(module
+                 (table (import "spectest" "table") 1 funcref)
+                 (table $t 2 funcref))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert_eq!(m.tables.len(), 1, "one real-tables-only entry");
+        assert_eq!(m.tables[0].limits.min, 2);
+    }
+
+    #[test]
+    fn abbreviated_module_form_with_no_wrapper_parses_its_bare_fields() {
+        // The WAT text format allows the enclosing `(module ...)` to be
+        // omitted entirely when the fields are the ONLY top-level content --
+        // exactly how the official spec testsuite's comments.wast/block.wast
+        // write their `(module quote "...")` directive's concatenated text
+        // (this is what `parse_module` is re-parsing that content as).
+        let m = parse_module(r#"(func (export "f") (result i32) (i32.const 42))"#).unwrap();
+        assert_eq!(m.functions.len(), 1);
+        assert_eq!(m.exports[0].name, "f");
+    }
+
+    #[test]
+    fn abbreviated_module_form_with_multiple_top_level_funcs() {
+        let m = parse_module(
+            r#"(func (export "a") (result i32) (i32.const 1))(func (export "b") (result i32) (i32.const 2))"#,
+        )
+        .unwrap();
+        assert_eq!(m.functions.len(), 2);
+        assert_eq!(m.exports.iter().map(|e| e.name.as_str()).collect::<Vec<_>>(), vec!["a", "b"]);
+    }
+
+    #[test]
     fn simple_add_function_encodes_expected_bytes() {
         let m = parse_module(
             "(module (func (param $a i32) (param $b i32) (result i32) local.get $a local.get $b i32.add))",
@@ -1427,6 +1837,50 @@ mod tests {
     }
 
     #[test]
+    fn sign_extension_opcodes_encode_flat_and_folded_the_same_as_any_other_no_immediate_instruction() {
+        // Real single-byte opcodes (0xC0-0xC4) go through the exact same
+        // `wasm_opcodes::get_opcode_by_name` path every other no-immediate
+        // instruction does -- no special-casing needed once WASM03 adds
+        // them to the opcode table.
+        let flat = parse_module("(module (func (param i32) (result i32) local.get 0 i32.extend8_s))").unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xC0, 0x0B]);
+
+        let folded = parse_module("(module (func (param i64) (result i64) (i64.extend32_s (local.get 0))))").unwrap();
+        assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xC4, 0x0B]);
+    }
+
+    #[test]
+    fn trunc_sat_opcodes_encode_as_the_0xfc_prefixed_two_byte_form() {
+        // Unlike sign-extension, trunc_sat isn't in `wasm_opcodes`' table at
+        // all (deliberately -- see that crate's own module doc comment) --
+        // this crate's `desugar`-adjacent interception in `encode_stream_instr`/
+        // `encode_flat_instr` must emit the real `0xFC <sub>` bytes.
+        let flat = parse_module("(module (func (param f32) (result i32) local.get 0 i32.trunc_sat_f32_s))").unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFC, 0x00, 0x0B]);
+
+        let folded = parse_module("(module (func (param f64) (result i64) (i64.trunc_sat_f64_u (local.get 0))))").unwrap();
+        assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xFC, 0x07, 0x0B]);
+    }
+
+    #[test]
+    fn all_eight_trunc_sat_names_map_to_the_spec_assigned_sub_opcode() {
+        let expected = [
+            ("i32.trunc_sat_f32_s", 0x00u8),
+            ("i32.trunc_sat_f32_u", 0x01),
+            ("i32.trunc_sat_f64_s", 0x02),
+            ("i32.trunc_sat_f64_u", 0x03),
+            ("i64.trunc_sat_f32_s", 0x04),
+            ("i64.trunc_sat_f32_u", 0x05),
+            ("i64.trunc_sat_f64_s", 0x06),
+            ("i64.trunc_sat_f64_u", 0x07),
+        ];
+        for (name, sub) in expected {
+            assert_eq!(trunc_sat_sub_opcode(name), Some(sub), "{name}");
+        }
+        assert_eq!(trunc_sat_sub_opcode("i32.trunc_f32_s"), None, "the TRAPPING variant must not match");
+    }
+
+    #[test]
     fn positional_and_named_locals_share_one_index_space() {
         let m = parse_module(
             "(module (func (param i32) (local $x i32) local.get 0 local.get $x drop))",
@@ -1434,6 +1888,142 @@ mod tests {
         .unwrap();
         // param is local 0, $x is local 1.
         assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
+    }
+
+    /// WASM14: a function that references its signature via `(type $sig)`
+    /// and has ZERO literal `(param ...)` forms of its own must still seed
+    /// the local-index counter from the referenced type's REAL param count,
+    /// not from 0 -- otherwise a declared `(local ...)` silently aliases
+    /// parameter index 0 instead of starting right after the params. This
+    /// is exactly `func.wast`'s own "type-use-1" shape from the official
+    /// spec testsuite (`(func (export "f") (type $sig) (local $var i32)
+    /// (local.get $var))` returning the local's own zero-initialized
+    /// default, 0, not the param's value, 42), found because that real
+    /// case was returning the wrong VALUE (not trapping) -- the kind of
+    /// bug an inline-`(param ...)` test like the one above can't catch.
+    #[test]
+    fn local_declared_after_a_type_only_referenced_param_gets_the_next_free_index() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (local $var i32) (local.get $var)))",
+        )
+        .unwrap();
+        // The param occupies local 0 (from $sig, never spelled out here);
+        // $var must be local 1, NOT local 0 again.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x01, 0x0B]);
+    }
+
+    /// Two rounds of security review on the WASM14 fix above chased the
+    /// same underlying issue through two increasingly narrow patches: a
+    /// func that gives BOTH an explicit `(type $sig)` reference AND its
+    /// own literal `(param ...)` forms with a DIFFERENT arity is something
+    /// `resolve_func_signature_ref` never rejects, so `param_count` (from
+    /// the real type) and this function's own literal param count can
+    /// disagree. Round 1's fix (seed local indices from `param_count`)
+    /// could make a declared local collide with (alias the storage of) an
+    /// "extra" literal param. Round 2's fix (seed from `max` of the two
+    /// counts) closed that collision but, since the compiled
+    /// `FunctionBody` and real function type only ever account for
+    /// `param_count` real params, an "extra" literal param's `local.get`/
+    /// `.set`/`.tee` still encoded an index past the function's real local
+    /// array -- confirmed via `wasm-execution`'s raw, unchecked
+    /// `ctx.typed_locals[index]` panicking once such a module actually ran
+    /// (not memory-unsafe, but a real crash/DoS surface). The real fix is
+    /// upstream of both patches: REJECT the mismatch at parse time
+    /// (`WastParseError::TypeUseParamCountMismatch`) rather than silently
+    /// accepting it and hoping every later index computation stays safe.
+    /// This is also the spec-correct behavior — a real `.wat` file's
+    /// literal params, when given alongside a type reference, must always
+    /// already match it exactly. The round-1/round-2 `max()`-based local
+    /// index seeding stays in place as defense in depth (harmless — once
+    /// this check passes, `param_position` and `param_count` are always
+    /// equal whenever literal params were given), but this parse-time
+    /// rejection is what actually makes the invariant hold.
+    #[test]
+    fn func_rejects_type_reference_disagreeing_with_its_own_literal_params() {
+        let result = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (param i32) (param i32) (local $x i32)
+                 (local.get $x)))",
+        );
+        assert!(matches!(
+            result,
+            Err(WastParseError::TypeUseParamCountMismatch { declared: 2, referenced: 1, .. })
+        ));
+    }
+
+    /// The legitimate counterpart to the rejection test above: a func that
+    /// repeats its `(param ...)` forms AGREEING with a `(type $sig)`
+    /// reference (purely for naming — `func.wast`'s own `"type-use-6"`
+    /// does exactly this: `(func (export "type-use-6") (type $sig-3)
+    /// (param i32))`) must still parse and index locals correctly.
+    #[test]
+    fn func_accepts_type_reference_agreeing_with_its_own_literal_params() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (param $x i32) (local $y i32)
+                 local.get $x local.get $y drop))",
+        )
+        .unwrap();
+        // $x (from the matching literal param) is local 0, $y is local 1.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
+    }
+
+    /// A THIRD round of security review found round 3's own mismatch
+    /// check could itself be bypassed: its pre-scan originally stopped at
+    /// the first field that wasn't `param`/`result`/`type`, but this
+    /// text-level parser doesn't otherwise enforce that a func's `(local
+    /// ...)` forms all come after its `(param ...)` forms (that ordering
+    /// check is `wasm-validator`'s job too). A func with a `(local ...)`
+    /// BEFORE some of its trailing `(param ...)` forms made the pre-scan
+    /// stop before ever counting those later params -- silently skipping
+    /// the mismatch check entirely (`saw_literal_param` could even end up
+    /// `false`) while the main assignment loop still processed them,
+    /// reproducing the exact out-of-bounds local index round 2's finding
+    /// was about, just via reordering instead of an outright arity
+    /// mismatch. Fixed by giving the pre-scan the SAME leading-region
+    /// membership test (`is_leading_field`) the main loop already uses --
+    /// `param`/`result`/`type`/`local` are ALL "still in the prefix,"
+    /// only a true instruction ends it -- so the two can no longer
+    /// disagree on how far to scan.
+    #[test]
+    fn func_rejects_type_reference_disagreeing_even_with_a_local_field_reordered_before_the_extra_params() {
+        let result = parse_module(
+            "(module
+               (type $sig (func (param i32)))
+               (func (export \"f\") (type $sig)
+                 (local $a i32)
+                 (param $b i32) (param $c i32) (param $d i32)
+                 (local.get $d)))",
+        );
+        assert!(matches!(
+            result,
+            Err(WastParseError::TypeUseParamCountMismatch { declared: 3, referenced: 1, .. })
+        ));
+    }
+
+    /// A FOURTH round of security review found the `TypeUseParamCountMismatch`
+    /// check itself had drifted from this file's own documented contract:
+    /// an out-of-range numeric `(type N)` reference (no `(type ...)`
+    /// section entry at all) must NOT be rejected here -- see
+    /// `func_with_out_of_range_numeric_type_reference_does_not_panic`
+    /// above, which is this exact promise, already regression-tested for
+    /// the no-literal-params case. But `(func (type 0) (param i32))`
+    /// (ordinary, spec-legal literal params, alongside an unresolvable
+    /// type reference) compared against `param_count`'s `0` FALLBACK for
+    /// the missing type and got hard-rejected -- a real functional
+    /// regression, not a security bug (it only makes the parser MORE
+    /// conservative), but still a false positive against input this
+    /// crate's own design says it should still accept and pass through to
+    /// `wasm-validator`. Fixed by gating the check on the type reference
+    /// actually having resolved to a real type in the first place.
+    #[test]
+    fn out_of_range_type_reference_with_ordinary_literal_params_still_does_not_panic_or_reject() {
+        let result = parse_module("(module (func (type 0) (param i32)))");
+        assert!(result.is_ok());
     }
 
     #[test]

@@ -461,11 +461,50 @@ Prioritized work items:
    template element remains in the body instead of sending later comments or
    processing instructions to `html`. Direct after-body placement,
    after-after-body reentry, and seeded HTML fragments remain distinct.
+   Repeated authored `frameset` start tags after a top-level frameset has
+   closed are now diagnosed and ignored in the document-only after-frameset
+   state, preserving the first frameset and its following tail nodes. Valid
+   nested framesets, after-after-frameset ignored-token recovery, and seeded
+   HTML fragment behavior remain distinct. Unexpected tokens in the
+   after-after-frameset state are now consumed by that insertion mode after its
+   single required diagnostic, preventing `frame`, `frameset`, and other start
+   or end tags from also emitting an unrelated downstream recovery error.
    Continue with the remaining after-body and after-after-body token classes,
    frameset tail modes, and trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
+   Tokenizer output now has an opt-in positioned-token path that records the
+   proven emission point without guessing a lexical span, while existing token
+   drains and unpositioned streaming parser callers remain compatible. The
+   after-after-frameset ignored-token diagnostic is the first end-to-end tree
+   construction slice to carry that position through UTF-8, Unicode-scalar,
+   line, column, and CRLF-preprocessing accounting. Shared after-body and
+   after-after-body unexpected-token recovery now carries the reprocessed
+   token's same proven emission point exactly once, while allowed tail tokens
+   and directly supplied token streams remain unpositioned. Ignored start tags
+   in the after-frameset insertion mode likewise carry their token emission
+   point exactly once across repeated `frameset`, `frame`, and generic starts,
+   while after-after-frameset dispatch remains distinct. Direct in-frameset
+   ignored start tags and non-whitespace character tokens also carry their
+   proven emission point exactly once. Character tokens use the delimiter or
+   EOF point that flushes the tokenizer's coalesced text. Direct after-frameset
+   non-whitespace character tokens now follow the same positioned contract,
+   while after-after-frameset text remains on its already-positioned generic
+   tail diagnostic. Open-frameset EOF diagnostics now carry the proven EOF
+   emission point for source parsing while plain token streams remain
+   unpositioned. Rejected end tags in direct in-frameset and after-frameset
+   modes now carry dedicated diagnostics at their proven token emission point,
+   while valid closure, foreign content, fragments, after-after-frameset, and
+   plain token streams retain their separate contracts. Non-initial doctypes
+   now carry the tokenizer's delimiter or EOF emission point through the shared
+   tree-construction rejection path, including frameset tails, while tokenizer
+   doctype errors and unpositioned token streams retain separate ownership.
+   Complete-document missing-doctype diagnostics now carry the first token's
+   delimiter or EOF emission point, while fragments and directly supplied
+   tokens retain their separate contracts.
+   Continue migrating one evidence-backed diagnostic family at a time;
+   synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
    and either add or explicitly separate byte decoding and encoding sniffing.
 5. **Algorithm and differential audit.** Map implemented states/modes to the

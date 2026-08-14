@@ -1,3 +1,4 @@
+
 defmodule CodingAdventures.ZipTest do
   use ExUnit.Case, async: true
   import Bitwise
@@ -64,7 +65,7 @@ defmodule CodingAdventures.ZipTest do
     # Local header = 30 bytes + 8 bytes name ("data.bin") = 38 bytes;
     # file data starts at byte 38. Corrupt the first data byte.
     data_offset = 38
-    <<pre::binary-size(data_offset), byte, rest::binary>> = archive
+    <<pre::binary-size(^data_offset), byte, rest::binary>> = archive
     corrupted = pre <> <<bxor(byte, 0xFF)>> <> rest
     assert_raise RuntimeError, ~r/CRC-32 mismatch/, fn ->
       Zip.unzip(corrupted)
@@ -85,7 +86,7 @@ defmodule CodingAdventures.ZipTest do
 
   test "TC-7: incompressible data stored as method 0" do
     # Random-ish bytes that deflate can't compress smaller than raw
-    data = :crypto.strong_rand_bytes(256)
+    data = for i <- 0..255, into: <<>>, do: <<i>>
     archive = Zip.zip([{"rand.bin", data}])
     reader = Zip.new_reader(archive)
     [entry] = Zip.reader_entries(reader)
@@ -340,9 +341,11 @@ defmodule CodingAdventures.ZipTest do
     archive = local <> cd <> eocd
     reader = Zip.new_reader(archive)
     [entry] = Zip.reader_entries(reader)
-    assert_raise RuntimeError, ~r/NLEN complement/, fn ->
+    error = assert_raise CodingAdventures.Zip.RawInflateError, fn ->
       Zip.reader_read(reader, entry)
     end
+
+    assert error.code == "stored-length-mismatch"
   end
 
   # ─── Duplicate entry names ────────────────────────────────────────────────

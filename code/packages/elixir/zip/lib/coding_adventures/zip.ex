@@ -1,5 +1,19 @@
+defmodule CodingAdventures.Zip.RawInflateError do
+  @moduledoc "A stable, payload-blind raw RFC 1951 decoding failure."
+  defexception [:code, :message]
+end
+
+defmodule CodingAdventures.Zip.RawInflateResult do
+  @moduledoc "Complete raw RFC 1951 output and the exact input bytes consumed."
+  @enforce_keys [:output, :bytes_consumed]
+  defstruct [:output, :bytes_consumed]
+end
+
 defmodule CodingAdventures.Zip do
   import Bitwise
+
+  alias CodingAdventures.Zip.RawInflateError
+  alias CodingAdventures.Zip.RawInflateResult
 
   @moduledoc """
   ZIP archive format (PKZIP 1989) — CMP09.
@@ -35,13 +49,13 @@ defmodule CodingAdventures.Zip do
   CD, and random-accesses only the entries it needs. We never need to scan
   from the front.
 
-  ## DEFLATE inlined (RFC 1951, fixed Huffman BTYPE=01)
+  ## DEFLATE inlined (RFC 1951)
 
   The existing `CodingAdventures.Deflate` package uses a custom wire format
   that does NOT conform to RFC 1951. ZIP embeds raw RFC 1951 bit streams, so
   we inline our own encoder and decoder here.
 
-  Fixed Huffman tree (RFC 1951 §3.2.6):
+  The encoder emits fixed Huffman blocks (RFC 1951 §3.2.6):
 
       Literal/Length codes:
         0-143   → 8-bit codes  0x30-0xBF
@@ -50,29 +64,51 @@ defmodule CodingAdventures.Zip do
         280-287 → 8-bit codes  0xC0-0xC7
 
       Distance codes 0-29: always 5 bits.
+
+  The strict decoder accepts stored, fixed, and dynamic blocks, validates
+  canonical Huffman trees, counts exact input consumption through BFINAL, and
+  enforces a caller-lowerable 256 MiB output ceiling before every write.
   """
 
   # ─── Wire constants ──────────────────────────────────────────────────────────
 
-  @local_sig  0x04034B50
-  @cd_sig     0x02014B50
-  @eocd_sig   0x06054B50
+  @local_sig 0x04034B50
+  @cd_sig 0x02014B50
+  @eocd_sig 0x06054B50
 
   # UTF-8 general-purpose bit flag
-  @flags      0x0800
+  @flags 0x0800
 
   # Minimum version needed to extract: 2.0 for DEFLATE, 1.0 for Stored
   @ver_deflate 20
-  @ver_stored  10
+  @ver_stored 10
 
   # Version made by: Unix (0x03) × 256 + spec version 30 (3.0)
   @ver_made_by 0x031E
 
   # MS-DOS epoch: 1980-01-01 00:00:00
-  @dos_epoch   0x00210000
+  @dos_epoch 0x00210000
 
   # Maximum decompressed output (zip-bomb guard): 256 MiB
-  @max_output  268_435_456
+  @raw_inflate_max_output 268_435_456
+  @raw_inflate_error_codes [
+    "invalid-output-limit",
+    "unexpected-eof",
+    "reserved-block-type",
+    "stored-length-mismatch",
+    "huffman-oversubscribed",
+    "incomplete-code-length-tree",
+    "incomplete-literal-length-tree",
+    "incomplete-distance-tree",
+    "repeat-without-previous",
+    "repeat-overrun",
+    "invalid-literal-length-symbol",
+    "reserved-distance-symbol",
+    "invalid-back-reference",
+    "output-limit-exceeded"
+  ]
+
+  @code_length_order [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]
 
   # ─── Public API ──────────────────────────────────────────────────────────────
 
@@ -85,6 +121,12 @@ defmodule CodingAdventures.Zip do
 
   @doc "MS-DOS epoch constant (1980-01-01 00:00:00)."
   def dos_epoch, do: @dos_epoch
+
+  @doc "Hard and default raw RFC 1951 output ceiling (256 MiB)."
+  def raw_inflate_max_output, do: @raw_inflate_max_output
+
+  @doc "Closed stable error identifiers for strict raw RFC 1951 decoding."
+  def raw_inflate_error_codes, do: @raw_inflate_error_codes
 
   @doc """
   CRC-32 of `data` (polynomial 0xEDB88320, LSB-first).
@@ -114,12 +156,15 @@ defmodule CodingAdventures.Zip do
   def zip(entries, opts \\ []) do
     compress = Keyword.get(opts, :compress, true)
     w = new_writer()
-    w = Enum.reduce(entries, w, fn entry, acc ->
-      case entry do
-        {name, data} -> add_file(acc, name, data, compress: compress)
-        {name, data, entry_opts} -> add_file(acc, name, data, entry_opts)
-      end
-    end)
+
+    w =
+      Enum.reduce(entries, w, fn entry, acc ->
+        case entry do
+          {name, data} -> add_file(acc, name, data, compress: compress)
+          {name, data, entry_opts} -> add_file(acc, name, data, entry_opts)
+        end
+      end)
+
     finish(w)
   end
 
@@ -127,10 +172,12 @@ defmodule CodingAdventures.Zip do
   def unzip(data) when is_binary(data) do
     reader = new_reader(data)
     entries = reader_entries(reader)
+
     Enum.reduce(entries, %{}, fn entry, acc ->
       if Map.has_key?(acc, entry.name) do
         raise "zip: duplicate entry name '#{entry.name}'"
       end
+
       Map.put(acc, entry.name, reader_read(reader, entry))
     end)
   end
@@ -195,11 +242,12 @@ defmodule CodingAdventures.Zip do
     end
 
     lh_sig = read_le32(data, local_offset)
+
     unless lh_sig == @local_sig do
       raise "zip: bad local header signature at offset #{local_offset}"
     end
 
-    lh_name_len  = read_le16(data, local_offset + 26)
+    lh_name_len = read_le16(data, local_offset + 26)
     lh_extra_len = read_le16(data, local_offset + 28)
 
     if is_nil(lh_name_len) or is_nil(lh_extra_len) do
@@ -216,12 +264,28 @@ defmodule CodingAdventures.Zip do
 
     decompressed =
       case entry.method do
-        0 -> compressed
-        8 -> deflate_decompress(compressed, entry.size)
-        m -> raise "zip: unsupported compression method #{m}"
+        0 ->
+          compressed
+
+        8 ->
+          result = raw_inflate_counted(compressed, entry.size)
+
+          if result.bytes_consumed != byte_size(compressed) do
+            raise "zip: compressed payload contains trailing bytes"
+          end
+
+          result.output
+
+        m ->
+          raise "zip: unsupported compression method #{m}"
       end
 
+    if byte_size(decompressed) != entry.size do
+      raise "zip: uncompressed size does not match the directory"
+    end
+
     actual_crc = crc32(decompressed)
+
     unless actual_crc == entry.crc32 do
       raise "zip: CRC-32 mismatch for '#{entry.name}' (expected #{entry.crc32}, got #{actual_crc})"
     end
@@ -241,23 +305,24 @@ defmodule CodingAdventures.Zip do
   defp add_entry(writer, name, data, compress) do
     {method, compressed, crc} = compress_entry(data, compress)
     datetime = @dos_epoch
-    version  = if method == 8, do: @ver_deflate, else: @ver_stored
+    version = if method == 8, do: @ver_deflate, else: @ver_stored
     name_bin = :unicode.characters_to_binary(name, :utf8)
     name_len = byte_size(name_bin)
 
     local_offset = writer.buffer |> IO.iodata_length()
 
     local_header = [
-      <<@local_sig   :: little-32>>,
-      <<version      :: little-16>>,
-      <<@flags       :: little-16>>,
-      <<method       :: little-16>>,
-      <<datetime     :: little-32>>,
-      <<crc          :: little-32>>,
-      <<byte_size(compressed) :: little-32>>,
-      <<byte_size(data)       :: little-32>>,
-      <<name_len     :: little-16>>,
-      <<0            :: little-16>>,   # extra field length
+      <<@local_sig::little-32>>,
+      <<version::little-16>>,
+      <<@flags::little-16>>,
+      <<method::little-16>>,
+      <<datetime::little-32>>,
+      <<crc::little-32>>,
+      <<byte_size(compressed)::little-32>>,
+      <<byte_size(data)::little-32>>,
+      <<name_len::little-16>>,
+      # extra field length
+      <<0::little-16>>,
       name_bin,
       compressed
     ]
@@ -273,16 +338,15 @@ defmodule CodingAdventures.Zip do
       local_offset: local_offset
     }
 
-    %{writer |
-      entries: writer.entries ++ [entry],
-      buffer: [writer.buffer | local_header]
-    }
+    %{writer | entries: writer.entries ++ [entry], buffer: [writer.buffer | local_header]}
   end
 
   defp compress_entry(data, false), do: {0, data, crc32(data)}
+
   defp compress_entry(data, true) do
     crc = crc32(data)
     compressed = deflate_compress(data)
+
     if byte_size(compressed) < byte_size(data) do
       {8, compressed, crc}
     else
@@ -293,37 +357,48 @@ defmodule CodingAdventures.Zip do
   defp build_cd_record(e) do
     name_bin = :unicode.characters_to_binary(e.name, :utf8)
     name_len = byte_size(name_bin)
+
     [
-      <<@cd_sig          :: little-32>>,
-      <<@ver_made_by     :: little-16>>,
-      <<e.version        :: little-16>>,
-      <<@flags           :: little-16>>,
-      <<e.method         :: little-16>>,
-      <<e.datetime       :: little-32>>,
-      <<e.crc32          :: little-32>>,
-      <<e.compressed_size :: little-32>>,
-      <<e.size           :: little-32>>,
-      <<name_len         :: little-16>>,
-      <<0                :: little-16>>,  # extra field length
-      <<0                :: little-16>>,  # comment length
-      <<0                :: little-16>>,  # disk start
-      <<0                :: little-16>>,  # internal attributes
-      <<0                :: little-32>>,  # external attributes
-      <<e.local_offset   :: little-32>>,
+      <<@cd_sig::little-32>>,
+      <<@ver_made_by::little-16>>,
+      <<e.version::little-16>>,
+      <<@flags::little-16>>,
+      <<e.method::little-16>>,
+      <<e.datetime::little-32>>,
+      <<e.crc32::little-32>>,
+      <<e.compressed_size::little-32>>,
+      <<e.size::little-32>>,
+      <<name_len::little-16>>,
+      # extra field length
+      <<0::little-16>>,
+      # comment length
+      <<0::little-16>>,
+      # disk start
+      <<0::little-16>>,
+      # internal attributes
+      <<0::little-16>>,
+      # external attributes
+      <<0::little-32>>,
+      <<e.local_offset::little-32>>,
       name_bin
     ]
   end
 
   defp build_eocd(entry_count, cd_size, cd_offset) do
     <<
-      @eocd_sig   :: little-32,
-      0           :: little-16,   # disk number
-      0           :: little-16,   # disk with CD start
-      entry_count :: little-16,   # entries on this disk
-      entry_count :: little-16,   # total entries
-      cd_size     :: little-32,
-      cd_offset   :: little-32,
-      0           :: little-16    # comment length
+      @eocd_sig::little-32,
+      # disk number
+      0::little-16,
+      # disk with CD start
+      0::little-16,
+      # entries on this disk
+      entry_count::little-16,
+      # total entries
+      entry_count::little-16,
+      cd_size::little-32,
+      cd_offset::little-32,
+      # comment length
+      0::little-16
     >>
   end
 
@@ -344,8 +419,8 @@ defmodule CodingAdventures.Zip do
     end
 
     entry_count = read_le16(data, eocd_offset + 8)
-    cd_size     = read_le32(data, eocd_offset + 12)
-    cd_offset   = read_le32(data, eocd_offset + 16)
+    cd_size = read_le32(data, eocd_offset + 12)
+    cd_offset = read_le32(data, eocd_offset + 16)
 
     if entry_count > 65535 do
       raise "zip: entry count #{entry_count} exceeds ZIP limit of 65535"
@@ -355,9 +430,11 @@ defmodule CodingAdventures.Zip do
     if cd_offset > eocd_offset do
       raise "zip: CD offset #{cd_offset} overlaps EOCD at #{eocd_offset}"
     end
+
     if cd_offset + cd_size > eocd_offset do
       raise "zip: CD region extends into EOCD"
     end
+
     if cd_offset + cd_size > size do
       raise "zip: CD region extends beyond archive"
     end
@@ -375,10 +452,11 @@ defmodule CodingAdventures.Zip do
 
   defp find_eocd_loop(data, pos, start) do
     sig = read_le32(data, pos)
+
     cond do
       sig == @eocd_sig -> pos
-      pos <= start     -> nil
-      true             -> find_eocd_loop(data, pos - 1, start)
+      pos <= start -> nil
+      true -> find_eocd_loop(data, pos - 1, start)
     end
   end
 
@@ -398,21 +476,24 @@ defmodule CodingAdventures.Zip do
     end
 
     sig = read_le32(data, pos)
+
     unless sig == @cd_sig do
       raise "zip: expected CD signature at #{pos}, got #{sig}"
     end
 
-    method           = read_le16(data, pos + 10)
-    crc32v           = read_le32(data, pos + 16)
-    compressed_size  = read_le32(data, pos + 20)
-    size             = read_le32(data, pos + 24)
-    name_len         = read_le16(data, pos + 28)
-    extra_len        = read_le16(data, pos + 30)
-    comment_len      = read_le16(data, pos + 32)
-    local_offset     = read_le32(data, pos + 42)
+    method = read_le16(data, pos + 10)
+    crc32v = read_le32(data, pos + 16)
+    compressed_size = read_le32(data, pos + 20)
+    size = read_le32(data, pos + 24)
+    name_len = read_le16(data, pos + 28)
+    extra_len = read_le16(data, pos + 30)
+    comment_len = read_le16(data, pos + 32)
+    local_offset = read_le32(data, pos + 42)
 
-    if Enum.any?([method, crc32v, compressed_size, size, name_len, extra_len,
-                  comment_len, local_offset], &is_nil/1) do
+    if Enum.any?(
+         [method, crc32v, compressed_size, size, name_len, extra_len, comment_len, local_offset],
+         &is_nil/1
+       ) do
       raise "zip: CD entry fields truncated at pos #{pos}"
     end
 
@@ -422,11 +503,11 @@ defmodule CodingAdventures.Zip do
       raise "zip: CD entry name extends beyond archive data at pos #{pos}"
     end
 
-    name_bin   = binary_part(data, name_start, name_len)
+    name_bin = binary_part(data, name_start, name_len)
     # scrub_utf8 handles the UTF-8 conversion internally — do not pre-pipe through
     # :unicode.characters_to_binary as it returns a tuple on error, not a binary,
     # which would cause a FunctionClauseError in scrub_utf8.
-    name       = scrub_utf8(name_bin)
+    name = scrub_utf8(name_bin)
     validate_entry_name!(name)
 
     next_pos = pos + 46 + name_len + extra_len + comment_len
@@ -452,7 +533,9 @@ defmodule CodingAdventures.Zip do
   # sequences are handled at the codepoint level, not byte-by-byte.
   defp scrub_utf8(bin) when is_binary(bin) do
     case :unicode.characters_to_binary(bin, :utf8, :utf8) do
-      result when is_binary(result) -> result
+      result when is_binary(result) ->
+        result
+
       _error ->
         case :unicode.characters_to_binary(bin, :latin1, :utf8) do
           result when is_binary(result) -> result
@@ -466,16 +549,22 @@ defmodule CodingAdventures.Zip do
   # are used in Windows path traversal (e.g., `..\etc\passwd`).
   defp validate_entry_name!(name) do
     segments = String.split(name, "/")
+
     cond do
       String.contains?(name, "\0") ->
         raise "zip: entry name contains null byte"
+
       String.contains?(name, "\\") ->
         raise "zip: entry name contains backslash"
+
       String.starts_with?(name, "/") ->
         raise "zip: entry name is an absolute path"
+
       Enum.any?(segments, &(&1 == "..")) ->
         raise "zip: entry name contains path traversal (..)"
-      true -> :ok
+
+      true ->
+        :ok
     end
   end
 
@@ -486,78 +575,87 @@ defmodule CodingAdventures.Zip do
 
   # Length code table: {symbol, base_len, extra_bits}
   @length_table [
-    {257,   3, 0}, {258,   4, 0}, {259,   5, 0}, {260,   6, 0},
-    {261,   7, 0}, {262,   8, 0}, {263,   9, 0}, {264,  10, 0},
-    {265,  11, 1}, {266,  13, 1}, {267,  15, 1}, {268,  17, 1},
-    {269,  19, 2}, {270,  23, 2}, {271,  27, 2}, {272,  31, 2},
-    {273,  35, 3}, {274,  43, 3}, {275,  51, 3}, {276,  59, 3},
-    {277,  67, 4}, {278,  83, 4}, {279,  99, 4}, {280, 115, 4},
-    {281, 131, 5}, {282, 163, 5}, {283, 195, 5}, {284, 227, 5},
+    {257, 3, 0},
+    {258, 4, 0},
+    {259, 5, 0},
+    {260, 6, 0},
+    {261, 7, 0},
+    {262, 8, 0},
+    {263, 9, 0},
+    {264, 10, 0},
+    {265, 11, 1},
+    {266, 13, 1},
+    {267, 15, 1},
+    {268, 17, 1},
+    {269, 19, 2},
+    {270, 23, 2},
+    {271, 27, 2},
+    {272, 31, 2},
+    {273, 35, 3},
+    {274, 43, 3},
+    {275, 51, 3},
+    {276, 59, 3},
+    {277, 67, 4},
+    {278, 83, 4},
+    {279, 99, 4},
+    {280, 115, 4},
+    {281, 131, 5},
+    {282, 163, 5},
+    {283, 195, 5},
+    {284, 227, 5},
     # RFC 1951 §3.2.5: symbol 285 = length 258, 0 extra bits (special case)
     {285, 258, 0}
   ]
 
   # Distance code table: {code, base_dist, extra_bits}
   @dist_table [
-    { 0,     1, 0}, { 1,     2, 0}, { 2,     3, 0}, { 3,     4, 0},
-    { 4,     5, 1}, { 5,     7, 1}, { 6,     9, 2}, { 7,    13, 2},
-    { 8,    17, 3}, { 9,    25, 3}, {10,    33, 4}, {11,    49, 4},
-    {12,    65, 5}, {13,    97, 5}, {14,   129, 6}, {15,   193, 6},
-    {16,   257, 7}, {17,   385, 7}, {18,   513, 8}, {19,   769, 8},
-    {20,  1025, 9}, {21,  1537, 9}, {22,  2049,10}, {23,  3073,10},
-    {24,  4097,11}, {25,  6145,11}, {26,  8193,12}, {27, 12289,12},
-    {28, 16385,13}, {29, 24577,13}
+    {0, 1, 0},
+    {1, 2, 0},
+    {2, 3, 0},
+    {3, 4, 0},
+    {4, 5, 1},
+    {5, 7, 1},
+    {6, 9, 2},
+    {7, 13, 2},
+    {8, 17, 3},
+    {9, 25, 3},
+    {10, 33, 4},
+    {11, 49, 4},
+    {12, 65, 5},
+    {13, 97, 5},
+    {14, 129, 6},
+    {15, 193, 6},
+    {16, 257, 7},
+    {17, 385, 7},
+    {18, 513, 8},
+    {19, 769, 8},
+    {20, 1025, 9},
+    {21, 1537, 9},
+    {22, 2049, 10},
+    {23, 3073, 10},
+    {24, 4097, 11},
+    {25, 6145, 11},
+    {26, 8193, 12},
+    {27, 12289, 12},
+    {28, 16385, 13},
+    {29, 24577, 13}
   ]
 
   # Build compile-time lookup maps.
-  @length_by_sym @length_table |> Enum.map(fn {s,b,e} -> {s, {b,e}} end) |> Map.new()
-  @dist_by_code  @dist_table   |> Enum.map(fn {c,b,e} -> {c, {b,e}} end) |> Map.new()
+  @length_by_sym @length_table |> Enum.map(fn {s, b, e} -> {s, {b, e}} end) |> Map.new()
+  @dist_by_code @dist_table |> Enum.map(fn {c, b, e} -> {c, {b, e}} end) |> Map.new()
 
   # ── Fixed Huffman encode (symbol → {code_bits, nbits}) ───────────────────────
 
-  defp fixed_ll_encode(sym) when sym in 0..143,   do: {0x30 + sym,           8}
-  defp fixed_ll_encode(sym) when sym in 144..255,  do: {0x190 + sym - 144,   9}
-  defp fixed_ll_encode(sym) when sym in 256..279,  do: {sym - 256,            7}
-  defp fixed_ll_encode(sym) when sym in 280..287,  do: {0xC0 + sym - 280,    8}
+  defp fixed_ll_encode(sym) when sym in 0..143, do: {0x30 + sym, 8}
+  defp fixed_ll_encode(sym) when sym in 144..255, do: {0x190 + sym - 144, 9}
+  defp fixed_ll_encode(sym) when sym in 256..279, do: {sym - 256, 7}
+  defp fixed_ll_encode(sym) when sym in 280..287, do: {0xC0 + sym - 280, 8}
 
   # ── Fixed Huffman decode ─────────────────────────────────────────────────────
   #
   # Read bits LSB-first from the BitReader state, then reverse them to get the
   # Huffman code (Huffman is MSB-first in the canonical sense).
-
-  defp fixed_ll_decode(br) do
-    # Peek 9 bits to handle 9-bit codes.
-    {bits9, br2} = br_peek(br, 9)
-    bits7 = bits9 &&& 0x7F
-    bits8 = bits9 &&& 0xFF
-
-    cond do
-      # 7-bit: 256-279 → reversed codes 0x00-0x17 (binary 0000000-0010111)
-      reverse_bits(bits7, 7) < 24 ->
-        {256 + reverse_bits(bits7, 7), br_consume(br2, 7)}
-
-      # 8-bit: 0-143 → 0x30-0xBF (reversed: 0x0C-0x7D in 8 bits)
-      reverse_bits(bits8, 8) in 0x30..0xBF ->
-        {reverse_bits(bits8, 8) - 0x30, br_consume(br2, 8)}
-
-      # 8-bit: 280-287 → 0xC0-0xC7
-      reverse_bits(bits8, 8) in 0xC0..0xC7 ->
-        {280 + reverse_bits(bits8, 8) - 0xC0, br_consume(br2, 8)}
-
-      # 9-bit: 144-255 → 0x190-0x1FF
-      reverse_bits(bits9, 9) in 0x190..0x1FF ->
-        {144 + reverse_bits(bits9, 9) - 0x190, br_consume(br2, 9)}
-
-      true ->
-        raise "zip: invalid fixed Huffman code #{inspect(bits9)} in stream"
-    end
-  end
-
-  defp fixed_dist_decode(br) do
-    {bits5, br2} = br_read(br, 5)
-    dist_code = reverse_bits(bits5, 5)
-    {br2, dist_code}
-  end
 
   # ── DEFLATE compress ─────────────────────────────────────────────────────────
 
@@ -576,24 +674,28 @@ defmodule CodingAdventures.Zip do
     bw = bw_write(bw, 1, 1)
     bw = bw_write(bw, 0, 1)
 
-    bw = Enum.reduce(tokens, bw, fn token, acc ->
-      case token do
-        %{kind: :literal, byte: b} ->
-          {code, nbits} = fixed_ll_encode(b)
-          bw_write_huffman(acc, code, nbits)
+    bw =
+      Enum.reduce(tokens, bw, fn token, acc ->
+        case token do
+          %{kind: :literal, byte: b} ->
+            {code, nbits} = fixed_ll_encode(b)
+            bw_write_huffman(acc, code, nbits)
 
-        %{kind: :match, length: len, offset: off} ->
-          # encode length
-          {ll_sym, {base_len, len_extra_bits}} = find_length_sym(len)
-          {code, nbits} = fixed_ll_encode(ll_sym)
-          acc = bw_write_huffman(acc, code, nbits)
-          acc = if len_extra_bits > 0, do: bw_write(acc, len - base_len, len_extra_bits), else: acc
-          # encode distance
-          {dist_code, {base_dist, dist_extra_bits}} = find_dist_code(off)
-          acc = bw_write_huffman(acc, dist_code, 5)
-          if dist_extra_bits > 0, do: bw_write(acc, off - base_dist, dist_extra_bits), else: acc
-      end
-    end)
+          %{kind: :match, length: len, offset: off} ->
+            # encode length
+            {ll_sym, {base_len, len_extra_bits}} = find_length_sym(len)
+            {code, nbits} = fixed_ll_encode(ll_sym)
+            acc = bw_write_huffman(acc, code, nbits)
+
+            acc =
+              if len_extra_bits > 0, do: bw_write(acc, len - base_len, len_extra_bits), else: acc
+
+            # encode distance
+            {dist_code, {base_dist, dist_extra_bits}} = find_dist_code(off)
+            acc = bw_write_huffman(acc, dist_code, 5)
+            if dist_extra_bits > 0, do: bw_write(acc, off - base_dist, dist_extra_bits), else: acc
+        end
+      end)
 
     # End-of-block symbol 256
     {eob_code, eob_bits} = fixed_ll_encode(256)
@@ -605,6 +707,7 @@ defmodule CodingAdventures.Zip do
   defp find_length_sym(len) do
     Enum.reduce_while(@length_table, nil, fn {sym, base, extra}, _acc ->
       max_len = base + (1 <<< extra) - 1
+
       if len >= base and len <= max_len do
         {:halt, {sym, {base, extra}}}
       else
@@ -621,6 +724,7 @@ defmodule CodingAdventures.Zip do
   defp find_dist_code(off) do
     Enum.reduce_while(@dist_table, nil, fn {code, base, extra}, _acc ->
       max_dist = base + (1 <<< extra) - 1
+
       if off >= base and off <= max_dist do
         {:halt, {code, {base, extra}}}
       else
@@ -633,134 +737,356 @@ defmodule CodingAdventures.Zip do
     end)
   end
 
-  # ── DEFLATE decompress ───────────────────────────────────────────────────────
+  @doc "Compress a binary as raw RFC 1951 without ZIP, zlib, or gzip framing."
+  def raw_deflate(data) when is_binary(data), do: deflate_compress(data)
 
-  defp deflate_decompress(data, expected_size) when is_binary(data) do
-    br = br_new(data)
-    decompress_blocks(br, [], 0, expected_size)
+  @doc "Strictly inflate a raw RFC 1951 stream and return its complete output."
+  def raw_inflate(data, max_output \\ @raw_inflate_max_output) when is_binary(data) do
+    raw_inflate_counted(data, max_output).output
   end
 
-  # Track `total` as a running integer to avoid O(n²) Enum.sum on every block.
-  defp decompress_blocks(br, acc, total, exp) do
-    {bfinal, br} = br_read(br, 1)
-    {btype,  br} = br_read(br, 2)
+  @doc "Strictly inflate raw RFC 1951 and report exact consumed input bytes."
+  def raw_inflate_counted(data, max_output \\ @raw_inflate_max_output) when is_binary(data) do
+    unless is_integer(max_output) and max_output >= 0 and
+             max_output <= @raw_inflate_max_output do
+      inflate_error!("invalid-output-limit")
+    end
 
-    # Pass remaining budget so the per-token guard inside decompress_fixed
-    # accounts for bytes already produced by previous blocks.
-    budget = @max_output - total
+    {reader, output} = decode_blocks(br_new(data), output_new(), max_output)
 
-    {chunk, br} =
-      case btype do
-        0 -> decompress_stored(br)
-        1 -> decompress_fixed(br, budget)
-        _ -> raise "zip: unsupported DEFLATE BTYPE #{btype} (only stored=0 and fixed=1 supported)"
+    %RawInflateResult{
+      output: output_to_binary(output),
+      bytes_consumed: reader.pos
+    }
+  end
+
+  defp inflate_error!(code) do
+    raise RawInflateError, code: code, message: code
+  end
+
+  defp decode_blocks(reader, output, max_output) do
+    {final, reader} = strict_br_read(reader, 1)
+    {block_type, reader} = strict_br_read(reader, 2)
+
+    {reader, output} =
+      case block_type do
+        0 ->
+          decode_stored_block(reader, output, max_output)
+
+        1 ->
+          decode_compressed_block(
+            build_huffman_decoder(fixed_ll_lengths()),
+            build_huffman_decoder(List.duplicate(5, 32)),
+            reader,
+            output,
+            max_output
+          )
+
+        2 ->
+          decode_dynamic_block(reader, output, max_output)
+
+        3 ->
+          inflate_error!("reserved-block-type")
       end
 
-    new_total = total + byte_size(chunk)
+    if final == 1, do: {reader, output}, else: decode_blocks(reader, output, max_output)
+  end
 
-    if new_total > @max_output do
-      raise "zip: decompressed output exceeds #{@max_output} bytes (zip bomb guard)"
+  defp decode_stored_block(reader, output, max_output) do
+    reader = br_align(reader)
+    {length, reader} = strict_br_read(reader, 16)
+    {complement, reader} = strict_br_read(reader, 16)
+
+    if bxor(length, 0xFFFF) != complement do
+      inflate_error!("stored-length-mismatch")
     end
 
-    if bfinal == 1 do
-      IO.iodata_to_binary([acc | [chunk]])
+    if length > max_output - output.size do
+      inflate_error!("output-limit-exceeded")
+    end
+
+    if length == 0 do
+      {reader, output}
     else
-      decompress_blocks(br, [acc | [chunk]], new_total, exp)
+      Enum.reduce(1..length, {reader, output}, fn _, {next_reader, next_output} ->
+        {byte, next_reader} = strict_br_read(next_reader, 8)
+        {next_reader, output_append(next_output, byte)}
+      end)
     end
   end
 
-  defp decompress_stored(br) do
-    # Align to byte boundary, then read LEN and NLEN (RFC 1951 §3.2.4).
-    br = br_align(br)
-    {len_bin,  br} = br_read_bytes(br, 2)
-    {nlen_bin, br} = br_read_bytes(br, 2)
-    len_val  = :binary.decode_unsigned(len_bin,  :little)
-    nlen_val = :binary.decode_unsigned(nlen_bin, :little)
-    unless bxor(len_val, nlen_val) == 0xFFFF do
-      raise "zip: stored block LEN/NLEN complement check failed"
+  defp decode_dynamic_block(reader, output, max_output) do
+    {hlit_value, reader} = strict_br_read(reader, 5)
+    {hdist_value, reader} = strict_br_read(reader, 5)
+    {hclen_value, reader} = strict_br_read(reader, 4)
+    hlit = hlit_value + 257
+    hdist = hdist_value + 1
+    hclen = hclen_value + 4
+
+    if hlit > 286, do: inflate_error!("invalid-literal-length-symbol")
+
+    {code_length_lengths, reader} =
+      Enum.reduce(0..(hclen - 1), {List.duplicate(0, 19), reader}, fn index,
+                                                                      {lengths, next_reader} ->
+        {value, next_reader} = strict_br_read(next_reader, 3)
+        {List.replace_at(lengths, Enum.at(@code_length_order, index), value), next_reader}
+      end)
+
+    code_length_decoder = build_huffman_decoder(code_length_lengths)
+
+    unless code_length_decoder.complete do
+      inflate_error!("incomplete-code-length-tree")
     end
-    {chunk, br} = br_read_raw(br, len_val)
-    {chunk, br}
+
+    {lengths, reader} = decode_code_lengths(code_length_decoder, reader, hlit + hdist, [])
+    {literal_lengths, distance_lengths} = Enum.split(lengths, hlit)
+    literal_decoder = build_huffman_decoder(literal_lengths)
+
+    unless literal_decoder.complete do
+      inflate_error!("incomplete-literal-length-tree")
+    end
+
+    distance_decoder = build_huffman_decoder(distance_lengths)
+
+    permitted_distance =
+      distance_decoder.complete or
+        (distance_decoder.symbol_count == 1 and distance_decoder.one_bit_count == 1) or
+        distance_decoder.symbol_count == 0
+
+    unless permitted_distance, do: inflate_error!("incomplete-distance-tree")
+
+    decode_compressed_block(
+      literal_decoder,
+      distance_decoder,
+      reader,
+      output,
+      max_output
+    )
   end
 
-  defp decompress_fixed(br, budget) do
-    decompress_fixed_loop(br, [], budget)
+  # ── DEFLATE decompress ───────────────────────────────────────────────────────
+
+  defp decode_code_lengths(_decoder, reader, total, lengths) when length(lengths) == total do
+    {lengths, reader}
   end
 
-  # `budget` = remaining bytes allowed before hitting @max_output.
-  # Passed from decompress_blocks so it accounts for ALL previous blocks,
-  # preventing a multi-block zip-bomb bypass.
-  defp decompress_fixed_loop(br, acc, budget) do
-    {sym, br} = fixed_ll_decode(br)
+  defp decode_code_lengths(decoder, reader, total, lengths) do
+    {symbol, reader} = decode_symbol(decoder, reader, "invalid-literal-length-symbol")
 
     cond do
-      sym == 256 ->
-        {IO.iodata_to_binary(acc), br}
+      symbol in 0..15 ->
+        decode_code_lengths(decoder, reader, total, lengths ++ [symbol])
 
-      sym < 256 ->
-        if budget < 1 do
-          raise "zip: decompressed output exceeds #{@max_output} bytes (zip bomb guard)"
-        end
-        decompress_fixed_loop(br, [acc | [<<sym>>]], budget - 1)
+      symbol == 16 ->
+        if lengths == [], do: inflate_error!("repeat-without-previous")
+        {extra, reader} = strict_br_read(reader, 2)
+        repeat = extra + 3
+        if repeat > total - length(lengths), do: inflate_error!("repeat-overrun")
+        value = List.last(lengths)
+        decode_code_lengths(decoder, reader, total, lengths ++ List.duplicate(value, repeat))
 
-      sym in 257..285 ->
-        {base_len, extra_len_bits} = Map.fetch!(@length_by_sym, sym)
-        {extra_len, br} = if extra_len_bits > 0, do: br_read(br, extra_len_bits), else: {0, br}
-        length = base_len + extra_len
-
-        {br, dist_code} = fixed_dist_decode(br)
-        unless Map.has_key?(@dist_by_code, dist_code) do
-          raise "zip: reserved or invalid distance code #{dist_code}"
-        end
-        {base_dist, extra_dist_bits} = Map.fetch!(@dist_by_code, dist_code)
-        {extra_dist, br} = if extra_dist_bits > 0, do: br_read(br, extra_dist_bits), else: {0, br}
-        distance = base_dist + extra_dist
-
-        current = IO.iodata_to_binary(acc)
-        cur_len = byte_size(current)
-
-        if distance > cur_len do
-          raise "zip: back-reference distance #{distance} > current output #{cur_len}"
-        end
-
-        if length > budget do
-          raise "zip: decompressed output exceeds #{@max_output} bytes (zip bomb guard)"
-        end
-
-        start = cur_len - distance
-        chunk = copy_with_overlap(current, start, length)
-        decompress_fixed_loop(br, [current | [chunk]], budget - length)
+      symbol in [17, 18] ->
+        {bits, base} = if symbol == 17, do: {3, 3}, else: {7, 11}
+        {extra, reader} = strict_br_read(reader, bits)
+        repeat = extra + base
+        if repeat > total - length(lengths), do: inflate_error!("repeat-overrun")
+        decode_code_lengths(decoder, reader, total, lengths ++ List.duplicate(0, repeat))
 
       true ->
-        raise "zip: invalid LL symbol #{sym}"
+        inflate_error!("invalid-literal-length-symbol")
     end
   end
 
-  # Copy `length` bytes from `buf` starting at `start`, allowing overlap.
-  #
-  # RFC 1951 allows the copy to reference bytes not yet in the source buffer
-  # (run-length expansion, e.g. distance=1 length=10 repeats one byte 10×).
-  # We handle this without growing `buf` by using modular index arithmetic:
-  # once we advance past the end of the original buffer, the byte at position
-  # `pos` is the same as the byte at `(buf_size - distance) + rem(pos - buf_size, distance)`,
-  # i.e. we repeat the window of `distance` bytes starting at `start`.
-  defp copy_with_overlap(buf, start, length) do
-    buf_size = byte_size(buf)
-    distance = buf_size - start
-    do_copy_no_grow(buf, start, buf_size, distance, length, [])
+  defp build_huffman_decoder(lengths) do
+    counts =
+      Enum.reduce(lengths, List.duplicate(0, 16), fn length, acc ->
+        if length > 15, do: inflate_error!("invalid-literal-length-symbol")
+        if length == 0, do: acc, else: List.update_at(acc, length, &(&1 + 1))
+      end)
+
+    left =
+      Enum.reduce(1..15, 1, fn length, remaining ->
+        next = remaining * 2 - Enum.at(counts, length)
+        if next < 0, do: inflate_error!("huffman-oversubscribed")
+        next
+      end)
+
+    {next_codes, _} =
+      Enum.reduce(1..15, {%{}, 0}, fn length, {codes, code} ->
+        next = (code + Enum.at(counts, length - 1)) <<< 1
+        {Map.put(codes, length, next), next}
+      end)
+
+    {table, _, symbol_count} =
+      Enum.reduce(Enum.with_index(lengths), {%{}, next_codes, 0}, fn
+        {0, _symbol}, acc ->
+          acc
+
+        {length, symbol}, {table, codes, symbol_count} ->
+          code = Map.fetch!(codes, length)
+
+          {
+            Map.put(table, {length, code}, symbol),
+            Map.put(codes, length, code + 1),
+            symbol_count + 1
+          }
+      end)
+
+    %{
+      table: table,
+      complete: left == 0,
+      symbol_count: symbol_count,
+      one_bit_count: Enum.at(counts, 1)
+    }
   end
 
-  defp do_copy_no_grow(_buf, _pos, _buf_size, _dist, 0, acc) do
-    acc |> Enum.reverse() |> IO.iodata_to_binary()
+  defp decode_symbol(decoder, reader, invalid_code) do
+    decode_symbol(decoder, reader, invalid_code, 1, 0)
   end
 
-  defp do_copy_no_grow(buf, pos, buf_size, dist, remaining, acc) do
-    effective = if pos < buf_size, do: pos,
-                  else: (buf_size - dist) + rem(pos - buf_size, dist)
-    byte = :binary.at(buf, effective)
-    do_copy_no_grow(buf, pos + 1, buf_size, dist, remaining - 1, [<<byte>> | acc])
+  defp decode_symbol(_decoder, _reader, invalid_code, 16, _code) do
+    inflate_error!(invalid_code)
   end
 
+  defp decode_symbol(decoder, reader, invalid_code, length, code) do
+    {bit, reader} = strict_br_read(reader, 1)
+    code = code <<< 1 ||| bit
+
+    case Map.fetch(decoder.table, {length, code}) do
+      {:ok, symbol} -> {symbol, reader}
+      :error -> decode_symbol(decoder, reader, invalid_code, length + 1, code)
+    end
+  end
+
+  defp fixed_ll_lengths do
+    Enum.map(0..287, fn symbol ->
+      cond do
+        symbol <= 143 -> 8
+        symbol <= 255 -> 9
+        symbol <= 279 -> 7
+        true -> 8
+      end
+    end)
+  end
+
+  defp decode_compressed_block(ll_decoder, distance_decoder, reader, output, max_output) do
+    {symbol, reader} = decode_symbol(ll_decoder, reader, "invalid-literal-length-symbol")
+
+    cond do
+      symbol in 0..255 ->
+        if output.size >= max_output, do: inflate_error!("output-limit-exceeded")
+
+        decode_compressed_block(
+          ll_decoder,
+          distance_decoder,
+          reader,
+          output_append(output, symbol),
+          max_output
+        )
+
+      symbol == 256 ->
+        {reader, output}
+
+      symbol in 257..285 ->
+        {base_length, extra_length_bits} = Map.fetch!(@length_by_sym, symbol)
+        {extra_length, reader} = strict_br_read(reader, extra_length_bits)
+
+        {distance_symbol, reader} =
+          decode_symbol(distance_decoder, reader, "reserved-distance-symbol")
+
+        unless Map.has_key?(@dist_by_code, distance_symbol) do
+          inflate_error!("reserved-distance-symbol")
+        end
+
+        {base_distance, extra_distance_bits} = Map.fetch!(@dist_by_code, distance_symbol)
+        {extra_distance, reader} = strict_br_read(reader, extra_distance_bits)
+
+        output =
+          output_copy(
+            output,
+            base_distance + extra_distance,
+            base_length + extra_length,
+            max_output
+          )
+
+        decode_compressed_block(ll_decoder, distance_decoder, reader, output, max_output)
+
+      true ->
+        inflate_error!("invalid-literal-length-symbol")
+    end
+  end
+
+  defp output_new, do: %{array: :array.new(default: 0), size: 0}
+
+  defp output_append(output, byte) do
+    %{output | array: :array.set(output.size, byte, output.array), size: output.size + 1}
+  end
+
+  defp output_copy(output, distance, length, max_output) do
+    if distance == 0 or distance > output.size do
+      inflate_error!("invalid-back-reference")
+    end
+
+    if length > max_output - output.size do
+      inflate_error!("output-limit-exceeded")
+    end
+
+    Enum.reduce(1..length, output, fn _, next_output ->
+      byte = :array.get(next_output.size - distance, next_output.array)
+      output_append(next_output, byte)
+    end)
+  end
+
+  defp output_to_binary(%{size: 0}), do: <<>>
+
+  defp output_to_binary(output) do
+    output_chunks(output.array, 0, output.size, [])
+    |> IO.iodata_to_binary()
+  end
+
+  defp output_chunks(_array, start, size, acc) when start >= size, do: Enum.reverse(acc)
+
+  defp output_chunks(array, start, size, acc) do
+    last = min(start + 8191, size - 1)
+    chunk = for index <- start..last, into: <<>>, do: <<:array.get(index, array)>>
+    output_chunks(array, last + 1, size, [chunk | acc])
+  end
+
+  defp strict_br_read(reader, 0), do: {0, reader}
+
+  defp strict_br_read(reader, count) do
+    case br_try_read(reader, count) do
+      :eof -> inflate_error!("unexpected-eof")
+      result -> result
+    end
+  end
+
+  defp br_try_read(reader, count) do
+    case refill_br_safe(reader, count) do
+      :eof ->
+        :eof
+
+      %{buf: buffer, nbits: bits} = filled ->
+        value = buffer &&& (1 <<< count) - 1
+        {value, %{filled | buf: buffer >>> count, nbits: bits - count}}
+    end
+  end
+
+  defp refill_br_safe(%{data: data, pos: pos, buf: buffer, nbits: bits} = reader, count)
+       when bits < count do
+    if pos >= byte_size(data) do
+      :eof
+    else
+      byte = :binary.at(data, pos)
+
+      refill_br_safe(
+        %{reader | pos: pos + 1, buf: buffer ||| byte <<< bits, nbits: bits + 8},
+        count
+      )
+    end
+  end
+
+  defp refill_br_safe(reader, _count), do: reader
 
   # ─── BitWriter ───────────────────────────────────────────────────────────────
   #
@@ -770,7 +1096,7 @@ defmodule CodingAdventures.Zip do
   defp bw_new, do: %{buf: 0, nbits: 0, bytes: []}
 
   defp bw_write(%{buf: b, nbits: n, bytes: out} = bw, val, bits) do
-    b2 = b ||| ((val &&& ((1 <<< bits) - 1)) <<< n)
+    b2 = b ||| (val &&& (1 <<< bits) - 1) <<< n
     n2 = n + bits
     flush_bw(%{bw | buf: b2, nbits: n2, bytes: out})
   end
@@ -779,6 +1105,7 @@ defmodule CodingAdventures.Zip do
     byte = b &&& 0xFF
     flush_bw(%{bw | buf: b >>> 8, nbits: n - 8, bytes: [out | [<<byte>>]]})
   end
+
   defp flush_bw(bw), do: bw
 
   # Write a Huffman code MSB-first (reverse the bits, then write LSB-first).
@@ -801,56 +1128,14 @@ defmodule CodingAdventures.Zip do
 
   defp br_new(data), do: %{data: data, pos: 0, buf: 0, nbits: 0}
 
-  # Read `n` bits (LSB-first).
-  defp br_read(br, 0), do: {0, br}
-  defp br_read(br, n) do
-    br = refill_br(br, n)
-    %{buf: b, nbits: nb} = br
-    val = b &&& ((1 <<< n) - 1)
-    {val, %{br | buf: b >>> n, nbits: nb - n}}
-  end
-
-  # Peek `n` bits without consuming.
-  defp br_peek(br, n) do
-    br2 = refill_br(br, n)
-    %{buf: b} = br2
-    {b &&& ((1 <<< n) - 1), br2}
-  end
-
   defp br_consume(%{buf: b, nbits: nb} = br, n) do
     %{br | buf: b >>> n, nbits: nb - n}
   end
-
-  defp refill_br(%{data: data, pos: pos, buf: b, nbits: nb} = br, n) when nb < n do
-    if pos >= byte_size(data) do
-      raise "zip: unexpected end of DEFLATE stream (need #{n} bits, have #{nb})"
-    end
-    byte = :binary.at(data, pos)
-    refill_br(%{br | pos: pos + 1, buf: b ||| (byte <<< nb), nbits: nb + 8}, n)
-  end
-  defp refill_br(br, _n), do: br
 
   # Align to next byte boundary (discard partial byte).
   defp br_align(%{nbits: nb} = br) do
     skip = rem(nb, 8)
     if skip > 0, do: br_consume(br, skip), else: br
-  end
-
-  # Read `n` bytes as a binary.
-  defp br_read_bytes(br, n) do
-    br = br_align(br)
-    %{data: data, pos: pos} = br
-    if pos + n > byte_size(data) do
-      raise "zip: DEFLATE stream truncated (need #{n} bytes at pos #{pos})"
-    end
-    chunk = binary_part(data, pos, n)
-    {chunk, %{br | pos: pos + n}}
-  end
-
-  # Read exactly `n` bytes from the aligned stream.
-  defp br_read_raw(br, n) do
-    {chunk, br} = br_read_bytes(br, n)
-    {chunk, br}
   end
 
   # ─── Bit reversal ────────────────────────────────────────────────────────────
@@ -864,24 +1149,27 @@ defmodule CodingAdventures.Zip do
   end
 
   defp do_reverse(_val, 0, acc), do: acc
+
   defp do_reverse(val, n, acc) do
-    do_reverse(val >>> 1, n - 1, (acc <<< 1) ||| (val &&& 1))
+    do_reverse(val >>> 1, n - 1, acc <<< 1 ||| (val &&& 1))
   end
 
   # ─── Little-endian helpers ───────────────────────────────────────────────────
 
   defp read_le16(data, offset) do
     case data do
-      <<_::binary-size(offset), lo, hi, _::binary>> -> lo ||| hi <<< 8
+      <<_::binary-size(^offset), lo, hi, _::binary>> -> lo ||| hi <<< 8
       _ -> nil
     end
   end
 
   defp read_le32(data, offset) do
     case data do
-      <<_::binary-size(offset), b0, b1, b2, b3, _::binary>> ->
+      <<_::binary-size(^offset), b0, b1, b2, b3, _::binary>> ->
         b0 ||| b1 <<< 8 ||| b2 <<< 16 ||| b3 <<< 24
-      _ -> nil
+
+      _ ->
+        nil
     end
   end
 
@@ -892,6 +1180,7 @@ defmodule CodingAdventures.Zip do
       Enum.map(0..255, fn i ->
         crc32_table_entry(i, 0, 0xEDB88320)
       end)
+
     List.to_tuple(entries)
   end
 

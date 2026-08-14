@@ -8,8 +8,9 @@ use core::fmt::{self, Display, Formatter};
 use std::collections::BTreeSet;
 use std::time::Duration;
 
-const MAX_RESOURCES: usize = 64;
-const MAX_IDENTIFIER_BYTES: usize = 128;
+const MAX_RESOURCES: usize = 1_026;
+const MAX_CONTEXT_IDENTIFIER_BYTES: usize = 128;
+const MAX_RESOURCE_IDENTIFIER_BYTES: usize = 320;
 const TIER1_TIMEOUT: Duration = Duration::from_secs(5);
 const TIER2_TIMEOUT: Duration = Duration::from_secs(30);
 const TIER3_TIMEOUT: Duration = Duration::from_secs(60);
@@ -28,7 +29,8 @@ impl TrustResource {
         tier: PrivilegeTier,
     ) -> Result<Self, TrustRequestError> {
         let resource_id = resource_id.into();
-        validate_identifier(&resource_id).map_err(|()| TrustRequestError::InvalidResourceId)?;
+        validate_identifier(&resource_id, MAX_RESOURCE_IDENTIFIER_BYTES)
+            .map_err(|()| TrustRequestError::InvalidResourceId)?;
         Ok(Self { resource_id, tier })
     }
 
@@ -52,6 +54,50 @@ pub struct TrustRequest {
     effective_tier: PrivilegeTier,
 }
 
+/// Validated caller and correlation context reused while exact resources are resolved.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TrustRequestContext {
+    request_id: String,
+    requested_by: String,
+}
+
+impl TrustRequestContext {
+    /// Validate the non-secret context for one approval request.
+    pub fn new(
+        request_id: impl Into<String>,
+        requested_by: impl Into<String>,
+    ) -> Result<Self, TrustRequestError> {
+        let request_id = request_id.into();
+        let requested_by = requested_by.into();
+        validate_identifier(&request_id, MAX_CONTEXT_IDENTIFIER_BYTES)
+            .map_err(|()| TrustRequestError::InvalidRequestId)?;
+        validate_identifier(&requested_by, MAX_CONTEXT_IDENTIFIER_BYTES)
+            .map_err(|()| TrustRequestError::InvalidRequester)?;
+        Ok(Self {
+            request_id,
+            requested_by,
+        })
+    }
+
+    /// Return the caller's stable correlation identifier.
+    pub fn request_id(&self) -> &str {
+        &self.request_id
+    }
+
+    /// Return the non-secret identity that initiated the request.
+    pub fn requested_by(&self) -> &str {
+        &self.requested_by
+    }
+
+    /// Attach an exact resource set and compute its maximum tier.
+    pub fn with_resources(
+        &self,
+        resources: Vec<TrustResource>,
+    ) -> Result<TrustRequest, TrustRequestError> {
+        TrustRequest::from_context(self.clone(), resources)
+    }
+}
+
 impl TrustRequest {
     /// Validate an exact non-empty resource set and compute its maximum tier.
     pub fn new(
@@ -59,10 +105,14 @@ impl TrustRequest {
         requested_by: impl Into<String>,
         resources: Vec<TrustResource>,
     ) -> Result<Self, TrustRequestError> {
-        let request_id = request_id.into();
-        let requested_by = requested_by.into();
-        validate_identifier(&request_id).map_err(|()| TrustRequestError::InvalidRequestId)?;
-        validate_identifier(&requested_by).map_err(|()| TrustRequestError::InvalidRequester)?;
+        let context = TrustRequestContext::new(request_id, requested_by)?;
+        Self::from_context(context, resources)
+    }
+
+    fn from_context(
+        context: TrustRequestContext,
+        resources: Vec<TrustResource>,
+    ) -> Result<Self, TrustRequestError> {
         if resources.is_empty() {
             return Err(TrustRequestError::NoResources);
         }
@@ -81,8 +131,8 @@ impl TrustRequest {
             .max()
             .expect("non-empty resources have a maximum tier");
         Ok(Self {
-            request_id,
-            requested_by,
+            request_id: context.request_id,
+            requested_by: context.requested_by,
             resources,
             effective_tier,
         })
@@ -365,9 +415,8 @@ impl<P: ApprovalProvider> TrustChecker<P> {
     }
 }
 
-fn validate_identifier(value: &str) -> Result<(), ()> {
-    if value.is_empty() || value.len() > MAX_IDENTIFIER_BYTES || value.chars().any(char::is_control)
-    {
+fn validate_identifier(value: &str, maximum_bytes: usize) -> Result<(), ()> {
+    if value.is_empty() || value.len() > maximum_bytes || value.chars().any(char::is_control) {
         return Err(());
     }
     Ok(())
@@ -452,6 +501,14 @@ mod tests {
         assert_eq!(request.requested_by(), "operator:local");
         assert_eq!(request.effective_tier(), PrivilegeTier::Tier2);
         assert_eq!(request.resources().len(), 3);
+        let context = TrustRequestContext::new("request-2", "operator:local").unwrap();
+        let contextual = context
+            .with_resources(vec![
+                TrustResource::new("resource", PrivilegeTier::Tier1).unwrap()
+            ])
+            .unwrap();
+        assert_eq!(contextual.request_id(), "request-2");
+        assert_eq!(contextual.requested_by(), "operator:local");
 
         assert_eq!(
             TrustRequest::new(
@@ -500,6 +557,11 @@ mod tests {
         );
         assert_eq!(
             TrustResource::new("bad\nresource", PrivilegeTier::Tier0),
+            Err(TrustRequestError::InvalidResourceId)
+        );
+        assert!(TrustResource::new("r".repeat(320), PrivilegeTier::Tier0).is_ok());
+        assert_eq!(
+            TrustResource::new("r".repeat(321), PrivilegeTier::Tier0),
             Err(TrustRequestError::InvalidResourceId)
         );
     }

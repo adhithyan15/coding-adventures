@@ -1634,6 +1634,23 @@ platform interaction to an injected approval provider. Provider failure,
 insufficient authentication assurance, and Tier 2 or Tier 3 timeout fail
 closed. Tier 1 timeout is the sole auto-approval path.
 
+`chief-of-staff-orchestrator-core` adapts channel topology changes into that
+contract. It resolves the current channel and member tiers through an
+authoritative injected boundary and binds the approval to a domain-separated
+SHA-256 fingerprint covering the operation, channel UUID, complete membership,
+public keys, creation time, key epoch, and lifecycle. Any resolution or approval
+failure occurs before channel storage mutation. The production daemon resolves
+explicit agent, channel, package-hash, and model assignments from its closed
+configuration. A fully assigned Tier 0 mutation can proceed without interaction;
+an omitted assignment fails closed. An optional absolute or home-relative Tier 1
+notification helper is launched without a shell or inherited environment and
+receives a bounded versioned exact-resource protocol. Only `approve` and `deny`
+responses are accepted after an explicit post-presentation readiness acknowledgement;
+only an acknowledged helper that remains live through the complete canonical window
+produces the sole timeout auto-approval path. An absent or unacknowledged helper,
+early exit, malformed output, I/O or process failure, and every Tier 2/3 request
+fail closed until the corresponding reviewed provider is composed.
+
 ```
 Pipeline: "Check bank balance and email it to accountant"
 ├── Email Responder: Tier 1 (sends email)
@@ -2175,6 +2192,13 @@ on a different operating system.
 `install-daemon` action resolves the sibling daemon and default configuration,
 then invokes that installer; authenticated lifecycle commands load the local
 credential outside argv and connect only to the configured loopback API.
+The same authenticated client exposes `wire` and `unwire`. `wire` validates a
+complete exact host registration, canonical UUID-v7 pipeline, bounded agent
+identity, repeatable named channel directions/UUIDs, and optional all-or-none
+Level 1 model settings before sending one typed binding. `unwire` validates the
+host identity. Neither command accepts requester context, credentials, or
+endpoints through argv; the daemon derives requester and request identity and
+routes both mutations through Trust Checker.
 
 **Configuration file** (`~/.chief-of-staff/config.toml`):
 
@@ -2216,8 +2240,21 @@ container = true               # run vault in OS container
 
 [privilege]
 tier_1_auto_approve_timeout = 5  # seconds
+tier_1_notification_command = "~/.chief-of-staff/bin/chief-notify" # optional
 biometric_timeout = 30           # seconds
 hardware_key_timeout = 60        # seconds
+agent_tiers = [
+  { agent_id = "77656174686572", tier = 0 }, # lowercase-hex "weather"
+]
+channel_tiers = [
+  { channel_id = "018f0c10-7b4a-7cc0-8000-000000000002", tier = 0 },
+]
+package_tiers = [
+  { package_hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", tier = 0 },
+]
+model_tiers = [
+  { model = "qwen2.5:0.5b", tier = 0 },
+]
 
 [data_plane]
 channel_keys = [

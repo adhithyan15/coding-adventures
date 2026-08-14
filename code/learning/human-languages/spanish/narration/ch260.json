@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 260,
+  "title": "María, España --- The Nouns That Need No Article",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d170c122b4cf33da",
+  "lessons": [
+    {
+      "id": "ES-C66-nombres-propios",
+      "sequence": 2535,
+      "title": "María, España, profesor — the nouns that need no article",
+      "headword": "María · España · profesor",
+      "romanization": "María · España · profesor",
+      "gloss": "names, places and titles — the nouns that behave differently from every other noun, and the article rule that follows from it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dafdba0ece34adb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "El libro, la casa. The article's job is to say which one."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now try putting one in front of a person's name and hear how wrong it sounds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: nothing left for the article to do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Veo a María. — not a la María. Vivo en España. — not en la España."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A proper noun — a name, a country, a city — already points at exactly one thing in the world. The article exists to narrow a noun down to one, and here there is nothing left to narrow. So it goes."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the rule you have been following since the first time you said Me llamo…, and it has never been stated."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the part that catches people, and it follows from the same logic."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Hablo con el profesor García., talking about him — article.",
+                "Profesor García, ¿puedo hablar?, talking to him — none."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A title is not a name. Profesor is an ordinary noun, so it takes an article like any other — until you turn and address the person, at which point you are not identifying them for anybody. You are calling them. And a vocative takes no article, exactly as it takes no personal a."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same rule underneath: the article says which one, and it appears precisely when that job needs doing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Veo a María, Vivo en España",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Veo a María*, *Vivo en España*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el profesor García, then Profesor García, …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el profesor García*, then *Profesor García, …*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C66-nombres-propios-name",
+              "prompt": "Say: I see Maria.",
+              "assesses": [
+                "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "veo a maria",
+                "veo a maria."
+              ],
+              "feedback": {
+                "correct": "Personal a, but no article.",
+                "incorrect": "Veo a Maria -- no la."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C66-nombres-propios-why",
+              "prompt": "Why does a name take no article?",
+              "assesses": [
+                "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "it already points at one thing",
+                "there is nothing left to narrow down"
+              ],
+              "feedback": {
+                "correct": "The article has no work to do.",
+                "incorrect": "It already points at exactly one thing."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C66-nombres-propios-title",
+              "prompt": "You are speaking TO Professor Garcia. Article or no article?",
+              "assesses": [
+                "ES-GRAMMAR-TITLE-TAKES-ARTICLE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "no article",
+                "none, it is a vocative"
+              ],
+              "feedback": {
+                "correct": "Addressing, not identifying.",
+                "incorrect": "None -- you are calling him, not identifying him."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why do names take no article? (They already point at one thing.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And when does a title lose its article? (When you are addressing the person.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

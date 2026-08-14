@@ -1,0 +1,53 @@
+% ============================================================================
+% green-signal-permitted-movement — the individual movements a driver facing
+% a steady CIRCULAR GREEN signal is permitted to make, as the MUTCD's own
+% sentence enumerates them (adj-facts-stdlib, TRANSPORTATION).
+% ============================================================================
+% A sibling to the already-shipped `traffic-lights.adj`
+% (`traffic_light_meaning(color, meaning)`, green → the single atomic value
+% `proceed`). That table's own header already quotes, VERBATIM, the MUTCD
+% sentence for green — and that SAME sentence enumerates FOUR distinct
+% permitted movements, not just one undifferentiated "proceed":
+%
+%   "Vehicular traffic facing a CIRCULAR GREEN signal indication is
+%    permitted to proceed straight through or turn right or left or make a
+%    U-turn movement"
+%
+% The color-to-meaning schema collapses all four into `proceed`; this
+% sibling gives each movement its own row. Recall is a plain listing query
+% (there is no key column — all four movements are simultaneously true for
+% green, unlike a keyed lookup):
+%
+%     ? green_signal_permitted_movement($Movement)
+%       % straight_through ; turn_right ; turn_left ; u_turn
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `green_signal_permitted_movement(movement)` carrying the
+% citation, so the query above is the ordinary SLD recall — the engine
+% returns every listed movement WITH its source, on the CPU, with zero
+% model calls. A movement the MUTCD sentence does NOT name — `reverse`, for
+% instance — has no row, so a check for it fails rather than being invented.
+%
+% Provenance: reproduces, byte-for-byte, the SAME MUTCD Section 4D.04 green
+% span already quoted inside `traffic-lights.adj`'s own header — no new
+% WebFetch, only a different schema decoding the four enumerated movements
+% already sitting unused inside that already-verified quote. `trust
+% authoritative` — the same tier `traffic-lights.adj` already carries (the
+% FHWA Manual on Uniform Traffic Control Devices, the federal standard for
+% U.S. traffic control devices).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table green_signal_permitted_movement {
+    columns movement
+
+    row (straight_through)
+    row (turn_right)
+    row (turn_left)
+    row (u_turn)
+
+    source "Vehicular traffic facing a CIRCULAR GREEN signal indication is permitted to proceed straight through or turn right or left or make a U-turn movement"
+    locator "https://mutcd.fhwa.dot.gov/htm/2009/part4/part4d.htm"
+    trust authoritative
+}

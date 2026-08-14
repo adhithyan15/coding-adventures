@@ -2702,22 +2702,34 @@ fn emit_instr(
                 // or backward) sets the dispatch variable, then branches back to the
                 // LOOP so br_table can redispatch to the correct block.
                 //
-                // After the br_table fires for the first time, each successive END
-                // instruction pops one label from the stack.  From body[block_idx]
-                // the surviving labels are exactly:
+                // (WASM11) This formula used to be `n_blocks - block_idx - 2`, one
+                // less than what is derived below. That value was empirically tuned
+                // against a genuine double-pop bug in `wasm-execution`'s
+                // `execute_branch`, which used to remove a BLOCK target's own label
+                // from `label_stack` *before* jumping to it, even though the target
+                // PC is that block's own `end` opcode — which then performed a
+                // *second*, unintended pop of the next enclosing label on landing.
+                // Once `execute_branch` was fixed to keep a block target's label on
+                // the stack until its own `end` naturally pops it once, every depth
+                // computed against the old (buggy) model became one too shallow.
+                // The correct depth is derived from the *actual* static nesting
+                // structure, which the double-pop bug never affected:
                 //
-                //   [outer_exit, LOOP, bb_0, …, bb_{n_blocks-block_idx-3}]
+                // From body[block_idx] (reached by exiting nested block
+                // `block_idx`, itself entered via `br_table`), the still-open
+                // labels, innermost first, are exactly the remaining `n_blocks - 1
+                // - block_idx` per-block wrapper blocks, then LOOP, then
+                // outer_exit — i.e. `n_blocks - block_idx + 1` labels total.  LOOP
+                // sits at:
                 //
-                // which is `n_blocks - block_idx` labels total.  The LOOP label is
-                // always at depth `n_blocks - block_idx - 2` from the innermost label:
+                //   depth(LOOP) = n_blocks - block_idx - 1
                 //
-                //   depth(LOOP) = n_blocks - block_idx - 2
-                //
-                // For the last block (block_idx = n_blocks - 1) the LOOP has already
-                // been consumed; those blocks always end with `ret` in well-formed
-                // programs so this case should never occur in practice.
+                // For the last block (block_idx = n_blocks - 1) this formula
+                // already evaluates to 0 (LOOP is innermost); those blocks always
+                // end with `ret` in well-formed programs so this case should never
+                // occur in practice, but the explicit 0 below matches it exactly.
                 let depth = if block_idx + 1 < n_blocks {
-                    (n_blocks - block_idx - 2) as u32
+                    (n_blocks - block_idx - 1) as u32
                 } else {
                     0 // last block — should not normally jmp, but fall safe
                 };
@@ -2763,15 +2775,30 @@ fn emit_instr(
                 // the label_stack, so the LOOP depth is one higher than for a plain
                 // `jmp`:
                 //
-                //   depth(LOOP) inside `if` = (n_blocks - block_idx - 2) + 1
-                //                           = n_blocks - block_idx - 1
+                //   depth(LOOP) inside `if` = (n_blocks - block_idx - 1) + 1
+                //                           = n_blocks - block_idx
                 //
-                // For the last block the LOOP is gone; use depth=1 to exit `if`
-                // plus outer_exit (should not occur in well-formed programs).
+                // (WASM11: see the `jmp` case above for why this is one deeper
+                // than it used to be — the old formula was tuned against a
+                // double-pop bug in `wasm-execution::execute_branch` that has
+                // since been fixed.)
+                //
+                // For the last block, LOOP is STILL open at this point (see
+                // the WASM11 security-review note on the fall-through
+                // fallback further down in this file, which found and fixed
+                // a real hang from this exact "LOOP is gone" assumption
+                // being wrong) — the label stack here is [if_label, LOOP,
+                // outer_exit], so exiting `if` AND reaching outer_exit
+                // (skipping LOOP) needs depth=2. This arm is currently
+                // unreachable (the sentinel-block invariant elsewhere in
+                // this function guarantees a block containing
+                // `jmp_if_true`/`jmp_if_false` is never the literal last
+                // block), kept correct anyway as defense in depth against a
+                // future change to that invariant.
                 let depth = if block_idx + 1 < n_blocks {
-                    (n_blocks - block_idx - 1) as u32
+                    (n_blocks - block_idx) as u32
                 } else {
-                    1 // last block — should not normally conditional-jmp
+                    2 // last block — should not normally conditional-jmp
                 };
                 code.extend(encode_local_get(cond_reg));
                 // `if` tests an i32 != 0. An i64 condition (the Brainfuck loop
@@ -2824,12 +2851,14 @@ fn emit_instr(
             if is_dispatch_loop {
                 let target_idx = get_label(label)? as usize;
                 // Emit: if cond == 0 { dispatch = target_idx; br <depth> }
-                // Same depth computation as jmp_if_true: always re-enter the LOOP,
-                // one extra label level for the enclosing `if` block.
+                // Same depth computation as jmp_if_true (see WASM11 notes
+                // there, both on the general formula and on why the
+                // last-block fallback is 2, not 1): always re-enter the
+                // LOOP, one extra label level for the enclosing `if` block.
                 let depth = if block_idx + 1 < n_blocks {
-                    (n_blocks - block_idx - 1) as u32
+                    (n_blocks - block_idx) as u32
                 } else {
-                    1 // last block — should not normally conditional-jmp
+                    2 // last block — should not normally conditional-jmp
                 };
                 code.extend(encode_local_get(cond_reg));
                 // "branch if cond == 0" → push the i32 boolean `cond == 0`.
@@ -4060,25 +4089,38 @@ fn lower_function(
             //
             // We MUST re-enter the LOOP (not fall through to the next block
             // body directly) to keep the label_stack consistent.  The loop
-            // depth from body[block_idx] is `n_blocks - block_idx - 2`.
+            // depth from body[block_idx] is `n_blocks - block_idx - 1` (see the
+            // WASM11 note on the `jmp` depth formula above — this is the same
+            // "plain jmp, not inside an extra `if`" case).
             //
-            // Special case: the last block (block_idx = n_blocks - 1) has
-            // label_stack = [outer_exit], so `br 0` exits the outer block,
-            // which terminates the function.  This is correct: well-formed
-            // programs end the last block with `ret`, so fall-through there
-            // is unreachable, but we emit a valid instruction for safety.
+            // Special case: the last block (block_idx = n_blocks - 1) — this
+            // point is reached from INSIDE the per-block loop body, before
+            // this same function's own `code.push(END); // end loop` below
+            // ever runs, so LOOP is still open here. label_stack =
+            // [LOOP, outer_exit], not just `[outer_exit]` (a WASM11 security
+            // review found and reproduced a real hang from the stale
+            // `[outer_exit]`-only assumption a previous version of this
+            // comment made: `br 0` landed on LOOP, redispatching to the
+            // SAME block forever with the dispatch variable never updated —
+            // an unconditional infinite loop, not a trap, for any program
+            // whose final basic block falls through without an explicit
+            // `ret`/`ret_void`/`jmp` — exactly the shape the sentinel-block
+            // workaround above exists to produce, e.g. BASIC GOSUB/RETURN
+            // dispatch-loop lowering). `br 1` is what actually reaches
+            // outer_exit (skipping LOOP), terminating the function.
             let last_op = block.instrs.last().map(|i| i.op.as_str()).unwrap_or("");
             if !matches!(last_op, "ret" | "ret_void" | "jmp") {
                 if block_idx + 1 < n_blocks {
                     let next_block = (block_idx + 1) as i32;
                     code.extend(encode_i32_const(next_block));
                     code.extend(encode_local_set(dispatch_reg));
-                    // Re-enter loop: depth = n_blocks - block_idx - 2.
-                    let loop_depth = (n_blocks - block_idx - 2) as u32;
+                    // Re-enter loop: depth = n_blocks - block_idx - 1.
+                    let loop_depth = (n_blocks - block_idx - 1) as u32;
                     code.extend(encode_br(loop_depth));
                 } else {
-                    // Last block: `br 0` exits outer_exit → function ends.
-                    code.extend(encode_br(0));
+                    // Last block: `br 1` skips LOOP (still open here) to
+                    // reach outer_exit, terminating the function.
+                    code.extend(encode_br(1));
                 }
             }
         }

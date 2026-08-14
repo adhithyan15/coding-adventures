@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0
+
+- Lay out Journey sections and tasks horizontally with score-ranked faces and activity lines.
+
+## 0.9.0
+
+- Resolve Journey task offsets and deterministically wrap actor legends to configured bounds.
+
 ## 0.8.0
 
 - Resolve cyclic Journey actor, section fill, and section text palettes.

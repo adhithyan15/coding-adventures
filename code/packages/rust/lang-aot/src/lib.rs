@@ -45,6 +45,7 @@
 use std::fmt;
 use std::path::Path;
 
+use interpreter_ir::instr::Operand;
 use interpreter_ir::module::IIRModule;
 
 /// McCarthy Lisp on the universal JIT backend (W15).
@@ -1199,43 +1200,162 @@ pub fn compile_file_to_riscv32_bin(
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let mut module = compile_source_to_iir(language, &source, stem)?;
+    if language == Language::DartmouthBasic {
+        lower_basic_integral_expressions_for_riscv(&mut module)?;
+    }
 
-    // Phase 7 (FINAL lane) of the historical-arch backend migration:
-    // route through aot_core::infer + aot_core::specialise +
-    // riscv_backend::compile per function, same pattern as Phases 3-6
-    // for GE-225 / Intel 4004 / ARMv7 / Intel 8008.  riscv-backend
-    // emits little-endian-flattened bytes directly, so concatenation
-    // here is just `extend_from_slice`.
+    // Route through aot_core::infer + aot_core::specialise, then let the
+    // RISC-V backend lay out the whole module. This keeps the selected entry
+    // at address zero and lets it patch direct module-local `jal` calls.
     let _ = stem;
-    let mut bytes = Vec::new();
-    let empty_params: Vec<(String, String)> = Vec::new();
+    let mut cir_functions = Vec::with_capacity(module.functions.len());
     for f in &module.functions {
         let inferred = aot_core::infer::infer_types(f);
-        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
-        let ctx = jit_core::backend::FunctionContext {
-            name: f.name.as_str(),
-            params: &empty_params,
-            return_type: f.return_type.as_str(),
-        };
-        // Name the function in the message.  A module is many functions
-        // (BASIC alone injects its whole `__basic_print_*` runtime), so
-        // "unsupported type f64" with no function name leaves the reader
-        // guessing which one refused — and the doc comment above has always
-        // promised the message names the function.
-        let fn_bytes = riscv_backend::compile(&ctx, &cir).map_err(|e| {
-            LangAotError::RiscvBackendError(format!("function {:?}: {e}", f.name))
-        })?;
-        bytes.extend_from_slice(&fn_bytes);
+        cir_functions.push(aot_core::specialise::aot_specialise(f, Some(&inferred)));
     }
-    if bytes.is_empty() {
-        // Fallback: an empty module still needs at least the
-        // canonical `ret` so consumers (qemu-riscv32, simulator)
-        // see a well-formed `.bin`.
-        bytes.extend_from_slice(&riscv_encoder::RET_WORD.to_le_bytes());
-    }
+    let functions: Vec<_> = module
+        .functions
+        .iter()
+        .zip(&cir_functions)
+        .map(|(function, cir)| riscv_backend::ModuleFunction {
+            context: jit_core::backend::FunctionContext {
+                name: function.name.as_str(),
+                params: &function.params,
+                return_type: function.return_type.as_str(),
+            },
+            cir,
+        })
+        .collect();
+    let bytes = riscv_backend::compile_module(&functions, module.entry_point.as_deref()).map_err(
+        |e| LangAotError::RiscvBackendError(format!("module {:?}: {e}", module.name)),
+    )?;
 
     std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Lower the Dartmouth BASIC integer-only expression slice supported by RV32I.
+///
+/// Dartmouth BASIC represents every numeric source expression as `f64`, even
+/// a literal such as `PRINT 42`. RV32I has no floating-point register file,
+/// but a finite whole-number program using integer-preserving expressions has
+/// an exact integer rendering. This target-only pass switches those operations
+/// to the existing integer ABI and removes the now-unreachable real-format
+/// helpers before IIR becomes CIR.
+///
+/// It intentionally refuses fractional literals, division, and float-only
+/// operations. Those require an exact-division representation or a floating-
+/// point ABI, rather than an implicit and potentially lossy conversion here.
+fn lower_basic_integral_expressions_for_riscv(
+    module: &mut IIRModule,
+) -> Result<(), LangAotError> {
+    const REAL_HELPERS: &[&str] = &[
+        "__basic_print_fixed_mag",
+        "__basic_print_real_e",
+        "__basic_print_real",
+    ];
+    const INTEGER_REAL_OPS: &[&str] = &[
+        "const", "mov", "add", "sub", "mul", "neg", "cmp_eq", "cmp_ne", "cmp_lt",
+        "cmp_le", "cmp_gt", "cmp_ge",
+    ];
+
+    let module_name = module.name.clone();
+    let Some(main) = module.get_function_mut("main") else {
+        return Err(LangAotError::RiscvBackendError(format!(
+            "module {:?}: Dartmouth BASIC entry function \"main\" is missing",
+            module_name
+        )));
+    };
+
+    let mut integer_values = std::collections::HashSet::new();
+    for instr in &mut main.instructions {
+        if instr.type_hint != "f64" {
+            continue;
+        }
+        if instr.op == "div" {
+            return Err(LangAotError::RiscvBackendError(format!(
+                "module {:?}: Dartmouth BASIC RV32I integral expressions do not yet support \
+                 division, because it can produce a fractional REAL value",
+                module_name
+            )));
+        }
+        if !INTEGER_REAL_OPS.contains(&instr.op.as_str()) {
+            return Err(LangAotError::RiscvBackendError(format!(
+                "module {:?}: Dartmouth BASIC RV32I integral expressions do not support REAL \
+                 operation {:?}",
+                module_name, instr.op
+            )));
+        }
+        for operand in &mut instr.srcs {
+            let Operand::Float(value) = operand else {
+                continue;
+            };
+            if !value.is_finite()
+                || value.fract() != 0.0
+                || *value < i64::MIN as f64
+                || *value > i64::MAX as f64
+            {
+                return Err(LangAotError::RiscvBackendError(format!(
+                    "module {:?}: Dartmouth BASIC RV32I integral expressions require finite \
+                     whole-number literals",
+                    module_name
+                )));
+            }
+            *operand = Operand::Int(*value as i64);
+        }
+        instr.type_hint = "i64".to_string();
+        if let Some(dest) = &instr.dest {
+            integer_values.insert(dest.clone());
+        }
+    }
+
+    for instr in &mut main.instructions {
+        if instr.op != "call" || instr.srcs.len() != 2 {
+            continue;
+        }
+        let Some("__basic_print_real") = instr.srcs.first().and_then(Operand::as_var) else {
+            continue;
+        };
+        let Some(argument) = instr.srcs.get(1).and_then(Operand::as_var) else {
+            continue;
+        };
+        if integer_values.contains(argument) {
+            instr.srcs[0] = Operand::Var("__basic_print_int".to_string());
+        }
+    }
+
+    let remaining_real = main.instructions.iter().find(|instr| {
+        instr.type_hint == "f64"
+            || instr.srcs.iter().any(|operand| matches!(operand, Operand::Float(_)))
+            || (instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real"))
+    });
+    if let Some(instr) = remaining_real {
+        return Err(LangAotError::RiscvBackendError(format!(
+            "module {:?}: Dartmouth BASIC RV32I integral expressions leave unsupported REAL \
+             function \"main\" still uses REAL operation {:?}",
+            module_name, instr.op
+        )));
+    }
+
+    module
+        .functions
+        .retain(|function| !REAL_HELPERS.contains(&function.name.as_str()));
+    if let Some(function) = module.functions.iter().find(|function| {
+        function.params.iter().any(|(_, ty)| ty == "f64")
+            || function.return_type == "f64"
+            || function.instructions.iter().any(|instr| {
+                instr.type_hint == "f64"
+                    || instr.srcs.iter().any(|operand| matches!(operand, Operand::Float(_)))
+            })
+    }) {
+        return Err(LangAotError::RiscvBackendError(format!(
+            "module {:?}: Dartmouth BASIC RV32I integral expressions do not support REAL \
+             function {:?}",
+            module_name, function.name
+        )));
+    }
     Ok(())
 }
 

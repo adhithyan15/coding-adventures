@@ -266,6 +266,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // handwritten form is single-storey; this learner path preserves that one-run
 // motion while widening the entry to cover Noto Sans Cyrillic's extra printed
 // upper shoulder before circling the lower bowl and descending the right stem.
+// The same lesson writes lowercase Cyrillic б without lifting: a
+// counterclockwise lower body closes before the pen rises into its rightward
+// top flag. The handwritten diagonal transition is routed through Noto Sans
+// Cyrillic's upper-left printed shoulder so the fitted path stays on its ink.
 // Arabic ا opens the smallest remaining starter inventory from the University
 // of Oregon's instructional video: one top-to-bottom movement with no lift.
 // Its scoped key preserves Arabic provenance separately from the Persian and
@@ -3005,6 +3009,700 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: cyrillicAlphabetSource("а"),
+  },
+  // RussianIrina closes the rounded lowercase б body and immediately climbs
+  // into its top flag. The source's direct diagonal crossing is a handwritten
+  // form; Noto Sans Cyrillic joins the ascender at the upper-left shoulder, so
+  // this one-run fit carries the pen left along the printed shoulder first.
+  [ductusKey("cyrillic", "б")]: {
+    script: "cyrillic",
+    glyph: "б",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle counterclockwise around the rounded lower body",
+            path: [
+              { x: 430, y: 480 }, { x: 350, y: 495 }, { x: 270, y: 495 },
+              { x: 190, y: 470 }, { x: 125, y: 420 }, { x: 90, y: 340 },
+              { x: 85, y: 250 }, { x: 105, y: 165 }, { x: 155, y: 95 },
+              { x: 225, y: 45 }, { x: 305, y: 25 }, { x: 380, y: 45 },
+              { x: 445, y: 90 }, { x: 490, y: 155 }, { x: 510, y: 235 },
+              { x: 505, y: 315 }, { x: 480, y: 400 }, { x: 430, y: 480 },
+            ],
+          },
+          {
+            label: "continue through the rising shoulder and sweep the top flag right",
+            path: [
+              { x: 430, y: 480 }, { x: 350, y: 490 }, { x: 270, y: 490 },
+              { x: 195, y: 485 }, { x: 195, y: 465 }, { x: 195, y: 450 },
+              { x: 170, y: 445 }, { x: 140, y: 445 }, { x: 140, y: 480 },
+              { x: 140, y: 520 }, { x: 150, y: 545 }, { x: 165, y: 585 },
+              { x: 185, y: 620 }, { x: 215, y: 660 }, { x: 260, y: 690 },
+              { x: 320, y: 710 }, { x: 390, y: 720 }, { x: 460, y: 730 },
+              { x: 500, y: 735 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("б"),
+  },
+  // RussianIrina starts lowercase в at the baseline, climbs through its tall
+  // handwritten ascender loop, descends to the baseline, and continues around
+  // the lower bowl without lifting. Noto Sans Cyrillic prints two compact bowls
+  // on a straight stem, so the same one-run order is fitted through the upper
+  // bowl, down the stem, and counterclockwise around the lower bowl.
+  [ductusKey("cyrillic", "в")]: {
+    script: "cyrillic",
+    glyph: "в",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb through the upper loop and descend to the baseline",
+            path: [
+              { x: 130, y: 20 }, { x: 130, y: 100 }, { x: 130, y: 200 },
+              { x: 130, y: 300 }, { x: 130, y: 400 }, { x: 130, y: 500 },
+              { x: 220, y: 500 }, { x: 310, y: 500 }, { x: 380, y: 480 },
+              { x: 430, y: 445 }, { x: 455, y: 400 }, { x: 450, y: 355 },
+              { x: 420, y: 320 }, { x: 365, y: 300 }, { x: 295, y: 290 },
+              { x: 220, y: 290 }, { x: 150, y: 290 }, { x: 130, y: 260 },
+              { x: 130, y: 180 }, { x: 130, y: 100 }, { x: 130, y: 20 },
+            ],
+          },
+          {
+            label: "continue counterclockwise around the rounded lower bowl",
+            path: [
+              { x: 130, y: 20 }, { x: 220, y: 35 }, { x: 310, y: 35 },
+              { x: 385, y: 50 }, { x: 440, y: 80 }, { x: 470, y: 120 },
+              { x: 475, y: 165 }, { x: 455, y: 205 }, { x: 415, y: 235 },
+              { x: 360, y: 260 }, { x: 295, y: 270 }, { x: 220, y: 270 },
+              { x: 150, y: 270 }, { x: 130, y: 260 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("в"),
+  },
+  // RussianIrina writes lowercase г as one rounded two-hump cursive run. The
+  // bundled Noto glyph is the block-like isolated form, so its zero-lift order
+  // is preserved by climbing the upright, sweeping and retracing the top bar,
+  // then descending the upright. Connected cursive restores the exit hump.
+  [ductusKey("cyrillic", "г")]: {
+    script: "cyrillic",
+    glyph: "г",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the upright and sweep the top bar right",
+            path: [
+              { x: 130, y: 20 }, { x: 130, y: 120 }, { x: 130, y: 240 },
+              { x: 130, y: 360 }, { x: 130, y: 500 }, { x: 220, y: 500 },
+              { x: 310, y: 500 }, { x: 390, y: 500 },
+            ],
+          },
+          {
+            label: "reverse along the top and descend to the baseline",
+            path: [
+              { x: 390, y: 500 }, { x: 310, y: 500 }, { x: 220, y: 500 },
+              { x: 130, y: 500 }, { x: 130, y: 360 }, { x: 130, y: 240 },
+              { x: 130, y: 120 }, { x: 130, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("г"),
+  },
+  // RussianIrina writes lowercase д as one cursive body-to-descender run. The
+  // bundled Noto glyph is the block-like isolated form, so its zero-lift order
+  // is preserved by circling the body before retracing both feet through their
+  // joined base shelf. Connected cursive restores the below-baseline loop.
+  [ductusKey("cyrillic", "д")]: {
+    script: "cyrillic",
+    glyph: "д",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle counterclockwise around the closed body",
+            path: [
+              { x: 470, y: 462 }, { x: 390, y: 500 }, { x: 300, y: 500 },
+              { x: 205, y: 500 }, { x: 190, y: 420 }, { x: 185, y: 330 },
+              { x: 175, y: 240 }, { x: 150, y: 150 }, { x: 110, y: 74 },
+              { x: 190, y: 35 }, { x: 290, y: 35 }, { x: 390, y: 35 },
+              { x: 470, y: 74 }, { x: 470, y: 170 }, { x: 470, y: 270 },
+              { x: 470, y: 370 }, { x: 470, y: 462 },
+            ],
+          },
+          {
+            label: "descend, retrace both feet, and finish along the base shelf",
+            path: [
+              { x: 470, y: 462 }, { x: 470, y: 330 }, { x: 470, y: 200 },
+              { x: 470, y: 74 }, { x: 550, y: 35 }, { x: 550, y: -50 },
+              { x: 550, y: -110 }, { x: 550, y: -50 }, { x: 550, y: 35 },
+              { x: 450, y: 35 }, { x: 350, y: 35 }, { x: 250, y: 35 },
+              { x: 150, y: 35 }, { x: 55, y: 35 }, { x: 55, y: -50 },
+              { x: 55, y: -110 }, { x: 55, y: -50 }, { x: 55, y: 35 },
+              { x: 150, y: 35 }, { x: 250, y: 35 }, { x: 350, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("д"),
+  },
+  // RussianIrina writes lowercase е as one upper-loop-to-lower-bowl cursive
+  // run. Noto Sans Cyrillic prints a compact e with a long middle bar, so the
+  // sourced zero-lift order is fitted by sweeping and reversing through that
+  // bar before continuing counterclockwise around the lower bowl.
+  [ductusKey("cyrillic", "е")]: {
+    script: "cyrillic",
+    glyph: "е",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve around the upper bowl and sweep through the middle",
+            path: [
+              { x: 430, y: 380 }, { x: 390, y: 455 }, { x: 320, y: 505 },
+              { x: 245, y: 505 }, { x: 175, y: 470 }, { x: 115, y: 410 },
+              { x: 85, y: 340 }, { x: 85, y: 285 }, { x: 150, y: 285 },
+              { x: 240, y: 285 }, { x: 330, y: 285 }, { x: 440, y: 285 },
+            ],
+          },
+          {
+            label: "reverse through the middle and circle the lower bowl",
+            path: [
+              { x: 440, y: 285 }, { x: 330, y: 285 }, { x: 240, y: 285 },
+              { x: 150, y: 285 }, { x: 85, y: 260 }, { x: 80, y: 185 },
+              { x: 105, y: 115 }, { x: 160, y: 55 }, { x: 230, y: 25 },
+              { x: 305, y: 25 }, { x: 375, y: 40 }, { x: 440, y: 70 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("е"),
+  },
+  // RussianIrina writes lowercase ё by completing the same looped body as е,
+  // then lifting for the left dot and once more for the right dot. The Noto
+  // Sans Cyrillic fit reuses the printed e route and places both circular dots
+  // as separate runs in the demonstrated left-to-right order.
+  [ductusKey("cyrillic", "ё")]: {
+    script: "cyrillic",
+    glyph: "ё",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve around the upper bowl and sweep through the middle",
+            path: [
+              { x: 430, y: 380 }, { x: 390, y: 455 }, { x: 320, y: 505 },
+              { x: 245, y: 505 }, { x: 175, y: 470 }, { x: 115, y: 410 },
+              { x: 85, y: 340 }, { x: 85, y: 285 }, { x: 150, y: 285 },
+              { x: 240, y: 285 }, { x: 330, y: 285 }, { x: 440, y: 285 },
+            ],
+          },
+          {
+            label: "reverse through the middle and circle the lower bowl",
+            path: [
+              { x: 440, y: 285 }, { x: 330, y: 285 }, { x: 240, y: 285 },
+              { x: 150, y: 285 }, { x: 85, y: 260 }, { x: 80, y: 185 },
+              { x: 105, y: 115 }, { x: 160, y: 55 }, { x: 230, y: 25 },
+              { x: 305, y: 25 }, { x: 375, y: 40 }, { x: 440, y: 70 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift and place the left dot",
+            path: [
+              { x: 197, y: 674 }, { x: 203, y: 674 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot",
+            path: [
+              { x: 379, y: 674 }, { x: 385, y: 674 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ё"),
+  },
+  // RussianIrina writes lowercase ж as one continuous rounded left-to-centre-
+  // to-right run. Noto Sans Cyrillic prints a straight upright with four arms,
+  // so the sourced zero-lift order is fitted by retracing each side junction
+  // and the central upright before continuing into the opposite wing.
+  [ductusKey("cyrillic", "ж")]: {
+    script: "cyrillic",
+    glyph: "ж",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "trace the left wings and rise through the centre",
+            path: [
+              { x: 60, y: 30 }, { x: 110, y: 100 }, { x: 190, y: 220 },
+              { x: 265, y: 275 }, { x: 210, y: 350 }, { x: 140, y: 455 },
+              { x: 75, y: 510 }, { x: 140, y: 455 }, { x: 210, y: 350 },
+              { x: 265, y: 275 }, { x: 340, y: 275 }, { x: 380, y: 275 },
+              { x: 380, y: 380 }, { x: 380, y: 510 }, { x: 380, y: 380 },
+              { x: 380, y: 275 }, { x: 380, y: 150 }, { x: 380, y: 30 },
+              { x: 380, y: 150 }, { x: 380, y: 275 },
+            ],
+          },
+          {
+            label: "retrace the centre and trace the right wings",
+            path: [
+              { x: 380, y: 275 }, { x: 495, y: 275 }, { x: 560, y: 370 },
+              { x: 630, y: 470 },
+              { x: 690, y: 510 }, { x: 630, y: 470 }, { x: 560, y: 370 },
+              { x: 495, y: 275 }, { x: 560, y: 180 }, { x: 630, y: 80 },
+              { x: 700, y: 30 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ж"),
+  },
+  // RussianIrina writes lowercase з as one continuous smaller-upper-lobe to
+  // larger-lower-lobe run with a cursive exit. Noto Sans Cyrillic omits the
+  // exit, so the sourced zero-lift order is fitted by circling both printed
+  // lobes through their middle junction and retracing to the lower-right tip.
+  [ductusKey("cyrillic", "з")]: {
+    script: "cyrillic",
+    glyph: "з",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the smaller upper lobe and descend through the middle",
+            path: [
+              { x: 80, y: 485 }, { x: 155, y: 510 }, { x: 225, y: 510 },
+              { x: 300, y: 500 }, { x: 365, y: 460 }, { x: 390, y: 410 },
+              { x: 385, y: 360 }, { x: 345, y: 320 }, { x: 285, y: 285 },
+              { x: 200, y: 280 },
+            ],
+          },
+          {
+            label: "circle the larger lower lobe and finish at the lower right",
+            path: [
+              { x: 200, y: 280 }, { x: 285, y: 275 }, { x: 360, y: 245 },
+              { x: 405, y: 200 }, { x: 410, y: 145 }, { x: 385, y: 90 },
+              { x: 325, y: 45 }, { x: 245, y: 25 }, { x: 160, y: 25 },
+              { x: 85, y: 45 }, { x: 160, y: 25 }, { x: 245, y: 25 },
+              { x: 325, y: 45 }, { x: 405, y: 75 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("з"),
+  },
+  // RussianIrina writes lowercase и as one continuous left-stem, rising-
+  // diagonal, right-stem run with cursive entry and exit joins. The bundled
+  // printed glyph omits those joins, so the sourced zero-lift order is fitted
+  // directly through its two stems and backwards-N diagonal.
+  [ductusKey("cyrillic", "и")]: {
+    script: "cyrillic",
+    glyph: "и",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 125, y: 510 }, { x: 125, y: 390 }, { x: 125, y: 270 },
+              { x: 125, y: 150 }, { x: 125, y: 25 }, { x: 160, y: 25 },
+              { x: 190, y: 40 },
+            ],
+          },
+          {
+            label: "rise diagonally to the upper right",
+            path: [
+              { x: 190, y: 40 }, { x: 225, y: 100 }, { x: 270, y: 180 },
+              { x: 315, y: 255 }, { x: 360, y: 335 }, { x: 405, y: 410 },
+              { x: 450, y: 485 }, { x: 475, y: 510 },
+            ],
+          },
+          {
+            label: "descend the right stem and finish at the baseline",
+            path: [
+              { x: 475, y: 510 }, { x: 475, y: 390 }, { x: 475, y: 270 },
+              { x: 475, y: 150 }, { x: 475, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("и"),
+  },
+  // RussianIrina writes the lowercase й body with the same continuous motion
+  // as и, then lifts once and adds its breve from left to right. The fitted
+  // path preserves that body-before-breve order across the bundled printed
+  // backwards-N body and its separate curved mark.
+  [ductusKey("cyrillic", "й")]: {
+    script: "cyrillic",
+    glyph: "й",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 125, y: 510 }, { x: 125, y: 390 }, { x: 125, y: 270 },
+              { x: 125, y: 150 }, { x: 125, y: 25 }, { x: 160, y: 25 },
+              { x: 190, y: 40 },
+            ],
+          },
+          {
+            label: "rise diagonally to the upper right",
+            path: [
+              { x: 190, y: 40 }, { x: 225, y: 100 }, { x: 270, y: 180 },
+              { x: 315, y: 255 }, { x: 360, y: 335 }, { x: 405, y: 410 },
+              { x: 450, y: 485 }, { x: 475, y: 510 },
+            ],
+          },
+          {
+            label: "descend the right stem and finish at the baseline",
+            path: [
+              { x: 475, y: 510 }, { x: 475, y: 390 }, { x: 475, y: 270 },
+              { x: 475, y: 150 }, { x: 475, y: 25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the breve from left to right",
+            path: [
+              { x: 195, y: 715 }, { x: 220, y: 675 }, { x: 265, y: 640 },
+              { x: 310, y: 635 }, { x: 355, y: 640 }, { x: 400, y: 675 },
+              { x: 430, y: 715 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("й"),
+  },
+  // RussianIrina writes lowercase к in one continuous school-hand motion:
+  // descend the left stem, rise into the upper arm and return to the middle,
+  // then continue through the lower arm. The fitted path preserves that order
+  // while tracing the bundled printed vertical and its two angular diagonals.
+  [ductusKey("cyrillic", "к")]: {
+    script: "cyrillic",
+    glyph: "к",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 510 },
+              { x: 129, y: 390 },
+              { x: 129, y: 270 },
+              { x: 129, y: 150 },
+              { x: 129, y: 25 },
+            ],
+          },
+          {
+            label: "rise through the upper arm and return to the middle junction",
+            path: [
+              { x: 129, y: 25 },
+              { x: 129, y: 120 },
+              { x: 129, y: 220 },
+              { x: 190, y: 274 },
+              { x: 250, y: 310 },
+              { x: 370, y: 400 },
+              { x: 435, y: 490 },
+              { x: 465, y: 510 },
+              { x: 420, y: 470 },
+              { x: 360, y: 400 },
+              { x: 300, y: 320 },
+              { x: 250, y: 274 },
+              { x: 190, y: 274 },
+            ],
+          },
+          {
+            label: "continue down-right through the lower arm to the baseline",
+            path: [
+              { x: 190, y: 274 },
+              { x: 250, y: 250 },
+              { x: 300, y: 210 },
+              { x: 350, y: 150 },
+              { x: 410, y: 70 },
+              { x: 475, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("к"),
+  },
+  // RussianIrina writes lowercase л in one continuous school-hand motion:
+  // curl around the baseline hook, rise to the apex, then descend the right
+  // leg. The fitted path preserves that order while tracing the bundled
+  // printed glyph's curved left leg, horizontal shoulder, and upright stem.
+  [ductusKey("cyrillic", "л")]: {
+    script: "cyrillic",
+    glyph: "л",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve from the baseline hook up the left leg",
+            path: [
+              { x: 25, y: 30 },
+              { x: 55, y: 25 },
+              { x: 85, y: 35 },
+              { x: 110, y: 75 },
+              { x: 125, y: 140 },
+              { x: 135, y: 240 },
+              { x: 145, y: 360 },
+              { x: 160, y: 460 },
+              { x: 175, y: 500 },
+            ],
+          },
+          {
+            label: "sweep right along the top shoulder",
+            path: [
+              { x: 175, y: 500 },
+              { x: 260, y: 500 },
+              { x: 360, y: 500 },
+              { x: 458, y: 500 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 458, y: 500 },
+              { x: 458, y: 380 },
+              { x: 458, y: 260 },
+              { x: 458, y: 140 },
+              { x: 458, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("л"),
+  },
+  // RussianIrina writes lowercase м in one continuous school-hand motion:
+  // rise from the entry hook to the first apex, descend and rise through the
+  // second arch, then descend the right leg. The fitted path preserves that
+  // order while tracing the bundled printed stems and deep central V.
+  [ductusKey("cyrillic", "м")]: {
+    script: "cyrillic",
+    glyph: "м",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "rise from the baseline through the left stem",
+            path: [
+              { x: 126, y: 25 },
+              { x: 126, y: 140 },
+              { x: 126, y: 260 },
+              { x: 126, y: 380 },
+              { x: 126, y: 500 },
+              { x: 185, y: 500 },
+            ],
+          },
+          {
+            label: "descend diagonally to the central valley",
+            path: [
+              { x: 185, y: 500 },
+              { x: 230, y: 400 },
+              { x: 275, y: 290 },
+              { x: 325, y: 170 },
+              { x: 380, y: 50 },
+            ],
+          },
+          {
+            label: "rise diagonally to the second apex",
+            path: [
+              { x: 380, y: 50 },
+              { x: 435, y: 170 },
+              { x: 490, y: 290 },
+              { x: 535, y: 400 },
+              { x: 585, y: 500 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 585, y: 500 },
+              { x: 642, y: 500 },
+              { x: 642, y: 380 },
+              { x: 642, y: 260 },
+              { x: 642, y: 140 },
+              { x: 642, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("м"),
+  },
+  // RussianIrina writes lowercase н in one continuous school-hand motion:
+  // descend the left stem, turn upward through the rounded middle bridge,
+  // rise to the right shoulder, then descend the right stem. The fitted path
+  // preserves that order across the bundled printed stems and middle bar.
+  [ductusKey("cyrillic", "н")]: {
+    script: "cyrillic",
+    glyph: "н",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 510 },
+              { x: 129, y: 390 },
+              { x: 129, y: 274 },
+              { x: 129, y: 150 },
+              { x: 129, y: 25 },
+            ],
+          },
+          {
+            label: "retrace to the middle bridge and rise to the upper right",
+            path: [
+              { x: 129, y: 25 },
+              { x: 129, y: 140 },
+              { x: 129, y: 274 },
+              { x: 220, y: 274 },
+              { x: 310, y: 274 },
+              { x: 400, y: 274 },
+              { x: 485, y: 274 },
+              { x: 485, y: 390 },
+              { x: 485, y: 510 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 485, y: 510 },
+              { x: 485, y: 390 },
+              { x: 485, y: 274 },
+              { x: 485, y: 150 },
+              { x: 485, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("н"),
+  },
+  // RussianIrina writes lowercase о as one continuous counterclockwise oval:
+  // begin on the upper-right shoulder, pass over the top and down the left,
+  // sweep through the bottom, then rise on the right and close. The fitted
+  // path preserves that order in the bundled printed oval.
+  [ductusKey("cyrillic", "о")]: {
+    script: "cyrillic",
+    glyph: "о",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve left over the top and descend the left side",
+            path: [
+              { x: 430, y: 450 },
+              { x: 380, y: 490 },
+              { x: 300, y: 510 },
+              { x: 220, y: 500 },
+              { x: 145, y: 450 },
+              { x: 105, y: 380 },
+              { x: 95, y: 270 },
+              { x: 105, y: 170 },
+              { x: 150, y: 90 },
+              { x: 220, y: 40 },
+              { x: 300, y: 25 },
+            ],
+          },
+          {
+            label: "sweep through the bottom and rise to close the oval",
+            path: [
+              { x: 300, y: 25 },
+              { x: 380, y: 40 },
+              { x: 450, y: 90 },
+              { x: 490, y: 170 },
+              { x: 500, y: 268 },
+              { x: 490, y: 360 },
+              { x: 450, y: 440 },
+              { x: 380, y: 490 },
+              { x: 300, y: 510 },
+              { x: 380, y: 490 },
+              { x: 430, y: 450 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("о"),
+  },
+  // RussianIrina writes lowercase п in one continuous school-hand motion:
+  // descend the left stem, turn upward into the rounded top shoulder, then
+  // descend the right stem. The fitted path preserves that order across the
+  // bundled printed stems and horizontal top bar.
+  [ductusKey("cyrillic", "п")]: {
+    script: "cyrillic",
+    glyph: "п",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 500 },
+              { x: 129, y: 380 },
+              { x: 129, y: 260 },
+              { x: 129, y: 140 },
+              { x: 129, y: 25 },
+            ],
+          },
+          {
+            label: "retrace to the top shoulder and sweep right",
+            path: [
+              { x: 129, y: 25 },
+              { x: 129, y: 140 },
+              { x: 129, y: 260 },
+              { x: 129, y: 380 },
+              { x: 129, y: 500 },
+              { x: 220, y: 500 },
+              { x: 310, y: 500 },
+              { x: 400, y: 500 },
+              { x: 477, y: 500 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 477, y: 500 },
+              { x: 477, y: 380 },
+              { x: 477, y: 260 },
+              { x: 477, y: 140 },
+              { x: 477, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("п"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

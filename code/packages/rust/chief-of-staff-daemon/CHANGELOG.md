@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Compose the config-backed exact privilege resolver and Trust Checker into the
+  production daemon. Fully declared Tier 0 channel and pipeline mutations are
+  executable; missing mappings and interactive tiers remain fail-closed.
+- Compose an optional shell-free notification helper for exact Tier 1 approval
+  while preserving unavailable Tier 1 defaults and closed Tier 2/3 gates.
+
 - Add optional Chief-owned Reolink pairing over the shared durable controller.
   One complete owner-only configuration tuple binds credentials and a pinned
   network target to an exact bridge, while worker failure joins coordinated

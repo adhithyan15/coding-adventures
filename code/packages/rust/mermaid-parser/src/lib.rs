@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.95.0";
+pub const VERSION: &str = "0.110.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -21,6 +21,7 @@ use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_journey, try_tokenize_mermaid_quadrant,
+    try_tokenize_mermaid_requirement,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -40,6 +41,8 @@ const QUADRANT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/quadrant.grammar");
 const JOURNEY_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.grammar");
+const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/requirement.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -491,13 +494,15 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
-    RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
-    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
-    SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
-    SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
-    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
-    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig,
+    QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind, RequirementMetadata,
+    RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode, SequenceArrowhead,
+    SequenceBlockKind, SequenceCentralConnection, SequenceDiagram, SequenceEvent,
+    SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
+    SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
+    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
+    StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskStart, TaskStatus,
+    TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -584,6 +589,7 @@ impl MermaidDiagramType {
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Journey
+                | Self::Requirement
                 | Self::Pie
                 | Self::Quadrant
                 | Self::Sequence
@@ -619,6 +625,11 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
     }
     if first.eq_ignore_ascii_case("journey") {
         return Ok(MermaidDiagramType::Journey);
+    }
+    if first.eq_ignore_ascii_case("requirement")
+        || first.eq_ignore_ascii_case("requirementDiagram")
+    {
+        return Ok(MermaidDiagramType::Requirement);
     }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
@@ -676,6 +687,9 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::C4 => parse_c4_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::Requirement => {
+            parse_requirement_diagram(source).map(MermaidDiagram::Structural)
+        }
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Quadrant => parse_quadrant_chart(source).map(MermaidDiagram::Chart),
@@ -717,6 +731,587 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
     }
 }
 
+/// Parse Mermaid requirements and elements into the shared structural IR.
+pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_requirement(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(REQUIREMENT_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse requirement.grammar: {error}"));
+    let mut parser = GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
+    })?;
+
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
+    let mut direction = None;
+    let mut nodes = Vec::new();
+    let mut relationships = Vec::new();
+    let mut style_events = Vec::new();
+    let mut cursor = TokenCursor::new(tokens);
+    cursor.skip_terminators();
+    cursor.consume_if("HEADER");
+    cursor.skip_terminators();
+    while !cursor.at_eof() {
+        match token_name(cursor.current()) {
+            "TITLE" => {
+                let value = cursor.advance().value.clone();
+                title = value
+                    .split_once(char::is_whitespace)
+                    .map(|(_, title)| title.trim().to_string());
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("accessibility block requires '{'");
+                let close = value.rfind('}').expect("accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+            }
+            "DIRECTION" => {
+                let value = cursor.advance().value.clone();
+                direction = Some(
+                    match value
+                        .split_whitespace()
+                        .nth(1)
+                        .map(|value| value.to_ascii_uppercase())
+                        .as_deref()
+                    {
+                        Some("TB") => DiagramDirection::Tb,
+                        Some("BT") => DiagramDirection::Bt,
+                        Some("LR") => DiagramDirection::Lr,
+                        Some("RL") => DiagramDirection::Rl,
+                        _ => {
+                            return Err(token_error(
+                                cursor.current(),
+                                "invalid requirement direction",
+                            ))
+                        }
+                    },
+                );
+            }
+            "STYLE" => {
+                let (node_ids, style) = parse_requirement_style(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::Direct { node_ids, style });
+            }
+            "CLASSDEF" => {
+                let (class_names, style) = parse_requirement_class_def(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::DefineClass { class_names, style });
+            }
+            "CLASS" => {
+                let (node_ids, class_names) = parse_requirement_class_assignment(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::AssignClass {
+                    node_ids,
+                    class_names,
+                });
+            }
+            "INLINE_CLASS" => {
+                let (node_id, class_names) = parse_requirement_inline_class(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::AssignClass {
+                    node_ids: vec![node_id],
+                    class_names,
+                });
+            }
+            "REQUIREMENT_START" | "ELEMENT_START" => {
+                let is_element = token_name(cursor.current()) == "ELEMENT_START";
+                let declaration = cursor
+                    .advance()
+                    .value
+                    .trim_end_matches('{')
+                    .trim()
+                    .to_string();
+                let (kind, node_ref) =
+                    declaration.split_once(char::is_whitespace).ok_or_else(|| {
+                        token_error(cursor.current(), "invalid requirement definition")
+                    })?;
+                let (name, inline_classes) = parse_requirement_node_ref(node_ref);
+                let mut fields = Vec::new();
+                let mut requirement_metadata = RequirementMetadata::default();
+                if !is_element {
+                    requirement_metadata.kind = parse_requirement_kind(kind);
+                }
+                let mut element_metadata = RequirementElementMetadata::default();
+                cursor.skip_terminators();
+                while token_name(cursor.current()) != "RBRACE" {
+                    if cursor.at_eof() {
+                        return Err(token_error(
+                            cursor.current(),
+                            "unterminated requirement definition",
+                        ));
+                    }
+                    if matches!(
+                        token_name(cursor.current()),
+                        "ID_FIELD"
+                            | "TEXT_FIELD"
+                            | "RISK_FIELD"
+                            | "VERIFY_FIELD"
+                            | "TYPE_FIELD"
+                            | "DOCREF_FIELD"
+                    ) {
+                        let value = cursor.advance().value.clone();
+                        if let Some((key, value)) = value.split_once(':') {
+                            let field_value = unquote_requirement_value(value);
+                            match key.trim().to_ascii_lowercase().as_str() {
+                                "id" => {
+                                    requirement_metadata.external_id = Some(field_value.clone())
+                                }
+                                "text" => requirement_metadata.text = Some(field_value.clone()),
+                                "risk" => {
+                                    requirement_metadata.risk =
+                                        Some(parse_requirement_risk(&field_value));
+                                }
+                                "verifymethod" => {
+                                    requirement_metadata.verify_method =
+                                        Some(parse_requirement_verify_method(&field_value));
+                                }
+                                "type" => element_metadata.element_type = Some(field_value.clone()),
+                                "docref" => {
+                                    element_metadata.document_reference = Some(field_value.clone());
+                                }
+                                _ => unreachable!("requirement grammar emitted an unknown field"),
+                            }
+                            fields.push(format!("{}: {}", key.trim(), field_value));
+                        }
+                    } else {
+                        cursor.advance();
+                    }
+                    cursor.skip_terminators();
+                }
+                cursor.advance();
+                nodes.push(StructuralNode {
+                    id: name.clone(),
+                    label: name.clone(),
+                    stereotype: Some(kind.to_string()),
+                    node_kind: if is_element {
+                        StructuralNodeKind::Element
+                    } else {
+                        StructuralNodeKind::Requirement
+                    },
+                    metadata: Some(if is_element {
+                        StructuralNodeMetadata::RequirementElement(element_metadata)
+                    } else {
+                        StructuralNodeMetadata::Requirement(requirement_metadata)
+                    }),
+                    style: None,
+                    compartments: vec![Compartment {
+                        kind: CompartmentKind::Values,
+                        entries: fields,
+                    }],
+                    parent_group: None,
+                });
+                if !inline_classes.is_empty() {
+                    style_events.push(RequirementStyleEvent::AssignClass {
+                        node_ids: vec![name],
+                        class_names: inline_classes,
+                    });
+                }
+            }
+            "RELATIONSHIP" => {
+                let token = cursor.advance().clone();
+                relationships.push(parse_requirement_relationship(&token)?);
+            }
+            _ => {
+                cursor.advance();
+            }
+        }
+        cursor.skip_terminators();
+    }
+    resolve_requirement_styles(&mut nodes, style_events, cursor.current())?;
+    Ok(StructuralDiagram {
+        kind: StructuralKind::Requirement,
+        title,
+        accessibility_title,
+        accessibility_description,
+        direction,
+        nodes,
+        groups: Vec::new(),
+        relationships,
+    })
+}
+
+fn unquote_requirement_value(value: &str) -> String {
+    value.trim().trim_matches('"').to_string()
+}
+
+fn parse_requirement_risk(value: &str) -> RequirementRisk {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "low" => RequirementRisk::Low,
+        "medium" => RequirementRisk::Medium,
+        "high" => RequirementRisk::High,
+        _ => unreachable!("requirement grammar accepted an unknown risk"),
+    }
+}
+
+fn parse_requirement_style(token: &Token) -> Result<(Vec<String>, DiagramStyle), ParseError> {
+    parse_requirement_target_style(token, "style")
+}
+
+fn parse_requirement_class_def(token: &Token) -> Result<(Vec<String>, DiagramStyle), ParseError> {
+    parse_requirement_target_style(token, "classDef")
+}
+
+fn parse_requirement_target_style(
+    token: &Token,
+    keyword: &str,
+) -> Result<(Vec<String>, DiagramStyle), ParseError> {
+    let value = token
+        .value
+        .trim_end_matches(';')
+        .get(keyword.len()..)
+        .expect("requirement grammar emitted the expected style keyword")
+        .trim();
+    let (targets, declarations) = split_requirement_head(value)
+        .ok_or_else(|| token_error(token, "invalid requirement style"))?;
+    let mut style = DiagramStyle::default();
+    for declaration in split_requirement_segments(declarations, ',') {
+        let (property, value) = declaration
+            .split_once(':')
+            .ok_or_else(|| token_error(token, "invalid requirement style declaration"))?;
+        let value = value.trim();
+        match property.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value.to_string()),
+            "stroke" => style.stroke = Some(value.to_string()),
+            "color" => style.text_color = Some(value.to_string()),
+            "stroke-width" => {
+                let width = value
+                    .strip_suffix("px")
+                    .unwrap_or(value)
+                    .parse::<f64>()
+                    .map_err(|_| token_error(token, "invalid requirement stroke width"))?;
+                if width <= 0.0 {
+                    return Err(token_error(
+                        token,
+                        "requirement stroke width must be positive",
+                    ));
+                }
+                style.stroke_width = Some(width);
+            }
+            "font-size" => {
+                let size = value
+                    .strip_suffix("px")
+                    .unwrap_or(value)
+                    .parse::<f64>()
+                    .map_err(|_| token_error(token, "invalid requirement font size"))?;
+                if size <= 0.0 {
+                    return Err(token_error(token, "requirement font size must be positive"));
+                }
+                style.font_size = Some(size);
+            }
+            "font-weight" => {
+                let weight = match value.to_ascii_lowercase().as_str() {
+                    "normal" => 400,
+                    "bold" => 700,
+                    numeric => numeric
+                        .parse::<u16>()
+                        .map_err(|_| token_error(token, "invalid requirement font weight"))?,
+                };
+                if !(100..=900).contains(&weight) || weight % 100 != 0 {
+                    return Err(token_error(
+                        token,
+                        "requirement font weight must be normal, bold, or 100 through 900",
+                    ));
+                }
+                style.font_weight = Some(weight);
+            }
+            "font-style" => {
+                style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
+                    "normal" => false,
+                    "italic" => true,
+                    _ => {
+                        return Err(token_error(
+                            token,
+                            "requirement font style must be normal or italic",
+                        ))
+                    }
+                });
+            }
+            "font-family" => {
+                let family = value.trim_matches('"').trim();
+                if family.is_empty() {
+                    return Err(token_error(
+                        token,
+                        "requirement font family cannot be empty",
+                    ));
+                }
+                style.font_family = Some(family.to_string());
+            }
+            property => {
+                return Err(token_error(
+                    token,
+                    format!("unsupported requirement style property {property:?}"),
+                ));
+            }
+        }
+    }
+    Ok((split_requirement_list(targets), style))
+}
+
+fn parse_requirement_class_assignment(
+    token: &Token,
+) -> Result<(Vec<String>, Vec<String>), ParseError> {
+    let value = token
+        .value
+        .trim_end_matches(';')
+        .get("class".len()..)
+        .expect("requirement grammar emitted the class keyword")
+        .trim();
+    let (node_ids, class_names) = split_requirement_head(value)
+        .ok_or_else(|| token_error(token, "invalid requirement class assignment"))?;
+    Ok((
+        split_requirement_list(node_ids),
+        split_requirement_list(class_names),
+    ))
+}
+
+fn parse_requirement_node_ref(value: &str) -> (String, Vec<String>) {
+    let (name, classes) = value
+        .split_once(":::")
+        .map(|(name, classes)| (name, split_requirement_list(classes)))
+        .unwrap_or((value, Vec::new()));
+    (unquote_requirement_value(name), classes)
+}
+
+fn parse_requirement_inline_class(token: &Token) -> Result<(String, Vec<String>), ParseError> {
+    let value = token.value.trim_end_matches(';');
+    let (node_id, class_names) = value
+        .split_once(":::")
+        .ok_or_else(|| token_error(token, "invalid requirement inline class assignment"))?;
+    Ok((
+        unquote_requirement_value(node_id),
+        split_requirement_list(class_names),
+    ))
+}
+
+fn split_requirement_list(value: &str) -> Vec<String> {
+    split_requirement_segments(value, ',')
+        .into_iter()
+        .map(unquote_requirement_value)
+        .filter(|value| !value.is_empty())
+        .collect()
+}
+
+fn split_requirement_head(value: &str) -> Option<(&str, &str)> {
+    let mut quoted = false;
+    for (index, character) in value.char_indices() {
+        match character {
+            '"' => quoted = !quoted,
+            character if character.is_whitespace() && !quoted => {
+                let tail = value[index..].trim_start();
+                if !tail.is_empty() {
+                    return Some((&value[..index], tail));
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+fn split_requirement_segments(value: &str, separator: char) -> Vec<&str> {
+    let mut segments = Vec::new();
+    let mut start = 0;
+    let mut quoted = false;
+    for (index, character) in value.char_indices() {
+        match character {
+            '"' => quoted = !quoted,
+            character if character == separator && !quoted => {
+                segments.push(value[start..index].trim());
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    segments.push(value[start..].trim());
+    segments
+}
+
+enum RequirementStyleEvent {
+    DefineClass {
+        class_names: Vec<String>,
+        style: DiagramStyle,
+    },
+    AssignClass {
+        node_ids: Vec<String>,
+        class_names: Vec<String>,
+    },
+    Direct {
+        node_ids: Vec<String>,
+        style: DiagramStyle,
+    },
+}
+
+fn resolve_requirement_styles(
+    nodes: &mut [StructuralNode],
+    events: Vec<RequirementStyleEvent>,
+    error_token: &Token,
+) -> Result<(), ParseError> {
+    let mut classes = HashMap::<String, DiagramStyle>::new();
+    let mut memberships = nodes
+        .iter()
+        .map(|node| (node.id.clone(), vec!["default".to_string()]))
+        .collect::<HashMap<_, _>>();
+
+    for event in events {
+        match event {
+            RequirementStyleEvent::DefineClass { class_names, style } => {
+                for class_name in class_names {
+                    merge_requirement_style(classes.entry(class_name.clone()).or_default(), &style);
+                    for node in nodes
+                        .iter_mut()
+                        .filter(|node| memberships[&node.id].iter().any(|name| name == &class_name))
+                    {
+                        merge_requirement_style(node.style.get_or_insert_default(), &style);
+                    }
+                }
+            }
+            RequirementStyleEvent::AssignClass {
+                node_ids,
+                class_names,
+            } => {
+                for node_id in node_ids {
+                    let node = requirement_style_node(nodes, &node_id, error_token)?;
+                    let node_memberships = memberships
+                        .get_mut(&node_id)
+                        .expect("styled requirement node has memberships");
+                    for class_name in &class_names {
+                        node_memberships.push(class_name.clone());
+                        if let Some(style) = classes.get(class_name) {
+                            merge_requirement_style(node.style.get_or_insert_default(), style);
+                        }
+                    }
+                }
+            }
+            RequirementStyleEvent::Direct { node_ids, style } => {
+                for node_id in node_ids {
+                    let node = requirement_style_node(nodes, &node_id, error_token)?;
+                    merge_requirement_style(node.style.get_or_insert_default(), &style);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn requirement_style_node<'a>(
+    nodes: &'a mut [StructuralNode],
+    node_id: &str,
+    token: &Token,
+) -> Result<&'a mut StructuralNode, ParseError> {
+    nodes
+        .iter_mut()
+        .find(|node| node.id == node_id)
+        .ok_or_else(|| token_error(token, format!("unknown styled node {node_id:?}")))
+}
+
+fn merge_requirement_style(target: &mut DiagramStyle, source: &DiagramStyle) {
+    if source.fill.is_some() {
+        target.fill.clone_from(&source.fill);
+    }
+    if source.stroke.is_some() {
+        target.stroke.clone_from(&source.stroke);
+    }
+    if source.stroke_width.is_some() {
+        target.stroke_width = source.stroke_width;
+    }
+    if source.text_color.is_some() {
+        target.text_color.clone_from(&source.text_color);
+    }
+    if source.font_size.is_some() {
+        target.font_size = source.font_size;
+    }
+    if source.font_weight.is_some() {
+        target.font_weight = source.font_weight;
+    }
+    if source.font_italic.is_some() {
+        target.font_italic = source.font_italic;
+    }
+    if source.font_family.is_some() {
+        target.font_family.clone_from(&source.font_family);
+    }
+}
+
+fn parse_requirement_kind(value: &str) -> RequirementKind {
+    match value.to_ascii_lowercase().as_str() {
+        "requirement" => RequirementKind::Requirement,
+        "functionalrequirement" => RequirementKind::Functional,
+        "interfacerequirement" => RequirementKind::Interface,
+        "performancerequirement" => RequirementKind::Performance,
+        "physicalrequirement" => RequirementKind::Physical,
+        "designconstraint" => RequirementKind::DesignConstraint,
+        _ => unreachable!("requirement grammar accepted an unknown definition kind"),
+    }
+}
+
+fn parse_requirement_verify_method(value: &str) -> RequirementVerifyMethod {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "analysis" => RequirementVerifyMethod::Analysis,
+        "inspection" => RequirementVerifyMethod::Inspection,
+        "test" => RequirementVerifyMethod::Test,
+        "demonstration" => RequirementVerifyMethod::Demonstration,
+        _ => unreachable!("requirement grammar accepted an unknown verification method"),
+    }
+}
+
+fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationship, ParseError> {
+    let value = token.value.trim();
+    let (from, kind, to) = if let Some((left, to)) = value.split_once("->") {
+        let (from, kind) = left
+            .rsplit_once('-')
+            .ok_or_else(|| token_error(token, "invalid relationship"))?;
+        (from, kind, to)
+    } else if let Some((to, right)) = value.split_once("<-") {
+        let (kind, from) = right
+            .split_once('-')
+            .ok_or_else(|| token_error(token, "invalid relationship"))?;
+        (from, kind, to)
+    } else {
+        return Err(token_error(token, "invalid requirement relationship"));
+    };
+    let label = kind.trim().to_ascii_lowercase();
+    let relationship_kind = match label.as_str() {
+        "contains" => RelKind::Composition,
+        "copies" => RelKind::Association,
+        "derives" | "verifies" => RelKind::Dependency,
+        "satisfies" => RelKind::Realization,
+        "refines" => RelKind::Inheritance,
+        "traces" => RelKind::Link,
+        _ => return Err(token_error(token, "unknown requirement relationship")),
+    };
+    Ok(StructuralRelationship {
+        from: unquote_requirement_value(from),
+        to: unquote_requirement_value(to),
+        kind: relationship_kind,
+        from_mult: None,
+        to_mult: None,
+        label: Some(label),
+    })
+}
+
 pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), ParseError> {
     let number = |key| quadrant_directive_value(source, key).and_then(|value| value.parse().ok());
     let font_size = |key| quadrant_directive_value(source, key).and_then(parse_mermaid_font_size);
@@ -734,6 +1329,8 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
         actor_colors: mermaid_directive_string_array(source, "actorColours"),
         section_fills: mermaid_directive_string_array(source, "sectionFills"),
         section_colors: mermaid_directive_string_array(source, "sectionColours"),
+        left_margin: number("leftMargin"),
+        max_label_width: number("maxLabelWidth"),
     };
     let preprocessed = preprocess_mermaid_source(source)?;
     let tokens =
@@ -759,9 +1356,7 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
     for token in tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
-                title = Some(normalize_journey_label(
-                    token.value["title".len()..].trim(),
-                ));
+                title = Some(normalize_journey_label(token.value["title".len()..].trim()));
             }
             Some("ACC_TITLE_STATEMENT") => {
                 accessibility_title = token
@@ -1039,6 +1634,8 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                     label: id,
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
+                    metadata: None,
+                    style: None,
                     compartments,
                     parent_group: None,
                 });
@@ -1052,6 +1649,8 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                         label: id.clone(),
                         stereotype: None,
                         node_kind: StructuralNodeKind::Class,
+                        metadata: None,
+                        style: None,
                         compartments: vec![],
                         parent_group: None,
                     });
@@ -1064,6 +1663,9 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
         title,
+        accessibility_title: None,
+        accessibility_description: None,
+        direction: None,
         nodes,
         groups: vec![],
         relationships,
@@ -4381,6 +4983,9 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
         title,
+        accessibility_title: None,
+        accessibility_description: None,
+        direction: None,
         nodes,
         groups: vec![],
         relationships,
@@ -4457,6 +5062,8 @@ fn upsert_er_node(
         label,
         stereotype: Some("entity".to_string()),
         node_kind: StructuralNodeKind::Entity,
+        metadata: None,
+        style: None,
         compartments: Vec::new(),
         parent_group: None,
     });
@@ -4582,6 +5189,9 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         title,
+        accessibility_title: None,
+        accessibility_description: None,
+        direction: None,
         nodes,
         groups,
         relationships,
@@ -4653,6 +5263,8 @@ fn upsert_c4_node(
         label,
         stereotype: Some(stereotype),
         node_kind: StructuralNodeKind::Class,
+        metadata: None,
+        style: None,
         compartments: Vec::new(),
         parent_group,
     });
@@ -6652,7 +7264,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.95.0");
+        assert_eq!(crate::VERSION, "0.110.0");
     }
 
     #[test]

@@ -1,5 +1,286 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.5 — 2026-08-13 — sign-extension + saturating-truncation opcodes (WASM03)
+
+`i32.wast`/`i64.wast` used `i32.extend8_s`/`i32.extend16_s`/
+`i64.extend8_s`/`i64.extend16_s`/`i64.extend32_s` (the "sign-extension
+operators" proposal); `conversions.wast` used `i32.trunc_sat_f32_s` and its
+7 siblings (the "non-trapping float-to-int conversions" proposal). Neither
+family parsed — all failed with "unknown instruction" (extend8_s/etc.) or
+were entirely unreachable in a working module (conversions.wast never
+parsed for an unrelated pre-existing reason, `nan:0x7f_ffff` in `const.wast`
+is a separate remaining gap this doesn't touch).
+
+- **Sign-extension** (5 opcodes, single-byte 0xC0-0xC4): added to
+  `wasm-opcodes` 0.2.1's table, so this crate's existing generic
+  no-immediate-instruction encoding path (`encode_stream_instr`/
+  `encode_flat_instr`'s default `_` arm) handles them automatically —
+  zero special-casing needed here beyond the opcode table entry existing.
+- **`trunc_sat`** (8 opcodes, two-byte `0xFC <sub-opcode>`): intercepted
+  directly in both `encode_stream_instr` and `encode_flat_instr`, before
+  the `wasm_opcodes::get_opcode_by_name` lookup that would otherwise reject
+  them as unknown — `wasm-opcodes` deliberately doesn't model 0xFC-prefixed
+  opcodes (see that crate's own changelog). New `trunc_sat_sub_opcode`
+  helper maps each of the 8 names to its spec-assigned sub-opcode byte.
+
+Once `i32.wast`/`i64.wast`/`conversions.wast` could parse, running them
+against `wasm-execution` surfaced 2 more, entirely pre-existing bugs in
+that crate (a NaN/overflow-boundary bug in the trapping `trunc_*` handlers,
+and 4 unrelated `reinterpret` NaN-payload cases now tracked as WASM13) —
+see `wasm-execution`'s own `0.6.5` changelog entry.
+
+New tests: opcode-table-driven encoding for both flat and folded syntax
+(sign-extension, going through the ordinary no-special-case path; `trunc_sat`,
+going through the new `0xFC` interception) and a direct name→sub-opcode
+mapping test for all 8 `trunc_sat` names.
+
+## 0.1.4 — 2026-08-13 — func/table/memory/global inline-import shorthand (WASM02)
+
+`(func $f (import "m" "n") (type $t))` and its `table`/`memory`/`global`
+equivalents — the WAT text format's **inline-import shorthand**, exactly
+equivalent to `(import "m" "n" (func $f (type $t)))` per the spec — weren't
+recognized: `script.rs`'s "module" directive parsing (and `module.rs`'s
+`parse_module_expr`) called straight into the plain-definition builder,
+which doesn't know about a `(import ...)` sub-form appearing where a
+function body would start. The `import`/`quote`/`type` fields it found
+there weren't recognized module-field or instruction shapes either, so the
+official testsuite's `func_ptrs.wast` and `global.wast` — the two files
+this shape blocks — failed to even parse: `func_ptrs.wast` with "unknown
+instruction \"import\"" (the shorthand's fields fed straight into the
+function-body instruction encoder), `global.wast` with "expected a value
+type, found \"list\"" (fed into the global-type parser instead).
+
+Fixed with a **pure syntactic desugaring pass** (`desugar_inline_imports`
+in `module.rs`), run before `collect_symbols`/`build` ever see a module's
+fields: any `func`/`table`/`memory`/`global` field whose first substantive
+item (after an optional `$name`) is `(import "m" "n")` gets rewritten into
+the equivalent explicit `(import "m" "n" (kind ...))` form. Every
+downstream pass then only ever has to understand ONE import shape.
+
+### A deeper, previously-unreachable bug this exposed
+
+Actually exercising an import together with a same-kind real definition —
+something no vendored file did until this desugaring made it possible —
+crashed with `index out of bounds` (a `func` import followed by any real
+`func`) or a clean-but-wrong `wasm-validator` rejection ("code section has
+N entries but function section has N+1 entries"). Root cause:
+`ctx.module.functions`/`tables`/`memories`/`globals` are supposed to mirror
+the real WASM **binary** format's function/table/memory/global sections,
+which never include imports (`wasm-module-parser`'s own section parsers
+confirm this: an import's type info lives solely in the import section,
+tracked here via `ctx.module.imports`). But `collect_symbols`'s import loop
+was ALSO pushing a placeholder entry into these same arrays for every
+import, and `build`'s per-kind arms indexed them with the COMBINED
+import+real ("func-space") index — both silently correct only because,
+until now, no module ever had a nonzero import count for a kind that also
+had real definitions. Fixed by making imports stop touching these arrays
+entirely (tracked via dedicated per-kind counters instead, which also
+fixes a latent double-counting bug in the old `table`/`memory`/`global`
+import-index formula that mixed a *named-imports-of-any-kind* count into a
+*this-kind* position), and splitting every "func-space index" (still
+needed for name resolution, exports, and element/data segment references)
+from the separate "storage index" (real-definitions-only, used to actually
+index into these arrays) everywhere `build`/`build_func`/
+`build_table_limits_and_elements` touch them.
+
+New tests: inline-import shorthand desugaring for `func` (with a
+`(type $t)` reference, matching `func_ptrs.wast`'s `$print`) and `global`
+(unnamed, matching `global.wast`'s two `spectest` imports); a `func` import
+followed by a real `func` with a `call` between them, asserting both the
+encoded call-site bytecode and the real func's export index; the same
+combination for `global` and `table`. Baseline: `func_ptrs.wast` goes from
+a full parse failure to 100% passing every directive kind it has
+(`assert_return` 12219/12238 → 12235/12254, +16); verified via a full
+per-file diff against the previous baseline that `func_ptrs.wast` is the
+ONLY file whose tally changed anywhere in the corpus. `global.wast` still
+doesn't parse — blocked by an unrelated, legitimate gap (`externref`, a
+reference-types feature explicitly out of scope for this phase) further
+down the file, past the two inline-import globals this fix does correctly
+handle.
+
+## 0.1.3 — 2026-08-13 — `(module quote/binary ...)` DIRECTIVES silently built an empty module (WASM12)
+
+Started as the small fix the task description named: the tokenizer's `;;`
+line comment only terminated at `\n`, not a bare `\r` or `\r\n` — the
+official testsuite's `comments.wast` has three functions whose bodies
+differ only in which line terminator follows a `;; comment`, so this alone
+would only have fixed 2 of its 3 `assert_return` cases. Fixed by also
+stopping the comment scan at `\r` (a following `\n` is then consumed as
+ordinary whitespace on the next iteration, so CRLF "just works" too).
+
+Investigating why `comments.wast`'s **third** case (the plain `\n`
+terminator, unaffected by the above) *also* failed found the real, much
+bigger bug: `parse_directive`'s `"module"` arm called `parse_module_expr`
+directly on the raw `(module quote "..." ...)` or `(module binary
+"...")` s-expression — a function that only understands the plain-text
+form. For `quote`/`binary`, the `quote`/`binary` atom and the string
+tokens aren't recognized module fields, so they were silently skipped,
+producing a trivially-valid **empty** module. Any `assert_return` invoking
+an export from it then failed with "no such export" — not a comment bug at
+all for 2 of the 3 cases; the module was never actually being parsed as
+WAT, ever, for this directive kind. This affected every already-vendored
+file with a real (non-`assert_malformed`) `(module quote/binary ...)`
+directive, not just `comments.wast` — `float_literals.wast` has a
+`(module binary ...)` decoding a real f64 constant, `func.wast` and
+`int_literals.wast` use `quote` inside several `assert_malformed` cases
+that happened to accidentally "pass" for the wrong reason (see below).
+
+Fixed with two changes:
+- `script.rs`'s `"module"` directive now routes through the actual source
+  kind: `quote` text re-parses via this crate's own `parse_module` (see
+  next point), `binary` bytes decode via the new `wasm-module-parser`
+  dependency (`WasmModuleParser::parse`), erroring for real
+  (`EmbeddedBinaryModuleError`) if either fails, rather than silently
+  discarding.
+- `module::parse_module` now accepts the WAT text format's **abbreviated
+  module** form — a source with no enclosing `(module ...)` at all, its
+  fields written directly at the top level — not just the explicit
+  `(module ...)` form it required before. Both are real, independently
+  valid WAT; the official testsuite's `(module quote ...)` directives use
+  BOTH conventions depending on the file (`comments.wast`/`block.wast`
+  quote bare fields; `align.wast`/`global.wast` quote the explicit
+  `(module ...)` form) — the old code silently mishandled the bare-field
+  convention as "one big unrecognized field," not a parse error.
+
+**A real, understood side effect on `assert_malformed`'s baseline**: many
+vendored `(module quote ...)` cases inside `assert_malformed` were
+previously graded `Pass` because the quote text failed to even parse (the
+missing-wrapper bug) — coincidentally the right VERDICT, for the wrong
+REASON (the harness never actually got to check whether the case's real,
+intended malformation was caught). Now that quote text parses correctly,
+many of these build into a perfectly valid module — this repo has no
+instruction-level type-checker (`W02` Phase 2, unimplemented) to catch the
+specific defect the case was designed to probe, so they correctly
+reclassify from an accidental `Pass` to an honest `NotYetSupported`
+(`assert_malformed` 145/147 → 33/35 graded, 46 → 158 `NotYetSupported`;
+zero new `Fail`s — confirmed by diffing every changed file's tally
+against the previous baseline). This matches this crate's own documented
+grading philosophy (see `wasm-conformance`'s module doc comment): a lucky
+`Pass` from the wrong layer is worse than an honest "we don't know."
+
+Net baseline effect: `assert_return` 12215/12238 → 12219/12238 (+4: 3 from
+`comments.wast`, 1 from `float_literals.wast`'s binary-module case);
+`assert_malformed` reclassified as above, no regressions. New tests:
+2 tokenizer tests (bare-CR and CRLF line-comment termination), 2
+`module.rs` tests (abbreviated-form parsing, single and multi-field), 2
+`script.rs` tests (`module quote`/`module binary` directives building a
+real, invokable module).
+
+## 0.1.2 — 2026-08-13 — a local-index bug found investigating real assert_return failures (WASM14)
+
+`build_func` assigned local indices by re-walking a function's own literal
+`(param ...)` forms, incrementing a counter as it went. That undercounts
+the moment a function references its signature purely via `(type $sig)`
+(no `(param ...)` forms of its own at all — the official testsuite's
+`func.wast` has several such cases: `"type-use-1"` through `"type-use-5"`)
+and *also* declares a `(local ...)`: the counter never advances past 0
+for the (invisible-to-this-function) params from the referenced type, so
+the first declared local silently gets assigned parameter index 0 again
+instead of the index right after the real params. `local.get` on that
+local then read the PARAM's value instead of the local's own
+zero-initialized default — a real, wrong computed VALUE, not a trap
+(`func.wast`'s `"f"`/`"g"` cases expected 0, got 42, the argument passed
+in).
+
+Fixed by seeding the local-index counter from `ctx.module.types[type_idx]
+.params.len()` — the function's REAL resolved param count — rather than
+from a count built by re-walking this function's own literal `(param
+...)` forms, which can legitimately be empty. Uses `.get()`, not direct
+indexing: an already-regression-tested case
+(`func_with_out_of_range_numeric_type_reference_does_not_panic`) exercises
+a numeric `(type N)` reference with no matching `(type ...)` section entry
+at all, which this text-level parser deliberately does not reject (that's
+`wasm-validator`'s job) — falls back to a param count of 0 rather than
+panicking on the out-of-range index.
+
+1 new regression test
+(`local_declared_after_a_type_only_referenced_param_gets_the_next_free_index`)
+reproducing `func.wast`'s exact shape in isolation. Baseline: `assert_return`
+12169/12238 (99.4%) → 12171/12238 (99.5%).
+
+**A security review of this fix found a residual edge case**: it split
+one shared counter into two independent ones (literal `(param ...)`
+forms counted as written, vs. the referenced type's real param count),
+which only agree when a function's literal params match its `(type
+$sig)` reference exactly — not something `resolve_func_signature_ref`
+itself enforces. A syntactically-valid but semantically-inconsistent
+module (literal params disagreeing in count with a same-function `(type
+$sig)` reference — deliberately adversarial input, not something a real
+`.wat` file produces) could make a declared local alias whichever count
+was smaller. Fixed by seeding the local-index counter from
+`max(literal param count, the type's real param count)` the first time a
+`(local ...)` form is actually reached, so a declared local can never
+collide with a position either count considers a parameter. 1 more
+regression test
+(`local_index_never_collides_with_a_param_even_if_literal_params_and_the_type_disagree`).
+No conformance-baseline change (the real testsuite never disagrees with
+its own type references).
+
+**A second round of security review found that round 1's fix wasn't
+actually closed by round 2's `max()` patch — it moved the failure mode.**
+Since the compiled `FunctionBody` and the function's real type only ever
+account for the type's real param count, an "extra" literal param (in
+the same mismatched-arity scenario round 2 was defending against) still
+encoded a `local.get`/`.set`/`.tee` index past the function's real local
+array. Confirmed empirically: `wasm-execution`'s raw, unchecked
+`ctx.typed_locals[index]` panics once such a module actually runs — not
+memory-unsafe (checked Rust indexing), but a real crash/DoS surface
+reachable through this repo's own pipeline
+(`wasm-conformance`/`wasm-runtime`/`wasm-execution`), since the only
+validation currently wired up (`WasmRuntime::validate`) is structural
+only and doesn't check instruction operand bounds. The real fix is
+upstream of both prior patches: a new `WastParseError::TypeUseParamCountMismatch`
+now REJECTS at parse time when a func's literal `(param ...)` forms
+disagree in arity with an explicit `(type $sig)` reference, instead of
+silently accepting the inconsistency and hoping every later index
+computation stays safe. This is also the spec-correct behavior — a real
+`.wat` file's literal params, when given alongside a type reference,
+always already match it exactly. The `max()`-based local-index seeding
+from round 2 stays as defense in depth (harmless: once this new check
+passes, the two counts are always equal whenever literal params were
+given), but this rejection is what actually makes the invariant hold. 2
+more regression tests: the mismatched case now asserts a clean `Err`
+instead of successfully (and unsoundly) parsing, plus a new positive
+case confirming the legitimate "type reference + matching literal
+params" pattern (`func.wast`'s own `"type-use-6"` shape) still parses
+and indexes correctly.
+
+**A third round of security review found round 3's own rejection check
+could itself be bypassed.** Its pre-scan stopped at the first field that
+wasn't `param`/`result`/`type` — but a `(local ...)` form placed BEFORE
+some of a func's trailing `(param ...)` forms (this parser doesn't
+enforce that params all precede locals; that's `wasm-validator`'s job
+too) made the pre-scan stop before ever counting those later params,
+silently skipping the mismatch check while the main assignment loop
+still processed them — reproducing round 2's exact out-of-bounds local
+index, just via reordering instead of an outright count mismatch. Fixed
+by giving the pre-scan the identical leading-region membership test
+(`is_leading_field`: `param`/`result`/`type`/`local` are ALL "still in
+the prefix," only a real instruction ends it) the main loop already
+uses, so the two passes can no longer silently disagree on where the
+leading region ends. 1 more regression test reproducing the reordered
+bypass directly.
+
+**A fourth (final) round of security review, after re-verifying the
+round-3 fix genuinely closed the OOB class, found a functional
+regression the mismatch check itself had introduced**: it compared
+against `param_count`'s `0` fallback for an out-of-range numeric `(type
+N)` reference, silently violating this file's own documented contract
+(`func_with_out_of_range_numeric_type_reference_does_not_panic`) that an
+unresolvable type reference must NOT be rejected here — that's
+`wasm-validator`'s job. `(func (type 0) (param i32))` — ordinary,
+spec-legal literal params alongside an unresolvable type index — got
+hard-rejected instead of passed through. Fixed by gating the check on
+the type reference actually resolving to a real type first. Also
+extracted `count_literal_param` (the named-vs-unnamed param-counting
+arithmetic) as a single function shared by the pre-scan and the main
+loop, the same way `is_leading_field` already is — the review flagged
+two independently-maintained copies of that arithmetic as exactly the
+drift pattern that produced rounds 2 and 3's findings, even though the
+two copies were still identical today. 2 more regression tests: the
+false-positive case now confirmed fixed, plus the legitimate
+"out-of-range type, no literal params" case re-confirmed unaffected.
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running

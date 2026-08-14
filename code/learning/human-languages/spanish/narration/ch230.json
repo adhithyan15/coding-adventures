@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 230,
+  "title": "Al --- Two Words Spanish Will Not Keep Apart",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cbace5daee5ed0c1",
+  "lessons": [
+    {
+      "id": "ES-C61-al",
+      "sequence": 2385,
+      "title": "al — two words Spanish will not let you keep apart",
+      "headword": "al",
+      "romanization": "al",
+      "gloss": "to the — one of only two places where Spanish forces two words into one, and it does it because the two vowels refuse to sit next to each other",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3a84e46b8fee7ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have a — to, towards. And you have el."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Put them together and say it quickly. A el... a el... Hear what your mouth wants to do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the squeeze",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a + el becomes al."
+            },
+            {
+              "kind": "speech",
+              "text": "Voy al café. — I'm going to the café."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is not an option and not a shortcut for speaking fast. It is how the language is written. A el café is not a more careful version of al café; it is simply wrong."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met this instinct two chapters ago, when mucho lost its ending in front of an adjective. Spanish does not like a word standing about doing nothing while another word waits: when one word leans on the next, something gives. Here the two words simply fuse."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And there is one exception worth knowing, because it looks like a mistake and is not. When El is part of a name, it keeps its distance:"
+            },
+            {
+              "kind": "speech",
+              "text": "Voy a El Salvador. — not al Salvador."
+            },
+            {
+              "kind": "speech",
+              "text": "What contracts is the little article — not every word that happens to be spelled el."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al café, al profesor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al café*, *al profesor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Voy al café",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Voy al café*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C61-al-say",
+              "prompt": "Say: I'm going to the cafe.",
+              "assesses": [
+                "ES-GRAMMAR-CONTRACTION-AL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "voy al cafe",
+                "voy al cafe."
+              ],
+              "feedback": {
+                "correct": "Two words, one shape.",
+                "incorrect": "Voy al cafe."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C61-al-must",
+              "prompt": "Is a el cafe a more careful way of saying it?",
+              "assesses": [
+                "ES-GRAMMAR-CONTRACTION-OBLIGATORY"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "no",
+                "no, it is simply wrong"
+              ],
+              "feedback": {
+                "correct": "The contraction is the written form.",
+                "incorrect": "No -- a el cafe is wrong, not formal."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C61-al-name",
+              "prompt": "Why does Voy a El Salvador keep the two words apart?",
+              "assesses": [
+                "ES-GRAMMAR-CONTRACTION-AL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "el is part of the name",
+                "because el is part of a name"
+              ],
+              "feedback": {
+                "correct": "The rule is about the article, not the spelling.",
+                "incorrect": "Because El there is part of a name."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A plus el makes what? (Al — always.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And when does it not happen? (When El is part of a name.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

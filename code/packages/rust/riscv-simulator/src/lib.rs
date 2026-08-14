@@ -13,4 +13,8 @@ pub mod core_adapter;
 
 pub use csr::CSRFile;
 pub use core_adapter::RiscVISADecoder;
-pub use simulator::{ExecutionResult, RiscVSimulator};
+pub use simulator::{
+    ExecutionResult, HostEvent, RiscVSimulator, HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+    HOST_ECALL_ARGUMENT_LOW_REGISTER, HOST_ECALL_EXIT, HOST_ECALL_SERVICE_REGISTER,
+    HOST_ECALL_READ_BYTE, HOST_ECALL_WRITE_BYTE, HOST_ECALL_WRITE_I64,
+};

@@ -1,0 +1,72 @@
+% ============================================================================
+% farm-animal-secondary-product — for the farm animals whose SAME cited
+% CFSPH span also names a second product, that product
+% (adj-facts-stdlib, AGRICULTURE).
+% ============================================================================
+% A sibling to the already-shipped `farm-animals.adj` (`farm_animal_product
+% (animal, product)`, ONE clear, source-stated product per animal: chicken
+% eggs, duck eggs, sheep wool, rabbit wool, goat milk). That table's own
+% per-row provenance already quotes, VERBATIM, a SECOND product for three
+% of the five animals — but the ONE-product-per-animal schema had no room
+% for it:
+%
+%   chicken → meat
+%     "A small flock can keep a family in eggs or meat."
+%
+%   duck → meat
+%     "Like chickens, Ducks produce meat and eggs."
+%
+%   sheep → meat, milk
+%     "depending on the breed, they can produce wool, meat, and milk."
+%
+% Recall is a binding query:
+%
+%     ? farm_animal_secondary_product(chicken, $Product)   % meat
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `farm-animals.adj`'s own `farm_animal_product`, but MULTI-VALUED — sheep
+% carries two rows, since its cited span states two distinct secondary
+% products): each `row` lowers to a ground relation
+% `farm_animal_secondary_product(animal, product)` carrying the citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the secondary product WITH its source, on the CPU, with zero
+% model calls, and abstains on rabbit and goat, since rabbit's own cited
+% span states only a USE for its already-recorded wool ("used for fiber
+% arts," not a second distinct product) and goat's own cited span states
+% only a PROCESSING note for its already-recorded milk ("may be
+% pasteurized"), neither of which names a genuinely different product the
+% way chicken's, duck's, and sheep's spans do.
+%
+% Only THREE of `farm-animals.adj`'s five farm animals have a genuinely
+% distinct secondary product in the ALREADY-cited spans; this table is
+% deliberately narrow rather than inventing a product the source does not
+% state. The query also runs BACKWARD — bind a product and recall which
+% animals give it:
+%
+%     ? farm_animal_secondary_product($Animal, meat)   % chicken, duck, sheep
+%
+% Provenance: reproduces, byte-for-byte, the SAME three CFSPH spans already
+% quoted inside `farm-animals.adj`'s own per-row provenance block — no new
+% WebFetch, only a different schema decoding the second-product half of
+% each already-verified quote. `trust authoritative` — the same tier
+% `farm-animals.adj` already carries (Iowa State University CFSPH, a
+% primary university educational source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table farm_animal_secondary_product {
+    columns animal, product
+
+    row (chicken, meat)   % CFSPH: "A small flock can keep a family in eggs or meat."
+    row (duck, meat)      % CFSPH: "Like chickens, Ducks produce meat and eggs."
+    row (sheep, meat)     % CFSPH: "depending on the breed, they can produce wool, meat, and milk."
+    row (sheep, milk)     % CFSPH: "depending on the breed, they can produce wool, meat, and milk."
+
+    source "Sheep are low maintenance and versatile – depending on the breed, they can produce wool, meat, and milk"
+    locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+    trust authoritative
+
+    cites "A small flock can keep a family in eggs or meat." locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+    cites "Like chickens, Ducks produce meat and eggs." locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+}

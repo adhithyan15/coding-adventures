@@ -44918,6 +44918,9 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::MqttCredentials],
             "mqtt",
         ),
+        bacnet_ip_entry(),
+        knxnet_ip_entry(),
+        modbus_tcp_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -44964,19 +44967,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::LocalPairing],
             "homekit_controller",
         ),
-        local_device_entry(
-            "esphome",
-            "ESPHome",
-            "Local ESPHome device integration for DIY sensors, lights, switches, and voice devices.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Specified,
-            1,
-            &["smart_home.read", "smart_home.command.light", "smart_home.command.switch"],
-            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor, EntityKind::Input],
-            &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Usb, DiscoveryMechanism::Manual],
-            &[AuthMode::LocalToken],
-            "esphome",
-        ),
+        esphome_entry(),
         tasmota_entry(),
         local_device_entry(
             "shelly",
@@ -45195,15 +45186,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Account-backed source browsing remains separate work; local playback, volume, grouping, and queue controls are available without HEOS account credentials.",
         ]),
-        media_entry(
-            "cast",
-            "Google Cast",
-            "Local Cast media-player integration.",
-            ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
-            2,
-            "cast",
-        ),
+        google_cast_entry(),
         camera_entry(
             "onvif",
             "ONVIF",
@@ -49067,6 +49050,171 @@ fn hue_entry() -> IntegrationCatalogEntry {
     ])
 }
 
+fn bacnet_ip_entry() -> IntegrationCatalogEntry {
+    base_entry(
+        "bacnet_ip",
+        "BACnet/IP",
+        "Bounded Who-Is/I-Am discovery for local building-automation devices.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "bacnet",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("bacnet_ip".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::UdpBroadcast, DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_primitives(&[
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ])
+    .with_notes(&[
+        "The first-party runtime supports only bounded Who-Is/I-Am device discovery.",
+        "Property reads, writes, controls, BBMD management, foreign-device registration, and BACnet/SC remain out of scope.",
+    ])
+}
+
+fn knxnet_ip_entry() -> IntegrationCatalogEntry {
+    base_entry(
+        "knxnet_ip",
+        "KNXnet/IP",
+        "Bounded local discovery for KNXnet/IP interfaces and routers.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "knx",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("knxnet_ip".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::UdpMulticast, DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_primitives(&[
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ])
+    .with_notes(&[
+        "The first-party runtime supports only bounded KNXnet/IP Search Request/Search Response discovery.",
+        "ETS project import, group-address semantics, tunneling, routing telegrams, configuration, and KNX IP Secure sessions remain out of scope.",
+    ])
+}
+
+fn esphome_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "esphome",
+        "ESPHome",
+        "Bounded mDNS discovery for ESPHome native-API nodes.",
+        IntegrationCategory::LocalDevice,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "esphome",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor(
+        "esphome_native_api".to_string(),
+    )])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only bounded _esphomelib._tcp mDNS discovery and advertised security classification.",
+        "Native API protobuf sessions, Noise key provisioning and custody, entity enumeration, subscriptions, and actions remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "ESPHome mDNS".to_string(),
+        url: "https://esphome.io/components/mdns/".to_string(),
+        external_id: Some("_esphomelib._tcp".to_string()),
+    });
+    entry
+}
+
+fn google_cast_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "cast",
+        "Google Cast",
+        "Bounded mDNS discovery for local CastV2 receivers.",
+        IntegrationCategory::CameraMedia,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        2,
+        "cast",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("google_cast_v2".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only bounded _googlecast._tcp mDNS receiver discovery and advertised capability classification.",
+        "Cast TLS, receiver authentication, application launch, sessions, queues, and media commands remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Google Cast discovery".to_string(),
+        url: "https://developers.google.com/cast/docs/discovery".to_string(),
+        external_id: Some("_googlecast._tcp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Chromium Open Screen receiver info".to_string(),
+        url: "https://github.com/chromium/openscreen/blob/876b5381036e91ca05e21b1446f453ebccfc3acf/cast/common/public/receiver_info.h".to_string(),
+        external_id: Some("876b5381036e91ca05e21b1446f453ebccfc3acf".to_string()),
+    });
+    entry
+}
+
+fn modbus_tcp_entry() -> IntegrationCatalogEntry {
+    base_entry(
+        "modbus_tcp",
+        "Modbus TCP",
+        "Read-only local register telemetry for explicitly configured HVAC, energy, and industrial equipment.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "modbus",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("modbus_tcp".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Sensor])
+    .with_discovery(&[DiscoveryMechanism::Manual, DiscoveryMechanism::FileConfig])
+    .with_auth(&[AuthMode::None])
+    .with_primitives(&[
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ])
+    .with_notes(&[
+        "The first-party runtime supports only read holding-register and read input-register functions.",
+        "Register writes remain unavailable because classic Modbus TCP provides no peer authentication.",
+    ])
+}
+
 #[allow(clippy::too_many_arguments)]
 fn protocol_entry(
     id: &'static str,
@@ -49159,43 +49307,6 @@ fn bluetooth_entry(
     .with_primitives(&[
         PrimitiveFamily::BluetoothLowEnergy,
         PrimitiveFamily::LocalPairing,
-        PrimitiveFamily::Supervision,
-    ])
-}
-
-fn media_entry(
-    id: &'static str,
-    name: &'static str,
-    summary: &'static str,
-    connectivity: ConnectivityClass,
-    status: ImplementationStatus,
-    priority: u8,
-    ha_domain: &'static str,
-) -> IntegrationCatalogEntry {
-    base_entry(
-        id,
-        name,
-        summary,
-        IntegrationCategory::CameraMedia,
-        connectivity,
-        status,
-        priority,
-        ha_domain,
-    )
-    .with_capabilities(&["smart_home.read", "smart_home.command.media"])
-    .with_entities(&[EntityKind::Unknown])
-    .with_discovery(&[
-        DiscoveryMechanism::Mdns,
-        DiscoveryMechanism::Ssdp,
-        DiscoveryMechanism::Manual,
-    ])
-    .with_auth(&[AuthMode::None, AuthMode::LocalToken])
-    .with_primitives(&[
-        PrimitiveFamily::Mdns,
-        PrimitiveFamily::Ssdp,
-        PrimitiveFamily::LocalHttp,
-        PrimitiveFamily::LocalToken,
-        PrimitiveFamily::CommandMapping,
         PrimitiveFamily::Supervision,
     ])
 }
@@ -81681,6 +81792,176 @@ mod tests {
         ] {
             assert!(homewizard.required_primitives.contains(&primitive));
         }
+    }
+
+    #[test]
+    fn bacnet_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let bacnet = find_entry(&catalog, &IntegrationId::trusted("bacnet_ip")).unwrap();
+        assert_eq!(
+            bacnet.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(bacnet.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(bacnet.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            bacnet.supported_protocols,
+            vec![ProtocolFamily::Vendor("bacnet_ip".to_string())]
+        );
+        assert_eq!(
+            bacnet.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(bacnet.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(bacnet.required_primitives.contains(&primitive));
+        }
+        assert!(!bacnet.required_primitives.contains(&PrimitiveFamily::Tcp));
+    }
+
+    #[test]
+    fn knxnet_ip_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let knx = find_entry(&catalog, &IntegrationId::trusted("knxnet_ip")).unwrap();
+        assert_eq!(
+            knx.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(knx.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(knx.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            knx.supported_protocols,
+            vec![ProtocolFamily::Vendor("knxnet_ip".to_string())]
+        );
+        assert_eq!(
+            knx.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(knx.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(knx.required_primitives.contains(&primitive));
+        }
+        assert!(!knx.required_primitives.contains(&PrimitiveFamily::Tcp));
+    }
+
+    #[test]
+    fn esphome_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let esphome = find_entry(&catalog, &IntegrationId::trusted("esphome")).unwrap();
+        assert_eq!(
+            esphome.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(esphome.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(esphome.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            esphome.supported_protocols,
+            vec![ProtocolFamily::Vendor("esphome_native_api".to_string())]
+        );
+        assert_eq!(
+            esphome.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(esphome.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(esphome.required_primitives.contains(&primitive));
+        }
+        for primitive in [PrimitiveFamily::CommandMapping, PrimitiveFamily::VaultLease] {
+            assert!(!esphome.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn google_cast_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let cast = find_entry(&catalog, &IntegrationId::trusted("cast")).unwrap();
+        assert_eq!(
+            cast.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(cast.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(cast.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            cast.supported_protocols,
+            vec![ProtocolFamily::Vendor("google_cast_v2".to_string())]
+        );
+        assert_eq!(
+            cast.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(cast.target_entity_kinds, vec![EntityKind::Unknown]);
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(cast.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::LocalToken,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!cast.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn modbus_entry_exposes_bounded_read_only_tcp_telemetry() {
+        let catalog = first_party_catalog();
+        let modbus = find_entry(&catalog, &IntegrationId::trusted("modbus_tcp")).unwrap();
+        assert_eq!(
+            modbus.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(modbus.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(modbus.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            modbus.supported_protocols,
+            vec![ProtocolFamily::Vendor("modbus_tcp".to_string())]
+        );
+        assert_eq!(
+            modbus.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(modbus.target_entity_kinds, vec![EntityKind::Sensor]);
+        for primitive in [
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(modbus.required_primitives.contains(&primitive));
+        }
+        assert!(!modbus
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
     }
 
     #[test]

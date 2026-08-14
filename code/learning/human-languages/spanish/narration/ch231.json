@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 231,
+  "title": "Del --- And Then the List Stops",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7920ede0bf513631",
+  "lessons": [
+    {
+      "id": "ES-C61-del",
+      "sequence": 2390,
+      "title": "del — and then the list stops",
+      "headword": "del",
+      "romanization": "del",
+      "gloss": "of the, from the — the second and last of Spanish's forced contractions, which means once you have these two you have all of them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dc2ee6517ab1b52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A + el gave you al. Now take de, which you have had since chapter forty-eight."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say de el quickly, and let the same thing happen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the second squeeze",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de + el becomes del."
+            },
+            {
+              "kind": "speech",
+              "text": "el libro del profesor — the teacher's book."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same rule, same force. And notice what del is doing in that phrase: Spanish has no apostrophe-s, so of the is how it says whose something is. Del profesor — of the teacher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the part worth celebrating."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the complete list. Spanish has exactly two obligatory contractions — al and del — and no others. Not de la, not a la, not de los. Those stay two words forever."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "a + el, al.",
+                "de + el, del.",
+                "a la, de la, a los, de las, unchanged."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It is rare to be handed a grammar rule and told the exceptions are finished. Learn these two and you will never wonder about a third."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al café, del café",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al café*, *del café*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el libro del profesor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el libro del profesor*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C61-del-say",
+              "prompt": "Say: the teacher's book.",
+              "assesses": [
+                "ES-GRAMMAR-CONTRACTION-DEL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "el libro del profesor",
+                "el libro del profesor."
+              ],
+              "feedback": {
+                "correct": "No apostrophe-s in Spanish -- of the.",
+                "incorrect": "El libro del profesor."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C61-del-count",
+              "prompt": "How many obligatory contractions does Spanish have?",
+              "assesses": [
+                "ES-GRAMMAR-CONTRACTION-ONLY-TWO"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "two",
+                "two: al and del"
+              ],
+              "feedback": {
+                "correct": "And the list is finished.",
+                "incorrect": "Two -- al and del."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C61-del-la",
+              "prompt": "Does de la contract?",
+              "assesses": [
+                "ES-GRAMMAR-CONTRACTION-ONLY-TWO"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "no, only de el does"
+              ],
+              "feedback": {
+                "correct": "Only the masculine singular article.",
+                "incorrect": "No. De la stays two words."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name both contractions. (Al and del.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And how many more are there to learn? (None. That is the whole list.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

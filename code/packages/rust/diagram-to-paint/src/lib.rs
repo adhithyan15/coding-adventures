@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.48.0";
+pub const VERSION: &str = "0.53.0";
 
 use std::collections::HashMap;
 
@@ -1042,9 +1042,15 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
+    let mut scene_metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        scene_metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        scene_metadata.insert("accessibility.description".into(), description.clone());
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
-    const HEADER_H: f64 = 40.0;
 
     // Groups are backend-neutral containers. Draw outer groups first so nested
     // groups, relationships, and nodes naturally layer above them.
@@ -1158,6 +1164,16 @@ where
 
     // ── Node boxes ───────────────────────────────────────────────────────────
     for node in &diagram.nodes {
+        let header_height = node
+            .compartments
+            .first()
+            .map(|compartment| compartment.y_offset)
+            .unwrap_or(node.height);
+        let mut node_font = lf.clone();
+        node_font.size = node.style.font_size;
+        node_font.weight = node.style.font_weight;
+        node_font.italic = node.style.font_italic;
+        node_font.family.clone_from(&node.style.font_family);
         // Outer rect
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
@@ -1165,10 +1181,10 @@ where
             y: node.y,
             width: node.width,
             height: node.height,
-            fill: Some("#f9fafb".into()),
-            stroke: Some("#374151".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(4.0),
+            fill: Some(node.style.fill.clone()),
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            corner_radius: Some(node.style.corner_radius),
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
@@ -1177,11 +1193,11 @@ where
             &[
                 Point {
                     x: node.x,
-                    y: node.y + HEADER_H,
+                    y: node.y + header_height,
                 },
                 Point {
                     x: node.x + node.width,
-                    y: node.y + HEADER_H,
+                    y: node.y + header_height,
                 },
             ],
             "#d1d5db",
@@ -1198,14 +1214,9 @@ where
             node.x,
             node.y + 8.0,
             node.width,
-            HEADER_H - 8.0,
-            options.title_font.clone(),
-            Color {
-                r: 17,
-                g: 24,
-                b: 39,
-                a: 255,
-            },
+            header_height - 8.0,
+            node_font.clone(),
+            css_to_color(&node.style.text_color),
         ));
         // Compartments
         for comp in &node.compartments {
@@ -1230,16 +1241,11 @@ where
                 text_children.push(text_node(
                     row,
                     node.x + 8.0,
-                    comp_y + 8.0 + i as f64 * (ls + 4.0),
+                    comp_y + 8.0 + i as f64 * (node.style.font_size * 1.4),
                     node.width - 16.0,
-                    ls * 1.2,
-                    lf.clone(),
-                    Color {
-                        r: 55,
-                        g: 65,
-                        b: 81,
-                        a: 255,
-                    },
+                    node.style.font_size * 1.2,
+                    node_font.clone(),
+                    css_to_color(&node.style.text_color),
                 ));
             }
         }
@@ -1279,7 +1285,7 @@ where
         background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!scene_metadata.is_empty()).then_some(scene_metadata),
     }
 }
 
@@ -2651,8 +2657,48 @@ where
                     stroke_dash_offset: None,
                 }));
             }
-            LayoutedTemporalItem::JourneyActor { x, y, color, label } => {
-                let label_width = (label.chars().count() as f64 * ls * 0.65).max(24.0);
+            LayoutedTemporalItem::JourneyActivityLine { x1, y, x2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x1, y: *y },
+                        PathCommand::LineTo { x: *x2, y: *y },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#0f172a".into()),
+                    stroke_width: Some(4.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+            LayoutedTemporalItem::JourneyTaskLine { x, y1, y2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x, y: *y1 },
+                        PathCommand::LineTo { x: *x, y: *y2 },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#64748b".into()),
+                    stroke_width: Some(1.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: Some(vec![4.0, 2.0]),
+                    stroke_dash_offset: None,
+                }));
+            }
+            LayoutedTemporalItem::JourneyActor {
+                x,
+                y,
+                width,
+                height,
+                color,
+                label,
+            } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: *x,
@@ -2668,9 +2714,9 @@ where
                 text_children.push(text_node(
                     label,
                     x + 12.0,
-                    y - ls / 2.0,
-                    label_width,
-                    ls * 1.2,
+                    y - height / 2.0,
+                    *width,
+                    *height,
                     lf.clone(),
                     Color {
                         r: 71,
@@ -2685,9 +2731,10 @@ where
                 y,
                 width,
                 height,
+                score_y,
                 score,
                 label,
-                people,
+                people: _,
                 person_colors,
                 font_size,
                 font_family,
@@ -2711,7 +2758,7 @@ where
                     instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                         base: PaintBase::default(),
                         cx: x + 12.0 + index as f64 * 12.0,
-                        cy: y + height - 7.0,
+                        cy: *y,
                         rx: 4.0,
                         ry: 4.0,
                         fill: Some(color.clone()),
@@ -2721,8 +2768,8 @@ where
                         stroke_dash_offset: None,
                     }));
                 }
-                let face_x = x + width - 22.0;
-                let face_y = y + height / 2.0;
+                let face_x = x + width / 2.0;
+                let face_y = *score_y;
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: face_x,
@@ -2779,11 +2826,6 @@ where
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
-                let actors = if people.is_empty() {
-                    String::new()
-                } else {
-                    format!(" · {}", people.join(", "))
-                };
                 let mut task_font = lf.clone();
                 if let Some(size) = font_size {
                     task_font.size = *size;
@@ -2792,10 +2834,10 @@ where
                     task_font.family.clone_from(family);
                 }
                 text_children.push(text_node(
-                    &format!("{label}  {score}/5{actors}"),
+                    label,
                     x + 10.0,
                     y + 6.0,
-                    width - 52.0,
+                    width - 20.0,
                     height - 12.0,
                     task_font,
                     css_to_color(text_color),
@@ -3335,7 +3377,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.48.0");
+        assert_eq!(crate::VERSION, "0.53.0");
     }
 
     #[test]
@@ -3558,8 +3600,20 @@ mod tests {
                 LayoutedTemporalItem::JourneyActor {
                     x: 24.0,
                     y: 18.0,
+                    width: 56.0,
+                    height: 36.0,
                     color: "#8fbc8f".into(),
-                    label: "Alice".into(),
+                    label: "Alice\nWonderland".into(),
+                },
+                LayoutedTemporalItem::JourneyActivityLine {
+                    x1: 80.0,
+                    y: 92.0,
+                    x2: 240.0,
+                },
+                LayoutedTemporalItem::JourneyTaskLine {
+                    x: 160.0,
+                    y1: 80.0,
+                    y2: 112.0,
                 },
                 LayoutedTemporalItem::JourneySection {
                     x: 0.0,
@@ -3575,6 +3629,7 @@ mod tests {
                     y: 40.0,
                     width: 288.0,
                     height: 40.0,
+                    score_y: 112.0,
                     score: 5,
                     label: "Find product".into(),
                     people: vec!["Alice".into()],
@@ -3599,6 +3654,10 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. }))
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 2.0])
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

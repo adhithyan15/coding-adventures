@@ -1,0 +1,19 @@
+% ============================================================================
+% coin-penny-discontinued.query.adj — a worked recall over the money
+% coin-penny-discontinued library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is the penny still
+% made?": it states no money fact of its own — it only `import`s the
+% grounded table and asks a binding query. The engine resolves the `?`
+% against the `coin_status` row and returns the status, year, and
+% production span + the table's source/locator/trust. Any OTHER coin
+% abstains honestly — the table carries no row for it at all.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli coin-penny-discontinued.query.adj
+% ============================================================================
+
+import "coin-penny-discontinued.adj"
+
+? coin_status(penny, $Status, $Year, $ProductionYears)   % expect discontinued, 2025, 232
+? coin_status(nickel, $Status, $Year, $ProductionYears)  % expect abstain — nickel's own cited span states no circulation-status change

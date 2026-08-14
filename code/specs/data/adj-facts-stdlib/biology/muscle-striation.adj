@@ -1,0 +1,67 @@
+% ============================================================================
+% muscle-striation — for each of the three muscle-tissue types, whether it
+% is striated or not, as the SAME NCI SEER spans also state
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `muscle-types.adj`
+% (`muscle_trait(muscle, trait)`, ONE distinctive characteristic per muscle
+% type — skeletal → voluntary, smooth → involuntary, cardiac →
+% intercalated_disks). That table's own header already quotes, verbatim,
+% each muscle type's defining SEER sentence, and buried in every one of
+% those three spans, alongside the trait the parent table already captures,
+% is a second, cleanly binary fact the voluntary/trait schema had no room
+% for: whether the tissue is STRIATED or not.
+%
+%   skeletal → striated (yes)
+%     "Skeletal muscle fibers are cylindrical, multinucleated, striated,
+%      and under voluntary control."
+%
+%   smooth → not striated (no)
+%     "Smooth muscle cells are spindle shaped, have a single, centrally
+%      located nucleus, and lack striations. They are called involuntary
+%      muscles."
+%
+%   cardiac → striated (yes)
+%     "Cardiac muscle has branching fibers, one nucleus per cell,
+%      striations, and intercalated disks."
+%
+% Recall is a binding query:
+%
+%     ? muscle_striated(cardiac, $Striated)   % yes
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation `muscle_striated(muscle,
+% striated)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the striation fact WITH its source, on
+% the CPU, with zero model calls. All three muscle types `muscle-types.adj`
+% ships have a striation fact stated in this SAME cited span, so this
+% sibling covers the full three-type domain with no abstention. The query
+% also runs BACKWARD — bind `no` and recall the one non-striated type:
+%
+%     ? muscle_striated($Muscle, no)
+%       % smooth
+%
+% Provenance: reproduces, byte-for-byte, the SAME three NCI SEER Training
+% Modules spans already quoted inside `muscle-types.adj`'s own header — no
+% new WebFetch, only a different schema decoding the striation half of each
+% already-verified quote. `trust authoritative` — the same tier
+% `muscle-types.adj` already carries (U.S. National Cancer Institute, a
+% primary U.S. government teaching resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table muscle_striated {
+    columns muscle, striated
+
+    row (skeletal, yes)   % SEER: "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    row (smooth, no)      % SEER: "Smooth muscle cells are spindle shaped, have a single, centrally located nucleus, and lack striations."
+    row (cardiac, yes)    % SEER: "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+
+    source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+    trust authoritative
+
+    cites "Smooth muscle cells are spindle shaped, have a single, centrally located nucleus, and lack striations. They are called involuntary muscles." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+    cites "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
+}

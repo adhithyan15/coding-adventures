@@ -1,0 +1,63 @@
+% ============================================================================
+% insulin-glucagon-trigger — the blood-glucose condition that triggers each
+% of the pancreas's two glucose-regulating hormones, as the SAME NCI SEER
+% spans also state (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `hormone-glands.adj`
+% (`hormone_gland(hormone, gland)`, WHICH gland secretes a hormone — insulin
+% → pancreas, glucagon → pancreas, etc.). That table's own header already
+% quotes, verbatim, the trigger condition for the pancreas's two glucose
+% hormones, and buried in those two spans, alongside the gland the parent
+% table already captures, is a second fact the hormone→gland schema had no
+% room for: WHAT blood-glucose condition triggers each hormone's release.
+%
+%   insulin → high
+%     "Beta cells in the pancreatic islets secrete the hormone insulin in
+%      response to a high concentration of glucose in the blood."
+%
+%   glucagon → low
+%     "Alpha cells in the pancreatic islets secrete the hormone glucagons in
+%      response to a low concentration of glucose in the blood."
+%     (the page spells it "glucagons"; the hormone is glucagon)
+%
+% Recall is a binding query:
+%
+%     ? secretion_trigger(insulin, $Level)   % high
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation `secretion_trigger(hormone,
+% blood_glucose_level)` carrying the citation, so the lookup above is the
+% ordinary SLD binding query — the engine returns the trigger condition WITH
+% its source, on the CPU, with zero model calls. Only these two hormones
+% among `hormone-glands.adj`'s twelve have a blood-glucose trigger stated in
+% this cited span, so this sibling is HONESTLY NARROW: it grounds exactly
+% the pancreas's two glucose-regulating hormones and abstains on every other
+% hormone (thyroxine, cortisol, etc.), which the source never ties to a
+% blood-glucose trigger at all. The query also runs BACKWARD — bind a level
+% and recall which hormone responds to it:
+%
+%     ? secretion_trigger($Hormone, low)
+%       % glucagon
+%
+% Provenance: reproduces, byte-for-byte, the SAME two NCI SEER Training
+% Modules spans already quoted inside `hormone-glands.adj`'s own header — no
+% new WebFetch, only a different schema decoding the trigger-condition half
+% of each already-verified quote. `trust authoritative` — the same tier
+% `hormone-glands.adj` already carries for this pair (U.S. National Cancer
+% Institute, a primary U.S. government teaching resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table secretion_trigger {
+    columns hormone, blood_glucose_level
+
+    row (insulin, high)    % SEER: "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
+    row (glucagon, low)    % SEER: "Alpha cells in the pancreatic islets secrete the hormone glucagons in response to a low concentration of glucose in the blood."
+
+    source "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
+    locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
+    trust authoritative
+
+    cites "Alpha cells in the pancreatic islets secrete the hormone glucagons in response to a low concentration of glucose in the blood." locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
+}

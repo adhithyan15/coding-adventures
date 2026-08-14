@@ -68,6 +68,28 @@ pub enum WastParseError {
     /// not a `panic!`, and NOT catchable by any Rust code) on adversarially
     /// deep input like `((((((...))))))`.
     TooDeeplyNested { pos: usize },
+    /// A `func` gives BOTH an explicit `(type $sig)` reference AND its own
+    /// literal `(param ...)` forms, and the two disagree in arity. A real
+    /// `.wat` file never does this (when both are given, the inline forms
+    /// are purely for naming and must already match `$sig` exactly), and
+    /// downstream code (`build_func`'s local-index computation) trusts
+    /// that invariant to keep every local index within the function's
+    /// real local array — a security review found that trusting a
+    /// mismatched arity here reaches a raw, unchecked `Vec` index in
+    /// `wasm-execution`'s `local.get`/`local.set`/`local.tee` handlers, a
+    /// real crash (not memory-unsafe, but a real DoS) once the module is
+    /// actually run. Rejecting the mismatch here, at parse time, is both
+    /// the spec-correct behavior (the official text-format grammar
+    /// requires the two to agree) and the fix that keeps every later
+    /// local-index computation sound by construction, rather than
+    /// patching each place that could otherwise be fooled by it.
+    TypeUseParamCountMismatch { pos: usize, declared: usize, referenced: usize },
+    /// A `(module binary "...")` **directive** (not `assert_malformed`'s
+    /// deliberately-broken bytes, which stay a raw
+    /// [`script::ModuleSource::Binary`] and are graded, never routed
+    /// through this error) failed to decode as a real `.wasm` binary via
+    /// `wasm-module-parser`.
+    EmbeddedBinaryModuleError { pos: usize, message: String },
 }
 
 impl std::fmt::Display for WastParseError {
@@ -105,6 +127,15 @@ impl std::fmt::Display for WastParseError {
             }
             WastParseError::TooDeeplyNested { pos } => {
                 write!(f, "at byte {pos}: nesting depth exceeds the parser's limit")
+            }
+            WastParseError::TypeUseParamCountMismatch { pos, declared, referenced } => {
+                write!(
+                    f,
+                    "at byte {pos}: func declares {declared} param(s) inline but its (type ...) reference has {referenced}"
+                )
+            }
+            WastParseError::EmbeddedBinaryModuleError { pos, message } => {
+                write!(f, "at byte {pos}: embedded (module binary ...) failed to decode: {message}")
             }
         }
     }

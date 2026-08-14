@@ -1,0 +1,81 @@
+% ============================================================================
+% aqi-category-color — for each EPA "Level of Concern" category, the color
+% the source's own truth table names for it (adj-facts-stdlib, ENVIRONMENT).
+% ============================================================================
+% A sibling to the already-shipped `air-quality-index.adj`
+% (`air_quality_index(min_aqi, category)`, a RANGE/BRACKET lookup keyed by
+% the numeric breakpoint). That table's own per-row provenance already
+% quotes, VERBATIM, a leading color word for every one of its six rows —
+% but the `min_aqi, category` schema had no column for it:
+%
+%   good → green
+%     "Green Good 0 to 50 Air quality is satisfactory, ..."
+%
+%   moderate → yellow
+%     "Yellow Moderate 51 to 100 Air quality is acceptable. ..."
+%
+%   unhealthy_for_sensitive_groups → orange
+%     "Orange Unhealthy for Sensitive Groups 101 to 150 Members of ..."
+%
+%   unhealthy → red
+%     "Red Unhealthy 151 to 200 Some members of the general public ..."
+%
+%   very_unhealthy → purple
+%     "Purple Very Unhealthy 201 to 300 Health alert: ..."
+%
+%   hazardous → maroon
+%     "Maroon Hazardous 301 and higher Health warning of emergency ..."
+%
+% The parent table's own header even lays this out explicitly, in a truth
+% table with a "source's colour" column (see `air-quality-index.adj` lines
+% 40-47) that it deliberately leaves unmaterialized — "shown here only to
+% make the step visible." This table is that column, finally given a row.
+%
+% Recall is a binding query:
+%
+%     ? aqi_category_color(hazardous, $Color)   % maroon
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup — unlike the parent, the key here is the category ATOM itself, not
+% a numeric breakpoint, so there is no bracket/range search to do): each
+% `row` lowers to a ground relation `aqi_category_color(category, color)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the color WITH its source, on the CPU, with
+% zero model calls. All six of the parent's categories have a color in the
+% cited spans, so this sibling covers the full domain with no abstention.
+% The query also runs BACKWARD — bind a color and recall which category it
+% names:
+%
+%     ? aqi_category_color($Category, orange)   % unhealthy_for_sensitive_groups
+%
+% Provenance: reproduces, byte-for-byte, the SAME six AirNow spans already
+% quoted inside `air-quality-index.adj`'s own per-row provenance block — no
+% new WebFetch, only a different schema decoding the color half of each
+% already-verified quote. `trust authoritative` — the same tier
+% `air-quality-index.adj` already carries (U.S. EPA / AirNow, a primary
+% U.S. government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table aqi_category_color {
+    columns category, color
+
+    row (good, green)                              % AirNow: "Green Good 0 to 50 ..."
+    row (moderate, yellow)                          % AirNow: "Yellow Moderate 51 to 100 ..."
+    row (unhealthy_for_sensitive_groups, orange)    % AirNow: "Orange Unhealthy for Sensitive Groups 101 to 150 ..."
+    row (unhealthy, red)                            % AirNow: "Red Unhealthy 151 to 200 ..."
+    row (very_unhealthy, purple)                    % AirNow: "Purple Very Unhealthy 201 to 300 ..."
+    row (hazardous, maroon)                         % AirNow: "Maroon Hazardous 301 and higher ..."
+
+    source "The AQI includes six color-coded categories, each corresponding to a range of index values."
+    locator "https://www.airnow.gov/aqi/aqi-basics/"
+    trust authoritative
+
+    cites "Green Good 0 to 50 Air quality is satisfactory, and air pollution poses little or no risk." locator "https://www.airnow.gov/aqi/aqi-basics/"
+    cites "Yellow Moderate 51 to 100 Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution." locator "https://www.airnow.gov/aqi/aqi-basics/"
+    cites "Orange Unhealthy for Sensitive Groups 101 to 150 Members of sensitive groups may experience health effects. The general public is less likely to be affected." locator "https://www.airnow.gov/aqi/aqi-basics/"
+    cites "Red Unhealthy 151 to 200 Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects." locator "https://www.airnow.gov/aqi/aqi-basics/"
+    cites "Purple Very Unhealthy 201 to 300 Health alert: The risk of health effects is increased for everyone." locator "https://www.airnow.gov/aqi/aqi-basics/"
+    cites "Maroon Hazardous 301 and higher Health warning of emergency conditions: everyone is more likely to be affected." locator "https://www.airnow.gov/aqi/aqi-basics/"
+}

@@ -1,0 +1,18 @@
+% ============================================================================
+% cell-division-genetic-outcome.query — worked recall queries against
+% cell-division-genetic-outcome.adj (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation for each process, and a
+% backward recall (bind an outcome, find which process yields it).
+% ============================================================================
+
+import "cell-division-genetic-outcome.adj"
+
+% Forward: what genetic outcome does mitosis produce?
+? cell_division_genetic_outcome(mitosis, $Outcome)
+
+% Forward: what genetic outcome does meiosis produce?
+? cell_division_genetic_outcome(meiosis, $Outcome2)
+
+% Backward: which process yields haploid daughter cells?
+? cell_division_genetic_outcome($Process, haploid)

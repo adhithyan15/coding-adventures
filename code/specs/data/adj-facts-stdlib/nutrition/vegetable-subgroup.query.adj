@@ -1,0 +1,20 @@
+% ============================================================================
+% vegetable-subgroup.query.adj — a worked recall over the nutrition
+% vegetable-subgroup library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what subgroup is
+% broccoli in?": it states no nutrition fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `vegetable_subgroup` rows and returns the subgroup + the
+% table's source/locator/trust. Every vegetable `food-groups.adj` ships has
+% a subgroup here, so this table never abstains.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli vegetable-subgroup.query.adj
+% ============================================================================
+
+import "vegetable-subgroup.adj"
+
+? vegetable_subgroup(broccoli, $Subgroup)         % expect dark_green
+? vegetable_subgroup($Vegetable, red_and_orange)   % expect carrots (and tomatoes on backtrack)
+? vegetable_subgroup(corn, $Subgroup)              % expect starchy

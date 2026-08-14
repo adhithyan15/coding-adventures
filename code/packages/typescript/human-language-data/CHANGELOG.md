@@ -90,6 +90,304 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - A1 grammar coverage reaches 85/85 (HL-C128)
+
+- Add Spanish chapters 262-266, closing the last four points on the A1
+  inventory: the ordinals, `uno...otro`, the infinitive as subject, and
+  word-order flexibility. **Coverage 81/85 -> 85/85 (100%).**
+- 262: `segundo` is Latin `secundus`, which meant FOLLOWING, from the verb to
+  follow -- so second place is literally the one that comes after, and English
+  `second` is the same word. `primer`/`tercer` drop their `o` before a
+  masculine noun, which is the THIRD sighting of that habit after `muy` and
+  `mal` -- three makes a rule rather than a list of exceptions.
+- 263: `otro` is Latin `alter`, the other of TWO rather than any other, which
+  is exactly the job it does in this pattern. It takes no article.
+- 264: the infinitive names an activity where English reaches for `-ing`. The
+  gerund cannot do this job -- `comiendo es bueno` is wrong -- because the
+  gerund is for an action underway, not a name for the activity.
+- 265: the pieces that say when and where can move, and the front of the
+  sentence is the emphatic position. This is possible only because the verb
+  ending already says who acts and the personal `a` marks who receives, so
+  nothing depends on position to keep the roles straight.
+- 266 closes the level on the thread that has run through it: Latin's endings
+  fell away, and Spanish built replacements out of small audible things -- an
+  article, a preposition, a comma, and a fixed emphatic position.
+- The "worst category first" assertion moved to a fixture. With every category
+  at 100% the real report can no longer demonstrate the property -- its
+  ordering falls back to the alphabetical tie-break -- so asserting its first
+  line would pin the tie-break while claiming to pin the sort.
+
+### Added - the four rules the book never stated (HL-C128)
+
+- Add Spanish chapters 257-261. **A1 coverage 77/85 (91%) -> 81/85 (95%)**.
+- These four points were a different problem from every batch before them.
+  Each names something the book DEMONSTRATES on nearly every page and had never
+  once stated, so the reader obeys the rule perfectly and cannot answer a
+  question about it. Every lesson therefore has the reader do the thing first
+  and names it afterwards, rather than opening with a rule.
+- 257: the plain present has carried TWO readings since the first verb -- the
+  habit and this moment -- so `estoy comiendo` was never required for "right
+  now". It is for insisting, which is why an English speaker who reaches for it
+  every time sounds oddly emphatic.
+- 258: the verb ending agrees with the subject. Stated for the first time after
+  two hundred chapters of the reader obeying it -- and it explains something
+  taught at chapter 16 without a reason: dropping `yo` is not a habit, it is a
+  CONSEQUENCE, because the ending already carried the subject.
+- 259: `mucho` agrees in front of a noun (`mucha agua`, and `agua` is the test
+  case the reader already owns) and freezes after a verb (`trabaja mucho`),
+  because a verb has no gender to agree with.
+- 260: a proper noun already points at exactly one thing, so the article that
+  exists to say WHICH one has nothing to do. The same logic returns the article
+  to a title -- until you address the person, at which point you are calling
+  them rather than identifying them.
+- 261 review closes on why naming a rule is worth a chapter: a rule you can
+  state is one you can CHECK, and naming one often explains another.
+
+### Added - every half-taught set finished (HL-C128)
+
+- Add Spanish chapters 251-256. **A1 coverage 71/85 (84%) -> 77/85 (91%)**.
+- Each of these was a set the book already had PART of, which is a harder gap
+  to notice than a missing one -- nothing feels absent, because the reader uses
+  the half they have and routes around the rest. `aqui` without `ahi`/`alli`.
+  `manana` without `ahora`/`hoy`. `un` without `unos`. `nuestro` without
+  `vuestro`. And a preterite missing only `ver` and `dar`.
+- 251 lines the three place words up against the three pointing words, one for
+  one: they answer the same question, which is whose side a thing is on.
+- 252 `ahora` is `hac hora` -- *this hour* -- with the word for hour still
+  visible in the middle of it, and `hoy` is `hodie`, *this day*, worn to three
+  letters. Both are Latin phrases that stopped having parts.
+- 253 `unos`: a plural of *one* sounds impossible until you hear what it does --
+  it stops being a number and becomes a vague few, which the bare plural (the
+  KIND of thing) does not mean.
+- 254 `vuestro` closes the possessive set at six, of which only two vary for
+  gender.
+- 255 `vi` and `di` take no written accent, and the reason is not an exception:
+  an accent marks a beat that could have fallen elsewhere, and in a
+  one-syllable word it could not. `dar` is an `-ar` verb that takes the `-er`
+  endings in the past.
+- 256 review. It exists because the gate asked for it: without a review this
+  batch pushed `atomsNeverRevisited` up by **15**, since nothing revisited the
+  new atoms. With it, +1. That is a pedagogical gap the counter found, not a
+  number to re-pin.
+- `A1-Q-04` closed with no new content: `bastante` was taught at ch227 and its
+  probe had never been wired. A point marked uncovered while genuinely taught
+  is as wrong as the reverse, and it surfaced only because the report names
+  every uncovered point rather than counting them.
+
+### Added - stressed pronouns, exclamations, and the vocative (HL-C128)
+- Add Spanish chapters 246-250. **A1 coverage 68/85 (80%) -> 71/85 (84%)**.
+- 246 `para mi`: only the first two persons change shape after a preposition,
+  and the accent on `mi` is the diacritic kind -- `mi` is *my*, `mi` is *me*.
+  `ti` takes none, which looks inconsistent and is not: there is no other `ti`
+  to separate it from. The mark is only ever spent where something needs
+  telling apart.
+- 247 `conmigo`: Latin stuck `cum` on the END of the pronoun (`mecum`), Spanish
+  inherited it as a meaningless `-migo` tail, and then put `con` back on the
+  front where prepositions belong. The word therefore says *with* **twice**,
+  once at each end, fifteen centuries apart -- the same reshaping instinct that
+  wore `mucho` down to `muy`, running in reverse for once.
+- 248 `!Que grande!`: the accent on `que` has never been about questions. It
+  marks the word carrying the force, which is why it survives into an
+  exclamation and into a reported question with no marks at all.
+- 249 the vocative: Latin had a whole CASE for addressing somebody, and Spanish
+  replaced the lot with a comma. The lesson pairs it with the personal `a` --
+  `Veo a Maria` puts her on the receiving end, `Maria, ven` has her doing the
+  coming, and the comma is what tells them apart.
+- 250 review notes that three of the four rules exist for one reason: Latin's
+  endings fell away and something audible had to take over -- a stressed
+  pronoun, a doubled preposition, and a comma.
+
+### Added - source-verified Cyrillic п (HL-C09EP)
+
+- Verify lowercase п as one continuous left-stem-to-top-shoulder-to-right-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced rounded Latin-n-like school hand while fitting the bundled squared arch, straight uprights, and horizontal top bar and documenting its entry and exit joins.
+- Reduce measured HL-C09 debt to 86 entries and queue Cyrillic р next.
+
+### Added - source-verified Cyrillic о (HL-C09EO)
+
+- Verify lowercase о as one continuous upper-right-to-left-side-to-bottom-to-right-side counterclockwise closure with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced tall, slightly slanted school-hand oval while fitting the bundled wider upright printed outline.
+- Reduce measured HL-C09 debt to 87 entries and queue Cyrillic п next.
+
+### Added - source-verified Cyrillic н (HL-C09EN)
+
+- Verify lowercase н as one continuous left-stem-to-middle-bridge-to-right-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced rounded school-hand bridge while fitting the bundled straight vertical stems and horizontal middle bar and documenting the printed form's omitted entry and exit joins.
+- Reduce measured HL-C09 debt to 88 entries and queue Cyrillic о next.
+
+### Added - source-verified Cyrillic м (HL-C09EM)
+
+- Verify lowercase м as one continuous entry-to-first-apex-to-valley-to-second-apex-to-baseline run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced rounded two-arch order while fitting the bundled straight upright stems and deep central V and documenting the printed form's omitted entry and exit joins.
+- Reduce measured HL-C09 debt to 89 entries and queue Cyrillic н next.
+
+### Added - source-verified Cyrillic л (HL-C09EL)
+
+- Verify lowercase л as one continuous hooked-left-leg-to-apex-to-right-leg run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced pointed school-hand order while fitting the bundled curved left leg, horizontal top shoulder, and straight right stem and documenting the printed form's omitted entry and exit joins.
+- Reduce measured HL-C09 debt to 90 entries and queue Cyrillic м next.
+
+### Added - source-verified Cyrillic к (HL-C09EK)
+
+- Verify lowercase к as one continuous left-stem-to-upper-arm-to-lower-arm run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced looped order while fitting the bundled printed vertical and two angular diagonals and documenting its omitted entry and exit joins.
+- Reduce measured HL-C09 debt to 91 entries and queue Cyrillic л next.
+
+### Added - source-verified Cyrillic й (HL-C09EJ)
+
+- Verify lowercase й as the joined и body followed by one lifted left-to-right breve against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced body-before-breve order while fitting the bundled printed backwards-N body and separate curved mark.
+- Reduce measured HL-C09 debt to 92 entries and queue Cyrillic к next.
+
+### Added - source-verified Cyrillic и (HL-C09EI)
+
+- Verify lowercase и as one continuous left-stem-to-rising-diagonal-to-right-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced joined order while fitting the bundled printed backwards-N glyph and documenting its omitted rounded entry and exit joins.
+- Reduce measured HL-C09 debt to 93 entries and queue Cyrillic й next.
+
+### Added - source-verified Cyrillic з (HL-C09EH)
+
+- Verify lowercase з as one continuous smaller-upper-lobe-to-larger-lower-lobe run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced joined lobe order while fitting the bundled compact printed glyph and documenting its omitted rising exit join.
+- Reduce measured HL-C09 debt to 94 entries and queue Cyrillic и next.
+
+### Added - source-verified Cyrillic ж (HL-C09EG)
+
+- Verify lowercase ж as one continuous lower-left-to-centre-to-right run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced rounded wing order while fitting the bundled symmetric printed glyph through its straight central upright and four diagonal arms.
+- Reduce measured HL-C09 debt to 95 entries and queue Cyrillic з next.
+
+### Added - source-verified Cyrillic ё (HL-C09EF)
+
+- Verify lowercase ё as the continuous looped е body followed by separately lifted left and right dots against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced body-before-left-dot-before-right-dot order while fitting the bundled compact printed glyph through its upper bowl, middle bar, lower bowl, and two circular dots.
+- Reduce measured HL-C09 debt to 96 entries and queue Cyrillic ж next.
+
+### Added - source-verified Cyrillic е (HL-C09EE)
+- Verify lowercase е as one continuous upper-loop-to-middle-to-lower-bowl run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced loop order while fitting the bundled compact printed glyph through its upper bowl, long middle bar, and rounded lower bowl.
+- Reduce measured HL-C09 debt to 97 entries and queue Cyrillic ё next.
+
+
+### Added - both past tenses finish (HL-C127, HL-C128)
+
+- Add Spanish chapters 241-245, paying a debt the book made in print. The
+  preterite review told the reader the `vosotros` forms were still owed;
+  they are now taught, and so is the imperfect plural, which had had only its
+  singular for well over a hundred chapters.
+- 241 `hablasteis` is `hablaste` with the plural `-is` stacked on it -- two
+  pieces the reader already owned, in a row. 242 puts the same `-isteis` on the
+  other two families AND on every strong stem, which closes the preterite
+  outright: six forms, every family, regular and strong, nothing outstanding.
+- 243 gives the `-aba` imperfect its plural, and explains the one written
+  accent in the set: `hablabamos` is stressed a syllable earlier than the
+  default would put it, so the mark is the difference between the word being a
+  past tense and being nothing at all.
+- 244 gives the `-ia` set its plural, where the accent is on EVERY form and for
+  a different reason -- the `i` and `a` would otherwise collapse into one beat.
+  The two sets are mirror images. It also finishes the three irregular
+  imperfects, which is the whole irregular list for the tense.
+- 245 reviews both tenses as complete paradigms and keeps the two accent rules
+  apart, since they look alike and are not.
+- **A1 coverage 66/85 (78%) -> 68/85 (80%).**
+- Two gates caught real problems on the way through and both were fixed in the
+  corpus rather than re-pinned: seven lessons named literal chapter numbers
+  (which shift on every insert, and which a Spanish-track invariant forbids),
+  and two paradigm grids pushed the info-dump ceiling -- rewritten as chants,
+  which is what every other review in this arc already does.
+
+### Added - the gerund, the progressive, and the personal a (HL-C128)
+- Add Spanish chapters 236-240. **A1 coverage 64/85 (75%) -> 66/85 (78%)**.
+- 236 and 237 build the gerund: `-ando` for `-ar` verbs, `-iendo` for
+  everything else. Two endings for three families, no agreement and no persons
+  -- the smallest new machinery this book has asked for. And the `-er`/`-ir`
+  merge the reader watched happen in the preterite happens again here, more
+  completely: there is not even a difference to notice.
+- 238 is the payoff: `estar` + gerund. It had to be `estar` rather than `ser`
+  for a reason the reader already holds -- `estar` is the verb for how
+  something temporarily stands, and an action caught mid-stride is as temporary
+  as things get. The lesson also draws the line English blurs: `estoy comiendo`
+  means NOW and cannot reach tomorrow, which still wants `voy a comer`.
+- 239 the personal `a`. Latin marked the receiving end with an ending; Spanish
+  discarded those endings and grew a preposition back in their place -- but
+  only where the ambiguity bites, which is people. A house is unlikely to be
+  seeing anybody.
+- 240 review pairs the two rules by their shared cause: the gerund is what is
+  LEFT of a Latin form after its cases fell off, and the personal `a` is what
+  grew back BECAUSE they fell off. One leftover, one repair.
+- **A third point was deliberately left uncovered.** `A1-V-03` asks for the
+  present indicative's own actual and durative values; chapter 238 teaches the
+  progressive and contrasts it with the plain present, which is adjacent but
+  not the same claim. Closing it with progressive atoms would be exactly the
+  gaming this gate exists to catch, so the probe stays `null` with the reason
+  written into the inventory.
+
+### Added - source-verified Cyrillic д (HL-C09ED)
+
+- Verify lowercase д as one continuous counterclockwise body and below-baseline descender loop with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced body-before-descender order while fitting the bundled block glyph through its trapezoidal body, joined base shelf, and two retraced feet.
+- Reduce measured HL-C09 debt to 98 entries and queue Cyrillic е next.
+
+### Added - source-verified Cyrillic г (HL-C09EC)
+- Verify lowercase г as one continuous two-hump cursive run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced lift count while fitting the bundled block glyph through its straight upright and top bar, explicitly documenting the omitted cursive exit arch.
+- Reduce measured HL-C09 debt to 99 entries and queue Cyrillic д next.
+
+
+### Added - the joining words, and Coordinacion closes (HL-C128)
+- Add Spanish chapters 230-235: `al`, `del`, `quien`, `o`, `ni`, review.
+  **A1 coverage 60/85 (71%) -> 64/85 (75%)**, and `Coordinacion` finishes
+  outright at 5/5.
+- 230 `al` and 231 `del`: the two obligatory contractions, taught as one
+  instinct the reader has already met -- when a small word leans on a bigger
+  one, something gives, exactly as `mucho` gave way to `muy`. 231 closes with
+  the rare pleasure of a finished list: Spanish has **two** contractions and no
+  others, so `de la` and `a los` stay two words forever. `El Salvador` keeps its
+  distance, because the rule is about the article and not the spelling.
+- 232 `quien` is Latin `quem` -- the OBJECT form, which survived after Spanish
+  discarded the case endings and now does every job. Reserved for people, where
+  English blurs the line.
+- 233 `o` is a whole word one letter long, from Latin `aut`, and it swaps to `u`
+  before a word starting with the o sound -- a rule about sound, so a silent `h`
+  does not stop it.
+- 234 `ni` carries its `no` inside it (Latin `nec`), which is why a correct
+  Spanish sentence can hold two negatives: they AGREE rather than cancel.
+- 235 review names the instinct the first three share and separates the fourth,
+  which is about agreement rather than sound.
+### Added - source-verified Cyrillic в (HL-C09EB)
+- Verify lowercase в as one continuous baseline-to-upper-loop-to-lower-bowl run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the source's tall looped school hand while routing the Noto Sans Cyrillic fit through the printed glyph's upper bowl and straight left stem.
+- Reduce measured HL-C09 debt to 100 entries and queue Cyrillic г next.
+
+
+### Added - the degree words, and four inventory points for three lessons (HL-C128)
+- Add Spanish chapters 226-229: `muy`, `bastante`, `mal`, and a review.
+  **A1 coverage 56/85 (66%) -> 60/85 (71%)**, and `El sintagma adjetival`
+  leaves the floor at last (0/1 -> 1/1).
+- Chosen for points-per-lesson: `muy` and `bastante` each sit on more than one
+  inventory line, so three lessons close four points across three categories.
+- 226 `muy` is not a new word: it is `mucho` with its ending bitten off, both
+  from Latin `multum`. The long form goes in front of a noun, the short one in
+  front of an adjective or adverb -- so the SHAPE of the word tells you what
+  kind of word is coming. And `muy` can never stand alone as an answer.
+- 227 `bastante` is `bastar` ("to be enough") wearing the `-ante` ending the
+  reader learned to decode at chapter 52, so it means literally "sufficing".
+  It is the MIDDLE of the scale -- poco, bastante, muy -- and English speakers
+  reach for it thinking "quite a lot" and land higher than they meant.
+- 228 `mal` gives `bien` the opposite it has waited for since chapter one, and
+  is the second long/short pair in three chapters. Two instances make it a
+  habit rather than two exceptions: Spanish bites the ending off a word that is
+  leaning on the next one.
+- 229 review, as three chants and the habit underneath them.
+- The coverage report reordered itself: `El sintagma adjetival` was the
+  worst-off category and is now closed, so the "worst first" line moved on to
+  `Los cuantificadores` at 1/4 without anyone editing the sort.
+### Added - source-verified Cyrillic б (HL-C09EA)
+- Verify lowercase б as one continuous counterclockwise-body-to-top-flag run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the source's handwritten diagonal transition while routing the Noto Sans Cyrillic fit through the printed glyph's upper-left shoulder.
+- Reduce measured HL-C09 debt to 101 entries and queue Cyrillic в next.
+
+
 ### Added - the demonstratives, and the first movement of the exam gate (HL-C128)
 - Add Spanish chapters 221-225. `Los demostrativos` was the only A1 category
   reading **0 of 3**, in a book that had already taught the imperfect
@@ -117,7 +415,6 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   The gate worked as designed on the way through: the number would not move
   until the three probes were wired to real atoms, and the pin had to be
   changed deliberately rather than drifting.
-
 ### Added - source-verified Cyrillic а (HL-C09DZ)
 - Verify lowercase а as one continuous body-to-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
 - Preserve the source's single-storey school-hand motion while fitting the upper entry through Noto Sans Cyrillic's extra double-storey printed shoulder.

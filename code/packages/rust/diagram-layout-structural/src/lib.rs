@@ -1,56 +1,90 @@
 //! # diagram-layout-structural
 //!
-//! Layout engine for structural diagrams (DG04): class, ER, and C4.
+//! Layout engine for structural diagrams (DG04): class, ER, C4, and Requirement.
 //!
 //! Takes a `StructuralDiagram` (semantic IR) and produces a
 //! `LayoutedStructuralDiagram` with bounding boxes for all nodes and
 //! polyline paths for all relationships.
 
 use diagram_ir::{
-    LayoutedCompartment, LayoutedStructuralDiagram, LayoutedStructuralGroup,
-    LayoutedStructuralNode, LayoutedStructuralRelationship, Point, StructuralDiagram, StructuralNode,
+    resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
+    LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
+    StructuralDiagram, StructuralNode,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.8.0";
 
 const MIN_NODE_W: f64 = 160.0;
-const HEADER_H:   f64 = 40.0;
-const ROW_H:      f64 = 20.0;
-const COMP_PAD:   f64 = 8.0;
-const COL_GAP:    f64 = 80.0;
-const ROW_GAP:    f64 = 60.0;
-const COLS:       usize = 3;
-const GROUP_PAD:  f64 = 24.0;
+const HEADER_H: f64 = 40.0;
+const ROW_H: f64 = 20.0;
+const COMP_PAD: f64 = 8.0;
+const COL_GAP: f64 = 80.0;
+const ROW_GAP: f64 = 60.0;
+const COLS: usize = 3;
+const GROUP_PAD: f64 = 24.0;
 const GROUP_HEADER_H: f64 = 32.0;
 
-/// Lay out a `StructuralDiagram` using a simple grid arrangement.
+fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
+    resolve_style_with_base(
+        node.style.as_ref(),
+        diagram_ir::ResolvedDiagramStyle {
+            fill: "#f9fafb".into(),
+            stroke: "#374151".into(),
+            stroke_width: 1.5,
+            text_color: "#111827".into(),
+            font_size: 14.0,
+            font_weight: 400,
+            font_italic: false,
+            font_family: "Helvetica".into(),
+            corner_radius: 4.0,
+        },
+    )
+}
+
+/// Lay out a `StructuralDiagram` using an explicit axis or the legacy grid.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
-    let nodes = layout_nodes(&diagram.nodes, &diagram.groups);
+    let nodes = match diagram.direction.as_ref() {
+        Some(direction) => layout_directional_nodes(&diagram.nodes, &diagram.groups, direction),
+        None => layout_nodes(&diagram.nodes, &diagram.groups),
+    };
     let groups = layout_groups(diagram, &nodes);
     let canvas_w = canvas_width(&nodes, &groups);
     let canvas_h = canvas_height(&nodes, &groups);
     let rels = layout_relationships(diagram, &nodes);
     LayoutedStructuralDiagram {
-        width: canvas_w, height: canvas_h, groups, nodes, relationships: rels,
+        width: canvas_w,
+        height: canvas_h,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        groups,
+        nodes,
+        relationships: rels,
     }
 }
 
 fn node_width(node: &StructuralNode) -> f64 {
-    let max_entry = node.compartments.iter()
+    let style = structural_style(node);
+    let max_entry = node
+        .compartments
+        .iter()
         .flat_map(|c| c.entries.iter())
         .map(|e| e.len())
         .max()
         .unwrap_or(0);
     // Approximate 8 px/char + padding; header is the label
-    let text_w = (node.label.len().max(max_entry) as f64 * 8.0 + 24.0).ceil();
+    let char_width = style.font_size * 0.57;
+    let text_w = (node.label.len().max(max_entry) as f64 * char_width + 24.0).ceil();
     text_w.max(MIN_NODE_W)
 }
 
 fn node_height(node: &StructuralNode) -> f64 {
-    let mut h = HEADER_H;
+    let font_size = structural_style(node).font_size;
+    let header_height = HEADER_H.max(font_size * 2.4);
+    let row_height = ROW_H.max(font_size * 1.4);
+    let mut h = header_height;
     for comp in &node.compartments {
-        h += COMP_PAD + comp.entries.len() as f64 * ROW_H + COMP_PAD;
+        h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
     }
     h
 }
@@ -64,53 +98,126 @@ fn layout_nodes(
     let mut row_y: Vec<f64> = vec![COMP_PAD];
 
     for (idx, node) in nodes.iter().enumerate() {
-        let col   = idx % COLS;
-        let row   = idx / COLS;
-        let nw    = node_width(node);
-        let nh    = node_height(node);
+        let col = idx % COLS;
+        let row = idx / COLS;
+        let nw = node_width(node);
+        let nh = node_height(node);
 
         // Ensure row_y has an entry for this row.
-        while row_y.len() <= row { row_y.push(*row_y.last().unwrap_or(&COMP_PAD)); }
+        while row_y.len() <= row {
+            row_y.push(*row_y.last().unwrap_or(&COMP_PAD));
+        }
 
         let x = COMP_PAD + col as f64 * (MIN_NODE_W + COL_GAP);
-        let y = row_y[row]
-            + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
+        let y =
+            row_y[row] + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
         // Update the starting y for the next row.
         let next_row_y = y + nh + ROW_GAP;
-        if row + 1 >= row_y.len() { row_y.push(next_row_y); }
-        else if row_y[row + 1] < next_row_y { row_y[row + 1] = next_row_y; }
+        if row + 1 >= row_y.len() {
+            row_y.push(next_row_y);
+        } else if row_y[row + 1] < next_row_y {
+            row_y[row + 1] = next_row_y;
+        }
 
         // Build layouted compartments.
-        let mut y_off = HEADER_H;
+        let style = structural_style(node);
+        let row_height = ROW_H.max(style.font_size * 1.4);
+        let mut y_off = HEADER_H.max(style.font_size * 2.4);
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
-            let ch = COMP_PAD + comp.entries.len() as f64 * ROW_H + COMP_PAD;
+            let ch = COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
             comps.push(LayoutedCompartment {
                 y_offset: y_off,
-                height:   ch,
-                rows:     comp.entries.clone(),
+                height: ch,
+                rows: comp.entries.clone(),
             });
             y_off += ch;
         }
 
         out.push(LayoutedStructuralNode {
             id: node.id.clone(),
-            x, y,
-            width:  nw,
+            x,
+            y,
+            width: nw,
             height: nh,
             header: node.label.clone(),
             stereotype: node.stereotype.clone(),
+            style: structural_style(node),
             compartments: comps,
         });
     }
     out
 }
 
-fn group_depth(
-    parent_group: Option<&str>,
+fn layout_directional_nodes(
+    nodes: &[StructuralNode],
     groups: &[diagram_ir::StructuralGroup],
-) -> usize {
+    direction: &DiagramDirection,
+) -> Vec<LayoutedStructuralNode> {
+    let reverse = matches!(direction, DiagramDirection::Bt | DiagramDirection::Rl);
+    let vertical = matches!(direction, DiagramDirection::Tb | DiagramDirection::Bt);
+    let mut indices = (0..nodes.len()).collect::<Vec<_>>();
+    if reverse {
+        indices.reverse();
+    }
+
+    let mut cursor = COMP_PAD;
+    let mut positioned = Vec::with_capacity(nodes.len());
+    for index in indices {
+        let node = &nodes[index];
+        let width = node_width(node);
+        let height = node_height(node);
+        let group_offset =
+            group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
+        let (x, y) = if vertical {
+            let position = (COMP_PAD, cursor + group_offset);
+            cursor = position.1 + height + ROW_GAP;
+            position
+        } else {
+            let position = (cursor, COMP_PAD + group_offset);
+            cursor = position.0 + width + COL_GAP;
+            position
+        };
+
+        let style = structural_style(node);
+        let row_height = ROW_H.max(style.font_size * 1.4);
+        let mut y_offset = HEADER_H.max(style.font_size * 2.4);
+        let compartments = node
+            .compartments
+            .iter()
+            .map(|compartment| {
+                let compartment_height =
+                    COMP_PAD + compartment.entries.len() as f64 * row_height + COMP_PAD;
+                let layouted = LayoutedCompartment {
+                    y_offset,
+                    height: compartment_height,
+                    rows: compartment.entries.clone(),
+                };
+                y_offset += compartment_height;
+                layouted
+            })
+            .collect();
+        positioned.push((
+            index,
+            LayoutedStructuralNode {
+                id: node.id.clone(),
+                x,
+                y,
+                width,
+                height,
+                header: node.label.clone(),
+                stereotype: node.stereotype.clone(),
+                style: structural_style(node),
+                compartments,
+            },
+        ));
+    }
+    positioned.sort_by_key(|(index, _)| *index);
+    positioned.into_iter().map(|(_, node)| node).collect()
+}
+
+fn group_depth(parent_group: Option<&str>, groups: &[diagram_ir::StructuralGroup]) -> usize {
     let mut depth = 0;
     let mut current = parent_group;
     let mut visited = HashSet::new();
@@ -128,14 +235,16 @@ fn group_depth(
 }
 
 fn canvas_width(nodes: &[LayoutedStructuralNode], groups: &[LayoutedStructuralGroup]) -> f64 {
-    nodes.iter()
+    nodes
+        .iter()
         .map(|n| n.x + n.width + COMP_PAD)
         .chain(groups.iter().map(|g| g.x + g.width + COMP_PAD))
         .fold(200.0_f64, f64::max)
 }
 
 fn canvas_height(nodes: &[LayoutedStructuralNode], groups: &[LayoutedStructuralGroup]) -> f64 {
-    nodes.iter()
+    nodes
+        .iter()
         .map(|n| n.y + n.height + COMP_PAD)
         .chain(groups.iter().map(|g| g.y + g.height + COMP_PAD))
         .fold(100.0_f64, f64::max)
@@ -224,10 +333,22 @@ fn group_bounds(
         return None;
     }
 
-    let min_x = children.iter().map(|bounds| bounds.0).fold(f64::INFINITY, f64::min);
-    let min_y = children.iter().map(|bounds| bounds.1).fold(f64::INFINITY, f64::min);
-    let max_x = children.iter().map(|bounds| bounds.2).fold(f64::NEG_INFINITY, f64::max);
-    let max_y = children.iter().map(|bounds| bounds.3).fold(f64::NEG_INFINITY, f64::max);
+    let min_x = children
+        .iter()
+        .map(|bounds| bounds.0)
+        .fold(f64::INFINITY, f64::min);
+    let min_y = children
+        .iter()
+        .map(|bounds| bounds.1)
+        .fold(f64::INFINITY, f64::min);
+    let max_x = children
+        .iter()
+        .map(|bounds| bounds.2)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let max_y = children
+        .iter()
+        .map(|bounds| bounds.3)
+        .fold(f64::NEG_INFINITY, f64::max);
     let bounds = (
         (min_x - GROUP_PAD).max(0.0),
         (min_y - GROUP_HEADER_H).max(0.0),
@@ -238,14 +359,17 @@ fn group_bounds(
     Some(bounds)
 }
 
-fn find_node<'a>(nodes: &'a [LayoutedStructuralNode], id: &str) -> Option<&'a LayoutedStructuralNode> {
+fn find_node<'a>(
+    nodes: &'a [LayoutedStructuralNode],
+    id: &str,
+) -> Option<&'a LayoutedStructuralNode> {
     nodes.iter().find(|n| n.id == id)
 }
 
 fn closest_sides(a: &LayoutedStructuralNode, b: &LayoutedStructuralNode) -> (Point, Point) {
-    let a_cx = a.x + a.width  / 2.0;
+    let a_cx = a.x + a.width / 2.0;
     let a_cy = a.y + a.height / 2.0;
-    let b_cx = b.x + b.width  / 2.0;
+    let b_cx = b.x + b.width / 2.0;
     let b_cy = b.y + b.height / 2.0;
     // Use dominant axis to pick left/right vs top/bottom connector sides.
     let dx = (b_cx - a_cx).abs();
@@ -253,16 +377,40 @@ fn closest_sides(a: &LayoutedStructuralNode, b: &LayoutedStructuralNode) -> (Poi
     if dx >= dy {
         // Horizontal dominant — connect right edge of A to left edge of B (or vice versa).
         if b_cx >= a_cx {
-            (Point { x: a.x + a.width, y: a_cy }, Point { x: b.x, y: b_cy })
+            (
+                Point {
+                    x: a.x + a.width,
+                    y: a_cy,
+                },
+                Point { x: b.x, y: b_cy },
+            )
         } else {
-            (Point { x: a.x, y: a_cy }, Point { x: b.x + b.width, y: b_cy })
+            (
+                Point { x: a.x, y: a_cy },
+                Point {
+                    x: b.x + b.width,
+                    y: b_cy,
+                },
+            )
         }
     } else {
         // Vertical dominant — connect bottom edge of A to top edge of B (or vice versa).
         if b_cy >= a_cy {
-            (Point { x: a_cx, y: a.y + a.height }, Point { x: b_cx, y: b.y })
+            (
+                Point {
+                    x: a_cx,
+                    y: a.y + a.height,
+                },
+                Point { x: b_cx, y: b.y },
+            )
         } else {
-            (Point { x: a_cx, y: a.y }, Point { x: b_cx, y: b.y + b.height })
+            (
+                Point { x: a_cx, y: a.y },
+                Point {
+                    x: b_cx,
+                    y: b.y + b.height,
+                },
+            )
         }
     }
 }
@@ -271,26 +419,30 @@ fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
 ) -> Vec<LayoutedStructuralRelationship> {
-    diagram.relationships.iter().filter_map(|rel| {
-        let a = find_node(nodes, &rel.from)?;
-        let b = find_node(nodes, &rel.to)?;
-        let (p0, p1) = closest_sides(a, b);
-        Some(LayoutedStructuralRelationship {
-            from_id: rel.from.clone(),
-            to_id:   rel.to.clone(),
-            kind:    rel.kind.clone(),
-            points:  vec![p0, p1],
-            from_mult: rel.from_mult.clone(),
-            to_mult:   rel.to_mult.clone(),
-            label:   rel.label.as_ref().map(|l| {
-                let a = find_node(nodes, &rel.from).unwrap();
-                let b = find_node(nodes, &rel.to).unwrap();
-                let mx = (a.x + a.width / 2.0 + b.x + b.width / 2.0) / 2.0;
-                let my = (a.y + a.height / 2.0 + b.y + b.height / 2.0) / 2.0;
-                (Point { x: mx, y: my }, l.clone())
-            }),
+    diagram
+        .relationships
+        .iter()
+        .filter_map(|rel| {
+            let a = find_node(nodes, &rel.from)?;
+            let b = find_node(nodes, &rel.to)?;
+            let (p0, p1) = closest_sides(a, b);
+            Some(LayoutedStructuralRelationship {
+                from_id: rel.from.clone(),
+                to_id: rel.to.clone(),
+                kind: rel.kind.clone(),
+                points: vec![p0, p1],
+                from_mult: rel.from_mult.clone(),
+                to_mult: rel.to_mult.clone(),
+                label: rel.label.as_ref().map(|l| {
+                    let a = find_node(nodes, &rel.from).unwrap();
+                    let b = find_node(nodes, &rel.to).unwrap();
+                    let mx = (a.x + a.width / 2.0 + b.x + b.width / 2.0) / 2.0;
+                    let my = (a.y + a.height / 2.0 + b.y + b.height / 2.0) / 2.0;
+                    (Point { x: mx, y: my }, l.clone())
+                }),
+            })
         })
-    }).collect()
+        .collect()
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -304,11 +456,17 @@ mod tests {
         StructuralDiagram {
             kind: StructuralKind::Class,
             title: Some("Domain".into()),
+            accessibility_title: None,
+            accessibility_description: None,
+            direction: None,
             nodes: vec![
                 StructuralNode {
-                    id: "Animal".into(), label: "Animal".into(),
+                    id: "Animal".into(),
+                    label: "Animal".into(),
                     stereotype: None,
                     node_kind: StructuralNodeKind::Abstract,
+                    metadata: None,
+                    style: None,
                     compartments: vec![Compartment {
                         kind: CompartmentKind::Methods,
                         entries: vec!["speak() void".into()],
@@ -316,9 +474,12 @@ mod tests {
                     parent_group: None,
                 },
                 StructuralNode {
-                    id: "Dog".into(), label: "Dog".into(),
+                    id: "Dog".into(),
+                    label: "Dog".into(),
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
+                    metadata: None,
+                    style: None,
                     compartments: vec![Compartment {
                         kind: CompartmentKind::Fields,
                         entries: vec!["name: String".into()],
@@ -328,14 +489,20 @@ mod tests {
             ],
             groups: vec![],
             relationships: vec![StructuralRelationship {
-                from: "Dog".into(), to: "Animal".into(),
+                from: "Dog".into(),
+                to: "Animal".into(),
                 kind: RelKind::Inheritance,
-                from_mult: None, to_mult: None, label: None,
+                from_mult: None,
+                to_mult: None,
+                label: None,
             }],
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
+    #[test]
+    fn version_exists() {
+        assert_eq!(crate::VERSION, "0.8.0");
+    }
 
     #[test]
     fn two_nodes_laid_out() {
@@ -367,6 +534,27 @@ mod tests {
     }
 
     #[test]
+    fn explicit_direction_controls_primary_axis_and_order() {
+        let mut diagram = two_class_diagram();
+
+        diagram.direction = Some(DiagramDirection::Tb);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[1].y > layout.nodes[0].y);
+
+        diagram.direction = Some(DiagramDirection::Bt);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[0].y > layout.nodes[1].y);
+
+        diagram.direction = Some(DiagramDirection::Lr);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[1].x > layout.nodes[0].x);
+
+        diagram.direction = Some(DiagramDirection::Rl);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[0].x > layout.nodes[1].x);
+    }
+
+    #[test]
     fn compartments_have_correct_rows() {
         let r = layout_structural_diagram(&two_class_diagram());
         let animal = r.nodes.iter().find(|n| n.id == "Animal").unwrap();
@@ -385,8 +573,16 @@ mod tests {
         });
 
         let layout = layout_structural_diagram(&diagram);
-        let group = layout.groups.iter().find(|group| group.id == "domain").unwrap();
-        let animal = layout.nodes.iter().find(|node| node.id == "Animal").unwrap();
+        let group = layout
+            .groups
+            .iter()
+            .find(|group| group.id == "domain")
+            .unwrap();
+        let animal = layout
+            .nodes
+            .iter()
+            .find(|node| node.id == "Animal")
+            .unwrap();
         assert!(group.x <= animal.x);
         assert!(group.y <= animal.y);
         assert!(group.x + group.width >= animal.x + animal.width);

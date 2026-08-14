@@ -1,5 +1,23 @@
 # Changelog — coding-adventures/go/zip
 
+## [0.2.0] — 2026-08-13
+
+### Added
+
+- Public `RawDeflate`, `RawInflate`, and `RawInflateCounted` RFC 1951 APIs.
+- Strict stored, fixed, dynamic, and multi-block decoding with exact byte
+  consumption, caller-lowerable output caps, full-window overlapping matches,
+  symbol 285, and RFC-correct 32-slot dynamic distance headers.
+- Stable typed `RawInflateError` failures for the 14 language-neutral error IDs.
+- All 34 `zip-raw-rfc1951-v1` fixture cases, independent standard-library decoder
+  interoperability, dynamic ZIP reading, and covert suffix-cavity rejection.
+- Explicit empty capability metadata for the pure in-memory production package.
+
+### Changed
+
+- `ZipReader.Read` now requires exact compressed-payload consumption and exact
+  declared uncompressed size instead of silently trimming excess output.
+
 ## [0.1.0] — 2026-04-23
 
 ### Added

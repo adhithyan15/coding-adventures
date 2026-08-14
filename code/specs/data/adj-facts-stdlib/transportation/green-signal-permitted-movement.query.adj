@@ -1,0 +1,18 @@
+% ============================================================================
+% green-signal-permitted-movement.query.adj — a worked recall over the
+% transportation green-signal-permitted-movement library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what am I allowed to
+% do at a green light?": it states no transportation fact of its own — it
+% only `import`s the grounded table and asks a recall query. The engine
+% resolves the `?` against every `green_signal_permitted_movement` row and
+% returns each movement + the table's source/locator/trust.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli green-signal-permitted-movement.query.adj
+% ============================================================================
+
+import "green-signal-permitted-movement.adj"
+
+? green_signal_permitted_movement($Movement)
+  % expect straight_through, turn_right, turn_left, u_turn (all four, unordered)

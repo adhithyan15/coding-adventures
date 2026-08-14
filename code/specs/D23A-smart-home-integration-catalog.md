@@ -599,6 +599,11 @@ These should be implemented before most vendor-specific adapters:
 | `smart-home-local-http` | Hue, Shelly, WLED, ESPHome, cameras, energy gateways |
 | `smart-home-event-streams` | Hue SSE, WebSocket workers, subscription health |
 | `smart-home-usb-serial` | Zigbee, Z-Wave, Thread, Modbus RTU |
+| `modbus-protocol` and `smart-home-modbus-tcp-integration` | bounded read-only Modbus TCP register telemetry and D23 sensor projection |
+| `bacnet-protocol` and `smart-home-bacnet-ip-integration` | bounded BACnet/IP Who-Is/I-Am discovery and D23 bridge-candidate projection |
+| `knxnet-ip-protocol` and `smart-home-knxnet-ip-integration` | bounded KNXnet/IP Search Request/Search Response discovery and D23 interface projection |
+| `smart-home-esphome-discovery-integration` | bounded `_esphomelib._tcp` mDNS identity and security-capability discovery with D23 candidate projection |
+| `smart-home-google-cast-discovery-integration` | bounded `_googlecast._tcp` mDNS receiver identity, version, status, and capability discovery with D23 candidate projection |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |
@@ -614,7 +619,8 @@ These should be implemented before most vendor-specific adapters:
 | ESPHome | DIY/local ecosystem |
 | Tasmota | MQTT-native device ecosystem |
 | Modbus | HVAC, energy, industrial |
-| KNX | building automation |
+| BACnet/IP | vendor-neutral building automation discovery |
+| KNXnet/IP | vendor-neutral building automation interface discovery |
 
 ### Wave 3 - High-Leverage Local Hubs And Devices
 

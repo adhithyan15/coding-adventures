@@ -70,7 +70,7 @@ describe("book chapter modality projection", () => {
     const ledgers = loadTrackChapters(root);
     // +1: Tamil chapter 39. Its opening renders "first 3 of 4 lessons", because the
     // writing lesson is last in the chapter — the placement rule TA-W19 established.
-    expect(ledgers.flatMap((track) => track.chapters)).toHaveLength(731); // +4: HL-C98 // +15: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +12: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive // HL-C136 wave I: +42 lessons, +6 chapters — 'Pointing, and Asking', six deixis words and the pattern behind them, one chapter per Indic track
+    expect(ledgers.flatMap((track) => track.chapters)).toHaveLength(772); //HL-C136 wave I: 42 lessons, 6 chapters — 'Pointing, and Asking', six deixis words per Indic track, re-measured against the merged base after main landed HL-C128 steps 3-10 and HL-C127 // +4: HL-C98 // +15: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +12: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive
     for (const track of ledgers) {
       const path = `${track.language}/book/chapter-modalities.tex`;
       const tex = outputs.get(path);

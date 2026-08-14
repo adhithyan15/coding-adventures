@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.0] - 2026-08-13
+
+### Added
+
+- Public `raw_deflate`, `raw_inflate`, and `raw_inflate_counted` APIs for the
+  ZIP-owned raw RFC 1951 profile.
+- Stored, fixed-Huffman, dynamic-Huffman, multi-block, symbol-285, HDIST-32,
+  overlapping-copy, and full 32 KiB-window decoding.
+- Typed `RawInflateError` failures with the 14 stable, payload-blind contract
+  identifiers and `RawInflateResult` exact byte-consumption reporting.
+- All 34 cases from the language-neutral `zip-raw-rfc1951-v1` fixture suite,
+  independent `zlib` encoder checks, and line/branch coverage reporting.
+- Explicit empty runtime capability metadata for this pure in-memory package.
+
+### Changed
+
+- `ZipReader` now caps method-8 expansion by the declared size and hard ceiling,
+  rejects compressed suffix cavities, and requires the exact declared output
+  size instead of silently trimming excess output.
+- The package build now lints both production and test Ruby sources.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

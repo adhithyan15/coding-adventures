@@ -2,7 +2,7 @@
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use riscv_backend::{compile, run_binary, BackendError, Riscv32Backend};
+use riscv_backend::{compile, compile_module, run_binary, run_binary_with_input, BackendError, ModuleFunction, Riscv32Backend};
 use vm_core::value::Value;
 
 fn ctx<'a>(name: &'a str, params: &'a [(String, String)], ret_ty: &'a str) -> FunctionContext<'a> {
@@ -71,6 +71,74 @@ fn canonical_twig_42_bytes_are_preserved_and_execute() {
         vec![0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00,]
     );
     assert_eq!(run_binary(&bytes, &[]).unwrap().return_value, 42);
+}
+
+#[test]
+fn character_builtins_round_trip_host_bytes_and_preserve_eof() {
+    let echo = vec![
+        ci(
+            "call_builtin",
+            Some("value"),
+            vec![CIROperand::Var("getchar".into())],
+            "i64",
+        ),
+        ci(
+            "call_builtin",
+            None,
+            vec![
+                CIROperand::Var("putchar".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+    let echo_binary = compile(&ctx("echo", &[], "void"), &echo).expect("character lowering");
+    let echo_run = run_binary_with_input(&echo_binary, &[], b"Z").expect("character execution");
+    assert!(echo_run.halted);
+    assert_eq!(echo_run.byte_output, b"Z");
+
+    let eof = vec![
+        ci(
+            "call_builtin",
+            Some("value"),
+            vec![CIROperand::Var("getchar".into())],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("value".into())], "i64"),
+    ];
+    let eof_binary = compile(&ctx("eof", &[], "i64"), &eof).expect("getchar lowering");
+    let eof_run = run_binary_with_input(&eof_binary, &[], b"").expect("EOF execution");
+    assert_eq!(eof_run.return_value, -1);
+    assert_eq!(eof_run.return_value_high, u32::MAX);
+}
+
+#[test]
+fn print_i64_builtin_writes_signed_pair_values_through_the_host_abi() {
+    let cir = vec![
+        ci(
+            "const_i64",
+            Some("value"),
+            vec![CIROperand::Int(-42)],
+            "i64",
+        ),
+        ci(
+            "call_builtin",
+            None,
+            vec![
+                CIROperand::Var("print_i64".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+
+    let binary = compile(&ctx("prints", &[], "void"), &cir).expect("print_i64 lowering");
+    let run = run_binary(&binary, &[]).expect("simulator execution");
+    assert!(run.halted);
+    assert_eq!(run.output, vec![-42]);
+    assert_eq!(run.exit_code, None);
 }
 
 #[test]
@@ -824,7 +892,7 @@ fn executes_chained_wide_shifts_without_exhausting_registers() {
 }
 
 #[test]
-fn rejects_calls_until_the_linker_and_frame_abi_exist() {
+fn single_function_compile_refuses_calls_without_module_linking() {
     let cir = vec![ci(
         "call",
         Some("result"),
@@ -832,7 +900,807 @@ fn rejects_calls_until_the_linker_and_frame_abi_exist() {
         "i32",
     )];
     let err = compile(&ctx("main", &[], "i32"), &cir).expect_err("calls are a later backend slice");
-    assert!(matches!(err, BackendError::UnsupportedOp(op) if op == "call"));
+    assert!(matches!(err, BackendError::UnsupportedOp(op) if op.contains("call")));
+}
+
+#[test]
+fn linked_module_executes_a_zero_argument_direct_call() {
+    let helper = vec![
+        ci("const_i32", Some("answer"), vec![CIROperand::Int(42)], "i32"),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ];
+    let main = vec![
+        ci("call", Some("answer"), vec![CIROperand::Var("helper".into())], "i32"),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("helper", &[], "i32"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+}
+
+#[test]
+fn linked_module_marshals_scalar_call_arguments() {
+    let params = vec![
+        ("left".to_owned(), "i32".to_owned()),
+        ("right".to_owned(), "i32".to_owned()),
+    ];
+    let helper = vec![
+        ci(
+            "add_i32",
+            Some("sum"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("sum".into())], "i32"),
+    ];
+    let main = vec![
+        ci("const_i32", Some("left"), vec![CIROperand::Int(19)], "i32"),
+        ci("const_i32", Some("right"), vec![CIROperand::Int(23)], "i32"),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("add".into()),
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("add", &params, "i32"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+}
+
+#[test]
+fn linked_module_marshals_wide_call_arguments() {
+    let params = vec![
+        ("left".to_owned(), "u64".to_owned()),
+        ("right".to_owned(), "u64".to_owned()),
+    ];
+    let helper = vec![
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("sum".into())], "u64"),
+    ];
+    let main = vec![
+        ci(
+            "const_u64",
+            Some("high_word"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "u64",
+        ),
+        ci("const_u64", Some("low_word"), vec![CIROperand::Int(42)], "u64"),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("add".into()),
+                CIROperand::Var("high_word".into()),
+                CIROperand::Var("low_word".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "u64",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("add", &params, "u64"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "u64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+    assert_eq!(result.return_value_high, 1);
+}
+
+#[test]
+fn linked_module_preserves_a_scalar_live_across_a_call() {
+    let helper = vec![
+        ci("const_i32", Some("two"), vec![CIROperand::Int(2)], "i32"),
+        ci("ret_i32", None, vec![CIROperand::Var("two".into())], "i32"),
+    ];
+    let main = vec![
+        ci("const_i32", Some("forty"), vec![CIROperand::Int(40)], "i32"),
+        ci(
+            "call",
+            Some("two"),
+            vec![CIROperand::Var("helper".into())],
+            "i32",
+        ),
+        ci(
+            "add_i32",
+            Some("answer"),
+            vec![
+                CIROperand::Var("forty".into()),
+                CIROperand::Var("two".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("helper", &[], "i32"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+}
+
+#[test]
+fn linked_module_preserves_an_incoming_parameter_across_a_call() {
+    let echo = vec![ci(
+        "ret_i32",
+        None,
+        vec![CIROperand::Var("value".into())],
+        "i32",
+    )];
+    let preserve = vec![
+        ci("const_i32", Some("two"), vec![CIROperand::Int(2)], "i32"),
+        ci(
+            "call",
+            Some("echoed"),
+            vec![
+                CIROperand::Var("echo".into()),
+                CIROperand::Var("two".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "add_i32",
+            Some("answer"),
+            vec![
+                CIROperand::Var("input".into()),
+                CIROperand::Var("echoed".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let main = vec![
+        ci("const_i32", Some("forty"), vec![CIROperand::Int(40)], "i32"),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("preserve".into()),
+                CIROperand::Var("forty".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let preserve_params = [("input".to_string(), "i32".to_string())];
+    let echo_params = [("value".to_string(), "i32".to_string())];
+    let functions = [
+        ModuleFunction {
+            context: ctx("echo", &echo_params, "i32"),
+            cir: &echo,
+        },
+        ModuleFunction {
+            context: ctx("preserve", &preserve_params, "i32"),
+            cir: &preserve,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+}
+
+#[test]
+fn linked_module_preserves_a_wide_value_live_across_a_call() {
+    let helper = vec![
+        ci("const_u64", Some("answer"), vec![CIROperand::Int(42)], "u64"),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "u64",
+        ),
+    ];
+    let main = vec![
+        ci(
+            "const_u64",
+            Some("high_word"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "u64",
+        ),
+        ci(
+            "call",
+            Some("answer"),
+            vec![CIROperand::Var("helper".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("high_word".into()),
+                CIROperand::Var("answer".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("sum".into())], "u64"),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("helper", &[], "u64"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "u64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+    assert_eq!(result.return_value_high, 1);
+}
+
+#[test]
+fn linked_module_shares_a_wide_global_across_function_calls() {
+    let bump = vec![
+        ci(
+            "global_load",
+            Some("current"),
+            vec![CIROperand::Var("counter".into())],
+            "u64",
+        ),
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci(
+            "add_u64",
+            Some("next"),
+            vec![
+                CIROperand::Var("current".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "global_store",
+            None,
+            vec![
+                CIROperand::Var("counter".into()),
+                CIROperand::Var("next".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("next".into())], "u64"),
+    ];
+    let main = vec![
+        ci("const_u64", Some("seed"), vec![CIROperand::Int(40)], "u64"),
+        ci(
+            "global_store",
+            None,
+            vec![
+                CIROperand::Var("counter".into()),
+                CIROperand::Var("seed".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "call",
+            Some("first"),
+            vec![CIROperand::Var("bump".into())],
+            "u64",
+        ),
+        ci(
+            "call",
+            Some("second"),
+            vec![CIROperand::Var("bump".into())],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("second".into())], "u64"),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("bump", &[], "u64"),
+            cir: &bump,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "u64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+    assert_eq!(result.return_value_high, 0);
+}
+
+#[test]
+fn linked_module_executes_static_byte_buffer_loads_and_stores() {
+    let main = vec![
+        ci("const_i64", Some("size"), vec![CIROperand::Int(4)], "i64"),
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("zero"), vec![CIROperand::Int(0)], "i64"),
+        ci(
+            "load_byte",
+            Some("initial"),
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("zero".into()),
+            ],
+            "i64",
+        ),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "const_i64",
+            Some("value"),
+            vec![CIROperand::Int(0x142)],
+            "i64",
+        ),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("one".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "load_byte",
+            Some("stored"),
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "add_i64",
+            Some("result"),
+            vec![
+                CIROperand::Var("initial".into()),
+                CIROperand::Var("stored".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &[], "i64"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("static byte-buffer execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0x42, "store_byte truncates to one byte");
+    assert_eq!(result.return_value_high, 0, "load_byte zero-extends to i64");
+}
+
+#[test]
+fn linked_module_loads_initialized_string_data_images() {
+    let main = vec![
+        ci(
+            "str_const",
+            Some("message"),
+            vec![CIROperand::Var("HI".into())],
+            "str",
+        ),
+        ci("const_i64", Some("zero"), vec![CIROperand::Int(0)], "i64"),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "load_byte",
+            Some("first"),
+            vec![
+                CIROperand::Var("message".into()),
+                CIROperand::Var("zero".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "load_byte",
+            Some("second"),
+            vec![
+                CIROperand::Var("message".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "add_i64",
+            Some("result"),
+            vec![
+                CIROperand::Var("first".into()),
+                CIROperand::Var("second".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &[], "i64"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("data-image execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, i32::from(b'H') + i32::from(b'I'));
+    assert_eq!(result.return_value_high, 0);
+}
+
+#[test]
+fn linked_module_allocates_a_runtime_sized_byte_buffer() {
+    let params = vec![("size".to_owned(), "i64".to_owned())];
+    let main = vec![
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("offset"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "const_i64",
+            Some("value"),
+            vec![CIROperand::Int(0x142)],
+            "i64",
+        ),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("offset".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "load_byte",
+            Some("result"),
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("offset".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &params, "i64"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[Value::Int(2)]).expect("dynamic byte-buffer execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0x42);
+    assert_eq!(result.return_value_high, 0);
+    assert_eq!(result.exit_code, None);
+}
+
+#[test]
+fn linked_module_exits_on_a_byte_access_outside_its_allocation() {
+    let params = vec![("size".to_owned(), "i64".to_owned())];
+    let main = vec![
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("offset"), vec![CIROperand::Int(2)], "i64"),
+        ci("const_i64", Some("value"), vec![CIROperand::Int(42)], "i64"),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("offset".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &params, "void"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[Value::Int(2)]).expect("bounds-checked execution");
+    assert!(result.halted);
+    assert_eq!(result.exit_code, Some(2));
+}
+
+#[test]
+fn linked_module_keeps_byte_buffer_bounds_through_escapes() {
+    let buffer_param = vec![("buffer".to_owned(), "i64".to_owned())];
+    let make_buffer = vec![
+        ci("const_i64", Some("size"), vec![CIROperand::Int(3)], "i64"),
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("buffer".into())],
+            "i64",
+        ),
+    ];
+    let write_and_read = vec![
+        ci(
+            "mov_i64",
+            Some("alias"),
+            vec![CIROperand::Var("buffer".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("offset"), vec![CIROperand::Int(1)], "i64"),
+        ci("const_i64", Some("value"), vec![CIROperand::Int(0x142)], "i64"),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("alias".into()),
+                CIROperand::Var("offset".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "load_byte",
+            Some("result"),
+            vec![
+                CIROperand::Var("alias".into()),
+                CIROperand::Var("offset".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let main = vec![
+        ci(
+            "call",
+            Some("buffer"),
+            vec![CIROperand::Var("make_buffer".into())],
+            "i64",
+        ),
+        ci(
+            "global_store",
+            None,
+            vec![
+                CIROperand::Var("saved_buffer".into()),
+                CIROperand::Var("buffer".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "global_load",
+            Some("loaded_buffer"),
+            vec![CIROperand::Var("saved_buffer".into())],
+            "i64",
+        ),
+        ci(
+            "call",
+            Some("result"),
+            vec![
+                CIROperand::Var("write_and_read".into()),
+                CIROperand::Var("loaded_buffer".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("make_buffer", &[], "i64"),
+            cir: &make_buffer,
+        },
+        ModuleFunction {
+            context: ctx("write_and_read", &buffer_param, "i64"),
+            cir: &write_and_read,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("escaped byte-buffer execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0x42);
+    assert_eq!(result.return_value_high, 0);
+    assert_eq!(result.exit_code, None);
+}
+
+#[test]
+fn widens_a_word_sized_i64_when_a_wide_operation_reassigns_it() {
+    let cir = vec![
+        ci("const_i64", Some("value"), vec![CIROperand::Int(0)], "i64"),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "sub_i64",
+            Some("value"),
+            vec![
+                CIROperand::Var("value".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("value".into())],
+            "i64",
+        ),
+    ];
+
+    let binary = compile(&ctx("wide_reassign", &[], "i64"), &cir).expect("wide reassignment");
+    let result = run_binary(&binary, &[]).expect("simulator execution");
+    assert_eq!(result.return_value, -1);
+    assert_eq!(result.return_value_high, u32::MAX);
+}
+
+#[test]
+fn moves_scalar_and_wide_values() {
+    let scalar = vec![
+        ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),
+        ci(
+            "mov_i32",
+            Some("copy"),
+            vec![CIROperand::Var("source".into())],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("copy".into())], "i32"),
+    ];
+    assert_eq!(compile_and_run(&scalar), 42);
+
+    let wide = vec![
+        ci(
+            "const_u64",
+            Some("source"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "u64",
+        ),
+        ci(
+            "mov_u64",
+            Some("copy"),
+            vec![CIROperand::Var("source".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("source".into()),
+                CIROperand::Var("copy".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("sum".into())], "u64"),
+    ];
+    let bytes = compile(&ctx("wide_move", &[], "u64"), &wide).expect("wide move lowering");
+    let result = run_binary(&bytes, &[]).expect("wide move execution");
+    assert_eq!(result.return_value, 0);
+    assert_eq!(result.return_value_high, 2);
 }
 
 // ---------------------------------------------------------------------------
@@ -934,16 +1802,16 @@ fn rejects_float_arithmetic_comparison_return_and_parameters() {
 #[test]
 fn non_float_unsupported_types_keep_the_generic_refusal() {
     // The float refusal must not swallow the ordinary "no lowering yet" case:
-    // a `str` is unsupported for a different reason and keeps its own error.
+    // an aggregate is unsupported for a different reason and keeps its own error.
     let cir = vec![ci(
-        "const_str",
+        "const_array",
         Some("s"),
-        vec![CIROperand::Var("hello".into())],
-        "str",
+        vec![CIROperand::Int(0)],
+        "array<i64>",
     )];
     assert_eq!(
-        compile(&ctx("main", &[], "i32"), &cir).expect_err("no string lowering"),
-        BackendError::UnsupportedType("str".to_owned())
+        compile(&ctx("main", &[], "i32"), &cir).expect_err("no array lowering"),
+        BackendError::UnsupportedType("array".to_owned())
     );
 }
 
@@ -1118,6 +1986,40 @@ fn allocates_a_wide_pair_by_spilling_live_scalar_values() {
         ),
     ]);
     assert_eq!(compile_and_run(&cir), 3);
+}
+
+#[test]
+fn interleaves_scalar_and_wide_values_under_register_pressure() {
+    let cir = vec![
+        ci("const_u64", Some("wide1"), vec![CIROperand::Int(4_294_967_297)], "u64"),
+        ci("const_i32", Some("scalar1"), vec![CIROperand::Int(20)], "i32"),
+        ci("const_u64", Some("wide2"), vec![CIROperand::Int(4_294_967_298)], "u64"),
+        ci("const_i32", Some("scalar2"), vec![CIROperand::Int(22)], "i32"),
+        ci("const_u64", Some("wide3"), vec![CIROperand::Int(4_294_967_299)], "u64"),
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![CIROperand::Var("wide1".into()), CIROperand::Var("wide2".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sink"),
+            vec![CIROperand::Var("sum".into()), CIROperand::Var("wide3".into())],
+            "u64",
+        ),
+        ci(
+            "add_i32",
+            Some("answer"),
+            vec![
+                CIROperand::Var("scalar1".into()),
+                CIROperand::Var("scalar2".into()),
+            ],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ];
+    assert_eq!(compile_and_run(&cir), 42);
 }
 
 #[test]

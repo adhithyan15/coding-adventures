@@ -2473,6 +2473,498 @@
         "ES-EXT-A1-REVIEW-DEM"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-A1-MUY",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C60-muy"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-MUY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-BASTANTE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C60-bastante"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-BASTANTE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-MAL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C60-mal"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-MAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-GRADO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C60-repaso-grado"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-GRADO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-AL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-al"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-AL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-DEL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-del"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-DEL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-QUIEN",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-quien"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-QUIEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-O",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-o"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-O"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-NI",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-ni"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-NI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-JUNT",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-repaso-juntores"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-JUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-HABLANDO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-hablando"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-HABLANDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-COMIENDO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-comiendo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-COMIENDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PROGRESIVO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-estoy-hablando"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PROGRESIVO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PERSONAL-A",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-veo-a-maria"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PERSONAL-A"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-GER",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-repaso-gerundio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-GER"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VOS-PRET-AR",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-hablasteis"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VOS-PRET-AR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VOS-PRET-REST",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-comisteis"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VOS-PRET-REST"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-IMP-PL-AR",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-hablabamos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-IMP-PL-AR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-IMP-PL-REST",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-comiamos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-IMP-PL-REST"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-PARAD",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-repaso-paradigmas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-PARAD"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-TONICO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C64-para-mi"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-TONICO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-CONMIGO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C64-conmigo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-CONMIGO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-EXCLAM",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C64-que-grande"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-EXCLAM"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VOCATIVO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C64-maria-ven"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VOCATIVO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-TON",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C64-repaso-tonicos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-TON"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-DEIXIS-LUGAR",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C65-ahi-alli"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-DEIXIS-LUGAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-DEIXIS-TIEMPO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C65-ahora-hoy"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-DEIXIS-TIEMPO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-UNOS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C65-unos-unas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-UNOS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VUESTRO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C65-vuestro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VUESTRO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VI-DI",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C65-vi-di"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VI-DI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-PAREJAS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C65-repaso-parejas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-PAREJAS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PRESENTE-DOS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-hablo-dos-lecturas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PRESENTE-DOS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-CONCORDANCIA",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-la-terminacion-dice-quien"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-CONCORDANCIA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-CUANTIF-ACUERDO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-mucha-agua"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-CUANTIF-ACUERDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PROPIOS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-nombres-propios"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PROPIOS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-IMPL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-repaso-lo-implicito"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-IMPL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-ORDINALES",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C67-primero"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-ORDINALES"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-DISTRIB",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C67-uno-otro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-DISTRIB"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-INF-SUJETO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C67-comer-es-bueno"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-INF-SUJETO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-ORDEN",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C67-hoy-como-en-casa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-ORDEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-CIERRE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C67-repaso-a1"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-CIERRE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2626,7 +3118,48 @@
         "ES-PATH-A1-ESE",
         "ES-PATH-A1-AQUEL",
         "ES-PATH-A1-NEUTRO",
-        "ES-PATH-A1-REVIEW-DEM"
+        "ES-PATH-A1-REVIEW-DEM",
+        "ES-PATH-A1-MUY",
+        "ES-PATH-A1-BASTANTE",
+        "ES-PATH-A1-MAL",
+        "ES-PATH-A1-REVIEW-GRADO",
+        "ES-PATH-A1-AL",
+        "ES-PATH-A1-DEL",
+        "ES-PATH-A1-QUIEN",
+        "ES-PATH-A1-O",
+        "ES-PATH-A1-NI",
+        "ES-PATH-A1-REVIEW-JUNT",
+        "ES-PATH-A1-HABLANDO",
+        "ES-PATH-A1-COMIENDO",
+        "ES-PATH-A1-PROGRESIVO",
+        "ES-PATH-A1-PERSONAL-A",
+        "ES-PATH-A1-REVIEW-GER",
+        "ES-PATH-A1-VOS-PRET-AR",
+        "ES-PATH-A1-VOS-PRET-REST",
+        "ES-PATH-A1-IMP-PL-AR",
+        "ES-PATH-A1-IMP-PL-REST",
+        "ES-PATH-A1-REVIEW-PARAD",
+        "ES-PATH-A1-TONICO",
+        "ES-PATH-A1-CONMIGO",
+        "ES-PATH-A1-EXCLAM",
+        "ES-PATH-A1-VOCATIVO",
+        "ES-PATH-A1-REVIEW-TON",
+        "ES-PATH-A1-DEIXIS-LUGAR",
+        "ES-PATH-A1-DEIXIS-TIEMPO",
+        "ES-PATH-A1-UNOS",
+        "ES-PATH-A1-VUESTRO",
+        "ES-PATH-A1-VI-DI",
+        "ES-PATH-A1-REVIEW-PAREJAS",
+        "ES-PATH-A1-PRESENTE-DOS",
+        "ES-PATH-A1-CONCORDANCIA",
+        "ES-PATH-A1-CUANTIF-ACUERDO",
+        "ES-PATH-A1-PROPIOS",
+        "ES-PATH-A1-REVIEW-IMPL",
+        "ES-PATH-A1-ORDINALES",
+        "ES-PATH-A1-DISTRIB",
+        "ES-PATH-A1-INF-SUJETO",
+        "ES-PATH-A1-ORDEN",
+        "ES-PATH-A1-REVIEW-CIERRE"
       ],
       "omits": [],
       "relocates": {}
@@ -5424,6 +5957,457 @@
       "prerequisites": [],
       "lessons": [
         "ES-C59-repaso-demostrativos"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-MUY",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C60-muy"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-BASTANTE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C60-bastante"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-MAL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C60-mal"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-GRADO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C60-repaso-grado"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-AL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-al"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-DEL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-del"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-QUIEN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-quien"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-O",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-o"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-NI",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-ni"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-JUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-repaso-juntores"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-HABLANDO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-hablando"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-COMIENDO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-comiendo"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PROGRESIVO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-estoy-hablando"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PERSONAL-A",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-veo-a-maria"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-GER",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-repaso-gerundio"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VOS-PRET-AR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-hablasteis"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VOS-PRET-REST",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-comisteis"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-IMP-PL-AR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-hablabamos"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-IMP-PL-REST",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-comiamos"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-PARAD",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-repaso-paradigmas"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-TONICO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C64-para-mi"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-CONMIGO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C64-conmigo"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-EXCLAM",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C64-que-grande"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VOCATIVO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C64-maria-ven"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-TON",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C64-repaso-tonicos"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-DEIXIS-LUGAR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C65-ahi-alli"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-DEIXIS-TIEMPO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C65-ahora-hoy"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-UNOS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C65-unos-unas"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VUESTRO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C65-vuestro"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VI-DI",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C65-vi-di"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-PAREJAS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C65-repaso-parejas"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PRESENTE-DOS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-hablo-dos-lecturas"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-CONCORDANCIA",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-la-terminacion-dice-quien"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-CUANTIF-ACUERDO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-mucha-agua"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PROPIOS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-nombres-propios"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-IMPL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-repaso-lo-implicito"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-ORDINALES",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C67-primero"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-DISTRIB",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C67-uno-otro"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-INF-SUJETO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C67-comer-es-bueno"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-ORDEN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C67-hoy-como-en-casa"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-CIERRE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C67-repaso-a1"
       ]
     }
   ]

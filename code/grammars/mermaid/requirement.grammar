@@ -1,0 +1,11 @@
+# @version 1
+# Mermaid 11.16.1 requirement diagram parser grammar.
+
+document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
+statement = TITLE | ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK | DIRECTION | CLASSDEF | CLASS | STYLE | INLINE_CLASS | relationship | definition ;
+definition = requirement_definition | element_definition ;
+requirement_definition = REQUIREMENT_START { NEWLINE | requirement_field } RBRACE ;
+element_definition = ELEMENT_START { NEWLINE | element_field } RBRACE ;
+requirement_field = ID_FIELD | TEXT_FIELD | RISK_FIELD | VERIFY_FIELD ;
+element_field = TYPE_FIELD | DOCREF_FIELD ;
+relationship = RELATIONSHIP ;

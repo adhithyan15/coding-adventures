@@ -123,6 +123,8 @@ module CodingAdventures
 
     # Reads bits LSB-first from a binary String.
     class BitReader
+      attr_reader :pos
+
       def initialize(data)
         @data = data.bytes
         @pos = 0
@@ -150,12 +152,6 @@ module CodingAdventures
         @buf >>= nbits
         @bits -= nbits
         val
-      end
-
-      # Read +nbits+ and bit-reverse (for reading Huffman codes MSB first).
-      def read_msb(nbits)
-        v = read_lsb(nbits)
-        v.nil? ? nil : CodingAdventures::Zip.reverse_bits(v, nbits)
       end
 
       # Discard partial byte bits to align to a byte boundary.
@@ -187,27 +183,6 @@ module CodingAdventures
       raise ArgumentError, "fixed_ll_encode: invalid symbol #{sym}"
     end
 
-    # Decode one symbol from +br+ using the fixed Huffman table.
-    # Returns nil on EOF.
-    def self.fixed_ll_decode(br)
-      v7 = br.read_msb(7)
-      return nil if v7.nil?
-      return v7 + 256 if v7 <= 23   # 7-bit codes: 256-279
-
-      extra = br.read_lsb(1)
-      return nil if extra.nil?
-      v8 = (v7 << 1) | extra
-
-      return v8 - 48 if v8.between?(48, 191)   # literals 0-143
-      return v8 + 88 if v8.between?(192, 199)  # symbols 280-287
-
-      extra2 = br.read_lsb(1)
-      return nil if extra2.nil?
-      v9 = (v8 << 1) | extra2
-      return v9 - 256 if v9.between?(400, 511)  # literals 144-255
-      nil
-    end
-
     # =========================================================================
     # RFC 1951 DEFLATE — Length / Distance Tables
     # =========================================================================
@@ -220,7 +195,7 @@ module CodingAdventures
       [19, 2], [23, 2], [27, 2], [31, 2],
       [35, 3], [43, 3], [51, 3], [59, 3],
       [67, 4], [83, 4], [99, 4], [115, 4],
-      [131, 5], [163, 5], [195, 5], [227, 5]
+      [131, 5], [163, 5], [195, 5], [227, 5], [258, 0]
     ].freeze
 
     DIST_TABLE = [
@@ -257,7 +232,38 @@ module CodingAdventures
     # =========================================================================
 
     # Maximum decompressed output size (256 MiB) — prevents zip-bomb expansion.
-    MAX_OUTPUT = 256 * 1024 * 1024
+    RAW_INFLATE_MAX_OUTPUT = 256 * 1024 * 1024
+    MAX_OUTPUT = RAW_INFLATE_MAX_OUTPUT
+
+    RAW_INFLATE_ERROR_CODES = [
+      "invalid-output-limit",
+      "unexpected-eof",
+      "reserved-block-type",
+      "stored-length-mismatch",
+      "huffman-oversubscribed",
+      "incomplete-code-length-tree",
+      "incomplete-literal-length-tree",
+      "incomplete-distance-tree",
+      "repeat-without-previous",
+      "repeat-overrun",
+      "invalid-literal-length-symbol",
+      "reserved-distance-symbol",
+      "invalid-back-reference",
+      "output-limit-exceeded"
+    ].freeze
+
+    # A stable, payload-blind failure from strict raw RFC 1951 decoding.
+    class RawInflateError < StandardError
+      attr_reader :code
+
+      def initialize(code)
+        @code = code
+        super
+      end
+    end
+
+    # Complete output plus the exact raw input bytes consumed.
+    RawInflateResult = Struct.new(:output, :bytes_consumed)
 
     # Compress +data+ (binary String) into raw RFC 1951 DEFLATE bytes.
     # Uses fixed Huffman codes (BTYPE=01) and LZSS for LZ77 match-finding.
@@ -307,76 +313,242 @@ module CodingAdventures
     # RFC 1951 DEFLATE — Decompress
     # =========================================================================
 
-    # Decompress raw RFC 1951 DEFLATE bytes to a binary String.
-    def self.deflate_decompress(data)
-      br = BitReader.new(data)
-      out = []
+    HuffmanDecoder = Struct.new(:table, :complete, :symbol_count, :one_bit_count)
 
-      loop do
-        bfinal = br.read_lsb(1)
-        raise "deflate: unexpected EOF reading BFINAL" if bfinal.nil?
-        btype = br.read_lsb(2)
-        raise "deflate: unexpected EOF reading BTYPE" if btype.nil?
+    CODE_LENGTH_ORDER = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15].freeze
 
-        case btype
-        when 0
-          # Stored block
-          br.align
-          len_val = br.read_lsb(16)
-          raise "deflate: EOF reading stored LEN" if len_val.nil?
-          nlen = br.read_lsb(16)
-          raise "deflate: EOF reading stored NLEN" if nlen.nil?
-          raise "deflate: LEN/NLEN mismatch" if (nlen ^ 0xFFFF) != len_val
-          raise "deflate: output size limit exceeded" if out.length + len_val > MAX_OUTPUT
-          len_val.times do
-            b = br.read_lsb(8)
-            raise "deflate: EOF inside stored block data" if b.nil?
-            out << b
-          end
-        when 1
-          # Fixed Huffman block
-          loop do
-            sym = fixed_ll_decode(br)
-            raise "deflate: EOF decoding fixed Huffman symbol" if sym.nil?
-            if sym < 256
-              raise "deflate: output size limit exceeded" if out.length >= MAX_OUTPUT
-              out << sym
-            elsif sym == 256
-              break
-            elsif sym.between?(257, 285)
-              idx = sym - 257
-              base_len, extra_len_bits = LENGTH_TABLE[idx]
-              extra_len = br.read_lsb(extra_len_bits)
-              raise "deflate: EOF reading length extra bits" if extra_len.nil?
-              length = base_len + extra_len
+    def self.inflate_error(code)
+      RawInflateError.new(code)
+    end
+    private_class_method :inflate_error
 
-              dist_code = br.read_msb(5)
-              raise "deflate: EOF reading distance code" if dist_code.nil?
-              base_dist, extra_dist_bits = DIST_TABLE[dist_code]
-              raise "deflate: invalid dist code #{dist_code}" if base_dist.nil?
-              extra_dist = br.read_lsb(extra_dist_bits)
-              raise "deflate: EOF reading distance extra bits" if extra_dist.nil?
-              offset = base_dist + extra_dist
-
-              raise "deflate: back-reference offset #{offset} > output len #{out.length}" if offset > out.length
-              raise "deflate: output size limit exceeded" if out.length + length > MAX_OUTPUT
-              length.times { |i| out << out[out.length - offset] }
-            else
-              raise "deflate: invalid LL symbol #{sym}"
-            end
-          end
-        when 2
-          raise "deflate: dynamic Huffman blocks (BTYPE=10) not supported"
-        else
-          raise "deflate: reserved BTYPE=11"
-        end
-
-        break if bfinal == 1
+    def self.build_huffman_decoder(lengths)
+      counts = Array.new(16, 0)
+      lengths.each do |length|
+        raise inflate_error("invalid-literal-length-symbol") if length > 15
+        counts[length] += 1 if length.positive?
       end
 
-      out.pack("C*")
+      left = 1
+      1.upto(15) do |length|
+        left = left * 2 - counts[length]
+        raise inflate_error("huffman-oversubscribed") if left.negative?
+      end
+
+      next_code = Array.new(16, 0)
+      code = 0
+      1.upto(15) do |length|
+        code = (code + counts[length - 1]) << 1
+        next_code[length] = code
+      end
+
+      table = {}
+      symbol_count = 0
+      lengths.each_with_index do |length, symbol|
+        next if length.zero?
+        code = next_code[length]
+        table[[length, code]] = symbol
+        next_code[length] += 1
+        symbol_count += 1
+      end
+      HuffmanDecoder.new(
+        table: table,
+        complete: left.zero?,
+        symbol_count: symbol_count,
+        one_bit_count: counts[1]
+      )
     end
-    # deflate_decompress is called by ZipReader (a nested class), so it cannot
+    private_class_method :build_huffman_decoder
+
+    def self.decode_symbol(decoder, reader, invalid_code)
+      code = 0
+      1.upto(15) do |length|
+        bit = reader.read_lsb(1)
+        raise inflate_error("unexpected-eof") if bit.nil?
+        code = (code << 1) | bit
+        symbol = decoder.table[[length, code]]
+        return symbol unless symbol.nil?
+      end
+      raise inflate_error(invalid_code)
+    end
+    private_class_method :decode_symbol
+
+    def self.fixed_ll_lengths
+      Array.new(288) do |symbol|
+        if symbol <= 143
+          8
+        elsif symbol <= 255
+          9
+        elsif symbol <= 279
+          7
+        else
+          8
+        end
+      end
+    end
+    private_class_method :fixed_ll_lengths
+
+    def self.fixed_dist_lengths
+      Array.new(32, 5)
+    end
+    private_class_method :fixed_dist_lengths
+
+    def self.copy_back_reference(out, distance, length, max_output)
+      raise inflate_error("invalid-back-reference") if distance.zero? || distance > out.length
+      raise inflate_error("output-limit-exceeded") if length > max_output - out.length
+
+      start = out.length - distance
+      length.times { |i| out << out[start + i] }
+    end
+    private_class_method :copy_back_reference
+
+    def self.decode_code_lengths(decoder, reader, total)
+      lengths = []
+      while lengths.length < total
+        symbol = decode_symbol(decoder, reader, "invalid-literal-length-symbol")
+        case symbol
+        when 0..15
+          lengths << symbol
+        when 16
+          raise inflate_error("repeat-without-previous") if lengths.empty?
+          extra = reader.read_lsb(2)
+          raise inflate_error("unexpected-eof") if extra.nil?
+          repeat = extra + 3
+          raise inflate_error("repeat-overrun") if repeat > total - lengths.length
+          repeat.times { lengths << lengths.last }
+        when 17, 18
+          bits, base = (symbol == 17) ? [3, 3] : [7, 11]
+          extra = reader.read_lsb(bits)
+          raise inflate_error("unexpected-eof") if extra.nil?
+          repeat = extra + base
+          raise inflate_error("repeat-overrun") if repeat > total - lengths.length
+          repeat.times { lengths << 0 }
+        else
+          raise inflate_error("invalid-literal-length-symbol")
+        end
+      end
+      lengths
+    end
+    private_class_method :decode_code_lengths
+
+    def self.decode_compressed_block(ll_decoder, distance_decoder, reader, out, max_output)
+      loop do
+        symbol = decode_symbol(ll_decoder, reader, "invalid-literal-length-symbol")
+        case symbol
+        when 0..255
+          raise inflate_error("output-limit-exceeded") if out.length >= max_output
+          out << symbol
+        when 256
+          return
+        when 257..285
+          base_length, extra_length_bits = LENGTH_TABLE[symbol - 257]
+          extra_length = reader.read_lsb(extra_length_bits)
+          raise inflate_error("unexpected-eof") if extra_length.nil?
+
+          distance_symbol = decode_symbol(distance_decoder, reader, "reserved-distance-symbol")
+          raise inflate_error("reserved-distance-symbol") if distance_symbol >= DIST_TABLE.length
+          base_distance, extra_distance_bits = DIST_TABLE[distance_symbol]
+          extra_distance = reader.read_lsb(extra_distance_bits)
+          raise inflate_error("unexpected-eof") if extra_distance.nil?
+          copy_back_reference(
+            out,
+            base_distance + extra_distance,
+            base_length + extra_length,
+            max_output
+          )
+        else
+          raise inflate_error("invalid-literal-length-symbol")
+        end
+      end
+    end
+    private_class_method :decode_compressed_block
+
+    # Compress +data+ as raw RFC 1951 without ZIP, zlib, or gzip framing.
+    def self.raw_deflate(data)
+      deflate_compress(data)
+    end
+
+    # Strictly inflate raw RFC 1951 and return output plus exact byte consumption.
+    def self.raw_inflate_counted(data, max_output: RAW_INFLATE_MAX_OUTPUT)
+      unless max_output.is_a?(Integer) && max_output.between?(0, RAW_INFLATE_MAX_OUTPUT)
+        raise inflate_error("invalid-output-limit")
+      end
+
+      reader = BitReader.new(data)
+      out = []
+      loop do
+        final = reader.read_lsb(1)
+        raise inflate_error("unexpected-eof") if final.nil?
+        block_type = reader.read_lsb(2)
+        raise inflate_error("unexpected-eof") if block_type.nil?
+
+        case block_type
+        when 0
+          reader.align
+          length = reader.read_lsb(16)
+          raise inflate_error("unexpected-eof") if length.nil?
+          complement = reader.read_lsb(16)
+          raise inflate_error("unexpected-eof") if complement.nil?
+          raise inflate_error("stored-length-mismatch") unless (complement ^ 0xFFFF) == length
+          raise inflate_error("output-limit-exceeded") if length > max_output - out.length
+          length.times do
+            value = reader.read_lsb(8)
+            raise inflate_error("unexpected-eof") if value.nil?
+            out << value
+          end
+        when 1
+          ll_decoder = build_huffman_decoder(fixed_ll_lengths)
+          distance_decoder = build_huffman_decoder(fixed_dist_lengths)
+          decode_compressed_block(ll_decoder, distance_decoder, reader, out, max_output)
+        when 2
+          hlit_value = reader.read_lsb(5)
+          hdist_value = reader.read_lsb(5)
+          hclen_value = reader.read_lsb(4)
+          raise inflate_error("unexpected-eof") if [hlit_value, hdist_value, hclen_value].any?(&:nil?)
+
+          hlit = hlit_value + 257
+          hdist = hdist_value + 1
+          hclen = hclen_value + 4
+          raise inflate_error("invalid-literal-length-symbol") if hlit > 286
+
+          code_length_lengths = Array.new(19, 0)
+          hclen.times do |i|
+            value = reader.read_lsb(3)
+            raise inflate_error("unexpected-eof") if value.nil?
+            code_length_lengths[CODE_LENGTH_ORDER[i]] = value
+          end
+          code_length_decoder = build_huffman_decoder(code_length_lengths)
+          raise inflate_error("incomplete-code-length-tree") unless code_length_decoder.complete
+
+          lengths = decode_code_lengths(code_length_decoder, reader, hlit + hdist)
+          ll_decoder = build_huffman_decoder(lengths.take(hlit))
+          raise inflate_error("incomplete-literal-length-tree") unless ll_decoder.complete
+
+          distance_decoder = build_huffman_decoder(lengths.drop(hlit))
+          permitted_distance = distance_decoder.complete ||
+            (distance_decoder.symbol_count == 1 && distance_decoder.one_bit_count == 1) ||
+            distance_decoder.symbol_count.zero?
+          raise inflate_error("incomplete-distance-tree") unless permitted_distance
+          decode_compressed_block(ll_decoder, distance_decoder, reader, out, max_output)
+        else
+          raise inflate_error("reserved-block-type")
+        end
+
+        break if final == 1
+      end
+
+      RawInflateResult.new(output: out.pack("C*"), bytes_consumed: reader.pos)
+    end
+
+    # Strict raw RFC 1951 inflate wrapper returning only complete output.
+    def self.raw_inflate(data, max_output: RAW_INFLATE_MAX_OUTPUT)
+      raw_inflate_counted(data, max_output: max_output).output
+    end
+
+    # Historical package-internal wrapper retained for compatibility.
+    def self.deflate_decompress(data)
+      raw_inflate(data)
+    end
 
     # =========================================================================
     # MS-DOS Date / Time Encoding
@@ -595,11 +767,14 @@ module CodingAdventures
 
         decompressed = case entry.method
         when 0 then compressed
-        when 8 then CodingAdventures::Zip.deflate_decompress(compressed)
+        when 8
+          result = CodingAdventures::Zip.raw_inflate_counted(compressed, max_output: entry.size)
+          raise "zip: compressed payload contains trailing bytes" if result.bytes_consumed != compressed.bytesize
+          result.output
         else raise "zip: unsupported compression method #{entry.method} for '#{entry.name}'"
         end
 
-        decompressed = decompressed.byteslice(0, entry.size) if decompressed.bytesize > entry.size
+        raise "zip: uncompressed size does not match the directory" if decompressed.bytesize != entry.size
 
         actual_crc = CodingAdventures::Zip.crc32(decompressed)
         if actual_crc != entry.crc32

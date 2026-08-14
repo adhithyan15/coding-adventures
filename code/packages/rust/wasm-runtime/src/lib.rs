@@ -1394,6 +1394,12 @@ impl WasmRuntime {
             host_functions,
         });
 
+        // Register the module's real type section (indexed by TYPE index,
+        // not function index — see `set_type_section`'s own doc comment) so
+        // `call_indirect $type` checks the callee against what the call
+        // site actually declared instead of skipping the check.
+        engine.set_type_section(instance.module.types.clone());
+
         // Register the module's WasmGC struct field counts (LANG77 / McCarthy
         // L3b-3a-3c-2) so the engine knows how many fields each `struct.new`
         // allocates — without this, a `struct.new` traps with "no field count
@@ -1437,14 +1443,26 @@ impl WasmRuntime {
             engine.set_struct_field_counts(struct_field_counts);
         }
 
-        let results = engine.call_function(func_index, wasm_args)?;
+        // Run the call, but restore `instance`'s memory/tables/host-functions
+        // from the engine's post-call state REGARDLESS of whether it trapped
+        // (`call_function` takes `&mut self`, so `engine` — and everything
+        // `instance.memory.take()`/`mem::take` moved into it above — is still
+        // fully intact even on `Err`). Using `?` directly on `call_function`
+        // here used to skip this restoration on any trap, silently and
+        // permanently leaving `instance.memory`/`instance.tables` empty
+        // (`None`/`vec![]`) for the rest of that instance's lifetime: the
+        // FIRST call that trapped for any reason (an intentionally-trapping
+        // test, or a real bug) would make every subsequent call on the same
+        // instance fail with a spurious "no memory available"/"undefined
+        // table", masking whatever the test was actually checking.
+        let result = engine.call_function(func_index, wasm_args);
         let state = engine.into_state();
         instance.memory = state.memory;
         instance.tables = state.tables;
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
 
-        Ok(results)
+        result
     }
 
     /// Parse, validate, instantiate, and call in one step.

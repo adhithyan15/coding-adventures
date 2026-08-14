@@ -246,7 +246,7 @@ describe("corpus snapshot", () => {
     // concept that fits without stretching it.
     const spanish = report.tracks.find((track) => track.language === "spanish")!;
     expect(spanish.covered).toHaveLength(36);
-    expect(spanish.extras.length).toBe(6);
+    expect(spanish.extras.length).toBe(7); // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set
 
     // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by
     // no track anywhere — everyday words like *think*, *read*, *write* and *ask*. Spanish,
