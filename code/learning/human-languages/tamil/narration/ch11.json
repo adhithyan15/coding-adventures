@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Colours",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:72839b0698328770",
+  "sourceHash": "fnv1a64:6385c983c32aee61",
   "lessons": [
     {
       "id": "TA-C11-nirangal",
@@ -152,7 +152,7 @@
     },
     {
       "id": "TA-S115-letter-llla",
-      "sequence": 545,
+      "sequence": 541,
       "title": "ழ (llla) — one character, met inside words you already say",
       "headword": "ழ",
       "romanization": "llla",
@@ -165,7 +165,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:12bbf1adabbc379c",
+      "sourceHash": "fnv1a64:36b3c2c168084900",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -278,7 +278,7 @@
             },
             {
               "kind": "speech",
-              "text": "தமிழ் எழுத்து, நான் தமிழ் பேசுகிறேன், வணக்கம்."
+              "text": "வணக்கம்."
             },
             {
               "kind": "prompt",

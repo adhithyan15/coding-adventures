@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S124-letter-ya
 spine_node: SPINE-MEET-GREET
-sequence: 715
+sequence: 711
 delivery: script
 chapter: 20
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ய in the ones that have it]
 
-> பெயர்  ·  என் பெயர் …  ·  வணக்கம்
+> பெயர்  ·  வணக்கம்
 
 - [YOU TRACE: ய three times, saying *ya* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ய once more]

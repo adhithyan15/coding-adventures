@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S113-letter-la
 spine_node: SPINE-MEET-GREET
-sequence: 515
+sequence: 511
 delivery: script
 chapter: 9
 type: writing
@@ -79,7 +79,7 @@ You already say these, and every one of them has ல somewhere inside it:
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ல in the ones that have it]
 
-> இல்லை  ·  ஆம் / இல்லை / சரி  ·  வணக்கம்
+> இல்லை  ·  வணக்கம்
 
 - [YOU TRACE: ல three times, saying *la* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ல once more]

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S119-letter-a
 spine_node: SPINE-MEET-GREET
-sequence: 595
+sequence: 591
 delivery: script
 chapter: 15
 type: writing
@@ -78,7 +78,7 @@ You already say these, and every one of them has அ somewhere inside it:
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find அ in the ones that have it]
 
-> அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை  ·  தண்ணீர் அரிசி சாதம்  ·  வணக்கம்
+> வணக்கம்
 
 - [YOU TRACE: அ three times, saying *a* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find அ once more]

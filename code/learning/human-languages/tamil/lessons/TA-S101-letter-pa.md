@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S101-letter-pa
 spine_node: SPINE-MEET-GREET
-sequence: 415
+sequence: 411
 delivery: script
 chapter: 6
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ப in the ones that have it]
 
-> பெயர்  ·  என் பெயர் …  ·  வணக்கம்
+> பெயர்  ·  வணக்கம்
 
 - [YOU TRACE: ப three times, saying *pa* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ப once more]

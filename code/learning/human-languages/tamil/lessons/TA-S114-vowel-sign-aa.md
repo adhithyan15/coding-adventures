@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S114-vowel-sign-aa
 spine_node: SPINE-MEET-GREET
-sequence: 535
+sequence: 531
 delivery: script
 chapter: 10
 type: writing
@@ -74,7 +74,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ா in the ones that have it]
 
-> வணக்கம் / நமஸ்காரம்  ·  நான்  ·  வணக்கம்
+> நான்  ·  வணக்கம்
 
 - [YOU TRACE: ◌ா three times, saying *ā* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ா once more]

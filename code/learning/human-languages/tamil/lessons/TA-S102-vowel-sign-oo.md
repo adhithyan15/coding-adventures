@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S102-vowel-sign-oo
 spine_node: SPINE-MEET-GREET
-sequence: 465
+sequence: 461
 delivery: script
 chapter: 7
 type: writing
@@ -68,7 +68,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ோ in the ones that have it]
 
-> போய் வருகிறேன்  ·  மீண்டும் சந்திப்போம்  ·  வணக்கம்
+> வணக்கம்
 
 - [YOU TRACE: ◌ோ three times, saying *ō* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ோ once more]

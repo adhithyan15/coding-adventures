@@ -338,7 +338,16 @@ def build(cfg):
             continue
         if sum(r["atoms"] for r in rows) + 1 > budget:
             continue
-        slots.append(dict(chapter=ch, seq=rows[-1]["seq"] + 5, spine=SCRIPT_SPINE_NODE))
+        # The first FREE sequence after this chapter's last lesson. `last + 5`
+        # was not safe: a chapter whose last lesson already sits at a +5 offset
+        # (because an earlier pass put a segment there) pushes the next one onto
+        # the following chapter's opener, and the validator rejects the whole
+        # run for a duplicate sequence.
+        taken = {r["seq"] for r in lessons}
+        seq = rows[-1]["seq"] + 1
+        while seq in taken:
+            seq += 1
+        slots.append(dict(chapter=ch, seq=seq, spine=SCRIPT_SPINE_NODE))
 
     # Ledger order, filling slots in turn, and a letter is skipped when the reader
     # would meet it before meeting any word that contains it.
@@ -371,12 +380,20 @@ def build(cfg):
     out = []
     pending = [e for e in L["letters"] if e["glyph"] not in taught_alone]
     for slot in slots:
+        # A candidate that does not qualify at THIS slot is put back, not thrown
+        # away. The first version popped and discarded, so a letter whose first
+        # word comes later than its ledger position was lost for good --
+        # Kannada's ಓ (first used chapter 33) and Malayalam's ഉ (chapter 17)
+        # both vanished that way, even though a later slot suits them exactly.
         e = None
+        deferred = []
         while pending:
             cand = pending.pop(0)
             if any(cand["glyph"] in r["headword"] and r["seq"] < slot["seq"] for r in lessons):
                 e = cand
                 break
+            deferred.append(cand)
+        pending = deferred + pending
         if e is None:
             break
         n = 100 + e["position"]
@@ -537,7 +554,13 @@ def render(cfg, script, seg, prev):
     hunt = [r["headword"] for r in seg["known"][:2]]
     if seg["distractor"]:
         hunt.append(seg["distractor"]["headword"])
-    hunt_line = "  ·  ".join(hunt)
+    # Single words only. A hunt line is "find this letter in these words", and
+    # a five-word counting phrase is not a word -- Malayalam's
+    # "onnu randu muunnu naalu anchu" filled the line by itself, which is both a
+    # bad drill and six underfull hboxes, since a nearly-full centred line has
+    # no room left to stretch to the measure.
+    hunt = [w for w in hunt if " " not in w]
+    hunt_line = "  \u00b7  ".join(hunt)
 
     warm = (f"[PAUSE 1s] Before the new one: {shown(prev['entry'], prev['glyph'])} — "
             f"what does it do?\n\n"
@@ -642,6 +665,8 @@ def register(cfg, script, segs):
     # longer visits.
     prior = next((n["lessons"] for n in doc["path"] if n["id"] == path_id), [])
     prior_inline = next((n.get("inline", []) for n in doc["path"] if n["id"] == path_id), [])
+    claimed_elsewhere = {l for e in doc.get("extensions", [])
+                         if e["id"] != ext_id for l in e.get("lessons", [])}
     merged = list(prior) + [i for i in ids if i not in prior]
     doc["path"] = [n for n in doc["path"] if n["id"] != path_id]
     doc["extensions"] = [e for e in doc.get("extensions", []) if e["id"] != ext_id]
@@ -663,10 +688,12 @@ def register(cfg, script, segs):
         id=ext_id, stage="pre-A1", kind="required", category="script",
         canDo=(f"I can pick out each of these {script['name']} characters inside the words "
                f"I already say, and copy its shape by tracing."),
-        # The PATH node holds every segment the track has; this EXTENSION holds
-        # only the ones it is responsible for. Giving it the merged list put the
-        # drizzle lessons into two extension nodes at once.
-        prerequisites=[], lessons=ids))
+        # This EXTENSION holds every segment on the path node EXCEPT the ones
+        # another extension already claims. Both narrower rules were wrong:
+        # `merged` put Tamil's drizzle lessons into two extension nodes at once,
+        # and `ids` orphaned the eight segments an earlier pass had written for
+        # Hindi, which belonged to this extension and nowhere else.
+        prerequisites=[], lessons=[i for i in merged if i not in claimed_elsewhere]))
 
     # The spine map keeps its own ordered list of the path segments that realize
     # each node, and the validator compares the two lists byte for byte. It is a

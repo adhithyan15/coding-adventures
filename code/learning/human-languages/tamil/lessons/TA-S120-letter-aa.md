@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S120-letter-aa
 spine_node: SPINE-MEET-GREET
-sequence: 615
+sequence: 611
 delivery: script
 chapter: 16
 type: writing
@@ -80,7 +80,7 @@ You already say these, and every one of them has ஆ somewhere inside it:
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ஆ in the ones that have it]
 
-> ஆம்  ·  ஆம் / இல்லை / சரி  ·  வணக்கம்
+> ஆம்  ·  வணக்கம்
 
 - [YOU TRACE: ஆ three times, saying *ā* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ஆ once more]

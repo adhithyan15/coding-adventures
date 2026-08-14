@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Body Parts",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a7675ff01c4fe314",
+  "sourceHash": "fnv1a64:a2e697d5f3b739af",
   "lessons": [
     {
       "id": "TA-C13-udal-uruppugal",
@@ -484,7 +484,7 @@
     },
     {
       "id": "TA-S117-letter-ra",
-      "sequence": 575,
+      "sequence": 571,
       "title": "ர — one character, met inside words you already say",
       "headword": "ர",
       "romanization": "ra",
@@ -497,7 +497,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a2bd721615b1cabd",
+      "sourceHash": "fnv1a64:56fff8d4231254af",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -610,7 +610,7 @@
             },
             {
               "kind": "speech",
-              "text": "வணக்கம் / நமஸ்காரம், சரி, வணக்கம்."
+              "text": "சரி, வணக்கம்."
             },
             {
               "kind": "prompt",

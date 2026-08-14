@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S123-vowel-sign-ee
 spine_node: SPINE-MEET-GREET
-sequence: 695
+sequence: 691
 delivery: script
 chapter: 19
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ே in the ones that have it]
 
-> போய் வருகிறேன்  ·  பேசு  ·  வணக்கம்
+> பேசு  ·  வணக்கம்
 
 - [YOU TRACE: ◌ே three times, saying *ē* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ே once more]

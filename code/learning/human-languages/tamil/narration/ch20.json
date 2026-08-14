@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bde359601d0aaab3",
+  "sourceHash": "fnv1a64:e67d1d276c7a7655",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
@@ -259,7 +259,7 @@
     },
     {
       "id": "TA-S124-letter-ya",
-      "sequence": 715,
+      "sequence": 711,
       "title": "ய (ya) — one character, met inside words you already say",
       "headword": "ய",
       "romanization": "ya",
@@ -272,7 +272,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9c2d301978d3dfd5",
+      "sourceHash": "fnv1a64:adac2cf3b38aebe3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -385,7 +385,7 @@
             },
             {
               "kind": "speech",
-              "text": "பெயர், என் பெயர் …, வணக்கம்."
+              "text": "பெயர், வணக்கம்."
             },
             {
               "kind": "prompt",

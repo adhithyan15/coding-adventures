@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:19de878be6a70fa6",
+  "sourceHash": "fnv1a64:4a367111d3a938f8",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -913,7 +913,7 @@
     },
     {
       "id": "TA-S102-vowel-sign-oo",
-      "sequence": 465,
+      "sequence": 461,
       "title": "◌ோ (ō) — one character, met inside words you already say",
       "headword": "ோ",
       "romanization": "ō",
@@ -926,7 +926,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6dcf9da457501d8b",
+      "sourceHash": "fnv1a64:d9f6b2cd1c972f1b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1031,7 +1031,7 @@
             },
             {
               "kind": "speech",
-              "text": "போய் வருகிறேன், மீண்டும் சந்திப்போம், வணக்கம்."
+              "text": "வணக்கம்."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a14ccd77b2b53851",
+  "sourceHash": "fnv1a64:759e5addc915cad6",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -1246,7 +1246,7 @@
     },
     {
       "id": "TA-S101-letter-pa",
-      "sequence": 415,
+      "sequence": 411,
       "title": "ப (pa) — one character, met inside words you already say",
       "headword": "ப",
       "romanization": "pa",
@@ -1259,7 +1259,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:768f9cb95ae83f5f",
+      "sourceHash": "fnv1a64:a4d9457530695d57",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1372,7 +1372,7 @@
             },
             {
               "kind": "speech",
-              "text": "பெயர், என் பெயர் …, வணக்கம்."
+              "text": "பெயர், வணக்கம்."
             },
             {
               "kind": "prompt",

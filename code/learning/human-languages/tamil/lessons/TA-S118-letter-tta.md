@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S118-letter-tta
 spine_node: SPINE-MEET-GREET
-sequence: 585
+sequence: 581
 delivery: script
 chapter: 14
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ட in the ones that have it]
 
-> எப்படி  ·  நீங்கள் எப்படி இருக்கிறீர்கள்?  ·  வணக்கம்
+> எப்படி  ·  வணக்கம்
 
 - [YOU TRACE: ட three times, saying *tta* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ட once more]

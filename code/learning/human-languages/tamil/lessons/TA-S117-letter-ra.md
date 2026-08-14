@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S117-letter-ra
 spine_node: SPINE-MEET-GREET
-sequence: 575
+sequence: 571
 delivery: script
 chapter: 13
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ர in the ones that have it]
 
-> வணக்கம் / நமஸ்காரம்  ·  சரி  ·  வணக்கம்
+> சரி  ·  வணக்கம்
 
 - [YOU TRACE: ர three times, saying *ra* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ர once more]

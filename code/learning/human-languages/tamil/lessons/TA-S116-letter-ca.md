@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S116-letter-ca
 spine_node: SPINE-MEET-GREET
-sequence: 555
+sequence: 551
 delivery: script
 chapter: 12
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ச in the ones that have it]
 
-> சரி  ·  ஆம் / இல்லை / சரி  ·  வணக்கம்
+> சரி  ·  வணக்கம்
 
 - [YOU TRACE: ச three times, saying *ca* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ச once more]

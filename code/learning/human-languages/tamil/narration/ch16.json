@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tamil Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f34966320310a9e5",
+  "sourceHash": "fnv1a64:bb3fab32cb07454c",
   "lessons": [
     {
       "id": "TA-C16-thamizh-maadangal",
@@ -510,7 +510,7 @@
     },
     {
       "id": "TA-S120-letter-aa",
-      "sequence": 615,
+      "sequence": 611,
       "title": "ஆ (ā) — one character, met inside words you already say",
       "headword": "ஆ",
       "romanization": "ā",
@@ -523,7 +523,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:747d9af71c649cbe",
+      "sourceHash": "fnv1a64:afef584f473b9034",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -676,7 +676,7 @@
             },
             {
               "kind": "speech",
-              "text": "ஆம் (ām), ஆம் (ām) / இல்லை / சரி, வணக்கம்."
+              "text": "ஆம் (ām), வணக்கம்."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3a0c9f573dca7c95",
+  "sourceHash": "fnv1a64:6f8347ddc75007a6",
   "lessons": [
     {
       "id": "TA-C10-vaara-kizhamai",
@@ -504,7 +504,7 @@
     },
     {
       "id": "TA-S114-vowel-sign-aa",
-      "sequence": 535,
+      "sequence": 531,
       "title": "◌ா (ā) — one character, met inside words you already say",
       "headword": "ா",
       "romanization": "ā",
@@ -517,7 +517,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:70cb73e881d0a753",
+      "sourceHash": "fnv1a64:45ff00e0a58fd159",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -638,7 +638,7 @@
             },
             {
               "kind": "speech",
-              "text": "வணக்கம் / நமஸ்காரம், நான், வணக்கம்."
+              "text": "நான், வணக்கம்."
             },
             {
               "kind": "prompt",

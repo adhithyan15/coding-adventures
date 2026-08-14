@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:131e7f285dbba896",
+  "sourceHash": "fnv1a64:37175827ddc1837f",
   "lessons": [
     {
       "id": "TA-C15-thanneer-arisi",
@@ -145,7 +145,7 @@
     },
     {
       "id": "TA-S119-letter-a",
-      "sequence": 595,
+      "sequence": 591,
       "title": "அ — one character, met inside words you already say",
       "headword": "அ",
       "romanization": "a",
@@ -158,7 +158,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:37258191d7c5352f",
+      "sourceHash": "fnv1a64:3e69bb4e88a98ccf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -303,7 +303,7 @@
             },
             {
               "kind": "speech",
-              "text": "அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை, தண்ணீர் அரிசி சாதம், வணக்கம்."
+              "text": "வணக்கம்."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:66f451293dc628c7",
+  "sourceHash": "fnv1a64:8e8a96d1f2286cc2",
   "lessons": [
     {
       "id": "TA-C12-kudumbam",
@@ -149,7 +149,7 @@
     },
     {
       "id": "TA-S116-letter-ca",
-      "sequence": 555,
+      "sequence": 551,
       "title": "ச (ca) — one character, met inside words you already say",
       "headword": "ச",
       "romanization": "ca",
@@ -162,7 +162,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d5859416124a041",
+      "sourceHash": "fnv1a64:a58b2603cca27bdb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -275,7 +275,7 @@
             },
             {
               "kind": "speech",
-              "text": "சரி, ஆம் / இல்லை / சரி, வணக்கம்."
+              "text": "சரி, வணக்கம்."
             },
             {
               "kind": "prompt",

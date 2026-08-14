@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S115-letter-llla
 spine_node: SPINE-MEET-GREET
-sequence: 545
+sequence: 541
 delivery: script
 chapter: 11
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ழ in the ones that have it]
 
-> தமிழ் எழுத்து  ·  நான் தமிழ் பேசுகிறேன்  ·  வணக்கம்
+> வணக்கம்
 
 - [YOU TRACE: ழ three times, saying *llla* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ழ once more]

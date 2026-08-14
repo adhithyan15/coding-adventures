@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c6b2de5004a76cac",
+  "sourceHash": "fnv1a64:dad3fd41250097f3",
   "lessons": [
     {
       "id": "TA-C17-nanpakal-nalliravu",
@@ -228,7 +228,7 @@
     },
     {
       "id": "TA-S121-vowel-sign-u",
-      "sequence": 635,
+      "sequence": 631,
       "title": "◌ு — one character, met inside words you already say",
       "headword": "ு",
       "romanization": "u",
@@ -241,7 +241,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:39b7bf42fff8dfe4",
+      "sourceHash": "fnv1a64:a4eaea2ef39524b0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -354,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "போய் வருகிறேன், மீண்டும் சந்திப்போம், வணக்கம்."
+              "text": "வணக்கம்."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:476c6f564b36c91a",
+  "sourceHash": "fnv1a64:8d142a110d0ab471",
   "lessons": [
     {
       "id": "TA-C09-mannikkavum",
@@ -289,7 +289,7 @@
     },
     {
       "id": "TA-S113-letter-la",
-      "sequence": 515,
+      "sequence": 511,
       "title": "ல (la) — one character, met inside words you already say",
       "headword": "ல",
       "romanization": "la",
@@ -302,7 +302,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2dc428eac3042eb6",
+      "sourceHash": "fnv1a64:d76ec2092aa01b7c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -451,7 +451,7 @@
             },
             {
               "kind": "speech",
-              "text": "இல்லை, ஆம் / இல்லை / சரி, வணக்கம்."
+              "text": "இல்லை, வணக்கம்."
             },
             {
               "kind": "prompt",

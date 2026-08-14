@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1b02d98a4dad0f7a",
+  "sourceHash": "fnv1a64:f2d4a698070362d3",
   "lessons": [
     {
       "id": "TA-C18-mani",
@@ -568,7 +568,7 @@
     },
     {
       "id": "TA-S122-letter-ta",
-      "sequence": 665,
+      "sequence": 661,
       "title": "த (ta) — one character, met inside words you already say",
       "headword": "த",
       "romanization": "ta",
@@ -581,7 +581,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a94bbc16592ee948",
+      "sourceHash": "fnv1a64:8ab5ce68888b9fbc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -694,7 +694,7 @@
             },
             {
               "kind": "speech",
-              "text": "மீண்டும் சந்திப்போம், தமிழ் எழுத்து, வணக்கம்."
+              "text": "வணக்கம்."
             },
             {
               "kind": "prompt",

@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S122-letter-ta
 spine_node: SPINE-MEET-GREET
-sequence: 665
+sequence: 661
 delivery: script
 chapter: 18
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find த in the ones that have it]
 
-> மீண்டும் சந்திப்போம்  ·  தமிழ் எழுத்து  ·  வணக்கம்
+> வணக்கம்
 
 - [YOU TRACE: த three times, saying *ta* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find த once more]

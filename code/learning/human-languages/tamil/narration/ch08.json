@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b1c4e18c5f519cb0",
+  "sourceHash": "fnv1a64:6b3f6334a1ce6dd2",
   "lessons": [
     {
       "id": "TA-C08-tayavuseytu",
@@ -626,7 +626,7 @@
     },
     {
       "id": "TA-S112-letter-e",
-      "sequence": 495,
+      "sequence": 491,
       "title": "எ — one character, met inside words you already say",
       "headword": "எ",
       "romanization": "e",
@@ -639,7 +639,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8f9d9d54d4494c29",
+      "sourceHash": "fnv1a64:50944e3bc120df71",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -752,7 +752,7 @@
             },
             {
               "kind": "speech",
-              "text": "என், என் பெயர் …, வணக்கம் (vaṇakkam)."
+              "text": "என், வணக்கம் (vaṇakkam)."
             },
             {
               "kind": "prompt",

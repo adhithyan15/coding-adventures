@@ -2,7 +2,7 @@
 schema_version: 2
 id: TA-S112-letter-e
 spine_node: SPINE-MEET-GREET
-sequence: 495
+sequence: 491
 delivery: script
 chapter: 8
 type: writing
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find எ in the ones that have it]
 
-> என்  ·  என் பெயர் …  ·  வணக்கம்
+> என்  ·  வணக்கம்
 
 - [YOU TRACE: எ three times, saying *e* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find எ once more]

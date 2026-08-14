@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:762b8d3e94f27a64",
+  "sourceHash": "fnv1a64:8f7c62818e2d37aa",
   "lessons": [
     {
       "id": "TA-C19-vayathu",
@@ -553,7 +553,7 @@
     },
     {
       "id": "TA-S123-vowel-sign-ee",
-      "sequence": 695,
+      "sequence": 691,
       "title": "◌ே (ē) — one character, met inside words you already say",
       "headword": "ே",
       "romanization": "ē",
@@ -566,7 +566,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc0fbdd7db2e0623",
+      "sourceHash": "fnv1a64:ff9f282f0d7c5fe5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -679,7 +679,7 @@
             },
             {
               "kind": "speech",
-              "text": "போய் வருகிறேன், பேசு, வணக்கம்."
+              "text": "பேசு, வணக்கம்."
             },
             {
               "kind": "prompt",
