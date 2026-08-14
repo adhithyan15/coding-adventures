@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.107.0";
+pub const VERSION: &str = "0.108.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -626,6 +626,11 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
     if first.eq_ignore_ascii_case("journey") {
         return Ok(MermaidDiagramType::Journey);
     }
+    if first.eq_ignore_ascii_case("requirement")
+        || first.eq_ignore_ascii_case("requirementDiagram")
+    {
+        return Ok(MermaidDiagramType::Requirement);
+    }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
         "classDiagram" | "classDiagram-v2" => MermaidDiagramType::Class,
@@ -757,7 +762,9 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
         match token_name(cursor.current()) {
             "TITLE" => {
                 let value = cursor.advance().value.clone();
-                title = Some(value.trim_start_matches("title").trim().to_string());
+                title = value
+                    .split_once(char::is_whitespace)
+                    .map(|(_, title)| title.trim().to_string());
             }
             "ACC_TITLE" => {
                 accessibility_title = cursor
@@ -788,18 +795,25 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
             }
             "DIRECTION" => {
                 let value = cursor.advance().value.clone();
-                direction = Some(match value.split_whitespace().nth(1) {
-                    Some("TB") => DiagramDirection::Tb,
-                    Some("BT") => DiagramDirection::Bt,
-                    Some("LR") => DiagramDirection::Lr,
-                    Some("RL") => DiagramDirection::Rl,
-                    _ => {
-                        return Err(token_error(
-                            cursor.current(),
-                            "invalid requirement direction",
-                        ))
-                    }
-                });
+                direction = Some(
+                    match value
+                        .split_whitespace()
+                        .nth(1)
+                        .map(|value| value.to_ascii_uppercase())
+                        .as_deref()
+                    {
+                        Some("TB") => DiagramDirection::Tb,
+                        Some("BT") => DiagramDirection::Bt,
+                        Some("LR") => DiagramDirection::Lr,
+                        Some("RL") => DiagramDirection::Rl,
+                        _ => {
+                            return Err(token_error(
+                                cursor.current(),
+                                "invalid requirement direction",
+                            ))
+                        }
+                    },
+                );
             }
             "STYLE" => {
                 let (node_ids, style) = parse_requirement_style(cursor.advance())?;
@@ -968,7 +982,8 @@ fn parse_requirement_target_style(
     let value = token
         .value
         .trim_end_matches(';')
-        .trim_start_matches(keyword)
+        .get(keyword.len()..)
+        .expect("requirement grammar emitted the expected style keyword")
         .trim();
     let (targets, declarations) = value
         .split_once(char::is_whitespace)
@@ -1069,7 +1084,8 @@ fn parse_requirement_class_assignment(
     let value = token
         .value
         .trim_end_matches(';')
-        .trim_start_matches("class")
+        .get("class".len()..)
+        .expect("requirement grammar emitted the class keyword")
         .trim();
     let (node_ids, class_names) = value
         .split_once(char::is_whitespace)
@@ -1213,13 +1229,13 @@ fn merge_requirement_style(target: &mut DiagramStyle, source: &DiagramStyle) {
 }
 
 fn parse_requirement_kind(value: &str) -> RequirementKind {
-    match value {
+    match value.to_ascii_lowercase().as_str() {
         "requirement" => RequirementKind::Requirement,
-        "functionalRequirement" => RequirementKind::Functional,
-        "interfaceRequirement" => RequirementKind::Interface,
-        "performanceRequirement" => RequirementKind::Performance,
-        "physicalRequirement" => RequirementKind::Physical,
-        "designConstraint" => RequirementKind::DesignConstraint,
+        "functionalrequirement" => RequirementKind::Functional,
+        "interfacerequirement" => RequirementKind::Interface,
+        "performancerequirement" => RequirementKind::Performance,
+        "physicalrequirement" => RequirementKind::Physical,
+        "designconstraint" => RequirementKind::DesignConstraint,
         _ => unreachable!("requirement grammar accepted an unknown definition kind"),
     }
 }
@@ -7221,7 +7237,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.107.0");
+        assert_eq!(crate::VERSION, "0.108.0");
     }
 
     #[test]

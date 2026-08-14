@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.108.0
+
+- Parse Requirement headers, statements, fields, enum values, and relationships case-insensitively.
+
 ## 0.107.0
 
 - Resolve standalone Requirement `:::` class shorthand into structural styles.

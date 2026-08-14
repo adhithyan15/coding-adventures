@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.60.0
+
+- Match Requirement keywords and enum values case-insensitively, following the pinned upstream lexer.
+
 ## 0.59.0
 
 - Tokenize standalone Requirement `:::` class shorthand statements.
