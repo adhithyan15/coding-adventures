@@ -885,10 +885,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   right to left. Its four-frame Noto fit preserves that outer-before-tongue
   order and one-lift evidence while tracing the printed broad open-left curve
   and straight middle bar; it records the school hand's narrower curve and
-  hooked tongue. The remaining **72** prose part
+  hooked tongue. Lowercase **ю** follows at 11:44–11:58: the pen descends the
+  left stem, turns through a rising connector, and continues clockwise around
+  the right oval to close without lifting. Its five-frame Noto fit preserves
+  that zero-lift stem-to-connector-to-oval order while tracing the printed
+  straight left upright, horizontal middle bar, and wide closed oval; it
+  records the school hand's looped entry, diagonal connector, and cursive oval.
+  The remaining **71** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 2,
+  `cyrillic` 1,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

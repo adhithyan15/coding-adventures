@@ -260,6 +260,8 @@ const CYRILLIC_SOFT_SIGN = ductusFor("ь", "cyrillic")!;
 const cyrillicSoftSignOutline = cyrillicOutline("ь");
 const CYRILLIC_E = ductusFor("э", "cyrillic")!;
 const cyrillicEOutline = cyrillicOutline("э");
+const CYRILLIC_YU = ductusFor("ю", "cyrillic")!;
+const cyrillicYuOutline = cyrillicOutline("ю");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3355,6 +3357,36 @@ describe("Cyrillic э — outer curve before a lifted middle tongue", () => {
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_E.strokes[1], 1),
+    );
+  });
+});
+
+describe("Cyrillic ю — one joined stem-to-oval run", () => {
+  const steps = ductusSteps(CYRILLIC_YU);
+  const strip = ductusFilmstrip(CYRILLIC_YU, cyrillicYuOutline);
+
+  it("keeps the left stem and connector joined to the clockwise oval", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "retrace upward and sweep right along the middle bar",
+      "curve upward around the oval and across its top",
+      "continue down around the oval's right side",
+      "sweep left through the bottom and rise to close",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the closed oval", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicYuOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_YU.strokes[0], 1),
     );
   });
 });
