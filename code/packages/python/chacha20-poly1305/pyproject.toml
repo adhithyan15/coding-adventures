@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-chacha20-poly1305"
-version = "0.1.0"
-description = "ChaCha20-Poly1305 AEAD cipher (RFC 8439) implemented from scratch using ARX operations"
+version = "0.2.0"
+description = "ChaCha20-Poly1305 (RFC 8439) and XChaCha20-Poly1305 authenticated encryption"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
