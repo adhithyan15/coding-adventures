@@ -163,7 +163,7 @@ impl std::error::Error for BackendError {}
 
 /// Lower a single typed CIR function to a flat little-endian RV32I binary.
 pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    let mut lowerer = Lowerer::new(ctx, cir, false, None, false)?;
+    let mut lowerer = Lowerer::new(ctx, cir, false, None, None, false)?;
     for instr in cir {
         lowerer.lower(instr)?;
         lowerer.consume_value_sources(instr);
@@ -230,6 +230,7 @@ pub fn compile_module(
             _ => None,
         })
         .collect();
+    let global_layout = GlobalLayout::collect(&ordered)?;
 
     let mut lowerers = Vec::with_capacity(ordered.len());
     for function in &ordered {
@@ -238,6 +239,7 @@ pub fn compile_module(
             function.cir,
             true,
             Some(&function_signatures),
+            Some(&global_layout),
             direct_call_targets.contains(function.context.name),
         )?;
         for instr in function.cir {
@@ -275,9 +277,16 @@ pub fn compile_module(
                 function: function.context.name.to_owned(),
                 error: Box::new(error),
             })?;
+        lowerer
+            .resolve_globals(offset)
+            .map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
         bytes.extend_from_slice(&assemble(&lowerer.words));
         function_offset += lowerer.words.len() * 4;
     }
+    bytes.resize(bytes.len() + global_layout.byte_len, 0);
     if bytes.is_empty() {
         bytes.extend_from_slice(&RET_WORD.to_le_bytes());
     }
@@ -348,6 +357,8 @@ struct Lowerer {
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
     calls: Vec<PendingCall>,
+    global_layout: Option<GlobalLayout>,
+    pending_globals: Vec<PendingGlobal>,
     /// Value uses still to be lowered. The allocator uses this to reclaim dead
     /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
@@ -413,12 +424,87 @@ struct PendingCall {
     function: String,
 }
 
+#[derive(Debug, Clone)]
+struct PendingGlobal {
+    word_index: usize,
+    slot_offset: usize,
+}
+
+#[derive(Debug, Clone)]
+struct GlobalSlot {
+    offset: usize,
+    ty: String,
+}
+
+#[derive(Debug, Clone, Default)]
+struct GlobalLayout {
+    slots: HashMap<String, GlobalSlot>,
+    byte_len: usize,
+}
+
+impl GlobalLayout {
+    fn collect(functions: &[&ModuleFunction<'_>]) -> Result<Self, BackendError> {
+        let mut layout = Self::default();
+        for function in functions {
+            for instr in function.cir {
+                if !matches!(instr.op.as_str(), "global_load" | "global_store") {
+                    continue;
+                }
+                let Some(CIROperand::Var(name)) = instr.srcs.first() else {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(format!(
+                            "{} srcs[0] must be Var(global_name)",
+                            instr.op
+                        ))),
+                    });
+                };
+                if !is_rv32_value_type(&instr.ty) {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(unsupported_type_error(
+                            &instr.ty,
+                            &format!("{} global {name:?}", instr.op),
+                        )),
+                    });
+                }
+                if let Some(slot) = layout.slots.get(name) {
+                    if slot.ty != instr.ty {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(format!(
+                                "global {name:?} has incompatible storage types {:?} and {:?}",
+                                slot.ty, instr.ty
+                            ))),
+                        });
+                    }
+                    continue;
+                }
+                let offset = layout.byte_len;
+                layout.byte_len = layout
+                    .byte_len
+                    .checked_add(8)
+                    .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                layout.slots.insert(
+                    name.clone(),
+                    GlobalSlot {
+                        offset,
+                        ty: instr.ty.clone(),
+                    },
+                );
+            }
+        }
+        Ok(layout)
+    }
+}
+
 impl Lowerer {
     fn new(
         ctx: &FunctionContext<'_>,
         cir: &[CIRInstr],
         allow_direct_calls: bool,
         call_signatures: Option<&HashMap<String, FunctionSignature>>,
+        global_layout: Option<&GlobalLayout>,
         canonicalize_wide_return: bool,
     ) -> Result<Self, BackendError> {
         let mut env = Vec::with_capacity(ctx.params.len());
@@ -491,6 +577,8 @@ impl Lowerer {
             labels: HashMap::new(),
             branches: Vec::new(),
             calls: Vec::new(),
+            global_layout: global_layout.cloned(),
+            pending_globals: Vec::new(),
             remaining_uses: count_value_uses(cir),
             allow_direct_calls,
             call_signatures: call_signatures.cloned().unwrap_or_default(),
@@ -598,6 +686,14 @@ impl Lowerer {
 
         if op == "call_builtin" {
             return self.lower_host_builtin(instr);
+        }
+
+        if op == "global_load" {
+            return self.lower_global_load(instr);
+        }
+
+        if op == "global_store" {
+            return self.lower_global_store(instr);
         }
 
         if let Some(ty) = op.strip_prefix("mov_") {
@@ -774,6 +870,18 @@ impl Lowerer {
         Ok(())
     }
 
+    fn resolve_globals(&mut self, data_offset: usize) -> Result<(), BackendError> {
+        for global in self.pending_globals.clone() {
+            let address = data_offset
+                .checked_add(global.slot_offset)
+                .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+            let address = i32::try_from(address)
+                .map_err(|_| BackendError::ImmediateOutOfRange(address as i64))?;
+            self.load_constant_fixed_at(global.word_index, SCRATCH_REGISTER, address);
+        }
+        Ok(())
+    }
+
     fn lower_direct_call(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
         if !self.allow_direct_calls {
             return Err(BackendError::UnsupportedOp(
@@ -884,6 +992,58 @@ impl Lowerer {
         self.copy_or_extend_high(A1, value, true);
         self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_I64);
         self.words.push(encode_ecall());
+        Ok(())
+    }
+
+    fn lower_global_load(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(format!(
+                "global_load requires one global name, got {} operands",
+                instr.srcs.len()
+            )));
+        }
+        let slot = self.global_slot(instr, "global_load")?;
+        if matches!(slot.ty.as_str(), "i64" | "u64") {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "global_load")? else {
+                unreachable!("dest_pair always returns a pair")
+            };
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_lw(lo, SCRATCH_REGISTER, 0));
+            self.words.push(encode_lw(hi, SCRATCH_REGISTER, 4));
+        } else {
+            let destination = self.dest(instr, "global_load")?;
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_lw(destination, SCRATCH_REGISTER, 0));
+            self.mask_unsigned(destination, &slot.ty);
+        }
+        Ok(())
+    }
+
+    fn lower_global_store(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.dest.is_some() {
+            return Err(BackendError::InvalidOperand(
+                "global_store must not have a destination".to_owned(),
+            ));
+        }
+        if instr.srcs.len() != 2 {
+            return Err(BackendError::InvalidOperand(format!(
+                "global_store requires a global name and one value, got {} operands",
+                instr.srcs.len()
+            )));
+        }
+        let slot = self.global_slot(instr, "global_store")?;
+        if matches!(slot.ty.as_str(), "i64" | "u64") {
+            let source = self.wide_var_location(instr, 1, "global_store")?;
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_sw(source.low(), SCRATCH_REGISTER, 0));
+            self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, source, is_signed(&slot.ty));
+            self.words
+                .push(encode_sw(SECOND_SCRATCH_REGISTER, SCRATCH_REGISTER, 4));
+        } else {
+            let source = self.var_src(instr, 1, "global_store")?;
+            self.reserve_global_address(slot.offset);
+            self.words.push(encode_sw(source, SCRATCH_REGISTER, 0));
+        }
         Ok(())
     }
 
@@ -2105,6 +2265,44 @@ impl Lowerer {
         }
     }
 
+    fn global_slot(&self, instr: &CIRInstr, op: &str) -> Result<GlobalSlot, BackendError> {
+        let Some(layout) = &self.global_layout else {
+            return Err(BackendError::UnsupportedOp(format!(
+                "{op} (module linking required)"
+            )));
+        };
+        let Some(CIROperand::Var(name)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[0] must be Var(global_name)"
+            )));
+        };
+        let slot = layout
+            .slots
+            .get(name)
+            .cloned()
+            .ok_or_else(|| BackendError::InvalidOperand(format!(
+                "{op}: global {name:?} has no allocated storage"
+            )))?;
+        if slot.ty != instr.ty {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op}: global {name:?} has storage type {:?}, not {:?}",
+                slot.ty, instr.ty
+            )));
+        }
+        Ok(slot)
+    }
+
+    fn reserve_global_address(&mut self, slot_offset: usize) {
+        let word_index = self.words.len();
+        // Keep this pair fixed-width so global-data placement can be resolved
+        // after every module function has been lowered.
+        self.words.extend([0, 0]);
+        self.pending_globals.push(PendingGlobal {
+            word_index,
+            slot_offset,
+        });
+    }
+
     fn add_or_extend_high(&mut self, dest: u32, location: ValueLocation, signed: bool) {
         match location {
             ValueLocation::Pair { hi, .. } => self.words.push(encode_add(dest, dest, hi)),
@@ -2151,6 +2349,13 @@ impl Lowerer {
         if lower != 0 {
             self.words.push(encode_addi(rd, rd, lower as i32));
         }
+    }
+
+    fn load_constant_fixed_at(&mut self, word_index: usize, rd: u32, value: i32) {
+        let upper = ((value as i64 + 0x800) >> 12) as i32;
+        let lower = value as i64 - ((upper as i64) << 12);
+        self.words[word_index] = encode_lui(rd, upper as u32);
+        self.words[word_index + 1] = encode_addi(rd, rd, lower as i32);
     }
 
     fn mask_unsigned(&mut self, rd: u32, ty: &str) {
@@ -2322,6 +2527,8 @@ fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
     match instr.op.as_str() {
         "label" | "jmp" => false,
         "call" | "call_builtin" => index != 0,
+        "global_load" => false,
+        "global_store" => index == 1,
         "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => index == 0,
         _ => true,
     }
