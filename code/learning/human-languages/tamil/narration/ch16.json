@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tamil Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d69456a2a09e1144",
+  "sourceHash": "fnv1a64:bb3fab32cb07454c",
   "lessons": [
     {
       "id": "TA-C16-thamizh-maadangal",
@@ -399,7 +399,7 @@
             },
             {
               "kind": "speech",
-              "text": "a tail added on the right — and now it is ஆ."
+              "text": "a tail added on the right — and now it is ஆ (ā)."
             },
             {
               "kind": "speech",
@@ -463,7 +463,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஆ — the same three parts, then the right-hand tail",
+              "instruction": "ஆ (ā) — the same three parts, then the right-hand tail",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -503,6 +503,215 @@
             {
               "kind": "speech",
               "text": "Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம (ma).) Next: noon and midnight."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S120-letter-aa",
+      "sequence": 611,
+      "title": "ஆ (ā) — one character, met inside words you already say",
+      "headword": "ஆ",
+      "romanization": "ā",
+      "gloss": "the single character ஆ — recognised inside words you already say",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:afef584f473b9034",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ஆ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஆ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: அ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ஆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆ — ā."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape the vowel ā takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "the whole of அ."
+            },
+            {
+              "kind": "speech",
+              "text": "a tail added on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ஆ (ā) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ஆம் — yes (ām)."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆம் / இல்லை / சரி ām / illai / sari — answering in Tamil."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆறு ஏழு பத்து āṟu ēḻu pattu — six, seven, and ten stay family cousins while Kannada regularly softens p to h."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆம் ām — a word that begins with a vowel gets a full vowel letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ஆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start inside the upper curl and sweep around it."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, continue down the outer curve."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, turn around the lower loop."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, carry the horizontal to the right edge — then lift once."
+            },
+            {
+              "kind": "speech",
+              "text": "5. set the pen at the top of the separate right upright and draw straight down."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting again, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes — four joined body movements, one pen lift, then the joined upright and long-vowel loop; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ (ā)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (ā) (Univ. of Texas at Austin), p. 192."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ஆ (ā) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ஆ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ஆம் (ām), வணக்கம்."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ஆ three times, saying ā as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ஆ three times, saying *ā* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ஆ (ā) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ஆ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ஆ? What sound does it carry? (ā.) Name one word you already say that contains it."
             }
           ]
         }

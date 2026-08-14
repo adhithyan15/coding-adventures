@@ -1,8 +1,8 @@
 Kannada, chapter 6: Case Endings and Dative Subjects.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 -ಗೆ (-ge) — "to, for".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -44,7 +44,7 @@ Wrap-up Recall.
 What does -ಗೆ (-ge) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (ನನಗೆ nanage.) Why does Kannada have g where its sisters have k? (Kannada voiced the k between vowels; doubled -kke resisted and kept the old hard form.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 -ಗೆ (-ge) — one suffix, one job.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -78,7 +78,7 @@ Why is Kannada called agglutinative? (It stacks visible pieces, each with one jo
 Why is Kannada called agglutinative?
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) — "I know Kannada".
 
 Warm-up.
@@ -125,7 +125,7 @@ Wrap-up Recall.
 What does ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) literally say? ("To-me Kannada known.") What has English got that Kannada hasn't? (A nominative "I" — nānu is replaced by the dative nanage.) Is gottu an action verb? (No — it's "[is] known"; nothing is doing anything.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ನ (na) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ನ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -161,3 +161,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ನ? What sound does it carry? (na.) Name one word you already say that contains it.
+
+
+Lesson 5 of 5.
+ಬ (ba) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಬ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Rounded and looping like Telugu (its sister script), most letters topped by a small curved headstroke; no continuous top line.
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ಬ.
+ಬ — ba.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not b, it is ba.
+You already say these, and every one of them has ಬ (ba) somewhere inside it:
+ಹೋಗಿ ಬರುತ್ತೇನೆ hōgi baruttēne — goodbye (lit. "I'll go and come back").
+
+Writing: ಬ — copy what you see.
+Put your pen on ಬ (ba) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ಬ (ba) in the ones that have it]
+[pause 8 seconds for the answer]
+ನಮಸ್ಕಾರ.
+[once you have stopped driving — trace: ಬ three times, saying ba as you finish each one]
+[your turn — look: back at any page of this chapter and find ಬ once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ಬ? What sound does it carry? (ba.) Name one word you already say that contains it.

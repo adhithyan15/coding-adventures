@@ -1,8 +1,8 @@
 Sanskrit, chapter 8: The Mind and the Palm Leaf.
-5 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 चिन्तयति (cintayati) — "thinks," and a root that never reached English.
 
 Warm-up.
@@ -41,7 +41,7 @@ Wrap-up Recall.
 What does class 10 put between root and ending, and what is cintayati's root? (-अय-; चिन्त्, the root of na cintā.) Why does the word begin with c and not k? (A rounded PIE k, merged and then palatalised — the numbers' rule.) Which verb of knowing came just before this one, and does cint have an English cousin? (जानाति; no — this root left English nothing.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 अवगच्छति (avagacchati) — "understands," going down into it.
 
 Warm-up.
@@ -79,7 +79,7 @@ Wrap-up Recall.
 Build "understands" out of pieces you already had. (अव "down" + गच्छति "goes".) Name the three verbs that share that one stem. (Gacchati, āgacchati, avagacchati.) What does बुध् mean before it means "understand," and what title comes from it? (To wake; बुद्ध, the awakened one.) Which two English words are its clean cousins? (Forbid and bode.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 पठति (paṭhati) — "reads," and where the word went afterwards.
 
 Warm-up.
@@ -117,7 +117,7 @@ Wrap-up Recall.
 What did paṭhati mean before "read," and which class builds it? (Recite aloud; class 1.) Name the two ways a Sanskrit word reaches a modern language. (तद्भव, worn down through speech; तत्सम, carried over whole.) Which is paṛhnā, which is cintā, and what label belongs on paṭhati's own ancestry? (Tadbhava; tatsama; a common account, not settled — the caution you kept on punch.)
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 लिखति (likhati) — "writes," and the scratch it started as.
 
 Warm-up.
@@ -155,7 +155,7 @@ Wrap-up Recall.
 What did लिख् mean before "write," and what are the chapter's four verbs? (To scratch; cintayati, avagacchati, paṭhati, likhati.) Which plants -अय-, and which is a prefix on a verb you already had? (Cintayati; avagacchati.) Which verb of understanding means "wakes," and what title comes from its root? (बुध्यते; बुद्ध.) Is Bengali lekhā tatsama or tadbhava, and which two word-histories here needed a label rather than a claim? (Tadbhava; paṭhati's ancestry and likh's English kin — the punch caution, twice.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 म (ma) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -196,3 +196,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — म? What sound does it carry? (ma.) Name one word you already say that contains it.
+
+
+Lesson 6 of 6.
+त (ta) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: त and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+A horizontal head-line (shirorekha) runs across the top; letters hang beneath it like laundry on a line.
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: त.
+त — ta.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta.
+What it is made of:
+a right-to-left upper shoulder curving down to an open lower tip.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has त (ta) somewhere inside it:
+नमस्ते namaste — hello (lit. "a bow to you") (namaste).
+स्वागतम् svāgatam — welcome (lit. "well come") (svāgatam).
+अस्ति asti — is.
+भवान् / त्वम् bhavān / tvam — you (respectful / familiar).
+
+Writing: त.
+1. start at the body's upper-right junction, sweep left across the shoulder, then curve down around the left side and finish down-right at the open lower tip without lifting.
+2. lift and draw the right stem top-to-bottom.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-त-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find त (ta) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्ते, स्वागतम्, नमस्कारः.
+[once you have stopped driving — trace: त three times, saying ta as you finish each one]
+[your turn — look: back at any page of this chapter and find त (ta) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — त? What sound does it carry? (ta.) Name one word you already say that contains it.

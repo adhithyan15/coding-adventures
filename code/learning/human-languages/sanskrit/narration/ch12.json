@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6a0a57a8d46c7199",
+  "sourceHash": "fnv1a64:c2e5f8208860ac10",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -384,7 +384,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मु is म under a short-u sign. ख is the aspirated kha you met in खादति — a k with a puff of breath, distinct from plain क. म् closes it: mu-kha-m."
+              "text": "मु is म under a short-u sign. ख is the aspirated kha you met in खादति — a k with a puff of breath, distinct from plain क (ka). म् closes it: mu-kha-m."
             }
           ]
         },
@@ -537,7 +537,7 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: क + ◌् ((vowel killer)) = क् — k."
+              "text": "Worked through: क (ka) + ◌् ((vowel killer)) = क् — k."
             },
             {
               "kind": "speech",
@@ -634,6 +634,215 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌् ((vowel killer))? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S111-letter-ka",
+      "sequence": 576,
+      "title": "क (ka) — one character, met inside words you already say",
+      "headword": "क",
+      "romanization": "ka",
+      "gloss": "the single character क — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:88224ad3dfa3652f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: क",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: र — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: क",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क — ka."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a counterclockwise left bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom central stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate right-hand arch."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has क (ka) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्कारः namaskāraḥ — hello (lit. \"the making of a bow\") (namaskāraḥ)."
+            },
+            {
+              "kind": "speech",
+              "text": "किम् kim — what."
+            },
+            {
+              "kind": "speech",
+              "text": "कथम् katham — how."
+            },
+            {
+              "kind": "speech",
+              "text": "कुशलम् kuśalam — well-being — and the reply \"अहं कुशली अस्मि."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: क",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the bowl's upper-right junction and sweep left over the top, down around the left side, and back to the lower-right junction."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the central stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified four-stroke teaching form; everyday handwriting may join or simplify the body differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-क (ka)-order.gif’, strokes 1–4, Wikimedia Commons, 8 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find क (ka) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find क in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्कारः, किम्, नमस्ते."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "क three times, saying ka as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: क three times, saying *ka* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find क (ka) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find क once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — क? What sound does it carry? (ka.) Name one word you already say that contains it."
             }
           ]
         }

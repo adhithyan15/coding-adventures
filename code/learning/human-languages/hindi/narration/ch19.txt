@@ -1,8 +1,8 @@
 Hindi, chapter 19: Asking Someone's Age.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 उम्र — the same word as Arabic.
 
 Warm-up.
@@ -24,7 +24,7 @@ Wrap-up Recall.
 What language does Hindi's उम्र come from, and what's the native Sanskrit alternative? (Arabic ʿumr, via Persian; native alternative is आयु, āyu.) Which one is ordinary conversational Hindi? (Umr.) Next: use a genitive marker to say how many years someone belongs to.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 कितने साल के हो? (kitne sāl ke ho?) — belonging to so many years.
 
 Warm-up.
@@ -48,3 +48,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does के/का mark? (A genitive/possessive relationship.) Does Hindi use Romance "have," simple Germanic "be," Latin "born," or Arabic's verbless sentence? (None: it says "belonging to N years" + honā.)
+
+
+Lesson 3 of 3.
+द (da) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: द and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ख — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: द.
+द — da.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not d, it is da.
+What it is made of:
+a short top-to-bottom stem.
+an outer body joined to an inward curl and down-right tail.
+the top shirorekhā.
+You already say these, and every one of them has द (da) somewhere inside it:
+धन्यवाद — thank you (dhanyavād — formal, Sanskritic).
+अलविदा — goodbye (alvidā — a final farewell, Persian/Arabic-derived).
+मैं हिंदी बोलता हूँ — I speak Hindi (gendered).
+एक दो तीन चार पाँच — one to five.
+
+Writing: द.
+1. draw the short stem top-to-bottom.
+2. lift at the stem's lower junction, sweep left through the upper shoulder and around the outer body, curl inward and clockwise through the loop, then continue down-right through the tail without lifting.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; another learner source stages the outer body and curl-tail separately.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-द-order.gif’, strokes 1–3, Wikimedia Commons, 8 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find द (da) in the ones that have it]
+[pause 8 seconds for the answer]
+धन्यवाद, अलविदा, नमस्ते.
+[once you have stopped driving — trace: द three times, saying da as you finish each one]
+[your turn — look: back at any page of this chapter and find द (da) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — द? What sound does it carry? (da.) Name one word you already say that contains it.

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b2c12f201d49a8be",
+  "sourceHash": "fnv1a64:8d76e533819aeb44",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
@@ -828,6 +828,207 @@
             {
               "kind": "speech",
               "text": "Which character is this — म? What sound does it carry? (ma.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S107-letter-ta",
+      "sequence": 436,
+      "title": "त (ta) — one character, met inside words you already say",
+      "headword": "त",
+      "romanization": "ta",
+      "gloss": "the single character त — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0086ba84aa2ded30",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: त",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: त and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A horizontal head-line (shirorekha) runs across the top; letters hang beneath it like laundry on a line."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "त — ta."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a right-to-left upper shoulder curving down to an open lower tip."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has त (ta) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते namaste — hello (lit. \"a bow to you\") (namaste)."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वागतम् svāgatam — welcome (lit. \"well come\") (svāgatam)."
+            },
+            {
+              "kind": "speech",
+              "text": "अस्ति asti — is."
+            },
+            {
+              "kind": "speech",
+              "text": "भवान् / त्वम् bhavān / tvam — you (respectful / familiar)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the body's upper-right junction, sweep left across the shoulder, then curve down around the left side and finish down-right at the open lower tip without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-त-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find त (ta) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find त in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते, स्वागतम्, नमस्कारः."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "त three times, saying ta as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: त three times, saying *ta* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find त (ta) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find त once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — त? What sound does it carry? (ta.) Name one word you already say that contains it."
             }
           ]
         }

@@ -1,8 +1,8 @@
 Kannada, chapter 20: Numbers 11–20 and Weather.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 ಹನ್ನೊಂದು to ಇಪ್ಪತ್ತು — numbers 11–20.
 
 Warm-up.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 How are Kannada's teens built? (ಹತ್ತು (ten) + a digit, compounded.) Does ಇಪ್ಪತ್ತು (twenty) have a compositional "two-tens" origin? (Yes — Proto-Dravidian ir- "two" + paHtu "ten.") Can you still spot modern eraḍu or modern hattu inside it today? (No — the old bound "two" root and the un-lenited middle-of-word "ten" root look different from their modern standalone descendants.) Do Sanskrit's vimshati or Latin's vīgintī have any compositional origin like this at all? (No — neither has a buried "two-ten" history the way Kannada's does.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 ಹವಾಮಾನ (havāmāna) — a genuine two-language hybrid word.
 
 Warm-up.
@@ -57,3 +57,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What are the two pieces of ಹವಾಮಾನ, and where does each come from? (ಹವಾ, "air," a Persian/Arabic loan; ಮಾನ, "measure," native Sanskrit.) What does havāmāna literally mean? ("Air-measure.") What other Indian language shares the exact same word for "air"? (Hindi — havā.)
+
+
+Lesson 3 of 3.
+ಪ (pa) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಪ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ◌ಂ — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ಪ.
+ಪ — pa.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not p, it is pa.
+You already say these, and every one of them has ಪ (pa) somewhere inside it:
+ಪರವಾಗಿಲ್ಲ paravāgilla — it's okay / no problem / you're welcome.
+ಕಪ್ಪು ಬಿಳಿ ಕೆಂಪು ನೀಲಿ — black, white, red, blue.
+ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ — father, mother, and four age-graded sibling words.
+ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ — the twelve lunisolar months.
+
+Writing: ಪ — copy what you see.
+Put your pen on ಪ (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ಪ (pa) in the ones that have it]
+[pause 8 seconds for the answer]
+ಪರವಾಗಿಲ್ಲ, ನಮಸ್ಕಾರ.
+[once you have stopped driving — trace: ಪ three times, saying pa as you finish each one]
+[your turn — look: back at any page of this chapter and find ಪ once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ಪ? What sound does it carry? (pa.) Name one word you already say that contains it.

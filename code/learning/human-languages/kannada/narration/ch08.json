@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b52accb44df5e59c",
+  "sourceHash": "fnv1a64:99419a39cad07f86",
   "lessons": [
     {
       "id": "KA-C08-dayavittu",
@@ -345,6 +345,175 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌್ (virama)? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-S112-letter-ga",
+      "sequence": 366,
+      "title": "ಗ (ga) — one character, met inside words you already say",
+      "headword": "ಗ",
+      "romanization": "ga",
+      "gloss": "the single character ಗ — recognised inside words you already say",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:66b10188e56d165f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ಗ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಗ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌ೆ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗ — ga."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not g, it is ga."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ಗ (ga) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೇಗೆ hēge — how."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? nīvu hēgiddīrā — how are you? (respectful)."
+            },
+            {
+              "kind": "speech",
+              "text": "ಚೆನ್ನಾಗಿ cennāgi — well, nicely — and the reply \"ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರವಾಗಿಲ್ಲ paravāgilla — it's okay / no problem / you're welcome."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ಗ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ಗ (ga) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find ಗ (ga) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find ಗ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೇಗೆ, ನಮಸ್ಕಾರ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ಗ three times, saying ga as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ಗ three times, saying *ga* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find ಗ (ga) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find ಗ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ಗ? What sound does it carry? (ga.) Name one word you already say that contains it."
             }
           ]
         }

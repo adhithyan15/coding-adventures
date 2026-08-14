@@ -51,7 +51,22 @@
         "HI-S05-sign-virama",
         "HI-S06-vowel-sign-aa",
         "HI-S07-letter-ta",
-        "HI-S08-letter-sa"
+        "HI-S08-letter-sa",
+        "HI-S110-letter-ra",
+        "HI-S111-letter-ka",
+        "HI-S112-vowel-sign-e",
+        "HI-S113-letter-pa",
+        "HI-S114-letter-ha",
+        "HI-S115-letter-ya",
+        "HI-S116-vowel-sign-ii",
+        "HI-S117-letter-ca",
+        "HI-S118-sign-candrabindu",
+        "HI-S119-letter-ssa",
+        "HI-S120-vowel-sign-u",
+        "HI-S121-letter-la",
+        "HI-S122-letter-kha",
+        "HI-S123-letter-da",
+        "HI-S124-letter-dha"
       ],
       "before": [],
       "inline": [
@@ -881,7 +896,22 @@
         "HI-S05-sign-virama",
         "HI-S06-vowel-sign-aa",
         "HI-S07-letter-ta",
-        "HI-S08-letter-sa"
+        "HI-S08-letter-sa",
+        "HI-S110-letter-ra",
+        "HI-S111-letter-ka",
+        "HI-S112-vowel-sign-e",
+        "HI-S113-letter-pa",
+        "HI-S114-letter-ha",
+        "HI-S115-letter-ya",
+        "HI-S116-vowel-sign-ii",
+        "HI-S117-letter-ca",
+        "HI-S118-sign-candrabindu",
+        "HI-S119-letter-ssa",
+        "HI-S120-vowel-sign-u",
+        "HI-S121-letter-la",
+        "HI-S122-letter-kha",
+        "HI-S123-letter-da",
+        "HI-S124-letter-dha"
       ]
     },
     {

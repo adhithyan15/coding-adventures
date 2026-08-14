@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ab5eac713273d314",
+  "sourceHash": "fnv1a64:472c76f1e406b143",
   "lessons": [
     {
       "id": "ML-C11-nirangal",
@@ -284,6 +284,175 @@
             {
               "kind": "speech",
               "text": "Which character is this — ൾ? What sound does it carry? (ll.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S114-letter-ma",
+      "sequence": 396,
+      "title": "മ (ma) — one character, met inside words you already say",
+      "headword": "മ",
+      "romanization": "ma",
+      "gloss": "the single character മ — recognised inside words you already say",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:94075038107f27c9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: മ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: മ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ണ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: മ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മ — ma."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not m, it is ma."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has മ (ma) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+            },
+            {
+              "kind": "speech",
+              "text": "സാരമില്ല sāramilla — it doesn't matter / no problem / you're welcome."
+            },
+            {
+              "kind": "speech",
+              "text": "താമസിക്കുക tāmasikkuka — to live, to stay."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് മലയാളം അറിയാം enikku malayāḷam aṟiyām — 'I know Malayalam'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: മ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on മ (ma) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find മ (ma) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find മ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "നമസ്കാരം, സാരമില്ല, നന്ദി."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "മ three times, saying ma as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: മ three times, saying *ma* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find മ (ma) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find മ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — മ? What sound does it carry? (ma.) Name one word you already say that contains it."
             }
           ]
         }

@@ -1,8 +1,8 @@
 Hindi, chapter 10: Days of the Week.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 सोमवार to शुक्रवार — Hindi's own planet-week.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know — The pattern: [deity] + वार, "day" until you have stopped, and I will say so again when we reach it.
@@ -32,7 +32,7 @@ Wrap-up Recall.
 What does every Hindi weekday end in, and what does it mean? (वार vār, "day.") Which planet is गुरुवार, and what title does its deity carry? (Jupiter — the deity Bṛhaspati, called "Guru," teacher of the gods — an ancient title Bṛhaspati bears, not the source of the word itself.) Did Hindi borrow its planet-week from Rome? (No — both likely trace back through Hellenistic Greece to a shared Babylonian astronomical source, though the exact route into India is still debated.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 शनिवार and रविवार — Saturday and Sunday, no rewrite needed.
 
 Warm-up.
@@ -60,7 +60,7 @@ Wrap-up Recall.
 What do शनिवार and रविवार literally mean? ("Saturn's day" and "Sun's day.") How is Hindi's weekend different from Spanish's or French's? (No religious rewrite ever happened — Hindi kept the plain planet-names for all seven days, while Spanish/French swapped in Sabbath / Lord's day for the weekend.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 ◌् ((vowel killer)) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌् and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -98,3 +98,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ◌् ((vowel killer))? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it.
+
+
+Lesson 4 of 4.
+ह — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ह and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: प — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ह.
+ह — ha.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not h, it is ha.
+What it is made of:
+a descending right stem joined to the leftward shoulder and clockwise hooked body.
+a separate down-right outer curve and tail.
+the top shirorekhā.
+You already say these, and every one of them has ह somewhere inside it:
+मेरा नाम … है — my name is…
+आपका नाम क्या है? — what's your name?
+आप कैसे हैं? — how are you? (respectful).
+आपका स्वागत है — you're welcome (also "welcome!")
+
+Writing: ह.
+1. start at the right stem's headline junction, descend, sweep left through the shoulder, then curve clockwise around the hooked body to its lower-right tip without lifting.
+2. lift at the body's left junction and sweep down-left around the outer curve, then continue diagonally down-right through the tail.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; the corroborating deskbook stages the joined first body in more component steps.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ह in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्ते.
+[once you have stopped driving — trace: ह three times, saying ha as you finish each one]
+[your turn — look: back at any page of this chapter and find ह once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ह? What sound does it carry? (ha.) Name one word you already say that contains it.
