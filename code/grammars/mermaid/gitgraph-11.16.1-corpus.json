@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/git/gitGraph.spec.ts",
+    "packages/parser/src/language/gitGraph/gitGraph.langium",
+    "packages/mermaid/src/docs/syntax/gitgraph.md"
+  ],
+  "valid": [
+    { "id": "default-direction", "source": "gitGraph:\ncommit" },
+    { "id": "top-to-bottom", "source": "gitGraph TB:\ncommit" },
+    { "id": "bottom-to-top", "source": "gitGraph BT:\ncommit" },
+    { "id": "commit-message-shorthand", "source": "gitGraph\ncommit \"a commit\"" },
+    { "id": "commit-attributes-any-order", "source": "gitGraph\ncommit type:REVERSE tag: \"test tag\" msg: \"test msg\" id: \"1111\"" },
+    { "id": "repeated-tags", "source": "gitGraph\ncommit id: \"root\" tag: \"v1\" tag: \"stable\" type: HIGHLIGHT" },
+    { "id": "quoted-branch", "source": "gitGraph\ncommit\nbranch \"branch\"\ncommit\ncheckout main\nmerge \"branch\"" },
+    { "id": "git-reference-characters", "source": "gitGraph\ncommit\nbranch azAZ_-./test\nbranch 1.0.1\nbranch cherry-pick03\nbranch merge/test_merge\nbranch A" },
+    { "id": "branch-order-and-switch", "source": "gitGraph\ncommit\nbranch test1 order: 3\nbranch test2 order: 2\nswitch test1\ncommit" },
+    { "id": "merge-attributes", "source": "gitGraph\ncommit id: \"root\"\nbranch feature\ncommit id: \"work\"\ncheckout main\nmerge feature id: \"merged\" tag: \"v1\" type:HIGHLIGHT" },
+    { "id": "cherry-pick", "source": "gitGraph\ncommit id: \"ZERO\"\nbranch develop\ncommit id: \"A\"\ncheckout main\ncherry-pick id: \"A\" tag: \"MyTag\"" },
+    { "id": "cherry-pick-merge-parent", "source": "gitGraph\ncommit id: \"ZERO\"\nbranch feature\nbranch release\ncheckout feature\ncommit id: \"A\"\ncommit id: \"B\"\ncheckout main\nmerge feature id: \"M\"\ncheckout release\ncherry-pick id: \"M\" parent: \"ZERO\" tag: \"v1.0\"" },
+    { "id": "title-accessibility-and-comments", "source": "gitGraph BT:\ntitle Release history\naccTitle: Accessible history\naccDescr {\nA multiline description\n}\n%% comment\ncommit" },
+    { "id": "duplicate-normal-commit-id-warns-upstream", "source": "gitGraph\ncommit id: \"duplicate\"\ncommit id: \"duplicate\"" }
+  ],
+  "invalid": [
+    { "id": "missing-header", "source": "commit" },
+    { "id": "unknown-direction", "source": "gitGraph RL:\ncommit" },
+    { "id": "unknown-commit-type", "source": "gitGraph\ncommit type: SPECIAL" },
+    { "id": "duplicate-branch", "source": "gitGraph\nbranch feature\nbranch feature" },
+    { "id": "checkout-unknown-branch", "source": "gitGraph\ncheckout feature" },
+    { "id": "merge-self", "source": "gitGraph\ncommit\nmerge main" },
+    { "id": "merge-unknown-branch", "source": "gitGraph\ncommit\nmerge feature" },
+    { "id": "merge-empty-current-branch", "source": "gitGraph\nbranch feature\ncommit\ncheckout main\nmerge feature" },
+    { "id": "merge-empty-source-branch", "source": "gitGraph\nbranch feature\ncheckout main\ncommit\nmerge feature" },
+    { "id": "merge-identical-heads", "source": "gitGraph\ncommit\nbranch feature\ncheckout main\nmerge feature" },
+    { "id": "duplicate-merge-id", "source": "gitGraph\ncommit id: \"root\"\nbranch feature\ncommit\ncheckout main\nmerge feature id: \"root\"" },
+    { "id": "cherry-pick-missing-id", "source": "gitGraph\ncommit\ncherry-pick" },
+    { "id": "cherry-pick-unknown-commit", "source": "gitGraph\ncommit\ncherry-pick id: \"missing\"" },
+    { "id": "cherry-pick-merge-without-parent", "source": "gitGraph\ncommit id: \"ZERO\"\nbranch feature\nbranch release\ncheckout feature\ncommit id: \"A\"\ncheckout main\nmerge feature id: \"M\"\ncheckout release\ncherry-pick id: \"M\"" },
+    { "id": "cherry-pick-non-parent", "source": "gitGraph\ncommit id: \"ZERO\"\nbranch feature\nbranch release\ncheckout feature\ncommit id: \"A\"\ncommit id: \"B\"\ncheckout main\nmerge feature id: \"M\"\ncheckout release\ncherry-pick id: \"M\" parent: \"A\"" }
+  ]
+}

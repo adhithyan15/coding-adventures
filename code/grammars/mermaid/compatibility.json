@@ -86,7 +86,7 @@
     {
       "id": "gitgraph",
       "headers": ["gitGraph", "gitGraph:"],
-      "status": "partial",
+      "status": "full",
       "ir": "temporal",
       "smoke_source": "gitGraph\ncommit\nbranch develop\ncheckout develop\ncommit"
     },

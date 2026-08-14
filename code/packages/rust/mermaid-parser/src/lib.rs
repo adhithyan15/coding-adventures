@@ -4953,7 +4953,14 @@ fn gitgraph_statement_ended(cursor: &TokenCursor) -> bool {
 
 fn parse_gitgraph_reference(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     let token = cursor.current().clone();
-    if !matches!(token_name(&token), "REFERENCE" | "STRING") {
+    if !matches!(
+        token_name(&token),
+        "REFERENCE"
+            | "PREFIXED_REFERENCE"
+            | "NUMERIC_REFERENCE"
+            | "INT"
+            | "STRING"
+    ) {
         return Err(token_error(&token, "expected GitGraph reference"));
     }
     Ok(cursor.advance().value.clone())
