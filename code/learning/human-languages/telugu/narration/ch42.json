@@ -1,0 +1,662 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 42,
+  "title": "Describing Things",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:000036d76be44512",
+  "lessons": [
+    {
+      "id": "TE-C42-big",
+      "sequence": 950,
+      "title": "పెద్ద (pedda) — big",
+      "headword": "పెద్ద",
+      "romanization": "pedda",
+      "gloss": "big",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acfef9cc6dd8ffcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పెద్ద",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెద్ద — pedda — big."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"పెద్ద (pedda)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"పెద్ద\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is pedda? (big.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C42-small",
+      "sequence": 960,
+      "title": "చిన్న (cinna) — small",
+      "headword": "చిన్న",
+      "romanization": "cinna",
+      "gloss": "small",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ba86b6117e37bf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చిన్న",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చిన్న — cinna — small."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met పెద్ద pedda a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"చిన్న (cinna)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"చిన్న\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is cinna? (small.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C42-good",
+      "sequence": 970,
+      "title": "మంచి (manci) — good",
+      "headword": "మంచి",
+      "romanization": "manci",
+      "gloss": "good",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d5b3f567ca07e00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మంచి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచి — manci — good."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met చిన్న cinna a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"మంచి (manci)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"మంచి\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is manci? (good.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C42-new",
+      "sequence": 980,
+      "title": "కొత్త (kotta) — new",
+      "headword": "కొత్త",
+      "romanization": "kotta",
+      "gloss": "new",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e150e42cdcc541fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొత్త",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొత్త — kotta — new."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met మంచి manci a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"కొత్త (kotta)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"కొత్త\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is kotta? (new.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C42-old",
+      "sequence": 990,
+      "title": "పాత (pāta) — old — of a thing, not of a person",
+      "headword": "పాత",
+      "romanization": "pāta",
+      "gloss": "old — of a thing, not of a person",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4982ca3a2c5eae23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పాత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాత — pāta — old — of a thing, not of a person."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met కొత్త kotta a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"పాత (pāta)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"పాత\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is pāta? (old — of a thing, not of a person.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C42-adjective-system",
+      "sequence": 1000,
+      "title": "before the noun, unchanged — five words, one rule",
+      "headword": "before the noun, unchanged",
+      "romanization": "before the noun, unchanged",
+      "gloss": "the one pattern behind all six words in this chapter",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:179f6dc0b9da2197",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five words from this chapter out loud, then say each one in front of a noun you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens: where an adjective goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You did not learn five separate words. You learned where an adjective goes, and five words that go there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "meaning",
+                "word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "meaning: big. word: పెద్ద pedda.",
+                "meaning: small. word: చిన్న cinna.",
+                "meaning: good. word: మంచి manci."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They sit in front of the noun and stay exactly as they are."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than the five words are. Every noun you already know — your name, the house, the water, the day — can now take any of them in front, and every adjective you meet from here goes in the same place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each of the five in front of a noun you already know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each of the five in front of a noun you already know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two of them with the same noun, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two of them with the same noun, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NOTICE",
+              "instruction": "whether the adjective changed shape when the noun did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NOTICE: whether the adjective changed shape when the noun did]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an adjective go in this language? (In front of the noun.) Does it change shape to match the noun? (unchanged.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

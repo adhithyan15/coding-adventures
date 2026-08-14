@@ -466,6 +466,63 @@ reader's brain can connect, and write for someone who knows no grammar
 vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
 HL-C88 and HL-C89 below.
 
+## The owner's architecture directive, 2026-08-14: two reference tracks, then replicate
+
+> *"I know we have even more work to do in other languages. But I want to layout
+> the spine with Spanish and then layout the script work addendum in Tamil and
+> then replicate it across all the languages."*
+
+This supersedes "all six in lockstep" as the **method**, not as the goal. The goal
+is still every language pre-A1 → C2. The method is now:
+
+| | reference track | what it establishes | replicated to |
+|---|---|---|---|
+| **SPINE** | **Spanish** | the meaning ladder pre-A1 → C2: what each rung contains, in what order, at what pace | all 22 tracks |
+| **SCRIPT ADDENDUM** | **Tamil** | the drizzle: letter order by word payoff, one character per segment, cited ductus, the filmstrip figure, and where the decoding ladder closes | every non-Latin track |
+
+**Why this is better than what I was doing.** Six tracks in lockstep means every
+design mistake is made six times and fixed six times. Wave I proved it: the
+placement error, the forward references, the duplicated block type — each landed
+in six tracks at once. One reference track makes a mistake cost one track, and
+replication carries a pattern that has already survived contact.
+
+It also matches where the two tracks actually are. Spanish is furthest up the
+meaning ladder and has the exam-coverage gate to prove a rung is passed. Tamil is
+the only track with a cited stroke order, so it is the only one where the script
+addendum can be built end to end rather than stubbed.
+
+**What this changes in practice.** A new pattern is authored ONCE, in its
+reference track, and proved there — through the gates, into the book, read back
+from the PDF. Only then is it replicated, and replication is a generator run plus
+per-track review rather than six hand-authorings.
+
+**What it does not change.** The gentle ramp, the drizzle riding inside the
+meaning tranches rather than in front of them, and page count never being a
+constraint. Those are properties of the pattern; establishing the pattern once
+makes them easier to hold, not optional.
+
+## The owner's standing goal, restated 2026-08-14
+
+> *"For every language I want to start with pre-A1 level (absolute beginner) to C2."*
+
+**Every language**, not only the six Indic tracks and Spanish. The registry holds
+22, and the ladder in HL12 §3 is the shape all of them climb: pre-A1 → A1 → A2 →
+B1 → B2 → C1 → C2, with the script drizzled in one character at a time underneath
+for those whose reader cannot already read the alphabet.
+
+Three constraints, all standing, all repeated by the owner more than once:
+
+1. **The ramp has to be gentle.** Every rule in HL08/HL11/HL12 costs lessons, and
+   paying that cost is the point.
+2. **The script drizzles in slowly**, alongside the meaning ramp rather than in
+   front of it — the book stays useful from page 1.
+3. **Page count is never a constraint.** *"We can always split the book in the
+   future."* Where a lesson is too big it splits; no rule is relaxed and no
+   lessons merged to keep a book short.
+
+The six Indic tracks lead because they are furthest behind. The other fifteen
+follow the same order once these are moving under their own loop.
+
 ## The owner's direction, 2026-08-14: alternate Spanish and the Indic six
 
 > *"It also looks like the Spanish loop stopped for some reason. So, alternate

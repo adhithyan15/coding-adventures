@@ -1,0 +1,62 @@
+---
+schema_version: 2
+id: TA-C41-old
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 1310
+chapter: 41
+type: word
+headword: "பழைய"
+gloss: "old — of a thing, not of a person"
+romanization: "paḻaiya"
+concept_tag: TA-ADJ-OLD
+prerequisites: [TA-C41-new]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04]
+introduces:
+  knowledge: [TA-LEX-C41-ADJ-05]
+practises:
+  knowledge: [TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04, TA-LEX-C41-ADJ-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C41-new]
+---
+
+# பழைய (paḻaiya) — old — of a thing, not of a person
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03, TA-LEX-C41-ADJ-04] -->
+
+[PAUSE 2s] You can already name things. This is how you POINT at them.
+
+## You'll want to know: பழைய
+<!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-05]; assesses=[] -->
+
+**பழைய** — *paḻaiya* — old — of a thing, not of a person.
+
+Put it in front of a word you already know and you have said something new.
+That is all an adjective does in this language.
+
+You met **புதிய** *pudiya* a moment ago. Put them side by side and nothing about either one changes.
+
+The last lesson of this chapter gives the one rule that governs every
+adjective you will ever meet here.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: "பழைய" three times, pointing at something different each time]
+- [YOU SAY: it once with a word you already know after it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05] -->
+
+[PAUSE 3s] What is *paḻaiya*? (**old — of a thing, not of a person**.) Where does it go — before the word
+it describes, or after? (**Before.**)

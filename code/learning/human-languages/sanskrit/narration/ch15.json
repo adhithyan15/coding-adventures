@@ -1,0 +1,662 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 15,
+  "title": "Describing Things",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:df45d08c69182ad1",
+  "lessons": [
+    {
+      "id": "SA-C15-big",
+      "sequence": 670,
+      "title": "महत् (mahat) — big",
+      "headword": "महत्",
+      "romanization": "mahat",
+      "gloss": "big",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37545f522fe7ae4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: महत्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "महत् — mahat — big."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"महत् (mahat)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"महत्\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is mahat? (big.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C15-small",
+      "sequence": 680,
+      "title": "अल्प (alpa) — small",
+      "headword": "अल्प",
+      "romanization": "alpa",
+      "gloss": "small",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9afadf01b2ff487",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अल्प",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अल्प — alpa — small."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met महत् mahat a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"अल्प (alpa)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"अल्प\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is alpa? (small.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C15-good",
+      "sequence": 690,
+      "title": "उत्तम (uttama) — good",
+      "headword": "उत्तम",
+      "romanization": "uttama",
+      "gloss": "good",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cbb615e324e82a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्तम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्तम — uttama — good."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met अल्प alpa a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"उत्तम (uttama)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"उत्तम\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is uttama? (good.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C15-new",
+      "sequence": 700,
+      "title": "नव (nava) — new",
+      "headword": "नव",
+      "romanization": "nava",
+      "gloss": "new",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a9440134ca255f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नव — nava — new."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met उत्तम uttama a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"नव (nava)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"नव\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is nava? (new.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C15-old",
+      "sequence": 710,
+      "title": "पुरातन (purātana) — old — of a thing, not of a person",
+      "headword": "पुरातन",
+      "romanization": "purātana",
+      "gloss": "old — of a thing, not of a person",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e809a8c5457514d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुरातन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरातन — purātana — old — of a thing, not of a person."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met नव nava a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"पुरातन (purātana)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"पुरातन\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is purātana? (old — of a thing, not of a person.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C15-adjective-system",
+      "sequence": 720,
+      "title": "before the noun, and it AGREES — five words, one rule",
+      "headword": "before the noun, and it AGREES",
+      "romanization": "before the noun, and it AGREES",
+      "gloss": "the one pattern behind all six words in this chapter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b4d1da8e344145e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five words from this chapter out loud, then say each one in front of a noun you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens: where an adjective goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You did not learn five separate words. You learned where an adjective goes, and five words that go there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "meaning",
+                "word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "meaning: big. word: महत् mahat.",
+                "meaning: small. word: अल्प alpa.",
+                "meaning: good. word: उत्तम uttama."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit agrees too, and in more ways than Hindi does — this is where Hindi's habit comes from."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than the five words are. Every noun you already know — your name, the house, the water, the day — can now take any of them in front, and every adjective you meet from here goes in the same place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each of the five in front of a noun you already know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each of the five in front of a noun you already know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two of them with the same noun, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two of them with the same noun, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NOTICE",
+              "instruction": "whether the adjective changed shape when the noun did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NOTICE: whether the adjective changed shape when the noun did]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an adjective go in this language? (In front of the noun.) Does it change shape to match the noun? (and it AGREES.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

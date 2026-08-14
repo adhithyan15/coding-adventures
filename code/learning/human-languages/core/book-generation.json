@@ -1235,6 +1235,12 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 41,
+      "output": "hindi/book/chapters/ch41-describing-things.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "output": "italian/book/chapters/ch02-how-are-you.tex"
@@ -1574,6 +1580,12 @@
       "language": "kannada",
       "chapter": 41,
       "output": "kannada/book/chapters/ch41-pointing-and-asking.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 42,
+      "output": "kannada/book/chapters/ch42-describing-things.tex",
       "scriptSet": "kannada-comparisons"
     },
     {
@@ -2000,6 +2012,12 @@
       "language": "malayalam",
       "chapter": 41,
       "output": "malayalam/book/chapters/ch41-pointing-and-asking.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 42,
+      "output": "malayalam/book/chapters/ch42-describing-things.tex",
       "scriptSet": "malayalam-comparisons"
     },
     {
@@ -2462,6 +2480,13 @@
       "language": "sanskrit",
       "chapter": 14,
       "output": "sanskrit/book/chapters/ch14-pointing-and-asking.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 15,
+      "output": "sanskrit/book/chapters/ch15-describing-things.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
@@ -4008,6 +4033,12 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 41,
+      "output": "tamil/book/chapters/ch41-describing-things.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",
@@ -4221,6 +4252,12 @@
       "language": "telugu",
       "chapter": 41,
       "output": "telugu/book/chapters/ch41-pointing-and-asking.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 42,
+      "output": "telugu/book/chapters/ch42-describing-things.tex",
       "scriptSet": "telugu-comparisons"
     },
     {
