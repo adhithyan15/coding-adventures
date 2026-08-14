@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/requirement/parser/requirementDiagram.jison",
+    "packages/mermaid/src/diagrams/requirement/parser/requirementDiagram.spec.js",
+    "packages/mermaid/src/docs/syntax/requirementDiagram.md"
+  ],
+  "valid": [
+    { "id": "empty", "source": "requirementDiagram\n" },
+    { "id": "full-requirement", "source": "requirementDiagram\nrequirement test_req {\nid: test_id\ntext: the test text.\nrisk: high\nverifymethod: analysis\n}" },
+    { "id": "full-element", "source": "requirementDiagram\nelement test_el {\ntype: test_type\ndocref: test_ref\n}" },
+    { "id": "all-definition-kinds", "source": "requirementDiagram\nrequirement base {\n}\nfunctionalRequirement functional {\n}\ninterfaceRequirement interface {\n}\nperformanceRequirement performance {\n}\nphysicalRequirement physical {\n}\ndesignConstraint constraint {\n}" },
+    { "id": "risk-and-verification-enums", "source": "requirementDiagram\nrequirement low_analysis {\nrisk: low\nverifyMethod: analysis\n}\nrequirement medium_demo {\nrisk: medium\nverifyMethod: demonstration\n}\nrequirement high_inspection {\nrisk: high\nverifyMethod: inspection\n}\nrequirement test_method {\nverifyMethod: test\n}" },
+    { "id": "all-relationships", "source": "requirementDiagram\na - contains -> b\na - copies -> b\na - derives -> b\na - satisfies -> b\na - verifies -> b\na - refines -> b\na - traces -> b\na <- copies - b" },
+    { "id": "accessibility", "source": "requirementDiagram\naccTitle: Checkout requirements\naccDescr: A concise requirement graph\naccDescr {\nA multiline requirement graph\n}" },
+    { "id": "directions", "source": "requirementDiagram\ndirection LR" },
+    { "id": "comments", "source": "requirementDiagram\n%% Mermaid comment\n# hash comment\nrequirement req {\n}" },
+    { "id": "case-insensitive", "source": "ReQuIrEmEnTdIaGrAm\nFuNcTiOnAlReQuIrEmEnT req {\nRiSk: HIGH\nVeRiFyMeThOd: InSpEcTiOn\n}" },
+    { "id": "quoted-values", "source": "requirementDiagram\nrequirement req {\nid: \"REQ: 1\"\ntext: \"Checkout, securely.\"\n}" },
+    { "id": "multiword-and-quoted-identifiers", "source": "requirementDiagram\nrequirement Checkout payment requirement {\n}\nelement \"Checkout service\" {\n}\n\"Checkout service\" - satisfies -> Checkout payment requirement" },
+    { "id": "prototype-identifiers", "source": "requirementDiagram\nrequirement __proto__ {\nid: 1\n}\nelement constructor {\ntype: simulation\n}" },
+    { "id": "direct-style", "source": "requirementDiagram\nrequirement req {\n}\nstyle req fill:#f9f,stroke:#333,stroke-width:4px,color:blue" },
+    { "id": "classes-and-shorthand", "source": "requirementDiagram\nrequirement req:::important {\n}\nelement elem {\n}\nclassDef important fill:#f9f,stroke:#333\nclassDef emphasized color:blue\nclass req,elem important,emphasized\nelem:::important" },
+    { "id": "quoted-style-identifiers", "source": "requirementDiagram\nrequirement \"Checkout service\" {\n}\nclassDef \"critical,class\" fill:#fff1a8\nclass \"Checkout service\" \"critical,class\"\nstyle \"Checkout service\" font-family:\"Avenir, Next\"" }
+  ],
+  "invalid": [
+    { "id": "missing-header", "source": "requirement req {\n}" },
+    { "id": "unknown-direction", "source": "requirementDiagram\ndirection XY" },
+    { "id": "unknown-risk", "source": "requirementDiagram\nrequirement req {\nrisk: urgent\n}" },
+    { "id": "unknown-verification", "source": "requirementDiagram\nrequirement req {\nverifyMethod: review\n}" },
+    { "id": "unterminated-requirement", "source": "requirementDiagram\nrequirement req {\nid: 1" },
+    { "id": "element-field-in-requirement", "source": "requirementDiagram\nrequirement req {\ntype: service\n}" },
+    { "id": "requirement-field-in-element", "source": "requirementDiagram\nelement elem {\nrisk: high\n}" },
+    { "id": "unknown-relationship", "source": "requirementDiagram\na - implements -> b" }
+  ]
+}

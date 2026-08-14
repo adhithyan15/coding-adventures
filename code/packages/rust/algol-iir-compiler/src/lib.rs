@@ -5684,7 +5684,7 @@ impl Compiler {
                                 && binding.array.is_none()
                                 && self.active_by_name_binding(dependency).is_none()
                         })
-                        && !body_targets_scalar(effect_root, dependency)
+                        && !body_changes_stable_selector(effect_root, dependency)
                 })
         });
         if condition_is_variable_free || stable_scalar_condition {
@@ -7471,21 +7471,23 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     out
 }
 
-fn body_targets_scalar(node: &GrammarASTNode, name: &str) -> bool {
+fn body_changes_stable_selector(node: &GrammarASTNode, name: &str) -> bool {
     let targets_name = |variable: &GrammarASTNode| {
         array_subscripts(variable).is_none()
             && direct_tokens(variable).into_iter().any(|token| {
                 token.effective_type_name() == "NAME" && token.value == name
             })
     };
-    if node.rule_name == "assign_stmt"
-        && direct_nodes(node)
+    if node.rule_name == "assign_stmt" {
+        let writes_name = direct_nodes(node)
             .into_iter()
             .filter(|child| child.rule_name == "left_part")
             .filter_map(|left| first_direct_node(left, "variable"))
-            .any(&targets_name)
-    {
-        return true;
+            .any(&targets_name);
+        if writes_name {
+            return first_direct_node(node, "expression")
+                .is_none_or(|expression| expr_variable_name(expression).as_deref() != Some(name));
+        }
     }
     if node.rule_name == "for_stmt"
         && first_direct_node(node, "variable").is_some_and(&targets_name)
@@ -7494,7 +7496,7 @@ fn body_targets_scalar(node: &GrammarASTNode, name: &str) -> bool {
     }
     direct_nodes(node)
         .into_iter()
-        .any(|child| body_targets_scalar(child, name))
+        .any(|child| body_changes_stable_selector(child, name))
 }
 
 fn collect_expression_dependency_names(
@@ -9880,6 +9882,25 @@ mod tests {
             "test",
         )
         .expect("an unchanged known selector may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_self_assigned_selector_preserves_transitive_dependency() {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := choose end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact self-assignment leaves a known transitive selector unchanged");
+    }
+
+    #[test]
+    fn al4_computed_selector_assignment_remains_conservative_for_transitive_dependency() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose, other; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := other end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a computed selector assignment may choose a changing leaf later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

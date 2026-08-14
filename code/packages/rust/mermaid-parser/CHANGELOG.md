@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.111.0
+
+- Graduate Requirement diagrams to full Mermaid 11.16.1 compatibility with a pinned upstream acceptance corpus.
+
 ## 0.110.0
 
 - Resolve quoted Requirement node and class identifiers in style and class statements without splitting on spaces or quoted commas.
