@@ -788,6 +788,7 @@ members = [
     "chief-of-staff-daemon-policy",
     "chief-of-staff-trust-checker",
     "chief-of-staff-notification-approval",
+    "chief-of-staff-biometric-approval",
     "chief-of-staff-cli-core",
     "chief-of-staff-tool-api",
     "chief-of-staff-host-runtime",

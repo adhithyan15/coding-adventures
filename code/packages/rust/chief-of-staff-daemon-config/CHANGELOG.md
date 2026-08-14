@@ -12,6 +12,8 @@
   assignments to the closed privilege schema.
 - Accept an optional normalized Tier 1 notification-helper path for shell-free
   production approval composition.
+- Accept an independently optional normalized Tier 2 biometric-helper path for
+  reviewed native-authenticator composition.
 - Bound secure-bootstrap and graceful-stop deadlines to five minutes.
 - Add optional, closed, typed data-plane declarations for exact directional
   channel-key files and exact Ollama model endpoints.
