@@ -3278,6 +3278,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ж"),
   },
+  // RussianIrina writes lowercase з as one continuous smaller-upper-lobe to
+  // larger-lower-lobe run with a cursive exit. Noto Sans Cyrillic omits the
+  // exit, so the sourced zero-lift order is fitted by circling both printed
+  // lobes through their middle junction and retracing to the lower-right tip.
+  [ductusKey("cyrillic", "з")]: {
+    script: "cyrillic",
+    glyph: "з",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the smaller upper lobe and descend through the middle",
+            path: [
+              { x: 80, y: 485 }, { x: 155, y: 510 }, { x: 225, y: 510 },
+              { x: 300, y: 500 }, { x: 365, y: 460 }, { x: 390, y: 410 },
+              { x: 385, y: 360 }, { x: 345, y: 320 }, { x: 285, y: 285 },
+              { x: 200, y: 280 },
+            ],
+          },
+          {
+            label: "circle the larger lower lobe and finish at the lower right",
+            path: [
+              { x: 200, y: 280 }, { x: 285, y: 275 }, { x: 360, y: 245 },
+              { x: 405, y: 200 }, { x: 410, y: 145 }, { x: 385, y: 90 },
+              { x: 325, y: 45 }, { x: 245, y: 25 }, { x: 160, y: 25 },
+              { x: 85, y: 45 }, { x: 160, y: 25 }, { x: 245, y: 25 },
+              { x: 325, y: 45 }, { x: 405, y: 75 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("з"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

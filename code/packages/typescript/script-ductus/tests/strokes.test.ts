@@ -84,6 +84,7 @@ const CYRILLIC_DE = DUCTUS[ductusKey("cyrillic", "д")];
 const CYRILLIC_IE = DUCTUS[ductusKey("cyrillic", "е")];
 const CYRILLIC_IO = DUCTUS[ductusKey("cyrillic", "ё")];
 const CYRILLIC_ZHE = DUCTUS[ductusKey("cyrillic", "ж")];
+const CYRILLIC_ZE = DUCTUS[ductusKey("cyrillic", "з")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1293,6 +1294,23 @@ describe("handwriting ductus", () => {
     expect(right.at(-1)!.y).toBeLessThan(right[0].y);
   });
 
+  it("Cyrillic з joins its smaller upper lobe to its larger lower lobe", () => {
+    expect(CYRILLIC_ZE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_ZE)).toBe(0);
+    expect(CYRILLIC_ZE.strokes).toHaveLength(1);
+    expect(CYRILLIC_ZE.strokes[0].segments).toHaveLength(2);
+    const upper = CYRILLIC_ZE.strokes[0].segments[0].path;
+    const lower = CYRILLIC_ZE.strokes[0].segments[1].path;
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(Math.max(...upper.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...lower.map((point) => point.y)),
+    );
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(
+      Math.min(...upper.map((point) => point.y)),
+    );
+    expect(Math.max(...lower.map((point) => point.x))).toBeGreaterThan(lower[0].x);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2348,6 +2366,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ж", CYRILLIC_ZHE.source.url)).toBe(
       "_fonts/NotoSansCyrillic-Static.ttf",
     );
+    expect(verifiedLetterFont("з", CYRILLIC_ZE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -3188,6 +3209,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*03:16–03:21.*lower left.*left arch.*tall central loop.*descends through the middle.*right arch.*rightward exit.*without lifting.*one continuous pen-down run.*zero intervening lifts.*rounded, looped form.*joined cursive arches.*bundled Noto Sans Cyrillic.*symmetric printed form.*straight central upright.*four diagonal arms.*lower-left-to-centre-to-right order.*lower-left arm.*retrace the upright.*upper-right arm.*return to the centre.*lower-right arm.*connected cursive.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic з traces its zero-lift lobes to the all-letter native lesson", () => {
+    const src = CYRILLIC_ZE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase з.*03:34–03:39.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*03:34–03:39.*upper left.*smaller upper lobe.*descends through the middle.*larger lower lobe.*curls left along the baseline.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*looped digit 3.*open left side.*exit join.*bundled Noto Sans Cyrillic.*compact printed form.*two open-right lobes.*no exit join.*upper-lobe-to-lower-lobe order.*circle the upper lobe.*middle junction.*circle the lower lobe.*lower-right tip.*connected cursive restores.*small rising exit/i,
     );
   });
 

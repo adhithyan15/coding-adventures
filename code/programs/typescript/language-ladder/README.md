@@ -757,6 +757,13 @@ wings without lifting. The native-teacher lesson demonstrates its rounded
 left-to-centre-to-right school-hand order at 03:16–03:21; the Noto Sans Cyrillic
 fit preserves that zero-lift evidence while tracing the printed glyph's straight
 central upright and four diagonal arms.
+The two-frame Cyrillic **з** filmstrip circles the smaller upper lobe and
+descends through the middle, then continues around the larger lower lobe and
+finishes at the lower right without lifting. The native-teacher lesson
+demonstrates its joined upper-lobe-to-lower-lobe school-hand order at
+03:34–03:39; the Noto Sans Cyrillic fit preserves that zero-lift evidence while
+tracing the compact printed double-lobe glyph and records that the printed form
+omits the school hand's rising exit join.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
