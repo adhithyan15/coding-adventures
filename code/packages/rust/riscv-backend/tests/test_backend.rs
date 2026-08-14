@@ -1345,6 +1345,34 @@ fn linked_module_exits_on_a_byte_access_outside_its_allocation() {
 }
 
 #[test]
+fn widens_a_word_sized_i64_when_a_wide_operation_reassigns_it() {
+    let cir = vec![
+        ci("const_i64", Some("value"), vec![CIROperand::Int(0)], "i64"),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "sub_i64",
+            Some("value"),
+            vec![
+                CIROperand::Var("value".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("value".into())],
+            "i64",
+        ),
+    ];
+
+    let binary = compile(&ctx("wide_reassign", &[], "i64"), &cir).expect("wide reassignment");
+    let result = run_binary(&binary, &[]).expect("simulator execution");
+    assert_eq!(result.return_value, -1);
+    assert_eq!(result.return_value_high, u32::MAX);
+}
+
+#[test]
 fn moves_scalar_and_wide_values() {
     let scalar = vec![
         ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),
