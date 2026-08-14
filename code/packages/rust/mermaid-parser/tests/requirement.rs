@@ -146,6 +146,38 @@ fn requirement_dispatches_through_structural_pipeline() {
 }
 
 #[test]
+fn requirement_matches_the_pinned_case_insensitive_lexer() {
+    let source = r#"ReQuIrEmEnTdIaGrAm
+TiTlE Mixed case requirements
+DiReCtIoN lr
+FuNcTiOnAlReQuIrEmEnT req {
+ID: REQ-1
+TeXt: "Mixed case"
+RiSk: HIGH
+VeRiFyMeThOd: InSpEcTiOn
+}
+ElEmEnT system {
+TyPe: service
+DoCrEf: docs/system
+}
+ClAsSdEf important fill:#fff1a8
+ClAsS req important
+system - SaTiSfIeS -> req"#;
+    let diagram = parse_requirement_diagram(source).expect("case-insensitive requirement parse");
+    assert_eq!(diagram.title.as_deref(), Some("Mixed case requirements"));
+    assert_eq!(diagram.direction, Some(DiagramDirection::Lr));
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("satisfies"));
+    assert_eq!(
+        diagram.nodes[0].style.as_ref().unwrap().fill.as_deref(),
+        Some("#fff1a8")
+    );
+    assert!(matches!(
+        parse_any_mermaid(source).expect("case-insensitive requirement dispatch"),
+        MermaidDiagram::Structural(_)
+    ));
+}
+
+#[test]
 fn requirement_preserves_layout_direction() {
     for (keyword, expected) in [
         ("TB", DiagramDirection::Tb),
