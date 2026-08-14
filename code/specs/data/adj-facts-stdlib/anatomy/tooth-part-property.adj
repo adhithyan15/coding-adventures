@@ -1,0 +1,66 @@
+% ============================================================================
+% tooth-part-property — a descriptive PROPERTY a source states for a tooth
+% part, decoded from clauses already sitting unused inside `tooth-parts.adj`'s
+% own already-quoted MedlinePlus/StatPearls source sentences
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `tooth-parts.adj`
+% (`tooth_part_role(part, role)`, dentin → beneath_enamel,
+% cementum → covers_roots): that table maps each part to WHERE it sits or
+% what it IS, but two of that table's own already-quoted spans ALSO state a
+% descriptive PROPERTY of the part -- a fact the part/role schema had no room
+% for:
+%
+%     "Just beneath the enamel is dentin, a substance harder than bone."
+%     "Cementoblasts form the cementum (calcified material covering the
+%      roots of teeth)"
+%
+% New `tooth_part_property(part, property)` table decodes those spans as
+% their own rows: dentin → harder_than_bone, cementum → calcified_material.
+% "Property" (a descriptive characteristic of the material itself) is
+% categorically distinct from the parent table's "role" (where the part sits
+% or what it does) -- dentin's role is beneath_enamel, but its property
+% (harder than bone) is a separate fact the role column has no room for.
+% Recall is a binding query:
+%
+%     ? tooth_part_property(dentin, $Property)   % harder_than_bone
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `tooth_part_property(part, property)` carrying the citation, so the lookup
+% above is the ordinary SLD binding query -- the engine returns the property
+% WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of these two parts (it never invents a property).
+% The query also runs BACKWARD -- bind a property and recall the part it
+% describes:
+%
+%     ? tooth_part_property($Part, calcified_material)   % cementum
+%
+% A recall on `enamel` -- a real, already-tabled tooth part in
+% `tooth-parts.adj`, but whose own quoted span ("The outer surface of the
+% crown is made of enamel.") states only its location, never a descriptive
+% property -- correctly abstains rather than inventing one for it. Likewise
+% `crown`, `pulp`, and `root` are deliberately left unrowed: their own quoted
+% spans never supply a second, descriptive property beyond the role itself.
+%
+% Provenance: reproduces, byte-for-byte, the SAME two sentences already
+% quoted inside `tooth-parts.adj`'s own header, from the SAME MedlinePlus and
+% StatPearls pages that table already cites -- no new WebFetch, only a
+% different schema decoding a different clause of each already-verified
+% quote. `trust authoritative` -- the same tier the parent table already
+% carries (MedlinePlus and StatPearls are both primary U.S. government
+% NIH/NLM resources).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table tooth_part_property {
+    columns part, property
+
+    row (dentin, harder_than_bone)
+    row (cementum, calcified_material)
+
+    source "Just beneath the enamel is dentin, a substance harder than bone."
+    locator "https://medlineplus.gov/ency/article/002214.htm"
+    trust authoritative
+}
