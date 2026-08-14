@@ -3768,6 +3768,22 @@ multicast, blockwise transfer, DTLS, OSCORE, or all-language socket adapters.
 All three CoAP ownership records were added before selection. The four pending
 ZIP raw-profile children remain .NET, Haskell, JVM, and Swift.
 
+The dependency/leverage pass selected `zip-raw-rfc1951-swift-lane-parity`.
+Swift is the only remaining ZIP child with no live or historical branch
+overlap: the ancient unmerged catch-up residue still touches the complete
+.NET, Haskell, and JVM ZIP trees and must not be reused or cherry-picked.
+Swift 6.3.3 is available, the package is a standalone pure in-memory library
+with only the local LZSS dependency, and no downstream Swift package imports
+it. Its decoder already owns stored/fixed and multi-block framing plus a 256
+MiB guard, but rejects dynamic Huffman blocks, lacks counted caller-capped raw
+APIs and stable errors, and trims declared-size mismatches. This coherent
+tranche consumes all 34 neutral fixtures, hardens exact compressed and
+uncompressed ZIP boundaries, adds an independent test-only raw-DEFLATE oracle,
+and records explicit empty production capabilities without adding native
+authority. The newly recorded CoAP owners remain high-leverage pending work but
+do not shorten the four-child ZIP blocker; Swift is therefore the next serial
+delivery.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

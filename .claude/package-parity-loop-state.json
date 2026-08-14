@@ -3569,10 +3569,12 @@
     {
       "id": "zip-raw-rfc1951-swift-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Swift",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/swift-zip-raw-rfc1951",
       "pr_number": null,
+      "selection_revision": "97094db1b26beb22b506bdf8432919bea1dca873",
+      "selection_notes": "Selected only after PR #11525 merged externally, the collision-clean live inventory classified the new Chief hardware-key approval and CoAP protocol/integration roots with five portable/native ownership records, and no live PR or remote branch claimed Swift ZIP or the shared RFC 1951 fixture. Swift is the only remaining ZIP child with no historical branch overlap; the ancient unmerged catch-up residue touches the full .NET, Haskell, and JVM ZIP trees and must not be reused or cherry-picked. Swift 6.3.3 is installed, the standalone pure in-memory package depends only on the local LZSS library, no downstream Swift package imports ZIP, and its existing codec already implements stored/fixed and multi-block framing with a 256 MiB guard but rejects dynamic blocks, exposes only generic errors, and trims declared-size mismatches. This coherent tranche adds strict dynamic Huffman, exact counted consumption, caller caps, stable payload-blind errors, all 34 neutral fixtures, strict ZIP suffix and size boundaries, coverage-aware build gates, and explicit empty capability metadata without duplicating DEFLATE or adding production authority.",
       "notes": "Portable Swift child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
