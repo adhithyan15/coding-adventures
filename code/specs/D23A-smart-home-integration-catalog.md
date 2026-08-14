@@ -604,6 +604,7 @@ These should be implemented before most vendor-specific adapters:
 | `knxnet-ip-protocol` and `smart-home-knxnet-ip-integration` | bounded KNXnet/IP Search Request/Search Response discovery and D23 interface projection |
 | `smart-home-esphome-discovery-integration` | bounded `_esphomelib._tcp` mDNS identity and security-capability discovery with D23 candidate projection |
 | `smart-home-google-cast-discovery-integration` | bounded `_googlecast._tcp` mDNS receiver identity, version, status, and capability discovery with D23 candidate projection |
+| `coap-protocol` and `smart-home-coap-integration` | bounded Confirmable GET framing and authorized read-only local CoAP scalar telemetry with strict text/JSON decoding |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |

@@ -1,0 +1,8 @@
+[package]
+name = "coap-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded CoAP GET request and response framing"
+license = "MIT"
+
+[dependencies]

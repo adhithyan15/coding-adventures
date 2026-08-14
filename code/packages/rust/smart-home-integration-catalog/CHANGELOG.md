@@ -1,5 +1,9 @@
 # Changelog
 
+- Promote CoAP to a first-party bounded read-only local UDP telemetry runtime
+  while keeping writes, Observe, multicast, blockwise transfer, and unsecured
+  public-network access out of scope.
+
 - Promote Google Cast to a first-party bounded `_googlecast._tcp` mDNS
   discovery runtime while keeping Cast TLS channels, sessions, and media
   commands out of scope.

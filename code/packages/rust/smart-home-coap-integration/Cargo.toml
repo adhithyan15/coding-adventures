@@ -1,0 +1,17 @@
+[package]
+name = "smart-home-coap-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Authorized bounded read-only CoAP telemetry for Smart Home"
+license = "MIT"
+
+[dependencies]
+coap-protocol = { path = "../coap-protocol" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+udp-client = { path = "../udp-client" }
+
+[[bin]]
+name = "smart-home-coap-integration"
+path = "src/main.rs"
