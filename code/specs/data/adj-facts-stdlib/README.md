@@ -198,6 +198,7 @@ per rotation, in parallel):
 | `anatomy/` | synovial joint type → representative example (hinge → elbow) | NIH / NLM StatPearls |
 | `anatomy/` | skin layer → defining descriptor (epidermis → outermost, subcutaneous → fat) | NIH / NCI SEER Training |
 | `anatomy/` | ear structure → ear region it sits in (cochlea → inner, malleus → middle, ear canal → outer) | NIH NIDCD (authoritative) |
+| `anatomy/` | middle-ear ossicle → what it does to the sound signal (`ear_structure_function(structure, function)`, malleus/incus/stapes → all amplifies_sound) — a sibling to `ear-parts.adj`, decoding the action-verb clause already sitting unused in that table's own already-quoted NIDCD sentence; honest abstention on `ear_canal` (a real, already-tabled ear structure, but its own quote states no action-verb function) | NIH NIDCD "How Do We Hear?" (authoritative; see `ear-structure-function.adj`'s header) |
 | `anatomy/` | hand-bone group → part of the hand it occupies (carpals → base_of_hand, metacarpals → middle_of_hand, phalanges → fingers) | InformedHealth.org / NIH NCBI Bookshelf (consensus) |
 | `anatomy/` | foot-bone group → region it occupies (tarsals → heel_and_ankle, metatarsals → midfoot, phalanges → toes) | Wikipedia "Metatarsal bones" (consensus) |
 | `anatomy/` | vertebral-column region → vertebra count (cervical → 7, thoracic → 12, lumbar → 5, sacral → 5, coccygeal → 4) | NCBI Bookshelf / StatPearls "Vertebral Column" (consensus) |

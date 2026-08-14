@@ -1,0 +1,16 @@
+% ============================================================================
+% ear-structure-function.query.adj — worked recall over the
+% ear-structure-function library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the
+% malleus do?" (direct) or "which ossicles amplify sound?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and
+% asks binding queries. A structure not tabled here abstains honestly —
+% the engine never invents a function.
+% ============================================================================
+
+import "ear-structure-function.adj"
+
+? ear_structure_function(malleus, $Function)              % expect amplifies_sound
+? ear_structure_function($Structure, amplifies_sound)      % reverse bind — expect malleus, incus, stapes
+? ear_structure_function(ear_canal, $Function)              % expect abstain -- a real, already-tabled ear structure, but its own quote states no action-verb function
