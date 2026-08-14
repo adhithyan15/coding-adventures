@@ -1,0 +1,662 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 42,
+  "title": "Describing Things",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:796736ad2cc5607a",
+  "lessons": [
+    {
+      "id": "ML-C42-big",
+      "sequence": 1010,
+      "title": "വലിയ (valiya) — big",
+      "headword": "വലിയ",
+      "romanization": "valiya",
+      "gloss": "big",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4170d3e1af4c1a97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വലിയ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വലിയ — valiya — big."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"വലിയ (valiya)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"വലിയ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is valiya? (big.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C42-small",
+      "sequence": 1020,
+      "title": "ചെറിയ (ceṟiya) — small",
+      "headword": "ചെറിയ",
+      "romanization": "ceṟiya",
+      "gloss": "small",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:780323261a147638",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചെറിയ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെറിയ — ceṟiya — small."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met വലിയ valiya a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ചെറിയ (ceṟiya)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ചെറിയ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ceṟiya? (small.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C42-good",
+      "sequence": 1030,
+      "title": "നല്ല (nalla) — good",
+      "headword": "നല്ല",
+      "romanization": "nalla",
+      "gloss": "good",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ed7a8b52f8cf5af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നല്ല",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നല്ല — nalla — good."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met ചെറിയ ceṟiya a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"നല്ല (nalla)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"നല്ല\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is nalla? (good.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C42-new",
+      "sequence": 1040,
+      "title": "പുതിയ (putiya) — new",
+      "headword": "പുതിയ",
+      "romanization": "putiya",
+      "gloss": "new",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb77b2102be615ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുതിയ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുതിയ — putiya — new."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met നല്ല nalla a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"പുതിയ (putiya)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"പുതിയ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is putiya? (new.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C42-old",
+      "sequence": 1050,
+      "title": "പഴയ (paḻaya) — old — of a thing, not of a person",
+      "headword": "പഴയ",
+      "romanization": "paḻaya",
+      "gloss": "old — of a thing, not of a person",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4945c17b7576975c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പഴയ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പഴയ — paḻaya — old — of a thing, not of a person."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met പുതിയ putiya a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"പഴയ (paḻaya)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"പഴയ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is paḻaya? (old — of a thing, not of a person.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C42-adjective-system",
+      "sequence": 1060,
+      "title": "before the noun, unchanged — five words, one rule",
+      "headword": "before the noun, unchanged",
+      "romanization": "before the noun, unchanged",
+      "gloss": "the one pattern behind all six words in this chapter",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75a61d22341ccd9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five words from this chapter out loud, then say each one in front of a noun you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens: where an adjective goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You did not learn five separate words. You learned where an adjective goes, and five words that go there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "meaning",
+                "word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "meaning: big. word: വലിയ valiya.",
+                "meaning: small. word: ചെറിയ ceṟiya.",
+                "meaning: good. word: നല്ല nalla."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every one ends in -a, sits in front of the noun, and never changes."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than the five words are. Every noun you already know — your name, the house, the water, the day — can now take any of them in front, and every adjective you meet from here goes in the same place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each of the five in front of a noun you already know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each of the five in front of a noun you already know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two of them with the same noun, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two of them with the same noun, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NOTICE",
+              "instruction": "whether the adjective changed shape when the noun did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NOTICE: whether the adjective changed shape when the noun did]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an adjective go in this language? (In front of the noun.) Does it change shape to match the noun? (unchanged.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

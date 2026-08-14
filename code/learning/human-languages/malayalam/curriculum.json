@@ -483,6 +483,23 @@
         "ML-EXT-200-DEIXIS"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-201",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ML-C42-big",
+        "ML-C42-small",
+        "ML-C42-good",
+        "ML-C42-new",
+        "ML-C42-old",
+        "ML-C42-adjective-system"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-201-ADJ"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -593,7 +610,8 @@
       "segments": [
         "ML-PATH-015",
         "ML-PATH-024",
-        "ML-PATH-200"
+        "ML-PATH-200",
+        "ML-PATH-201"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1195,6 +1213,22 @@
         "ML-C41-who",
         "ML-C41-where",
         "ML-C41-deixis-system"
+      ]
+    },
+    {
+      "id": "ML-EXT-201-ADJ",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can describe things in Malayalam — big, small, good, new, old — and I can see the one pattern the six words are built from.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C42-big",
+        "ML-C42-small",
+        "ML-C42-good",
+        "ML-C42-new",
+        "ML-C42-old",
+        "ML-C42-adjective-system"
       ]
     }
   ]

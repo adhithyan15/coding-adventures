@@ -470,6 +470,23 @@
         "TE-EXT-200-DEIXIS"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-201",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TE-C42-big",
+        "TE-C42-small",
+        "TE-C42-good",
+        "TE-C42-new",
+        "TE-C42-old",
+        "TE-C42-adjective-system"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-201-ADJ"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -581,7 +598,8 @@
       "segments": [
         "TE-PATH-015",
         "TE-PATH-024",
-        "TE-PATH-200"
+        "TE-PATH-200",
+        "TE-PATH-201"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1193,6 +1211,22 @@
         "TE-C41-who",
         "TE-C41-where",
         "TE-C41-deixis-system"
+      ]
+    },
+    {
+      "id": "TE-EXT-201-ADJ",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can describe things in Telugu — big, small, good, new, old — and I can see the one pattern the six words are built from.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C42-big",
+        "TE-C42-small",
+        "TE-C42-good",
+        "TE-C42-new",
+        "TE-C42-old",
+        "TE-C42-adjective-system"
       ]
     }
   ]

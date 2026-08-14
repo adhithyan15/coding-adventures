@@ -1,0 +1,662 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 42,
+  "title": "Describing Things",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:4e30e5b75b79b180",
+  "lessons": [
+    {
+      "id": "KA-C42-big",
+      "sequence": 960,
+      "title": "ದೊಡ್ಡ (doḍḍa) — big",
+      "headword": "ದೊಡ್ಡ",
+      "romanization": "doḍḍa",
+      "gloss": "big",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:634d1ae10fd14df6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೊಡ್ಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೊಡ್ಡ — doḍḍa — big."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ದೊಡ್ಡ (doḍḍa)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ದೊಡ್ಡ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is doḍḍa? (big.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C42-small",
+      "sequence": 970,
+      "title": "ಚಿಕ್ಕ (cikka) — small",
+      "headword": "ಚಿಕ್ಕ",
+      "romanization": "cikka",
+      "gloss": "small",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3145553a9c74e05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಿಕ್ಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಿಕ್ಕ — cikka — small."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met ದೊಡ್ಡ doḍḍa a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ಚಿಕ್ಕ (cikka)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ಚಿಕ್ಕ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is cikka? (small.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C42-good",
+      "sequence": 980,
+      "title": "ಒಳ್ಳೆಯ (oḷḷeya) — good",
+      "headword": "ಒಳ್ಳೆಯ",
+      "romanization": "oḷḷeya",
+      "gloss": "good",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:222c0f944cfbc410",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಳ್ಳೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಳ್ಳೆಯ — oḷḷeya — good."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met ಚಿಕ್ಕ cikka a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ಒಳ್ಳೆಯ (oḷḷeya)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ಒಳ್ಳೆಯ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is oḷḷeya? (good.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C42-new",
+      "sequence": 990,
+      "title": "ಹೊಸ (hosa) — new",
+      "headword": "ಹೊಸ",
+      "romanization": "hosa",
+      "gloss": "new",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a4c65891500bb2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊಸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಸ — hosa — new."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met ಒಳ್ಳೆಯ oḷḷeya a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ಹೊಸ (hosa)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ಹೊಸ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is hosa? (new.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C42-old",
+      "sequence": 1000,
+      "title": "ಹಳೆಯ (haḷeya) — old — of a thing, not of a person",
+      "headword": "ಹಳೆಯ",
+      "romanization": "haḷeya",
+      "gloss": "old — of a thing, not of a person",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf5016cd647cbcae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name things. This is how you POINT at them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಳೆಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಳೆಯ — haḷeya — old — of a thing, not of a person."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it in front of a word you already know and you have said something new. That is all an adjective does in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You met ಹೊಸ hosa a moment ago. Put them side by side and nothing about either one changes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of this chapter gives the one rule that governs every adjective you will ever meet here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ಹಳೆಯ (haḷeya)\" three times, pointing at something different each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ಹಳೆಯ\" three times, pointing at something different each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once with a word you already know after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once with a word you already know after it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is haḷeya? (old — of a thing, not of a person.) Where does it go — before the word it describes, or after? (Before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C42-adjective-system",
+      "sequence": 1010,
+      "title": "before the noun, unchanged — five words, one rule",
+      "headword": "before the noun, unchanged",
+      "romanization": "before the noun, unchanged",
+      "gloss": "the one pattern behind all six words in this chapter",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2df2ecf84504b44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five words from this chapter out loud, then say each one in front of a noun you already know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar lens: where an adjective goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You did not learn five separate words. You learned where an adjective goes, and five words that go there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "meaning",
+                "word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "meaning: big. word: ದೊಡ್ಡ doḍḍa.",
+                "meaning: small. word: ಚಿಕ್ಕ cikka.",
+                "meaning: good. word: ಒಳ್ಳೆಯ oḷḷeya."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They sit in front of the noun and stay exactly as they are."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than the five words are. Every noun you already know — your name, the house, the water, the day — can now take any of them in front, and every adjective you meet from here goes in the same place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each of the five in front of a noun you already know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each of the five in front of a noun you already know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two of them with the same noun, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two of them with the same noun, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NOTICE",
+              "instruction": "whether the adjective changed shape when the noun did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NOTICE: whether the adjective changed shape when the noun did]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an adjective go in this language? (In front of the noun.) Does it change shape to match the noun? (unchanged.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

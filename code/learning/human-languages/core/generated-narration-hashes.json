@@ -2733,6 +2733,25 @@
       "jsonHash": "fnv1a64:1e9a1c8b96b6207c"
     },
     {
+      "language": "hindi",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:9944553efc69c580",
+      "lessonIds": [
+        "HI-C41-big",
+        "HI-C41-small",
+        "HI-C41-good",
+        "HI-C41-new",
+        "HI-C41-old",
+        "HI-C41-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "hindi/narration/ch41.txt",
+      "json": "hindi/narration/ch41.json",
+      "textHash": "fnv1a64:c41962000bc9cd77",
+      "jsonHash": "fnv1a64:14223ea517a2f780"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
@@ -3801,6 +3820,25 @@
       "json": "kannada/narration/ch41.json",
       "textHash": "fnv1a64:3f8705a89aa458a6",
       "jsonHash": "fnv1a64:0aae170e0d371f47"
+    },
+    {
+      "language": "kannada",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:4e30e5b75b79b180",
+      "lessonIds": [
+        "KA-C42-big",
+        "KA-C42-small",
+        "KA-C42-good",
+        "KA-C42-new",
+        "KA-C42-old",
+        "KA-C42-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "kannada/narration/ch42.txt",
+      "json": "kannada/narration/ch42.json",
+      "textHash": "fnv1a64:1d3336bb6f8d0025",
+      "jsonHash": "fnv1a64:b4f05ca35fd2e130"
     },
     {
       "language": "latin",
@@ -5089,6 +5127,25 @@
       "json": "malayalam/narration/ch41.json",
       "textHash": "fnv1a64:921f51e6bf3298fe",
       "jsonHash": "fnv1a64:997f38fbdaac58ab"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:796736ad2cc5607a",
+      "lessonIds": [
+        "ML-C42-big",
+        "ML-C42-small",
+        "ML-C42-good",
+        "ML-C42-new",
+        "ML-C42-old",
+        "ML-C42-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "malayalam/narration/ch42.txt",
+      "json": "malayalam/narration/ch42.json",
+      "textHash": "fnv1a64:c145d3fcf65ce77e",
+      "jsonHash": "fnv1a64:85b3f393e089e1a2"
     },
     {
       "language": "marathi",
@@ -6712,6 +6769,25 @@
       "json": "sanskrit/narration/ch14.json",
       "textHash": "fnv1a64:0affdc3d68c0b039",
       "jsonHash": "fnv1a64:23955c00ecfbced3"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:df45d08c69182ad1",
+      "lessonIds": [
+        "SA-C15-big",
+        "SA-C15-small",
+        "SA-C15-good",
+        "SA-C15-new",
+        "SA-C15-old",
+        "SA-C15-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch15.txt",
+      "json": "sanskrit/narration/ch15.json",
+      "textHash": "fnv1a64:7e48d9d79fe9c24f",
+      "jsonHash": "fnv1a64:89a2cfd6431424cd"
     },
     {
       "language": "spanish",
@@ -11252,6 +11328,25 @@
       "jsonHash": "fnv1a64:e4d11b7cddb56cb7"
     },
     {
+      "language": "tamil",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:9746d87673fef68c",
+      "lessonIds": [
+        "TA-C41-big",
+        "TA-C41-small",
+        "TA-C41-good",
+        "TA-C41-new",
+        "TA-C41-old",
+        "TA-C41-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "tamil/narration/ch41.txt",
+      "json": "tamil/narration/ch41.json",
+      "textHash": "fnv1a64:a4f6e3d40908f9c2",
+      "jsonHash": "fnv1a64:0df4bc54671dd90e"
+    },
+    {
       "language": "telugu",
       "chapter": 1,
       "sourceHash": "fnv1a64:1a3b4076a4e03286",
@@ -11885,6 +11980,25 @@
       "json": "telugu/narration/ch41.json",
       "textHash": "fnv1a64:3f9fb4b8404fcceb",
       "jsonHash": "fnv1a64:73399e019f83b003"
+    },
+    {
+      "language": "telugu",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:000036d76be44512",
+      "lessonIds": [
+        "TE-C42-big",
+        "TE-C42-small",
+        "TE-C42-good",
+        "TE-C42-new",
+        "TE-C42-old",
+        "TE-C42-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "telugu/narration/ch42.txt",
+      "json": "telugu/narration/ch42.json",
+      "textHash": "fnv1a64:9e020212a09db8c3",
+      "jsonHash": "fnv1a64:ecf3a5a68bec4444"
     },
     {
       "language": "urdu",

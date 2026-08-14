@@ -1248,6 +1248,20 @@
       "tex": "hindi/book/chapters/ch40-pointing-and-asking.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:3ff5259e08cbfbe2",
+      "lessonIds": [
+        "HI-C41-big",
+        "HI-C41-small",
+        "HI-C41-good",
+        "HI-C41-new",
+        "HI-C41-old",
+        "HI-C41-adjective-system"
+      ],
+      "tex": "hindi/book/chapters/ch41-describing-things.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
@@ -1894,6 +1908,20 @@
         "KA-C41-deixis-system"
       ],
       "tex": "kannada/book/chapters/ch41-pointing-and-asking.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:5b199e4ab8de6ddb",
+      "lessonIds": [
+        "KA-C42-big",
+        "KA-C42-small",
+        "KA-C42-good",
+        "KA-C42-new",
+        "KA-C42-old",
+        "KA-C42-adjective-system"
+      ],
+      "tex": "kannada/book/chapters/ch42-describing-things.tex"
     },
     {
       "language": "latin",
@@ -2677,6 +2705,20 @@
         "ML-C41-deixis-system"
       ],
       "tex": "malayalam/book/chapters/ch41-pointing-and-asking.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:6cd4fe14bd21dd5f",
+      "lessonIds": [
+        "ML-C42-big",
+        "ML-C42-small",
+        "ML-C42-good",
+        "ML-C42-new",
+        "ML-C42-old",
+        "ML-C42-adjective-system"
+      ],
+      "tex": "malayalam/book/chapters/ch42-describing-things.tex"
     },
     {
       "language": "marathi",
@@ -3545,6 +3587,20 @@
         "SA-C14-deixis-system"
       ],
       "tex": "sanskrit/book/chapters/ch14-pointing-and-asking.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:a487f77349e595c8",
+      "lessonIds": [
+        "SA-C15-big",
+        "SA-C15-small",
+        "SA-C15-good",
+        "SA-C15-new",
+        "SA-C15-old",
+        "SA-C15-adjective-system"
+      ],
+      "tex": "sanskrit/book/chapters/ch15-describing-things.tex"
     },
     {
       "language": "spanish",
@@ -6480,6 +6536,20 @@
       "tex": "tamil/book/chapters/ch40-pointing-and-asking.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:1cdfaea5426041f4",
+      "lessonIds": [
+        "TA-C41-big",
+        "TA-C41-small",
+        "TA-C41-good",
+        "TA-C41-new",
+        "TA-C41-old",
+        "TA-C41-adjective-system"
+      ],
+      "tex": "tamil/book/chapters/ch41-describing-things.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:bc4de0324f627ca2",
@@ -6838,6 +6908,20 @@
         "TE-C41-deixis-system"
       ],
       "tex": "telugu/book/chapters/ch41-pointing-and-asking.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:3d15ff11917e0e6d",
+      "lessonIds": [
+        "TE-C42-big",
+        "TE-C42-small",
+        "TE-C42-good",
+        "TE-C42-new",
+        "TE-C42-old",
+        "TE-C42-adjective-system"
+      ],
+      "tex": "telugu/book/chapters/ch42-describing-things.tex"
     },
     {
       "language": "urdu",

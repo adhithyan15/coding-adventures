@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c8fb1359a9bf58d1",
+  "sourceHash": "fnv1a64:8156598b0000db37",
   "summary": {
-    "totalLessons": 2101,
-    "voice": 1417,
+    "totalLessons": 2137,
+    "voice": 1453,
     "sight": 568,
     "pen": 116,
-    "drivableLessons": 1417,
-    "drivablePercent": 67,
+    "drivableLessons": 1453,
+    "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 772,
-    "drivablePrefixTotal": 1217,
-    "fullyDrivableChapters": 510,
+    "chapterCount": 778,
+    "drivablePrefixTotal": 1253,
+    "fullyDrivableChapters": 516,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -2215,12 +2215,12 @@
     },
     {
       "language": "hindi",
-      "lessonCount": 124,
-      "voice": 66,
+      "lessonCount": 130,
+      "voice": 72,
       "sight": 39,
       "pen": 19,
-      "drivablePercent": 53,
-      "drivablePrefixTotal": 49,
+      "drivablePercent": 55,
+      "drivablePrefixTotal": 55,
       "modalities": [
         "voice",
         "sight",
@@ -2894,6 +2894,27 @@
             "HI-C40-where",
             "HI-C40-deixis-system"
           ]
+        },
+        {
+          "chapter": 41,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "HI-C41-big",
+            "HI-C41-small",
+            "HI-C41-good",
+            "HI-C41-new",
+            "HI-C41-old",
+            "HI-C41-adjective-system"
+          ]
         }
       ]
     },
@@ -3380,12 +3401,12 @@
     },
     {
       "language": "kannada",
-      "lessonCount": 103,
-      "voice": 64,
+      "lessonCount": 109,
+      "voice": 70,
       "sight": 31,
       "pen": 8,
-      "drivablePercent": 62,
-      "drivablePrefixTotal": 55,
+      "drivablePercent": 64,
+      "drivablePrefixTotal": 61,
       "modalities": [
         "voice",
         "sight",
@@ -4069,6 +4090,27 @@
             "KA-C41-who",
             "KA-C41-where",
             "KA-C41-deixis-system"
+          ]
+        },
+        {
+          "chapter": 42,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C42-big",
+            "KA-C42-small",
+            "KA-C42-good",
+            "KA-C42-new",
+            "KA-C42-old",
+            "KA-C42-adjective-system"
           ]
         }
       ]
@@ -4818,12 +4860,12 @@
     },
     {
       "language": "malayalam",
-      "lessonCount": 108,
-      "voice": 60,
+      "lessonCount": 114,
+      "voice": 66,
       "sight": 40,
       "pen": 8,
-      "drivablePercent": 56,
-      "drivablePrefixTotal": 53,
+      "drivablePercent": 58,
+      "drivablePrefixTotal": 59,
       "modalities": [
         "voice",
         "sight",
@@ -5504,6 +5546,27 @@
             "ML-C41-who",
             "ML-C41-where",
             "ML-C41-deixis-system"
+          ]
+        },
+        {
+          "chapter": 42,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C42-big",
+            "ML-C42-small",
+            "ML-C42-good",
+            "ML-C42-new",
+            "ML-C42-old",
+            "ML-C42-adjective-system"
           ]
         }
       ]
@@ -6951,12 +7014,12 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 72,
-      "voice": 30,
+      "lessonCount": 78,
+      "voice": 36,
       "sight": 36,
       "pen": 6,
-      "drivablePercent": 42,
-      "drivablePrefixTotal": 21,
+      "drivablePercent": 46,
+      "drivablePrefixTotal": 27,
       "modalities": [
         "voice",
         "sight",
@@ -7196,6 +7259,27 @@
             "SA-C14-who",
             "SA-C14-where",
             "SA-C14-deixis-system"
+          ]
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C15-big",
+            "SA-C15-small",
+            "SA-C15-good",
+            "SA-C15-new",
+            "SA-C15-old",
+            "SA-C15-adjective-system"
           ]
         }
       ]
@@ -11534,12 +11618,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 148,
-      "voice": 83,
+      "lessonCount": 154,
+      "voice": 89,
       "sight": 32,
       "pen": 33,
-      "drivablePercent": 56,
-      "drivablePrefixTotal": 67,
+      "drivablePercent": 58,
+      "drivablePrefixTotal": 73,
       "modalities": [
         "voice",
         "sight",
@@ -12245,17 +12329,38 @@
             "TA-C40-where",
             "TA-C40-deixis-system"
           ]
+        },
+        {
+          "chapter": 41,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C41-big",
+            "TA-C41-small",
+            "TA-C41-good",
+            "TA-C41-new",
+            "TA-C41-old",
+            "TA-C41-adjective-system"
+          ]
         }
       ]
     },
     {
       "language": "telugu",
-      "lessonCount": 102,
-      "voice": 58,
+      "lessonCount": 108,
+      "voice": 64,
       "sight": 36,
       "pen": 8,
-      "drivablePercent": 57,
-      "drivablePrefixTotal": 50,
+      "drivablePercent": 59,
+      "drivablePrefixTotal": 56,
       "modalities": [
         "voice",
         "sight",
@@ -12934,6 +13039,27 @@
             "TE-C41-who",
             "TE-C41-where",
             "TE-C41-deixis-system"
+          ]
+        },
+        {
+          "chapter": 42,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C42-big",
+            "TE-C42-small",
+            "TE-C42-good",
+            "TE-C42-new",
+            "TE-C42-old",
+            "TE-C42-adjective-system"
           ]
         }
       ]
@@ -24135,6 +24261,114 @@
       "sourceHash": "fnv1a64:64eae09961a75166"
     },
     {
+      "id": "HI-C41-big",
+      "language": "hindi",
+      "chapter": 41,
+      "sequence": 1170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b02475ce6f5c7611"
+    },
+    {
+      "id": "HI-C41-small",
+      "language": "hindi",
+      "chapter": 41,
+      "sequence": 1180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8b33f8a4d7f41f99"
+    },
+    {
+      "id": "HI-C41-good",
+      "language": "hindi",
+      "chapter": 41,
+      "sequence": 1190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b9514e0b8e8096a2"
+    },
+    {
+      "id": "HI-C41-new",
+      "language": "hindi",
+      "chapter": 41,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5510787e22485d8b"
+    },
+    {
+      "id": "HI-C41-old",
+      "language": "hindi",
+      "chapter": 41,
+      "sequence": 1210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:26ccee560734f904"
+    },
+    {
+      "id": "HI-C41-adjective-system",
+      "language": "hindi",
+      "chapter": 41,
+      "sequence": 1220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:036b8786423cd2d5"
+    },
+    {
       "id": "IT-C01-buongiorno",
       "language": "italian",
       "chapter": 1,
@@ -27872,6 +28106,114 @@
       "sourceHash": "fnv1a64:ca6fc0978f9ebd2c"
     },
     {
+      "id": "KA-C42-big",
+      "language": "kannada",
+      "chapter": 42,
+      "sequence": 960,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:634d1ae10fd14df6"
+    },
+    {
+      "id": "KA-C42-small",
+      "language": "kannada",
+      "chapter": 42,
+      "sequence": 970,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b3145553a9c74e05"
+    },
+    {
+      "id": "KA-C42-good",
+      "language": "kannada",
+      "chapter": 42,
+      "sequence": 980,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:222c0f944cfbc410"
+    },
+    {
+      "id": "KA-C42-new",
+      "language": "kannada",
+      "chapter": 42,
+      "sequence": 990,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1a4c65891500bb2f"
+    },
+    {
+      "id": "KA-C42-old",
+      "language": "kannada",
+      "chapter": 42,
+      "sequence": 1000,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cf5016cd647cbcae"
+    },
+    {
+      "id": "KA-C42-adjective-system",
+      "language": "kannada",
+      "chapter": 42,
+      "sequence": 1010,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b2df2ecf84504b44"
+    },
+    {
       "id": "LA-C01-salve",
       "language": "latin",
       "chapter": 1,
@@ -31555,6 +31897,114 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:bb798bfcb486fdcf"
+    },
+    {
+      "id": "ML-C42-big",
+      "language": "malayalam",
+      "chapter": 42,
+      "sequence": 1010,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4170d3e1af4c1a97"
+    },
+    {
+      "id": "ML-C42-small",
+      "language": "malayalam",
+      "chapter": 42,
+      "sequence": 1020,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:780323261a147638"
+    },
+    {
+      "id": "ML-C42-good",
+      "language": "malayalam",
+      "chapter": 42,
+      "sequence": 1030,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6ed7a8b52f8cf5af"
+    },
+    {
+      "id": "ML-C42-new",
+      "language": "malayalam",
+      "chapter": 42,
+      "sequence": 1040,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fb77b2102be615ef"
+    },
+    {
+      "id": "ML-C42-old",
+      "language": "malayalam",
+      "chapter": 42,
+      "sequence": 1050,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4945c17b7576975c"
+    },
+    {
+      "id": "ML-C42-adjective-system",
+      "language": "malayalam",
+      "chapter": 42,
+      "sequence": 1060,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:75a61d22341ccd9b"
     },
     {
       "id": "MR-C01-baram",
@@ -39448,6 +39898,114 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:2e4709d254aaabad"
+    },
+    {
+      "id": "SA-C15-big",
+      "language": "sanskrit",
+      "chapter": 15,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:37545f522fe7ae4c"
+    },
+    {
+      "id": "SA-C15-small",
+      "language": "sanskrit",
+      "chapter": 15,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c9afadf01b2ff487"
+    },
+    {
+      "id": "SA-C15-good",
+      "language": "sanskrit",
+      "chapter": 15,
+      "sequence": 690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9cbb615e324e82a6"
+    },
+    {
+      "id": "SA-C15-new",
+      "language": "sanskrit",
+      "chapter": 15,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4a9440134ca255f3"
+    },
+    {
+      "id": "SA-C15-old",
+      "language": "sanskrit",
+      "chapter": 15,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e809a8c5457514d6"
+    },
+    {
+      "id": "SA-C15-adjective-system",
+      "language": "sanskrit",
+      "chapter": 15,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7b4d1da8e344145e"
     },
     {
       "id": "ES-C01-hola",
@@ -49854,6 +50412,114 @@
       "sourceHash": "fnv1a64:f3016ecfc5a56a23"
     },
     {
+      "id": "TA-C41-big",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b172d44794aaf9b1"
+    },
+    {
+      "id": "TA-C41-small",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4e0b77db2b2bd740"
+    },
+    {
+      "id": "TA-C41-good",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14b6ac8d32b13a37"
+    },
+    {
+      "id": "TA-C41-new",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8d1e8a5a7a5e2548"
+    },
+    {
+      "id": "TA-C41-old",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:10ef1e9ca946eda9"
+    },
+    {
+      "id": "TA-C41-adjective-system",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f8ba52ec7ed7337c"
+    },
+    {
       "id": "TE-C01-namaskaram",
       "language": "telugu",
       "chapter": 1,
@@ -51845,6 +52511,114 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:8098eb3491625c4d"
+    },
+    {
+      "id": "TE-C42-big",
+      "language": "telugu",
+      "chapter": 42,
+      "sequence": 950,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:acfef9cc6dd8ffcf"
+    },
+    {
+      "id": "TE-C42-small",
+      "language": "telugu",
+      "chapter": 42,
+      "sequence": 960,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3ba86b6117e37bf0"
+    },
+    {
+      "id": "TE-C42-good",
+      "language": "telugu",
+      "chapter": 42,
+      "sequence": 970,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1d5b3f567ca07e00"
+    },
+    {
+      "id": "TE-C42-new",
+      "language": "telugu",
+      "chapter": 42,
+      "sequence": 980,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e150e42cdcc541fe"
+    },
+    {
+      "id": "TE-C42-old",
+      "language": "telugu",
+      "chapter": 42,
+      "sequence": 990,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4982ca3a2c5eae23"
+    },
+    {
+      "id": "TE-C42-adjective-system",
+      "language": "telugu",
+      "chapter": 42,
+      "sequence": 1000,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:179f6dc0b9da2197"
     },
     {
       "id": "UR-C01-ji-han",
