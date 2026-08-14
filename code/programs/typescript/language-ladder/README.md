@@ -751,6 +751,12 @@ lifts for the left dot and lifts again for the right dot. The native-teacher
 lesson demonstrates this body-before-left-dot-before-right-dot order at
 02:51–02:56; the Noto Sans Cyrillic fit preserves its two-lift evidence while
 tracing the compact printed e body and both circular dots.
+The two-frame Cyrillic **ж** filmstrip traces the left wings and rises through
+the centre, then retraces the central upright and continues through the right
+wings without lifting. The native-teacher lesson demonstrates its rounded
+left-to-centre-to-right school-hand order at 03:16–03:21; the Noto Sans Cyrillic
+fit preserves that zero-lift evidence while tracing the printed glyph's straight
+central upright and four diagonal arms.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

@@ -736,10 +736,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   body first, then lifts for the left dot and lifts again for the right dot.
   Its four-frame Noto fit preserves the source's body-before-left-dot-before-
   right-dot order and two-lift evidence while tracing the compact printed e
-  body and both circular dots. The remaining **96** prose part
+  body and both circular dots. Lowercase **ж** follows at 03:16–03:21: the pen
+  rises from the lower left through a rounded left arch and tall central loop,
+  descends through the middle, continues into a rounded right arch, and
+  finishes through a smaller rightward exit without lifting. Its two-frame
+  Noto fit preserves that left-to-centre-to-right order and zero-lift evidence
+  while tracing the printed glyph's straight central upright and four diagonal
+  arms. The remaining **95** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 26,
+  `cyrillic` 25,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
