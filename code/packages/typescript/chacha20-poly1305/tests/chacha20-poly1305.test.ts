@@ -13,6 +13,10 @@ import {
   poly1305Mac,
   aeadEncrypt,
   aeadDecrypt,
+  hchacha20Subkey,
+  xchacha20Encrypt,
+  xchacha20Poly1305Encrypt,
+  xchacha20Poly1305Decrypt,
 } from "../src/index.js";
 
 /**
@@ -407,5 +411,205 @@ describe("AEAD", () => {
     expect(ct.length).toBe(500);
     const pt = aeadDecrypt(ct, key, nonce, aad, tag);
     expect(pt).toEqual(plaintext);
+  });
+});
+
+// ============================================================================
+// XChaCha20-Poly1305 Tests (SE04)
+// ============================================================================
+
+function xchachaFixture() {
+  return {
+    key: fromHex(
+      "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f",
+    ),
+    nonce: fromHex("404142434445464748494a4b4c4d4e4f5051525354555657"),
+    aad: fromHex("50515253c0c1c2c3c4c5c6c7"),
+    plaintext: fromString(
+      "Ladies and Gentlemen of the class of '99: If I could offer you only one tip for the future, sunscreen would be it.",
+    ),
+    ciphertext: fromHex(
+      "bd6d179d3e83d43b9576579493c0e939" +
+        "572a1700252bfaccbed2902c21396cbb" +
+        "731c7f1b0b4aa6440bf3a82f4eda7e39" +
+        "ae64c6708c54c216cb96b72e1213b452" +
+        "2f8c9ba40db5d945b11b69b982c1bb9e" +
+        "3f3fac2bc369488f76b2383565d3fff9" +
+        "21f9664c97637da9768812f615c68b13" +
+        "b52e",
+    ),
+    tag: fromHex("c0875924c1c7987947deafd8780acf49"),
+  };
+}
+
+describe("XChaCha20-Poly1305", () => {
+  it("draft Section 2.2.1 — HChaCha20 subkey", () => {
+    const key = fromHex(
+      "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    );
+    const nonce = fromHex("000000090000004a0000000031415927");
+    const expected = fromHex(
+      "82413b4227b27bfed30e42508a877d73a0f9e4d58a74a853c12ec41326d3ecdc",
+    );
+
+    expect(hchacha20Subkey(key, nonce)).toEqual(expected);
+  });
+
+  it("draft Appendix A.3.1 — exact ciphertext and tag", () => {
+    const fixture = xchachaFixture();
+    const [ciphertext, tag] = xchacha20Poly1305Encrypt(
+      fixture.plaintext,
+      fixture.key,
+      fixture.nonce,
+      fixture.aad,
+    );
+
+    expect(ciphertext).toEqual(fixture.ciphertext);
+    expect(tag).toEqual(fixture.tag);
+  });
+
+  it("decrypts the Appendix A.3.1 ciphertext", () => {
+    const fixture = xchachaFixture();
+    expect(
+      xchacha20Poly1305Decrypt(
+        fixture.ciphertext,
+        fixture.key,
+        fixture.nonce,
+        fixture.aad,
+        fixture.tag,
+      ),
+    ).toEqual(fixture.plaintext);
+  });
+
+  it("rejects a change in every tag byte with one authentication failure", () => {
+    const fixture = xchachaFixture();
+    for (let i = 0; i < fixture.tag.length; i++) {
+      const changedTag = new Uint8Array(fixture.tag);
+      changedTag[i]! ^= 0x01;
+      expect(() =>
+        xchacha20Poly1305Decrypt(
+          fixture.ciphertext,
+          fixture.key,
+          fixture.nonce,
+          fixture.aad,
+          changedTag,
+        ),
+      ).toThrow("Authentication failed");
+    }
+  });
+
+  it("rejects changed ciphertext, key, nonce, and AAD", () => {
+    const fixture = xchachaFixture();
+    const changes: Array<[Uint8Array, Uint8Array, Uint8Array, Uint8Array]> = [];
+
+    const ciphertext = new Uint8Array(fixture.ciphertext);
+    ciphertext[0]! ^= 0x01;
+    changes.push([ciphertext, fixture.key, fixture.nonce, fixture.aad]);
+
+    const key = new Uint8Array(fixture.key);
+    key[0]! ^= 0x01;
+    changes.push([fixture.ciphertext, key, fixture.nonce, fixture.aad]);
+
+    const nonce = new Uint8Array(fixture.nonce);
+    nonce[23]! ^= 0x01;
+    changes.push([fixture.ciphertext, fixture.key, nonce, fixture.aad]);
+
+    const aad = new Uint8Array(fixture.aad);
+    aad[0]! ^= 0x01;
+    changes.push([fixture.ciphertext, fixture.key, fixture.nonce, aad]);
+
+    for (const [
+      changedCiphertext,
+      changedKey,
+      changedNonce,
+      changedAad,
+    ] of changes) {
+      expect(() =>
+        xchacha20Poly1305Decrypt(
+          changedCiphertext,
+          changedKey,
+          changedNonce,
+          changedAad,
+          fixture.tag,
+        ),
+      ).toThrow("Authentication failed");
+    }
+  });
+
+  it("round-trips empty and multi-block plaintexts", () => {
+    const key = Uint8Array.from({ length: 32 }, (_, i) => i);
+    const nonce = Uint8Array.from({ length: 24 }, (_, i) => i + 32);
+    const aad = fromString("SE04 edge cases");
+
+    for (const plaintext of [
+      new Uint8Array(0),
+      new Uint8Array(4096).fill(0xa5),
+    ]) {
+      const [ciphertext, tag] = xchacha20Poly1305Encrypt(
+        plaintext,
+        key,
+        nonce,
+        aad,
+      );
+      expect(
+        xchacha20Poly1305Decrypt(ciphertext, key, nonce, aad, tag),
+      ).toEqual(plaintext);
+    }
+  });
+
+  it("raw XChaCha20 is XOR-symmetric at counters 0 and 1", () => {
+    const key = Uint8Array.from({ length: 32 }, (_, i) => i);
+    const nonce = Uint8Array.from({ length: 24 }, (_, i) => i + 32);
+    const plaintext = Uint8Array.from({ length: 200 }, (_, i) => i);
+
+    for (const counter of [0, 1]) {
+      const ciphertext = xchacha20Encrypt(plaintext, key, nonce, counter);
+      expect(ciphertext).not.toEqual(plaintext);
+      expect(xchacha20Encrypt(ciphertext, key, nonce, counter)).toEqual(
+        plaintext,
+      );
+    }
+  });
+
+  it("rejects invalid key, nonce, and tag lengths", () => {
+    expect(() =>
+      hchacha20Subkey(new Uint8Array(31), new Uint8Array(16)),
+    ).toThrow("Key must be 32 bytes");
+    expect(() =>
+      hchacha20Subkey(new Uint8Array(32), new Uint8Array(15)),
+    ).toThrow("Nonce must be 16 bytes");
+    expect(() =>
+      xchacha20Encrypt(
+        new Uint8Array(0),
+        new Uint8Array(32),
+        new Uint8Array(23),
+        0,
+      ),
+    ).toThrow("Nonce must be 24 bytes");
+    expect(() =>
+      xchacha20Poly1305Encrypt(
+        new Uint8Array(0),
+        new Uint8Array(31),
+        new Uint8Array(24),
+        new Uint8Array(0),
+      ),
+    ).toThrow("Key must be 32 bytes");
+    expect(() =>
+      xchacha20Poly1305Encrypt(
+        new Uint8Array(0),
+        new Uint8Array(32),
+        new Uint8Array(23),
+        new Uint8Array(0),
+      ),
+    ).toThrow("Nonce must be 24 bytes");
+    expect(() =>
+      xchacha20Poly1305Decrypt(
+        new Uint8Array(0),
+        new Uint8Array(31),
+        new Uint8Array(23),
+        new Uint8Array(0),
+        new Uint8Array(15),
+      ),
+    ).toThrow("Tag must be 16 bytes");
   });
 });
