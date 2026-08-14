@@ -1,0 +1,23 @@
+% ============================================================================
+% vertebrate-thermoregulation.query — worked recall queries against
+% vertebrate-thermoregulation.adj (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% type, list its classes), and a full-domain sweep demonstrating no
+% abstention across all five vertebrate classes.
+% ============================================================================
+
+import "vertebrate-thermoregulation.adj"
+
+% Forward: is a bird ecto- or endothermic?
+? vertebrate_thermoregulation(bird, $Type)
+
+% Backward: which classes are ectothermic ("cold-blooded")?
+? vertebrate_thermoregulation($Class, ectothermic)
+
+% Full-domain sweep: every vertebrate class this stdlib ships has a
+% thermoregulation type on record -- no abstention.
+? vertebrate_thermoregulation(fish, $T1)
+? vertebrate_thermoregulation(amphibian, $T2)
+? vertebrate_thermoregulation(reptile, $T3)
+? vertebrate_thermoregulation(mammal, $T4)
