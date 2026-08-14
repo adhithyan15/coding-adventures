@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.56.0
+
+- Preserve the six SysML Requirement definition kinds as typed metadata.
+
 ## 0.55.0
 
 - Add typed Requirement and element metadata to structural nodes.

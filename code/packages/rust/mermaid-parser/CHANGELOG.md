@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.102.0
+
+- Lower all six Requirement definition kinds into typed semantic metadata.
+
 ## 0.101.0
 
 - Parse Requirement fields with dedicated grammar tokens and typed semantic metadata.

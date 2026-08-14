@@ -1,6 +1,6 @@
 use diagram_ir::{
-    DiagramDirection, RelKind, RequirementRisk, RequirementVerifyMethod, StructuralKind,
-    StructuralNodeKind, StructuralNodeMetadata,
+    DiagramDirection, RelKind, RequirementKind, RequirementRisk, RequirementVerifyMethod,
+    StructuralKind, StructuralNodeKind, StructuralNodeMetadata,
 };
 use mermaid_parser::{parse_any_mermaid, parse_requirement_diagram, MermaidDiagram};
 
@@ -30,6 +30,7 @@ fn requirement_core_lowers_to_structural_ir() {
         diagram.nodes[0].metadata,
         Some(StructuralNodeMetadata::Requirement(
             diagram_ir::RequirementMetadata {
+                kind: RequirementKind::Functional,
                 external_id: Some("PAY-1".into()),
                 text: Some("Payment completes securely".into()),
                 risk: Some(RequirementRisk::High),
@@ -65,13 +66,46 @@ verifyMethod: Inspection
         panic!("typed requirement metadata");
     };
     assert_eq!(metadata.risk, Some(RequirementRisk::Medium));
-    assert_eq!(metadata.verify_method, Some(RequirementVerifyMethod::Inspection));
+    assert_eq!(
+        metadata.verify_method,
+        Some(RequirementVerifyMethod::Inspection)
+    );
+}
+
+#[test]
+fn requirement_preserves_all_definition_kinds() {
+    let source = r#"requirementDiagram
+requirement base {}
+functionalRequirement functional {}
+interfaceRequirement interface {}
+performanceRequirement performance {}
+physicalRequirement physical {}
+designConstraint constraint {}"#;
+    let diagram = parse_requirement_diagram(source).expect("requirement kinds");
+    let kinds = diagram
+        .nodes
+        .iter()
+        .map(|node| match node.metadata.as_ref() {
+            Some(StructuralNodeMetadata::Requirement(metadata)) => metadata.kind.clone(),
+            _ => panic!("typed requirement metadata"),
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(
+        kinds,
+        vec![
+            RequirementKind::Requirement,
+            RequirementKind::Functional,
+            RequirementKind::Interface,
+            RequirementKind::Performance,
+            RequirementKind::Physical,
+            RequirementKind::DesignConstraint,
+        ]
+    );
 }
 
 #[test]
 fn requirement_rejects_fields_from_the_other_definition_family() {
-    let requirement_with_element_field =
-        "requirementDiagram\nrequirement req {\ntype: service\n}";
+    let requirement_with_element_field = "requirementDiagram\nrequirement req {\ntype: service\n}";
     assert!(parse_requirement_diagram(requirement_with_element_field).is_err());
 
     let element_with_requirement_field = "requirementDiagram\nelement system {\nrisk: high\n}";
@@ -94,9 +128,8 @@ fn requirement_preserves_layout_direction() {
         ("LR", DiagramDirection::Lr),
         ("RL", DiagramDirection::Rl),
     ] {
-        let source = format!(
-            "requirementDiagram\ndirection {keyword}\nrequirement a {{\nid: a\n}}"
-        );
+        let source =
+            format!("requirementDiagram\ndirection {keyword}\nrequirement a {{\nid: a\n}}");
         let diagram = parse_requirement_diagram(&source).expect("requirement direction");
         assert_eq!(diagram.direction, Some(expected));
     }

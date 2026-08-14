@@ -12,7 +12,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H:   f64 = 40.0;
@@ -404,7 +404,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.4.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.5.0"); }
 
     #[test]
     fn two_nodes_laid_out() {
