@@ -7600,7 +7600,7 @@ fn body_changes_bare_self_assignment_dependency(node: &GrammarASTNode, name: &st
             .any(&targets_name);
         if writes_name {
             return first_direct_node(node, "expression").is_none_or(|expression| {
-                exact_bare_variable_expression_name(expression).as_deref() != Some(name)
+                !expression_is_bare_self_or_equal_leaf_conditional(expression, name)
             });
         }
     }
@@ -8027,6 +8027,28 @@ fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> 
     (child_nodes.len() == 1)
         .then(|| exact_bare_variable_expression_name(child_nodes[0]))
         .flatten()
+}
+
+fn expression_is_bare_self_or_equal_leaf_conditional(
+    node: &GrammarASTNode,
+    name: &str,
+) -> bool {
+    if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
+        return true;
+    }
+    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+        || !direct_tokens(node).iter().any(|token| token.value == "if")
+    {
+        return false;
+    }
+    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+        .into_iter()
+        .filter(|child| child.rule_name == node.rule_name)
+        .collect();
+    branches.len() == 2
+        && branches
+            .into_iter()
+            .all(|branch| expression_is_bare_self_or_equal_leaf_conditional(branch, name))
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -10074,6 +10096,25 @@ mod tests {
             "test",
         )
         .expect_err("a computed dependency assignment may change the selected leaf later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_equal_leaf_conditional_selector_dependency_stays_stable() {
+        compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else other end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("equal bare-self leaves leave a conditional selector dependency stable");
+    }
+
+    #[test]
+    fn al4_differing_leaf_conditional_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("differing dependency leaves may change the selected selector leaf later");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

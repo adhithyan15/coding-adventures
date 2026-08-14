@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.226.16 - 2026-08-13 (ALGOL conditional idempotent selector dependencies)
+
+The seven-backend ALGOL matrix now proves that equal bare-self conditional
+leaves preserve a known predicate dependency while it selects the preserving
+leaf of an assignment to a known transitive selector.
+
 ## 0.226.15 - 2026-08-13 (ALGOL idempotent conditional selector dependencies)
 
 The seven-backend ALGOL matrix now proves that an exact self-assignment leaves
