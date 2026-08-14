@@ -1,0 +1,21 @@
+$ErrorActionPreference = "Stop"
+Set-Location ../sha256
+npm install --silent
+Set-Location ../sha512
+npm install --silent
+Set-Location ../ed25519
+npm install --silent
+Set-Location ../chacha20-poly1305
+npm install --silent
+Set-Location ../md5
+npm install --silent
+Set-Location ../sha1
+npm install --silent
+Set-Location ../uuid
+npm install --silent
+Set-Location ../chief-of-staff-channel-crypto
+npm install --silent
+Set-Location ../chief-of-staff-channel-store
+npm ci --quiet
+npx vitest run --coverage
+npx tsc --noEmit
