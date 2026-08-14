@@ -66,7 +66,9 @@ pub fn parse_module(src: &str) -> Result<WasmModule, WastParseError> {
     if exprs.is_empty() {
         return Err(WastParseError::UnexpectedEof);
     }
-    let fields: Vec<&SExpr> = exprs.iter().collect();
+    let owned_fields: Vec<&SExpr> = exprs.iter().collect();
+    let desugared = desugar_inline_imports(&owned_fields);
+    let fields: Vec<&SExpr> = desugared.iter().collect();
     let mut ctx = ModuleCtx::default();
     collect_symbols(&fields, &mut ctx)?;
     build(&fields, &mut ctx)?;
@@ -94,16 +96,64 @@ pub fn parse_module_expr(module_expr: &SExpr) -> Result<WasmModule, WastParseErr
     }
     // Skip the leading `module` atom and an optional module-name identifier
     // (`(module $name ...)`), neither of which affects encoding.
-    let fields: Vec<&SExpr> = items
+    let owned_fields: Vec<&SExpr> = items
         .iter()
         .skip(1)
         .skip_while(|e| matches!(e, SExpr::Atom(s, _) if s.starts_with('$')))
         .collect();
+    let desugared = desugar_inline_imports(&owned_fields);
+    let fields: Vec<&SExpr> = desugared.iter().collect();
 
     let mut ctx = ModuleCtx::default();
     collect_symbols(&fields, &mut ctx)?;
     build(&fields, &mut ctx)?;
     Ok(ctx.module)
+}
+
+/// Desugars WAT's **inline-import shorthand** — `(func $f? (import "m" "n")
+/// ...rest)`, and the same for `table`/`memory`/`global` — into the
+/// equivalent explicit form, `(import "m" "n" (func $f? ...rest))`, so
+/// `collect_symbols`/`build` only ever have to understand ONE import shape.
+/// This is a pure syntactic rewrite per the WAT spec (§ module abbreviations):
+/// `(func $f (import "m" "n") (type $t))` means EXACTLY `(import "m" "n"
+/// (func $f (type $t)))`, not a real function body.
+///
+/// Only recognizes the import form immediately following an optional
+/// `$name` (i.e. as the field's very first substantive item) — the shape
+/// every inline-import case in the vendored testsuite actually uses.
+/// Combining inline import with inline export on the same field (`(func
+/// (export "e") (import "m" "n") ...)`, also spec-legal) isn't handled;
+/// no vendored file currently needs it, and it isn't the gap this fixes.
+fn desugar_inline_imports(fields: &[&SExpr]) -> Vec<SExpr> {
+    fields.iter().map(|f| desugar_one_inline_import(f)).collect()
+}
+
+fn desugar_one_inline_import(f: &SExpr) -> SExpr {
+    let Some(items) = f.as_list() else { return (*f).clone() };
+    let pos = f.pos();
+    let kind = items.first().and_then(|e| e.as_atom()).unwrap_or("");
+    if !matches!(kind, "func" | "table" | "memory" | "global") {
+        return (*f).clone();
+    }
+    let mut i = 1;
+    if matches!(items.get(i), Some(SExpr::Atom(s, _)) if s.starts_with('$')) {
+        i += 1;
+    }
+    match items.get(i) {
+        Some(candidate) if candidate.is_keyword_list("import") => {
+            let import_items = candidate.as_list().unwrap();
+            if import_items.len() != 3 {
+                return (*f).clone(); // malformed; let normal parsing surface a real error
+            }
+            let module_name = import_items[1].clone();
+            let field_name = import_items[2].clone();
+            let mut desc_items: Vec<SExpr> = items[..i].to_vec(); // kind atom + optional $name
+            desc_items.extend(items[i + 1..].iter().cloned()); // everything after (import ...)
+            let desc = SExpr::List(desc_items, pos);
+            SExpr::List(vec![SExpr::Atom("import".to_string(), pos), module_name, field_name, desc], pos)
+        }
+        _ => (*f).clone(),
+    }
 }
 
 #[derive(Default)]
@@ -224,6 +274,23 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
     // Imports: always occupy the lowest indices in their respective index
     // spaces, in textual import order, regardless of interleaving with
     // non-import definitions -- the WAT spec's own rule.
+    //
+    // `ctx.module.functions`/`tables`/`memories`/`globals` mirror the real
+    // WASM BINARY format's function/table/memory/global SECTIONS, which
+    // never include imports (an import's type info lives solely in
+    // `ctx.module.imports`; see `wasm-module-parser`'s own section parsers,
+    // which never touch these arrays while parsing the import section
+    // either). So this loop must NOT push placeholder entries into them --
+    // only `func_i`/`table_i`/`memory_i`/`global_i` below (dedicated,
+    // per-kind counters, since imports of different kinds interleave in
+    // one textual pass) track "how many imports of this kind have been
+    // seen so far," which IS the func-space/table-space/etc. index imports
+    // occupy (they're always the lowest indices, so the k-th import of a
+    // kind gets index k directly, no offset).
+    let mut import_func_i = 0u32;
+    let mut import_table_i = 0u32;
+    let mut import_memory_i = 0u32;
+    let mut import_global_i = 0u32;
     for f in fields {
         if f.is_keyword_list("import") {
             let items = f.as_list().unwrap();
@@ -236,39 +303,28 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let name = desc.get(1).and_then(|e| e.as_atom());
             match kind {
                 "func" => {
-                    // This loop only pushes to `ctx.module.functions` for
-                    // func-kind imports, so its current length already IS
-                    // the running func-space index -- no separate counter
-                    // needed.
-                    let idx = ctx.module.functions.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.func_names, n, idx, f.pos(), "func")?;
+                        insert_unique(&mut ctx.func_names, n, import_func_i, f.pos(), "func")?;
                     }
-                    ctx.module.functions.push(0); // placeholder type index, fixed in pass 2
+                    import_func_i += 1;
                 }
                 "table" => {
-                    let idx = ctx.table_names.len() as u32 + ctx.module.tables.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.table_names, n, idx, f.pos(), "table")?;
+                        insert_unique(&mut ctx.table_names, n, import_table_i, f.pos(), "table")?;
                     }
-                    ctx.module.tables.push(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None } });
+                    import_table_i += 1;
                 }
                 "memory" => {
-                    let idx = ctx.memory_names.len() as u32 + ctx.module.memories.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.memory_names, n, idx, f.pos(), "memory")?;
+                        insert_unique(&mut ctx.memory_names, n, import_memory_i, f.pos(), "memory")?;
                     }
-                    ctx.module.memories.push(MemoryType { limits: Limits { min: 0, max: None } });
+                    import_memory_i += 1;
                 }
                 "global" => {
-                    let idx = ctx.global_names.len() as u32 + ctx.module.globals.len() as u32;
                     if let Some(n) = name {
-                        insert_unique(&mut ctx.global_names, n, idx, f.pos(), "global")?;
+                        insert_unique(&mut ctx.global_names, n, import_global_i, f.pos(), "global")?;
                     }
-                    ctx.module.globals.push(Global {
-                        global_type: GlobalType { value_type: ValueType::I32, mutable: false },
-                        init_expr: vec![0x0B],
-                    });
+                    import_global_i += 1;
                 }
                 _ => {}
             }
@@ -277,13 +333,24 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
         }
     }
 
-    // Non-import definitions, in textual order.
+    // Non-import definitions, in textual order. Each one's NAME resolves to
+    // a func-space/table-space/etc. index (`num_import_X + ctx.module.X.len()`
+    // -- the fixed import count from the pass above, plus how many REAL
+    // definitions of this kind have been pushed to the (now import-free)
+    // storage array so far), but the storage array itself is indexed
+    // real-definitions-only, matching the binary format `wasm-module-parser`
+    // itself produces -- `build`'s pass 2 relies on this same split (see
+    // `build_func`'s own doc comment).
+    let num_import_funcs = import_func_i;
+    let num_import_tables = import_table_i;
+    let num_import_memories = import_memory_i;
+    let num_import_globals = import_global_i;
     for f in fields {
         if f.is_keyword_list("func") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.functions.len() as u32;
+                    let idx = num_import_funcs + ctx.module.functions.len() as u32;
                     insert_unique(&mut ctx.func_names, name, idx, f.pos(), "func")?;
                 }
             }
@@ -293,7 +360,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.tables.len() as u32;
+                    let idx = num_import_tables + ctx.module.tables.len() as u32;
                     insert_unique(&mut ctx.table_names, name, idx, f.pos(), "table")?;
                 }
             }
@@ -302,7 +369,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.memories.len() as u32;
+                    let idx = num_import_memories + ctx.module.memories.len() as u32;
                     insert_unique(&mut ctx.memory_names, name, idx, f.pos(), "memory")?;
                 }
             }
@@ -311,7 +378,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
                 if name.starts_with('$') {
-                    let idx = ctx.module.globals.len() as u32;
+                    let idx = num_import_globals + ctx.module.globals.len() as u32;
                     insert_unique(&mut ctx.global_names, name, idx, f.pos(), "global")?;
                 }
             }
@@ -434,7 +501,6 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let num_import_globals = ctx.module.imports.iter().filter(|i| i.kind == ExternalKind::Global).count();
 
     let mut import_all_i = 0usize; // index into ctx.module.imports (every kind, textual order)
-    let mut import_func_i = 0usize; // func-space index of the next func-kind import
     let mut func_i = 0usize;
     let mut table_i = 0usize;
     let mut memory_i = 0usize;
@@ -454,10 +520,13 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 // arm at all is proof both hold for this form.
                 let desc = items[3].as_list().unwrap();
                 if desc[0].as_atom().unwrap() == "func" {
+                    // A func import's resolved type lives ONLY in its own
+                    // `ctx.module.imports[..].type_info` -- `ctx.module.functions`
+                    // never has an entry for it (that array mirrors the
+                    // binary format's function section, which is real-funcs-only;
+                    // see `collect_symbols`'s doc comment on this same split).
                     let type_idx = resolve_func_signature_ref(&desc[1..], ctx)?;
                     ctx.module.imports[import_all_i].type_info = ImportTypeInfo::Function(type_idx);
-                    ctx.module.functions[import_func_i] = type_idx;
-                    import_func_i += 1;
                 }
                 // table/memory/global import shells are already correct
                 // from pass 1 -- no fixup needed for those kinds.
@@ -465,7 +534,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             }
             "func" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
-                build_func(&items[name_skip..], ctx, num_import_funcs + func_i)?;
+                build_func(&items[name_skip..], ctx, num_import_funcs + func_i, func_i)?;
                 func_i += 1;
             }
             "export" => {
@@ -493,30 +562,35 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             "memory" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
                 let rest = &items[name_skip..];
-                let idx = num_import_memories + memory_i;
-                let (limits_start, _) = handle_inline_export(rest, "memory", idx, ctx)?;
-                ctx.module.memories[idx].limits = parse_limits(&rest[limits_start..])?;
+                // `space_idx` (imports counted in) is what exports address
+                // this memory by; `memory_i` (real-only) is where its entry
+                // actually lives in `ctx.module.memories` -- see
+                // `collect_symbols`'s doc comment on why these differ once
+                // a module has any memory import.
+                let space_idx = num_import_memories + memory_i;
+                let (limits_start, _) = handle_inline_export(rest, "memory", space_idx, ctx)?;
+                ctx.module.memories[memory_i].limits = parse_limits(&rest[limits_start..])?;
                 memory_i += 1;
             }
             "table" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
                 let rest = &items[name_skip..];
-                let idx = num_import_tables + table_i;
-                let (limits_start, _) = handle_inline_export(rest, "table", idx, ctx)?;
-                build_table_limits_and_elements(&rest[limits_start..], idx as u32, ctx)?;
+                let space_idx = num_import_tables + table_i;
+                let (limits_start, _) = handle_inline_export(rest, "table", space_idx, ctx)?;
+                build_table_limits_and_elements(&rest[limits_start..], space_idx as u32, table_i as u32, ctx)?;
                 table_i += 1;
             }
             "global" => {
                 let name_skip = if items.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
                 let rest = &items[name_skip..];
-                let idx = num_import_globals + global_i;
-                let (type_start, _) = handle_inline_export(rest, "global", idx, ctx)?;
+                let space_idx = num_import_globals + global_i;
+                let (type_start, _) = handle_inline_export(rest, "global", space_idx, ctx)?;
                 let gt = parse_global_type(expect_get(rest, type_start)?)?;
                 let init_instrs = rest.get(type_start + 1..).unwrap_or(&[]);
                 let mut code = Vec::new();
                 encode_instr_list(init_instrs, &mut InstrCtx::empty(ctx), &mut code)?;
                 code.push(0x0B);
-                ctx.module.globals[idx] = Global { global_type: gt, init_expr: code };
+                ctx.module.globals[global_i] = Global { global_type: gt, init_expr: code };
                 global_i += 1;
             }
             "elem" => build_elem(&items[1..], ctx)?,
@@ -600,13 +674,26 @@ fn count_literal_param(items: &[SExpr]) -> (u32, Option<String>) {
     }
 }
 
-fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<(), WastParseError> {
+/// `func_idx` is this function's index in the **func space** (imports,
+/// which occupy the lowest indices, counted in) -- what exports, calls, and
+/// `ctx.module.functions` itself all address a function by. `code_idx` is
+/// separate: `ctx.module.code` holds bodies for REAL functions only (an
+/// import has no body to encode), so it's indexed 0.. among just those,
+/// with no offset for however many func imports precede this one. The two
+/// coincide (`code_idx == func_idx`) in every module with zero func
+/// imports, which is why this distinction went unexercised until inline
+/// import shorthand (`(func $f (import "m" "n") ...)`, desugared by
+/// `desugar_inline_imports`) gave a real module both a func import AND a
+/// subsequent real function body for the first time in this crate's own
+/// tests and the vendored corpus alike -- `ctx.module.code[func_idx]` panics
+/// with an out-of-bounds index the moment that combination occurs.
+fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: usize) -> Result<(), WastParseError> {
     // Inline export shorthand: `(func $f (export "e") ...)`.
     let (after_export, _) = handle_inline_export(fields, "func", func_idx, ctx)?;
     let fields = &fields[after_export..];
 
     let type_idx = resolve_func_signature_ref(fields, ctx)?;
-    ctx.module.functions[func_idx] = type_idx;
+    ctx.module.functions[code_idx] = type_idx;
 
     // Local scope: params first, then declared `(local ...)` forms right
     // after them. The FIRST declared local's index must be the function's
@@ -765,7 +852,7 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     let mut code = Vec::new();
     encode_instr_list(&fields[instr_start..], &mut icx, &mut code)?;
     code.push(0x0B);
-    ctx.module.code[func_idx] = FunctionBody { locals: locals_decl, code };
+    ctx.module.code[code_idx] = FunctionBody { locals: locals_decl, code };
     Ok(())
 }
 
@@ -780,10 +867,19 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
 ///   running the real WebAssembly/testsuite corpus (e.g. `br.wast`,
 ///   `call_indirect.wast`) -- every one of them uses this shorthand for
 ///   their auxiliary function-pointer table.
-fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
+///
+/// `table_idx` is the table-space index (imports counted in) -- what an
+/// `Element`'s own `table_index` field addresses, matching how the binary
+/// format's element section references a table. `storage_idx` is separate:
+/// `ctx.module.tables` holds entries for REAL (non-import) tables only, so
+/// it's indexed 0.. among just those, with no offset for however many table
+/// imports precede this one -- the same split `build_func`'s own doc
+/// comment explains for functions/code, needed here for the identical
+/// reason once a module can combine a table import with a real table.
+fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()));
     if starts_with_limit_number {
-        ctx.module.tables[table_idx as usize].limits = parse_limits(rest)?;
+        ctx.module.tables[storage_idx as usize].limits = parse_limits(rest)?;
         return Ok(());
     }
 
@@ -808,7 +904,7 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, ctx: &mut Mod
         .map(|f| resolve_idx(&ctx.func_names, f, "func"))
         .collect::<Result<_, _>>()?;
     let count = function_indices.len() as u32;
-    ctx.module.tables[table_idx as usize].limits = Limits { min: count, max: Some(count) };
+    ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
     ctx.module.elements.push(Element {
         table_index: table_idx,
         offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
@@ -1576,6 +1672,86 @@ mod tests {
     fn empty_module_parses() {
         let m = parse_module("(module)").unwrap();
         assert_eq!(m, WasmModule::default());
+    }
+
+    #[test]
+    fn func_inline_import_shorthand_desugars_to_a_real_import() {
+        // `(func $f (import "m" "n") (type $t))` means EXACTLY
+        // `(import "m" "n" (func $f (type $t)))` -- matches the official
+        // testsuite's func_ptrs.wast shape ($print).
+        let m = parse_module(
+            r#"(module
+                 (type $t (func (param i32)))
+                 (func $print (import "spectest" "print_i32") (type $t)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.functions.len(), 0, "the import has no entry in the real-funcs-only function section");
+        assert_eq!(m.code.len(), 0);
+        assert_eq!(m.imports.len(), 1);
+        assert_eq!(m.imports[0].module_name, "spectest");
+        assert_eq!(m.imports[0].name, "print_i32");
+        assert!(matches!(m.imports[0].kind, ExternalKind::Function));
+        assert!(matches!(m.imports[0].type_info, ImportTypeInfo::Function(0)));
+    }
+
+    #[test]
+    fn func_import_followed_by_a_real_func_resolves_both_correctly() {
+        // The regression this crate's own conformance run against func_ptrs.wast
+        // caught: `ctx.module.functions`/`code` used to be indexed by the
+        // COMBINED func-space index (imports counted in) even though those
+        // arrays only ever hold REAL functions -- a module with one func
+        // import followed by any real func panicked with an out-of-bounds
+        // index the first time this combination was ever exercised.
+        let m = parse_module(
+            r#"(module
+                 (func $print (import "spectest" "print_i32") (param i32))
+                 (func $real (export "real") (result i32) (i32.const 7))
+                 (func (export "call_print") (call $print (i32.const 1))))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert_eq!(m.functions.len(), 2, "one real-funcs-only entry per non-import func");
+        assert_eq!(m.code.len(), 2);
+        assert_eq!(code_of(&m, 0), &[0x41, 0x07, 0x0B]); // $real: i32.const 7; end
+        // `call $print` must resolve to func-space index 0 (the import,
+        // the lowest index in its space) -- 0x10 = call, 0x00 = funcidx 0.
+        assert_eq!(code_of(&m, 1), &[0x41, 0x01, 0x10, 0x00, 0x0B]);
+        let real_export = m.exports.iter().find(|e| e.name == "real").unwrap();
+        assert_eq!(real_export.index, 1, "the real func's own func-space index (after the 1 import)");
+    }
+
+    #[test]
+    fn global_inline_import_shorthand_followed_by_a_real_global_resolves_both_correctly() {
+        // Matches the official testsuite's global.wast shape: unnamed
+        // inline-import globals (no `$name`) followed by real globals.
+        let m = parse_module(
+            r#"(module
+                 (global (import "spectest" "global_i32") i32)
+                 (global $g (export "g") i32 (i32.const 42)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert!(matches!(m.imports[0].type_info, ImportTypeInfo::Global(GlobalType { value_type: ValueType::I32, mutable: false })));
+        assert_eq!(m.globals.len(), 1, "one real-globals-only entry, not one per import too");
+        assert_eq!(m.globals[0].init_expr, vec![0x41, 0x2A, 0x0B]); // i32.const 42; end
+        let export = m.exports.iter().find(|e| e.name == "g").unwrap();
+        assert_eq!(export.index, 1, "the real global's own global-space index (after the 1 import)");
+    }
+
+    #[test]
+    fn table_import_followed_by_a_real_table_resolves_both_correctly() {
+        // Same storage-vs-space-index split as func/global, exercised for
+        // table since `build_table_limits_and_elements` shares the identical
+        // code path this fix touches.
+        let m = parse_module(
+            r#"(module
+                 (table (import "spectest" "table") 1 funcref)
+                 (table $t 2 funcref))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert_eq!(m.tables.len(), 1, "one real-tables-only entry");
+        assert_eq!(m.tables[0].limits.min, 2);
     }
 
     #[test]
