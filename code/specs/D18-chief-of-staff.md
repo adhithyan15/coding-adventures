@@ -134,6 +134,10 @@ Orchestrator (Rust actor, D18)     ← signature verification + host supervision
 │                └── immutable D18 envelope, D18M v1 binary/JSON contract,
 │                    rich payload conventions, and cross-language fixtures
 │
+├── defines ──► D18P Portable Durable Channel Profile
+│                └── D18C membership, D18S reservation, D18A cursor,
+│                    atomic persistence, recovery, roles, and conformance
+│
 └── extended by ──► Store / Job / Tool Layers
                     ├── D18A Store Layer
                     │    └── repository-owned storage abstraction + Context/Artifact/Skill/Memory stores
@@ -153,7 +157,10 @@ transit-crypto contracts and test vectors; VLT01 owns Vault at-rest encryption a
 Argon2id key derivation. D20 is the JSON specification and is not a crypto dependency.
 D18F is the normative portable profile for the encrypted message envelope described
 below; it preserves the production Rust `D18M` version 1 bytes and keeps them distinct
-from D19's generic `ACTM` actor message.
+from D19's generic `ACTM` actor message. D18P is the normative portable profile for
+the durable channel described below; it preserves the production Rust definition,
+reservation, cursor, storage-key, CAS, recovery, and structural-role behavior while
+leaving D18F message cryptography and channel-key grants in their existing owners.
 
 **Extended by:** D18A Chief of Staff Stores — repository-owned storage abstraction,
 ContextStore, ArtifactStore, SkillStore, and MemoryStore. D18C Chief of Staff Job
@@ -331,6 +338,13 @@ originator to one or more receivers. Messages flow in one direction only — fro
 originator's write end to the receivers' read ends. A Channel is never bidirectional.
 The Channel type comes from D19 (Actor); D18 extends it with encryption keys and
 persistent storage.
+
+[D18P](D18P-chief-of-staff-durable-channel-profile.md) defines the normative
+cross-language durable channel contract: exact D18C/D18S/D18H/D18A records,
+storage keys and content types, reserve-before-encrypt recovery, ordered reads,
+per-receiver cursors, irreversible lifecycle, structural roles, stable failures,
+and the required six-language conformance rollout. D18F continues to own D18M
+message bytes, while channel-key grant generation and rotation remain under #141.
 
 **Analogy:** A Channel is a one-way pneumatic tube in an office building. Documents go
 in one end and come out the other. You cannot send documents backwards through the
