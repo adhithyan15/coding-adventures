@@ -1,0 +1,16 @@
+% ============================================================================
+% skin-layer-function.query.adj — worked recall over the skin-layer-function
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the epidermis
+% do?" (direct) or "which layer is a shock absorber?" (reverse) — it states
+% no fact of its own — it only `import`s the grounded table and asks binding
+% queries. A layer not tabled here abstains honestly — the engine never
+% invents a function.
+% ============================================================================
+
+import "skin-layer-function.adj"
+
+? skin_layer_function(epidermis, $Function)   % expect protects_body
+? skin_layer_function($Layer, shock_absorber)  % reverse bind — expect subcutaneous
+? skin_layer_function(dermis, $Function)        % expect abstain -- a real, already-tabled skin layer whose own quote states only its location and thickness, never a function
