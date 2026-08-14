@@ -175,6 +175,10 @@ Prioritized work items:
    unclosed-elements diagnostic, matching WPT's `eof-in-table` evidence while
    leaving closed tables, open cells, and closed table fragments on their
    existing paths.
+   EOF reached with disallowed open elements now attaches the generic
+   `eof-with-unclosed-elements` diagnostic to the tokenizer's proven EOF
+   emission point, while table, template, text, frameset, fragment, and plain
+   token-stream ownership remains unchanged.
    EOF reached with authored open templates now reports one template-mode
    parse error for each open template before evaluating the residual insertion
    mode, matching the focused `template.dat` EOF cases across ordinary,
