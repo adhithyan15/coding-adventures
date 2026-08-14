@@ -232,6 +232,8 @@ const CYRILLIC_O = ductusFor("о", "cyrillic")!;
 const cyrillicOOutline = cyrillicOutline("о");
 const CYRILLIC_PE = ductusFor("п", "cyrillic")!;
 const cyrillicPeOutline = cyrillicOutline("п");
+const CYRILLIC_ER = ductusFor("р", "cyrillic")!;
+const cyrillicErOutline = cyrillicOutline("р");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2885,6 +2887,34 @@ describe("Cyrillic п — one joined top-shoulder school-hand run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_PE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic р — one joined descender-and-bowl school-hand run", () => {
+  const steps = ductusSteps(CYRILLIC_ER);
+  const strip = ductusFilmstrip(CYRILLIC_ER, cyrillicErOutline);
+
+  it("shows the descender before the retraced shoulder and closed bowl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the stem below the baseline",
+      "retrace to the upper shoulder and curve right",
+      "sweep around the bowl and return to the stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined path", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicErOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_ER.strokes[0], 1),
     );
   });
 });
