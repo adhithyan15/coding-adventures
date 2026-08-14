@@ -13,7 +13,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -64,6 +64,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
 }
 
 fn node_width(node: &StructuralNode) -> f64 {
+    let style = structural_style(node);
     let max_entry = node
         .compartments
         .iter()
@@ -72,14 +73,18 @@ fn node_width(node: &StructuralNode) -> f64 {
         .max()
         .unwrap_or(0);
     // Approximate 8 px/char + padding; header is the label
-    let text_w = (node.label.len().max(max_entry) as f64 * 8.0 + 24.0).ceil();
+    let char_width = style.font_size * 0.57;
+    let text_w = (node.label.len().max(max_entry) as f64 * char_width + 24.0).ceil();
     text_w.max(MIN_NODE_W)
 }
 
 fn node_height(node: &StructuralNode) -> f64 {
-    let mut h = HEADER_H;
+    let font_size = structural_style(node).font_size;
+    let header_height = HEADER_H.max(font_size * 2.4);
+    let row_height = ROW_H.max(font_size * 1.4);
+    let mut h = header_height;
     for comp in &node.compartments {
-        h += COMP_PAD + comp.entries.len() as f64 * ROW_H + COMP_PAD;
+        h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
     }
     h
 }
@@ -116,10 +121,12 @@ fn layout_nodes(
         }
 
         // Build layouted compartments.
-        let mut y_off = HEADER_H;
+        let style = structural_style(node);
+        let row_height = ROW_H.max(style.font_size * 1.4);
+        let mut y_off = HEADER_H.max(style.font_size * 2.4);
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
-            let ch = COMP_PAD + comp.entries.len() as f64 * ROW_H + COMP_PAD;
+            let ch = COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
             comps.push(LayoutedCompartment {
                 y_offset: y_off,
                 height: ch,
@@ -173,13 +180,15 @@ fn layout_directional_nodes(
             position
         };
 
-        let mut y_offset = HEADER_H;
+        let style = structural_style(node);
+        let row_height = ROW_H.max(style.font_size * 1.4);
+        let mut y_offset = HEADER_H.max(style.font_size * 2.4);
         let compartments = node
             .compartments
             .iter()
             .map(|compartment| {
                 let compartment_height =
-                    COMP_PAD + compartment.entries.len() as f64 * ROW_H + COMP_PAD;
+                    COMP_PAD + compartment.entries.len() as f64 * row_height + COMP_PAD;
                 let layouted = LayoutedCompartment {
                     y_offset,
                     height: compartment_height,
@@ -492,7 +501,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.7.0");
+        assert_eq!(crate::VERSION, "0.8.0");
     }
 
     #[test]

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.105.0";
+pub const VERSION: &str = "0.106.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -990,6 +990,55 @@ fn parse_requirement_target_style(
                 }
                 style.stroke_width = Some(width);
             }
+            "font-size" => {
+                let size = value
+                    .strip_suffix("px")
+                    .unwrap_or(value)
+                    .parse::<f64>()
+                    .map_err(|_| token_error(token, "invalid requirement font size"))?;
+                if size <= 0.0 {
+                    return Err(token_error(token, "requirement font size must be positive"));
+                }
+                style.font_size = Some(size);
+            }
+            "font-weight" => {
+                let weight = match value.to_ascii_lowercase().as_str() {
+                    "normal" => 400,
+                    "bold" => 700,
+                    numeric => numeric
+                        .parse::<u16>()
+                        .map_err(|_| token_error(token, "invalid requirement font weight"))?,
+                };
+                if !(100..=900).contains(&weight) || weight % 100 != 0 {
+                    return Err(token_error(
+                        token,
+                        "requirement font weight must be normal, bold, or 100 through 900",
+                    ));
+                }
+                style.font_weight = Some(weight);
+            }
+            "font-style" => {
+                style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
+                    "normal" => false,
+                    "italic" => true,
+                    _ => {
+                        return Err(token_error(
+                            token,
+                            "requirement font style must be normal or italic",
+                        ))
+                    }
+                });
+            }
+            "font-family" => {
+                let family = value.trim_matches('"').trim();
+                if family.is_empty() {
+                    return Err(token_error(
+                        token,
+                        "requirement font family cannot be empty",
+                    ));
+                }
+                style.font_family = Some(family.to_string());
+            }
             property => {
                 return Err(token_error(
                     token,
@@ -1130,6 +1179,18 @@ fn merge_requirement_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     }
     if source.text_color.is_some() {
         target.text_color.clone_from(&source.text_color);
+    }
+    if source.font_size.is_some() {
+        target.font_size = source.font_size;
+    }
+    if source.font_weight.is_some() {
+        target.font_weight = source.font_weight;
+    }
+    if source.font_italic.is_some() {
+        target.font_italic = source.font_italic;
+    }
+    if source.font_family.is_some() {
+        target.font_family.clone_from(&source.font_family);
     }
 }
 
@@ -7142,7 +7203,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.105.0");
+        assert_eq!(crate::VERSION, "0.106.0");
     }
 
     #[test]

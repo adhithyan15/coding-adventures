@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.53.0
+
+- Shape structural node text with resolved font size, weight, style, and family.
+
 ## 0.52.0
 
 - Lower resolved structural node styles into backend-neutral paint instructions.

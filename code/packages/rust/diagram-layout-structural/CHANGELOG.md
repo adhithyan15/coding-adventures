@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Reserve structural node geometry from resolved typography styles.
+
 ## 0.7.0
 
 - Resolve structural node styles into deterministic layout IR.

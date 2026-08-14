@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.106.0
+
+- Parse Requirement font size, weight, style, and family into structural semantic styles.
+
 ## 0.105.0
 
 - Resolve Requirement class definitions, assignments, default styles, and inline shorthand.

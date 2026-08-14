@@ -233,6 +233,19 @@ fn requirement_applies_classes_declared_after_assignment() {
 }
 
 #[test]
+fn requirement_preserves_typography_styles() {
+    let diagram = parse_requirement_diagram(
+        "requirementDiagram\nrequirement req {}\nstyle req font-size:22px,font-weight:bold,font-style:italic,font-family:\"Avenir Next\"",
+    )
+    .expect("requirement typography");
+    let style = diagram.nodes[0].style.as_ref().expect("typography style");
+    assert_eq!(style.font_size, Some(22.0));
+    assert_eq!(style.font_weight, Some(700));
+    assert_eq!(style.font_italic, Some(true));
+    assert_eq!(style.font_family.as_deref(), Some("Avenir Next"));
+}
+
+#[test]
 fn requirement_relationships_preserve_semantics_and_orientation() {
     let source = r#"requirementDiagram
 requirement a {
