@@ -3806,6 +3806,27 @@ state DAG, dependency, credential, authority, package-manifest, and diff checks
 are clean. Production remains pure in-memory with only the local LZSS
 dependency; Foundation, fixture reads, Process, and zlib remain test-only.
 
+### PR #11553 CI build repair
+
+After the Swift package itself passed on all three runners, repository-wide
+BUILD validation exposed legacy Windows metadata drift. The bounded repair
+restores the exact Perl, Python, and Swift standalone dependency declarations,
+keeps Windows `cmd /C` metadata comments executable-safe, fixes the affected
+virtual-environment path and LF-sensitive byte fixtures, and repairs the Perl
+Nib type checker's missing `shift_expr` precedence node.
+
+The first Direct2D workaround duplicated Windows-only Rust dependencies into
+Unix BUILD files. That made the Linux-generated plan validate on Windows but
+incorrectly scheduled the native Direct2D/GDI dependency chain on Unix. Build
+plan v1 now carries optional Linux, Darwin, and Windows dependency graphs plus
+prerequisite-closed affected sets, unions their toolchain requirements, assigns
+shared shards from the platform union, and selects only the current runner's
+state for execution. The Windows Rust bridge is therefore never omitted from
+the matrix but is built and ordered only where it applies; older v1 plans
+continue to use the top-level graph. The branch was rebased cleanly onto
+`5d2880ed274452721355981ac320ca7cb522745f`; auto-merge remains disabled until
+the replacement CI run is entirely acceptable and GitHub reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
