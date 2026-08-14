@@ -15,4 +15,4 @@ checkout_stmt = ( "checkout" | "switch" ) reference ;
 cherry_pick_stmt = CHERRY_PICK { cherry_pick_attr } ;
 cherry_pick_attr = ID_ATTR STRING | TAG_ATTR STRING | PARENT_ATTR STRING ;
 
-reference = REFERENCE | STRING ;
+reference = REFERENCE | PREFIXED_REFERENCE | NUMERIC_REFERENCE | INT | STRING ;
