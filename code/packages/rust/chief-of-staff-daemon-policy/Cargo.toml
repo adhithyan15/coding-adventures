@@ -6,6 +6,7 @@ description = "Fail-closed local authentication and wiring policy for the D18 Ch
 license = "MIT"
 
 [dependencies]
+chief-of-staff-biometric-approval = { path = "../chief-of-staff-biometric-approval" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-daemon-config = { path = "../chief-of-staff-daemon-config" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
