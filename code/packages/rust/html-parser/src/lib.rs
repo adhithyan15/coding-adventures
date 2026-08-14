@@ -4762,10 +4762,13 @@ impl HtmlParser {
                             )
                         {
                             if self.eof_open_element_prefix_is_in_table(eof_open_element_limit) {
-                                self.diagnostics.push(ParserDiagnostic::new(
-                                    "eof-in-table",
-                                    "end of file was reached while parsing table structure",
-                                ));
+                                self.diagnostics.push(
+                                    ParserDiagnostic::new(
+                                        "eof-in-table",
+                                        "end of file was reached while parsing table structure",
+                                    )
+                                    .at_emission(self.current_token_emission_position),
+                                );
                             } else {
                                 self.diagnostics.push(ParserDiagnostic::new(
                                     "eof-with-unclosed-elements",
@@ -40355,54 +40358,144 @@ mod tests {
     }
 
     #[test]
-    fn reports_eof_in_table_structure_without_duplicating_generic_eof() {
+    fn positions_eof_in_authored_table_structure_without_generic_eof() {
         for source in [
             "<!doctype html><table>",
+            "<!doctype html><table><colgroup>",
             "<!doctype html><table><tbody>",
+            "<!doctype html><table><thead>",
+            "<!doctype html><table><tfoot>",
             "<!doctype html><table><tr>",
             "<!doctype html><table><div>x",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
-                diagnostic
-                    == &ParserDiagnostic::new(
-                        "eof-in-table",
-                        "end of file was reached while parsing table structure",
-                    )
-            }));
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }),
+                "source {source:?}"
+            );
             assert!(output
                 .parser_diagnostics
                 .iter()
                 .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
         }
 
+        let unicode_source = "<!doctype html><!--é-->\r\n<table><tbody>té";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        let diagnostic = unicode
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-table")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: unicode_source.len(),
+                char_offset: unicode_source.chars().count(),
+                line: 2,
+                column: "<table><tbody>té".chars().count() + 1,
+            })
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let template_source = "<!doctype html><table><tr><template><td>";
+        let template = parse_html_with_diagnostics(template_source).unwrap();
+        for code in ["eof-in-template", "eof-in-table"] {
+            let diagnostic = template
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == code)
+                .unwrap();
+            assert_eq!(
+                diagnostic.position,
+                Some(SourcePosition {
+                    byte_offset: template_source.len(),
+                    char_offset: template_source.chars().count(),
+                    line: 1,
+                    column: template_source.chars().count() + 1,
+                })
+            );
+        }
+
         for source in [
             "<!doctype html><table></table>",
             "<!doctype html><table><tr><td>x",
+            "<!doctype html><table><caption>x",
             "<!doctype html><div>x",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            assert!(output
-                .parser_diagnostics
-                .iter()
-                .all(|diagnostic| diagnostic.code != "eof-in-table"));
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "eof-in-table"),
+                "source {source:?}"
+            );
         }
 
-        let cell = parse_html_with_diagnostics("<!doctype html><table><tr><td>x").unwrap();
-        assert!(cell
+        for source in [
+            "<!doctype html><table><tr><td>x",
+            "<!doctype html><table><caption>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+                .unwrap();
+            assert_eq!(diagnostic.position, None, "source {source:?}");
+        }
+
+        let foreign =
+            parse_html_fragment_for_context_with_diagnostics("<g>", "svg table").unwrap();
+        assert!(foreign
             .parser_diagnostics
             .iter()
-            .any(|diagnostic| diagnostic.code == "eof-with-unclosed-elements"));
+            .all(|diagnostic| diagnostic.code != "eof-in-table"));
+        let diagnostic = foreign
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
 
-        let fragment = parse_html_fragment_for_context_with_diagnostics(
+        let closed_fragment = parse_html_fragment_for_context_with_diagnostics(
             "<tr><td>x</td></tr>",
             "table",
         )
         .unwrap();
-        assert!(fragment
+        assert!(closed_fragment
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "eof-in-table"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "table".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -40478,14 +40571,22 @@ mod tests {
             );
         }
 
-        let table =
-            parse_html_with_diagnostics("<!doctype html><table><tr><template><td>").unwrap();
+        let table_source = "<!doctype html><table><tr><template><td>";
+        let table = parse_html_with_diagnostics(table_source).unwrap();
         let table_diagnostic = table
             .parser_diagnostics
             .iter()
             .find(|diagnostic| diagnostic.code == "eof-in-table")
             .unwrap();
-        assert_eq!(table_diagnostic.position, None);
+        assert_eq!(
+            table_diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: table_source.len(),
+                char_offset: table_source.chars().count(),
+                line: 1,
+                column: table_source.chars().count() + 1,
+            })
+        );
         assert!(table
             .parser_diagnostics
             .iter()
