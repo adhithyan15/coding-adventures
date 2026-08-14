@@ -1,0 +1,77 @@
+% ============================================================================
+% band-emitter — for three of the seven electromagnetic-spectrum bands, WHO
+% or WHAT the SAME already-cited NASA sentence states emits that band
+% (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `em-spectrum.adj`
+% (`band_use(band, application)`, a representative everyday USE / effect /
+% detector NASA associates with each of the seven EM bands — radio →
+% radio_stations, x_ray → teeth, etc.). That table's own header already
+% quotes, verbatim, three NASA sentences that separately state WHO or
+% WHAT emits the band — a fact distinct from the `application` column
+% (use/effect/detector), which the parent schema had no room for:
+%
+%   ultraviolet → sun
+%     "Ultraviolet radiation is emitted by the Sun and are the reason
+%      skin tans and burns."
+%
+%   infrared → skin_and_heat_objects
+%     "Night vision goggles pick up the infrared light emitted by our
+%      skin and objects with heat."
+%
+%   visible → fireflies
+%     "Our eyes detect visible light. Fireflies, light bulbs, and stars
+%      all emit visible light." (the source lists THREE emitters for
+%      visible light; the FIRST listed, fireflies, is carried as the row
+%      value, matching this stdlib's own established convention — see
+%      `simple-machines.adj` — of carrying the first everyday item a
+%      source lists when more than one is given.)
+%
+% Recall is a binding query:
+%
+%     ? band_emitter(ultraviolet, $Emitter)   % sun
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each
+% `row` lowers to a ground relation `band_emitter(band, emitter)` carrying
+% the citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the emitter WITH its source, on the CPU, with zero
+% model calls, and abstains on anything that is not one of these three
+% bands. `radio`, `microwave`, `x_ray`, and `gamma_ray` are deliberately
+% NOT rows here: their own already-quoted NASA sentences state a USE
+% (already captured by `em-spectrum.adj`'s own `application` column) but
+% never an emitter, so this sibling is HONESTLY NARROWER than its
+% parent — it grounds exactly the three bands whose cited span states an
+% emitter, and abstains on the other four, or any other word, rather than
+% inventing one. The query also runs BACKWARD — bind an emitter and
+% recall which band it emits:
+%
+%     ? band_emitter($Band, sun)   % ultraviolet
+%
+% Provenance: reproduces, byte-for-byte, three of the seven NASA Goddard
+% Space Flight Center "Imagine the Universe!" spans already quoted inside
+% `em-spectrum.adj`'s own header — no new WebFetch, only a different
+% schema decoding the emitter half of each already-verified quote. An ADJ
+% `table` carries ONE provenance envelope (per `em-spectrum.adj`'s own
+% convention), so `source`/`locator`/`trust` below hold the ultraviolet
+% span; the other two rows' own spans are listed above for independent
+% auditability. `trust authoritative` — the same tier `em-spectrum.adj`
+% already carries (NASA Goddard Space Flight Center, a primary U.S.
+% government teaching resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table band_emitter {
+    columns band, emitter
+
+    row (ultraviolet, sun)                    % NASA: "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."
+    row (infrared, skin_and_heat_objects)      % NASA: "Night vision goggles pick up the infrared light emitted by our skin and objects with heat."
+    row (visible, fireflies)                   % NASA: "Our eyes detect visible light. Fireflies, light bulbs, and stars all emit visible light."
+
+    source "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."
+    locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
+    trust authoritative
+
+    cites "Night vision goggles pick up the infrared light emitted by our skin and objects with heat." locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
+    cites "Our eyes detect visible light. Fireflies, light bulbs, and stars all emit visible light." locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
+}

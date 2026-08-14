@@ -1,0 +1,20 @@
+% ============================================================================
+% band-emitter.query — worked recall queries against band-emitter.adj
+% (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind an
+% emitter, find the band), and honest abstention on radio (this table is
+% honestly narrower than its parent em-spectrum.adj -- only three of the
+% seven bands have an emitter stated in the cited spans).
+% ============================================================================
+
+import "band-emitter.adj"
+
+% Forward: who emits ultraviolet radiation, per the cited NASA span?
+? band_emitter(ultraviolet, $Emitter)
+
+% Backward: which band does the Sun emit?
+? band_emitter($Band, sun)
+
+% Honest abstention: radio's cited span states a use (radio stations), not an emitter.
+? band_emitter(radio, $EmitterRadio)
