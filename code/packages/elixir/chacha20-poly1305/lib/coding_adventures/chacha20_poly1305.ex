@@ -85,7 +85,8 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
   import Bitwise
 
   @moduledoc """
-  ChaCha20-Poly1305 AEAD cipher (RFC 8439).
+  ChaCha20-Poly1305 AEAD cipher (RFC 8439) and the XChaCha20-Poly1305
+  extended-nonce construction pinned by SE04.
 
   Provides authenticated encryption with associated data (AEAD) using the
   ChaCha20 stream cipher for encryption and Poly1305 for authentication.
@@ -102,6 +103,10 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
   - Key must be 32 bytes (256 bits), generated with a CSPRNG.
   - Nonce must be 12 bytes (96 bits) and MUST NOT be reused for the same key.
     Nonce reuse destroys both confidentiality and authentication.
+  - XChaCha20-Poly1305 uses a 24-byte nonce. Random generation makes collisions
+    negligible at realistic volumes, but the complete nonce must remain unique
+    for each key.
+  - BEAM binaries are immutable, so derived-subkey erasure cannot be guaranteed.
   - This implementation is for education.  For production Elixir, use
     `:crypto.crypto_one_time_aead/6`.
   """
@@ -109,7 +114,7 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
   # "expand 32-byte k" in little-endian 32-bit words — the magic ChaCha20
   # constants that were chosen to have no hidden trapdoors (nothing-up-my-sleeve
   # numbers: they are just an ASCII string).
-  @constants [0x61707865, 0x3320646e, 0x79622d32, 0x6b206574]
+  @constants [0x61707865, 0x3320646E, 0x79622D32, 0x6B206574]
 
   # Poly1305 prime: 2^130 - 5.  Chosen because arithmetic mod this prime is
   # efficient — 2^130 is a round power-of-two, and subtracting 5 keeps it prime.
@@ -167,21 +172,7 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
     state0 = List.to_tuple(initial_list)
 
     # Apply 10 double-rounds (= 20 rounds total).
-    # Each double-round: 4 column quarter-rounds, then 4 diagonal quarter-rounds.
-    state =
-      Enum.reduce(1..10, state0, fn _, s ->
-        s
-        # Column rounds — operate on the four columns of the 4×4 matrix:
-        |> quarter_round(0, 4, 8, 12)
-        |> quarter_round(1, 5, 9, 13)
-        |> quarter_round(2, 6, 10, 14)
-        |> quarter_round(3, 7, 11, 15)
-        # Diagonal rounds — operate on the four diagonals:
-        |> quarter_round(0, 5, 10, 15)
-        |> quarter_round(1, 6, 11, 12)
-        |> quarter_round(2, 7, 8, 13)
-        |> quarter_round(3, 4, 9, 14)
-      end)
+    state = chacha20_rounds(state0)
 
     # Add the initial state to the mixed state (mod 2^32 per word).
     # This step prevents reversing the block function from the output alone,
@@ -193,6 +184,30 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
 
     # Serialise each 32-bit word back as a little-endian 32-bit chunk.
     for w <- final_words, into: <<>>, do: <<w::little-32>>
+  end
+
+  @doc """
+  Derive the 32-byte HChaCha20 subkey pinned by SE04.
+
+  HChaCha20 applies the ChaCha20 20-round permutation to a 32-byte key and a
+  16-byte nonce. Unlike `chacha20_block/3`, it does not add the initial state
+  back after the rounds. The first and last state rows form the subkey.
+  """
+  def hchacha20_subkey(key, nonce) do
+    validate_binary_size!(key, 32, "Key")
+    validate_binary_size!(nonce, 16, "Nonce")
+
+    key_words = for(<<word::little-32 <- key>>, do: word)
+    nonce_words = for(<<word::little-32 <- nonce>>, do: word)
+
+    state =
+      (@constants ++ key_words ++ nonce_words)
+      |> List.to_tuple()
+      |> chacha20_rounds()
+
+    for index <- [0, 1, 2, 3, 12, 13, 14, 15], into: <<>> do
+      <<elem(state, index)::little-32>>
+    end
   end
 
   @doc """
@@ -222,6 +237,19 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
 
   def chacha20_encrypt(plaintext, key, nonce, counter) do
     do_chacha20_encrypt(plaintext, key, nonce, counter, <<>>)
+  end
+
+  @doc """
+  Encrypt or decrypt data using raw XChaCha20.
+
+  The 24-byte nonce is split between HChaCha20 subkey derivation and an RFC
+  8439 nonce. Raw XChaCha20 provides confidentiality but no authentication;
+  use `xchacha20_poly1305_encrypt/4` for messages and stored records.
+  """
+  def xchacha20_encrypt(input, key, nonce, counter \\ 0) do
+    validate_counter!(counter)
+    {subkey, derived_nonce} = derive_xchacha20_material(key, nonce)
+    chacha20_encrypt(input, subkey, derived_nonce, counter)
   end
 
   @doc """
@@ -348,6 +376,30 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
     end
   end
 
+  @doc """
+  Encrypt and authenticate with XChaCha20-Poly1305 and a 24-byte nonce.
+
+  Random 24-byte nonces make accidental collisions negligible at realistic
+  volumes, but the complete nonce must still be unique for each key.
+  """
+  def xchacha20_poly1305_encrypt(plaintext, key, nonce, aad \\ <<>>) do
+    {subkey, derived_nonce} = derive_xchacha20_material(key, nonce)
+    aead_encrypt(plaintext, subkey, derived_nonce, aad)
+  end
+
+  @doc """
+  Authenticate and decrypt an XChaCha20-Poly1305 ciphertext.
+
+  Returns the same `{:ok, plaintext}` or `{:error, :authentication_failed}`
+  result as `aead_decrypt/5`. The tag length is checked before deriving secret
+  material, and plaintext is never returned before full tag verification.
+  """
+  def xchacha20_poly1305_decrypt(ciphertext, key, nonce, aad, tag) do
+    validate_binary_size!(tag, 16, "Tag")
+    {subkey, derived_nonce} = derive_xchacha20_material(key, nonce)
+    aead_decrypt(ciphertext, subkey, derived_nonce, aad, tag)
+  end
+
   # ---------------------------------------------------------------------------
   # Private helpers
   # ---------------------------------------------------------------------------
@@ -395,6 +447,24 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
     |> put_elem(pd, sd)
   end
 
+  # Apply the shared ChaCha20 20-round permutation. HChaCha20 reuses this
+  # permutation without the normal block function's feed-forward addition.
+  defp chacha20_rounds(state) do
+    Enum.reduce(1..10, state, fn _, current ->
+      current
+      # Column rounds — operate on the four columns of the 4×4 matrix:
+      |> quarter_round(0, 4, 8, 12)
+      |> quarter_round(1, 5, 9, 13)
+      |> quarter_round(2, 6, 10, 14)
+      |> quarter_round(3, 7, 11, 15)
+      # Diagonal rounds — operate on the four diagonals:
+      |> quarter_round(0, 5, 10, 15)
+      |> quarter_round(1, 6, 11, 12)
+      |> quarter_round(2, 7, 8, 13)
+      |> quarter_round(3, 4, 9, 14)
+    end)
+  end
+
   # Left-rotate a 32-bit word by `n` bits.
   #
   # In a stream cipher, rotation provides diffusion across bit positions.
@@ -414,6 +484,31 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
     do_chacha20_encrypt(rest, key, nonce, ctr + 1, acc <> xored)
   end
 
+  # Derive the HChaCha20 subkey and RFC 8439 nonce shared by all XChaCha
+  # operations. BEAM binaries are immutable and may be copied by the runtime,
+  # so Elixir cannot guarantee reliable in-place erasure of the derived subkey.
+  defp derive_xchacha20_material(key, nonce) do
+    validate_binary_size!(key, 32, "Key")
+    validate_binary_size!(nonce, 24, "Nonce")
+
+    subkey = hchacha20_subkey(key, binary_part(nonce, 0, 16))
+    derived_nonce = <<0, 0, 0, 0>> <> binary_part(nonce, 16, 8)
+    {subkey, derived_nonce}
+  end
+
+  defp validate_binary_size!(value, expected, label) do
+    unless is_binary(value) and byte_size(value) == expected do
+      raise ArgumentError, "#{label} must be #{expected} bytes"
+    end
+  end
+
+  defp validate_counter!(counter)
+       when is_integer(counter) and counter >= 0 and counter <= @u32,
+       do: :ok
+
+  defp validate_counter!(_counter),
+    do: raise(ArgumentError, "Counter must be a 32-bit unsigned integer")
+
   # Poly1305 accumulation loop.
   #
   # For each 16-byte (or shorter final) chunk, interpret the bytes as a
@@ -430,7 +525,7 @@ defmodule CodingAdventures.ChaCha20Poly1305 do
     <<chunk::binary-size(chunk_size), rest::binary>> = message
     # Decode the chunk as a little-endian integer, then set the high bit
     # at position (8 * chunk_size) to mark the end of the block.
-    n = :binary.decode_unsigned(chunk, :little) ||| (1 <<< (8 * chunk_size))
+    n = :binary.decode_unsigned(chunk, :little) ||| 1 <<< (8 * chunk_size)
     new_acc = rem((acc + n) * r, @poly_prime)
     poly1305_accumulate(rest, r, new_acc)
   end
