@@ -790,6 +790,12 @@ hooked-left-leg-to-apex-to-right-leg school-hand order at 05:06–05:10; the Not
 Sans Cyrillic fit preserves that zero-lift evidence while tracing the printed
 curved left leg, horizontal top shoulder, and straight right stem and records
 the source's slanted right leg and entry and exit joins.
+The four-frame Cyrillic **м** filmstrip rises through the left stem, descends to
+the central valley, rises to the second apex, then descends the right stem
+without lifting. The native-teacher lesson demonstrates its rounded two-arch
+school-hand order at 05:26–05:31; the Noto Sans Cyrillic fit preserves that
+zero-lift evidence while tracing the printed straight upright stems and deep
+central V and records the source's entry and exit joins.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
