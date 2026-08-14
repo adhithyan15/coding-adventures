@@ -479,5 +479,12 @@ plaintext payloads, another AEAD, or a non-canonical JSON-only envelope.
 5. Run one cross-language fixture gate in CI and close #130 only when all six
    languages pass it.
 
+The repository-owned `validate_d18f_message_conformance.py` gate completes
+this sequence. It strictly validates the one fixture manifest and generator
+blob identity, requires the complete six-language consumer roster, executes
+each package's native build front door, and regenerates the Rust-authored
+manifest for an exact byte comparison. Its stable CI status is a dependency of
+the aggregate gate on every push and pull request.
+
 Part of #130 and #128. The normative profile was tracked by #11649; the Rust
 adapter and shared fixture lock are tracked by #11652.
