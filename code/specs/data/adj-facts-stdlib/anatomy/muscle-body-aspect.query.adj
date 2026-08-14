@@ -1,0 +1,16 @@
+% ============================================================================
+% muscle-body-aspect.query.adj — worked recall over the muscle-body-aspect
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what aspect is the
+% sartorius on?" (direct) or "which muscle is posterior?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. A muscle not tabled here abstains honestly — the engine
+% never invents an aspect.
+% ============================================================================
+
+import "muscle-body-aspect.adj"
+
+? muscle_body_aspect(sartorius, $Aspect)     % expect anterior
+? muscle_body_aspect($Muscle, posterior)      % reverse bind — expect gastrocnemius
+? muscle_body_aspect(quadriceps, $Aspect)      % expect abstain -- a real, already-tabled muscle sharing the thigh region with sartorius, but its own quote says "front of the thigh", never the word "anterior"
