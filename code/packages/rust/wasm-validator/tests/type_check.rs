@@ -371,3 +371,70 @@ fn valid_if_with_else_and_a_multi_value_param_blocktype() {
                (else (i32.const -2) (i32.add)))))",
     );
 }
+
+// ── Security regressions ────────────────────────────────────────────────
+//
+// These build a `WasmModule` directly (not via `wasm-wast-parser`, which
+// only ever emits well-formed nested block structure) so the function
+// body's raw bytes can be genuinely malformed -- adversarial input, not
+// something any real encoder would produce, and exactly the kind of thing
+// `validate()` exists to safely reject rather than crash on.
+
+fn module_with_body(func_type: wasm_types::FuncType, code: Vec<u8>) -> wasm_types::WasmModule {
+    wasm_types::WasmModule {
+        types: vec![func_type],
+        functions: vec![0],
+        code: vec![wasm_types::FunctionBody { locals: vec![], code }],
+        ..Default::default()
+    }
+}
+
+/// A `/security-review` finding (WASM06): `control_stack` starts with
+/// exactly one frame (the function body's own implicit outer block),
+/// meant to be closed by exactly one matching `end` -- the LAST byte of a
+/// well-formed body. Without a guard, a 2-byte body `[0x0B, X]` for any
+/// function with empty declared results closes that outer frame on the
+/// FIRST byte, emptying `control_stack` while a byte remains, and every
+/// other opcode handler's `frame!()`/`frame_mut!()` (or `return`'s own
+/// `control_stack` read) would then panic instead of cleanly rejecting
+/// the module -- a validator panicking on adversarial bytecode is itself
+/// a denial-of-service, since safely rejecting bad input is this code's
+/// entire job. `0x0F` (`return`) is the exact byte the report's PoC used.
+#[test]
+fn invalid_premature_end_followed_by_another_opcode_does_not_panic() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0x0B, 0x0F]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "a premature top-level `end` with trailing bytes must be rejected, not silently accepted");
+}
+
+/// Same PoC shape, but with the trailing byte swapped to `drop` (0x1A) --
+/// covers the `frame!()` (immutable) path specifically, since `return`
+/// and `unreachable` are the only handlers that go through `frame_mut!()`
+/// first.
+#[test]
+fn invalid_premature_end_followed_by_drop_does_not_panic() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0x0B, 0x1A]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "a premature top-level `end` with trailing bytes must be rejected, not silently accepted");
+}
+
+/// Two `end`s in a row is a DIFFERENT case (the second `end` finds
+/// `control_stack` already empty via `pop_ctrl`'s own `ok_or_else`, not
+/// via a raw index) -- included to confirm that path was already clean
+/// and stays clean after the fix.
+#[test]
+fn invalid_double_end_does_not_panic() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0x0B, 0x0B]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err());
+}
+
+/// A truncated `ref.null` (`0xD0` as the very last byte, missing its
+/// required heap-type immediate) must be rejected, not silently accepted
+/// by running off the end of `code` without ever dereferencing it.
+#[test]
+fn invalid_truncated_ref_null_heap_type_immediate() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0xD0]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "a truncated ref.null immediate must be rejected");
+}

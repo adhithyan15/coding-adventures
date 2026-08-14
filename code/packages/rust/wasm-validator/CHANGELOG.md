@@ -57,6 +57,30 @@ implementing real reference-type subtyping (out of this phase's scope).
   this phase's scope). Zero regressions elsewhere -- `assert_return`
   ended at the exact same 13775/13777 as before this change.
 
+### Fixed -- `/security-review` found a reachable panic before this shipped
+
+`control_stack` starts with exactly one frame (the function body's own
+implicit outer block), meant to be closed by exactly one matching `end`
+-- the LAST byte of a well-formed body. Nothing enforced that: a 2-byte
+body `[0x0B, X]` for any function with empty declared results closed
+that outer frame on the first byte, emptying `control_stack` while a
+byte remained, and every later opcode handler's `frame!()`/`frame_mut!()`
+macro (`.expect("control_stack never empties mid-body")`) -- or
+`return`'s own unchecked `control_stack[0]` read -- panicked instead of
+cleanly rejecting the module. A validator panicking on adversarial
+bytecode is itself a denial-of-service: the one thing this code must
+never do is crash on malformed input, only reject it. Fixed with two
+layers: the `end` handler now rejects a premature top-level close
+outright, and `frame!()`/`frame_mut!()` return a `ValidationError`
+instead of panicking as defense in depth. Also fixed a related gap
+found in the same review: `ref.null`'s heap-type immediate byte wasn't
+bounds-checked (a truncated encoding was silently accepted rather than
+rejected), and `br`/`br_if`/`br_table`'s branch-depth arithmetic used a
+plain (non-`checked_add`) addition before the `checked_sub`, safe on
+64-bit targets but not provably so. 4 new regression tests, verified via
+TEMP-REVERT-CHECK to reproduce the exact real panics
+(`index out of bounds` / `.expect()`) with the fix reverted.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

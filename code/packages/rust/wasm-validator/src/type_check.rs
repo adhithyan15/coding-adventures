@@ -111,6 +111,16 @@ fn label_types(frame: &ControlFrame) -> &[ValueType] {
     }
 }
 
+/// Resolve a `br`/`br_if`/`br_table` `depth` immediate (an attacker-
+/// controlled `u32` read straight from the bytecode) to an index into
+/// `control_stack`, or `None` if it's out of range. Uses `checked_add`
+/// before the `checked_sub`, not a plain `1 + depth as usize`, so this
+/// can't silently overflow on a 32-bit `usize` target when `depth` is
+/// `u32::MAX`.
+fn resolve_label_target(control_stack_len: usize, depth: u32) -> Option<usize> {
+    control_stack_len.checked_sub((depth as usize).checked_add(1)?)
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Stack primitives
 // ──────────────────────────────────────────────────────────────────────────────
@@ -489,14 +499,27 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 return Err(ValidationError::Other(format!("function #{func_idx}: {}", format!($($arg)*))))
             };
         }
+        // Security: defense in depth alongside the `0x0B` handler's own
+        // guard above -- if `control_stack` were ever unexpectedly empty
+        // here (e.g. from a future bug reintroducing the premature-`end`
+        // hole), this returns a clean `ValidationError` instead of
+        // panicking. A validator panicking on adversarial bytecode is
+        // itself a DoS: the one thing this code must never do is crash on
+        // malformed input, only reject it.
         macro_rules! frame {
             () => {
-                control_stack.last().expect("control_stack never empties mid-body")
+                match control_stack.last() {
+                    Some(f) => f,
+                    None => return Err(ValidationError::Other(format!("function #{func_idx}: no open block (control stack unexpectedly empty)"))),
+                }
             };
         }
         macro_rules! frame_mut {
             () => {
-                control_stack.last_mut().expect("control_stack never empties mid-body")
+                match control_stack.last_mut() {
+                    Some(f) => f,
+                    None => return Err(ValidationError::Other(format!("function #{func_idx}: no open block (control stack unexpectedly empty)"))),
+                }
             };
         }
 
@@ -585,6 +608,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             }
             0xD0 => {
                 // ref.null <heap_type byte>: pushes a null reference.
+                code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated ref.null heap-type immediate")))?;
                 offset += 1;
                 stack.push(StackType::Unknown);
             }
@@ -638,6 +662,23 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             }
             0x0B => {
                 // end
+                //
+                // Security: `control_stack` always starts with exactly one
+                // entry (the function body's own implicit outer block),
+                // meant to be closed by exactly one matching `end` -- the
+                // LAST byte of a well-formed body. Without this guard, a
+                // crafted body could close that outer frame early (e.g. a
+                // 2-byte `[0x0B, X]` body for any func with empty declared
+                // results) and empty `control_stack` while bytes remain,
+                // making every later opcode handler's `frame!()`/
+                // `frame_mut!()` -- and `return`'s own `control_stack[0]`
+                // read -- panic instead of cleanly rejecting the module.
+                if control_stack.len() == 1 && offset != code.len() {
+                    err!(
+                        "unexpected `end`: closes the function's own implicit outer block before the end of the function body ({} trailing byte(s))",
+                        code.len() - offset
+                    );
+                }
                 let closed = pop_ctrl(&mut stack, &mut control_stack)?;
                 if closed.kind == FrameKind::If && !closed.saw_else && closed.start_types != closed.end_types {
                     err!("`if` without a matching `else` must have identical param and result types");
@@ -648,9 +689,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // br
                 let (depth, size) = decode_idx(code, offset)?;
                 offset += size;
-                let target = control_stack
-                    .len()
-                    .checked_sub(1 + depth as usize)
+                let target = resolve_label_target(control_stack.len(), depth)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br target {depth} out of range")))?;
                 let types = label_types(&control_stack[target]).to_vec();
                 pop_expect_many(&mut stack, frame!(), &types)?;
@@ -661,9 +700,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 let (depth, size) = decode_idx(code, offset)?;
                 offset += size;
                 pop_expect(&mut stack, frame!(), ValueType::I32)?; // condition
-                let target = control_stack
-                    .len()
-                    .checked_sub(1 + depth as usize)
+                let target = resolve_label_target(control_stack.len(), depth)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_if target {depth} out of range")))?;
                 let types = label_types(&control_stack[target]).to_vec();
                 pop_expect_many(&mut stack, frame!(), &types)?;
@@ -683,15 +720,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 offset += size;
 
                 pop_expect(&mut stack, frame!(), ValueType::I32)?; // index
-                let default_target = control_stack
-                    .len()
-                    .checked_sub(1 + default_label as usize)
+                let default_target = resolve_label_target(control_stack.len(), default_label)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table default target {default_label} out of range")))?;
                 let default_types = label_types(&control_stack[default_target]).to_vec();
                 for &label in &labels {
-                    let target = control_stack
-                        .len()
-                        .checked_sub(1 + label as usize)
+                    let target = resolve_label_target(control_stack.len(), label)
                         .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table target {label} out of range")))?;
                     let types = label_types(&control_stack[target]).to_vec();
                     if types.len() != default_types.len() {
@@ -707,7 +740,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             }
             0x0F => {
                 // return
-                let results = control_stack[0].end_types.clone();
+                let results = control_stack
+                    .first()
+                    .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return with no open block")))?
+                    .end_types
+                    .clone();
                 pop_expect_many(&mut stack, frame!(), &results)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
