@@ -7294,10 +7294,13 @@ impl HtmlParser {
             && self.has_authored_open_html_heading()
             && self.open_html_heading_in_scope_index().is_none()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                format!("end tag `</{name}>` did not match the current foreign element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-heading-end-tag",
                 format!("end tag `</{name}>` did not match the current heading element"),
@@ -38244,12 +38247,7 @@ mod tests {
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
-                    ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        format!(
-                            "end tag `</{end_tag}>` did not match the current foreign element"
-                        )
-                    ),
+                    generic_foreign_end_tag_mismatch(&source, end_tag),
                     ParserDiagnostic::new(
                         "unexpected-heading-end-tag",
                         format!(
@@ -38313,6 +38311,60 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-heading-end-tag"));
+    }
+
+    #[test]
+    fn positions_heading_foreign_end_tag_mismatches_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<h1><math><mi></h2>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics[0],
+            generic_foreign_end_tag_mismatch(source, "h2")
+        );
+        assert_eq!(output.parser_diagnostics[1].position, None);
+        assert!(source.len() > source.chars().count());
+
+        let eof_source = "<!doctype html><h1><math><mi></h1";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+        assert_eq!(
+            eof_output.parser_diagnostics.last(),
+            Some(&eof_with_unclosed_elements(eof_source))
+        );
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "h1".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "h1".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
