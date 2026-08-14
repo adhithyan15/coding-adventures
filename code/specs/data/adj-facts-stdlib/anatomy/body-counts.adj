@@ -61,12 +61,37 @@
 %     "The paired kidneys are located between the twelfth thoracic and third
 %      lumbar vertebrae, one on each side of the vertebral column."
 %
+% EXTENDED this cycle with the three hand-bone GROUP counts. These reuse the
+% SAME already-quoted, already-cited NCBI-Bookshelf sentence that
+% `hand-bones.adj` (`hand_bone_region(group, region)`) already ships in its
+% own header -- no new WebFetch. `hand_bone_region` decodes WHERE each group
+% sits; this table decodes HOW MANY bones are in each group, a number the
+% source states plainly alongside the location:
+%
+%   carpals → 8
+%   metacarpals → 5
+%   phalanges → 14
+%     https://www.ncbi.nlm.nih.gov/books/NBK279362/
+%     (InformedHealth.org, "In brief: How do hands work?" — IQWiG teaching
+%      summary hosted on the U.S. NIH / NCBI Bookshelf)
+%     "The human hand is made up of a total of 27 individual bones: 8 carpal
+%      bones (in the base of the hand), 5 metacarpal bones (in the middle
+%      part of the hand) and 14 phalanges (finger bones) are connected by
+%      joints and ligaments."
+%   Unlike the other six rows, this source is a patient-education / teaching
+%   summary (IQWiG), not a primary government anatomy authority — so these
+%   three rows are honestly `consensus`-tier, one rung below the table's
+%   `authoritative` envelope trust, exactly as `hand-bones.adj` itself
+%   already documents for the same sentence.
+%
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
 % `trust` below hold the single strongest span: the explicitly numeric NHGRI
 % statement that fixes the first row (chromosomes → 46). Every OTHER row's
-% per-fact source and verbatim span is listed above, so each count remains
-% independently checkable. All six sources are primary U.S. government / NIH
-% references, so `trust authoritative`.
+% per-fact source, verbatim span, and real trust tier is listed above, so
+% each count remains independently checkable. Six of the nine sources are
+% primary U.S. government / NIH references (`trust authoritative`); the
+% three hand-bone-group rows are `consensus`-tier per their own IQWiG
+% source, as noted above.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -80,6 +105,9 @@ table body_count {
     row (lungs, 2)
     row (pairs_of_ribs, 12)
     row (kidneys, 2)
+    row (carpals, 8)
+    row (metacarpals, 5)
+    row (phalanges, 14)
 
     source "Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46."
     locator "https://www.genome.gov/genetics-glossary/Chromosome"

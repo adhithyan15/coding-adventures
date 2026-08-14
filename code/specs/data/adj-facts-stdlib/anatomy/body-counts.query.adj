@@ -20,3 +20,6 @@ import "body-counts.adj"
 ? body_count(pairs_of_ribs, $N)        % expect 12
 ? body_count($S, 206)                  % expect bones_in_adult_body — reverse recall
 ? body_count(spleens, $N)              % expect abstain — not in the table
+? body_count(carpals, $N)              % expect 8
+? body_count(metacarpals, $N)          % expect 5
+? body_count(phalanges, $N)            % expect 14
