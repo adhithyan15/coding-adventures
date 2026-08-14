@@ -28,7 +28,11 @@ rest of the way, pre-A1 to C2, and turns on the observation that decoding and
 meaning are two different ramps: the script one is finite and *ends*, the meaning
 one is the whole climb. A lesson may sit at the frontier of one or the other,
 never both, because a reader who fails a lesson that is new in both cannot tell
-which one they failed. This page is just an index.
+which one they failed. [`HL13`](../../specs/HL13-spine-layout-and-replication.md) sets the method for
+everything above: the spine is laid out in **Spanish**, the script addendum in
+**Tamil**, and both are then replicated across every language — because six
+tracks in lockstep means every design mistake is made six times before anyone
+finds it. This page is just an index.
 
 Every track shares the same shape:
 

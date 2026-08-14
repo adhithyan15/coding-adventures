@@ -501,6 +501,17 @@ meaning tranches rather than in front of them, and page count never being a
 constraint. Those are properties of the pattern; establishing the pattern once
 makes them easier to hold, not optional.
 
+### The work this method implies
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C152 | **NEXT (Spanish side)** | **Realize the thirteen unrealized spine nodes in Spanish**, lowest stage first: A2's one (`SPINE-NEGATE-AND-ASK`), B1's two, B2's two, then **C1's four and C2's four — which have ZERO realizations in the corpus's most advanced track.** Each needs the six parts HL13 §3 lists: entry lessons, vocabulary floor, grammar points, text shape, task shapes, payoff. | All 33 spine nodes realized in Spanish; the gates read clean per rung. |
+| HL-C153 | Not started | **Deepen each Spanish rung to the density the lower ones have** — roughly twenty lessons per node, against 33 nodes. This is where the page count goes, and where *"do not worry about the number of pages"* is doing real work. | Every rung carries comparable weight; no rung is a single lesson standing in for a level. |
+| HL-C154 | Not started | **Complete Tamil's script addendum end to end** — the letter ledger's 24 positions, conjuncts, running text, and the named lesson where decoding closes. Tamil is the reference because it is the only track with a cited stroke order. | The addendum is whole in one track and ready to replicate. |
+| HL-C155 | Not started | **Replicate the spine layout to the other 21 tracks**, one stage at a time, as a generator plus per-track review. | Every track has the same rung anatomy at every stage it has reached. |
+| HL-C156 | Not started | **Replicate the script addendum to every non-Latin track**, recognition-first where the ductus is uncited. **No citation → no pen path → no figure** travels with it. | Every non-Latin track teaches its script; uncited pen paths are reported as debt, never invented. |
+
+
 ## The owner's standing goal, restated 2026-08-14
 
 > *"For every language I want to start with pre-A1 level (absolute beginner) to C2."*
