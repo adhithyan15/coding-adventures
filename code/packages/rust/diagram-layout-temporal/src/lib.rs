@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -343,6 +343,18 @@ fn layout_gantt(
 
 fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let mut items: Vec<LayoutedTemporalItem> = Vec::new();
+    let title_offset = if let Some(title) = &diagram.title {
+        items.push(LayoutedTemporalItem::TemporalTitle {
+            x: 0.0,
+            y: 0.0,
+            width: cw,
+            height: 40.0,
+            label: title.clone(),
+        });
+        40.0
+    } else {
+        0.0
+    };
     let mut branch_lanes: HashMap<String, usize> = HashMap::new();
     let mut commit_x: HashMap<String, (f64, f64)> = HashMap::new(); // id -> (x,y)
     let mut x_cursor = 60.0_f64;
@@ -358,7 +370,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     }
     let mut next_lane = diagram.branches.len().max(1);
 
-    let lane_y = |lane: usize| -> f64 { 30.0 + lane as f64 * LANE_H };
+    let lane_y = |lane: usize| -> f64 { title_offset + 30.0 + lane as f64 * LANE_H };
 
     // Emit branch lane labels.
     for (name, &lane) in &branch_lanes {
@@ -435,7 +447,9 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let ch = lane_y(next_lane - 1) + LANE_H;
     LayoutedTemporalDiagram {
         width: cw.max(x_cursor + 60.0), height: ch,
-        accessibility_title: None, accessibility_description: None, items,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        items,
     }
 }
 
@@ -478,8 +492,11 @@ mod tests {
     fn simple_git() -> TemporalDiagram {
         TemporalDiagram {
             kind: TemporalKind::Git,
-            title: None,
+            title: Some("Release history".into()),
             body: TemporalBody::Git(GitDiagram {
+                title: Some("Release history".into()),
+                accessibility_title: Some("Accessible release history".into()),
+                accessibility_description: Some("Two commits on main".into()),
                 direction: DiagramDirection::Lr,
                 branches: vec![GitBranch { name: "main".into(), order: None }],
                 events: vec![
@@ -498,7 +515,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.10.0");
+        assert_eq!(crate::VERSION, "0.11.0");
     }
 
     #[test]
@@ -555,6 +572,24 @@ mod tests {
     fn git_canvas_width_covers_commits() {
         let d = layout_temporal_diagram(&simple_git(), 800.0);
         assert!(d.width >= 2.0 * COMMIT_SPACING);
+    }
+
+    #[test]
+    fn git_layout_preserves_title_and_accessibility_metadata() {
+        let d = layout_temporal_diagram(&simple_git(), 800.0);
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TemporalTitle { label, .. }
+                if label == "Release history"
+        )));
+        assert_eq!(
+            d.accessibility_title.as_deref(),
+            Some("Accessible release history")
+        );
+        assert_eq!(
+            d.accessibility_description.as_deref(),
+            Some("Two commits on main")
+        );
     }
 
     #[test]

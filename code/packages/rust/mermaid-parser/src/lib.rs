@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.111.0";
+pub const VERSION: &str = "0.112.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -699,9 +699,10 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::State => parse_state_diagram(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::GitGraph => parse_gitgraph(source).map(|git| {
+            let title = git.title.clone();
             MermaidDiagram::Temporal(TemporalDiagram {
                 kind: TemporalKind::Git,
-                title: None,
+                title,
                 body: TemporalBody::Git(git),
             })
         }),
@@ -4639,9 +4640,61 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
     }];
     let mut events = Vec::new();
     let mut current_branch = "main".to_string();
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
 
     while !cursor.at_eof() {
         let command = cursor.current().clone();
+        match token_name(&command) {
+            "TITLE" => {
+                title = Some(
+                    cursor
+                        .advance()
+                        .value
+                        .strip_prefix("title")
+                        .expect("GitGraph grammar emitted a title token")
+                        .trim()
+                        .to_string(),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("accessibility block requires '{'");
+                let close = value.rfind('}').expect("accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            _ => {}
+        }
         match command.value.as_str() {
             "commit" => {
                 cursor.advance();
@@ -4789,6 +4842,9 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
     }
 
     Ok(GitDiagram {
+        title,
+        accessibility_title,
+        accessibility_description,
         direction,
         branches,
         events,
@@ -5758,6 +5814,21 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
                     && parent.as_deref() == Some("root")
                     && branch == "main"
         ));
+    }
+
+    #[test]
+    fn gitgraph_parses_title_and_accessibility_metadata() {
+        let source = "gitGraph TB:\ntitle Release history\naccTitle: Accessible release history\naccDescr {\nTwo branches\nand one merge\n}\ncommit";
+        let d = parse_gitgraph(source).unwrap();
+        assert_eq!(d.title.as_deref(), Some("Release history"));
+        assert_eq!(
+            d.accessibility_title.as_deref(),
+            Some("Accessible release history")
+        );
+        assert_eq!(
+            d.accessibility_description.as_deref(),
+            Some("Two branches\nand one merge")
+        );
     }
 
     #[test]
@@ -7264,7 +7335,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.111.0");
+        assert_eq!(crate::VERSION, "0.112.0");
     }
 
     #[test]

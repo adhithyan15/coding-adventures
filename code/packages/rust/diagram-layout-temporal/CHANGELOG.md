@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+- Reserve a backend-neutral GitGraph title row and carry accessibility metadata into temporal layout IR.
+
 ## 0.10.0
 
 - Lay out Journey sections and tasks horizontally with score-ranked faces and activity lines.

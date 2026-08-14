@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.59.0
+
+- Preserve GitGraph titles and accessibility metadata and add a backend-neutral temporal title layout item.
+
 ## 0.58.0
 
 - Add semantic and resolved styles to structural nodes.

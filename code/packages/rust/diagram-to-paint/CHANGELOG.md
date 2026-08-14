@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.54.0
+
+- Shape backend-neutral temporal title items and preserve GitGraph accessibility metadata in PaintScene.
+
 ## 0.53.0
 
 - Shape structural node text with resolved font size, weight, style, and family.

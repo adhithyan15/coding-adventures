@@ -10,6 +10,10 @@ skip:
   COMMENT         = /%%[^\r\n]*/
 
 NEWLINE           = /\r?\n/
+ACC_DESCR_BLOCK   = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE         = /accTitle[ \t]*:[^\r\n#;]*/
+ACC_DESCR         = /accDescr[ \t]*:[^\r\n#;]*/
+TITLE             = /title(?:[ \t]+[^\r\n#;]*)?/
 HEADER            = /gitGraph:?/
 CHERRY_PICK       = "cherry-pick"
 ID_ATTR           = "id:"
