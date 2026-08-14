@@ -1,5 +1,9 @@
 # Changelog
 
+- Promote ESPHome to a first-party bounded `_esphomelib._tcp` mDNS discovery
+  runtime while keeping native API sessions, key custody, and controls out of
+  scope.
+
 - Record UniFi Network's exact-consent, target-bounded, rate-limited live device
   statistics and two-minute normalized retention boundary.
 

@@ -2300,8 +2300,32 @@ This broadens local lighting, HVAC, shading, access, and energy interface
 discovery while keeping actual KNX bus access outside the unauthenticated
 discovery boundary.
 
-The protocol- and vendor-specific backlog below remains valid after those
-central ownership steps:
+## Current ESPHome mDNS Breadth Slice
+
+The next breadth slice adds concrete ESPHome native-API node discovery without
+claiming ownership of an encrypted protobuf session:
+
+- `smart-home-esphome-discovery-integration` targets the production
+  `_esphomelib._tcp.local` service through the shared mDNS scanner and requires
+  stable MAC, firmware version, configuration hash, board, host, and port data.
+- Optional platform, network, project, and native-API security TXT records are
+  bounded and validated. Noise advertisements must name the exact ESPHome
+  NNpsk0 suite, and zero-PSK provisioning is accepted only with explicit Noise
+  support.
+- D23 discovery authorization runs before socket I/O. One scan accepts at most
+  64 replies, uses a bounded timeout and record TTL, and isolates malformed or
+  conflicting advertisements as partial failures without replacing the
+  deterministic first identity observation.
+- The runtime opens no native-API TCP connection and performs no protobuf
+  handshake, key provisioning, entity enumeration, subscriptions, or actions.
+  Those require a separately supervised session owner and ephemeral
+  Vault-backed encryption-key custody.
+
+This broadens the DIY/local-device ecosystem using production discovery
+primitives while preserving the native session and secret boundaries.
+
+The protocol- and vendor-specific backlog below remains valid after these
+breadth steps:
 
 No additional camera snapshot slice is currently executable without a concrete
 authentication prerequisite. Blue Iris documents `/image/{camera}` and secure

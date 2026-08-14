@@ -44967,19 +44967,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::LocalPairing],
             "homekit_controller",
         ),
-        local_device_entry(
-            "esphome",
-            "ESPHome",
-            "Local ESPHome device integration for DIY sensors, lights, switches, and voice devices.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Specified,
-            1,
-            &["smart_home.read", "smart_home.command.light", "smart_home.command.switch"],
-            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor, EntityKind::Input],
-            &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Usb, DiscoveryMechanism::Manual],
-            &[AuthMode::LocalToken],
-            "esphome",
-        ),
+        esphome_entry(),
         tasmota_entry(),
         local_device_entry(
             "shelly",
@@ -49126,6 +49114,43 @@ fn knxnet_ip_entry() -> IntegrationCatalogEntry {
         "The first-party runtime supports only bounded KNXnet/IP Search Request/Search Response discovery.",
         "ETS project import, group-address semantics, tunneling, routing telegrams, configuration, and KNX IP Secure sessions remain out of scope.",
     ])
+}
+
+fn esphome_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "esphome",
+        "ESPHome",
+        "Bounded mDNS discovery for ESPHome native-API nodes.",
+        IntegrationCategory::LocalDevice,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "esphome",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor(
+        "esphome_native_api".to_string(),
+    )])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only bounded _esphomelib._tcp mDNS discovery and advertised security classification.",
+        "Native API protobuf sessions, Noise key provisioning and custody, entity enumeration, subscriptions, and actions remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "ESPHome mDNS".to_string(),
+        url: "https://esphome.io/components/mdns/".to_string(),
+        external_id: Some("_esphomelib._tcp".to_string()),
+    });
+    entry
 }
 
 fn modbus_tcp_entry() -> IntegrationCatalogEntry {
@@ -81835,6 +81860,40 @@ mod tests {
             assert!(knx.required_primitives.contains(&primitive));
         }
         assert!(!knx.required_primitives.contains(&PrimitiveFamily::Tcp));
+    }
+
+    #[test]
+    fn esphome_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let esphome = find_entry(&catalog, &IntegrationId::trusted("esphome")).unwrap();
+        assert_eq!(
+            esphome.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(esphome.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(esphome.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            esphome.supported_protocols,
+            vec![ProtocolFamily::Vendor("esphome_native_api".to_string())]
+        );
+        assert_eq!(
+            esphome.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(esphome.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(esphome.required_primitives.contains(&primitive));
+        }
+        for primitive in [PrimitiveFamily::CommandMapping, PrimitiveFamily::VaultLease] {
+            assert!(!esphome.required_primitives.contains(&primitive));
+        }
     }
 
     #[test]
