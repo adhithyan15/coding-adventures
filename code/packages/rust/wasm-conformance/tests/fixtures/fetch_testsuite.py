@@ -35,12 +35,14 @@ PINNED_SHA = "28864811cf03bdbf880733786148feaba339582d"
 FIXTURES_DIR = Path(__file__).parent
 OUTPUT_DIR = FIXTURES_DIR / "testsuite"
 
-# Initial slice: WASM 1.0 MVP core only. Deliberately excludes anything
-# needing the `spectest` host-import module or heavier module-linking
-# semantics, and anything from a post-MVP proposal (SIMD, threads/atomics,
-# exceptions, tail calls, GC/reference-types beyond this repo's existing
-# narrow slice, memory64, the component model) -- see
-# `code/specs/W05-wasm-conformance-harness.md` section 6 for the full
+# WASM 1.0 MVP core only (extended once, WASM08, beyond the initial
+# W05/PR3 slice -- see this file's own git history for the two-stage
+# growth). Deliberately excludes anything needing the `spectest`
+# host-import module or heavier module-linking semantics, and anything
+# from a post-MVP proposal (SIMD, threads/atomics, exceptions, tail
+# calls, bulk memory operations, GC/reference-types beyond this repo's
+# existing narrow slice, memory64, the component model) -- see
+# `code/specs/W05-wasm-conformance-harness.md` section 6 for the original
 # out-of-scope list and why each is deferred to its own future phase, not
 # vendored here.
 TESTSUITE_FILES = [
@@ -60,6 +62,7 @@ TESTSUITE_FILES = [
     "float_misc.wast",
     "conversions.wast",
     "const.wast",
+    "left-to-right.wast",
     # Control flow
     "block.wast",
     "loop.wast",
@@ -73,12 +76,18 @@ TESTSUITE_FILES = [
     "unreachable.wast",
     "switch.wast",
     "forward.wast",
+    # Type checking / dead code (WASM06's instruction-level type checker)
+    "unreached-invalid.wast",
+    "unreached-valid.wast",
+    # Types
+    "type.wast",
     # Calls
     "call.wast",
     "call_indirect.wast",
     "func.wast",
     "func_ptrs.wast",
     "fac.wast",
+    "stack.wast",
     # Variables
     "local_get.wast",
     "local_set.wast",
@@ -95,9 +104,15 @@ TESTSUITE_FILES = [
     "memory_grow.wast",
     "memory_trap.wast",
     "traps.wast",
+    "float_memory.wast",
+    "memory_redundancy.wast",
     # Parser self-test
     "select.wast",
     "comments.wast",
+    "id.wast",
+    "custom.wast",
+    "obsolete-keywords.wast",
+    "utf8-invalid-encoding.wast",
 ]
 
 # The corpus itself is Apache-2.0 licensed; vendor the license verbatim
