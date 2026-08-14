@@ -92,7 +92,9 @@
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "canDo": "I can say the Sanskrit numerals एक to पञ्च with their dual and gendered forms, and follow पञ्च outward into Punjab, pentagon, and the disputed history of punch.",
-      "spineNodes": ["SPINE-COUNT-ONE-TO-FIVE"],
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
       "payoff": {
         "lesson": "SA-C06-pancha-travels",
         "kind": "task",
@@ -113,7 +115,9 @@
       "title": "The Core Verbs",
       "label": "ch:sa-core-verbs",
       "canDo": "I can say that someone is, becomes, goes, comes, eats, sees and knows in Sanskrit; I can name each verb by its dhātu rather than by its present form, say which of the three gaṇa patterns builds its stem, and point at the English word that descends from the same root.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "SA-C07-janati",
         "kind": "production",
@@ -139,7 +143,9 @@
       "title": "The Mind and the Palm Leaf",
       "label": "ch:sa-mind-verbs",
       "canDo": "I can say that someone thinks, understands, reads and writes in Sanskrit; I can name the class that plants -अय- inside a verb, build \"understands\" out of a prefix and a verb I already had, say what लिख् meant before it meant write, and tell a word worn down by speech (तद्भव) from one carried over whole (तत्सम).",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "SA-C08-likhati",
         "kind": "production",
@@ -163,7 +169,9 @@
       "title": "Taking, Asking, Helping, Loving",
       "label": "ch:sa-doing-verbs",
       "canDo": "I can say that someone takes, asks, helps and loves in Sanskrit; I can say संस्कृतं मम प्रियम्, build a verb by putting करोति behind a noun, and point at the English word — grab, pray, friend — that each of these four roots also produced.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "SA-C09-snihyati",
         "kind": "production",
@@ -191,7 +199,9 @@
       "title": "What You'd Ask For",
       "label": "ch:sa-request-nouns",
       "canDo": "I can name water, milk and food in Sanskrit, say that food is grammatically the eaten thing, and name the three genders every Sanskrit noun carries.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "SA-C10-annam",
         "kind": "production",
@@ -214,7 +224,9 @@
       "title": "The People You'd Introduce",
       "label": "ch:sa-people-nouns",
       "canDo": "I can name a friend, a family, a brother and a sister in Sanskrit, and say which of those words travelled with English and which quietly did not.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "SA-C11-bhagini",
         "kind": "production",
@@ -236,7 +248,9 @@
       "title": "The Face, Part One",
       "label": "ch:sa-face-nouns-1",
       "canDo": "I can name an eye, an ear and a mouth in Sanskrit, say why eyes take a dual number, and say which of the three words has a settled Western cousin and which do not.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "SA-C12-mukham",
         "kind": "production",
@@ -258,7 +272,9 @@
       "title": "The Face, Part Two",
       "label": "ch:sa-face-nouns-2",
       "canDo": "I can name a nose and a heart in Sanskrit, say which daughter-language nose-word नासिका is a relative of rather than a parent of, and close the chapter's twelve nouns against the cousin words this book has already shown.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "SA-C13-hridayam",
         "kind": "production",
@@ -274,6 +290,29 @@
           "SA-LEX-BHRATA-BROTHER",
           "SA-LEX-BHAGINI-SISTER",
           "SA-GRAMMAR-NOUN-GENDER-THREE"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "Pointing, and Asking",
+      "label": "ch:sa-pointing-and-asking",
+      "canDo": "I can point at something in Sanskrit and ask who or where it is — and I can say what the six words have in common.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "SA-C14-deixis-system",
+        "kind": "production",
+        "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+        "assesses": [
+          "SA-LEX-C14-DEIXIS-01",
+          "SA-LEX-C14-DEIXIS-02",
+          "SA-LEX-C14-DEIXIS-03",
+          "SA-LEX-C14-DEIXIS-04",
+          "SA-LEX-C14-DEIXIS-05",
+          "SA-LEX-C14-DEIXIS-06",
+          "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
         ]
       }
     }

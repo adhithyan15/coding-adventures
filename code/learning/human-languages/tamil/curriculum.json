@@ -534,6 +534,24 @@
         "TA-EXT-036-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-200",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TA-C40-this",
+        "TA-C40-that",
+        "TA-C40-here",
+        "TA-C40-there",
+        "TA-C40-who",
+        "TA-C40-where",
+        "TA-C40-deixis-system"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-200-DEIXIS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -643,7 +661,8 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "TA-PATH-017",
-        "TA-PATH-026"
+        "TA-PATH-026",
+        "TA-PATH-200"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1346,6 +1365,23 @@
         "TA-C39-vendum",
         "TA-C39-evvalavu",
         "TA-C39-oru"
+      ]
+    },
+    {
+      "id": "TA-EXT-200-DEIXIS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can point at something in Tamil and ask who or where it is, and I can see the one pattern the six words are built from.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C40-this",
+        "TA-C40-that",
+        "TA-C40-here",
+        "TA-C40-there",
+        "TA-C40-who",
+        "TA-C40-where",
+        "TA-C40-deixis-system"
       ]
     }
   ]

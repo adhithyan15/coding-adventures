@@ -244,6 +244,24 @@
         "SA-EXT-016-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-200",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "SA-C14-this",
+        "SA-C14-that",
+        "SA-C14-here",
+        "SA-C14-there",
+        "SA-C14-who",
+        "SA-C14-where",
+        "SA-C14-deixis-system"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-200-DEIXIS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -345,7 +363,9 @@
       "relocates": {}
     },
     "SPINE-DEFINITE-REFERENCE": {
-      "segments": [],
+      "segments": [
+        "SA-PATH-200"
+      ],
       "omits": [
         "GRAMMAR-THE"
       ],
@@ -726,6 +746,23 @@
       "lessons": [
         "SA-C13-nasika",
         "SA-C13-hridayam"
+      ]
+    },
+    {
+      "id": "SA-EXT-200-DEIXIS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can point at something in Sanskrit and ask who or where it is, and I can see the one pattern the six words are built from.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C14-this",
+        "SA-C14-that",
+        "SA-C14-here",
+        "SA-C14-there",
+        "SA-C14-who",
+        "SA-C14-where",
+        "SA-C14-deixis-system"
       ]
     }
   ]

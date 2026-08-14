@@ -452,6 +452,24 @@
         "TE-EXT-034-MEAL"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-200",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TE-C41-this",
+        "TE-C41-that",
+        "TE-C41-here",
+        "TE-C41-there",
+        "TE-C41-who",
+        "TE-C41-where",
+        "TE-C41-deixis-system"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-200-DEIXIS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -562,7 +580,8 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "TE-PATH-015",
-        "TE-PATH-024"
+        "TE-PATH-024",
+        "TE-PATH-200"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1157,6 +1176,23 @@
       "prerequisites": [],
       "lessons": [
         "TE-C40-bhojanam"
+      ]
+    },
+    {
+      "id": "TE-EXT-200-DEIXIS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can point at something in Telugu and ask who or where it is, and I can see the one pattern the six words are built from.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C41-this",
+        "TE-C41-that",
+        "TE-C41-here",
+        "TE-C41-there",
+        "TE-C41-who",
+        "TE-C41-where",
+        "TE-C41-deixis-system"
       ]
     }
   ]
