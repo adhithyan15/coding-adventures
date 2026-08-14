@@ -607,6 +607,7 @@ These should be implemented before most vendor-specific adapters:
 | `coap-protocol` and `smart-home-coap-integration` | bounded Confirmable GET framing and authorized read-only local CoAP scalar telemetry with strict text/JSON decoding |
 | `snmp-protocol` and `smart-home-snmp-integration` | strict bounded SNMPv2c GET framing and authorized read-only local OID telemetry with ephemeral shared-secret handling |
 | `nut-protocol` and `smart-home-nut-ups-integration` | strict bounded RFC 9271 `LIST VAR` framing and authorized anonymous read-only local UPS/PDU telemetry |
+| `ssdp-protocol` and `smart-home-ssdp-discovery-integration` | strict bounded UPnP `M-SEARCH` framing and authorized local SSDP discovery with source/USN/LOCATION correlation |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |

@@ -1,0 +1,8 @@
+[package]
+name = "ssdp-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Strict bounded SSDP M-SEARCH request and response framing"
+license = "MIT"
+
+[dependencies]

@@ -2557,6 +2557,30 @@ This broadens local battery, load, runtime, line-power, and equipment-health
 telemetry while preserving every independent credential, camera-resource, and
 radio-host prerequisite below.
 
+## Current UPnP SSDP Discovery Breadth Slice
+
+The next breadth slice adds reusable standards-level discovery across local
+media devices, appliances, gateways, and network equipment without turning an
+unauthenticated advertisement into a control session:
+
+- `ssdp-protocol` owns strict bounded UPnP `M-SEARCH` request and search-response
+  framing, including required HTTPU headers, cache lifetime, UDN/USN target
+  correlation, duplicate rejection, and optional boot/configuration ids.
+- `smart-home-ssdp-discovery-integration` sends one search from an explicit
+  private, link-local, or loopback IPv4 interface to one local multicast or
+  unicast destination and collects at most 64 replies within a bounded timeout.
+- D23 discovery authorization runs before UDP socket creation. Responses must
+  bind the requested ST to the USN and a credential-free local HTTP `LOCATION`
+  whose IPv4 host exactly matches the UDP source; stable UDNs deduplicate while
+  endpoint conflicts and malformed packets remain isolated failures.
+- The runtime does not fetch device descriptions, retain a discovery socket,
+  subscribe to events, invoke SOAP actions, expose control, or accept public
+  endpoints. Those require separately authorized HTTP resource, subscription,
+  and operation owners.
+
+This broadens generic local discovery while also establishing a reusable strict
+protocol core for existing Sonos, Wemo, Roku, and HEOS SSDP adapters.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
