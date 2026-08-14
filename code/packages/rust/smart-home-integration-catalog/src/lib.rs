@@ -44923,6 +44923,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         modbus_tcp_entry(),
         coap_entry(),
         snmp_entry(),
+        nut_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49294,6 +49295,46 @@ fn snmp_entry() -> IntegrationCatalogEntry {
         label: "IETF SNMP transport mappings".to_string(),
         url: "https://www.rfc-editor.org/rfc/rfc3417.html".to_string(),
         external_id: Some("RFC 3417".to_string()),
+    });
+    entry
+}
+
+fn nut_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "nut",
+        "Network UPS Tools",
+        "Read-only local UPS and PDU telemetry from explicitly configured NUT servers.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "nut",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("nut_upsd".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Sensor])
+    .with_discovery(&[DiscoveryMechanism::Manual, DiscoveryMechanism::FileConfig])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime performs one bounded anonymous LIST VAR exchange for an exact UPS name on an explicit local unicast endpoint.",
+        "Authentication, writable variables, instant commands, forced shutdown, enumeration, subscriptions, public endpoints, and TLS session ownership remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "IETF Network UPS Tools protocol".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc9271.html".to_string(),
+        external_id: Some("RFC 9271".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Network UPS Tools LIST VAR client interface".to_string(),
+        url: "https://networkupstools.org/docs/man/upscli_list_start.html".to_string(),
+        external_id: Some("upscli_list_start".to_string()),
     });
     entry
 }
@@ -82118,6 +82159,43 @@ mod tests {
             PrimitiveFamily::DiscoveryIndex,
         ] {
             assert!(!snmp.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn nut_entry_exposes_bounded_anonymous_read_only_telemetry() {
+        let catalog = first_party_catalog();
+        let nut = find_entry(&catalog, &IntegrationId::trusted("nut")).unwrap();
+        assert_eq!(
+            nut.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(nut.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(nut.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            nut.supported_protocols,
+            vec![ProtocolFamily::Vendor("nut_upsd".to_string())]
+        );
+        assert_eq!(
+            nut.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(nut.target_entity_kinds, vec![EntityKind::Sensor]);
+        for primitive in [
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(nut.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::DiscoveryIndex,
+        ] {
+            assert!(!nut.required_primitives.contains(&primitive));
         }
     }
 

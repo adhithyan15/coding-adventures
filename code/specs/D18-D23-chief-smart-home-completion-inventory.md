@@ -2532,6 +2532,31 @@ This broadens local infrastructure and equipment telemetry while preserving
 every independent credential, camera-resource, and radio-host prerequisite
 below.
 
+## Current Network UPS Tools Telemetry Breadth Slice
+
+The next breadth slice adds vendor-neutral UPS and PDU telemetry through the
+standard Network UPS Tools server protocol without exposing power-control or
+shutdown commands:
+
+- `nut-protocol` owns strict bounded RFC 9271 `LIST VAR` request and response
+  framing for one exact UPS name, including quoted-value escapes, duplicate
+  rejection, list correlation, and fixed line, value, count, and response
+  limits.
+- `smart-home-nut-ups-integration` polls one explicit private, link-local, or
+  loopback TCP endpoint and projects profile-selected decimal, boolean, and
+  text variables into normalized D23 sensor entities.
+- D23 read authorization runs before TCP connection. Every configured point
+  must be present and valid before bridge, device, or entity state is mutated;
+  no credential is accepted, persisted, logged, or placed in metadata.
+- The runtime exposes no `SET VAR`, instant command, forced shutdown, UPS
+  enumeration, subscription, reconnect loop, public endpoint, authentication,
+  or TLS negotiation. Credentialed or encrypted deployments require a
+  separately supervised session and trust-lifetime owner.
+
+This broadens local battery, load, runtime, line-power, and equipment-health
+telemetry while preserving every independent credential, camera-resource, and
+radio-host prerequisite below.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
