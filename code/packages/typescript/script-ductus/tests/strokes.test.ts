@@ -103,6 +103,7 @@ const CYRILLIC_TSE = DUCTUS[ductusKey("cyrillic", "ц")];
 const CYRILLIC_CHE = DUCTUS[ductusKey("cyrillic", "ч")];
 const CYRILLIC_SHA = DUCTUS[ductusKey("cyrillic", "ш")];
 const CYRILLIC_SHCHA = DUCTUS[ductusKey("cyrillic", "щ")];
+const CYRILLIC_HARD_SIGN = DUCTUS[ductusKey("cyrillic", "ъ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1628,6 +1629,25 @@ describe("handwriting ductus", () => {
     expect(firstRise.at(-1)!.y).toBeGreaterThan(firstRise[0].y);
     expect(secondRise.at(-1)!.y).toBeGreaterThan(secondRise[0].y);
     expect(tail.at(-1)!.y).toBeLessThan(left.at(-1)!.y);
+  });
+
+  it("Cyrillic ъ keeps its flag, stem, and lower bowl in one run", () => {
+    expect(CYRILLIC_HARD_SIGN.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_HARD_SIGN)).toBe(0);
+    expect(CYRILLIC_HARD_SIGN.strokes).toHaveLength(1);
+    expect(CYRILLIC_HARD_SIGN.strokes[0].segments).toHaveLength(5);
+    const [flag, stem, lower, right, upper] = CYRILLIC_HARD_SIGN.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(flag.at(-1)).toEqual(stem[0]);
+    expect(stem.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(right[0]);
+    expect(right.at(-1)).toEqual(upper[0]);
+    expect(flag[0].x).toBeLessThan(flag.at(-1)!.x);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(lower[0].x).toBeLessThan(lower.at(-1)!.x);
+    expect(right.at(-1)!.y).toBeGreaterThan(right[0].y);
+    expect(upper.at(-1)!.x).toBeLessThan(upper[0].x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3743,6 +3763,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*10:17–10:25.*upper left.*descends the left stem.*baseline.*rounded diagonal join.*top of the middle stem.*descends the middle stem.*second rounded diagonal join.*top of the right stem.*descends the right stem.*small lower tail loop.*rising exit without lifting.*one continuous pen-down run.*zero intervening lifts.*left stem down.*first joined rise.*middle stem down.*second joined rise.*right stem down.*looped tail.*bundled Noto Sans Cyrillic.*printed щ-like form.*three straight full-height vertical stems.*two horizontal baseline bars.*short separate-looking right descender.*without diagonal rounded joins.*exit loop.*left-to-middle-to-right-to-tail order.*zero-lift evidence.*descend the left stem.*first bottom bar.*rise then retrace the middle stem.*second bottom bar.*rise then retrace the right stem.*tail shoulder.*descend the short tail without lifting.*connected cursive restores/i,
+    );
+  });
+
+  it("Cyrillic ъ traces its joined flag-to-stem-to-bowl order to the native lesson", () => {
+    const src = CYRILLIC_HARD_SIGN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase ъ.*10:34–10:38.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*10:34–10:38.*upper left.*narrow entry loop.*rounded top shoulder.*descends the tall main stem.*baseline.*circles the lower bowl counterclockwise.*closes it against the stem without lifting.*one continuous pen-down run.*zero intervening lifts.*looped entry and top shoulder.*main stem down.*joined lower bowl.*bundled Noto Sans Cyrillic.*printed ъ-like form.*broad horizontal top flag.*straight main stem.*wide closed lower bowl.*without the narrow entry loop.*rounded top shoulder.*flag-to-stem-to-bowl order.*zero-lift evidence.*sweep right along the top flag.*descend the main stem.*circle the lower bowl counterclockwise.*close it against the stem without lifting.*connected cursive restores/i,
     );
   });
 

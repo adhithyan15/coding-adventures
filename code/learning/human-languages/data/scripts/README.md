@@ -861,10 +861,17 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   left-to-middle-to-right-to-tail order and zero-lift evidence while tracing
   the printed three straight stems, two horizontal baseline joins, and short
   right descender; it records the school hand's diagonal rounded joins and
-  looped exit. The remaining **76** prose part
+  looped exit. Lowercase **ъ** follows at 10:34–10:38: the pen curls through a
+  narrow entry loop, sweeps through the rounded top shoulder, descends the main
+  stem, then circles the joined lower bowl counterclockwise and closes it
+  without lifting. Its five-frame Noto fit preserves that
+  flag-to-stem-to-bowl order and zero-lift evidence while tracing the printed
+  broad horizontal top flag, straight main stem, and closed lower bowl; it
+  records the school hand's looped entry and rounded shoulder. The remaining
+  **75** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 6,
+  `cyrillic` 5,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
