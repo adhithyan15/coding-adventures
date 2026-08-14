@@ -873,6 +873,14 @@ rounded short-stem-to-long-stem bridge and rising exit at 09:24–09:28; the Not
 Sans Cyrillic fit preserves that zero-lift order while tracing the printed
 shorter left stem, shallow bowl, and full-height right stem and records the
 source's narrower bridge, curled baseline, and rising exit.
+The five-frame Cyrillic **ш** filmstrip descends the left stem, crosses the
+first baseline join and rises then retraces the middle stem, crosses the second
+baseline join and rises then retraces the right stem without lifting. The
+native-teacher lesson demonstrates its rounded left-to-middle-to-right
+school-hand order and rising exit at 09:49–09:57; the Noto Sans Cyrillic fit
+preserves that zero-lift evidence while tracing the printed three straight
+stems and horizontal baseline bars and records the source's diagonal rounded
+joins, curled baseline, and rising exit.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
