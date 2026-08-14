@@ -5564,7 +5564,12 @@ impl Compiler {
                         || binding.array.is_some()
                         || self.active_by_name_binding(dependency).is_some()
                 })
-                || self.for_body_changes_dependency(effect_root, dependency)
+                || self.for_body_changes_dependency(
+                    effect_root,
+                    dependency,
+                    target_name,
+                    effect_root,
+                )
         }) {
             return false;
         }
@@ -5590,7 +5595,13 @@ impl Compiler {
         }
     }
 
-    fn for_body_changes_dependency(&self, node: &GrammarASTNode, name: &str) -> bool {
+    fn for_body_changes_dependency(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
         // Keep transitive dependency checks non-recursive: only a bare
         // self-assignment is intrinsically preserving without another proof.
         if node.rule_name == "assign_stmt" {
@@ -5604,7 +5615,12 @@ impl Compiler {
                 });
             if writes_name
                 && !first_direct_node(node, "expression").is_some_and(|expression| {
-                    self.expression_intrinsically_preserves_name(expression, name)
+                    self.expression_intrinsically_preserves_name(
+                        expression,
+                        name,
+                        target_name,
+                        effect_root,
+                    )
                 })
             {
                 return true;
@@ -5619,13 +5635,17 @@ impl Compiler {
         }
         direct_nodes(node)
             .into_iter()
-            .any(|child| self.for_body_changes_dependency(child, name))
+            .any(|child| {
+                self.for_body_changes_dependency(child, name, target_name, effect_root)
+            })
     }
 
     fn expression_intrinsically_preserves_name(
         &self,
         node: &GrammarASTNode,
         name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
     ) -> bool {
         if expr_variable_name(node).as_deref() == Some(name) {
             return true;
@@ -5648,20 +5668,54 @@ impl Compiler {
                 .iter()
                 .any(|token| token.effective_type_name() == "NAME")
         });
-        if condition_is_variable_free {
+        let stable_scalar_condition = condition.is_some_and(|condition| {
+            let Some(dependencies) = self.static_predicate_dependencies(condition) else {
+                return false;
+            };
+            !dependencies.is_empty()
+                && dependencies.iter().all(|dependency| {
+                    dependency != name
+                        && dependency != target_name
+                        && self.require_var(dependency).is_ok_and(|binding| {
+                            matches!(
+                                binding.ty,
+                                ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                            ) && !binding.is_global
+                                && binding.array.is_none()
+                                && self.active_by_name_binding(dependency).is_none()
+                        })
+                        && !body_targets_scalar(effect_root, dependency)
+                })
+        });
+        if condition_is_variable_free || stable_scalar_condition {
             match condition.and_then(|condition| self.static_boolean_value(condition)) {
                 Some(true) => {
-                    return self.expression_intrinsically_preserves_name(branches[0], name)
+                    return self.expression_intrinsically_preserves_name(
+                        branches[0],
+                        name,
+                        target_name,
+                        effect_root,
+                    )
                 }
                 Some(false) => {
-                    return self.expression_intrinsically_preserves_name(branches[1], name)
+                    return self.expression_intrinsically_preserves_name(
+                        branches[1],
+                        name,
+                        target_name,
+                        effect_root,
+                    )
                 }
                 None => {}
             }
         }
-        branches
-            .into_iter()
-            .all(|branch| self.expression_intrinsically_preserves_name(branch, name))
+        branches.into_iter().all(|branch| {
+            self.expression_intrinsically_preserves_name(
+                branch,
+                name,
+                target_name,
+                effect_root,
+            )
+        })
     }
 
     fn collect_static_predicate_dependencies(
@@ -7415,6 +7469,32 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     let mut out = Vec::new();
     collect_tokens(node, &mut out);
     out
+}
+
+fn body_targets_scalar(node: &GrammarASTNode, name: &str) -> bool {
+    let targets_name = |variable: &GrammarASTNode| {
+        array_subscripts(variable).is_none()
+            && direct_tokens(variable).into_iter().any(|token| {
+                token.effective_type_name() == "NAME" && token.value == name
+            })
+    };
+    if node.rule_name == "assign_stmt"
+        && direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == "left_part")
+            .filter_map(|left| first_direct_node(left, "variable"))
+            .any(&targets_name)
+    {
+        return true;
+    }
+    if node.rule_name == "for_stmt"
+        && first_direct_node(node, "variable").is_some_and(&targets_name)
+    {
+        return true;
+    }
+    direct_nodes(node)
+        .into_iter()
+        .any(|child| body_targets_scalar(child, name))
 }
 
 fn collect_expression_dependency_names(
@@ -9791,6 +9871,35 @@ mod tests {
             "test",
         )
         .expect("a static selector may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_stable_assignment_selector_preserves_transitive_dependency() {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged known selector may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_written_assignment_selector_remains_conservative_for_transitive_dependency() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a selector written by the body may choose a changing leaf later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_controlled_assignment_selector_remains_conservative_for_transitive_dependency() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if i < 2 then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("the changing loop control may select a different dependency leaf later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
