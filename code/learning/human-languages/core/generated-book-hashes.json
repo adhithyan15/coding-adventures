@@ -3698,6 +3698,33 @@
       "tex": "sanskrit/book/chapters/ch18-asking.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:8bcd1d9a6175fbf0",
+      "lessonIds": [
+        "SA-C19-six",
+        "SA-C19-seven",
+        "SA-C19-eight",
+        "SA-C19-nine",
+        "SA-C19-ten",
+        "SA-C19-number-family"
+      ],
+      "tex": "sanskrit/book/chapters/ch19-numbers.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:84967fcaaa8b753a",
+      "lessonIds": [
+        "SA-C20-man",
+        "SA-C20-woman",
+        "SA-C20-child",
+        "SA-C20-old-person",
+        "SA-C20-people"
+      ],
+      "tex": "sanskrit/book/chapters/ch20-people.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:55f690de8a10e9cb",

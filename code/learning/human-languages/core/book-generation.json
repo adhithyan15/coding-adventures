@@ -2512,6 +2512,20 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 19,
+      "output": "sanskrit/book/chapters/ch19-numbers.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 20,
+      "output": "sanskrit/book/chapters/ch20-people.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "output": "spanish/book/chapters/ch01-first-words.tex"

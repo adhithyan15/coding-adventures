@@ -337,6 +337,39 @@
         "SA-EXT-204-ASK"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-205",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "SA-C19-six",
+        "SA-C19-seven",
+        "SA-C19-eight",
+        "SA-C19-nine",
+        "SA-C19-ten",
+        "SA-C19-number-family"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-205-NUM"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-206",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "SA-C20-man",
+        "SA-C20-woman",
+        "SA-C20-child",
+        "SA-C20-old-person",
+        "SA-C20-people"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-206-PEOPLE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -442,7 +475,8 @@
         "SA-PATH-200",
         "SA-PATH-201",
         "SA-PATH-202",
-        "SA-PATH-203"
+        "SA-PATH-203",
+        "SA-PATH-206"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -451,7 +485,8 @@
     },
     "SPINE-COUNT-ONE-TO-FIVE": {
       "segments": [
-        "SA-PATH-009"
+        "SA-PATH-009",
+        "SA-PATH-205"
       ],
       "omits": [
         "NUMBER-ONE-TO-FIVE"
@@ -914,6 +949,37 @@
         "SA-C18-how-many",
         "SA-C18-from-where",
         "SA-C18-k-words"
+      ]
+    },
+    {
+      "id": "SA-EXT-205-NUM",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can count to ten in Sanskrit and name the English cousin of each number.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C19-six",
+        "SA-C19-seven",
+        "SA-C19-eight",
+        "SA-C19-nine",
+        "SA-C19-ten",
+        "SA-C19-number-family"
+      ]
+    },
+    {
+      "id": "SA-EXT-206-PEOPLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five kinds of person in Sanskrit and tell an elder from an ancient thing.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C20-man",
+        "SA-C20-woman",
+        "SA-C20-child",
+        "SA-C20-old-person",
+        "SA-C20-people"
       ]
     }
   ]
