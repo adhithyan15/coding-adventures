@@ -223,11 +223,25 @@ multiple languages; close an enabler before the features that depend on it.
       `2e0`/`0e0`, which clang rejects). **Executed proof on real `clang`**: the two ALGOL real
       programs (exit 42, exit 1) run on the LLVM matrix column. (`f64` *params* reassigned across a
       back-edge still stay SSA — `param_slot_compatible` excludes floats — a separate unexercised case.)
-    - ✅ **iir-to-wasm** (v0.15.1) — **no backend change needed.** Unlike LLVM/JVM's uniform
+    - ✅ **iir-to-wasm** (v0.15.1, **corrected in v0.48.3**) — Unlike LLVM/JVM's uniform
       slot model, WASM types each local individually (`hint_to_value_type("f64") = F64`) and
       selects `f64.mul`/`f64.eq`/`f64.lt` from the `f64` type_hint, so an `f64` variable already
       lived in an `F64` local. **Executed proof on `wasm-runtime`**: the two ALGOL real programs
       run on the WASM matrix column; added op-selection regression tests.
+      - ⚠️ **v0.15.1's "no backend change needed" was half right, and the wrong half was the
+        one this bullet names.** The shared problem above has *two* parts — per-slot float
+        typing **and** a boolean (not operand-width) comparison-result type. WASM genuinely had
+        the first for free. It did **not** have the second: `infer_local_type_hints` declared a
+        comparison's destination from `instr.type_hint`, which for a comparison names its
+        *operands*, so an `f64` comparison's result local was declared `F64` while `f64.ge`
+        pushes an `i32`. The modules were ill-typed and had been all along; nothing caught it
+        because the validator did not yet check instruction operand types and `wasm-execution`
+        is untyped at runtime. `wasm-validator`'s instruction-level type checker (W02 Phase 2 /
+        WASM06) rejected 42 matrix cells the day it landed — every Dartmouth BASIC comparison
+        (REAL is BASIC's only numeric type), plus Algol60, Twig and Nib. Fixed in iir-to-wasm
+        v0.48.3 along with two sibling width bugs; see that CHANGELOG entry. The lesson is the
+        one W05/W02 exist to enforce: "the column is green" was not evidence of a well-typed
+        module until something actually checked the types.
     - ✅ **iir-to-jvm-class-file** (v0.15.0) — f64 locals were already typed `Double` (`dstore`/
       `dload`, two slots) and arithmetic already used `dadd`/`dmul`; the two real gaps were
       (a) non-0/1 f64 *constants* emitted `ldc2_w #0` (the unused phantom slot) instead of a real
