@@ -95,6 +95,7 @@ const CYRILLIC_O = DUCTUS[ductusKey("cyrillic", "о")];
 const CYRILLIC_PE = DUCTUS[ductusKey("cyrillic", "п")];
 const CYRILLIC_ER = DUCTUS[ductusKey("cyrillic", "р")];
 const CYRILLIC_ES = DUCTUS[ductusKey("cyrillic", "с")];
+const CYRILLIC_TE = DUCTUS[ductusKey("cyrillic", "т")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1483,6 +1484,24 @@ describe("handwriting ductus", () => {
     expect(lower.at(-1)!.x).toBeGreaterThan(Math.min(...lower.map((point) => point.x)));
     expect(lower.at(-1)!.y).toBeLessThan(upper[0].y);
     expect(lower.at(-1)).not.toEqual(upper[0]);
+  });
+
+  it("Cyrillic т joins its central stem to the full printed top bar", () => {
+    expect(CYRILLIC_TE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_TE)).toBe(0);
+    expect(CYRILLIC_TE.strokes).toHaveLength(1);
+    expect(CYRILLIC_TE.strokes[0].segments).toHaveLength(3);
+    const [stem, left, right] = CYRILLIC_TE.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(stem.at(-1)).toEqual(left[0]);
+    expect(left.at(-1)).toEqual(right[0]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(left.at(-1)!.x).toBeLessThan(stem[0].x);
+    expect(right.at(-1)!.x).toBeGreaterThan(stem[0].x);
+    expect(Math.max(...right.map((point) => point.y))).toBe(
+      Math.min(...right.map((point) => point.y)),
+    );
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3510,6 +3529,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*07:04–07:08.*upper right.*left across the top.*left side.*bottom.*lower-right exit.*one continuous counterclockwise pen-down run.*zero intervening lifts.*tall, slightly slanted open curve.*small rising exit.*bundled Noto Sans Cyrillic.*wider, upright printed C-like form.*blunt open tips.*upper-right-to-left-side-to-bottom-to-lower-right order.*zero-lift evidence.*one open counterclockwise curve.*connected cursive may add.*entry join.*exit join/i,
+    );
+  });
+
+  it("Cyrillic т traces its zero-lift m-like school hand to the all-letter native lesson", () => {
+    const src = CYRILLIC_TE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase т.*07:29–07:36.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*07:29–07:36.*upper left.*left stem.*turns upward without lifting.*first arch.*middle stem.*second arch.*right stem.*small rising exit.*one continuous pen-down run.*zero intervening lifts.*rounded Latin m.*two arches.*rising exit.*bundled Noto Sans Cyrillic.*printed T-shaped form.*one central vertical stem.*horizontal top bar.*initial-descent-before-joined-top-movements order.*zero-lift evidence.*descend the central stem.*retrace to the top junction.*sweep left along the top bar.*retrace through the junction.*right tip without lifting.*connected cursive restores/i,
     );
   });
 
