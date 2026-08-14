@@ -336,11 +336,11 @@ Every implementation must prove:
 | Ruby | `code/packages/ruby/chacha20-poly1305` | Complete | Complete in #11595 |
 | TypeScript | `code/packages/typescript/chacha20-poly1305` | Complete | Complete in #11594 |
 | Rust | `code/packages/rust/chacha20-poly1305` | Complete | Complete in PR #1029 |
-| Elixir | `code/packages/elixir/chacha20-poly1305` | Complete | Remaining |
+| Elixir | `code/packages/elixir/chacha20-poly1305` | Complete | Complete in #11596 |
 
-Issue #129 remains open until the remaining Elixir port and the
-cross-language conformance fixture pass. D19 is the Actor model specification;
-it is not renamed or duplicated by this crypto profile.
+Issue #129 remains open until the cross-language conformance fixture passes.
+D19 is the Actor model specification; it is not renamed or duplicated by this
+crypto profile.
 
 ## Dependencies
 
