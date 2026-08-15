@@ -384,6 +384,20 @@ fn valid_v128_local_and_global_round_trip() {
     );
 }
 
+#[test]
+fn valid_block_with_v128_funcref_externref_single_value_blocktype() {
+    // Real bug found vendoring simd_const.wast (task #81): decode_blocktype
+    // only special-cased the 4 MVP scalar single-byte blocktypes
+    // (i32/i64/f32/f64); v128 (SIMD) and funcref/externref (WASM17) fell
+    // through to the type-index branch, where their raw byte read as
+    // signed LEB128 produced a bogus negative "type index" and always
+    // failed with TypeIndexOutOfBounds -- even though a plain `(block
+    // (result v128) ...)` is completely ordinary, valid WASM.
+    assert_valid("(module (func (result v128) (block (result v128) (v128.const i32x4 0 1 2 3))))");
+    assert_valid("(module (func (param funcref) (result funcref) (block (result funcref) (local.get 0))))");
+    assert_valid("(module (func (param externref) (result externref) (block (result externref) (local.get 0))))");
+}
+
 // ── Invalid modules ─────────────────────────────────────────────────────
 
 #[test]

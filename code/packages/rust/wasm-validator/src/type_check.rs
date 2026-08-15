@@ -272,6 +272,18 @@ fn decode_blocktype(module: &WasmModule, code: &[u8], offset: usize) -> Result<(
         0x7E => Ok((vec![], vec![ValueType::I64], 1)),
         0x7D => Ok((vec![], vec![ValueType::F32], 1)),
         0x7C => Ok((vec![], vec![ValueType::F64], 1)),
+        // v128 (SIMD) and funcref/externref (WASM17) single-value
+        // blocktypes -- a real, previously-undetected gap: both fell
+        // through to the type-index branch below instead, where their
+        // raw byte read as signed LEB128 (`0x7B`→-5, `0x70`→-16, `0x6F`
+        // →-17) produced a bogus negative "type index" that always
+        // failed with `TypeIndexOutOfBounds`. Confirmed via the real,
+        // pinned-commit `simd_const.wast` corpus (`(block (result v128)
+        // ...)`) -- see `wasm-execution`'s matching fix in
+        // `decode_function_body`'s "blocktype" operand decoder.
+        0x7B => Ok((vec![], vec![ValueType::V128], 1)),
+        0x70 => Ok((vec![], vec![ValueType::Funcref], 1)),
+        0x6F => Ok((vec![], vec![ValueType::Externref], 1)),
         _ => {
             let (idx, size) = decode_signed(code, offset).map_err(|e| ValidationError::Other(format!("bad blocktype immediate: {e}")))?;
             let ty = module

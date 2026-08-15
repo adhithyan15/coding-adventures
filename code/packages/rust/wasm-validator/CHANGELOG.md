@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.6] - 2026-08-15 (task #81 — v128/funcref/externref single-value blocktypes)
+
+### Fixed
+
+- `decode_blocktype` only special-cased the 4 MVP scalar single-byte
+  blocktypes (`i32`/`i64`/`f32`/`f64`) explicitly; `v128` (`0x7B`, SIMD)
+  and `funcref`/`externref` (`0x70`/`0x6F`, WASM17) fell through to the
+  type-index branch, where their raw byte read as signed LEB128 (`0x7B`
+  → -5) always failed with `TypeIndexOutOfBounds` -- even for an
+  ordinary, valid `(block (result v128) ...)`. Found vendoring the real
+  `simd_const.wast` corpus (task #78); see `wasm-execution` 0.9.1's
+  matching fix in `decode_function_body`/`block_arity` (the same
+  representation gap on the runtime side).
+- 1 new test proving all 3 single-value blocktypes now validate
+  correctly.
+
 ## [0.2.5] - 2026-08-15 (SIMD PR1b-2 — type rules for the v128 first slice)
 
 ### Added

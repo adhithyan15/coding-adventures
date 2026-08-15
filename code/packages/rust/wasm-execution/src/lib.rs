@@ -1250,9 +1250,37 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
             }
         }
         "blocktype" => {
-            let byte = code[offset];
+            // Security review (task #81's PR): `code[offset]` here was an
+            // unchecked index -- unlike `f32`/`f64` above, which already
+            // guard truncated input with a length check and a safe
+            // default. A module reaching this decoder without first going
+            // through `wasm-validator::validate()` (a real, reachable path:
+            // `wasm-runtime::instantiate()`/`call()` don't call `validate()`
+            // themselves -- only the separate `load_and_run()` convenience
+            // wrapper does) could panic the whole process on a function
+            // body truncated right after a `block`/`loop`/`if` opcode, with
+            // no blocktype byte at all. `0x40` (empty) is a safe, non-
+            // crashing default for the same reason `f32`/`f64` default to
+            // `0.0` on truncation -- the actually-malformed body still gets
+            // caught downstream (by validation, or by a real trap once
+            // execution runs off the end of a too-short instruction
+            // stream), just not via a raw Rust panic here.
+            let byte = code.get(offset).copied().unwrap_or(0x40);
             match byte {
-                0x40 | 0x7F | 0x7E | 0x7D | 0x7C => (DecodedOperand::Int(byte as i64), 1),
+                // Single-byte value-type blocktypes -- carried as the RAW
+                // byte (not signed-LEB128-decoded), matching `block_arity`'s
+                // own raw-byte range check below. Originally just the 4 MVP
+                // scalars; `0x7B` (v128, SIMD) and `0x70`/`0x6F` (funcref/
+                // externref, WASM17) were a real, previously-undetected gap
+                // here -- both fell through to the signed-LEB128 type-index
+                // branch below instead, producing a bogus negative "type
+                // index" (e.g. `0x7B` decodes to signed value -5) that a
+                // real module using `(block (result v128) ...)` or
+                // `(block (result funcref) ...)` would then fail structural
+                // validation against (confirmed via the real, pinned-commit
+                // `simd_const.wast` corpus -- see wasm-validator's matching
+                // fix in `decode_blocktype`).
+                0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F => (DecodedOperand::Int(byte as i64), 1),
                 _ => {
                     // Type index (signed LEB128)
                     let (value, consumed) = decode_signed(code, offset).unwrap_or((0, 1));
@@ -1878,7 +1906,13 @@ fn get_table<'a>(ctx: &mut WasmExecutionContext, idx: usize) -> Result<&'a mut T
 fn block_arity(block_type: i64, types: &[FuncType]) -> (usize, usize) {
     match block_type {
         0x40 => (0, 0),                        // empty
-        0x7C..=0x7F => (0, 1),                 // single value type, no params
+        // Single value type, no params -- the 4 MVP scalars (0x7C..=0x7F)
+        // plus v128 (0x7B, SIMD) and funcref/externref (0x70/0x6F, WASM17),
+        // matching the raw-byte blocktype cases `decode_function_body`'s
+        // own "blocktype" operand decoder now carries for all 7 (see that
+        // match's own doc comment for why this was a real, previously-
+        // undetected gap for the 3 non-MVP-scalar types).
+        0x7C..=0x7F | 0x7B | 0x70 | 0x6F => (0, 1),
         n if n >= 0 && (n as usize) < types.len() => {
             let t = &types[n as usize];
             (t.params.len(), t.results.len())
@@ -6781,6 +6815,63 @@ mod tests {
             DecodedOperand::Int(v) => assert_eq!(*v, 0x40),
             _ => panic!("expected Int operand for blocktype"),
         }
+    }
+
+    #[test]
+    fn test_decode_block_type_truncated_body_does_not_panic() {
+        // Security review regression: a function body truncated right
+        // after a `block`/`loop`/`if` opcode (no blocktype byte at all)
+        // must not panic via an unchecked `code[offset]` index -- this is
+        // reachable without going through `wasm-validator::validate()`
+        // first (`wasm-runtime::instantiate()`/`call()` don't call it
+        // themselves), so a real embedder could hit this with a crafted
+        // module. Defaults to the same "empty" blocktype (0x40) truncated
+        // f32/f64 immediates already default to on short input.
+        let body = FunctionBody { locals: vec![], code: vec![0x02] }; // block, then nothing
+        let decoded = decode_function_body(&body); // must not panic
+        assert_eq!(decoded[0].opcode, 0x02);
+        match &decoded[0].operand {
+            DecodedOperand::Int(v) => assert_eq!(*v, 0x40),
+            _ => panic!("expected Int operand for blocktype"),
+        }
+    }
+
+    #[test]
+    fn test_decode_block_type_v128_funcref_externref_are_raw_bytes_not_signed_leb128() {
+        // Real bug (task #81, found vendoring simd_const.wast): these 3
+        // single-byte blocktypes fell through to the signed-LEB128
+        // type-index branch instead of being carried as their raw byte
+        // (like the 4 MVP scalars already were) -- 0x7B/0x70/0x6F decode
+        // to -5/-16/-17 as signed LEB128, which is NOT what `block_arity`
+        // (or wasm-validator's `decode_blocktype`) expects.
+        for byte in [0x7Bu8, 0x70, 0x6F] {
+            let body = FunctionBody { locals: vec![], code: vec![0x02, byte, 0x0B, 0x0B] };
+            let decoded = decode_function_body(&body);
+            match &decoded[0].operand {
+                DecodedOperand::Int(v) => assert_eq!(*v, byte as i64, "blocktype byte {byte:#x}"),
+                _ => panic!("expected Int operand for blocktype {byte:#x}"),
+            }
+        }
+    }
+
+    /// End-to-end proof `block_arity` (not just the decoder) is fixed: a
+    /// `br` OUT OF a `(block (result v128) ...)` must actually carry its
+    /// v128 value across the branch -- before the fix, `block_arity`
+    /// silently returned `(0, 0)` for this blocktype (the `_ => (0, 0)`
+    /// fallback), which would have dropped the branched value instead of
+    /// keeping it on the stack.
+    #[test]
+    fn br_out_of_a_v128_result_block_carries_the_value() {
+        let mut code = vec![0x02, 0x7B]; // block (result v128)
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes([11, 22, 33, 44]));
+        code.extend([0x0C, 0x00]); // br 0
+        code.push(0x0B); // end (block)
+        code.push(0x0B); // end (func)
+        let mut engine = simd_engine_returning_v128(code);
+        let (results, v128_bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results.len(), 1);
+        assert_eq!(v128_bytes[0], Some(V128Bytes(v128_const_bytes([11, 22, 33, 44]).try_into().unwrap())));
     }
 
     #[test]

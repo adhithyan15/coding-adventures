@@ -2,6 +2,43 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.1] - 2026-08-15 (task #81 — v128/funcref/externref single-value blocktypes)
+
+### Fixed
+
+- `decode_function_body`'s `"blocktype"` operand decoder only special-cased
+  the 4 MVP scalar single-byte blocktypes (`0x40`/`0x7F`/`0x7E`/`0x7D`/
+  `0x7C`) as raw bytes; `v128` (`0x7B`, SIMD) and `funcref`/`externref`
+  (`0x70`/`0x6F`, WASM17) fell through to the signed-LEB128 type-index
+  branch instead, producing a bogus negative "type index" (`0x7B` decodes
+  to signed value -5) for a completely ordinary `(block (result v128)
+  ...)` or similar. Found vendoring the real `simd_const.wast` corpus
+  (task #78) -- confirmed a genuine bug, not a capability gap.
+- `block_arity`'s matching range (`0x7C..=0x7F`) had the identical gap on
+  the runtime side -- a `br` out of a `(block (result v128) ...)` would
+  have silently dropped the branched value (arity `(0, 0)` instead of
+  `(0, 1)`) even once the decoder above is fixed, since this function
+  independently re-derives arity from the same raw byte. Verified
+  load-bearing via TEMP-REVERT-CHECK: reverting just this arm reproduces
+  a `StackUnderflow` trap on a dedicated regression test, then restored.
+- 3 new tests: the decoder now carries `0x7B`/`0x70`/`0x6F` as their raw
+  byte (not a signed-LEB128 type index), and a real end-to-end `br` out
+  of a `(block (result v128) ...)` correctly carries its value across
+  the branch.
+- Security review (round 1) found a pre-existing, adjacent issue: the
+  `"blocktype"` operand decoder's `let byte = code[offset];` was an
+  UNCHECKED index, unlike `f32`/`f64` immediately above it (which already
+  guard truncated input with a length check and a safe default). Reachable
+  without going through `wasm-validator::validate()` first --
+  `wasm-runtime::instantiate()`/`call()` don't call it themselves, only
+  the separate `load_and_run()` convenience wrapper does -- so a real
+  embedder could panic the process on a function body truncated right
+  after a `block`/`loop`/`if` opcode. Fixed to `code.get(offset).copied()
+  .unwrap_or(0x40)` (empty blocktype, the same safe-default convention
+  `f32`/`f64` already use on truncation). Verified load-bearing via
+  TEMP-REVERT-CHECK: reverting reproduces the exact predicted panic
+  (`index out of bounds`) on a dedicated regression test, then restored.
+
 ## [0.9.0] - 2026-08-15 (SIMD PR1b-1 — v128 cross-call-boundary materialization)
 
 ### Added
