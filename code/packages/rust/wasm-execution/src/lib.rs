@@ -1250,7 +1250,22 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
             }
         }
         "blocktype" => {
-            let byte = code[offset];
+            // Security review (task #81's PR): `code[offset]` here was an
+            // unchecked index -- unlike `f32`/`f64` above, which already
+            // guard truncated input with a length check and a safe
+            // default. A module reaching this decoder without first going
+            // through `wasm-validator::validate()` (a real, reachable path:
+            // `wasm-runtime::instantiate()`/`call()` don't call `validate()`
+            // themselves -- only the separate `load_and_run()` convenience
+            // wrapper does) could panic the whole process on a function
+            // body truncated right after a `block`/`loop`/`if` opcode, with
+            // no blocktype byte at all. `0x40` (empty) is a safe, non-
+            // crashing default for the same reason `f32`/`f64` default to
+            // `0.0` on truncation -- the actually-malformed body still gets
+            // caught downstream (by validation, or by a real trap once
+            // execution runs off the end of a too-short instruction
+            // stream), just not via a raw Rust panic here.
+            let byte = code.get(offset).copied().unwrap_or(0x40);
             match byte {
                 // Single-byte value-type blocktypes -- carried as the RAW
                 // byte (not signed-LEB128-decoded), matching `block_arity`'s
@@ -6795,6 +6810,25 @@ mod tests {
             code: vec![0x02, 0x40, 0x0B, 0x0B], // block (empty); end; end
         };
         let decoded = decode_function_body(&body);
+        assert_eq!(decoded[0].opcode, 0x02);
+        match &decoded[0].operand {
+            DecodedOperand::Int(v) => assert_eq!(*v, 0x40),
+            _ => panic!("expected Int operand for blocktype"),
+        }
+    }
+
+    #[test]
+    fn test_decode_block_type_truncated_body_does_not_panic() {
+        // Security review regression: a function body truncated right
+        // after a `block`/`loop`/`if` opcode (no blocktype byte at all)
+        // must not panic via an unchecked `code[offset]` index -- this is
+        // reachable without going through `wasm-validator::validate()`
+        // first (`wasm-runtime::instantiate()`/`call()` don't call it
+        // themselves), so a real embedder could hit this with a crafted
+        // module. Defaults to the same "empty" blocktype (0x40) truncated
+        // f32/f64 immediates already default to on short input.
+        let body = FunctionBody { locals: vec![], code: vec![0x02] }; // block, then nothing
+        let decoded = decode_function_body(&body); // must not panic
         assert_eq!(decoded[0].opcode, 0x02);
         match &decoded[0].operand {
             DecodedOperand::Int(v) => assert_eq!(*v, 0x40),

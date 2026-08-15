@@ -25,6 +25,19 @@ All notable changes to this package will be documented in this file.
   byte (not a signed-LEB128 type index), and a real end-to-end `br` out
   of a `(block (result v128) ...)` correctly carries its value across
   the branch.
+- Security review (round 1) found a pre-existing, adjacent issue: the
+  `"blocktype"` operand decoder's `let byte = code[offset];` was an
+  UNCHECKED index, unlike `f32`/`f64` immediately above it (which already
+  guard truncated input with a length check and a safe default). Reachable
+  without going through `wasm-validator::validate()` first --
+  `wasm-runtime::instantiate()`/`call()` don't call it themselves, only
+  the separate `load_and_run()` convenience wrapper does -- so a real
+  embedder could panic the process on a function body truncated right
+  after a `block`/`loop`/`if` opcode. Fixed to `code.get(offset).copied()
+  .unwrap_or(0x40)` (empty blocktype, the same safe-default convention
+  `f32`/`f64` already use on truncation). Verified load-bearing via
+  TEMP-REVERT-CHECK: reverting reproduces the exact predicted panic
+  (`index out of bounds`) on a dedicated regression test, then restored.
 
 ## [0.9.0] - 2026-08-15 (SIMD PR1b-1 — v128 cross-call-boundary materialization)
 
