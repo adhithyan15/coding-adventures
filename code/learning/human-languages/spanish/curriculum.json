@@ -3485,9 +3485,7 @@
         "ES-PATH-B1-SYNTH-COND",
         "ES-PATH-210-DEPENDS"
       ],
-      "omits": [
-        "MODAL-WOULD"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-ARGUE-A-VIEW": {
@@ -3515,8 +3513,6 @@
         "ES-PATH-B2-SYNTH-REPORT"
       ],
       "omits": [
-        "REPORTED-SPEECH",
-        "SPEECH-ACT-REPORT",
         "QUOTATION-DIRECT"
       ],
       "relocates": {}
@@ -3525,8 +3521,6 @@
       "segments": [],
       "omits": [
         "DISCOURSE-TOPIC-SENTENCE",
-        "RELATIVE-CLAUSE",
-        "VOICE-PASSIVE",
         "VOCAB-FIELD-SPECIFIC"
       ],
       "relocates": {}
@@ -6555,6 +6549,21 @@
     ],
     "TENSE-BACKSHIFT": [
       "ES-REPORT-BACKSHIFT"
+    ],
+    "REPORTED-SPEECH": [
+      "ES-REPORT-QUE-OBLIGATORY"
+    ],
+    "SPEECH-ACT-REPORT": [
+      "ES-REPORT-DECIR-PRETERITE"
+    ],
+    "MODAL-WOULD": [
+      "ES-CONDITIONAL"
+    ],
+    "VOICE-PASSIVE": [
+      "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
+    ],
+    "RELATIVE-CLAUSE": [
+      "ES-GRAMMAR-RELATIVE-QUE"
     ]
   }
 }
