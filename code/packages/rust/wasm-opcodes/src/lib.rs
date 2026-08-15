@@ -262,6 +262,18 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "global.get", opcode: 0x23, category: "variable", immediates: &["globalidx"], stack_pop: 0, stack_push: 1 },
     OpcodeInfo { name: "global.set", opcode: 0x24, category: "variable", immediates: &["globalidx"], stack_pop: 1, stack_push: 0 },
 
+    // ── Table instructions (reference-types proposal, WASM17) ────────────────
+    //
+    // `table.get` — push table[tableidx][index] (a funcref, currently the
+    //   only element type WASM 1.0's single table can hold).
+    // `table.set` — pop a funcref and an i32 index, store into
+    //   table[tableidx][index].
+    // Both take a single `tableidx` LEB128 immediate, same shape as
+    // `global.get`/`global.set`'s `globalidx` immediate above. See
+    // `code/specs/W08-wasm-funcref-externref.md`.
+    OpcodeInfo { name: "table.get", opcode: 0x25, category: "table", immediates: &["tableidx"], stack_pop: 1, stack_push: 1 },
+    OpcodeInfo { name: "table.set", opcode: 0x26, category: "table", immediates: &["tableidx"], stack_pop: 2, stack_push: 0 },
+
     // ── Memory load instructions ──────────────────────────────────────────────
     //
     // All load instructions have a `memarg` immediate: two LEB128 u32 values:
@@ -525,6 +537,20 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "i64.extend8_s",  opcode: 0xC2, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
     OpcodeInfo { name: "i64.extend16_s", opcode: 0xC3, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
     OpcodeInfo { name: "i64.extend32_s", opcode: 0xC4, category: "conversion", immediates: &[], stack_pop: 1, stack_push: 1 },
+
+    // ── `ref.func` (reference-types proposal, WASM17) ─────────────────────────
+    //
+    // Pushes a `funcref` referring to a function by index (used to obtain a
+    // callable reference without going through a table, e.g. as an
+    // `elem`-segment initializer or a first-class value). Takes one
+    // `funcidx` LEB128 immediate, same shape as `call`'s immediate.
+    //
+    // `ref.null` (0xD0) and `ref.is_null` (0xD1) are deliberately absent from
+    // this table: they already have working handlers in `wasm-execution`
+    // and `wasm-validator` from before WASM17, and `wasm-execution`'s
+    // decoder special-cases `ref.null`'s heap-type immediate outside this
+    // generic table (see `code/specs/W08-wasm-funcref-externref.md`).
+    OpcodeInfo { name: "ref.func", opcode: 0xD2, category: "reference", immediates: &["funcidx"], stack_pop: 0, stack_push: 1 },
 ];
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -769,5 +795,39 @@ mod tests {
             let by_name = get_opcode_by_name(name).unwrap_or_else(|| panic!("{name} should be found"));
             assert_eq!(by_name.opcode, byte);
         }
+    }
+
+    // Additional (WASM17): the reference-types proposal's new opcodes
+    // round-trip by both byte and name, with the expected stack shape and
+    // immediates. `table.get`/`table.set` sit in the previously-reserved
+    // 0x25/0x26 MVP gap; `ref.func` is at 0xD2. `ref.null` (0xD0) and
+    // `ref.is_null` (0xD1) are deliberately absent from this table (see the
+    // comment above `ref.func`'s entry) and so must NOT be found here.
+    #[test]
+    fn test_reference_types_opcodes() {
+        let table_get = get_opcode(0x25).expect("0x25 should be table.get");
+        assert_eq!(table_get.name, "table.get");
+        assert_eq!(table_get.immediates, &["tableidx"]);
+        assert_eq!(table_get.stack_pop, 1);
+        assert_eq!(table_get.stack_push, 1);
+
+        let table_set = get_opcode(0x26).expect("0x26 should be table.set");
+        assert_eq!(table_set.name, "table.set");
+        assert_eq!(table_set.immediates, &["tableidx"]);
+        assert_eq!(table_set.stack_pop, 2);
+        assert_eq!(table_set.stack_push, 0);
+
+        let ref_func = get_opcode(0xD2).expect("0xD2 should be ref.func");
+        assert_eq!(ref_func.name, "ref.func");
+        assert_eq!(ref_func.immediates, &["funcidx"]);
+        assert_eq!(ref_func.stack_pop, 0);
+        assert_eq!(ref_func.stack_push, 1);
+
+        assert_eq!(get_opcode_by_name("table.get").map(|o| o.opcode), Some(0x25));
+        assert_eq!(get_opcode_by_name("table.set").map(|o| o.opcode), Some(0x26));
+        assert_eq!(get_opcode_by_name("ref.func").map(|o| o.opcode), Some(0xD2));
+
+        assert!(get_opcode(0xD0).is_none(), "ref.null is intentionally not in this table");
+        assert!(get_opcode(0xD1).is_none(), "ref.is_null is intentionally not in this table");
     }
 }

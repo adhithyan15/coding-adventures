@@ -324,6 +324,10 @@ fn const_value_to_wasm_value(c: &ConstValue) -> WasmValue {
         ConstValue::I64(v) => WasmValue::I64(v),
         ConstValue::F32Bits(bits) => WasmValue::F32(f32::from_bits(bits)),
         ConstValue::F64Bits(bits) => WasmValue::F64(f64::from_bits(bits)),
+        // WASM17: `(ref.null func/extern)` -> Ref(None); `(ref.extern n)`
+        // -> Ref(Some(n)). Falls out for free since `WasmValue::Ref` already
+        // wraps the identical `Option<u32>` shape `ConstValue::Ref` does.
+        ConstValue::Ref(v) => WasmValue::Ref(v),
     }
 }
 
@@ -360,6 +364,27 @@ fn value_matches_expected(actual: &WasmValue, expected: &Expected) -> bool {
         Expected::Value(ConstValue::I64(v)) => matches!(actual, WasmValue::I64(a) if a == v),
         Expected::Value(ConstValue::F32Bits(bits)) => matches!(actual, WasmValue::F32(a) if a.to_bits() == *bits),
         Expected::Value(ConstValue::F64Bits(bits)) => matches!(actual, WasmValue::F64(a) if a.to_bits() == *bits),
+        // WASM17: exact `(ref.null func/extern)` (None) / `(ref.extern n)`
+        // (Some(n)) -- compares the *handle number*, not host-object
+        // identity, matching this repo's own script-literal design (no
+        // real host environment produces externref values to preserve
+        // identity for).
+        Expected::Value(ConstValue::Ref(v)) => matches!(actual, WasmValue::Ref(a) if a == v),
+        // Bare `(ref.null)` -- matches the null reference of ANY reference
+        // type. This repo's `WasmValue::Ref(Option<u32>)` doesn't carry a
+        // runtime type tag (only the *static* type distinguishes a funcref
+        // from an externref from an anyref -- see `code/specs/
+        // W08-wasm-funcref-externref.md`), so "null of any type" and
+        // "null" are the same check at this layer.
+        Expected::RefNullAny => matches!(actual, WasmValue::Ref(None)),
+        // Bare `(ref.func)` -- matches ANY non-null funcref. Same
+        // representation limitation as above: this crate can't distinguish
+        // "non-null funcref" from "non-null externref" at the value level,
+        // so this accepts any non-null reference. In practice this is only
+        // ever used where the real testsuite itself expects a funcref
+        // result, so the type ambiguity doesn't cause false passes against
+        // the vendored corpus.
+        Expected::RefFuncAny => matches!(actual, WasmValue::Ref(Some(_))),
         Expected::NanCanonicalF32 => {
             matches!(actual, WasmValue::F32(a) if (a.to_bits() & !F32_SIGN_BIT) == F32_CANONICAL_NAN_UNSIGNED)
         }
@@ -405,6 +430,45 @@ mod tests {
             (assert_return (invoke "add" (i32.const 1) (i32.const 2)) (i32.const 4))
             "#,
         );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    #[test]
+    fn assert_return_ref_extern_compares_the_handle_number() {
+        let results = outcomes(
+            r#"
+            (module (func (export "id") (param externref) (result externref) local.get 0))
+            (assert_return (invoke "id" (ref.extern 1)) (ref.extern 1))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+
+        let results = outcomes(
+            r#"
+            (module (func (export "id") (param externref) (result externref) local.get 0))
+            (assert_return (invoke "id" (ref.extern 1)) (ref.extern 2))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    #[test]
+    fn assert_return_ref_null_func_and_bare_ref_null_both_accept_a_null_funcref() {
+        let module = r#"(module (func (export "n") (result funcref) (ref.null func)))"#;
+        let exact = outcomes(&format!(r#"{module} (assert_return (invoke "n") (ref.null func))"#));
+        assert_eq!(exact[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+        let wildcard = outcomes(&format!(r#"{module} (assert_return (invoke "n") (ref.null))"#));
+        assert_eq!(wildcard[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn assert_return_bare_ref_func_accepts_any_non_null_funcref_but_rejects_null() {
+        let module = r#"(module (func $f) (func (export "get") (result funcref) (ref.func $f)))"#;
+        let results = outcomes(&format!(r#"{module} (assert_return (invoke "get") (ref.func))"#));
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+
+        let null_module = r#"(module (func (export "get") (result funcref) (ref.null func)))"#;
+        let results = outcomes(&format!(r#"{null_module} (assert_return (invoke "get") (ref.func))"#));
         assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
     }
 

@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.8] — 2026-08-15 (WASM17 — ref.func, table.get, table.set opcode handlers)
+
+### Added
+
+- `ref.func` (0xD2): bounds-checks the `funcidx` immediate against
+  `ctx.func_types` (same source of truth `call_function_inner`'s own
+  bounds check uses) and pushes `WasmValue::Ref(Some(func_index))`.
+- `table.get`/`table.set` (0x25/0x26): thin wrappers around the
+  already-existing, already-tested `Table::get`/`Table::set` *methods* --
+  only `call_indirect`'s hardcoded table-0 lookup and element-segment
+  initialization reached them directly before this; no WASM *instruction*
+  did. Honors the real decoded `tableidx` (unlike `call_indirect`, which
+  hardcodes table 0) so a named `$t` resolves to whichever index
+  `wasm-wast-parser` actually emitted.
+- `ref.null` (0xD0)/`ref.is_null` (0xD1) needed NO changes -- both already
+  had real, tested handlers from before WASM17 (this repo's existing GC
+  slice already needed them); they just become *reachable* now that
+  `wasm-wast-parser` can emit them from text. See `code/specs/
+  W08-wasm-funcref-externref.md`.
+- `WasmValue::default_for` and `wasm-runtime`'s lossy `call()` argument
+  conversion updated to cover the two new `ValueType` variants
+  (`Funcref`/`Externref` default to the null reference, same as every
+  other nullable reference type).
+- 5 new opcode-level unit tests (`ref.func` valid + out-of-range,
+  `table.get`/`table.set` round-trip, uninitialized-slot, out-of-bounds).
+
 ## [0.6.7] — 2026-08-13 (WASM04 — multi-value block/loop/if blocktypes)
 
 ### Fixed — `block_arity` resolved a type-index blocktype against the wrong table

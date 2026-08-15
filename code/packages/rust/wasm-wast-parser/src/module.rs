@@ -187,6 +187,23 @@ fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) ->
 }
 
 fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
+    // `(ref null func)` / `(ref null extern)` -- the fully-spelled-out
+    // nullable abstract-heap-type syntax, semantically identical to the bare
+    // `funcref`/`externref` keywords below (WASM17; found in the real
+    // corpus's `br_table.wast`, e.g. `(result (ref null func))`). Non-null
+    // `(ref func)` and concrete `(ref null $t)` / `(ref $t)` forms are
+    // deliberately NOT recognized -- see `code/specs/
+    // W08-wasm-funcref-externref.md`'s "explicitly out of scope" section.
+    if let Some(items) = expr.as_list() {
+        if items.len() == 3 && items[0].as_atom() == Some("ref") && items[1].as_atom() == Some("null") {
+            return match items[2].as_atom() {
+                Some("func") => Ok(ValueType::Funcref),
+                Some("extern") => Ok(ValueType::Externref),
+                _ => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" }),
+            };
+        }
+        return Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: "list".to_string(), expected: "a value type" });
+    }
     let s = expr.as_atom().ok_or(WastParseError::UnexpectedToken {
         pos: expr.pos(),
         found: "list".to_string(),
@@ -197,7 +214,26 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
         "i64" => Ok(ValueType::I64),
         "f32" => Ok(ValueType::F32),
         "f64" => Ok(ValueType::F64),
+        "funcref" => Ok(ValueType::Funcref),
+        "externref" => Ok(ValueType::Externref),
         other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a value type" }),
+    }
+}
+
+/// Parse a `ref.null` heap-type immediate keyword (`func` or `extern`) into
+/// its binary heap-type byte. This crate only recognizes the two abstract
+/// heap types `funcref`/`externref` need (WASM17); a concrete `$t` heap
+/// type is deliberately out of scope (see `parse_value_type`'s doc comment).
+fn parse_ref_null_heap_type(expr: &SExpr) -> Result<u8, WastParseError> {
+    let s = expr.as_atom().ok_or(WastParseError::UnexpectedToken {
+        pos: expr.pos(),
+        found: "list".to_string(),
+        expected: "a heap type (func or extern)",
+    })?;
+    match s {
+        "func" => Ok(0x70),
+        "extern" => Ok(0x6F),
+        other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a heap type (func or extern)" }),
     }
 }
 
@@ -1207,6 +1243,22 @@ fn encode_stream_instr(
         out.push(sub);
         return Ok(0);
     }
+    // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
+    // WASM17): neither is registered in `wasm_opcodes::OPCODES` (see
+    // `code/specs/W08-wasm-funcref-externref.md` -- both already have real
+    // runtime/validator handlers from before WASM17, but this crate never
+    // had a metadata entry for either), so both must be intercepted here
+    // before the `get_opcode_by_name` lookup below, exactly like trunc_sat.
+    if name == "ref.null" {
+        let heap_byte = parse_ref_null_heap_type(following.first().ok_or(WastParseError::UnexpectedEof)?)?;
+        out.push(0xD0);
+        out.push(heap_byte);
+        return Ok(1);
+    }
+    if name == "ref.is_null" {
+        out.push(0xD1);
+        return Ok(0);
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
     match name {
@@ -1218,6 +1270,18 @@ fn encode_stream_instr(
         }
         "global.get" | "global.set" => {
             let idx = resolve_idx(&icx.module.global_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "global")?;
+            out.push(info.opcode);
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(1)
+        }
+        "table.get" | "table.set" => {
+            let idx = resolve_idx(&icx.module.table_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "table")?;
+            out.push(info.opcode);
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(1)
+        }
+        "ref.func" => {
+            let idx = resolve_idx(&icx.module.func_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "func")?;
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(1)
@@ -1429,6 +1493,26 @@ fn encode_flat_instr(
         out.push(sub);
         return Ok(());
     }
+    // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
+    // WASM17): see the matching comment in `encode_stream_instr` -- neither
+    // is registered in `wasm_opcodes::OPCODES`, so both are intercepted
+    // here before the `get_opcode_by_name` lookup, exactly like trunc_sat.
+    // Both take zero stack operands, so unlike every other folded
+    // instruction below there is no `args[1..]`/`args` sub-expression list
+    // to recurse into for `ref.null` (its one arg is the heap-type keyword,
+    // not an operand) -- `ref.is_null` DOES take one stack operand (the
+    // reference being tested), which is why it still recurses into `args`.
+    if name == "ref.null" {
+        let heap_byte = parse_ref_null_heap_type(args.first().ok_or(WastParseError::UnexpectedEof)?)?;
+        out.push(0xD0);
+        out.push(heap_byte);
+        return Ok(());
+    }
+    if name == "ref.is_null" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xD1);
+        return Ok(());
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
 
@@ -1455,6 +1539,22 @@ fn encode_flat_instr(
             encode_instr_list(&args[1..], icx, out)?;
             out.push(info.opcode);
             let idx = resolve_idx(&icx.module.global_names, idx_expr, "global")?;
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(())
+        }
+        "table.get" | "table.set" => {
+            let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+            encode_instr_list(&args[1..], icx, out)?;
+            out.push(info.opcode);
+            let idx = resolve_idx(&icx.module.table_names, idx_expr, "table")?;
+            out.extend(wasm_leb128::encode_unsigned(idx as u64));
+            Ok(())
+        }
+        "ref.func" => {
+            let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+            encode_instr_list(&args[1..], icx, out)?;
+            out.push(info.opcode);
+            let idx = resolve_idx(&icx.module.func_names, idx_expr, "func")?;
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(())
         }
@@ -2296,6 +2396,26 @@ mod tests {
         assert!(matches!(err, WastParseError::UnknownIdentifier { .. }));
     }
 
+    #[test]
+    fn select_with_explicit_result_type_annotation_is_a_known_gap() {
+        // `select (result funcref)` -- opcode 0x1C, a SEPARATE opcode from
+        // plain `select` (0x1B), added by the same reference-types
+        // proposal WASM17 otherwise implements (needed because a bare
+        // `select`'s type can't always be inferred from the stack alone
+        // when reference types are ambiguous). Deliberately NOT implemented
+        // here -- `select`'s existing folded-arm handling recurses into
+        // `(result funcref)` as if it were an operand sub-expression,
+        // producing a clean `UnknownInstruction` on "result" rather than a
+        // real parse. Documented honestly as a known limitation (see the
+        // real corpus's `select.wast`) rather than silently mishandled.
+        let err = parse_module(
+            r#"(module (func (param funcref funcref i32) (result funcref)
+                 (select (result funcref) (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownInstruction { .. }));
+    }
+
     // ── Security-review regressions: malformed-but-syntactically-parseable
     // input must produce a clean Err, never panic. ────────────────────────
 
@@ -2630,5 +2750,124 @@ mod tests {
             code_of(&m, 0),
             &[0x41, 0x01, 0x04, 0x7F, 0x41, 0x02, 0x05, 0x41, 0x03, 0x0B, 0x0B]
         );
+    }
+
+    // ── WASM17: funcref/externref, ref.null/ref.is_null/ref.func, table.get/set ──
+
+    #[test]
+    fn funcref_externref_recognized_as_value_types() {
+        let m = parse_module(
+            r#"(module
+                 (func $f (param $p funcref) (result externref)
+                   (local $l externref)
+                   unreachable))"#,
+        )
+        .unwrap();
+        assert_eq!(m.types[0].params, vec![ValueType::Funcref]);
+        assert_eq!(m.types[0].results, vec![ValueType::Externref]);
+    }
+
+    #[test]
+    fn verbose_ref_null_func_extern_form_matches_bare_keyword() {
+        // `(ref null func)`/`(ref null extern)` -- the fully-spelled-out
+        // syntax found in the real corpus (br_table.wast) -- must parse to
+        // the exact same ValueType as the bare `funcref`/`externref`
+        // keyword.
+        let m = parse_module(
+            r#"(module (func (param $p (ref null func)) (result (ref null extern))
+                 unreachable))"#,
+        )
+        .unwrap();
+        assert_eq!(m.types[0].params, vec![ValueType::Funcref]);
+        assert_eq!(m.types[0].results, vec![ValueType::Externref]);
+    }
+
+    #[test]
+    fn ref_null_func_folded_and_flat_emit_same_bytes() {
+        let folded = parse_module("(module (func (result funcref) (ref.null func)))").unwrap();
+        let flat = parse_module("(module (func (result funcref) ref.null func))").unwrap();
+        // ref.null (0xD0) + heap-type byte 0x70 (func); end (0x0B).
+        assert_eq!(code_of(&folded, 0), &[0xD0, 0x70, 0x0B]);
+        assert_eq!(code_of(&flat, 0), &[0xD0, 0x70, 0x0B]);
+    }
+
+    #[test]
+    fn ref_null_extern_emits_heap_type_byte_0x6f() {
+        let m = parse_module("(module (func (result externref) (ref.null extern)))").unwrap();
+        assert_eq!(code_of(&m, 0), &[0xD0, 0x6F, 0x0B]);
+    }
+
+    #[test]
+    fn ref_null_unknown_heap_type_is_a_clean_error_not_a_panic() {
+        // `$t` (a concrete heap type) is deliberately out of scope -- must
+        // error, not panic or silently accept it.
+        let err = parse_module("(module (func (result funcref) (ref.null $t)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
+    }
+
+    #[test]
+    fn ref_is_null_folded_and_flat_pop_one_push_i32() {
+        let folded = parse_module(
+            "(module (func (param funcref) (result i32) (ref.is_null (local.get 0))))",
+        )
+        .unwrap();
+        let flat = parse_module(
+            "(module (func (param funcref) (result i32) local.get 0 ref.is_null))",
+        )
+        .unwrap();
+        // local.get 0 (0x20 0x00); ref.is_null (0xD1); end.
+        assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xD1, 0x0B]);
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xD1, 0x0B]);
+    }
+
+    #[test]
+    fn ref_func_resolves_named_index_folded_and_flat() {
+        let folded = parse_module(
+            r#"(module (func $tf) (func (result funcref) (ref.func $tf)))"#,
+        )
+        .unwrap();
+        let flat = parse_module(r#"(module (func $tf) (func (result funcref) ref.func $tf))"#).unwrap();
+        // ref.func (0xD2) + funcidx 0 (the only function, itself, is
+        // func-space index 0 since `$tf` comes first); end.
+        assert_eq!(code_of(&folded, 1), &[0xD2, 0x00, 0x0B]);
+        assert_eq!(code_of(&flat, 1), &[0xD2, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn table_get_set_resolve_named_table_folded_and_flat() {
+        let folded = parse_module(
+            r#"(module
+                 (table $t 1 funcref)
+                 (func (param funcref)
+                   (table.set $t (i32.const 0) (local.get 0))
+                   (drop (table.get $t (i32.const 0)))))"#,
+        )
+        .unwrap();
+        // table.set (0x26) + tableidx 0; drop needs table.get (0x25) +
+        // tableidx 0 first.
+        let code = code_of(&folded, 0);
+        assert!(code.windows(2).any(|w| w == [0x26, 0x00]), "table.set $t -> tableidx 0: {code:?}");
+        assert!(code.windows(2).any(|w| w == [0x25, 0x00]), "table.get $t -> tableidx 0: {code:?}");
+
+        let flat = parse_module(
+            r#"(module
+                 (table $t 1 funcref)
+                 (func (param funcref)
+                   i32.const 0 local.get 0 table.set $t
+                   i32.const 0 table.get $t drop))"#,
+        )
+        .unwrap();
+        let code = code_of(&flat, 0);
+        assert!(code.windows(2).any(|w| w == [0x26, 0x00]));
+        assert!(code.windows(2).any(|w| w == [0x25, 0x00]));
+    }
+
+    #[test]
+    fn table_get_unknown_table_name_is_a_clean_error() {
+        let err = parse_module(
+            r#"(module (table 1 funcref) (func (drop (table.get $nope (i32.const 0)))))"#,
+        )
+        .unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownIdentifier { space: "table", .. }));
     }
 }

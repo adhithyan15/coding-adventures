@@ -2690,17 +2690,17 @@
     }
   },
   "parse_failures": {
-    "br_table.wast": "at byte 50812: expected a value type, found \"externref\"",
+    "br_table.wast": "at byte 51401: expected a value type, found \"list\"",
     "call_indirect.wast": "at byte 23596: expected an index, found \"func\"",
     "const.wast": "at byte 13634: invalid numeric literal \"nan:0x7f_ffff\"",
     "float_exprs.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
     "float_memory.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
-    "global.wast": "at byte 840: expected a value type, found \"externref\"",
+    "global.wast": "at byte 17077: expected a value type, found \"$g0\"",
     "id.wast": "at byte 222: duplicate func identifier \"$\"",
     "memory.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
     "memory_grow.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
     "select.wast": "at byte 656: unknown instruction \"result\"",
     "stack.wast": "at byte 1455: unknown instruction \"$body\"",
-    "unreached-valid.wast": "at byte 1033: unknown instruction \"ref.is_null\""
+    "unreached-valid.wast": "at byte 1180: unknown instruction \"call_ref\""
   }
 }

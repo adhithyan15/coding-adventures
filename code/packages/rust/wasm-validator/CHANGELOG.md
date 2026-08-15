@@ -2,7 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.2.1] - 2026-08-13 (bulk-memory type checking)
+## [0.2.2] - 2026-08-15 (WASM17 — funcref/externref type rules)
+
+- Upgraded `ref.null`'s existing type rule: instead of unconditionally
+  pushing `StackType::Unknown`, it now reads the heap-type byte and pushes
+  a real static type -- `Funcref` (0x70), `Externref` (0x6F), `Anyref`
+  (0x0F, this repo's own pre-existing bare-`ref.null` convention). Still
+  not full subtyping (any other heap-type byte still falls back to
+  `Unknown`), but enough to make `select`/`global.set`/etc.'s existing
+  type-mismatch checks catch a funcref-vs-externref mixup, which they
+  couldn't before since both looked like the same `Unknown`.
+- Added type rules for `ref.func` (bounds-checks `funcidx` against the
+  same `func_types` table `call`'s rule uses, pushes `Funcref`) and
+  `table.get`/`table.set` (pop/push `I32`+`Funcref`, bounds-checked
+  against a new `table_count` -- the REAL declared table count, not just
+  a boolean "does any table exist", since (unlike memory ops, which
+  hardcode index 0) these decode a real `tableidx` immediate that can be
+  out of range even when *some* table exists).
+- 3 new "valid" tests, 4 new "invalid" tests (including one proving the
+  upgraded `ref.null` type now catches a funcref/externref mixup that
+  type-checked before this release).
 
 The instruction-level validator now decodes and type-checks `memory.copy` and
 `memory.fill`, including their memory indices and three `i32` operands. This

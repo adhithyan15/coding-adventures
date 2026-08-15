@@ -410,6 +410,14 @@ struct ModuleContext<'a> {
     /// convention as `func_types`.
     global_types: Vec<GlobalType>,
     has_memory: bool,
+    /// Combined imported + module-defined table COUNT (WASM17), same
+    /// index-space convention as `func_types`/`global_types` -- unlike
+    /// `has_memory` (a plain bool, since every memory op hardcodes memory
+    /// index 0 and ignores its reserved-byte immediate), `table.get`/
+    /// `table.set` decode a REAL `tableidx` immediate that must be
+    /// bounds-checked against the actual table count, not just "is there
+    /// at least one".
+    table_count: u32,
 }
 
 fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, ValidationError> {
@@ -442,12 +450,15 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     }
 
     let has_memory = !module.memories.is_empty() || module.imports.iter().any(|i| matches!(i.type_info, ImportTypeInfo::Memory(_)));
+    let imported_table_count = module.imports.iter().filter(|i| matches!(i.type_info, ImportTypeInfo::Table(_))).count() as u32;
+    let table_count = imported_table_count + module.tables.len() as u32;
 
     Ok(ModuleContext {
         module,
         func_types,
         global_types,
         has_memory,
+        table_count,
     })
 }
 
@@ -641,9 +652,26 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             }
             0xD0 => {
                 // ref.null <heap_type byte>: pushes a null reference.
-                code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated ref.null heap-type immediate")))?;
+                // WASM17 upgrade: push the REAL static type for the two
+                // heap types this repo's `wasm-wast-parser` actually emits
+                // (`func` = 0x70, `extern` = 0x6F, and the pre-existing bare
+                // `ref.null` convention `none` = 0x0F, which stays Anyref)
+                // instead of the previously-unconditional `Unknown` -- this
+                // is what lets `select`/`global.set`/etc.'s existing
+                // type-mismatch checks catch a funcref-vs-externref mixup,
+                // which they couldn't when both looked like the same
+                // `Unknown`. Any other heap-type byte (a concrete `$t`
+                // reference, out of this repo's scope) still falls back to
+                // `Unknown` -- full subtyping remains outside this
+                // validator phase, same as every other GC reference type.
+                let heap_type = *code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated ref.null heap-type immediate")))?;
                 offset += 1;
-                stack.push(StackType::Unknown);
+                match heap_type {
+                    0x70 => push_val(&mut stack, ValueType::Funcref),
+                    0x6F => push_val(&mut stack, ValueType::Externref),
+                    0x0F => push_val(&mut stack, ValueType::Anyref),
+                    _ => stack.push(StackType::Unknown),
+                }
             }
             0xD1 => {
                 // ref.is_null: accepts any reference and produces an i32.
@@ -651,6 +679,20 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // so ref-producing instructions use Unknown on the stack.
                 pop_val(&mut stack, frame!())?;
                 push_val(&mut stack, ValueType::I32);
+            }
+            0xD2 => {
+                // ref.func <funcidx> (WASM17): pushes a non-null funcref
+                // referring to a function by index. Bounds-checked the same
+                // way `call`'s type rule above checks its own funcidx.
+                let (callee, size) = decode_idx(code, offset)?;
+                offset += size;
+                if ctx.func_types.get(callee as usize).is_none() {
+                    return Err(ValidationError::FuncIndexOutOfBounds(format!(
+                        "function #{func_idx}: ref.func references function index {callee}, but only {} functions exist",
+                        ctx.func_types.len()
+                    )));
+                }
+                push_val(&mut stack, ValueType::Funcref);
             }
 
             // ── Control ──────────────────────────────────────────────────────
@@ -879,6 +921,34 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     err!("global.set on immutable global {idx}");
                 }
                 pop_expect(&mut stack, frame!(), gt.value_type)?;
+            }
+            0x25 => {
+                // table.get <tableidx> (WASM17): pops an i32 index, pushes
+                // a funcref -- WASM 1.0's single table is always funcref
+                // (see `code/specs/W08-wasm-funcref-externref.md`'s
+                // "explicitly out of scope" section for why non-funcref
+                // tables aren't modeled here). Unlike `has_memory` (a plain
+                // bool, since memory ops hardcode index 0), this decodes a
+                // REAL tableidx that must be bounds-checked, same pattern
+                // as `call`'s funcidx check above.
+                let (table_idx, size) = decode_idx(code, offset)?;
+                offset += size;
+                if table_idx >= ctx.table_count {
+                    err!("table.get references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                }
+                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                push_val(&mut stack, ValueType::Funcref);
+            }
+            0x26 => {
+                // table.set <tableidx> (WASM17): pops a funcref and an i32
+                // index, no push.
+                let (table_idx, size) = decode_idx(code, offset)?;
+                offset += size;
+                if table_idx >= ctx.table_count {
+                    err!("table.set references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                }
+                pop_expect(&mut stack, frame!(), ValueType::Funcref)?;
+                pop_expect(&mut stack, frame!(), ValueType::I32)?;
             }
 
             // ── Memory ───────────────────────────────────────────────────────

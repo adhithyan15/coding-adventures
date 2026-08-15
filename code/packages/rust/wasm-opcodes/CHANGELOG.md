@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-08-15 - reference-types table/ref.func opcodes (WASM17)
+
+### Added
+
+- `table.get` (0x25) and `table.set` (0x26) -- the previously-reserved MVP
+  gap the reference-types proposal fills, `tableidx` immediate. `ref.func`
+  (0xD2) -- `funcidx` immediate. All three use the crate's normal metadata
+  table with no special-casing (`tableidx`/`funcidx` were already generic
+  immediate kinds this crate's decoders understood).
+- 1 new unit test (`test_reference_types_opcodes`) round-tripping all three
+  by byte and name, and asserting `ref.null`/`ref.is_null` (0xD0/0xD1) are
+  deliberately absent from this table -- both already have working
+  `wasm-execution`/`wasm-validator` handlers from before WASM17 and were
+  never entries here, matching the existing `0xFB`/`0xFC` GC/misc-prefix
+  precedent. See `code/specs/W08-wasm-funcref-externref.md`.
+
 ## [0.2.1] - 2026-08-13 - sign-extension opcodes (WASM03)
 
 ### Added

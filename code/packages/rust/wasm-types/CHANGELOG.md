@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-08-15 (WASM17 — funcref/externref as first-class value types)
+
+### Added
+
+- Two new `ValueType` variants: `Funcref` (`byte_tag()` = `Some(0x70)`) and
+  `Externref` (`byte_tag()` = `Some(0x6F)`), reusing this repo's own
+  `funcref` = `0x70` convention already established by the pre-existing
+  `FUNCREF` constant (`TableType::element_type`'s default). Both encode as
+  single bytes via `ValueType::encode`, matching `Anyref`/`I31ref`.
+- Part of the WASM17 slice (see `code/specs/W08-wasm-funcref-externref.md`)
+  unblocking real conformance-testsuite files (`global.wast`, `select.wast`,
+  `br_table.wast`, `call_indirect.wast`) that reference `funcref`/`externref`
+  as real value types, not just the implicit table element type.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
