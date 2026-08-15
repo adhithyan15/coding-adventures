@@ -3903,6 +3903,11 @@
       "output": "spanish/book/chapters/ch275-matices.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 276,
+      "output": "spanish/book/chapters/ch276-literario.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

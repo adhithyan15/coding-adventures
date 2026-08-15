@@ -3780,7 +3780,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:75700631107a8feb",
+      "sourceHash": "fnv1a64:6acb9c9f2140f9ca",
       "lessonIds": [
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
@@ -6296,7 +6296,7 @@
     {
       "language": "spanish",
       "chapter": 269,
-      "sourceHash": "fnv1a64:aaa9d6d426346aa1",
+      "sourceHash": "fnv1a64:283c1e0999cae051",
       "lessonIds": [
         "ES-C269-feliz",
         "ES-C269-espero",
@@ -6379,6 +6379,17 @@
         "ES-C275-practice"
       ],
       "tex": "spanish/book/chapters/ch275-matices.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 276,
+      "sourceHash": "fnv1a64:1c5388e67acbd274",
+      "lessonIds": [
+        "ES-C276-mas",
+        "ES-C276-asonancia",
+        "ES-C276-practice"
+      ],
+      "tex": "spanish/book/chapters/ch276-literario.tex"
     },
     {
       "language": "tamil",

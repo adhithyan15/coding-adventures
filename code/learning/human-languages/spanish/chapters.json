@@ -5307,6 +5307,24 @@
           "ES-SEMANTIC-CONNOTATION"
         ]
       }
+    },
+    {
+      "chapter": 276,
+      "title": "Reading Older Spanish --- Register, Date, and Form",
+      "label": "ch:literario",
+      "canDo": "I can tell from small details whether a Spanish text is literary and whether its verse is rhymed.",
+      "spineNodes": [
+        "SPINE-READ-LITERARY-AND-CLASSICAL"
+      ],
+      "payoff": {
+        "lesson": "ES-C276-practice",
+        "kind": "task",
+        "summary": "Complete ES-C276-practice: say what each detail tells you about a text before you have read it.",
+        "assesses": [
+          "ES-SEMANTIC-LITERARY-REGISTER",
+          "ES-SEMANTIC-VERSE-CONVENTION"
+        ]
+      }
     }
   ]
 }

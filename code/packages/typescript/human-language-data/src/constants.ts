@@ -69,7 +69,14 @@ export const CONTENT_TYPES = new Set(["word", "phrase"]);
 // eight call sites that mean the narrower thing; widening it raised 33
 // validation errors across other tracks on lessons that legitimately carry no
 // concept_tag.
-export const REALIZING_TYPES = new Set(["word", "phrase", "grammar"]);
+// `etymology` joins for the same reason `grammar` did, and the evidence is now
+// two independent instances rather than one: ES-C23-hermano-hache teaches the
+// Latin f- to h- shift that ORTHOGRAPHY-HISTORICAL names, and no word or phrase
+// lesson ever will -- a historical sound change is what an etymology lesson IS.
+// (The remaining known case is POLITENESS-STRATEGY against a `practice-mix`
+// synthesis; that one is left open deliberately, because a synthesis realizing a
+// concept is a larger claim than a teaching lesson doing so. See HL-C174.)
+export const REALIZING_TYPES = new Set(["word", "phrase", "grammar", "etymology"]);
 
 /**
  * Lesson types that carry a session/orthography label, not a cross-language

@@ -3326,6 +3326,29 @@
         "ES-EXT-275-SHADES"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-276-01",
+      "spine_node": "SPINE-READ-LITERARY-AND-CLASSICAL",
+      "lessons": [
+        "ES-C276-mas"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-276-03",
+      "spine_node": "SPINE-READ-LITERARY-AND-CLASSICAL",
+      "lessons": [
+        "ES-C276-asonancia",
+        "ES-C276-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-276-LITERARY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3826,13 +3849,11 @@
       "relocates": {}
     },
     "SPINE-READ-LITERARY-AND-CLASSICAL": {
-      "segments": [],
-      "omits": [
-        "LITERARY-REGISTER",
-        "ARCHAIC-FORM",
-        "METER-AND-VERSE",
-        "ORTHOGRAPHY-HISTORICAL"
+      "segments": [
+        "ES-PATH-276-01",
+        "ES-PATH-276-03"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-READ-CULTURAL-WEIGHT": {
@@ -6823,6 +6844,17 @@
       "lessons": [
         "ES-C275-practice"
       ]
+    },
+    {
+      "id": "ES-EXT-276-LITERARY",
+      "stage": "C2",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what register, date and verse form a text signals before I have read it.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C276-practice"
+      ]
     }
   ],
   "conceptAliases": {
@@ -6861,6 +6893,9 @@
     ],
     "DIALECT-FEATURE": [
       "ES-PRONOUN-VOS"
+    ],
+    "ORTHOGRAPHY-HISTORICAL": [
+      "ES-SOUND-HERMANO-H"
     ]
   }
 }
