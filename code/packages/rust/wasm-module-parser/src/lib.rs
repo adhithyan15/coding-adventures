@@ -154,6 +154,19 @@ const SECTION_START: u8 = 8;
 const SECTION_ELEMENT: u8 = 9;
 const SECTION_CODE: u8 = 10;
 const SECTION_DATA: u8 = 11;
+/// Data Count section (bulk-memory-operations proposal) -- a single
+/// `u32leb` declaring how many segments the data section will contain,
+/// placed BEFORE the code section so validators can type-check
+/// `memory.init`/`data.drop` (which reference a data segment index) without
+/// a forward-reference to the data section itself. Purely a cross-check
+/// value at the structural-parse layer this crate operates at: real corpus
+/// evidence (`custom.wast`'s "data count and data section have
+/// inconsistent lengths" `assert_malformed` case, task #84) that a mismatch
+/// between the declared count and the data section's actual segment count
+/// must be rejected, not silently accepted -- this section ID used to fall
+/// into the generic "unknown section, skip it" arm below, so its value was
+/// never even read, let alone checked.
+const SECTION_DATA_COUNT: u8 = 12;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Error Type
@@ -472,6 +485,27 @@ fn decode_external_kind(byte: u8, offset: usize) -> Result<ExternalKind, WasmPar
     }
 }
 
+/// Decode a mutability byte (used by global imports, global definitions, and
+/// WasmGC struct fields) into `bool`. Per spec this is a one-bit flag with
+/// exactly two legal encodings, `0x00` (immutable) and `0x01` (mutable) --
+/// NOT "any nonzero byte means mutable". A real corpus gap (found via a
+/// `wasm-conformance` prioritization scan after task #80): every call site
+/// here used to do `byte != 0`, silently accepting a value like `0x04` as
+/// "mutable" instead of rejecting it, so the official testsuite's
+/// `global.wast` `assert_malformed` cases (binary global encodings that
+/// deliberately use `0x04` to test this exact rule, expecting the message
+/// "malformed mutability") were wrongly parsing as valid modules.
+fn decode_mutability(byte: u8, offset: usize) -> Result<bool, WasmParseError> {
+    match byte {
+        0x00 => Ok(false),
+        0x01 => Ok(true),
+        _ => Err(WasmParseError {
+            message: format!("malformed mutability: 0x{:02X}", byte),
+            offset,
+        }),
+    }
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Limits (shared by Table and Memory)
 // ──────────────────────────────────────────────────────────────────────────────
@@ -611,7 +645,7 @@ fn parse_struct_type(p: &mut Parser) -> Result<StructType, WasmParseError> {
         let mutability = p.read_u8()?;
         fields.push(FieldType {
             val_type,
-            mutable: mutability != 0,
+            mutable: decode_mutability(mutability, p.offset() - 1)?,
         });
     }
     Ok(StructType { fields })
@@ -656,7 +690,7 @@ fn parse_import_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), W
                 let mut_byte = p.read_u8()?;
                 ImportTypeInfo::Global(GlobalType {
                     value_type,
-                    mutable: mut_byte != 0,
+                    mutable: decode_mutability(mut_byte, p.offset() - 1)?,
                 })
             }
         };
@@ -744,12 +778,13 @@ fn parse_global_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), W
         let vt_byte = p.read_u8()?;
         let value_type = decode_value_type(vt_byte, p.offset() - 1)?;
         let mut_byte = p.read_u8()?;
+        // Validate BEFORE `read_expr()` advances past it -- `p.offset()` must
+        // still point one-past the mutability byte itself here, not one-past
+        // the (variable-length) init expression that follows it.
+        let mutable = decode_mutability(mut_byte, p.offset() - 1)?;
         let init_expr = p.read_expr()?;
         module.globals.push(Global {
-            global_type: GlobalType {
-                value_type,
-                mutable: mut_byte != 0,
-            },
+            global_type: GlobalType { value_type, mutable },
             init_expr,
         });
     }
@@ -1000,6 +1035,7 @@ impl WasmModuleParser {
         // into the next.
 
         let mut module = WasmModule::default();
+        let mut data_count: Option<u32> = None;
 
         while !p.is_empty() {
             let section_id = p.read_u8()?;
@@ -1019,6 +1055,9 @@ impl WasmModuleParser {
                 SECTION_ELEMENT => parse_element_section(&mut section_p, &mut module)?,
                 SECTION_CODE => parse_code_section(&mut section_p, &mut module)?,
                 SECTION_DATA => parse_data_section(&mut section_p, &mut module)?,
+                SECTION_DATA_COUNT => {
+                    data_count = Some(section_p.read_u32leb()?);
+                }
                 unknown => {
                     // Unknown section IDs are silently skipped per the WASM spec's
                     // forward-compatibility rule: future proposals may add new sections.
@@ -1027,6 +1066,21 @@ impl WasmModuleParser {
                     let _ = section_p;
                     let _ = unknown;
                 }
+            }
+        }
+
+        // A data count section, when present, must agree with the data
+        // section's actual segment count -- a real, corpus-confirmed
+        // `assert_malformed` case (task #84), not a hypothetical.
+        if let Some(count) = data_count {
+            if count as usize != module.data.len() {
+                return Err(WasmParseError {
+                    message: format!(
+                        "data count and data section have inconsistent lengths: declared {count}, found {}",
+                        module.data.len()
+                    ),
+                    offset: p.offset(),
+                });
             }
         }
 
@@ -1406,6 +1460,59 @@ mod tests {
         assert_eq!(m.globals[0].init_expr, vec![0x41, 0x2A, 0x0B]);
     }
 
+    /// Task #82 (prioritization scan after task #80, PR #11844): a global's
+    /// mutability byte is a spec-mandated one-bit flag -- `0x00` or `0x01`
+    /// only, NOT "any nonzero byte means mutable". Real corpus case
+    /// (`global.wast`'s `assert_malformed` "malformed mutability" cases,
+    /// which use `0x04`) must be rejected, not silently accepted as
+    /// mutable=true.
+    #[test]
+    fn test_global_section_rejects_malformed_mutability_byte() {
+        let payload = vec![
+            0x01, // count = 1
+            0x7F, // i32
+            0x04, // malformed mutability (not 0 or 1)
+            0x41, 0x2A, 0x0B, // i32.const 42; end
+        ];
+        let data = wasm_with_sections(&[make_section(6, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("malformed mutability"), "unexpected error: {}", err.message);
+    }
+
+    /// As above, for a global IMPORT's mutability byte (a separate call
+    /// site, same bug).
+    #[test]
+    fn test_import_global_rejects_malformed_mutability_byte() {
+        let mut payload = vec![0x01]; // import count = 1
+        payload.extend(encode_str("m"));
+        payload.extend(encode_str("g"));
+        payload.push(0x03); // ExternalKind::Global
+        payload.push(0x7F); // i32
+        payload.push(0x04); // malformed mutability
+        let data = wasm_with_sections(&[make_section(2, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("malformed mutability"), "unexpected error: {}", err.message);
+    }
+
+    /// As above, for a WasmGC struct field's mutability byte -- the same
+    /// spec rule (one-bit flag, `0x00`/`0x01` only) applies here too, even
+    /// though no vendored corpus case currently exercises it; fixed for
+    /// consistency with the two sites above since it's the identical bug
+    /// pattern.
+    #[test]
+    fn test_struct_field_rejects_malformed_mutability_byte() {
+        let mut payload = vec![0x01]; // type count = 1
+        payload.push(0x50); // sub-type open tag
+        payload.push(0x00); // zero supertypes
+        payload.push(0x5F); // struct composite-type marker
+        payload.push(0x01); // field count = 1
+        payload.push(0x7F); // i32
+        payload.push(0x04); // malformed mutability
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(err.message.contains("malformed mutability"), "unexpected error: {}", err.message);
+    }
+
     // ── Test 10: Data section ─────────────────────────────────────────────────
     //
     // Data at memory 0, offset i32.const 0, content = [0xDE, 0xAD]:
@@ -1428,6 +1535,47 @@ mod tests {
         assert_eq!(m.data[0].memory_index, 0);
         assert_eq!(m.data[0].offset_expr, vec![0x41, 0x00, 0x0B]);
         assert_eq!(m.data[0].data, vec![0xDE, 0xAD]);
+    }
+
+    /// Task #84 (prioritization scan after task #80, PR #11844): a data
+    /// count section that DOES agree with the data section's actual
+    /// segment count must parse fine.
+    #[test]
+    fn test_data_count_section_matching_data_section_parses_fine() {
+        let data_count_payload = vec![0x01]; // declares 1 segment
+        let data_payload = vec![
+            0x01, // count = 1
+            0x00, // mem_idx = 0
+            0x41, 0x00, 0x0B, // i32.const 0; end
+            0x02, 0xDE, 0xAD, // 2 bytes
+        ];
+        let data = wasm_with_sections(&[make_section(12, &data_count_payload), make_section(11, &data_payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.data.len(), 1);
+    }
+
+    /// Real corpus case (`custom.wast`'s `assert_malformed` "data count and
+    /// data section have inconsistent lengths"): a data count section
+    /// silently fell into the "unknown section, skip it" arm before this
+    /// fix, so its declared count (2) was never checked against the data
+    /// section's real segment count (1) -- the module parsed successfully
+    /// when it should have been rejected as malformed.
+    #[test]
+    fn test_data_count_section_mismatch_is_rejected() {
+        let data_count_payload = vec![0x02]; // declares 2 segments
+        let data_payload = vec![
+            0x01, // count = 1 (mismatch!)
+            0x00, // mem_idx = 0
+            0x41, 0x00, 0x0B, // i32.const 0; end
+            0x02, 0xDE, 0xAD, // 2 bytes
+        ];
+        let data = wasm_with_sections(&[make_section(12, &data_count_payload), make_section(11, &data_payload)]);
+        let err = WasmModuleParser::parse(&data).unwrap_err();
+        assert!(
+            err.message.contains("data count and data section have inconsistent lengths"),
+            "unexpected error: {}",
+            err.message
+        );
     }
 
     // ── Test 11: Element section ──────────────────────────────────────────────
