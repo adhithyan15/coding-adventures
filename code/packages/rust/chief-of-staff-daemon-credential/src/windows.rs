@@ -38,7 +38,11 @@ use windows_sys::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken}
 
 const OWNER_ACCESS: u32 = FILE_GENERIC_READ | FILE_GENERIC_WRITE;
 const MAX_SECURITY_DESCRIPTOR_BYTES: u32 = 64 * 1024;
-const PUBLICATION_RETRIES: usize = 250;
+// See the matching constant in unix.rs: losing threads in the create race
+// poll here while the winner finishes writing and fsync-ing the file it
+// just created. Widened from 250ms to 3s of headroom to absorb scheduling
+// noise on loaded/shared CI runners (see lessons.md).
+const PUBLICATION_RETRIES: usize = 3000;
 const MINIMUM_SID_BYTES: usize = 8;
 
 enum OpenFailure {
