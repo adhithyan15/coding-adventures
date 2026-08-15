@@ -30,6 +30,39 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C198 — ANSWERED: a lesson's spine NODE and its POSITION are independent
+
+HL-C197 left the next tranche blocked on a design question: pre-A1 spine nodes
+live early in the book, but HL-C192's chaining rule appends new chapters at the
+end. Could a lesson appended last still declare a pre-A1 node?
+
+**Yes — and the corpus already proves it, so no new mechanism is needed:**
+
+```
+spanish : 81 pre-A1 lessons, earliest ch1, LATEST ch144  (book runs to ch281)
+hindi   : 62 pre-A1 lessons, earliest ch1, LATEST  ch39  (book runs to  ch44)
+```
+
+`ES-C55-la-bebo` sits past the halfway point of the Spanish book on a pre-A1
+node, and validates clean. **Position in the book and level on the spine are
+orthogonal.** The gate counts the node; the reader meets it wherever it is placed.
+
+**So the next tranche is unblocked, and its shape is fixed:**
+
+1. Append the chapter at the end, chained to the previous chapter's last lesson
+   (HL-C192 — this is what keeps R1 falling rather than rising).
+2. Declare a **pre-A1 spine node** on every lesson in it.
+3. Choose words whose prerequisites are already met, so the late position costs
+   nothing — which everyday concrete vocabulary satisfies by construction.
+
+That combination satisfies the chaining rule and the pre-A1 criterion at once. It
+is what the last two tranches should have done: they were good words on A1 nodes
+and moved the blocker by zero.
+
+**Target for the next tranches**, cheapest first, on the corrected numbers:
+sanskrit 34/300 · spanish 48/300 · tamil 49 · malayalam 49 · hindi 50 ·
+kannada and telugu to be measured. Sanskrit leads the queue.
+
 ## HL-C197 — the corrected number changes the plan: every track is ~1/6 of pre-A1, and Hindi leads
 
 HL-C195's fix landed, and the picture it reveals is not the one the old line
