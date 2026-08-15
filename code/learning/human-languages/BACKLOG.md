@@ -9,37 +9,28 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
-## HL-C192 — "chapter N" in prose is capped per track, and a new chapter can spend the cap
+## HL-C193 — `git checkout --theirs` DISCARDS your side on additive config files
 
-The family/people tranche (24 lessons, four per track across tamil, kannada,
-telugu, malayalam, hindi and sanskrit) wrote the obvious sentence — *"the
-masculine ending you already met on बच्चा in chapter 39"* — and Hindi went from
-20 cross-chapter prose references to 21. `chapter-references.test.ts` holds each
-track at its current count, and **that pin is not repinnable**: `repin_tests.py`
-reports `STUCK -- not a count pin`, correctly, because HL-C102 already decided
-the fix is prose and never a fresher number. Ten of the 24 lessons carried one;
-all ten were rewritten to name the thing (*"the family lesson"*, *"you already
-met in ಹೋಗು"*, *"the people lesson"*).
+Resolving a merge conflict in the HL config files with `git checkout --theirs`
+silently threw away every addition this branch had made, in **four** files, and
+each one surfaced as a different failure several steps later:
 
-**Two things worth carrying forward from this tranche.**
+| file | what was lost | how it showed up |
+|---|---|---|
+| `<track>/curriculum.json` | path + extension nodes | `validate`: "declares SPINE-X but is absent from the local path" |
+| `core/book-generation.json` | the chapter target | `book-cli`: "is in neither targets[] nor handwritten[]" |
+| `<track>/chapters.json` | the chapter entry | `book-cli`: "declaration has no chapters.json capability" |
+| `<track>/book/book.tex` | the `\input` line | `book-cli`: "is never \input into book.tex" |
 
-**A new chapter at the END of a track un-exempts the previous last lesson.**
-`continuity.ts` only judges a reinforcement window the track was long enough to
-contain (`at + window.from > last` skips it), so the final lesson's atom is
-exempt from R1 by construction. Append four lessons and it stops being final,
-and its atom starts *missing* R1 — six new misses across six tracks, for content
-nobody touched. Chaining each chapter's FIRST lesson to the previous chapter's
-last (`prerequisites`/`requires`/`practises`/`reviews_of`) closes that window and
-costs nothing, because HL14 makes reuse free. R1 went 1106/3484 (0.31745) to
-1106/3508 (**0.31528**) — the ratio *fell* while 24 atoms were added.
+`--theirs` is right for a **generated** file (regenerate afterwards and the
+content is restored) and wrong for an **authored, additive** one, where both
+sides appended different entries and neither is a superset.
 
-**R2, R3 and R4 all grew (+24/+27/+33) for exactly the same reason**, and those
-are repinnable counts rather than ceilings. The pattern is worth naming: adding
-lessons to the tail of a track converts unmeasured debt into measured debt. It is
-not a regression, and the fix is not to stop appending.
-
-Vocabulary after the tranche: hindi 107, malayalam 107, tamil 103, sanskrit 100,
-kannada 99, telugu 99 — all still short of the 300 pre-A1 floor (HL-C184).
+**Do this instead:** resolve additive config by hand or with a script that
+re-derives the entries from the lessons on disk, which is what recovered it here.
+The four failures also arrive in sequence rather than together, so fixing one and
+re-running looks like progress while three more wait — run `validate`, the suite,
+AND `book-cli` before believing a merge is resolved.
 
 ## HL-C191 — cross-script citations must be ROMANISED; each book loads only its own font
 

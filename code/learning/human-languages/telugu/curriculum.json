@@ -535,7 +535,7 @@
       "after": []
     },
     {
-      "id": "TE-PATH-45-KIN",
+      "id": "TE-PATH-45-FAMILY",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "TE-C45-grandfather",
@@ -545,7 +545,7 @@
       ],
       "before": [],
       "inline": [
-        "TE-EXT-45-KIN"
+        "TE-EXT-45-FAMILY"
       ],
       "after": []
     }
@@ -661,7 +661,7 @@
         "TE-PATH-024",
         "TE-PATH-200",
         "TE-PATH-201",
-        "TE-PATH-45-KIN"
+        "TE-PATH-45-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1338,11 +1338,11 @@
       ]
     },
     {
-      "id": "TE-EXT-45-KIN",
+      "id": "TE-EXT-45-FAMILY",
       "stage": "pre-A1",
       "kind": "required",
       "category": "vocabulary",
-      "canDo": "I can name four more family members and say them in order.",
+      "canDo": "I can name four family and people words.",
       "prerequisites": [],
       "lessons": [
         "TE-C45-grandfather",

@@ -1303,7 +1303,7 @@
     {
       "language": "hindi",
       "chapter": 44,
-      "sourceHash": "fnv1a64:6f9609838554afc8",
+      "sourceHash": "fnv1a64:d20bc1abddc78abf",
       "lessonIds": [
         "HI-C44-son",
         "HI-C44-daughter",
@@ -2017,7 +2017,7 @@
     {
       "language": "kannada",
       "chapter": 45,
-      "sourceHash": "fnv1a64:2921525d0ce2b056",
+      "sourceHash": "fnv1a64:e7be6a7b72a246ae",
       "lessonIds": [
         "KA-C45-grandfather",
         "KA-C45-grandmother",
@@ -2866,7 +2866,7 @@
     {
       "language": "malayalam",
       "chapter": 45,
-      "sourceHash": "fnv1a64:cce50486ee16413d",
+      "sourceHash": "fnv1a64:9772b9c21c0dbc26",
       "lessonIds": [
         "ML-C45-grandfather",
         "ML-C45-grandmother",
@@ -7411,7 +7411,7 @@
     {
       "language": "telugu",
       "chapter": 45,
-      "sourceHash": "fnv1a64:4f3686a5b07a447b",
+      "sourceHash": "fnv1a64:5bac8b19c36c4d8b",
       "lessonIds": [
         "TE-C45-grandfather",
         "TE-C45-grandmother",

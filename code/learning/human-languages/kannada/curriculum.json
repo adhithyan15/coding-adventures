@@ -526,7 +526,7 @@
       "after": []
     },
     {
-      "id": "KA-PATH-45-KIN",
+      "id": "KA-PATH-45-FAMILY",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "KA-C45-grandfather",
@@ -536,7 +536,7 @@
       ],
       "before": [],
       "inline": [
-        "KA-EXT-45-KIN"
+        "KA-EXT-45-FAMILY"
       ],
       "after": []
     }
@@ -651,7 +651,7 @@
         "KA-PATH-023",
         "KA-PATH-200",
         "KA-PATH-201",
-        "KA-PATH-45-KIN"
+        "KA-PATH-45-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1329,11 +1329,11 @@
       ]
     },
     {
-      "id": "KA-EXT-45-KIN",
+      "id": "KA-EXT-45-FAMILY",
       "stage": "pre-A1",
       "kind": "required",
       "category": "vocabulary",
-      "canDo": "I can name four more family members and say them in order.",
+      "canDo": "I can name four family and people words.",
       "prerequisites": [],
       "lessons": [
         "KA-C45-grandfather",

@@ -456,8 +456,27 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
         "table" => ImportTypeInfo::Table(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None } }),
         "memory" => ImportTypeInfo::Memory(MemoryType { limits: parse_limits(&desc[1..])? }),
         "global" => {
-            let gt = desc.get(1).ok_or(WastParseError::UnexpectedEof)?;
-            ImportTypeInfo::Global(parse_global_type(gt)?)
+            // `desc` is `(global $name? <type>)` -- an optional `$name`
+            // (from either the desugared inline-import shorthand or a real
+            // explicit `(import "m" "n" (global $g <type>))`) can sit at
+            // index 1, pushing the actual type field to index 2. Every
+            // other import kind's `desc` either doesn't carry a name at
+            // all (table/memory don't read `desc` here) or doesn't need to
+            // skip past one (func's type is resolved later) -- `global` is
+            // the only kind whose type info lives IN `desc` at a
+            // name-dependent offset. Found via the real corpus's
+            // `global.wast`, whose `(global $g0 (import "G" "g") i32)`
+            // (a NAMED inline import) previously mis-read `$g0` itself as
+            // the value type ("expected a value type, found \"$g0\"") --
+            // only the unnamed shorthand `(global (import ...) i32)`
+            // worked before this fix.
+            let type_field = if desc.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
+                desc.get(2)
+            } else {
+                desc.get(1)
+            }
+            .ok_or(WastParseError::UnexpectedEof)?;
+            ImportTypeInfo::Global(parse_global_type(type_field)?)
         }
         // `desc` can be an empty list (`(import "m" "n" ())`), in which case
         // `kind` is already "" from `unwrap_or("")` above -- fall back to
@@ -1932,6 +1951,42 @@ mod tests {
         assert_eq!(m.globals[0].init_expr, vec![0x41, 0x2A, 0x0B]); // i32.const 42; end
         let export = m.exports.iter().find(|e| e.name == "g").unwrap();
         assert_eq!(export.index, 1, "the real global's own global-space index (after the 1 import)");
+    }
+
+    #[test]
+    fn named_global_inline_import_shorthand_resolves_its_type_and_index() {
+        // WASM19: `(global $g0 (import "m" "n") i32)` -- the NAMED form,
+        // matching the real corpus's global.wast. Only the unnamed form
+        // (no `$name` between `global` and `(import ...)`) worked before
+        // this fix: `build_import_shell`'s "global" arm read `desc.get(1)`
+        // unconditionally as the value type, but when a `$name` is present
+        // it desugars into that very slot instead (`desc` = `[global,
+        // $name, type]`, not `[global, type]`), so `$g0` itself was
+        // mis-parsed as a value type ("expected a value type, found
+        // \"$g0\"").
+        let m = parse_module(
+            r#"(module
+                 (global $g0 (import "m" "n") i32)
+                 (func (export "get") (result i32) (global.get $g0)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.imports.len(), 1);
+        assert!(matches!(m.imports[0].type_info, ImportTypeInfo::Global(GlobalType { value_type: ValueType::I32, mutable: false })));
+        // `$g0` must resolve to the import's own index (0), not fail as an
+        // unknown identifier.
+        assert_eq!(code_of(&m, 0), &[0x23, 0x00, 0x0B]); // global.get 0; end
+    }
+
+    #[test]
+    fn named_mutable_global_inline_import_shorthand_resolves_correctly() {
+        let m = parse_module(
+            r#"(module (global $mg (import "m" "n") (mut f64)))"#,
+        )
+        .unwrap();
+        assert!(matches!(
+            m.imports[0].type_info,
+            ImportTypeInfo::Global(GlobalType { value_type: ValueType::F64, mutable: true })
+        ));
     }
 
     #[test]

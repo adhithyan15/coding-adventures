@@ -1,5 +1,36 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.8 — 2026-08-15 — named global inline-import shorthand (WASM19)
+
+`(global $g0 (import "m" "n") i32)` -- the NAMED form of the global
+inline-import shorthand -- previously mis-parsed `$g0` itself as the
+value type ("expected a value type, found \"$g0\""). Only the unnamed
+form (`(global (import "m" "n") i32)`, no `$name`) worked.
+
+Root cause: `desugar_one_inline_import` rewrites `(global $g0 (import
+"m" "n") i32)` into `(import "m" "n" (global $g0 i32))`, so `desc` (the
+inner `(global $g0 i32)` list `build_import_shell` reads) is `[global,
+$g0, i32]` when a name is present, vs. `[global, i32]` when it isn't.
+`build_import_shell`'s "global" arm unconditionally read `desc.get(1)`
+as the value type -- correct only for the unnamed shape.
+
+### Fixed
+
+- `build_import_shell`'s "global" arm now skips an optional `$name` at
+  `desc[1]` before reading the value-type field, matching every other
+  place in this crate that has to handle an optional name in a
+  fixed-position field list.
+- 2 new unit tests: named non-mutable and named mutable inline-import
+  globals, both round-tripping through a real `parse_module` call and a
+  `global.get` reference to the resolved index. Discovered while
+  regenerating WASM17's conformance baseline (`global.wast`'s real
+  corpus content uses exactly this named form) -- confirmed via a full
+  baseline diff that this fix moves `global.wast`'s parse failure
+  further still, this time into the SAME already-out-of-scope extended
+  `elem`-segment syntax gap `call_indirect.wast` also hits (see WASM17's
+  spec, `code/specs/W08-wasm-funcref-externref.md`), with zero
+  regressions on any already-parsing file.
+
 ## 0.1.7 — 2026-08-15 — funcref/externref, ref.null/ref.func/ref.is_null, table.get/table.set (WASM17)
 
 This crate had ZERO reference-types-proposal support before this release

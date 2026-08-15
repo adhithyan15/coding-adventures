@@ -550,7 +550,7 @@
       "after": []
     },
     {
-      "id": "HI-PATH-44-KIN",
+      "id": "HI-PATH-44-FAMILY",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "HI-C44-son",
@@ -560,7 +560,7 @@
       ],
       "before": [],
       "inline": [
-        "HI-EXT-44-KIN"
+        "HI-EXT-44-FAMILY"
       ],
       "after": []
     }
@@ -669,7 +669,7 @@
         "HI-PATH-023",
         "HI-PATH-200",
         "HI-PATH-201",
-        "HI-PATH-44-KIN"
+        "HI-PATH-44-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1342,11 +1342,11 @@
       ]
     },
     {
-      "id": "HI-EXT-44-KIN",
+      "id": "HI-EXT-44-FAMILY",
       "stage": "pre-A1",
       "kind": "required",
       "category": "vocabulary",
-      "canDo": "I can name four more people-words and say them in order.",
+      "canDo": "I can name four family and people words.",
       "prerequisites": [],
       "lessons": [
         "HI-C44-son",

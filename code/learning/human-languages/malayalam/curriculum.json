@@ -548,7 +548,7 @@
       "after": []
     },
     {
-      "id": "ML-PATH-45-KIN",
+      "id": "ML-PATH-45-FAMILY",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
         "ML-C45-grandfather",
@@ -558,7 +558,7 @@
       ],
       "before": [],
       "inline": [
-        "ML-EXT-45-KIN"
+        "ML-EXT-45-FAMILY"
       ],
       "after": []
     }
@@ -673,7 +673,7 @@
         "ML-PATH-024",
         "ML-PATH-200",
         "ML-PATH-201",
-        "ML-PATH-45-KIN"
+        "ML-PATH-45-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1340,11 +1340,11 @@
       ]
     },
     {
-      "id": "ML-EXT-45-KIN",
+      "id": "ML-EXT-45-FAMILY",
       "stage": "pre-A1",
       "kind": "required",
       "category": "vocabulary",
-      "canDo": "I can name four more family members and say them in order.",
+      "canDo": "I can name four family and people words.",
       "prerequisites": [],
       "lessons": [
         "ML-C45-grandfather",
