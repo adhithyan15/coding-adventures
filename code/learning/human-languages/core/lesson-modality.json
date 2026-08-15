@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e4bd210ca3b67eb7",
+  "sourceHash": "fnv1a64:48bf164d263b84f7",
   "summary": {
-    "totalLessons": 2456,
-    "voice": 1677,
-    "sight": 577,
+    "totalLessons": 2491,
+    "voice": 1710,
+    "sight": 579,
     "pen": 202,
-    "drivableLessons": 1677,
-    "drivablePercent": 68,
+    "drivableLessons": 1710,
+    "drivablePercent": 69,
     "trackCount": 22,
-    "chapterCount": 829,
-    "drivablePrefixTotal": 1460,
-    "fullyDrivableChapters": 521,
+    "chapterCount": 836,
+    "drivablePrefixTotal": 1491,
+    "fullyDrivableChapters": 526,
     "unstartableChapters": 182,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -3472,12 +3472,12 @@
     },
     {
       "language": "kannada",
-      "lessonCount": 137,
-      "voice": 82,
-      "sight": 31,
+      "lessonCount": 172,
+      "voice": 115,
+      "sight": 33,
       "pen": 24,
-      "drivablePercent": 60,
-      "drivablePrefixTotal": 73,
+      "drivablePercent": 67,
+      "drivablePrefixTotal": 104,
       "modalities": [
         "voice",
         "sight",
@@ -4255,6 +4255,144 @@
             "KA-C45-grandmother",
             "KA-C45-husband",
             "KA-C45-wife"
+          ]
+        },
+        {
+          "chapter": 46,
+          "lessonCount": 5,
+          "voice": 4,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": "KA-C46-book",
+          "drivable": false,
+          "drivableLessonIds": [
+            "KA-C46-fruit",
+            "KA-C46-cloth",
+            "KA-C46-lamp",
+            "KA-C46-salt"
+          ]
+        },
+        {
+          "chapter": 47,
+          "lessonCount": 5,
+          "voice": 4,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "KA-C47-hair",
+          "drivable": false,
+          "drivableLessonIds": [
+            "KA-C47-leg",
+            "KA-C47-tooth"
+          ]
+        },
+        {
+          "chapter": 48,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C48-teacher",
+            "KA-C48-student",
+            "KA-C48-doctor",
+            "KA-C48-farmer",
+            "KA-C48-guest"
+          ]
+        },
+        {
+          "chapter": 49,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C49-true",
+            "KA-C49-enough",
+            "KA-C49-certainly",
+            "KA-C49-perhaps",
+            "KA-C49-just-so"
+          ]
+        },
+        {
+          "chapter": 50,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C50-now",
+            "KA-C50-day-after",
+            "KA-C50-journey",
+            "KA-C50-set-out",
+            "KA-C50-farewell"
+          ]
+        },
+        {
+          "chapter": 51,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C51-gratitude",
+            "KA-C51-favour",
+            "KA-C51-respect",
+            "KA-C51-blessing",
+            "KA-C51-salutation"
+          ]
+        },
+        {
+          "chapter": 52,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "KA-C52-door",
+            "KA-C52-chair",
+            "KA-C52-rangoli",
+            "KA-C52-flower",
+            "KA-C52-garland"
           ]
         }
       ]
@@ -30475,6 +30613,636 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:47dc722b1ecddaf7"
+    },
+    {
+      "id": "KA-C46-fruit",
+      "language": "kannada",
+      "chapter": 46,
+      "sequence": 1140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5a47f523d4118a16"
+    },
+    {
+      "id": "KA-C46-cloth",
+      "language": "kannada",
+      "chapter": 46,
+      "sequence": 1150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8f088e874037255e"
+    },
+    {
+      "id": "KA-C46-lamp",
+      "language": "kannada",
+      "chapter": 46,
+      "sequence": 1160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14cd80ed78d78656"
+    },
+    {
+      "id": "KA-C46-salt",
+      "language": "kannada",
+      "chapter": 46,
+      "sequence": 1170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9fedefcbfe63fe45"
+    },
+    {
+      "id": "KA-C46-book",
+      "language": "kannada",
+      "chapter": 46,
+      "sequence": 1180,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:572365c5c68d92ab"
+    },
+    {
+      "id": "KA-C47-leg",
+      "language": "kannada",
+      "chapter": 47,
+      "sequence": 1190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c78a65e38287ef97"
+    },
+    {
+      "id": "KA-C47-tooth",
+      "language": "kannada",
+      "chapter": 47,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f3216af73f360c94"
+    },
+    {
+      "id": "KA-C47-hair",
+      "language": "kannada",
+      "chapter": 47,
+      "sequence": 1210,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:024a58c29052981e"
+    },
+    {
+      "id": "KA-C47-finger",
+      "language": "kannada",
+      "chapter": 47,
+      "sequence": 1220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1b86cb4e6dd66136"
+    },
+    {
+      "id": "KA-C47-stomach",
+      "language": "kannada",
+      "chapter": 47,
+      "sequence": 1230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:01f131e2c09a5a7e"
+    },
+    {
+      "id": "KA-C48-teacher",
+      "language": "kannada",
+      "chapter": 48,
+      "sequence": 1240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:28900c7176dac826"
+    },
+    {
+      "id": "KA-C48-student",
+      "language": "kannada",
+      "chapter": 48,
+      "sequence": 1250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ae84824bf8e27606"
+    },
+    {
+      "id": "KA-C48-doctor",
+      "language": "kannada",
+      "chapter": 48,
+      "sequence": 1260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cbb7441d5e3f416c"
+    },
+    {
+      "id": "KA-C48-farmer",
+      "language": "kannada",
+      "chapter": 48,
+      "sequence": 1270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a22a02f52d3ba6f8"
+    },
+    {
+      "id": "KA-C48-guest",
+      "language": "kannada",
+      "chapter": 48,
+      "sequence": 1280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:133fd2121f7b405e"
+    },
+    {
+      "id": "KA-C49-true",
+      "language": "kannada",
+      "chapter": 49,
+      "sequence": 1290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:29d11b36fe7e7224"
+    },
+    {
+      "id": "KA-C49-enough",
+      "language": "kannada",
+      "chapter": 49,
+      "sequence": 1300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:26d145ae7159cf57"
+    },
+    {
+      "id": "KA-C49-certainly",
+      "language": "kannada",
+      "chapter": 49,
+      "sequence": 1310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2f79afa2c84248d0"
+    },
+    {
+      "id": "KA-C49-perhaps",
+      "language": "kannada",
+      "chapter": 49,
+      "sequence": 1320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3a6f47b3bd217a5a"
+    },
+    {
+      "id": "KA-C49-just-so",
+      "language": "kannada",
+      "chapter": 49,
+      "sequence": 1330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8ad2a1d7924a066b"
+    },
+    {
+      "id": "KA-C50-now",
+      "language": "kannada",
+      "chapter": 50,
+      "sequence": 1340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ae5d8360d35cfecb"
+    },
+    {
+      "id": "KA-C50-day-after",
+      "language": "kannada",
+      "chapter": 50,
+      "sequence": 1350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:676b4189817e86ae"
+    },
+    {
+      "id": "KA-C50-journey",
+      "language": "kannada",
+      "chapter": 50,
+      "sequence": 1360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5b1af66f7544fed5"
+    },
+    {
+      "id": "KA-C50-set-out",
+      "language": "kannada",
+      "chapter": 50,
+      "sequence": 1370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0b7c0d0249091fc8"
+    },
+    {
+      "id": "KA-C50-farewell",
+      "language": "kannada",
+      "chapter": 50,
+      "sequence": 1380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6c464c94650d6909"
+    },
+    {
+      "id": "KA-C51-gratitude",
+      "language": "kannada",
+      "chapter": 51,
+      "sequence": 1390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c4506a4dab212827"
+    },
+    {
+      "id": "KA-C51-favour",
+      "language": "kannada",
+      "chapter": 51,
+      "sequence": 1400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4d893bf13ff5003c"
+    },
+    {
+      "id": "KA-C51-respect",
+      "language": "kannada",
+      "chapter": 51,
+      "sequence": 1410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4f6ff0235e0acfd5"
+    },
+    {
+      "id": "KA-C51-blessing",
+      "language": "kannada",
+      "chapter": 51,
+      "sequence": 1420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8ff086e705a65178"
+    },
+    {
+      "id": "KA-C51-salutation",
+      "language": "kannada",
+      "chapter": 51,
+      "sequence": 1430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:698cdc15eee22588"
+    },
+    {
+      "id": "KA-C52-door",
+      "language": "kannada",
+      "chapter": 52,
+      "sequence": 1440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:521ac95c213d8344"
+    },
+    {
+      "id": "KA-C52-chair",
+      "language": "kannada",
+      "chapter": 52,
+      "sequence": 1450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:130f375f4a387635"
+    },
+    {
+      "id": "KA-C52-rangoli",
+      "language": "kannada",
+      "chapter": 52,
+      "sequence": 1460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cabb79e20ff58623"
+    },
+    {
+      "id": "KA-C52-flower",
+      "language": "kannada",
+      "chapter": 52,
+      "sequence": 1470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:62f5c8fd7e13b013"
+    },
+    {
+      "id": "KA-C52-garland",
+      "language": "kannada",
+      "chapter": 52,
+      "sequence": 1480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:54a4194d7cabe4fe"
     },
     {
       "id": "LA-C01-salve",

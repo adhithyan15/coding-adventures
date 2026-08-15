@@ -152,7 +152,7 @@ describe("corpus snapshot", () => {
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight
     // measurable teaching lessons carry the current corpus across another point.
-    expect(report.summary.measurablePercent).toBe(75); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable // +1: vocabulary wave 6 added 54 schema-v2 lessons, all measurable // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all schema-v2 and all atom-bearing, so the measurable share rises // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C156: letter ledgers replicated to all six — 85 one-character segments // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C194: +16 Spanish pre-A1 words
+    expect(report.summary.measurablePercent).toBe(76); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable // +1: vocabulary wave 6 added 54 schema-v2 lessons, all measurable // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all schema-v2 and all atom-bearing, so the measurable share rises // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C156: letter ledgers replicated to all six — 85 one-character segments // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C194: +16 Spanish pre-A1 words // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52)
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
@@ -325,7 +325,7 @@ describe("the script ramp against the real corpus", () => {
     // cousin forms the same way earlier waves did.
     // 173 -> 184: vocabulary wave 5's telugu/malayalam lessons cite Dravidian cousin
     // forms in cousin scripts the same way.
-    expect(report.summary.lessonsWithForeignScript).toBe(198); // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them // HL-C190: +16 -- see/say verbs, Kannada Telugu Malayalam Hindi // HL-C190 // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52)
+    expect(report.summary.lessonsWithForeignScript).toBe(200); // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them // HL-C190: +16 -- see/say verbs, Kannada Telugu Malayalam Hindi // HL-C190 // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52)
     expect(report.summary.maxForeignGlyphsInALesson).toBe(27); // HL11: +1. Reordering moved which lesson is the FIRST to show a given cousin-script glyph, so one cousin table now carries one more first-sighting. Cousin glyphs are counted and never charged to the budget (HL08)
   });
 

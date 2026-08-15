@@ -1,0 +1,625 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 50,
+  "title": "Taking Your Leave",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d47d05e11d6581aa",
+  "lessons": [
+    {
+      "id": "KA-C50-now",
+      "sequence": 1340,
+      "title": "ಈಗ (īga) — now",
+      "headword": "ಈಗ",
+      "romanization": "īga",
+      "gloss": "now",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae5d8360d35cfecb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did hāge mean, and what did bahuśaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಈಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಗ (īga) — \"now\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈಗ (īga) is 'now', and it stands on the same ಇ- of nearness the chapter before ended on. ಆಗ (āga) is its partner: 'then, at that time', carrying the ಅ- of distance."
+            },
+            {
+              "kind": "speech",
+              "text": "So Kannada names this moment and that moment by the same means it names this thing and that thing. Time is handled as one more place to point at."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words for going."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īga, then āga, and point at the near one and the far one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īga*, then *āga*, and point at the near one and the far one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಈಗ (īga) mean? (\"now\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C50-day-after",
+      "sequence": 1350,
+      "title": "ನಾಡಿದ್ದು (nāḍiddu) — the day after tomorrow",
+      "headword": "ನಾಡಿದ್ದು",
+      "romanization": "nāḍiddu",
+      "gloss": "the day after tomorrow",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:676b4189817e86ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did īga mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಾಡಿದ್ದು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಡಿದ್ದು (nāḍiddu) — \"the day after tomorrow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English needs four words for this. Kannada needs one, and keeps a matching one running the other way: ಮೊನ್ನೆ (monne), the day before yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "You can hear ನಾಳೆ, 'tomorrow', at the front of ನಾಡಿದ್ದು (nāḍiddu) — the two belong together, one step out and two steps out. A language that sows and marries by the calendar finds it worth keeping single words this far from today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: now, and the day after tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḍiddu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḍiddu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īga, nāḷe, nāḍiddu — today's moment, then one day out, then two",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īga*, *nāḷe*, *nāḍiddu* — today's moment, then one day out, then two]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಾಡಿದ್ದು (nāḍiddu) mean? (\"the day after tomorrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C50-journey",
+      "sequence": 1360,
+      "title": "ಪ್ರಯಾಣ (prayāṇa) — a journey",
+      "headword": "ಪ್ರಯಾಣ",
+      "romanization": "prayāṇa",
+      "gloss": "a journey",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b1af66f7544fed5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nāḍiddu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಯಾಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯಾಣ (prayāṇa) — \"a journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pra-yāṇa: pra, 'forth, forward', laid on a root meaning to go. A going-forth."
+            },
+            {
+              "kind": "speech",
+              "text": "That pra- is very old and very widely travelled. It is the pro- of Latin, the pro- of Greek and the forth of English, one prefix that four languages inherited rather than borrowed from one another. Wish someone ಶುಭ ಪ್ರಯಾಣ (prayāṇa), a good journey, and half the phrase is a word this book taught you on a quite different errand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: now, the day after tomorrow, a journey."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śubha prayāṇa to someone leaving, then prayāṇa on its own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śubha prayāṇa* to someone leaving, then *prayāṇa* on its own]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಯಾಣ (prayāṇa) mean? (\"a journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C50-set-out",
+      "sequence": 1370,
+      "title": "ಹೊರಡು (horaḍu) — to set out",
+      "headword": "ಹೊರಡು",
+      "romanization": "horaḍu",
+      "gloss": "to set out",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b7c0d0249091fc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did prayāṇa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊರಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊರಡು (horaḍu) — \"to set out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊರಡು (horaḍu) is to set out, to start off, to leave a place with somewhere else in mind — not merely to go, for which Kannada already handed you a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Its front half is ಹೊರ (hora), 'outside'. To set out is to go outward. And ಹೊರ is one more inherited word with an h where Tamil has a p: புறம் (puṟam) is the outside there. The law turns up again in the middle of an ordinary travelling verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. Now, the day after tomorrow, a journey, and setting out on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horaḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horaḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horaḍu, then hōgu, and say which of the two has a destination in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horaḍu*, then *hōgu*, and say which of the two has a destination in it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊರಡು (horaḍu) mean? (\"to set out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C50-farewell",
+      "sequence": 1380,
+      "title": "ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge) — a send-off, a farewell",
+      "headword": "ಬೀಳ್ಕೊಡುಗೆ",
+      "romanization": "bīḷkoḍuge",
+      "gloss": "a send-off, a farewell",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c464c94650d6909",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did horaḍu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೀಳ್ಕೊಡುಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge) — \"a send-off, a farewell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart and something you already own falls out of it. ಬೀಳ್ಕೊಡು is 'to see someone off', and the ಕೊಡು sitting in the middle of it is the plain verb 'give' from the chapter of commands. The ending -ge turns the whole action into a thing: a send-off."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice whose act it is. Kannada makes the leave-taking belong to the one who stays: the host gives the departure away. The traveller only walks."
+            },
+            {
+              "kind": "speech",
+              "text": "Five words for going: now, the day after tomorrow, a journey, to set out, and the send-off at the end of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words for going, and a way to end a visit without repeating yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīḷkoḍuge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīḷkoḍuge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then bīḷkoḍuge and the koḍu hiding inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *bīḷkoḍuge* and the *koḍu* hiding inside it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge) mean? (\"a send-off, a farewell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

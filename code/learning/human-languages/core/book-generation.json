@@ -1610,22 +1610,61 @@
       "language": "kannada",
       "chapter": 43,
       "output": "kannada/book/chapters/ch43-more-verbs.tex",
-      "unicodeScript": "Kannada",
-      "scriptCommand": "kn"
+      "scriptSet": "kannada-comparisons"
     },
     {
       "language": "kannada",
       "chapter": 44,
       "output": "kannada/book/chapters/ch44-see-say.tex",
-      "unicodeScript": "Kannada",
-      "scriptCommand": "kn"
+      "scriptSet": "kannada-comparisons"
     },
     {
       "language": "kannada",
       "chapter": 45,
       "output": "kannada/book/chapters/ch45-older-generation.tex",
-      "unicodeScript": "Kannada",
-      "scriptCommand": "kn"
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 46,
+      "output": "kannada/book/chapters/ch46-things-you-ask-for.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 47,
+      "output": "kannada/book/chapters/ch47-leg-and-tooth.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 48,
+      "output": "kannada/book/chapters/ch48-roles.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 49,
+      "output": "kannada/book/chapters/ch49-replies.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 50,
+      "output": "kannada/book/chapters/ch50-taking-leave.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 51,
+      "output": "kannada/book/chapters/ch51-courtesy.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 52,
+      "output": "kannada/book/chapters/ch52-welcoming-a-guest.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
       "language": "latin",

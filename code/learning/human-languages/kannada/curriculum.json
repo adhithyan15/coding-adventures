@@ -539,13 +539,126 @@
         "KA-EXT-45-FAMILY"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-46-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C46-fruit",
+        "KA-C46-cloth",
+        "KA-C46-lamp",
+        "KA-C46-salt",
+        "KA-C46-book"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-46-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-47-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C47-leg",
+        "KA-C47-tooth",
+        "KA-C47-hair",
+        "KA-C47-finger",
+        "KA-C47-stomach"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-47-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-48-ROLE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C48-teacher",
+        "KA-C48-student",
+        "KA-C48-doctor",
+        "KA-C48-farmer",
+        "KA-C48-guest"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-48-ROLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-49-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "KA-C49-true",
+        "KA-C49-enough",
+        "KA-C49-certainly",
+        "KA-C49-perhaps",
+        "KA-C49-just-so"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-49-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-50-LEAVE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "KA-C50-now",
+        "KA-C50-day-after",
+        "KA-C50-journey",
+        "KA-C50-set-out",
+        "KA-C50-farewell"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-50-LEAVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-51-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "KA-C51-gratitude",
+        "KA-C51-favour",
+        "KA-C51-respect",
+        "KA-C51-blessing",
+        "KA-C51-salutation"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-51-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-52-WELCOME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "KA-C52-door",
+        "KA-C52-chair",
+        "KA-C52-rangoli",
+        "KA-C52-flower",
+        "KA-C52-garland"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-52-WELCOME"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
         "KA-PATH-001",
-        "KA-PATH-100"
+        "KA-PATH-100",
+        "KA-PATH-52-WELCOME"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -557,7 +670,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "KA-PATH-002",
-        "KA-PATH-008"
+        "KA-PATH-008",
+        "KA-PATH-51-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -566,7 +680,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "KA-PATH-003"
+        "KA-PATH-003",
+        "KA-PATH-49-REPLY"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -581,7 +696,8 @@
         "KA-PATH-015",
         "KA-PATH-020",
         "KA-PATH-027",
-        "KA-PATH-028"
+        "KA-PATH-028",
+        "KA-PATH-48-ROLE"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -595,7 +711,8 @@
         "KA-PATH-007",
         "KA-PATH-016",
         "KA-PATH-029",
-        "KA-PATH-030"
+        "KA-PATH-030",
+        "KA-PATH-47-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -608,14 +725,16 @@
         "KA-PATH-012",
         "KA-PATH-018",
         "KA-PATH-031",
-        "KA-PATH-032"
+        "KA-PATH-032",
+        "KA-PATH-46-ASK"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
       "segments": [
-        "KA-PATH-009"
+        "KA-PATH-009",
+        "KA-PATH-50-LEAVE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1340,6 +1459,111 @@
         "KA-C45-grandmother",
         "KA-C45-husband",
         "KA-C45-wife"
+      ]
+    },
+    {
+      "id": "KA-EXT-46-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things I might ask someone for in Kannada.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C46-fruit",
+        "KA-C46-cloth",
+        "KA-C46-lamp",
+        "KA-C46-salt",
+        "KA-C46-book"
+      ]
+    },
+    {
+      "id": "KA-EXT-47-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Kannada.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C47-leg",
+        "KA-C47-tooth",
+        "KA-C47-hair",
+        "KA-C47-finger",
+        "KA-C47-stomach"
+      ]
+    },
+    {
+      "id": "KA-EXT-48-ROLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what someone's role is in Kannada.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C48-teacher",
+        "KA-C48-student",
+        "KA-C48-doctor",
+        "KA-C48-farmer",
+        "KA-C48-guest"
+      ]
+    },
+    {
+      "id": "KA-EXT-49-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer in Kannada with more than yes and no.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C49-true",
+        "KA-C49-enough",
+        "KA-C49-certainly",
+        "KA-C49-perhaps",
+        "KA-C49-just-so"
+      ]
+    },
+    {
+      "id": "KA-EXT-50-LEAVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can take my leave in Kannada and say when I will be back.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C50-now",
+        "KA-C50-day-after",
+        "KA-C50-journey",
+        "KA-C50-set-out",
+        "KA-C50-farewell"
+      ]
+    },
+    {
+      "id": "KA-EXT-51-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can be polite in Kannada beyond thank you.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C51-gratitude",
+        "KA-C51-favour",
+        "KA-C51-respect",
+        "KA-C51-blessing",
+        "KA-C51-salutation"
+      ]
+    },
+    {
+      "id": "KA-EXT-52-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a Kannada welcome offers a guest.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C52-door",
+        "KA-C52-chair",
+        "KA-C52-rangoli",
+        "KA-C52-flower",
+        "KA-C52-garland"
       ]
     }
   ]

@@ -2027,6 +2027,97 @@
       "tex": "kannada/book/chapters/ch45-older-generation.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:e45a7b347790fb7c",
+      "lessonIds": [
+        "KA-C46-fruit",
+        "KA-C46-cloth",
+        "KA-C46-lamp",
+        "KA-C46-salt",
+        "KA-C46-book"
+      ],
+      "tex": "kannada/book/chapters/ch46-things-you-ask-for.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:d6dd5fb63c899777",
+      "lessonIds": [
+        "KA-C47-leg",
+        "KA-C47-tooth",
+        "KA-C47-hair",
+        "KA-C47-finger",
+        "KA-C47-stomach"
+      ],
+      "tex": "kannada/book/chapters/ch47-leg-and-tooth.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:d2dcd0b5d705966e",
+      "lessonIds": [
+        "KA-C48-teacher",
+        "KA-C48-student",
+        "KA-C48-doctor",
+        "KA-C48-farmer",
+        "KA-C48-guest"
+      ],
+      "tex": "kannada/book/chapters/ch48-roles.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:f2cad7f24b738f18",
+      "lessonIds": [
+        "KA-C49-true",
+        "KA-C49-enough",
+        "KA-C49-certainly",
+        "KA-C49-perhaps",
+        "KA-C49-just-so"
+      ],
+      "tex": "kannada/book/chapters/ch49-replies.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:c019747e7a9608bd",
+      "lessonIds": [
+        "KA-C50-now",
+        "KA-C50-day-after",
+        "KA-C50-journey",
+        "KA-C50-set-out",
+        "KA-C50-farewell"
+      ],
+      "tex": "kannada/book/chapters/ch50-taking-leave.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:d325a04c5eea91d6",
+      "lessonIds": [
+        "KA-C51-gratitude",
+        "KA-C51-favour",
+        "KA-C51-respect",
+        "KA-C51-blessing",
+        "KA-C51-salutation"
+      ],
+      "tex": "kannada/book/chapters/ch51-courtesy.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:283cc4cdb488731d",
+      "lessonIds": [
+        "KA-C52-door",
+        "KA-C52-chair",
+        "KA-C52-rangoli",
+        "KA-C52-flower",
+        "KA-C52-garland"
+      ],
+      "tex": "kannada/book/chapters/ch52-welcoming-a-guest.tex"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:e487ced01dcb7f2f",

@@ -257,7 +257,7 @@ describe("corpus snapshot", () => {
     // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
     // possessive and terminal-practice gaps; Chapters 12-13 close their payoff gaps.
     expect(summary.unmapped).toBe(86);
-    expect(summary.mappedPercent).toBe(96); // +1: vocabulary wave 6 grows the mapped corpus faster than the unmapped 86
+    expect(summary.mappedPercent).toBe(97); // +1: vocabulary wave 6 grows the mapped corpus faster than the unmapped 86 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52)
   });
 
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {

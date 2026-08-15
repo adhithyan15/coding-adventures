@@ -964,6 +964,153 @@
           "KA-LEX-WIFE"
         ]
       }
+    },
+    {
+      "chapter": 46,
+      "title": "Things You Ask For",
+      "label": "ch:ka-ask-for",
+      "canDo": "I can name five everyday things I might ask someone for in Kannada, and say which of them Kannada has always had and which arrived from elsewhere.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "KA-C46-book",
+        "kind": "production",
+        "summary": "Complete KA-C46-book and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C46-ASK-01",
+          "KA-LEX-C46-ASK-02",
+          "KA-LEX-C46-ASK-03",
+          "KA-LEX-C46-ASK-04",
+          "KA-LEX-C46-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
+      "title": "The Leg and the Tooth",
+      "label": "ch:ka-body-more",
+      "canDo": "I can name five more parts of the body in Kannada, and point to the two regular sound exchanges that separate them from their Tamil and Telugu cousins.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "KA-C47-stomach",
+        "kind": "production",
+        "summary": "Complete KA-C47-stomach and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C47-BODY-01",
+          "KA-LEX-C47-BODY-02",
+          "KA-LEX-C47-BODY-03",
+          "KA-LEX-C47-BODY-04",
+          "KA-LEX-C47-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 48,
+      "title": "Naming Who Someone Is",
+      "label": "ch:ka-roles",
+      "canDo": "I can say what someone's role is in Kannada --- teacher, student, doctor, farmer, guest --- and name the root that two of those words share.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "KA-C48-guest",
+        "kind": "production",
+        "summary": "Complete KA-C48-guest and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C48-ROLE-01",
+          "KA-LEX-C48-ROLE-02",
+          "KA-LEX-C48-ROLE-03",
+          "KA-LEX-C48-ROLE-04",
+          "KA-LEX-C48-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 49,
+      "title": "Answering With More Than Yes",
+      "label": "ch:ka-replies",
+      "canDo": "I can answer in Kannada with more than yes and no --- true, enough, certainly, perhaps, just so --- and see the three-vowel grid running under ಇದು, ಅದು and ಹೇಗೆ.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "KA-C49-just-so",
+        "kind": "production",
+        "summary": "Complete KA-C49-just-so and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C49-REPLY-01",
+          "KA-LEX-C49-REPLY-02",
+          "KA-LEX-C49-REPLY-03",
+          "KA-LEX-C49-REPLY-04",
+          "KA-LEX-C49-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 50,
+      "title": "Taking Your Leave",
+      "label": "ch:ka-leave-more",
+      "canDo": "I can take my leave in Kannada and say when I will be back, and explain why the word for the farewell itself is built on the verb for giving.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "KA-C50-farewell",
+        "kind": "production",
+        "summary": "Complete KA-C50-farewell and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C50-LEAVE-01",
+          "KA-LEX-C50-LEAVE-02",
+          "KA-LEX-C50-LEAVE-03",
+          "KA-LEX-C50-LEAVE-04",
+          "KA-LEX-C50-LEAVE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 51,
+      "title": "Courtesy Words",
+      "label": "ch:ka-courtesy",
+      "canDo": "I can be polite in Kannada beyond thank you --- gratitude, a good turn, respect, a blessing, a salutation --- and name the piece that a blessing shares with the thanks I learned first.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "KA-C51-salutation",
+        "kind": "production",
+        "summary": "Complete KA-C51-salutation and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C51-COURTESY-01",
+          "KA-LEX-C51-COURTESY-02",
+          "KA-LEX-C51-COURTESY-03",
+          "KA-LEX-C51-COURTESY-04",
+          "KA-LEX-C51-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 52,
+      "title": "Welcoming a Guest",
+      "label": "ch:ka-welcome",
+      "canDo": "I can name the five things a Kannada welcome puts between the street and the guest, from the pattern on the ground to the garland.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "KA-C52-garland",
+        "kind": "production",
+        "summary": "Complete KA-C52-garland and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C52-WELCOME-01",
+          "KA-LEX-C52-WELCOME-02",
+          "KA-LEX-C52-WELCOME-03",
+          "KA-LEX-C52-WELCOME-04",
+          "KA-LEX-C52-WELCOME-05"
+        ]
+      }
     }
   ]
 }
