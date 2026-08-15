@@ -3620,7 +3620,6 @@
       "omits": [
         "REGISTER-FORMAL",
         "REGISTER-COLLOQUIAL",
-        "HONORIFIC-SYSTEM",
         "POLITENESS-STRATEGY"
       ],
       "relocates": {}
@@ -3628,7 +3627,6 @@
     "SPINE-FOLLOW-REGIONAL-VARIATION": {
       "segments": [],
       "omits": [
-        "DIALECT-FEATURE",
         "ACCENT-VARIATION",
         "LEXICAL-VARIANT-REGIONAL",
         "DIGLOSSIA"
@@ -6641,6 +6639,12 @@
     ],
     "NOMINALIZATION": [
       "ES-GRAMMAR-LO-QUE"
+    ],
+    "HONORIFIC-SYSTEM": [
+      "ES-REGISTER-TU-USTED"
+    ],
+    "DIALECT-FEATURE": [
+      "ES-PRONOUN-VOS"
     ]
   }
 }

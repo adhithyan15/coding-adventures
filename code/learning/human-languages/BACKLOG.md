@@ -69,6 +69,35 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C174 — C1 opens at 2 of 4 on two aliases; what remains needs authoring
+
+`HONORIFIC-SYSTEM` → `ES-REGISTER-TU-USTED` and `DIALECT-FEATURE` →
+`ES-PRONOUN-VOS`. Both are the canonical instance of the concept rather than a
+near-miss: *tú/usted* **is** a T–V honorific system, and *voseo* **is** the
+textbook dialect feature of Spanish. **C1 goes 0/4 → 2/4, spine 25/33 → 27/33,
+no lesson written.**
+
+**Not aliased, and here is what each would need:**
+
+* `POLITENESS-STRATEGY` — `ES-SYNTHESIS-COMMANDS-POLITENESS` covers it, but its
+  type is `practice-mix`, which is not in `REALIZING_TYPES`. **Open question
+  worth answering before the C1 sweep continues:** should a synthesis lesson be
+  able to realize a concept? It is arguably the *best* evidence a concept is
+  held, since a synthesis is where the learner uses it under load.
+* `REGISTER-FORMAL` / `REGISTER-COLLOQUIAL` — the corpus teaches the *forms*
+  (`hable usted`, the vosotros preterites) but never names register as a thing
+  you choose. Needs authoring.
+* `ACCENT-VARIATION`, `DIGLOSSIA` — genuinely absent.
+* `LEXICAL-VARIANT-REGIONAL` — nearly there: `billete`/`boleto` is noted inside
+  the travel lesson, and `ES-C09-falsos-amigos` is adjacent. Neither *owns* the
+  concept. One small lesson on the regional word pairs would close it.
+
+The two remaining C1 nodes (`SPINE-INFER-IMPLICIT-MEANING`,
+`SPINE-STRUCTURE-EXTENDED-TEXT`) have **no** alias candidates at all — implicature,
+irony, anaphora and paragraph planning are simply untaught. Those are authoring
+work, and they are the first genuinely new *teaching* the ladder has needed since
+B1.
+
 ## HL-C171 — cross-node aliases work; the relocation worry was unfounded
 
 HL-C170 left cross-node aliasing as blocked, on the reasoning that pointing a
