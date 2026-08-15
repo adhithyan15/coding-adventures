@@ -3878,6 +3878,11 @@
       "output": "spanish/book/chapters/ch270-argumentar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 271,
+      "output": "spanish/book/chapters/ch271-ideas.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

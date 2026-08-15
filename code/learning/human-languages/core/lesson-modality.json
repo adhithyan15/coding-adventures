@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e5a0392c79986b17",
+  "sourceHash": "fnv1a64:5db31dca12eb780b",
   "summary": {
-    "totalLessons": 2271,
-    "voice": 1499,
+    "totalLessons": 2274,
+    "voice": 1502,
     "sight": 570,
     "pen": 202,
-    "drivableLessons": 1499,
+    "drivableLessons": 1502,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 787,
-    "drivablePrefixTotal": 1294,
-    "fullyDrivableChapters": 485,
+    "chapterCount": 788,
+    "drivablePrefixTotal": 1297,
+    "fullyDrivableChapters": 486,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7436,12 +7436,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 432,
-      "voice": 382,
+      "lessonCount": 435,
+      "voice": 385,
       "sight": 43,
       "pen": 7,
-      "drivablePercent": 88,
-      "drivablePrefixTotal": 367,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 370,
       "modalities": [
         "voice",
         "sight",
@@ -11840,6 +11840,24 @@
             "ES-C270-por-ejemplo",
             "ES-C270-sin-embargo",
             "ES-C270-aunque"
+          ]
+        },
+        {
+          "chapter": 271,
+          "lessonCount": 3,
+          "voice": 3,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C271-quizas",
+            "ES-C271-supongo-que",
+            "ES-C271-practice"
           ]
         }
       ]
@@ -49945,6 +49963,60 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:304ff643d546f22f"
+    },
+    {
+      "id": "ES-C271-quizas",
+      "language": "spanish",
+      "chapter": 271,
+      "sequence": 2740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b596f22e013fe1df"
+    },
+    {
+      "id": "ES-C271-supongo-que",
+      "language": "spanish",
+      "chapter": 271,
+      "sequence": 2750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2d995c05e5d63526"
+    },
+    {
+      "id": "ES-C271-practice",
+      "language": "spanish",
+      "chapter": 271,
+      "sequence": 2760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:45043b25f3befac5"
     },
     {
       "id": "TA-C01-vanakkam",

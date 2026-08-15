@@ -247,7 +247,7 @@ describe("corpus snapshot", () => {
     // B2 opened with HL-C113 step 6: three lessons on SPINE-REPORT-WHAT-OTHERS-SAID.
     // C1 and C2 remain authored-but-unrealized, in every track.
     expect(summary.byLevel.B1).toBe(40); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons) // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1
-    expect(summary.byLevel.B2).toBe(14); // +3: HL-C113 step 6 opens B2 with reported speech // +4: step 7 adds the reported questions, the review and the synthesis, closing the node // HL-C172: +4 -- the B2 argue rung (chapter 270)
+    expect(summary.byLevel.B2).toBe(17); // +3: HL-C113 step 6 opens B2 with reported speech // +4: step 7 adds the reported questions, the review and the synthesis, closing the node // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C173: +3 -- B2 closes (chapter 271)
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
 
