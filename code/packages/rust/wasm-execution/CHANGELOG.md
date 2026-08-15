@@ -50,6 +50,19 @@ All notable changes to this package will be documented in this file.
   tail-call machinery is fully verified via the hand-written
   integration tests above instead.
 
+### Fixed
+
+- Security review caught the new `return_call_indirect` (`0x13`)
+  handler directly indexing `ctx.func_types[func_index]` where
+  `func_index` comes from a TABLE ENTRY (data, not a static part of
+  the bytecode a validator necessarily already checked -- this engine
+  can be, and in this crate's own tests sometimes is, driven without
+  `wasm-validator` running first) -- a table slot pointing past
+  `func_types.len()` panicked the host process instead of trapping
+  cleanly. Fixed with `.get()`, matching the sibling `return_call`
+  (`0x12`) handler's already-safe pattern. 1 new regression test,
+  confirmed to panic without the fix via a temporary revert.
+
 ## [0.6.10] — 2026-08-15 (WASM05 — Table gains Clone, LinearMemory/Table gain limit accessors)
 
 ### Added

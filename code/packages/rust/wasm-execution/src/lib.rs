@@ -3690,15 +3690,30 @@ fn register_control(vm: &mut GenericVM) {
             .map_err(VMError::from)?
             .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
 
+        let func_index = func_index as usize;
+        // Security review (WASM16): a table entry -- unlike the
+        // instruction's own `funcidx` immediate `return_call`'s (0x12)
+        // handler bounds-checks via `.get()` -- is DATA, not a static
+        // part of the bytecode a validator necessarily already checked
+        // (this crate's own tests construct engines that skip
+        // `wasm-validator` entirely, e.g. `wasm16_tail_calls.rs`'s
+        // `engine_from_wat`). `.get()` here, not `call_indirect`'s own
+        // adjacent `&ctx.func_types[func_index as usize]` (unchanged,
+        // pre-existing, only reached when a type section is set) --
+        // this call site is unconditional, so it must never panic on an
+        // out-of-range table entry.
+        let func_type = ctx
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| VMError::GenericError("indirect call: table entry references an undefined function".into()))?
+            .clone();
+
         if let Some(expected) = ctx.types.get(type_idx) {
-            let actual = &ctx.func_types[func_index as usize];
-            if expected.params != actual.params || expected.results != actual.results {
+            if expected.params != func_type.params || expected.results != func_type.results {
                 return Err(VMError::GenericError("indirect call type mismatch".into()));
             }
         }
 
-        let func_index = func_index as usize;
-        let func_type = ctx.func_types[func_index].clone();
         let mut args = Vec::with_capacity(func_type.params.len());
         for _ in 0..func_type.params.len() {
             args.push(pop_wasm(vm)?);
@@ -5427,6 +5442,33 @@ mod tests {
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memory: None,
             tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_return_call_indirect_through_a_table_entry_referencing_an_undefined_function_is_a_clean_error_not_a_panic() {
+        // WASM16 security review: a table entry is DATA, not a static
+        // part of the bytecode a validator necessarily already checked
+        // (this engine can be, and in real usage sometimes is, driven
+        // without going through wasm-validator first) -- a crafted or
+        // corrupt table slot pointing past `func_types.len()` must trap
+        // cleanly, the same discipline `test_table_get_out_of_bounds_
+        // index_is_a_clean_error_not_a_panic` above already established
+        // for `table.get`.
+        let code = vec![0x41, 0x00, 0x13, 0x00, 0x00, 0x0B]; // i32.const 0; return_call_indirect type=0 table=0; end
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut table = Table::new(1, None);
+        table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![table],
             globals: vec![],
             global_types: vec![],
             func_types: vec![func_type],
