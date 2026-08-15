@@ -502,14 +502,34 @@ impl Executor {
                 let mut instance = instance_rc.borrow_mut();
                 let mut wasm_args = Vec::with_capacity(args.len());
                 for a in args {
-                    wasm_args.push(const_value_to_wasm_value(a).ok_or_else(|| {
-                        ActionError::NotYetSupported(
-                            "a v128 invoke ARGUMENT is not yet supported (real capability gap, not a bug): \
-                             no live wasm-execution heap exists before the call to allocate its handle into, \
-                             see V128Bytes's own doc comment for why only RESULTS can be resolved this way"
-                                .to_string(),
-                        )
-                    })?);
+                    wasm_args.push(match a {
+                        // v128 invoke arguments (task #86, W15 follow-up):
+                        // `WasmInstance.v128_heap` is now a persistent
+                        // field that exists BEFORE any call runs (see
+                        // `code/specs/W15-wasm-v128-persistent-storage.md`),
+                        // so a `v128.const` argument can allocate directly
+                        // into it here, exactly like `evaluate_const_expr`
+                        // already does for a global initializer -- this
+                        // used to be impossible (no heap existed yet at
+                        // this point at all), now it's the same
+                        // "push and return the new index" shape used
+                        // everywhere else a v128 value is created.
+                        ConstValue::V128(bytes) => {
+                            if instance.v128_heap.len() >= wasm_execution::MAX_V128_HEAP_LEN {
+                                return Err(ActionError::Trap(
+                                    "v128 heap limit exceeded (too many SIMD values created)".to_string(),
+                                ));
+                            }
+                            let handle = instance.v128_heap.len() as u32;
+                            instance.v128_heap.push(*bytes);
+                            WasmValue::V128(handle)
+                        }
+                        _ => const_value_to_wasm_value(a).ok_or_else(|| {
+                            ActionError::NotYetSupported(format!(
+                                "invoke argument {a:?} has no WasmValue representation (real capability gap, not a bug)"
+                            ))
+                        })?,
+                    });
                 }
                 self.runtime
                     .call_typed_with_v128(&mut instance, name, &wasm_args)
@@ -867,20 +887,20 @@ mod tests {
     }
 
     #[test]
-    fn invoke_with_a_v128_argument_grades_not_yet_supported_not_a_silent_wrong_pass() {
-        // No live wasm-execution heap exists before a call starts, so a
-        // `(v128.const ...)` invoke ARGUMENT can't be turned into a real
-        // handle (unlike a v128 RESULT, resolved after the call via
-        // `call_typed_with_v128`) -- this must degrade loudly
-        // (`NotYetSupported`), never silently substitute the zero vector
-        // and risk a false pass/fail for the wrong reason.
+    fn invoke_with_v128_arguments_passes_for_real() {
+        // Task #86 (W15 follow-up): `WasmInstance.v128_heap` is now a
+        // persistent field that exists BEFORE any call runs, so a
+        // `(v128.const ...)` invoke ARGUMENT allocates directly into it --
+        // this used to be a hard capability gap (`NotYetSupported`, no
+        // heap existed yet at this point at all); now it's a real,
+        // byte-exact `Pass`, same as a v128 RESULT already was.
         let results = outcomes(
             r#"
             (module (func (export "add") (param v128 v128) (result v128) (i32x4.add (local.get 0) (local.get 1))))
             (assert_return (invoke "add" (v128.const i32x4 1 2 3 4) (v128.const i32x4 10 20 30 40)) (v128.const i32x4 11 22 33 44))
             "#,
         );
-        assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)), "{:?}", results[1]);
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
     }
 
     #[test]

@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.3] - 2026-08-15 (task #86, W15 follow-up — v128 invoke arguments)
+
+### Changed
+
+- `MAX_V128_HEAP_LEN` is now `pub`. An embedder allocating directly into
+  `WasmInstance.v128_heap` from OUTSIDE this crate's own execution loop
+  (e.g. `wasm-conformance` converting a `v128.const` `invoke` argument
+  into a real handle before a call even starts, now that `WasmInstance.
+  v128_heap` is persistent -- W15) needs the identical cap this crate's
+  own `push_v128`/`evaluate_const_expr` already enforce, not a
+  separately-chosen or unbounded one.
+
 ## [0.9.2] - 2026-08-15 (W15, task #79 — v128 persistent storage)
 
 ### Fixed (breaking)
