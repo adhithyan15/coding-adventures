@@ -7498,6 +7498,97 @@
       "tex": "tamil/book/chapters/ch43-household.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:66b356a46ac01de1",
+      "lessonIds": [
+        "TA-C44-fruit",
+        "TA-C44-cloth",
+        "TA-C44-lamp",
+        "TA-C44-salt",
+        "TA-C44-book"
+      ],
+      "tex": "tamil/book/chapters/ch44-things-you-ask-for.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:373a526aa186224d",
+      "lessonIds": [
+        "TA-C45-eye",
+        "TA-C45-ear",
+        "TA-C45-nose",
+        "TA-C45-tooth",
+        "TA-C45-stomach"
+      ],
+      "tex": "tamil/book/chapters/ch45-more-of-the-body.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:5ebc67e4eafe881a",
+      "lessonIds": [
+        "TA-C46-teacher",
+        "TA-C46-student",
+        "TA-C46-doctor",
+        "TA-C46-farmer",
+        "TA-C46-guest"
+      ],
+      "tex": "tamil/book/chapters/ch46-who-somebody-is.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:675c01e26ec8050b",
+      "lessonIds": [
+        "TA-C47-true",
+        "TA-C47-enough",
+        "TA-C47-certainly",
+        "TA-C47-perhaps",
+        "TA-C47-just-so"
+      ],
+      "tex": "tamil/book/chapters/ch47-short-replies.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:1b6f1fc3a6fafe65",
+      "lessonIds": [
+        "TA-C48-now",
+        "TA-C48-time",
+        "TA-C48-journey",
+        "TA-C48-later",
+        "TA-C48-set-out"
+      ],
+      "tex": "tamil/book/chapters/ch48-setting-out.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:e77c5b4d881ea7b6",
+      "lessonIds": [
+        "TA-C49-affection",
+        "TA-C49-respect",
+        "TA-C49-gladness",
+        "TA-C49-good-wish",
+        "TA-C49-many-thanks"
+      ],
+      "tex": "tamil/book/chapters/ch49-courtesy.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:5e5d2f82ce010fca",
+      "lessonIds": [
+        "TA-C50-threshold",
+        "TA-C50-kolam",
+        "TA-C50-flower",
+        "TA-C50-betel-leaf",
+        "TA-C50-welcome"
+      ],
+      "tex": "tamil/book/chapters/ch50-at-the-doorway.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:c7f3ae952173dcba",

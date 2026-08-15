@@ -4446,6 +4446,48 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 44,
+      "output": "tamil/book/chapters/ch44-things-you-ask-for.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 45,
+      "output": "tamil/book/chapters/ch45-more-of-the-body.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 46,
+      "output": "tamil/book/chapters/ch46-who-somebody-is.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 47,
+      "output": "tamil/book/chapters/ch47-short-replies.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 48,
+      "output": "tamil/book/chapters/ch48-setting-out.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 49,
+      "output": "tamil/book/chapters/ch49-courtesy.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 50,
+      "output": "tamil/book/chapters/ch50-at-the-doorway.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",

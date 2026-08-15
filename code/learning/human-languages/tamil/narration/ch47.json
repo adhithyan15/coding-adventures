@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 47,
+  "title": "Short Replies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:acf4b9002ada45d8",
+  "lessons": [
+    {
+      "id": "TA-C47-true",
+      "sequence": 1560,
+      "title": "உண்மை (uṇmai) — the truth",
+      "headword": "உண்மை",
+      "romanization": "uṇmai",
+      "gloss": "the truth",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:764f67fa451f6760",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did vivasāyi mean, and what did viruntāḷi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உண்மை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உண்மை (uṇmai) — \"the truth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built out of uḷ, 'to be, to exist', and the -mai Tamil adds to turn a quality into something you can name. The truth, then, is is-ness: what is the case."
+            },
+            {
+              "kind": "speech",
+              "text": "As a reply it stands on its own. Somebody tells you something surprising and uṇmai means \"true\" — and uṇmaiyā?, with the question fixed to the end, means \"really?\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five short replies."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇmai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇmai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇmai, then sari, so the two agreements sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇmai*, then *sari*, so the two agreements sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உண்மை (uṇmai) mean? (\"the truth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C47-enough",
+      "sequence": 1570,
+      "title": "போதும் (pōdum) — that is enough",
+      "headword": "போதும்",
+      "romanization": "pōdum",
+      "gloss": "that is enough",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab689e556f0b7e7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did uṇmai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: போதும்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போதும் (pōdum) — \"that is enough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It grows out of pōdu, 'to suffice', and it is the polite full stop of a Tamil meal: your host is serving, your plate is filling, and pōdum stops it without giving offence. Said twice — pōdum pōdum — it means you are serious."
+            },
+            {
+              "kind": "speech",
+              "text": "It has nothing to do with pō, 'to go', though the two look alike at a glance. Different roots, similar clothes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: agreeing, and calling a halt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōdum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōdum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇmai, then pōdum, and let the second land firmly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇmai*, then *pōdum*, and let the second land firmly]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does போதும் (pōdum) mean? (\"that is enough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C47-certainly",
+      "sequence": 1580,
+      "title": "நிச்சயமாக (niccayamāka) — certainly",
+      "headword": "நிச்சயமாக",
+      "romanization": "niccayamāka",
+      "gloss": "certainly",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e99e5e4a08e7f24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pōdum mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிச்சயமாக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிச்சயமாக (niccayamāka) — \"certainly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit niścaya, 'a settled thing', plus -āka, the ending Tamil adds when a word is to describe how something is done. niccayam on its own is the certainty; niccayamāka is doing the thing certainly."
+            },
+            {
+              "kind": "speech",
+              "text": "That same -āka is inside nalamāka, from the answer about being well, so the shape is already in your ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and the third leaves no room for doubt."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niccayamāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niccayamāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōdum, then niccayamāka, and feel how much longer the second is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōdum*, then *niccayamāka*, and feel how much longer the second is]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிச்சயமாக (niccayamāka) mean? (\"certainly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C47-perhaps",
+      "sequence": 1590,
+      "title": "ஒருவேளை (oruvēḷai) — perhaps",
+      "headword": "ஒருவேளை",
+      "romanization": "oruvēḷai",
+      "gloss": "perhaps",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1653d7cee3bf05c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did niccayamāka mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒருவேளை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒருவேளை (oruvēḷai) — \"perhaps\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces welded together: oru, 'one', which you have, and vēḷai, 'an occasion, a time', which you have not. One occasion out of the several that could happen — which is exactly the claim \"perhaps\" makes."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil builds its hedge out of counting. English does the same trick with \"maybe\", which is a \"may\" and a \"be\" pushed against each other until they stuck."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the fourth one steps back from the other three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oruvēḷai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oruvēḷai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niccayamāka, then oruvēḷai, and hear the certainty drain out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niccayamāka*, then *oruvēḷai*, and hear the certainty drain out]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒருவேளை (oruvēḷai) mean? (\"perhaps\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C47-just-so",
+      "sequence": 1600,
+      "title": "அப்படியே (appaḍiyē) — just so",
+      "headword": "அப்படியே",
+      "romanization": "appaḍiyē",
+      "gloss": "just so",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2af4bdf191e17957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did oruvēḷai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அப்படியே",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அப்படியே (appaḍiyē) — \"just so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The front of it is the far pointer a- from adu and aṅgē; appaḍi is 'in that manner'; and the -ē on the end is how Tamil presses down on a word. In that manner, precisely."
+            },
+            {
+              "kind": "speech",
+              "text": "Move the pointer and the whole set follows: ippaḍi, 'like this', and eppaḍi, 'how' — which you have been saying since you first asked somebody how they were. One pattern, three words, and only the front letter moves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That closes the run: true, enough, certainly, perhaps, just so."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appaḍiyē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appaḍiyē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — uṇmai, pōdum, niccayamāka, oruvēḷai, appaḍiyē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *uṇmai*, *pōdum*, *niccayamāka*, *oruvēḷai*, *appaḍiyē*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அப்படியே (appaḍiyē) mean? (\"just so\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
