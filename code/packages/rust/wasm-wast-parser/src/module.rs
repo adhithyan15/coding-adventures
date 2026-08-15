@@ -26,7 +26,7 @@
 //! **labels** (one per enclosing `block`/`loop`/`if`, pushed/popped as the
 //! instruction encoder walks nested folded or flat instruction lists).
 
-use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i32, parse_i64};
+use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i16, parse_i32, parse_i64, parse_i8};
 use crate::sexpr::{expect_get, parse_source, SExpr};
 use crate::WastParseError;
 use std::collections::HashMap;
@@ -214,6 +214,7 @@ fn parse_value_type(expr: &SExpr) -> Result<ValueType, WastParseError> {
         "i64" => Ok(ValueType::I64),
         "f32" => Ok(ValueType::F32),
         "f64" => Ok(ValueType::F64),
+        "v128" => Ok(ValueType::V128),
         "funcref" => Ok(ValueType::Funcref),
         "externref" => Ok(ValueType::Externref),
         other => Err(WastParseError::UnexpectedToken { pos: expr.pos(), found: other.to_string(), expected: "a value type" }),
@@ -1328,6 +1329,41 @@ fn encode_stream_instr(
         out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
         return Ok(consumed);
     }
+    // SIMD (`0xFD`-prefixed, SIMD PR1b-2 -- v128 first slice, see
+    // `code/specs/W13-wasm-simd-v128-first-slice.md`): same two-byte-
+    // prefix shape as atomics above, but the sub-opcode is a LEB128 `u32`
+    // (not a raw byte) -- `wasm_opcodes::SimdOpInfo::sub_opcode`'s own doc
+    // comment explains why (`i32x4.add`'s real value, 174, needs the
+    // 2-byte LEB128 continuation encoding). `v128.const` carries a 16-byte
+    // literal (`<shape> <lane0> ... <laneN-1>`, all 6 shapes supported --
+    // see `parse_v128_const`'s doc comment for why, even though this
+    // slice's own opcodes only execute the `i32x4` one);
+    // `i32x4.extract_lane` carries a single raw (non-LEB128) lane-index
+    // byte; every other opcode in this slice takes no immediate at all.
+    if let Some(simd_op) = wasm_opcodes::get_simd_op_by_name(name) {
+        match simd_op.kind {
+            wasm_opcodes::SimdOpKind::Const => {
+                let (bytes, consumed) = parse_v128_const(following, pos)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.extend(bytes);
+                return Ok(consumed);
+            }
+            wasm_opcodes::SimdOpKind::ExtractLane => {
+                let (text, lpos) = literal_text(following.first(), pos)?;
+                let lane = parse_lane_index(&text, lpos)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.push(lane);
+                return Ok(1);
+            }
+            wasm_opcodes::SimdOpKind::Splat | wasm_opcodes::SimdOpKind::Add | wasm_opcodes::SimdOpKind::Eq => {
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                return Ok(0);
+            }
+        }
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
     match name {
@@ -1604,6 +1640,40 @@ fn encode_flat_instr(
         out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
         return Ok(());
     }
+    // SIMD: see the matching comment in `encode_stream_instr`. `v128.const`
+    // takes no stack operand at all (its whole `args` list is the literal
+    // itself, like `ref.null`'s heap-type keyword); `i32x4.extract_lane`'s
+    // lane index leads, its one stack operand (the `v128` being read)
+    // trails, same "immediate leads, operands trail" convention as
+    // `local.get`/`global.get`/etc. above; the remaining ops take no
+    // immediate, only operands.
+    if let Some(simd_op) = wasm_opcodes::get_simd_op_by_name(name) {
+        match simd_op.kind {
+            wasm_opcodes::SimdOpKind::Const => {
+                let (bytes, _consumed) = parse_v128_const(args, pos)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.extend(bytes);
+                return Ok(());
+            }
+            wasm_opcodes::SimdOpKind::ExtractLane => {
+                let lane_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+                encode_instr_list(&args[1..], icx, out)?;
+                let (text, lpos) = literal_text(Some(lane_expr), pos)?;
+                let lane = parse_lane_index(&text, lpos)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.push(lane);
+                return Ok(());
+            }
+            wasm_opcodes::SimdOpKind::Splat | wasm_opcodes::SimdOpKind::Add | wasm_opcodes::SimdOpKind::Eq => {
+                encode_instr_list(args, icx, out)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                return Ok(());
+            }
+        }
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
 
@@ -1838,6 +1908,78 @@ fn literal_text(expr: Option<&SExpr>, pos: usize) -> Result<(String, usize), Was
         Some(SExpr::Atom(s, p)) => Ok((s.clone(), *p)),
         _ => Err(WastParseError::UnexpectedToken { pos, found: "".into(), expected: "a numeric literal" }),
     }
+}
+
+/// `i32x4.extract_lane`'s lane-index immediate: a single raw (non-LEB128)
+/// byte, 0-3 for this slice's only lane-typed shape. Real corpus files
+/// only ever write a small plain-decimal literal here (`(i32x4.extract_lane
+/// 0 ...)`), so a plain `u8` parse (not the full `parse_i32`-style
+/// signed/hex/underscore grammar numeric literals elsewhere in this crate
+/// support) is enough; out-of-range lane indices (>3) are rejected at
+/// execution time by `wasm-execution`'s own bounds check, not here.
+fn parse_lane_index(text: &str, pos: usize) -> Result<u8, WastParseError> {
+    text.parse::<u8>()
+        .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })
+}
+
+/// `v128.const <shape> <lane0> ... <laneN-1>` -- the SIMD proposal's
+/// literal syntax. `<shape>` picks both the lane width and count (16×i8,
+/// 8×i16, 4×i32, 2×i64, 4×f32, or 2×f64); every shape packs down to the
+/// same 16 raw bytes regardless of how it's spelled in source.
+///
+/// This slice's own executable opcodes (SIMD PR1a) only run `i32x4`-shaped
+/// ops, but the *literal syntax* itself is shape-agnostic once encoded, so
+/// all 6 shapes are supported here even though nothing in this slice
+/// computes with the other 5. That's not scope creep: real corpus files
+/// mix shapes even when testing a single op -- e.g. `simd_splat.wast`
+/// exercises `i8x16.splat`/`f64x2.splat`/etc. alongside `i32x4.splat`, each
+/// compared against a `v128.const` of its OWN shape -- so parsing only
+/// `i32x4` would leave those files unparseable as a whole (one bad literal
+/// fails the whole module's parse, per this crate's parser design), not
+/// just missing coverage for the unimplemented shapes' own instructions.
+///
+/// Returns `(bytes, consumed)`, where `consumed` counts the shape keyword
+/// itself plus every lane literal (`1 + lane_count`) -- used by the stream
+/// (bare-atom) caller to advance its cursor; the folded caller already
+/// knows its whole `args` list is exactly this literal, so it ignores it.
+fn parse_v128_const(operands: &[SExpr], pos: usize) -> Result<([u8; 16], usize), WastParseError> {
+    let (shape, shape_pos) = literal_text(operands.first(), pos)?;
+    let lane_count: usize = match shape.as_str() {
+        "i8x16" => 16,
+        "i16x8" => 8,
+        "i32x4" => 4,
+        "i64x2" => 2,
+        "f32x4" => 4,
+        "f64x2" => 2,
+        _ => {
+            return Err(WastParseError::UnexpectedToken {
+                pos: shape_pos,
+                found: shape,
+                expected: "a v128 shape (i8x16/i16x8/i32x4/i64x2/f32x4/f64x2)",
+            })
+        }
+    };
+    let lanes = operands.get(1..).unwrap_or(&[]);
+    if lanes.len() < lane_count {
+        return Err(WastParseError::UnexpectedEof);
+    }
+    let mut bytes = [0u8; 16];
+    let mut offset = 0usize;
+    for lane_expr in &lanes[..lane_count] {
+        let (text, lpos) = literal_text(Some(lane_expr), pos)?;
+        let lane_bytes: Vec<u8> = match shape.as_str() {
+            "i8x16" => vec![parse_i8(&text, lpos)? as u8],
+            "i16x8" => parse_i16(&text, lpos)?.to_le_bytes().to_vec(),
+            "i32x4" => parse_i32(&text, lpos)?.to_le_bytes().to_vec(),
+            "i64x2" => parse_i64(&text, lpos)?.to_le_bytes().to_vec(),
+            "f32x4" => parse_f32_bits(&text, lpos)?.to_le_bytes().to_vec(),
+            "f64x2" => parse_f64_bits(&text, lpos)?.to_le_bytes().to_vec(),
+            _ => unreachable!("shape already validated above"),
+        };
+        bytes[offset..offset + lane_bytes.len()].copy_from_slice(&lane_bytes);
+        offset += lane_bytes.len();
+    }
+    Ok((bytes, 1 + lane_count))
 }
 
 /// `align=N` / `offset=N` attributes on a load/store, in either order,
@@ -3188,5 +3330,120 @@ mod tests {
     fn unknown_atomic_instruction_name_is_a_clean_error() {
         let err = parse_module(r#"(module (func (drop (i32.atomic.nonsense (i32.const 0)))))"#).unwrap_err();
         assert!(matches!(err, WastParseError::UnknownInstruction { .. }));
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // SIMD PR1b-2: v128.const text syntax + the 4 other first-slice opcodes
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn v128_const_folded_and_flat_emit_the_0xfd_prefix_and_real_16_bytes() {
+        let folded = parse_module(r#"(module (func (drop (v128.const i32x4 1 2 3 4))))"#).unwrap();
+        let flat = parse_module(r#"(module (func v128.const i32x4 1 2 3 4 drop))"#).unwrap();
+        let mut expected = vec![0xFDu8, 0x0C];
+        for lane in [1i32, 2, 3, 4] {
+            expected.extend(lane.to_le_bytes());
+        }
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(expected.len()).any(|w| w == expected.as_slice()), "missing v128.const i32x4 1 2 3 4 bytes: {code:?}");
+        }
+    }
+
+    #[test]
+    fn v128_const_supports_all_six_shapes() {
+        // Real corpus files (e.g. simd_splat.wast) mix all 6 shapes even
+        // when testing a single op -- see `parse_v128_const`'s doc
+        // comment. None of these shapes' own instructions (i8x16.splat
+        // etc.) are executable yet; this only proves the LITERAL syntax
+        // itself parses to the correct 16 bytes for every shape.
+        let cases: &[(&str, &str, [u8; 16])] = &[
+            ("i8x16", "i8x16 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]),
+            ("i16x8", "i16x8 1 2 3 4 5 6 7 8", {
+                let mut b = [0u8; 16];
+                for (i, lane) in [1i16, 2, 3, 4, 5, 6, 7, 8].into_iter().enumerate() {
+                    b[i * 2..i * 2 + 2].copy_from_slice(&lane.to_le_bytes());
+                }
+                b
+            }),
+            ("i64x2", "i64x2 1 2", {
+                let mut b = [0u8; 16];
+                b[0..8].copy_from_slice(&1i64.to_le_bytes());
+                b[8..16].copy_from_slice(&2i64.to_le_bytes());
+                b
+            }),
+            ("f32x4", "f32x4 1.5 1.5 1.5 1.5", {
+                let mut b = [0u8; 16];
+                for i in 0..4 {
+                    b[i * 4..i * 4 + 4].copy_from_slice(&1.5f32.to_le_bytes());
+                }
+                b
+            }),
+            ("f64x2", "f64x2 1.5 1.5", {
+                let mut b = [0u8; 16];
+                b[0..8].copy_from_slice(&1.5f64.to_le_bytes());
+                b[8..16].copy_from_slice(&1.5f64.to_le_bytes());
+                b
+            }),
+        ];
+        for (shape, literal, expected_bytes) in cases {
+            let src = format!("(module (func (drop (v128.const {literal}))))");
+            let m = parse_module(&src).unwrap_or_else(|e| panic!("{shape} failed to parse: {e:?}"));
+            let code = code_of(&m, 0);
+            assert!(
+                code.windows(expected_bytes.len()).any(|w| w == expected_bytes.as_slice()),
+                "{shape}: expected bytes {expected_bytes:?} not found in {code:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn simd_binops_use_the_real_sub_opcode_leb128_encoding() {
+        // i32x4.add's real sub-opcode is 174 (0xAE) -- past the 1-byte
+        // LEB128 range, so it MUST take the 2-byte continuation encoding
+        // [0xAE, 0x01], exercising the same multi-byte path SIMD PR1a's
+        // own decoder test proved (see wasm-execution's CHANGELOG). eq's
+        // sub-opcode (0x37 = 55) fits in one byte, no continuation bit.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 v128) (result v128) (i32x4.add (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.eq (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0xAE, 0x01]), "i32x4.add: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x37]), "i32x4.eq: {:?}", code_of(&m, 1));
+    }
+
+    #[test]
+    fn i32x4_splat_emits_the_prefix_and_no_immediate() {
+        let m = parse_module(r#"(module (func (param i32) (result v128) (i32x4.splat (local.get 0))))"#).unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x11]), "{:?}", code_of(&m, 0));
+    }
+
+    #[test]
+    fn i32x4_extract_lane_folded_and_flat_lane_index_leads() {
+        let folded = parse_module(
+            r#"(module (func (result i32) (i32x4.extract_lane 2 (v128.const i32x4 10 20 30 40))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (result i32) v128.const i32x4 10 20 30 40 i32x4.extract_lane 2))"#,
+        )
+        .unwrap();
+        // sub-opcode 0x1B (27, single-byte LEB128) then the raw lane index.
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0x1B, 0x02]), "missing extract_lane lane=2: {code:?}");
+        }
+    }
+
+    #[test]
+    fn v128_const_unknown_shape_is_a_clear_error() {
+        let err = parse_module(r#"(module (func (drop (v128.const bogus 1 2 3 4))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
+    }
+
+    #[test]
+    fn v128_const_too_few_lanes_is_a_clear_error() {
+        let err = parse_module(r#"(module (func (drop (v128.const i32x4 1 2 3))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
     }
 }

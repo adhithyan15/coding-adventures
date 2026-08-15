@@ -1138,6 +1138,63 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 }
             }
 
+            // ── SIMD (v128) first slice, SIMD PR1b-2 -- see code/specs/
+            // W13-wasm-simd-v128-first-slice.md ────────────────────────
+            //
+            // Same two-byte-prefix shape as `0xFE` atomics above, but the
+            // sub-opcode is a LEB128 `u32` (not a raw byte) -- see
+            // `wasm_opcodes::SimdOpInfo::sub_opcode`'s own doc comment for
+            // why (`i32x4.add`'s real sub-opcode, 174, needs the 2-byte
+            // LEB128 continuation encoding). `v128.const`'s own 16-byte
+            // literal is decoded here only to advance `offset` past it
+            // correctly -- its actual byte VALUES don't affect the type
+            // stack, only its presence (pushing one `V128`) does.
+            0xFD => {
+                let (sub, size) = decode_unsigned(code, offset)
+                    .map_err(|e| ValidationError::Other(format!("bad 0xFD sub-opcode: {e}")))?;
+                offset += size;
+                let simd_op = wasm_opcodes::get_simd_op(sub as u32)
+                    .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: unknown SIMD sub-opcode {sub:#04x}")))?;
+                match simd_op.kind {
+                    wasm_opcodes::SimdOpKind::Const => {
+                        if offset + 16 > code.len() {
+                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated v128.const literal")));
+                        }
+                        offset += 16;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Splat => {
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Add => {
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Eq => {
+                        // WASM's SIMD comparison convention: the RESULT is
+                        // still a v128 (a per-lane boolean mask), not a
+                        // plain i32 -- see `SimdOpKind::Eq`'s own doc
+                        // comment in wasm-opcodes.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::ExtractLane => {
+                        // Lane-index immediate: a single raw byte, not a
+                        // LEB128 value -- see wasm-execution's decoder for
+                        // the same convention.
+                        if offset >= code.len() {
+                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated i32x4.extract_lane lane index")));
+                        }
+                        offset += 1;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                }
+            }
+
             // ── Conversion (incl. sign-extension, WASM03) ───────────────────
             0xA7..=0xC4 => {
                 let info = get_opcode(byte).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: unknown conversion opcode {byte:#x}")))?;
