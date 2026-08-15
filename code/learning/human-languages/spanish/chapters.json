@@ -5184,6 +5184,30 @@
           "ES-SEMANTIC-DURATION"
         ]
       }
+    },
+    {
+      "chapter": 270,
+      "title": "Making a Case --- Claim, Example, However, Although",
+      "label": "ch:argumentar",
+      "canDo": "I can state an opinion in Spanish, back it with an example, turn against an objection, and grant one before I turn it.",
+      "spineNodes": [
+        "SPINE-ARGUE-A-VIEW"
+      ],
+      "payoff": {
+        "lesson": "ES-C270-aunque",
+        "kind": "task",
+        "summary": "Complete ES-C270-aunque: run the four moves in order on one claim of your own.",
+        "assesses": [
+          "ES-LEX-EN-MI-OPINION",
+          "ES-SEMANTIC-CLAIM-MARKED",
+          "ES-LEX-POR-EJEMPLO",
+          "ES-SEMANTIC-EVIDENCE-MARKED",
+          "ES-LEX-SIN-EMBARGO",
+          "ES-SEMANTIC-CONCESSION-STRONG",
+          "ES-LEX-AUNQUE",
+          "ES-SEMANTIC-CONCESSION-LEADING"
+        ]
+      }
     }
   ]
 }

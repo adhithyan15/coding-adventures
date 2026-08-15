@@ -3873,6 +3873,11 @@
       "output": "spanish/book/chapters/ch269-experiencia.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 270,
+      "output": "spanish/book/chapters/ch270-argumentar.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
