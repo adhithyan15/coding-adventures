@@ -1085,7 +1085,6 @@ mod tests {
     /// parallelism. (Throughput *scaling* is measured separately on a CPU-bound
     /// benchmark — see WEB01a-2; an echo handler is latency-bound and would not
     /// show speedup here.)
-    #[cfg(not(target_os = "windows"))]
     #[test]
     fn sharded_http_server_serves_concurrent_clients_across_shards() {
         let worker_count = 4;
