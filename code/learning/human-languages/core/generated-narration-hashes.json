@@ -10914,6 +10914,24 @@
       "jsonHash": "fnv1a64:d264a6e35fff2604"
     },
     {
+      "language": "spanish",
+      "chapter": 273,
+      "sourceHash": "fnv1a64:3da742b28a088e33",
+      "lessonIds": [
+        "ES-C273-en-primer-lugar",
+        "ES-C273-ademas",
+        "ES-C273-por-lo-tanto",
+        "ES-C273-lo-cual",
+        "ES-C273-practice"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch273.txt",
+      "json": "spanish/narration/ch273.json",
+      "textHash": "fnv1a64:868802a69d6c322c",
+      "jsonHash": "fnv1a64:dd84b83fbf57fd14"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:6df1383fd4404bac",

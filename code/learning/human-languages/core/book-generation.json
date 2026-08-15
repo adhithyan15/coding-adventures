@@ -3888,6 +3888,11 @@
       "output": "spanish/book/chapters/ch272-entrelineas.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 273,
+      "output": "spanish/book/chapters/ch273-parrafo.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
