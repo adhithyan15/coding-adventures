@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 271,
+  "title": "Talking About Ideas --- Hedging From Doubt, and From Inference",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:26deb7f2af4a0174",
+  "lessons": [
+    {
+      "id": "ES-C271-quizas",
+      "sequence": 2740,
+      "title": "quizás — saying it without claiming it",
+      "headword": "quizás",
+      "romanization": "quizás",
+      "gloss": "maybe, perhaps",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b596f22e013fe1df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An argument needs one more thing: a way to put an idea forward while admitting you might be wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aunque — the concession that closed the last chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "en mi opinión — marking a claim as yours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ki-ZÁS, stress on the last syllable, and the accent says so. You will also see quizá, without the -s; both are standard. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quizás — \"maybe, perhaps.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is a fossilised question. Latin qui sapit — \"who knows?\" — said often enough that it stopped being a question and became a word meaning perhaps. The sapit is the same root as savoir, sapient and, at some distance, sage: knowing."
+            },
+            {
+              "kind": "speech",
+              "text": "English did the identical thing twice over. Perhaps is per + hap, \"by chance\"; maybe is may be. Every language seems to build its hedges by wearing down a phrase that once admitted ignorance out loud."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a hedge: it lowers your commitment without lowering your meaning. Es difícil claims. Quizás es difícil offers."
+            },
+            {
+              "kind": "speech",
+              "text": "Set beside what you already have, you now hold three settings on the same dial — en mi opinión marks a claim as yours, quizás marks it as uncertain, and a bare statement claims outright."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quizás — stress the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quizás* — stress the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a claim, then the same claim hedged",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a claim, then the same claim hedged]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Latin qui sapit asked (who knows?)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Latin *qui sapit* asked (*who knows?*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What question is hidden inside quizás? (Qui sapit — \"who knows?\") What does a hedge lower — your meaning, or your commitment? (Your commitment.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C271-supongo-que",
+      "sequence": 2750,
+      "title": "supongo que — the hedge that shows its reasoning",
+      "headword": "supongo que",
+      "romanization": "supongo que",
+      "gloss": "I suppose that",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d995c05e5d63526",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second hedge, and it is not the same as the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quizás — the hedge that admits uncertainty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "su-PON-go ke. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "supongo que — \"I suppose that.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart and it is beautifully literal: Latin sub- (\"under\") plus ponere (\"to place\"). To suppose is to place something underneath — to slide an assumption under an argument so the argument can stand on it."
+            },
+            {
+              "kind": "speech",
+              "text": "That ponere is everywhere in English once you see it: compose (place together), impose (place upon), depose, postpone, position. And supongo is exactly English suppose, arrived by the same road."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Quizás and supongo que hedge differently, and the difference is worth keeping."
+            },
+            {
+              "kind": "speech",
+              "text": "Quizás says: I do not know. Supongo que says: I have not been told, but it follows."
+            },
+            {
+              "kind": "speech",
+              "text": "The first admits ignorance; the second claims an inference. In an argument they do opposite work — one steps back from a claim, the other quietly offers a reason for it."
+            },
+            {
+              "kind": "speech",
+              "text": "With this the chapter's four moves are complete: name an abstract thing, name a whole idea, hedge from uncertainty, and hedge from inference."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "supongo que …, finishing it however you like",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *supongo que* …, finishing it however you like]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same idea with quizás instead, and hear what changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same idea with *quizás* instead, and hear what changed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three English words built on ponere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three English words built on *ponere*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sub- + ponere mean literally? (To place underneath.) Which hedge admits ignorance, and which claims an inference? (Quizás; supongo que.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C271-practice",
+      "sequence": 2760,
+      "title": "Three settings on one dial",
+      "headword": "three settings on one dial",
+      "romanization": "three settings on one dial",
+      "gloss": "bare claim, quizás, supongo que",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45043b25f3befac5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two hedges, and a bare statement between them. This is where you feel the difference rather than read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take one idea of your own — anything you could argue about — and say it three times."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bare claim. No hedge. Hear how much you have committed to.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bare claim. No hedge. Hear how much you have committed to.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same claim with quizás in front. You have not changed the idea; you have changed how far you will defend it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same claim with *quizás* in front. You have not changed the idea; you have changed how far you will defend it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same claim again with supongo que. Now you are not admitting ignorance — you are offering an inference, and inviting the listener to check your reasoning rather than your confidence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same claim again with *supongo que*. Now you are not admitting ignorance — you are offering an inference, and inviting the listener to check your reasoning rather than your confidence.]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three you would use with a stranger, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three you would use with a stranger, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one an argument is hardest to answer with, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one an argument is hardest to answer with, and why]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which hedge admits you do not know? (Quizás.) Which one claims a reason you have not been given? (Supongo que.) What did the Latin behind each one mean — \"who knows?\", and \"to place underneath\"?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -6318,6 +6318,17 @@
       "tex": "spanish/book/chapters/ch270-argumentar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 271,
+      "sourceHash": "fnv1a64:ffed1fda335497d9",
+      "lessonIds": [
+        "ES-C271-quizas",
+        "ES-C271-supongo-que",
+        "ES-C271-practice"
+      ],
+      "tex": "spanish/book/chapters/ch271-ideas.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

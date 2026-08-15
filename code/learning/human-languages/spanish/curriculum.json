@@ -3131,6 +3131,29 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-271-01",
+      "spine_node": "SPINE-DISCUSS-ABSTRACT",
+      "lessons": [
+        "ES-C271-quizas"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-271-02",
+      "spine_node": "SPINE-DISCUSS-ABSTRACT",
+      "lessons": [
+        "ES-C271-supongo-que",
+        "ES-C271-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-271-HEDGING"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3565,13 +3588,11 @@
       "relocates": {}
     },
     "SPINE-DISCUSS-ABSTRACT": {
-      "segments": [],
-      "omits": [
-        "ABSTRACT-NOUN",
-        "HEDGE-PROBABLY",
-        "HEDGE-SUPPOSE",
-        "NOMINALIZATION"
+      "segments": [
+        "ES-PATH-271-01",
+        "ES-PATH-271-02"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-INFER-IMPLICIT-MEANING": {
@@ -6577,6 +6598,17 @@
         "ES-C267-verdad-no",
         "ES-C267-negar-preguntar"
       ]
+    },
+    {
+      "id": "ES-EXT-271-HEDGING",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can state one idea three ways -- bare, hedged from doubt, and hedged from inference -- and say what each does to my commitment.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C271-practice"
+      ]
     }
   ],
   "conceptAliases": {
@@ -6603,6 +6635,12 @@
     ],
     "RELATIVE-CLAUSE": [
       "ES-GRAMMAR-RELATIVE-QUE"
+    ],
+    "ABSTRACT-NOUN": [
+      "ES-FRIEND-DAD"
+    ],
+    "NOMINALIZATION": [
+      "ES-GRAMMAR-LO-QUE"
     ]
   }
 }
