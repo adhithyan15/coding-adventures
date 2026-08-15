@@ -2,5 +2,5 @@
   "version": 1,
   "package": "elixir/chief-of-staff-channel-crypto",
   "capabilities": [],
-  "justification": "Pure deterministic message framing, hashing, signing, and authenticated encryption over caller-supplied bytes and injected identifiers, clocks, and keys."
+  "justification": "Pure message and grant framing, repository-owned cryptography, immutable receiver epoch state, and rotation over caller-supplied bytes and injected identifiers, clocks, randomness, and keys."
 }

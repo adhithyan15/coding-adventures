@@ -20,7 +20,9 @@ defmodule CodingAdventures.ChiefOfStaffChannelCrypto.MixProject do
     [
       {:coding_adventures_chacha20_poly1305, path: "../chacha20-poly1305"},
       {:coding_adventures_ed25519, path: "../ed25519"},
+      {:coding_adventures_hkdf, path: "../hkdf"},
       {:coding_adventures_sha256, path: "../sha256"},
+      {:coding_adventures_x25519, path: "../x25519"},
       {:jason, "~> 1.4"}
     ]
   end
