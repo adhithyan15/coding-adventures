@@ -134,7 +134,25 @@ suggests:**
 Doing (2) first is what this row is here to prevent. Related: HL12 §3.1 — size
 is not a constraint, and no rule may be relaxed to save pages.
 
-## HL-C162 — Kannada ledger position 24 (ಓ) has no host word
+## HL-C162 — CLOSED 2026-08-14. Kannada's ledger is 24 of 24
+
+The original diagnosis was wrong in an instructive way. It said no taught Kannada
+word contains ಓ. **ಓದು (*ōdu*, "to read") has been taught since chapter 33.**
+
+The generator writes 0 segments because its drizzle slots all sit in **chapters
+6–20**, and ಓದು arrives at 33 — the word exists, but it exists *after* every slot
+the generator will consider. So the position was not missing a word; it was
+missing a **slot late enough to use the word it already had**.
+
+Closed by authoring the segment by hand at chapter 34, immediately after ಓದು.
+R1 moved 0.3175 → 0.3177 against its 0.32 ceiling: one segment fits comfortably,
+which is consistent with the ~+0.0008-per-segment figure in HL-C167.
+
+**Follow-on, still open:** the generator's drizzle window should extend past
+chapter 20 so a late-taught word can host a late ledger position without hand
+authoring. That is the same window question HL-C167 raises from the other side.
+
+## HL-C162-ORIGINAL — superseded, kept for the record
 
 `author_recognition_segments.py kannada` writes **0 segments**: no chapter slot
 qualifies, because the drizzle rule requires the letter to appear in a word the

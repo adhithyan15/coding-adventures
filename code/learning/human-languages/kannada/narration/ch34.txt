@@ -1,8 +1,8 @@
 Kannada, chapter 34: Four Verbs Between People.
-4 lessons. All 4 can be done entirely by ear.
+5 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ತೆಗೆದುಕೊ (tegeduko) — "to take," in two verbs rather than one.
 
 Warm-up.
@@ -47,7 +47,7 @@ Wrap-up Recall.
 Say "I take it," then name the two verbs inside it. (Nānu tegedukoḷḷuttēne; tege, "to pull out," and koḷḷu, "to keep for oneself.") Which other verb of yours carries the same ending? (Arthamāḍikoḷḷuttēne.) Which sister matches Kannada on both roots, and which on only one? (Telugu on both; Tamil on the second, with its own eṭu in front.) And why is that mildly surprising? (The family tree puts Kannada with Tamil, not with Telugu — descent does not decide every word.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 ಕೇಳು (kēḷu) — one verb for "ask" and for "hear".
 
 Warm-up.
@@ -89,7 +89,7 @@ Wrap-up Recall.
 Give the two meanings of kēḷuttēne, and say what decides between them. (I ask and I hear; whatever stands beside the verb — a person or a sound.) Is the double job Kannada's own invention? (No — the root is reconstructed with both senses, and Tamil and Malayalam carry the pair too.) Which sister splits them, and what is the honest wording? (Telugu, vinu against aḍugu — it dropped the old word, since Gondi and Kui still have it.) Say "please ask." (Kēḷi.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ಸಹಾಯ ಮಾಡು (sahāya māḍu) — "to help," a noun and a verb.
 
 Warm-up.
@@ -131,7 +131,7 @@ Wrap-up Recall.
 Say "please help," then "I help." (Sahāya māḍi; nānu sahāya māḍuttēne.) What are the two pieces of sahāya, and what did they mean? (Saha, "with," and aya, "going" — "one who goes with.") Which piece of sahāya māḍu is Sanskrit and which is native, and what earlier word was layered the same way? (Sahāya Sanskrit, māḍu native; havāmāna, Persian plus Sanskrit.) Name Kannada's own native word for help. (ನೆರವು, neravu.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ನನಗೆ ಕನ್ನಡ ಇಷ್ಟ (nanage kannaḍa iṣṭa) — "I like Kannada," with no verb in it.
 
 Warm-up.
@@ -173,3 +173,42 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say "I like Kannada," and how many verbs it holds. (Nanage kannaḍa iṣṭa; none.) Name the three datives. (Nanage gottu, a fact; nanage kannaḍa iṣṭa, a taste; nanage bēku, a need.) Is the frame borrowed with the word? (No — inherited bēku uses it, answering vēṇṭum by the v becomes b law.) Which English word is iṣṭa's cousin? (Ask — and kēḷu is no relation.)
+
+
+Lesson 5 of 5.
+ಓ (ō) — one character, met inside a word you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಓ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ಪ — what sound does it carry?
+[pause 2 seconds]
+One character this time, and it is the last of the twenty-four this book drizzles in. It waited this long for a reason worth knowing.
+
+Script you'll notice: ಓ.
+ಓ — ō.
+It is an independent vowel: the shape a vowel takes when it stands at the start of a word with no consonant in front of it. You have already met its other half, the vowel sign ೋ, which is what the same sound looks like when it rides on a consonant.
+So the same vowel has two shapes, and which one you see tells you where in the word you are:
+ಓ (ō) — standing alone, at the beginning.
+ೋ — attached, riding on the consonant before it.
+The word you already say that opens with it:
+ಓದು ōdu — to read, to study.
+Why this one came last. Every other character in this sequence was introduced once a word containing it was already in your mouth. ಓ (ō) had to wait until ಓದು was taught, because until then there was nothing to find it inside — and a character shown without a word to hold it is a character you will not keep.
+
+Writing: ಓ — copy what you see.
+Put your pen on ಓ (ō) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these two, and say which one begins with the independent vowel]
+[pause 8 seconds for the answer]
+ಓದು, ಪರವಾಗಿಲ್ಲ.
+[once you have stopped driving — trace: ಓ three times, saying ō as you finish each one]
+[your turn — look: at ಓ (ō) and ೋ side by side, and say which one stands alone]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ಓ? What sound does it carry? (ō.) What is the difference between ಓ and ೋ? (One stands alone at the start of a word; the other rides on a consonant.)
