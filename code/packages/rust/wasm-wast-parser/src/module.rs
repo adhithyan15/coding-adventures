@@ -1355,16 +1355,19 @@ fn encode_stream_instr(
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(1)
         }
-        "call" => {
+        "call" | "return_call" => {
             let idx = resolve_idx(&icx.module.func_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "func")?;
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(1)
         }
-        "call_indirect" => {
+        "call_indirect" | "return_call_indirect" => {
             // Flat form: `call_indirect (type $t)` -- the type reference
             // (and any `(param...)`/`(result...)`) trails as List elements
             // in the SAME flat sequence, not nested inside this atom.
+            // `return_call_indirect` (WASM16) shares this exact shape --
+            // same immediates (typeidx, tableidx), only the opcode byte
+            // itself differs, already selected via `info.opcode`.
             let sig_end = following.iter().position(|a| !is_type_or_param_or_result(a)).unwrap_or(following.len());
             let sig_fields = &following[..sig_end];
             let type_form = sig_fields.iter().find(|a| a.is_keyword_list("type"));
@@ -1646,7 +1649,7 @@ fn encode_flat_instr(
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(())
         }
-        "call" => {
+        "call" | "return_call" => {
             let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
             encode_instr_list(&args[1..], icx, out)?;
             out.push(info.opcode);
@@ -1654,8 +1657,10 @@ fn encode_flat_instr(
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(())
         }
-        "call_indirect" => {
+        "call_indirect" | "return_call_indirect" => {
             // `(call_indirect (type $t) (param...) (result...) operand-exprs...)`
+            // `return_call_indirect` (WASM16) shares this exact shape --
+            // same immediates, only the opcode byte differs.
             let type_form = args.iter().find(|a| a.is_keyword_list("type"));
             let operand_start = args.iter().position(|a| !is_type_or_param_or_result(a)).unwrap_or(args.len());
             encode_instr_list(&args[operand_start..], icx, out)?;
@@ -2844,6 +2849,59 @@ mod tests {
         )
         .unwrap();
         assert_eq!(code_of(&m, 1), &[0x41, 0x03, 0x41, 0x04, 0x10, 0x00, 0x0B]);
+    }
+
+    // ── WASM16: tail calls ────────────────────────────────────────────────
+
+    /// Folded `return_call` -- same "index first, argument operands
+    /// after" shape as `call`, just opcode 0x12 instead of 0x10.
+    #[test]
+    fn folded_return_call_encodes_index_first_then_argument_operands() {
+        let m = parse_module(
+            "(module (func $add (param i32 i32) (result i32) (i32.add (local.get 0) (local.get 1))) \
+              (func (result i32) (return_call $add (i32.const 3) (i32.const 4))))",
+        )
+        .unwrap();
+        // i32.const 3 ; i32.const 4 ; return_call 0 ; end
+        assert_eq!(code_of(&m, 1), &[0x41, 0x03, 0x41, 0x04, 0x12, 0x00, 0x0B]);
+    }
+
+    /// Flat (non-folded) `return_call`, distinct code path from the folded
+    /// case above.
+    #[test]
+    fn flat_return_call_with_preceding_argument_operands() {
+        let m = parse_module(
+            "(module (func $add (param i32 i32) (result i32) local.get 0 local.get 1 i32.add) \
+              (func (result i32) i32.const 3 i32.const 4 return_call $add))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 1), &[0x41, 0x03, 0x41, 0x04, 0x12, 0x00, 0x0B]);
+    }
+
+    /// Folded `return_call_indirect` with an explicit `(type $t)` --
+    /// same shape as `call_indirect`, opcode 0x13 instead of 0x11.
+    #[test]
+    fn folded_return_call_indirect_encodes_type_and_table_index() {
+        let m = parse_module(
+            "(module (type $t (func (param i32) (result i32))) \
+              (table 1 funcref) \
+              (func (result i32) (return_call_indirect (type $t) (i32.const 5) (i32.const 0))))",
+        )
+        .unwrap();
+        // i32.const 5 ; i32.const 0 ; return_call_indirect type=0 table=0 ; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x05, 0x41, 0x00, 0x13, 0x00, 0x00, 0x0B]);
+    }
+
+    /// Flat (non-folded) `return_call_indirect`.
+    #[test]
+    fn flat_return_call_indirect_with_preceding_argument_operands() {
+        let m = parse_module(
+            "(module (type $t (func (param i32) (result i32))) \
+              (table 1 funcref) \
+              (func (result i32) i32.const 5 i32.const 0 return_call_indirect (type $t)))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x41, 0x05, 0x41, 0x00, 0x13, 0x00, 0x00, 0x0B]);
     }
 
     /// Flat, nested nested `block`/`loop` -- proves the stream-form

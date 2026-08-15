@@ -139,6 +139,22 @@ fn valid_call_and_call_indirect() {
 }
 
 #[test]
+fn valid_return_call_and_return_call_indirect() {
+    // WASM16: same param-popping shape as call/call_indirect, but the
+    // callee's result type must match the CALLER's own declared result
+    // type exactly (nothing runs after a tail call).
+    assert_valid(
+        "(module
+           (type $t (func (param i32) (result i32)))
+           (func $callee (param i32) (result i32) (local.get 0))
+           (table 1 funcref)
+           (elem (i32.const 0) $callee)
+           (func (result i32) (return_call $callee (i32.const 1)))
+           (func (result i32) (return_call_indirect (type $t) (i32.const 1) (i32.const 0))))",
+    );
+}
+
+#[test]
 fn valid_drop_and_select() {
     assert_valid(
         "(module (func (result i32)
@@ -450,6 +466,44 @@ fn invalid_call_argument_type_mismatch() {
         "(module
            (func $callee (param i32) (result i32) (local.get 0))
            (func (drop (call $callee (f64.const 1.0)))))",
+    );
+}
+
+#[test]
+fn invalid_return_call_to_out_of_range_function_index() {
+    assert_invalid("(module (func (result i32) (return_call 99)))");
+}
+
+#[test]
+fn invalid_return_call_argument_type_mismatch() {
+    assert_invalid(
+        "(module
+           (func $callee (param i32) (result i32) (local.get 0))
+           (func (result i32) (return_call $callee (f64.const 1.0))))",
+    );
+}
+
+#[test]
+fn invalid_return_call_result_type_mismatches_caller() {
+    // The callee returns i32, but the caller itself declares i64 --
+    // illegal even though a plain `call` immediately followed by
+    // `return` would need real result-value conversion to fail here.
+    assert_invalid(
+        "(module
+           (func $callee (result i32) (i32.const 1))
+           (func (result i64) (return_call $callee)))",
+    );
+}
+
+#[test]
+fn invalid_return_call_indirect_result_type_mismatches_caller() {
+    assert_invalid(
+        "(module
+           (type $t (func (result i32)))
+           (table 1 funcref)
+           (elem (i32.const 0) $callee)
+           (func $callee (result i32) (i32.const 1))
+           (func (result i64) (return_call_indirect (type $t) (i32.const 0))))",
     );
 }
 

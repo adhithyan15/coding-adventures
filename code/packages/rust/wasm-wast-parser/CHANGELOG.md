@@ -1,5 +1,29 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.10 — 2026-08-15 — return_call/return_call_indirect (WASM16)
+
+### Added
+
+- Full grammar support (folded + flat forms) for `return_call`/
+  `return_call_indirect`, reusing `call`/`call_indirect`'s exact
+  immediate-decode paths -- no new immediate shape to parse, just the
+  new opcode byte. 4 new tests. See `code/specs/
+  W11-wasm-tail-calls.md`.
+
+### Investigated, not fixed this release
+
+- The real, pinned-commit `return_call.wast`/`return_call_indirect.wast`
+  each fail to parse on one narrow `(func $f (result (ref null $t))
+  (ref.null $t))` declaration -- a concrete typed nullable function
+  reference (function-references proposal grammar this crate doesn't
+  support). Considered a minimal erasure-to-`Funcref` fix; rejected it
+  after finding `return_call.wast`'s own `type-ref-vs-funcref`
+  `assert_invalid` case specifically tests that a concrete `(ref null
+  $t)` and a bare `funcref` result type are NOT interchangeable under
+  real subtyping -- an erasure fix would make that case falsely `Pass`
+  for the wrong reason. Needs real typed-function-reference support
+  first; not vendored this release, tracked as a follow-up.
+
 ## 0.1.9 — 2026-08-15 — atomic instructions + `shared` memory keyword (WASM18)
 
 ### Added

@@ -855,6 +855,54 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
                 push_vals(&mut stack, &callee_type.results);
             }
+            0x12 => {
+                // return_call (WASM16): same immediate as `call`, but
+                // nothing runs after a tail call -- the callee's results
+                // become the CURRENT FUNCTION's own results directly, so
+                // they must match its declared result types exactly (not
+                // merely be pushable for further use), and everything
+                // textually after this is dead code, the same handling
+                // `return` (0x0F) already has.
+                let (callee, size) = decode_idx(code, offset)?;
+                offset += size;
+                let callee_type = ctx
+                    .func_types
+                    .get(callee as usize)
+                    .ok_or_else(|| ValidationError::FuncIndexOutOfBounds(format!("function #{func_idx}: return_call references function index {callee}, but only {} functions exist", ctx.func_types.len())))?;
+                let function_results = &control_stack
+                    .first()
+                    .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call with no open block")))?
+                    .end_types;
+                if callee_type.results != *function_results {
+                    err!("return_call to function #{callee} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
+                }
+                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                mark_unreachable(&mut stack, frame_mut!());
+            }
+            0x13 => {
+                // return_call_indirect (WASM16): same immediates as
+                // `call_indirect` (typeidx, tableidx), same tail-call
+                // result-type-must-match-exactly + dead-code-after rule
+                // as `return_call` above.
+                let (type_idx, sz1) = decode_idx(code, offset)?;
+                let (_table_idx, sz2) = decode_idx(code, offset + sz1)?;
+                offset += sz1 + sz2;
+                let callee_type = ctx
+                    .module
+                    .types
+                    .get(type_idx as usize)
+                    .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("function #{func_idx}: return_call_indirect references type index {type_idx}, but only {} types exist", ctx.module.types.len())))?;
+                let function_results = &control_stack
+                    .first()
+                    .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call_indirect with no open block")))?
+                    .end_types;
+                if callee_type.results != *function_results {
+                    err!("return_call_indirect to type #{type_idx} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
+                }
+                pop_expect(&mut stack, frame!(), ValueType::I32)?; // table index
+                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                mark_unreachable(&mut stack, frame_mut!());
+            }
 
             // ── Parametric ───────────────────────────────────────────────────
             0x1A => {

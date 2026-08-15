@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.4] - 2026-08-15 - tail-call opcodes: return_call/return_call_indirect (WASM16)
+
+### Added
+
+- `return_call` (`0x12`) and `return_call_indirect` (`0x13`) -- confirmed
+  free/unclaimed sub-opcodes, same immediate shapes as `call`/
+  `call_indirect` respectively (a `funcidx`, or a `typeidx`+`tableidx`
+  pair). 1 new unit test. See `code/specs/W11-wasm-tail-calls.md`.
+
 ## [0.2.3] - 2026-08-15 - atomic memory opcode table, 0xFE prefix (WASM18)
 
 ### Added

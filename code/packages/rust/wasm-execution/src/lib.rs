@@ -1365,6 +1365,16 @@ pub struct WasmExecutionContext {
     pub gc_state: gc::GcState,
     /// Current WASM call-nesting depth — see [`MAX_CALL_DEPTH`].
     pub call_depth: usize,
+    /// Set by a `return_call`/`return_call_indirect` handler (WASM16) to
+    /// signal `call_function_inner`'s outer loop that the CURRENT frame
+    /// should be replaced with a new function, not that a new frame
+    /// should be pushed. `(func_index, args)` — args already popped from
+    /// the VM stack by the handler, in the same shape
+    /// `call_function_inner` would otherwise pop itself for an ordinary
+    /// call. Checked once per outer-loop iteration, right after the
+    /// inner instruction-dispatch loop halts; `None` in every other case
+    /// (an ordinary `return`, or falling off the end of the function).
+    pub pending_tail_call: Option<(usize, Vec<WasmValue>)>,
 }
 
 /// `call_function`'s own call-stack recursion ceiling. WASM's `call`/
@@ -3641,6 +3651,78 @@ fn register_control(vm: &mut GenericVM) {
         call_function(vm, ctx, func_index as usize)?;
         Ok(None)
     });
+
+    // return_call (0x12, WASM16): tail call. Pops the same args an
+    // ordinary `call` would, but does NOT recurse -- signals
+    // `call_function_inner`'s outer loop to replace the CURRENT frame
+    // instead of pushing a new one (no `SavedFrame`, no `call_depth`
+    // increment: this is what makes an unbounded tail-call chain run in
+    // genuinely constant Rust-stack space). See `pending_tail_call`'s
+    // own doc comment.
+    vm.register_context_opcode(0x12, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let func_index = operand_int(instr) as usize;
+        let func_type = ctx
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| VMError::GenericError(format!("undefined function {func_index}")))?
+            .clone();
+        let mut args = Vec::with_capacity(func_type.params.len());
+        for _ in 0..func_type.params.len() {
+            args.push(pop_wasm(vm)?);
+        }
+        args.reverse();
+        ctx.pending_tail_call = Some((func_index, args));
+        vm.halted = true;
+        Ok(None)
+    });
+
+    // return_call_indirect (0x13, WASM16): same table-lookup + type
+    // check as call_indirect, then the same tail-call signal as
+    // return_call above.
+    vm.register_context_opcode(0x13, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let type_idx = operand_int(instr) as usize;
+        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        let table = get_table(ctx, 0)?;
+        let func_index = table
+            .get(elem_index as u32)
+            .map_err(VMError::from)?
+            .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
+
+        let func_index = func_index as usize;
+        // Security review (WASM16): a table entry -- unlike the
+        // instruction's own `funcidx` immediate `return_call`'s (0x12)
+        // handler bounds-checks via `.get()` -- is DATA, not a static
+        // part of the bytecode a validator necessarily already checked
+        // (this crate's own tests construct engines that skip
+        // `wasm-validator` entirely, e.g. `wasm16_tail_calls.rs`'s
+        // `engine_from_wat`). `.get()` here, not `call_indirect`'s own
+        // adjacent `&ctx.func_types[func_index as usize]` (unchanged,
+        // pre-existing, only reached when a type section is set) --
+        // this call site is unconditional, so it must never panic on an
+        // out-of-range table entry.
+        let func_type = ctx
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| VMError::GenericError("indirect call: table entry references an undefined function".into()))?
+            .clone();
+
+        if let Some(expected) = ctx.types.get(type_idx) {
+            if expected.params != func_type.params || expected.results != func_type.results {
+                return Err(VMError::GenericError("indirect call type mismatch".into()));
+            }
+        }
+
+        let mut args = Vec::with_capacity(func_type.params.len());
+        for _ in 0..func_type.params.len() {
+            args.push(pop_wasm(vm)?);
+        }
+        args.reverse();
+        ctx.pending_tail_call = Some((func_index, args));
+        vm.halted = true;
+        Ok(None)
+    });
 }
 
 /// Execute a function call within the WASM execution context.
@@ -3673,146 +3755,215 @@ fn call_function_inner(
     ctx: &mut WasmExecutionContext,
     func_index: usize,
 ) -> VMResult<()> {
-    // GC checkpoint (W04): every call/call_indirect (nested or recursive)
-    // routes through this one shared helper, so this single call site is the
-    // "safepoint at calls" chokepoint for both of this crate's independent
-    // dispatch loops — see gc::maybe_collect.
-    gc::maybe_collect(vm, ctx);
+    // Captured ONCE, before any tail-call transition: where this ENTIRE
+    // `call_function_inner` invocation should eventually hand control
+    // back to, once it's completely done (whether that's after zero,
+    // one, or an unbounded chain of `return_call`/`return_call_indirect`
+    // transitions -- see the WASM16 loop below). A tail call replaces
+    // WHICH function is currently executing; it never changes where the
+    // whole invocation ultimately returns to, so this must not be
+    // recomputed from `vm.pc` on a later iteration (by then `vm.pc` has
+    // been overwritten to point into whichever callee is currently
+    // running).
+    let saved_pc = vm.pc;
 
-    let func_type = ctx
-        .func_types
-        .get(func_index)
-        .ok_or_else(|| VMError::GenericError(format!("undefined function {}", func_index)))?
-        .clone();
+    // Whether THIS invocation pushed a `SavedFrame` -- distinct from
+    // whether `ctx.saved_frames` is non-empty, which reflects every
+    // OTHER still-in-flight nested call too. Only ever set once, on the
+    // first iteration that turns out to be a module-defined function
+    // (never for a pure host-function call, matching the pre-WASM16
+    // behavior exactly): guards the "restore caller state" step below
+    // so a host function reached via a tail call doesn't wrongly pop an
+    // ENCLOSING caller's frame that doesn't belong to this invocation.
+    let mut frame_pushed = false;
 
-    // Pop arguments.
-    let mut args = Vec::new();
-    for _ in 0..func_type.params.len() {
-        args.push(pop_wasm(vm)?);
-    }
-    args.reverse();
+    let mut current_func_index = func_index;
+    // `None` on the first iteration (pop args from the VM stack, same
+    // as always); `Some` after a `return_call`/`return_call_indirect`
+    // transition -- that handler already popped and prepared them (see
+    // `WasmExecutionContext::pending_tail_call`'s own doc comment).
+    let mut pending_args: Option<Vec<WasmValue>> = None;
 
-    // Check for host function.
-    if let Some(Some(host_func)) = ctx.host_functions.get(func_index) {
-        let results = host_func
-            .call(&args, ctx.memory.map(|ptr| unsafe { &mut *ptr }))
-            .map_err(VMError::from)?;
-        for r in results {
-            push_wasm(vm, r);
+    // WASM16: this loop is what makes an unbounded `return_call` chain
+    // run in genuinely constant Rust-stack space -- a tail call
+    // `continue`s the SAME loop iteration inside the SAME Rust stack
+    // frame, never recursing through `call_function`/`call_function_inner`
+    // again (that's `call`/`call_indirect`'s job, and `MAX_CALL_DEPTH`
+    // still guards exactly that path, untouched by this change).
+    let return_arity = loop {
+        // GC checkpoint (W04): every call/call_indirect/return_call
+        // (nested, recursive, or a tail-call loop iteration) routes
+        // through this one shared helper, so this single call site is
+        // the "safepoint at calls" chokepoint for both of this crate's
+        // independent dispatch loops — see gc::maybe_collect.
+        gc::maybe_collect(vm, ctx);
+
+        let func_type = ctx
+            .func_types
+            .get(current_func_index)
+            .ok_or_else(|| VMError::GenericError(format!("undefined function {}", current_func_index)))?
+            .clone();
+
+        // Pop arguments.
+        let args = match pending_args.take() {
+            Some(args) => args,
+            None => {
+                let mut args = Vec::new();
+                for _ in 0..func_type.params.len() {
+                    args.push(pop_wasm(vm)?);
+                }
+                args.reverse();
+                args
+            }
+        };
+
+        // Check for host function. A tail call landing on a host import
+        // is still a leaf call (no further WASM frames to run), so it's
+        // handled the same way an ordinary call to a host function
+        // always has been: invoke it, push its results, and fall
+        // through to the shared "restore caller state" tail below --
+        // `frame_pushed` (false unless an EARLIER iteration already
+        // pushed one) makes that tail behave exactly like the original
+        // single-pass `vm.advance_pc()` shortcut when this is reached
+        // on the very first iteration.
+        if let Some(Some(host_func)) = ctx.host_functions.get(current_func_index) {
+            let results = host_func
+                .call(&args, ctx.memory.map(|ptr| unsafe { &mut *ptr }))
+                .map_err(VMError::from)?;
+            for r in results {
+                push_wasm(vm, r);
+            }
+            break func_type.results.len();
         }
-        vm.advance_pc();
-        return Ok(());
-    }
 
-    // Module-defined function.
-    let body = ctx
-        .func_bodies
-        .get(func_index)
-        .and_then(|b| b.as_ref())
-        .ok_or_else(|| VMError::GenericError(format!("no body for function {}", func_index)))?
-        .clone();
+        // Module-defined function.
+        let body = ctx
+            .func_bodies
+            .get(current_func_index)
+            .and_then(|b| b.as_ref())
+            .ok_or_else(|| VMError::GenericError(format!("no body for function {}", current_func_index)))?
+            .clone();
 
-    // Save caller state (including br_table targets so the callee can
-    // install its own without clobbering the caller's dispatch table).
-    ctx.saved_frames.push(SavedFrame {
-        locals: ctx.typed_locals.clone(),
-        label_stack: ctx.label_stack.clone(),
-        stack_height: vm.typed_stack.len(),
-        control_flow_map: ctx.control_flow_map.clone(),
-        return_pc: vm.pc + 1,
-        return_arity: func_type.results.len(),
-        br_table_targets: std::mem::take(&mut ctx.br_table_targets),
-        gc_ops: std::mem::take(&mut ctx.gc_ops),
-    });
+        // Save caller state (including br_table targets so the callee can
+        // install its own without clobbering the caller's dispatch
+        // table) -- but only ONCE per invocation: a tail-call transition
+        // reuses the CURRENT frame, it doesn't grow the logical call
+        // stack, so nothing new gets pushed here on iteration 2+.
+        if !frame_pushed {
+            ctx.saved_frames.push(SavedFrame {
+                locals: ctx.typed_locals.clone(),
+                label_stack: ctx.label_stack.clone(),
+                stack_height: vm.typed_stack.len(),
+                control_flow_map: ctx.control_flow_map.clone(),
+                return_pc: saved_pc + 1,
+                return_arity: func_type.results.len(),
+                br_table_targets: std::mem::take(&mut ctx.br_table_targets),
+                gc_ops: std::mem::take(&mut ctx.gc_ops),
+            });
+            frame_pushed = true;
+        }
 
-    // Initialize callee locals.
-    let mut locals: Vec<WasmValue> = args;
-    for t in &body.locals {
-        locals.push(WasmValue::default_for(*t));
-    }
-    ctx.typed_locals = locals;
-    ctx.label_stack = Vec::new();
-    ctx.returned = false;
+        // Initialize callee locals.
+        let mut locals: Vec<WasmValue> = args;
+        for t in &body.locals {
+            locals.push(WasmValue::default_for(*t));
+        }
+        ctx.typed_locals = locals;
+        ctx.label_stack = Vec::new();
+        ctx.returned = false;
 
-    // Decode and build control flow map for callee.
-    let decoded = decode_function_body(&body);
-    ctx.control_flow_map = build_control_flow_map(&decoded);
+        // Decode and build control flow map for callee.
+        let decoded = decode_function_body(&body);
+        ctx.control_flow_map = build_control_flow_map(&decoded);
 
-    // Convert to VM instructions, simultaneously building the callee's
-    // per-function side-tables (br_table targets + WasmGC ops).  Each complex
-    // instruction stores its index into the relevant Vec as its Operand::Index.
-    let mut callee_br_table_targets: Vec<Vec<u32>> = Vec::new();
-    let mut callee_gc_ops: Vec<GcOp> = Vec::new();
-    let mut vm_instructions: Vec<Instruction> = Vec::new();
-    for d in &decoded {
-        let operand =
-            convert_operand(&d.operand, &mut callee_br_table_targets, &mut callee_gc_ops);
-        vm_instructions.push(Instruction {
-            opcode: d.opcode,
-            operand,
+        // Convert to VM instructions, simultaneously building the callee's
+        // per-function side-tables (br_table targets + WasmGC ops).  Each complex
+        // instruction stores its index into the relevant Vec as its Operand::Index.
+        let mut callee_br_table_targets: Vec<Vec<u32>> = Vec::new();
+        let mut callee_gc_ops: Vec<GcOp> = Vec::new();
+        let mut vm_instructions: Vec<Instruction> = Vec::new();
+        for d in &decoded {
+            let operand =
+                convert_operand(&d.operand, &mut callee_br_table_targets, &mut callee_gc_ops);
+            vm_instructions.push(Instruction {
+                opcode: d.opcode,
+                operand,
+            });
+        }
+        // Install the callee's side-tables; the caller's were saved above.  The GC
+        // *heap* and struct field counts are module-global, so they are left alone.
+        ctx.br_table_targets = callee_br_table_targets;
+        ctx.gc_ops = callee_gc_ops;
+
+        // A WASM function body is itself an implicit outer `block` whose label is
+        // the function's own end (spec: "execution of an instruction sequence
+        // behaves as if it was wrapped in a block"). Without this, `br N`/`br_if
+        // N`/`br_table` at a depth that walks all the way out of every *explicit*
+        // block has nothing left on `label_stack` to resolve against and
+        // `execute_branch` reports a spurious "branch target out of range" —
+        // even though a bare `(br 0)` at function-top-level (no enclosing block
+        // at all) is completely ordinary, spec-legal WASM, equivalent to
+        // `return`. Pushing this label first, with `target_pc` one past the
+        // callee's last instruction, makes that walk-all-the-way-out branch land
+        // exactly where the function naturally ends: `execute_branch` pops the
+        // function's own result arity, truncates the stack to the height it had
+        // on entry, and jumps past the last instruction, so the `while` loop
+        // below exits the same way it would on an ordinary fall-through return.
+        ctx.label_stack.push(Label {
+            arity: func_type.results.len(),
+            param_arity: func_type.params.len(),
+            target_pc: vm_instructions.len(),
+            stack_height: vm.typed_stack.len(),
+            is_loop: false,
         });
-    }
-    // Install the callee's side-tables; the caller's were saved above.  The GC
-    // *heap* and struct field counts are module-global, so they are left alone.
-    ctx.br_table_targets = callee_br_table_targets;
-    ctx.gc_ops = callee_gc_ops;
 
-    // A WASM function body is itself an implicit outer `block` whose label is
-    // the function's own end (spec: "execution of an instruction sequence
-    // behaves as if it was wrapped in a block"). Without this, `br N`/`br_if
-    // N`/`br_table` at a depth that walks all the way out of every *explicit*
-    // block has nothing left on `label_stack` to resolve against and
-    // `execute_branch` reports a spurious "branch target out of range" —
-    // even though a bare `(br 0)` at function-top-level (no enclosing block
-    // at all) is completely ordinary, spec-legal WASM, equivalent to
-    // `return`. Pushing this label first, with `target_pc` one past the
-    // callee's last instruction, makes that walk-all-the-way-out branch land
-    // exactly where the function naturally ends: `execute_branch` pops the
-    // function's own result arity, truncates the stack to the height it had
-    // on entry, and jumps past the last instruction, so the `while` loop
-    // below exits the same way it would on an ordinary fall-through return.
-    ctx.label_stack.push(Label {
-        arity: func_type.results.len(),
-        param_arity: func_type.params.len(),
-        target_pc: vm_instructions.len(),
-        stack_height: vm.typed_stack.len(),
-        is_loop: false,
-    });
+        // Set up callee code and jump to start.
+        // We need to use a recursive execution approach. Execute the callee inline.
+        vm.halted = false;
 
-    // Set up callee code and jump to start.
-    // We need to use a recursive execution approach. Execute the callee inline.
-    vm.halted = false;
+        let callee_code = CodeObject {
+            instructions: vm_instructions,
+            constants: vec![],
+            names: vec![],
+        };
 
-    let callee_code = CodeObject {
-        instructions: vm_instructions,
-        constants: vec![],
-        names: vec![],
+        vm.pc = 0;
+
+        // Execute callee with the same context.
+        while !vm.halted && vm.pc < callee_code.instructions.len() {
+            let instr = callee_code.instructions[vm.pc].clone();
+            let pc_before = vm.pc;
+
+            if let Some(handler) = vm.context_handlers.get(&instr.opcode).copied() {
+                handler(vm, &instr, &callee_code, ctx)?;
+            } else {
+                return Err(VMError::InvalidOpcode(format!(
+                    "no handler for opcode 0x{:02X}",
+                    instr.opcode
+                )));
+            }
+
+            // Check for nested calls that might have changed things
+            let _ = pc_before;
+        }
+
+        // WASM16: did the inner loop halt because of a real
+        // `return_call`/`return_call_indirect`, not an ordinary
+        // `return`/fall-through? If so, don't collect return values or
+        // restore caller state yet -- swap in the new function and loop
+        // again, still inside this same Rust stack frame.
+        if let Some((next_func_index, next_args)) = ctx.pending_tail_call.take() {
+            current_func_index = next_func_index;
+            pending_args = Some(next_args);
+            continue;
+        }
+
+        break func_type.results.len();
     };
 
-    // Save current PC and execute callee.
-    let saved_pc = vm.pc;
-    vm.pc = 0;
-
-    // Execute callee with the same context.
-    while !vm.halted && vm.pc < callee_code.instructions.len() {
-        let instr = callee_code.instructions[vm.pc].clone();
-        let pc_before = vm.pc;
-
-        if let Some(handler) = vm.context_handlers.get(&instr.opcode).copied() {
-            handler(vm, &instr, &callee_code, ctx)?;
-        } else {
-            return Err(VMError::InvalidOpcode(format!(
-                "no handler for opcode 0x{:02X}",
-                instr.opcode
-            )));
-        }
-
-        // Check for nested calls that might have changed things
-        let _ = pc_before;
-    }
-
-    // Collect return values.
-    let return_arity = func_type.results.len();
+    // Collect return values (from whichever function FINALLY completed
+    // -- the last one in the tail-call chain, or the only one if there
+    // was no tail call at all).
     let mut return_values = Vec::new();
     for _ in 0..return_arity {
         return_values.push(pop_wasm(vm)?);
@@ -3820,21 +3971,31 @@ fn call_function_inner(
     return_values.reverse();
 
     // Restore caller state.
-    if let Some(frame) = ctx.saved_frames.pop() {
-        ctx.typed_locals = frame.locals;
-        ctx.label_stack = frame.label_stack;
-        ctx.control_flow_map = frame.control_flow_map;
-        ctx.br_table_targets = frame.br_table_targets;
-        ctx.gc_ops = frame.gc_ops;
+    if frame_pushed {
+        if let Some(frame) = ctx.saved_frames.pop() {
+            ctx.typed_locals = frame.locals;
+            ctx.label_stack = frame.label_stack;
+            ctx.control_flow_map = frame.control_flow_map;
+            ctx.br_table_targets = frame.br_table_targets;
+            ctx.gc_ops = frame.gc_ops;
 
-        // Truncate stack to caller's height.
-        while vm.typed_stack.len() > frame.stack_height {
-            let _ = vm.pop_typed();
+            // Truncate stack to caller's height.
+            while vm.typed_stack.len() > frame.stack_height {
+                let _ = vm.pop_typed();
+            }
+
+            vm.pc = frame.return_pc;
+        } else {
+            vm.pc = saved_pc + 1;
         }
-
-        vm.pc = frame.return_pc;
         vm.halted = false;
     } else {
+        // Never pushed a frame -- this invocation never ran a
+        // module-defined function at all (a pure host-function call,
+        // whether reached on the first iteration or via a tail call
+        // straight into an import). Matches the pre-WASM16 code's own
+        // `vm.advance_pc()` shortcut exactly (`saved_pc` is `vm.pc` as
+        // captured at entry, before any mutation).
         vm.pc = saved_pc + 1;
         vm.halted = false;
     }
@@ -4003,62 +4164,30 @@ impl WasmExecutionEngine {
         func_index: usize,
         args: &[WasmValue],
     ) -> Result<Vec<WasmValue>, TrapError> {
-        let func_type = self
+        let initial_func_type = self
             .func_types
             .get(func_index)
             .ok_or_else(|| TrapError::new(format!("undefined function index {}", func_index)))?;
 
-        if args.len() != func_type.params.len() {
+        if args.len() != initial_func_type.params.len() {
             return Err(TrapError::new(format!(
                 "function {} expects {} arguments, got {}",
                 func_index,
-                func_type.params.len(),
+                initial_func_type.params.len(),
                 args.len()
             )));
         }
 
-        // Check for host function.
+        // Check for host function -- unchanged fast path for calling a
+        // host-imported function directly; no WASM frame or tail-call
+        // machinery is needed at all here.
         if let Some(Some(host_func)) = self.host_functions.get(func_index) {
             return host_func.call(args, self.memory.as_deref_mut());
         }
 
-        // Module-defined function.
-        let body = self
-            .func_bodies
-            .get(func_index)
-            .and_then(|b| b.as_ref())
-            .ok_or_else(|| TrapError::new(format!("no body for function {}", func_index)))?
-            .clone();
-
-        let result_count = func_type.results.len();
-
-        // Decode the function body.
-        let decoded = decode_function_body(&body);
-        let control_flow_map = build_control_flow_map(&decoded);
-
-        // Convert to VM instructions, building the top-level per-function
-        // side-tables (br_table targets + WasmGC ops) in lockstep.  Each complex
-        // instruction stores its index into the relevant Vec as its
-        // Operand::Index.  Nested calls save/restore these on the saved-frame
-        // stack so callee and caller don't collide.
-        let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
-        let mut gc_ops: Vec<GcOp> = Vec::new();
-        let mut vm_instructions: Vec<Instruction> = Vec::new();
-        for d in &decoded {
-            let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops);
-            vm_instructions.push(Instruction {
-                opcode: d.opcode,
-                operand,
-            });
-        }
-
-        // Initialize locals.
-        let mut typed_locals: Vec<WasmValue> = args.to_vec();
-        for t in &body.locals {
-            typed_locals.push(WasmValue::default_for(*t));
-        }
-
-        // Build raw pointers for the context.
+        // Build raw pointers for the context -- shared VM-level state,
+        // computed once regardless of how many WASM16 tail-call
+        // transitions follow below.
         let memory_ptr = self.memory.as_mut().map(|m| &mut **m as *mut LinearMemory);
         let table_ptrs: Vec<*mut Table> = self
             .tables
@@ -4066,22 +4195,6 @@ impl WasmExecutionEngine {
             .map(|t| &mut **t as *mut Table)
             .collect();
         let host_functions = std::mem::take(&mut self.host_functions);
-
-        // See `call_function_inner`'s matching comment: a WASM function body
-        // is itself an implicit outer `block` whose label is the function's
-        // own end, so `br`/`br_if`/`br_table` at a depth that walks out of
-        // every *explicit* block (including a bare top-level `(br 0)`, which
-        // is ordinary, spec-legal WASM meaning "return") needs a label on
-        // `label_stack` to resolve against. This top-level entry point has
-        // its own separate instruction-decode-and-dispatch path (it doesn't
-        // go through `call_function_inner`), so it needs this pushed too.
-        let implicit_function_label = Label {
-            arity: result_count,
-            param_arity: func_type.params.len(),
-            target_pc: vm_instructions.len(),
-            stack_height: 0,
-            is_loop: false,
-        };
 
         let mut ctx = WasmExecutionContext {
             memory: memory_ptr,
@@ -4092,13 +4205,13 @@ impl WasmExecutionEngine {
             types: self.type_section.clone(),
             func_bodies: self.func_bodies.clone(),
             host_functions,
-            typed_locals,
-            label_stack: vec![implicit_function_label],
-            control_flow_map,
+            typed_locals: Vec::new(),
+            label_stack: Vec::new(),
+            control_flow_map: HashMap::new(),
             saved_frames: Vec::new(),
             returned: false,
-            br_table_targets,
-            gc_ops,
+            br_table_targets: Vec::new(),
+            gc_ops: Vec::new(),
             // The GC heap starts empty and grows as `struct.new` allocates; it
             // lives for the whole call so a cons built in a callee survives.
             // Real mark-sweep collection now runs against it (W04) at loop
@@ -4108,19 +4221,143 @@ impl WasmExecutionEngine {
             struct_field_counts: self.struct_field_counts.clone(),
             gc_state: gc::GcState::default(),
             call_depth: 0,
-        };
-
-        let code = CodeObject {
-            instructions: vm_instructions,
-            constants: vec![],
-            names: vec![],
+            pending_tail_call: None,
         };
 
         // Reset and execute.
         self.vm.reset();
         register_all_handlers(&mut self.vm);
 
-        let exec_result = self.vm.execute_with_context(&code, &mut ctx);
+        let mut current_func_index = func_index;
+        let mut pending_args: Option<Vec<WasmValue>> = Some(args.to_vec());
+        let mut final_result_count = 0usize;
+
+        // WASM16: this top-level entry point has its own separate
+        // instruction-decode-and-dispatch path (it doesn't go through
+        // `call_function_inner`, which only handles NESTED calls) — so
+        // a `return_call`/`return_call_indirect` chain that starts at
+        // the very top level needs the SAME "swap the current frame
+        // instead of recursing" handling duplicated here. See
+        // `call_function_inner`'s matching loop and
+        // `WasmExecutionContext::pending_tail_call`'s own doc comment.
+        let exec_result: VMResult<()> = loop {
+            let func_type = match ctx
+                .func_types
+                .get(current_func_index)
+                .ok_or_else(|| VMError::GenericError(format!("undefined function {current_func_index}")))
+            {
+                Ok(t) => t.clone(),
+                Err(e) => break Err(e),
+            };
+            let current_args = pending_args.take().expect("pending_args is always Some at the top of each loop iteration");
+
+            // A tail call landing on a host import is still a leaf call
+            // (no further WASM frames) -- call it, push its results
+            // exactly like `call_function_inner`'s own host branch
+            // does, and stop. `final_result_count` lets the shared
+            // "collect return values" step below pop them back off
+            // uniformly, whether this loop ran zero, one, or many
+            // tail-call transitions before landing here.
+            if let Some(Some(host_func)) = ctx.host_functions.get(current_func_index) {
+                match host_func.call(&current_args, ctx.memory.map(|ptr| unsafe { &mut *ptr })) {
+                    Ok(results) => {
+                        for r in results {
+                            push_wasm(&mut self.vm, r);
+                        }
+                        final_result_count = func_type.results.len();
+                        break Ok(());
+                    }
+                    Err(e) => break Err(VMError::from(e)),
+                }
+            }
+
+            // Module-defined function.
+            let body = match ctx
+                .func_bodies
+                .get(current_func_index)
+                .and_then(|b| b.as_ref())
+                .ok_or_else(|| VMError::GenericError(format!("no body for function {current_func_index}")))
+            {
+                Ok(b) => b.clone(),
+                Err(e) => break Err(e),
+            };
+
+            // Decode the function body.
+            let decoded = decode_function_body(&body);
+            ctx.control_flow_map = build_control_flow_map(&decoded);
+
+            // Convert to VM instructions, building this function's
+            // side-tables (br_table targets + WasmGC ops) in lockstep.
+            // Each complex instruction stores its index into the
+            // relevant Vec as its Operand::Index. Nested calls save/
+            // restore these on the saved-frame stack so callee and
+            // caller don't collide; a tail-call transition here simply
+            // overwrites them, matching the fact that no new logical
+            // call frame is being pushed.
+            let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
+            let mut gc_ops: Vec<GcOp> = Vec::new();
+            let mut vm_instructions: Vec<Instruction> = Vec::new();
+            for d in &decoded {
+                let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops);
+                vm_instructions.push(Instruction {
+                    opcode: d.opcode,
+                    operand,
+                });
+            }
+            ctx.br_table_targets = br_table_targets;
+            ctx.gc_ops = gc_ops;
+
+            // Initialize locals.
+            let mut typed_locals: Vec<WasmValue> = current_args;
+            for t in &body.locals {
+                typed_locals.push(WasmValue::default_for(*t));
+            }
+            ctx.typed_locals = typed_locals;
+
+            // See `call_function_inner`'s matching comment: a WASM
+            // function body is itself an implicit outer `block` whose
+            // label is the function's own end, so `br`/`br_if`/
+            // `br_table` at a depth that walks out of every *explicit*
+            // block (including a bare top-level `(br 0)`, which is
+            // ordinary, spec-legal WASM meaning "return") needs a label
+            // on `label_stack` to resolve against. `stack_height: 0` is
+            // correct on every iteration, not just the first: the
+            // validator requires a `return_call`/`return_call_indirect`
+            // site to leave the operand stack at exactly this
+            // function's entry height once the callee's args are
+            // popped (the same "stack-polymorphic, like `return`" rule
+            // that lets `return_call` type-check at all), so control
+            // never reaches a later iteration with anything extra left
+            // on `self.vm`'s stack.
+            ctx.label_stack = vec![Label {
+                arity: func_type.results.len(),
+                param_arity: func_type.params.len(),
+                target_pc: vm_instructions.len(),
+                stack_height: 0,
+                is_loop: false,
+            }];
+
+            let code = CodeObject {
+                instructions: vm_instructions,
+                constants: vec![],
+                names: vec![],
+            };
+
+            self.vm.pc = 0;
+            self.vm.halted = false;
+            if let Err(e) = self.vm.execute_with_context(&code, &mut ctx) {
+                break Err(e);
+            }
+
+            if let Some((next_func_index, next_args)) = ctx.pending_tail_call.take() {
+                current_func_index = next_func_index;
+                pending_args = Some(next_args);
+                continue;
+            }
+
+            final_result_count = func_type.results.len();
+            break Ok(());
+        };
 
         // Update globals back UNCONDITIONALLY, before propagating a trap
         // (WASM07 security review): `self.host_functions` was moved out via
@@ -4147,7 +4384,7 @@ impl WasmExecutionEngine {
 
         // Collect return values.
         let mut results = Vec::new();
-        for _ in 0..result_count {
+        for _ in 0..final_result_count {
             let tv = self
                 .vm
                 .pop_typed()
@@ -5205,6 +5442,33 @@ mod tests {
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memory: None,
             tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_return_call_indirect_through_a_table_entry_referencing_an_undefined_function_is_a_clean_error_not_a_panic() {
+        // WASM16 security review: a table entry is DATA, not a static
+        // part of the bytecode a validator necessarily already checked
+        // (this engine can be, and in real usage sometimes is, driven
+        // without going through wasm-validator first) -- a crafted or
+        // corrupt table slot pointing past `func_types.len()` must trap
+        // cleanly, the same discipline `test_table_get_out_of_bounds_
+        // index_is_a_clean_error_not_a_panic` above already established
+        // for `table.get`.
+        let code = vec![0x41, 0x00, 0x13, 0x00, 0x00, 0x0B]; // i32.const 0; return_call_indirect type=0 table=0; end
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut table = Table::new(1, None);
+        table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![table],
             globals: vec![],
             global_types: vec![],
             func_types: vec![func_type],
