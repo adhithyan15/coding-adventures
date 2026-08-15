@@ -12,9 +12,10 @@ use coding_adventures_zeroize::Zeroizing;
 use crate::wire::{self, MAX_IDENTITY_BYTES};
 use crate::{
     open_channel_key_grant as open_raw_grant, seal_channel_key as seal_raw_grant,
-    seal_channel_key_with_material_raw, ChannelCryptoError, ChannelId, ChannelMasterKey,
-    GrantInstallOutcome, KeyEpoch, OriginatorSigningKey, ReceiverEpochKeys as RawReceiverEpochKeys,
-    ReceiverKeyPair, SealedChannelKeyGrant,
+    seal_channel_key_with_material_raw,
+    verify_channel_key_grant_signature as verify_raw_grant_signature, ChannelCryptoError,
+    ChannelId, ChannelMasterKey, GrantInstallOutcome, KeyEpoch, OriginatorSigningKey,
+    ReceiverEpochKeys as RawReceiverEpochKeys, ReceiverKeyPair, SealedChannelKeyGrant,
 };
 
 /// Stable machine-readable failures defined by D18Q.
@@ -321,6 +322,26 @@ pub fn open_channel_key_grant(
         receiver_key_pair,
         originator_public_key,
     )?)
+}
+
+/// Verify a D18G signature and its expected public identities without opening
+/// the receiver-bound CMK.
+pub fn verify_grant_signature(
+    grant: &PortableKeyGrant,
+    expected_originator_id: &[u8],
+    expected_receiver_id: &[u8],
+    expected_channel_id: ChannelId,
+    originator_public_key: &[u8; 32],
+) -> Result<(), KeyGrantProfileError> {
+    validate_grant(&grant.grant)?;
+    verify_raw_grant_signature(
+        &grant.grant,
+        expected_originator_id,
+        expected_receiver_id,
+        expected_channel_id,
+        originator_public_key,
+    )?;
+    Ok(())
 }
 
 /// Receiver-local D18Q epoch state with immutable grant inputs.

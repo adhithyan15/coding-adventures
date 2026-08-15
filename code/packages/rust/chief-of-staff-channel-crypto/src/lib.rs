@@ -294,15 +294,17 @@ pub(crate) fn seal_channel_key_with_material_raw(
     })
 }
 
-/// Verify and unwrap a receiver-bound channel-key grant.
-pub fn open_channel_key_grant(
+/// Verify one receiver-bound grant without requiring receiver private material.
+///
+/// This is the originator-side validation boundary used before a durable D18T
+/// activation can expose the grant to publishers.
+pub fn verify_channel_key_grant_signature(
     grant: &SealedChannelKeyGrant,
     expected_originator_id: &[u8],
     expected_receiver_id: &[u8],
     expected_channel_id: ChannelId,
-    receiver_key_pair: &ReceiverKeyPair,
     originator_public_key: &[u8; 32],
-) -> Result<ChannelMasterKey, ChannelCryptoError> {
+) -> Result<(), ChannelCryptoError> {
     if grant.originator_id != expected_originator_id {
         return Err(ChannelCryptoError::UnexpectedOriginator);
     }
@@ -328,6 +330,25 @@ pub fn open_channel_key_grant(
     ) {
         return Err(ChannelCryptoError::InvalidGrantSignature);
     }
+    Ok(())
+}
+
+/// Verify and unwrap a receiver-bound channel-key grant.
+pub fn open_channel_key_grant(
+    grant: &SealedChannelKeyGrant,
+    expected_originator_id: &[u8],
+    expected_receiver_id: &[u8],
+    expected_channel_id: ChannelId,
+    receiver_key_pair: &ReceiverKeyPair,
+    originator_public_key: &[u8; 32],
+) -> Result<ChannelMasterKey, ChannelCryptoError> {
+    verify_channel_key_grant_signature(
+        grant,
+        expected_originator_id,
+        expected_receiver_id,
+        expected_channel_id,
+        originator_public_key,
+    )?;
     let shared_secret = Zeroizing::new(
         x25519(&receiver_key_pair.private_key, &grant.ephemeral_public_key)
             .map_err(|_| ChannelCryptoError::InvalidKeyAgreement)?,

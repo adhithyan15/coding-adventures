@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add signature-only D18G grant verification for durable activation
+  orchestrators that must validate provenance without receiver private keys or
+  opening the wrapped CMK.
 - Add the portable D18Q grant adapter with high-level field validation,
   explicit-material sealing, stable errors, immutable grants, receiver epoch
   state, deterministic rotation planning, honest erasure reporting, and the

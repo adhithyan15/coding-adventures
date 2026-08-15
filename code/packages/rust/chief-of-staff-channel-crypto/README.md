@@ -29,6 +29,8 @@ rules; crash-safe activation of a rotated epoch remains a caller-owned durable
 composition boundary.
 
 The `grant_profile` module adds validated immutable grant values,
+signature-only provenance verification for orchestration layers that do not
+hold receiver private keys,
 explicit-material sealing, stable cross-language errors, receiver epoch
 installation, pure ordered rotation planning, and the Rust `guaranteed`
 controlled-destruction declaration without changing D18G version 1 bytes. The
