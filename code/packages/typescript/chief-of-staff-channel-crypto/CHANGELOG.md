@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Add the immutable TypeScript D18Q `D18G` grant model, exact binary codec,
+  explicit-material and CSPRNG sealing, fail-closed opening order, and stable
+  error taxonomy.
+- Add receiver epoch installation, pure sorted rotation plans, managed secret
+  containers, and honest `best_effort` secret-erasure reporting.
+- Consume every canonical D18Q derivation intermediate, record, negative case,
+  receiver-state transition, and prospective-revocation fixture.
+- Make the package-native BUILD run this package after installing local crypto
+  dependencies, and fix HKDF typed-array compatibility under current TypeScript.
+
 ## 0.1.0
 
 - Add the immutable TypeScript D18F message model.

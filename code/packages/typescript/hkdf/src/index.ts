@@ -257,7 +257,7 @@ export function hkdfExpand(
 
   // T(0) is the empty string — used as "previous block" for the first
   // iteration.
-  let previous = new Uint8Array(0);
+  let previous: Uint8Array = new Uint8Array(0);
 
   for (let i = 1; i <= n; i++) {
     // Build the HMAC input: T(i-1) || info || counter_byte

@@ -1,5 +1,7 @@
 /** Portable D18F encrypted messages for Chief of Staff channels. */
 
+export * from "./grant-profile.js";
+
 import {
   xchacha20Poly1305Decrypt,
   xchacha20Poly1305Encrypt,

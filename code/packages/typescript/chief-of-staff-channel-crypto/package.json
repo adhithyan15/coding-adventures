@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/chief-of-staff-channel-crypto",
   "version": "0.1.0",
-  "description": "Portable D18F immutable encrypted-message profile for Chief of Staff channels",
+  "description": "Portable D18F messages and D18Q channel-key grants for Chief of Staff channels",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -14,8 +14,10 @@
   "dependencies": {
     "@coding-adventures/chacha20-poly1305": "file:../chacha20-poly1305",
     "@coding-adventures/ed25519": "file:../ed25519",
+    "@coding-adventures/hkdf": "file:../hkdf",
     "@coding-adventures/sha256": "file:../sha256",
-    "@coding-adventures/uuid": "file:../uuid"
+    "@coding-adventures/uuid": "file:../uuid",
+    "@coding-adventures/x25519": "file:../x25519"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
