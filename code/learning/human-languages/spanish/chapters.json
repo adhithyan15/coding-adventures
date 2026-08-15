@@ -5588,6 +5588,153 @@
           "ES-LEX-C288-LEAVE-05"
         ]
       }
+    },
+    {
+      "chapter": 289,
+      "title": "Overhead --- Daybreak, Sky, Cloud, Star, Shade",
+      "label": "ch:lo-de-arriba",
+      "canDo": "I can name the daybreak, the sky, a cloud, a star and the shade in Spanish.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ES-C289-sombra",
+        "kind": "production",
+        "summary": "Complete ES-C289-sombra: name all five overhead in order, from first light to the shade under a tree.",
+        "assesses": [
+          "ES-LEX-C289-SKY-01",
+          "ES-LEX-C289-SKY-02",
+          "ES-LEX-C289-SKY-03",
+          "ES-LEX-C289-SKY-04",
+          "ES-LEX-C289-SKY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 290,
+      "title": "What Is Eaten --- Wheat, Rice, Onion, Tomato, Honey",
+      "label": "ch:lo-que-se-come",
+      "canDo": "I can name wheat, rice, an onion, a tomato and honey in Spanish, and thank somebody for them.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C290-miel",
+        "kind": "production",
+        "summary": "Complete ES-C290-miel: name all five foods in turn and thank somebody for each.",
+        "assesses": [
+          "ES-LEX-C290-FOOD-01",
+          "ES-LEX-C290-FOOD-02",
+          "ES-LEX-C290-FOOD-03",
+          "ES-LEX-C290-FOOD-04",
+          "ES-LEX-C290-FOOD-05"
+        ]
+      }
+    },
+    {
+      "chapter": 291,
+      "title": "From the Seed Up --- Seed, Root, Trunk, Branch, Wood",
+      "label": "ch:de-la-semilla",
+      "canDo": "I can name the seed, the root, the trunk, the branch and the wood in Spanish.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C291-bosque",
+        "kind": "production",
+        "summary": "Complete ES-C291-bosque: name all five from the ground upwards, seed to forest.",
+        "assesses": [
+          "ES-LEX-C291-TREE-01",
+          "ES-LEX-C291-TREE-02",
+          "ES-LEX-C291-TREE-03",
+          "ES-LEX-C291-TREE-04",
+          "ES-LEX-C291-TREE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 292,
+      "title": "Naming the Land --- Village, Hill, Valley, Lake, Mountain",
+      "label": "ch:la-tierra",
+      "canDo": "I can name the village, a hill, a valley, a lake and a mountain in Spanish, and say where I am from.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C292-montana",
+        "kind": "production",
+        "summary": "Complete ES-C292-montana: name all five features of a landscape and place a village among them.",
+        "assesses": [
+          "ES-LEX-C292-LAND-01",
+          "ES-LEX-C292-LAND-02",
+          "ES-LEX-C292-LAND-03",
+          "ES-LEX-C292-LAND-04",
+          "ES-LEX-C292-LAND-05"
+        ]
+      }
+    },
+    {
+      "chapter": 293,
+      "title": "Further Down --- Neck, Shoulder, Back, Knee, Ankle",
+      "label": "ch:mas-del-cuerpo",
+      "canDo": "I can name the neck, the shoulder, the back, the knee and the ankle in Spanish, and say which one hurts.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C293-tobillo",
+        "kind": "production",
+        "summary": "Complete ES-C293-tobillo: name all five places in order and say that each one hurts.",
+        "assesses": [
+          "ES-LEX-C293-BODY-01",
+          "ES-LEX-C293-BODY-02",
+          "ES-LEX-C293-BODY-03",
+          "ES-LEX-C293-BODY-04",
+          "ES-LEX-C293-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 294,
+      "title": "Five More Things You Ask For --- Knife, Cup, Pot, Blanket, Broom",
+      "label": "ch:cinco-cosas-mas",
+      "canDo": "I can ask for a knife, a cup, a pot, a blanket and a broom in Spanish, politely.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C294-escoba",
+        "kind": "production",
+        "summary": "Complete ES-C294-escoba: ask for all five in turn, with por favor on the end of each.",
+        "assesses": [
+          "ES-LEX-C294-HOME-01",
+          "ES-LEX-C294-HOME-02",
+          "ES-LEX-C294-HOME-03",
+          "ES-LEX-C294-HOME-04",
+          "ES-LEX-C294-HOME-05"
+        ]
+      }
+    },
+    {
+      "chapter": 295,
+      "title": "The Way Out --- Path, Bridge, Shore, Island, Mist",
+      "label": "ch:el-sendero",
+      "canDo": "I can name the path, the bridge, the shore, the island and the mist in Spanish.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C295-niebla",
+        "kind": "production",
+        "summary": "Complete ES-C295-niebla: name all five of the way out, from the path to the mist behind you.",
+        "assesses": [
+          "ES-LEX-C295-PATH-01",
+          "ES-LEX-C295-PATH-02",
+          "ES-LEX-C295-PATH-03",
+          "ES-LEX-C295-PATH-04",
+          "ES-LEX-C295-PATH-05"
+        ]
+      }
     }
   ]
 }

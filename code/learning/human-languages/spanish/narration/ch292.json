@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 292,
+  "title": "Naming the Land --- Village, Hill, Valley, Lake, Mountain",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:314fa3e8236a2cae",
+  "lessons": [
+    {
+      "id": "ES-C292-pueblo",
+      "sequence": 3720,
+      "title": "el pueblo — the place and the people, one word",
+      "headword": "el pueblo",
+      "romanization": "el pueblo",
+      "gloss": "the village, and also the people — Latin populus, which gave popular, population and public",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf4b4e4e25510a72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: where does bosque come from? (Germanic, not Latin.) And what was ramus? (A branch.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casa — what a small one is mostly made of."
+            },
+            {
+              "kind": "speech",
+              "text": "el vecino — who lives in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PUE-blo, stress on the first part. The ue is one slide, and the b between vowels is the soft one. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pueblo — \"the village,\" and also \"the people.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin populus meant the people, the citizen body. Spanish kept that sense and added the other one, so el pueblo is both the settlement and everybody in it, and Spanish does not usually feel the need to say which."
+            },
+            {
+              "kind": "speech",
+              "text": "Populus is generous in English. Something popular belongs to the people. A population is the whole of them counted. Anything public is theirs rather than private — publicus is populus worn down. And people itself came through French from the same Latin, so the English and the Spanish word are the same word, three roads apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the ue. Latin's short o in populus broke into ue in Spanish, the same way the short e broke into ie in cielo. Once you can hear those two breaks, a very large number of Spanish words stop being surprises."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One word doing two jobs, which is a bargain."
+            },
+            {
+              "kind": "speech",
+              "text": "You can now name where somebody is from, and the answer is also a claim about who they are. That is a genuinely useful thing to be able to say when you are meeting people, and it costs one word."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pueblo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pueblo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi pueblo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi pueblo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pueblo, popular, público — the same Latin three times",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pueblo*, *popular*, *público* — the same Latin three times]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did populus mean? (The people.) What two things does pueblo name? (The village and the people in it.) And what did Latin's short o become? (Ue.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C292-colina",
+      "sequence": 3730,
+      "title": "la colina — the same rising that is in excel",
+      "headword": "la colina",
+      "romanization": "la colina",
+      "gloss": "the hill — Latin collis, from a root meaning to rise; excel and culminate rise from the same place",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db292987e91b69b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: which of the tree words was Germanic? (El bosque.) And what does pueblo name besides the village? (The people.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pueblo — often sitting on one of these."
+            },
+            {
+              "kind": "speech",
+              "text": "el bosque — what is often growing on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "co-LI-na, stress in the middle. Both l sounds are bright and forward. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la colina — \"the hill.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin collis, a hill, and behind it an old root that simply meant to rise or to stand up. That root went everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "To excel is ex- plus cellere, to rise out above the rest. To culminate is to reach the culmen, the summit. And the plain English hill is a cousin too, arriving through Germanic rather than Latin — the same ancient rising, split between the two halves of your vocabulary."
+            },
+            {
+              "kind": "speech",
+              "text": "The -ina on the end is a softening, the same shape as in cocina. Spanish tends to take a blunt Latin word and hand it a warmer ending, and collis to colina is that habit in one step."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and between them you can place a settlement in a landscape."
+            },
+            {
+              "kind": "speech",
+              "text": "El pueblo and la colina are the beginning of being able to answer \"where are you from?\" with something more than a name — which is exactly what you do when you meet somebody and the name alone is not enough."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la colina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la colina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pueblo en la colina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pueblo en la colina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "colina, then excel — both of them rising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *colina*, then *excel* — both of them rising]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was collis? (A hill.) What does the old root behind it mean? (To rise.) And which two English words still rise? (Excel, culminate.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C292-valle",
+      "sequence": 3740,
+      "title": "el valle — the low half of the pair",
+      "headword": "el valle",
+      "romanization": "el valle",
+      "gloss": "the valley — Latin vallis; valley, vale and avalanche all come down the same slope",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cca2df9aace5dbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what was collis? (A hill.) And what two things does el pueblo name? (The village and its people.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la colina — the opposite shape."
+            },
+            {
+              "kind": "speech",
+              "text": "la nieve — what comes down into one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "VA-lle, stress on the first part. The v is said with both lips, close to a soft b, and the ll is the y sound. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el valle — \"the valley.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin vallis, and English has it twice over. Valley came through French, carrying the extra syllable. Vale is the same word arriving earlier and shorter, which is why it survives mostly in place names and poetry."
+            },
+            {
+              "kind": "speech",
+              "text": "Avalanche belongs here too, though it took a detour: it is from a dialect of the Alps, built on the idea of descending — a val, to the valley. What an avalanche is named for is not the snow, but where the snow ends up."
+            },
+            {
+              "kind": "speech",
+              "text": "The v is worth a moment. In Spanish it is not the English v made with teeth and lip; it is made with both lips, and in most positions it is barely distinguishable from b. Spanish speakers who have not been taught spelling mix the two up in writing for exactly that reason."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and they are starting to describe a place rather than list things."
+            },
+            {
+              "kind": "speech",
+              "text": "El pueblo, la colina, el valle. High ground, low ground, and somewhere for people to live between them. That is a landscape, and you can now put a name to one when somebody asks where you grew up."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el valle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el valle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la colina, then el valle — up, then down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la colina*, then *el valle* — up, then down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pueblo del valle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pueblo del valle*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was vallis? (A valley.) Which two English words are both from it? (Valley and vale.) And how is the Spanish v made? (With both lips, near a soft b.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C292-lago",
+      "sequence": 3750,
+      "title": "el lago — and the gap it leaves in a page",
+      "headword": "el lago",
+      "romanization": "el lago",
+      "gloss": "the lake — Latin lacus; lake, lagoon and lacuna are all the same standing water",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9bef9bfead0b4d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quick pass: what was vallis? (A valley.) What was collis? (A hill.) And what was populus? (The people.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el agua — what one is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "el valle — where one usually sits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LA-go, stress on the first part. The g before o is hard, and softens a little between vowels. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el lago — \"the lake.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin lacus, standing water. English lake is the same word through French, and lagoon arrived later through Italian laguna, which is lacuna worn smooth."
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is the interesting turn. A lacuna in Latin is a pool or a pit, and scholars borrowed it for a hole in a manuscript — a place where the text has gone missing. So the word for a small lake became the word for a gap in a page, because both are an absence with an edge round it."
+            },
+            {
+              "kind": "speech",
+              "text": "Lacus also went north on its own and turned up in English as loch and lough through the Celtic languages, which is why the map of Scotland and Ireland is covered in a Spanish word nobody there would recognise as one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the landscape now has water in it."
+            },
+            {
+              "kind": "speech",
+              "text": "El pueblo, la colina, el valle, el lago. You could describe most of the places people are actually from with these four and nothing else, which is not bad for four words that each came with an English relative attached."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el lago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el lago*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el lago del valle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el lago del valle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pueblo, la colina, el valle, el lago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pueblo*, *la colina*, *el valle*, *el lago*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was lacus? (Standing water.) What is a lacuna in a text? (A gap where something is missing.) And why is it called that? (It was a pool first.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C292-montana",
+      "sequence": 3760,
+      "title": "la montaña — the hill inside amount",
+      "headword": "la montaña",
+      "romanization": "la montaña",
+      "gloss": "the mountain — Latin mons; paramount is above the hill and an amount is what it comes to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30ac88d5a5f9e777",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what was lacus? (Standing water.) What was vallis? (A valley.) And what was collis? (A hill.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la colina — the smaller version."
+            },
+            {
+              "kind": "speech",
+              "text": "la nieve — what is on top of one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mon-TA-ña, stress in the middle. The ñ is one sound, not two: the tongue flat against the roof of the mouth. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la montaña — \"the mountain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin mons, and in its other forms montem, a hill. Spanish built montaña on it; English took mountain through French from the same place."
+            },
+            {
+              "kind": "speech",
+              "text": "Then mons went quietly into a set of English words that have stopped looking like hills at all. Something paramount is par a mont, up above. To surmount is to get over the top. To amount to something is to climb to it — which is why a bill amounts to a figure, as though the total were a summit. A montage is things mounted, stacked up."
+            },
+            {
+              "kind": "speech",
+              "text": "The ñ is the one letter here that Latin did not have. It began as a scribe's shortcut for a doubled n: rather than write the second one in full, they set a tiny n over the first to save space, and that tiny mark hardened into the tilde. Montanea to montaña is that shortcut, frozen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: el pueblo, la colina, el valle, el lago, la montaña."
+            },
+            {
+              "kind": "speech",
+              "text": "Together they are a place, and a place is what most people mean when they tell you where they are from. You started this run able to give a name; you can now give a landscape as well, which is the difference between an introduction and a conversation."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la montaña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la montaña*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la colina, then la montaña — small, then large",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la colina*, then *la montaña* — small, then large]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — el pueblo, la colina, el valle, el lago, la montaña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *el pueblo*, *la colina*, *el valle*, *el lago*, *la montaña*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was mons? (A hill.) What does paramount say, taken apart? (Up above.) And where did the ñ come from? (A scribe's tiny second n, set over the first.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

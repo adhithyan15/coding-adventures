@@ -9,6 +9,30 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C205 — the gap report's cost model, and why its test timeout is not a dial
+
+Recorded because three separate sessions raised the same timeout and none of them
+wrote down the growth rate, so each one rediscovered the problem from scratch.
+
+`tests/cli.test.ts` builds the whole curriculum gap report twice. Its budget went
+5s -> 20s (at 1,249 lessons) -> 35s (at 1,878), and at 2,771 it failed CI at 35s.
+The cause was not corpus size as such: `measureContinuity`'s forward-reference walk
+was **quadratic in track length**, asking each of Spanish's 549 lessons about each of
+its ~550 taught words, and building a fresh `(?<![\p{L}\p{M}-])...` regex per pair.
+Measured on this corpus, one such regex costs ~162µs to construct and ~168µs on its
+first `.test()`, because `\p{L}` and `\p{M}` expand into large code-point tables.
+
+Fixed by indexing candidates on their leading word-run, so a lesson is only asked
+about words its own text can reach. `measureContinuity` 2,065ms -> 218ms; the whole
+`--format json` run 3.94s -> 1.79s; both report formats byte-identical.
+
+**What to expect now, and the number to check it against.** The remaining cost is
+linear: ~0.65ms per lesson per build (1.79s / 2,771 lessons, two-thirds of it
+reading, parsing and hashing the files). At that rate 35s covers roughly three times
+today's corpus. So a future slow run on this test is evidence that something has gone
+superlinear AGAIN, not evidence that the budget is stale — profile it before touching
+the number, and never thin the report to fit the clock.
+
 ## HL-C196 — `repin_tests.py` oscillates on a field name shared with a synthetic fixture
 
 Found by the Spanish tranche. `drivablePercent` appears twice in
@@ -29,6 +53,21 @@ field, and `drivablePercent` will not be the only one.
 
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
+
+## HL-C204 — Spanish chapters 8 and 9 share a LaTeX label
+
+`spanish/book/build.sh` emits `Label 'ch:how-are-you' multiply defined`. Chapters 8
+and 9 both claim it. **Pre-existing at HEAD**, unrelated to any tranche, and it has
+been surviving every build because it is a WARNING, not an error -- the build exits
+0 and the PDF is produced.
+
+What it costs: `\ref`/`\hyperref` to that label resolves to whichever chapter LaTeX
+saw last, so a cross-reference silently points at the wrong chapter. Same family as
+the rest of this session's findings -- **renders fine, says the wrong thing.**
+
+Left out of the Spanish round-2 tranche deliberately: relabelling ripples into every
+cross-reference that targets it, which is its own change with its own verification,
+not something to bury in a vocabulary PR.
 
 ## HL-C203 — corpus-wide sweep: 31 mixed-script findings, and a THIRD blind tool
 

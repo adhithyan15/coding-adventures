@@ -4992,6 +4992,41 @@
       "chapter": 59,
       "output": "kannada/book/chapters/ch59-weather-and-ground.tex",
       "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "spanish",
+      "chapter": 289,
+      "output": "spanish/book/chapters/ch289-lo-de-arriba.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 290,
+      "output": "spanish/book/chapters/ch290-lo-que-se-come.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 291,
+      "output": "spanish/book/chapters/ch291-de-la-semilla.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 292,
+      "output": "spanish/book/chapters/ch292-la-tierra.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 293,
+      "output": "spanish/book/chapters/ch293-mas-del-cuerpo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 294,
+      "output": "spanish/book/chapters/ch294-cinco-cosas-mas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 295,
+      "output": "spanish/book/chapters/ch295-el-sendero.tex"
     }
   ],
   "handwritten": [

@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 293,
+  "title": "Further Down --- Neck, Shoulder, Back, Knee, Ankle",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f223186b904f7362",
+  "lessons": [
+    {
+      "id": "ES-C293-cuello",
+      "sequence": 3770,
+      "title": "el cuello — what an accolade was thrown around",
+      "headword": "el cuello",
+      "romanization": "el cuello",
+      "gloss": "the neck — Latin collum, which is also the collar round it and the accolade thrown round it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f8873893af0609f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what was mons? (A hill.) And what was lacus? (Standing water.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cabeza — what sits on top of it."
+            },
+            {
+              "kind": "speech",
+              "text": "la garganta — what runs down inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CUE-llo, stress on the first part. The ue is one slide, and the ll is the y sound you have had since cebolla. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cuello — \"the neck.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin collum, and there is that o-to-ue break again, the one you met in pueblo. Spanish did it here for exactly the same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "Collum is all over English clothing and ceremony. A collar is the thing that goes round it. An accolade is ad collum, \"to the neck\" — originally the embrace, or the sword laid on the shoulder, that made somebody a knight. The word now means any honour, and has forgotten it used to be a gesture."
+            },
+            {
+              "kind": "speech",
+              "text": "El cuello does double duty in Spanish, as it does in English: the neck of a person and the neck of a shirt are the same word, and so is the neck of a bottle."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more place on the body, and you already had the ones above it."
+            },
+            {
+              "kind": "speech",
+              "text": "La cabeza, la garganta, and now el cuello. Being able to say precisely where something hurts is one of the few pieces of vocabulary that is genuinely urgent, which is why this ground is worth going over twice."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuello",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuello*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me duele el cuello",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me duele el cuello*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cabeza, el cuello — top down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cabeza*, *el cuello* — top down]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was collum? (The neck.) What does accolade say, taken apart? (To the neck.) And what break turned collum into cuello? (Short o into ue.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C293-hombro",
+      "sequence": 3780,
+      "title": "el hombro — the bone a doctor still names in Latin",
+      "headword": "el hombro",
+      "romanization": "el hombro",
+      "gloss": "the shoulder — Latin umerus, which doctors still call the humerus; the h is silent and came late",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd8c8765242da47f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what was mons? (A hill.) And what does accolade mean, taken apart? (To the neck.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cuello — what this sits either side of."
+            },
+            {
+              "kind": "speech",
+              "text": "la mano — the far end of the same arm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "OM-bro, stress on the first part. The h is silent — begin on the vowel and the word is right. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hombro — \"the shoulder.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin umerus, with no h at all. Spanish added the letter later, purely as spelling, and it has been silent from the day it arrived. If you say ombro you have said the word correctly."
+            },
+            {
+              "kind": "speech",
+              "text": "The Latin survives untouched in English medicine: the humerus is the long bone of the upper arm, running from this joint to the elbow. It is one of those words English kept in a white coat while Spanish wore it every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not confuse umerus with humor, the old bodily fluid — nor with humus, the ground. Three similar Latin words, three unrelated families, and the h that Spanish sprinkled on hombro makes the confusion easier rather than harder. Spelling is not always your friend."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and they are next to each other on the body."
+            },
+            {
+              "kind": "speech",
+              "text": "El cuello and el hombro. You are working downward, and the run will keep going down — which is a better way to hold a set of body words than any list, because the body supplies the order for you."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hombro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hombro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me duele el hombro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me duele el hombro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuello, then el hombro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuello*, then *el hombro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was umerus? (The shoulder.) What do doctors call that bone today? (The humerus.) And what is the h in hombro doing? (Nothing — it is silent.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C293-espalda",
+      "sequence": 3790,
+      "title": "la espalda — a broad blade, worn on the body",
+      "headword": "la espalda",
+      "romanization": "la espalda",
+      "gloss": "the back — Latin spatula, a broad blade; the same blade is a spatula, a spade and an epaulette",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3da1b22c15b5d5b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what was umerus? (The shoulder.) And what was collum? (The neck.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hombro — the corner of it."
+            },
+            {
+              "kind": "speech",
+              "text": "el dolor — what it is famous for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es-PAL-da, stress in the middle. There is the e- step again, in front of sp, exactly as in estrella. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la espalda — \"the back.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath is Latin spatula, a broad flat blade, itself a small spatha, a broad sword. The shoulder blade was named after the tool it resembles, and in Spanish the name spread out from the blade to cover the whole back."
+            },
+            {
+              "kind": "speech",
+              "text": "Strip the Spanish e- and the English relatives line up. A spatula is still a broad flat blade in a kitchen. A spade is a bigger one. An epaulette is the ornament on a shoulder, through French épaule — and French put an é on the front for the same reason Spanish put an e, so the two languages solved one problem twice."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the second word in this run where the e- is the only thing standing between you and a word you already know. It is worth making that a habit: meet an unfamiliar es- word, take the e off, and see what is left."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, still working downward: el cuello, el hombro, la espalda."
+            },
+            {
+              "kind": "speech",
+              "text": "The e- trick has now paid twice — once on a star and once on a back — which is about the point at which a pattern stops being a curiosity and starts being a tool."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la espalda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la espalda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me duele la espalda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me duele la espalda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuello, el hombro, la espalda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuello*, *el hombro*, *la espalda*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was spatula in Latin? (A broad blade.) Which English kitchen tool is the same word? (A spatula.) And what happens if you take the e- off an es- word? (A familiar word is often underneath.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C293-rodilla",
+      "sequence": 3800,
+      "title": "la rodilla — a little wheel, which is exactly right",
+      "headword": "la rodilla",
+      "romanization": "la rodilla",
+      "gloss": "the knee — Latin rotella, a little wheel, from rota; rotate, rotary and roulette are the same wheel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:233557851b7637da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quick pass: what was spatula? (A broad blade.) What was umerus? (The shoulder.) And what was collum? (The neck.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la espalda — the word before this one."
+            },
+            {
+              "kind": "speech",
+              "text": "el dolor — what this joint tends to produce."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ro-DI-lla, stress in the middle. The opening r is rolled; the d between vowels is soft. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la rodilla — \"the knee.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin rota was a wheel, and rotella a little one. That is what the knee was called: the small wheel in the middle of the leg. Anyone who has watched a kneecap turn will grant that it is a fair description."
+            },
+            {
+              "kind": "speech",
+              "text": "Rota is busy in English. To rotate is to wheel. A rotary is a wheel of traffic. Roulette is a little wheel through French — the same diminutive as rotella, built in a different language. And something rotund is wheel-shaped."
+            },
+            {
+              "kind": "speech",
+              "text": "There is that -illa again, and this is the fourth time it has appeared. Once in an onion, once in a seed, and now in a knee. When an ending shows up in words that have nothing to do with one another, it has stopped being decoration and become part of how the language builds things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, from the neck down to the leg: el cuello, el hombro, la espalda, la rodilla."
+            },
+            {
+              "kind": "speech",
+              "text": "Each one arrived with a picture attached — a collar, a bone, a blade, a wheel. Words with a picture behind them survive in the memory much longer than words with only a translation."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rodilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rodilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me duele la rodilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me duele la rodilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuello, el hombro, la espalda, la rodilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuello*, *el hombro*, *la espalda*, *la rodilla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was rota? (A wheel.) What did rotella add? (Smallness.) And which English gambling wheel is the same diminutive? (Roulette.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C293-tobillo",
+      "sequence": 3810,
+      "title": "el tobillo — a small lump, honestly named",
+      "headword": "el tobillo",
+      "romanization": "el tobillo",
+      "gloss": "the ankle — from Latin tuber, a swelling; a tuber in the ground and a protuberance are the same lump",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e76bb913a4d2592",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what was rota? (A wheel.) What was spatula? (A broad blade.) And what was umerus? (The shoulder.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la rodilla — the joint above this one."
+            },
+            {
+              "kind": "speech",
+              "text": "el dolor — what a twisted one gives you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "to-BI-llo, stress in the middle. The b between vowels is soft, lips barely touching. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tobillo — \"the ankle.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is Latin tuber, a swelling or a lump, with the small ending on it. The ankle is the little lump at the bottom of the leg, and the Romans saw no reason to be more poetic about it than that."
+            },
+            {
+              "kind": "speech",
+              "text": "Tuber kept its lumpiness in English. A tuber is the swelling on a root that we eat as a potato. Tuberculosis is named for the small lumps the disease leaves in the lungs. A protuberance is a lump sticking forward, which is pro- doing the sticking."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the fifth -illo or -illa in this stretch of the book, and by now it should not need pointing out. A seed, an onion, a knee, an ankle: none of them related, all of them small."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and a whole side of the body: el cuello, el hombro, la espalda, la rodilla, el tobillo."
+            },
+            {
+              "kind": "speech",
+              "text": "Said in that order they run from the top of the spine to the bottom of the leg, and each of them fits straight into me duele — which you have had for a long time and which now has five more places to point at. The vocabulary is new; the sentence around it is not."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tobillo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tobillo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me duele el tobillo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me duele el tobillo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — el cuello, el hombro, la espalda, la rodilla, el tobillo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *el cuello*, *el hombro*, *la espalda*, *la rodilla*, *el tobillo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was tuber? (A swelling, a lump.) Which vegetable part is still called one? (A tuber.) And what do -illo and -illa add? (Smallness.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

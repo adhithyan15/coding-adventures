@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 294,
+  "title": "Five More Things You Ask For --- Knife, Cup, Pot, Blanket, Broom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e14ec3083a4451d8",
+  "lessons": [
+    {
+      "id": "ES-C294-cuchillo",
+      "sequence": 3820,
+      "title": "el cuchillo — the little blade behind cutlery",
+      "headword": "el cuchillo",
+      "romanization": "el cuchillo",
+      "gloss": "the knife — Latin cultellus, a little culter; cutlery, cutlass and the plough's coulter are the same blade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58e1bf78f9eb1b63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what was tuber? (A swelling.) And what was rota? (A wheel.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cuchara — the one that does not cut."
+            },
+            {
+              "kind": "speech",
+              "text": "por favor — what you put on the end when you ask."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cu-CHI-llo, stress in the middle. The ch is one sound, as in English church. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cuchillo — \"the knife.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin culter was a blade; cultellus was a small one. Spanish took the small one and forgot the big one, exactly as it did with the onion."
+            },
+            {
+              "kind": "speech",
+              "text": "English took culter by several roads at once. Cutlery came through French coutel. A cutlass is coutelas, an oversized one. And the coulter on a plough — the blade that cuts the soil ahead of the share — is the bare Latin word, still doing farm work."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have la cuchara. It looks like a relative of cuchillo and is not one: cuchara is from cochlearium, a snail-shell spoon. Two kitchen words that begin with the same three letters and come from opposite places, which is a useful reminder that resemblance is not evidence."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more thing you can ask for at a meal."
+            },
+            {
+              "kind": "speech",
+              "text": "You had la cuchara and el plato already. Adding el cuchillo means you can now ask for the two halves of the job — the thing that cuts and the thing that lifts — with nothing but por favor on the end."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuchillo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuchillo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un cuchillo, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un cuchillo, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cuchara and el cuchillo — near neighbours, unrelated",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cuchara* and *el cuchillo* — near neighbours, unrelated]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was culter? (A blade.) What did cultellus add? (Smallness.) And is cuchara from the same word? (No — it is a snail shell.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C294-taza",
+      "sequence": 3830,
+      "title": "la taza — a cup that came a very long way",
+      "headword": "la taza",
+      "romanization": "la taza",
+      "gloss": "the cup — Arabic tassa, from Persian; French tasse and the English demitasse are the same vessel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da0de796214d43df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what was tuber? (A swelling.) And what was cultellus? (A little blade.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el vaso — the one you drink cold things from."
+            },
+            {
+              "kind": "speech",
+              "text": "el agua — what goes in either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "TA-za, stress on the first part. The z is the s sound across most of the Spanish-speaking world. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la taza — \"the cup.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Another one with no Latin behind it. Arabic tassa brought it into Spain, and Arabic had it from Persian tašt, a bowl or a basin. So the word crossed two languages and most of a continent before it reached a Spanish kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "French took the same Arabic word and made tasse, which is why a small strong coffee is served in a demitasse — a half-cup — in English restaurants that would not otherwise admit to speaking Persian."
+            },
+            {
+              "kind": "speech",
+              "text": "Set this beside el vaso, which you already have. Vaso is Latin vas, a vessel, and gives English vase and vascular. Two drinking containers, sitting side by side in the same cupboard, from two completely different worlds."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the five, and both of them ask well."
+            },
+            {
+              "kind": "speech",
+              "text": "Un cuchillo, por favor. Una taza, por favor. The polite frame has not changed since you first learned it — you are simply dropping new words into a shape you already trust, which is the cheapest kind of progress there is."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la taza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la taza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una taza, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una taza, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el vaso and la taza — Rome and Persia in one cupboard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el vaso* and *la taza* — Rome and Persia in one cupboard]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language handed taza to Spanish? (Arabic.) And before that? (Persian.) What is a demitasse? (A half-cup.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C294-olla",
+      "sequence": 3840,
+      "title": "la olla — the word that never changed",
+      "headword": "la olla",
+      "romanization": "la olla",
+      "gloss": "the pot — Latin olla, unchanged in two thousand years; potpourri is a French translation of olla podrida",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a624e330dccf5218",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: which language handed taza to Spanish? (Arabic.) And what was culter? (A blade.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el arroz — what goes in it."
+            },
+            {
+              "kind": "speech",
+              "text": "la cebolla — and what goes in with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "O-lla, two beats, stress on the first. The ll is the y sound; do not let the English l creep in. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la olla — \"the pot.\""
+            },
+            {
+              "kind": "speech",
+              "text": "There is nothing to take apart. Latin olla meant a cooking pot, and two thousand years later Spanish says olla and means a cooking pot. Every letter is where the Romans left it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is rarer than it sounds, and it tends to happen to the humblest words. Grand Latin words get replaced, borrowed over, or refined into something abstract. A pot stays a pot because people keep needing one."
+            },
+            {
+              "kind": "speech",
+              "text": "English does have it, at one remove. The Spanish dish olla podrida — literally a rotted pot, meaning a stew of everything — was borrowed into English as olio, a mixture. The French translated the name rather than borrowing it, and got pot pourri, which is the same two words again and now means a bowl of dried petals."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and a small point about how languages age."
+            },
+            {
+              "kind": "speech",
+              "text": "El cuchillo shrank, la taza travelled, la olla sat still. Three words from one kitchen, and three completely different fates — which is most of what etymology has to teach, in one cupboard."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la olla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la olla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el arroz en la olla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el arroz en la olla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuchillo, la taza, la olla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuchillo*, *la taza*, *la olla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How much has olla changed since Latin? (Nothing at all.) What does olla podrida mean literally? (A rotted pot.) And what did French make of it? (Pot pourri.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C294-manta",
+      "sequence": 3850,
+      "title": "la manta — a cloak that lay down",
+      "headword": "la manta",
+      "romanization": "la manta",
+      "gloss": "the blanket — Latin mantum, a cloak; the mantle, the mantelpiece and the manta ray are all cloaks",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccdcc7837fdf0137",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quick pass: how much has olla changed? (Nothing.) Which language gave taza? (Arabic.) And what was cultellus? (A little blade.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cama — where one lives."
+            },
+            {
+              "kind": "speech",
+              "text": "la toalla — the other useful cloth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MAN-ta, stress on the first part. Two clean beats, and the n closes the first. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la manta — \"the blanket.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin mantum was a cloak — something you wore. Spanish kept the cloth and dropped the wearing, so a manta is now what goes over a bed rather than over your shoulders."
+            },
+            {
+              "kind": "speech",
+              "text": "The cloak is still visible in English. A mantle is a cloak, literal or inherited: a bishop's, or a champion's. A mantelpiece is the shelf over a fire, named because the hood above the hearth was thought of as its cloak. A mantilla is a Spanish lace veil, and there is the small ending again. And a manta ray is named for its shape — a swimming cloak, which is the best description of one anybody has managed."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish also has manto for the cloak proper. So the language kept both: the masculine one stayed a garment, the feminine one lay down on a bed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four things to ask for, and a whole room implied by them."
+            },
+            {
+              "kind": "speech",
+              "text": "El cuchillo, la taza, la olla, la manta. A kitchen and a bed between them. These are the words you actually need when you are a guest in somebody's house and do not want to rummage."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la manta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la manta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una manta, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una manta, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cuchillo, la taza, la olla, la manta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cuchillo*, *la taza*, *la olla*, *la manta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was mantum? (A cloak.) Why is a mantelpiece called that? (The hood over the fire was its cloak.) And why is the manta ray called one? (It is shaped like a swimming cloak.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C294-escoba",
+      "sequence": 3860,
+      "title": "la escoba — the one with no English cousin",
+      "headword": "la escoba",
+      "romanization": "la escoba",
+      "gloss": "the broom — Latin scopa, a bundle of twigs, wearing the Spanish e- step for the third time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68aac4e5623ff1de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what was mantum? (A cloak.) How much has olla changed? (Nothing.) And what was culter? (A blade.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "limpio — what this makes a room."
+            },
+            {
+              "kind": "speech",
+              "text": "sucio — what a room is before you use it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es-CO-ba, stress in the middle. The e- step in front of sc, and the b between vowels is soft. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la escoba — \"the broom.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin scopa was a twig, and scopae in the plural was a bundle of them tied to a stick. That is what a broom was, and in much of the world still is."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the e- off and scopa is showing. That is the third time the step has earned its keep in this stretch — a star, a back, and now a broom."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the honest part: this one has no everyday English relative. Scopa stayed in Latin and in botany, and English built its own word from the broom plant instead. Most of the words in this book have arrived with a cousin attached, and it is worth meeting one that has not, so that the method does not start to look like magic. Sometimes a word is simply a word, and you learn it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: el cuchillo, la taza, la olla, la manta, la escoba."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them fits the asking-frame you already had, so the five cost you no grammar whatever. Four came with an English relative and the fifth came without one, which is a fair sample of how the vocabulary of a language is actually distributed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la escoba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la escoba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una escoba, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una escoba, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — el cuchillo, la taza, la olla, la manta, la escoba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *el cuchillo*, *la taza*, *la olla*, *la manta*, *la escoba*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was scopa? (A twig, and a bundle of them.) What is the e- doing on the front? (Giving the tongue a start before sc.) And does this one have an English cousin? (No — and that is worth knowing.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

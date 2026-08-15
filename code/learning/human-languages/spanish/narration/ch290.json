@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 290,
+  "title": "What Is Eaten --- Wheat, Rice, Onion, Tomato, Honey",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:136778fd42d626db",
+  "lessons": [
+    {
+      "id": "ES-C290-trigo",
+      "sequence": 3620,
+      "title": "el trigo — the grain that got rubbed",
+      "headword": "el trigo",
+      "romanization": "el trigo",
+      "gloss": "the wheat — Latin triticum, the rubbed grain, from terere, to rub; trite is worn down the same way",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bf98ab44e464611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what two Latin words hide in sombra? (Sub and umbra.) And what was stella? (A star.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan — what this becomes."
+            },
+            {
+              "kind": "speech",
+              "text": "el agua — the other half of what bread needs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "TRI-go, stress on the first part. One tap for the r, and the g is hard before o. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el trigo — \"the wheat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin triticum, and that is built on terere, to rub or to wear away. Wheat was named for what you had to do to it: rub the grain out of the husk. The crop is named after the threshing, not the plant."
+            },
+            {
+              "kind": "speech",
+              "text": "Terere wore a path through English too. Something trite has been rubbed smooth by overuse. Attrition is wearing down. Detritus is what has been rubbed off. Even detriment is a wearing-away, though it has gone abstract and stopped admitting it."
+            },
+            {
+              "kind": "speech",
+              "text": "A useful habit, this: when a Latin food word looks odd, ask what was done to the food. The answer is often the whole etymology."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One word, and a small piece of the ancient working day."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had el pan for a long time. Now you have what it is made of, which means you can name a thing and the stuff it came from — a step up from naming things one at a time."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trigo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trigo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trigo, then el pan — the stuff, then the thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trigo*, then *el pan* — the stuff, then the thing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pan de trigo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pan de trigo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did terere mean? (To rub.) Which English words still rub? (Trite, attrition, detritus.) And what is el trigo? (The wheat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C290-arroz",
+      "sequence": 3630,
+      "title": "el arroz — a word that brought its own article",
+      "headword": "el arroz",
+      "romanization": "el arroz",
+      "gloss": "the rice — Arabic ar-ruzz, carrying its own article; rice is the same grain by a different road",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84f7dee06c783997",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what does la sombra name? (The shade.) And what did terere mean? (To rub.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el trigo — the grain before this one."
+            },
+            {
+              "kind": "speech",
+              "text": "el agua — what you cook it in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-RROZ, stress on the end. The rr at the start of the second part is the rolled one, held. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el arroz — \"the rice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one did not come from Latin. Arabic ar-ruzz crossed into Spain with the crop itself, and Spanish took the phrase whole, article and all. Ar- was already \"the.\" So el arroz says it twice, in two languages, and nobody minds."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you know to watch for it, that stuck-on a- is everywhere in the Arabic layer of Spanish: azúcar, aceite, almohada, aduana. Each one is still wearing an Arabic al- that Spanish stopped being able to see."
+            },
+            {
+              "kind": "speech",
+              "text": "English got the same grain by a different road — Greek oryza, then Latin, then Italian, then French, arriving as rice. Same plant, two routes, and the words no longer look like relatives."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two grains, and two completely different histories sitting side by side."
+            },
+            {
+              "kind": "speech",
+              "text": "El trigo came down from Rome. El arroz came in from the south with farmers. That is Spanish in miniature: a Latin skeleton with a large Arabic vocabulary laid over the top, and the joins still visible when you know where to look."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el arroz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el arroz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trigo, then el arroz — Rome, then the south",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trigo*, then *el arroz* — Rome, then the south]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arroz, azúcar, aceite — three words carrying an Arabic al-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arroz*, *azúcar*, *aceite* — three words carrying an Arabic *al-*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the ar- in arroz already mean? (The.) Name two more Spanish words carrying an Arabic article. (Azúcar, aceite, almohada.) And which English word is the same grain? (Rice.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C290-cebolla",
+      "sequence": 3640,
+      "title": "la cebolla — a little something, permanently",
+      "headword": "la cebolla",
+      "romanization": "la cebolla",
+      "gloss": "the onion — Latin caepulla, a little caepa; the chive in English is the same root, undiminished",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e45752511ae9fa26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what does the ar- of arroz already mean? (The.) And what was triticum named for? (The rubbing, the threshing.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comer — what you eventually do with it."
+            },
+            {
+              "kind": "speech",
+              "text": "el arroz — what it usually goes into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ce-BO-lla, stress in the middle. The c before e is soft, and the ll is close to an English y. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cebolla — \"the onion.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had caepa for an onion, and caepulla for a small one. Spanish kept the small one and quietly dropped the full-sized word, so the language now calls every onion a little onion, however large."
+            },
+            {
+              "kind": "speech",
+              "text": "That happens more than you would expect. A word with a diminutive on it gets used so often that the ending stops meaning anything, and the plain form falls away. You will meet the same -illa and -illo again shortly, still doing the job in words where it has not yet worn out."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the other half. Chive came through French cive from that same caepa, and a chive really is a small one — so between the two languages the pair got split down the middle."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three things you can put in a pot, and a piece of machinery worth more than the three."
+            },
+            {
+              "kind": "speech",
+              "text": "El trigo, el arroz, la cebolla. Hearing a small ending as \"a little one of these\" will unlock words you have not been taught, which is the whole point of taking them apart."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cebolla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cebolla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el arroz con cebolla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el arroz con cebolla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trigo, el arroz, la cebolla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trigo*, *el arroz*, *la cebolla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was caepa? (An onion.) What did caepulla add? (Smallness.) Which English plant is the same root? (Chive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C290-tomate",
+      "sequence": 3650,
+      "title": "el tomate — a word that came the other way",
+      "headword": "el tomate",
+      "romanization": "el tomate",
+      "gloss": "the tomato — Nahuatl tomatl, one of the words Spanish carried back across the Atlantic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:066479c26b812c8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quick pass: what was caepa? (An onion.) What does ar- mean in arroz? (The.) And what is el trigo? (The wheat.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cebolla — what it is usually cooked with."
+            },
+            {
+              "kind": "speech",
+              "text": "rojo — what colour it goes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "to-MA-te, stress in the middle. Three clean vowels, none of them swallowed. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tomate — \"the tomato.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take this one apart and nothing Latin falls out, because there is nothing Latin in it. Tomatl is Nahuatl, the language of the Mexica, and the plant and its name travelled to Spain together in the sixteenth century."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish shaved the -tl into -te, which is what it did to the whole set: chocolatl became chocolate, ahuacatl became aguacate, coyotl became coyote. Then English took them from Spanish, which is why an English speaker already owns three Nahuatl words without knowing it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the traffic ran both ways. Spanish handed sombrero to English and took tomate from Mexico, and both words now sit in the same everyday vocabulary with no label saying where they have been."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four foods, and three separate continents behind them."
+            },
+            {
+              "kind": "speech",
+              "text": "El trigo is Roman. El arroz is Arabic. El tomate is American. One short set of words, and the history of who fed whom is sitting inside it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tomate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tomate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomate, chocolate, aguacate — the same ending three times",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomate*, *chocolate*, *aguacate* — the same ending three times]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el arroz con tomate y cebolla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el arroz con tomate y cebolla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What language is tomate from? (Nahuatl.) What happened to the -tl ending? (It became -te.) Name two more words that did it. (Chocolate, aguacate, coyote.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C290-miel",
+      "sequence": 3660,
+      "title": "la miel — the sweetness inside three English words",
+      "headword": "la miel",
+      "romanization": "la miel",
+      "gloss": "the honey — Latin mel, which sweetens mellifluous, molasses and marmalade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cb87ebedb77da82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what language gave us tomate? (Nahuatl.) What was caepa? (An onion.) And what does ar- mean? (The.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan — what you put it on."
+            },
+            {
+              "kind": "speech",
+              "text": "la flor — where it starts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MIEL, one beat. The ie is a single slide, and the l is bright, never the dark English one at the end of a word. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la miel — \"the honey.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin mel, four letters shorter than most of what we have taken apart, and Spanish did little to it beyond breaking the e into ie — the same break you met in cielo."
+            },
+            {
+              "kind": "speech",
+              "text": "Mel is sweeter in English than it looks. Something mellifluous flows with honey, which is what fluere is doing on the end of it. Molasses came through Portuguese melaço, the honey-like leavings of sugar. And marmalade carries the Greek form meli, stuck to melon, quince — a quince-honey, which is exactly what marmalade is."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a lesson hidden in that last one. A word can be perfectly transparent in its own language and completely opaque once it has crossed two borders."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: el trigo, el arroz, la cebolla, el tomate, la miel."
+            },
+            {
+              "kind": "speech",
+              "text": "Set out together they are a shopping list, and they are also four separate histories — Rome, Arabia, Mexico, and Rome again. Every one of the five arrived with an English relative attached, which is the quiet argument this whole approach rests on: you know more of this language than you have been taught."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la miel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la miel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pan con miel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pan con miel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — el trigo, el arroz, la cebolla, el tomate, la miel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *el trigo*, *el arroz*, *la cebolla*, *el tomate*, *la miel*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was mel? (Honey.) What does mellifluous say, taken apart? (Flowing with honey.) And which breakfast preserve is a quince-honey? (Marmalade.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

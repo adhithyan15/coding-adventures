@@ -327,6 +327,126 @@ describe("forward references", () => {
     ]);
     expect(report.forwardReferences).toHaveLength(0);
   });
+
+  // ---- the boundary rule, pinned ----
+  //
+  // These eight say what "the word occurs here" MEANS, and they exist because the
+  // matcher stopped being one regex per word. That regex was
+  // `(?<![\p{L}\p{M}-])<word>(?![\p{L}\p{M}-])` and cost ~330µs per word to build
+  // and first run, which at ~2,700 taught words was the largest single line in the
+  // gap report's profile; it is now an `indexOf` walk plus a shared character class,
+  // with the candidates indexed by leading run so a lesson is only asked about words
+  // its own text could reach. Every case below passed under the regex and passes now.
+  // They are the cases where a cheaper matcher would plausibly have drifted.
+
+  it("will not match a word glued to a letter", () => {
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Abro el paraguas." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("finds a free occurrence that follows a glued one", () => {
+    // The reason every occurrence is examined and not just the first: `indexOf`
+    // finds `paraguas` before it finds the real use, and stopping there would have
+    // quietly lost the defect.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Abro el paraguas y bebo agua." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences[0]?.word).toBe("agua");
+  });
+
+  it("treats a hyphen as part of the word, not as a boundary", () => {
+    // "pan-Hispanic" is English wearing a Spanish syllable. `-` is inside the
+    // adjacency class for exactly this reason.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "An agua-adjacent idea." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("treats a following combining mark as part of the word", () => {
+    // U+0301 COMBINING ACUTE ACCENT. `\p{M}` is in the adjacency class because a
+    // base letter plus its mark is one grapheme, and half of one is not a word.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Bebo agua\u0301 aqui." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("matches a word sitting against an astral-plane character", () => {
+    // U+1F600 is a surrogate PAIR in memory, and the character on each side of a
+    // match is read as a code point rather than a code unit. Reading half a pair
+    // here would ask whether an unpaired surrogate is a letter.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Bebo \u{1F600}agua\u{1F600} hoy." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences[0]?.word).toBe("agua");
+  });
+
+  it("keeps a multi-word headword whole and still finds it", () => {
+    // The candidate index is keyed on a word's LEADING run — `buenos` for
+    // `buenos días` — so a phrase is reachable from a lesson containing its first
+    // word. Indexing on the whole phrase, or on every token, would lose it.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Digo **buenos días** hoy." }),
+      lesson({ id: "ES-9", chapter: 9, sequence: 20, headword: "buenos días" }),
+    ]);
+    expect(report.forwardReferences[0]?.word).toBe("buenos días");
+  });
+
+  it("does not match a phrase whose words are merely both present", () => {
+    // The other half of the index's contract: it only ever WIDENS the candidate
+    // list, and the boundary walk still decides. `buenos` and `días` apart are not
+    // an occurrence of `buenos días`.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Digo **buenos** y **días**." }),
+      lesson({ id: "ES-9", chapter: 9, sequence: 20, headword: "buenos días" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("stays linear on a body built to defeat the matcher", () => {
+    // A security review of the rewrite found this: rejecting an occurrence and
+    // retrying ONE character later pays a full comparison at every position inside
+    // a run, so a long headword against a long run of near-misses went quadratic —
+    // 3.9 SECONDS for one word in one lesson, on a walk whose whole purpose was to
+    // stop being quadratic. The matcher now skips the rest of the run, since every
+    // position in it is preceded by a word-adjacent character and fails identically.
+    //
+    // The budget is deliberately loose: this asserts the SHAPE (a linear scan of a
+    // few megabytes, tens of milliseconds) against a regression that costs seconds,
+    // so it cannot flake on a slow runner and still catches the bug it exists for.
+    const word = "a".repeat(4_000);
+    const body = `**${"a".repeat(4_000_000)} ${word}**`;
+    const started = performance.now();
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, headword: "hola", body }),
+      lesson({ id: "ES-2", chapter: 2, sequence: 20, headword: word }),
+    ]);
+    expect(performance.now() - started).toBeLessThan(1_000);
+    expect(report.tracks[0]?.lessonCount).toBe(2);
+  });
+
+  it("matches a non-Latin word at its own boundaries", () => {
+    // Devanagari carries its vowels as combining marks, so the adjacency class does
+    // most of its work outside Latin script. `घरमें` is not a use of `घर`.
+    const free = measureContinuity([
+      lesson({ id: "HI-1", chapter: 1, sequence: 10, body: "यह **घर** है।" }),
+      lesson({ id: "HI-9", chapter: 9, sequence: 20, headword: "घर" }),
+    ]);
+    expect(free.forwardReferences[0]?.word).toBe("घर");
+    const glued = measureContinuity([
+      lesson({ id: "HI-1", chapter: 1, sequence: 10, body: "यह **घरमें** है।" }),
+      lesson({ id: "HI-9", chapter: 9, sequence: 20, headword: "घर" }),
+    ]);
+    expect(glued.forwardReferences).toHaveLength(0);
+  });
 });
 
 describe("the real corpus", () => {
@@ -791,7 +911,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(2959); // tamil pre-A1 tranche: +35 lessons, +7 chapters (chapters 44-50). R2 is the wide window and it moves with new lessons by construction; R1, the tight one, held its numerator at 1106 while the denominator grew, so the ratio improved 0.2949 -> 0.2922 // HL-C136 wave I: +61, and NOT ONE of the 61 is an atom this wave introduced -- verified by measuring main's tree and the merged tree side by side and diffing the atom lists. All 61 are pre-existing atoms sitting in the last few positions of the six Indic tracks (hindi 12, malayalam 11, kannada/tamil/telugu 10 each, sanskrit 8), and they moved because of the guard at continuity.ts: a window is only judged when `at + window.from <= last`, so an atom near the end of a track has not FAILED R2, the track simply has not got there yet. Giving each of the six tracks seven more lessons puts that band inside the judgeable range: hindi's newly-judged atoms sit at positions 112-116 against a previous last-introducing position of 112, and the other five read the same way. The debt was always there and was never re-practised; extending the track is what made it measurable. Which is also why this number is the wrong shape -- HL-C149 exists to derive it. // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above // +1: HL-C88 slice 8 // +87: vocabulary wave 6 // +4: HL-C113 (B1 si-condition rung) // +2: HL-C113 preterite plural // HL-C113 preterite close // HL11: -4. The drizzle adds nine atoms whose re-use is far away (R1 above), but placing each segment beside the word lesson that uses its letter also pulls several EXISTING atoms back inside R2 -- so the wider window comes out ahead // HL12: the 30 recognition segments chain one letter to the next, so their atoms sit in this window like every other drizzled strand // HL12 payment two: +8, Hindi's segments, same shape as the other four tracks' // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C156: 85 script segments across the six Indic tracks // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C168: +1 -- Kannada's ledger closes at 24 of 24 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +3 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C187: +20 -- verb tranche across the five behind tracks // HL-C189: +8 -- Tamil and Sanskrit verb tranche // HL-C190: see/say verbs across four tracks // HL-C192: +24 family words // HL-C194: +16 Spanish words // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // hindi pre-A1 tranche: +35 lessons, +7 chapters (chapters 45-51) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // telugu pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // kannada pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59)
+    expect(report.summary.missedByWindow.R2).toBe(2994); // tamil pre-A1 tranche: +35 lessons, +7 chapters (chapters 44-50). R2 is the wide window and it moves with new lessons by construction; R1, the tight one, held its numerator at 1106 while the denominator grew, so the ratio improved 0.2949 -> 0.2922 // HL-C136 wave I: +61, and NOT ONE of the 61 is an atom this wave introduced -- verified by measuring main's tree and the merged tree side by side and diffing the atom lists. All 61 are pre-existing atoms sitting in the last few positions of the six Indic tracks (hindi 12, malayalam 11, kannada/tamil/telugu 10 each, sanskrit 8), and they moved because of the guard at continuity.ts: a window is only judged when `at + window.from <= last`, so an atom near the end of a track has not FAILED R2, the track simply has not got there yet. Giving each of the six tracks seven more lessons puts that band inside the judgeable range: hindi's newly-judged atoms sit at positions 112-116 against a previous last-introducing position of 112, and the other five read the same way. The debt was always there and was never re-practised; extending the track is what made it measurable. Which is also why this number is the wrong shape -- HL-C149 exists to derive it. // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above // +1: HL-C88 slice 8 // +87: vocabulary wave 6 // +4: HL-C113 (B1 si-condition rung) // +2: HL-C113 preterite plural // HL-C113 preterite close // HL11: -4. The drizzle adds nine atoms whose re-use is far away (R1 above), but placing each segment beside the word lesson that uses its letter also pulls several EXISTING atoms back inside R2 -- so the wider window comes out ahead // HL12: the 30 recognition segments chain one letter to the next, so their atoms sit in this window like every other drizzled strand // HL12 payment two: +8, Hindi's segments, same shape as the other four tracks' // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C156: 85 script segments across the six Indic tracks // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C168: +1 -- Kannada's ledger closes at 24 of 24 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +3 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C187: +20 -- verb tranche across the five behind tracks // HL-C189: +8 -- Tamil and Sanskrit verb tranche // HL-C190: see/say verbs across four tracks // HL-C192: +24 family words // HL-C194: +16 Spanish words // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // hindi pre-A1 tranche: +35 lessons, +7 chapters (chapters 45-51) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // telugu pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // kannada pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295)
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -820,7 +940,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 514, // HL-C194: +16 Spanish words // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C175: +5 -- chapter 272, reading between the lines // HL-C173: +3 -- B2 closes (chapter 271) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +4 // HL-C113 step 8: +3 // HL-C128 step 2: +5 // HL-C128 step 3: +4 // HL-C128 step 4: +6 // HL-C128 step 5: +5 // HL-C127: +5 // HL-C128 step 7: +5 // HL-C128 step 8: +6 // HL-C128 step 9: +5 // HL-C128 step 10: +5 // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288)
+      lessonCount: 549, // HL-C194: +16 Spanish words // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C175: +5 -- chapter 272, reading between the lines // HL-C173: +3 -- B2 closes (chapter 271) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +4 // HL-C113 step 8: +3 // HL-C128 step 2: +5 // HL-C128 step 3: +4 // HL-C128 step 4: +6 // HL-C128 step 5: +5 // HL-C127: +5 // HL-C128 step 7: +5 // HL-C128 step 8: +6 // HL-C128 step 9: +5 // HL-C128 step 10: +5 // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295)
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -830,7 +950,7 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 806, // HL-C194: +16 Spanish words // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C175: +5 -- chapter 272, reading between the lines // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // +3: HL-C98's per-cell atoms // +7: HL-C88 slices 5-6 // +2: HL-C88 slice 7 (ES-C09-ncia) // +2: HL-C88 slice 8 (-ario, review, synthesis) // +2: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +2: HL-C113 preterite close (strong plurals, review, synthesis) // +3: HL-C113 imperfect subjunctive // +1: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +8 // HL-C128 step 2: +9 -- the demonstratives, their deixis, their position rule and three etymons // HL-C128 step 3: +10 -- muy, bastante, mal, malo, the scale, the apocope pattern and three etymons // HL-C128 step 4: +13 // HL-C128 step 5: +9 -- both gerund endings, its meaning, the progressive and its limit, the personal a and its reason, and the -ndum etymon // HL-C127: +10 -- the vosotros preterite for both ending groups and the strong stems, the imperfect plural for both, the three irregular plurals, the accent rule, and two completeness atoms // HL-C128 step 7: +8 // HL-C128 step 8: +15 // HL-C128 step 9: +8 // HL-C128 step 10: +11 // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288)
+      atomsTaught: 841, // HL-C194: +16 Spanish words // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C175: +5 -- chapter 272, reading between the lines // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // +3: HL-C98's per-cell atoms // +7: HL-C88 slices 5-6 // +2: HL-C88 slice 7 (ES-C09-ncia) // +2: HL-C88 slice 8 (-ario, review, synthesis) // +2: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +2: HL-C113 preterite close (strong plurals, review, synthesis) // +3: HL-C113 imperfect subjunctive // +1: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +8 // HL-C128 step 2: +9 -- the demonstratives, their deixis, their position rule and three etymons // HL-C128 step 3: +10 -- muy, bastante, mal, malo, the scale, the apocope pattern and three etymons // HL-C128 step 4: +13 // HL-C128 step 5: +9 -- both gerund endings, its meaning, the progressive and its limit, the personal a and its reason, and the -ndum etymon // HL-C127: +10 -- the vosotros preterite for both ending groups and the strong stems, the imperfect plural for both, the three irregular plurals, the accent rule, and two completeness atoms // HL-C128 step 7: +8 // HL-C128 step 8: +15 // HL-C128 step 9: +8 // HL-C128 step 10: +11 // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295)
       atomsNeverRevisited: 128, // HL-C194: +16 Spanish words // HL-C173: +3 -- B2 closes (chapter 271) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // slice 8 nets zero: -1 ES-FRIEND-NCIA-NCE (the new review and synthesis revisit it), +1 ES-ETYMON-ARIUS (introduced, never re-practised) // +2: HL-C98 // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +1: HL-C88 slice 9 (falsos amigos) // +1: B1 si-condition rung // +2: HL-C113 preterite plural // -2 (the review and synthesis revisit two orphaned atoms): HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // -1 (the review revisits an orphaned atom): HL-C113 unreal condition // HL-C113 step 7: -3 -- the review and synthesis revisit the three reported-speech atoms step 6 left unspent // HL-C113 step 8: +4 -- pero/tambien/tampoco mint lexical atoms the review rung has not spent yet // HL-C128 step 3: +1 // HL-C128 step 4: +2 // HL-C128 step 5: +2 // HL-C127: +3 // HL-C128 step 7: +1 // HL-C128 step 8: +1 -- 15 new atoms, and the ch256 review revisits all but one of them; without that review this would have been +15, which is what prompted writing it // HL-C128 step 9: -1 -- the ch261 review revisits all eight new atoms and one older orphan // HL-C128 step 10: +3 // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288)
     });
   });
