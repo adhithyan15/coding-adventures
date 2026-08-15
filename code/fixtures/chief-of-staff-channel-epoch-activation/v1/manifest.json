@@ -1,0 +1,162 @@
+{
+  "fixture_format": "D18T-durable-epoch-activation-fixtures-v1",
+  "spec": "code/specs/D18T-chief-of-staff-durable-epoch-activation-profile.md",
+  "generator_blob_sha1": "f93ea88a7fbb4dd5df245eab03b878ed808a42df",
+  "warning": "The test_only_secrets object contains deterministic conformance-only secrets. Never log or use them outside tests.",
+  "constants": {
+    "state_magic_ascii": "D18S",
+    "state_version": "2",
+    "plan_magic_ascii": "D18T",
+    "plan_version": "1",
+    "state_content_type": "application/vnd.coding-adventures.chief-channel-state-v2",
+    "plan_content_type": "application/vnd.coding-adventures.chief-channel-epoch-activation-v1",
+    "max_cas_attempts": "16"
+  },
+  "test_only_secrets": {
+    "current_cmk_hex": "2222222222222222222222222222222222222222222222222222222222222222",
+    "next_cmk_hex": "3333333333333333333333333333333333333333333333333333333333333333",
+    "originator_signing_seed_hex": "1111111111111111111111111111111111111111111111111111111111111111",
+    "receiver_a_private_key_hex": "4141414141414141414141414141414141414141414141414141414141414141",
+    "receiver_b_private_key_hex": "4242424242424242424242424242424242424242424242424242424242424242",
+    "ephemeral_private_key_hex": "5151515151515151515151515151515151515151515151515151515151515151",
+    "wrapping_nonce_hex": "616161616161616161616161616161616161616161616161"
+  },
+  "state_migrations": [
+    {
+      "name": "no-pending",
+      "d18s_v1_b64": "RDE4UwEAAAAAAAAAAAA=",
+      "d18s_v2_b64": "RDE4UwIAAAAAAAAAAAAAAAAAAAAAAA==",
+      "active_epoch": "0",
+      "next_sequence": "0"
+    },
+    {
+      "name": "pending-d18h",
+      "d18s_v1_b64": "RDE4UwEAAAAAAAAACAEAAACHRDE4SAEHBwcHBwd3B4cHBwcHBwcHF/BuXE2MgAcAAAAKb3JpZ2luYXRvcgGPR6CbbH3vkjRWeJq83vAAAAAAAAAABwAAAAAAAAAAAAAAGGFwcGxpY2F0aW9uL29jdGV0LXN0cmVhbfQD6dTNsluIAHQ+UrIku31HxmTQcg0/Ie7BsZlcX+Oc",
+      "d18s_v2_b64": "RDE4UwIAAAAAAAAAAAAAAAAAAAAIAQAAAIdEMThIAQcHBwcHB3cHhwcHBwcHBwcX8G5cTYyABwAAAApvcmlnaW5hdG9yAY9HoJtsfe+SNFZ4mrze8AAAAAAAAAAHAAAAAAAAAAAAAAAYYXBwbGljYXRpb24vb2N0ZXQtc3RyZWFt9APp1M2yW4gAdD5SsiS7fUfGZNByDT8h7sGxmVxf45w=",
+      "active_epoch": "0",
+      "next_sequence": "8"
+    }
+  ],
+  "activation_case": {
+    "name": "receivers-a-plus-b-to-b-only",
+    "base_epoch": "0",
+    "new_epoch": "1",
+    "plan_record_key": "018f47a09b6c7def923456789abcdef0/epochs/00000000000000000001/activation",
+    "plan_content_type": "application/vnd.coding-adventures.chief-channel-epoch-activation-v1",
+    "plan_b64": "RDE4VAEBj0egm2x975I0VniavN7wAAAAAAAAAAAAAAAAAAAAAQAAAAFukbjadFX3YVYcZcnRBJEnQqCJVYOfBQq2WwBwYvPOWKVPWeA7Pdrz8CW0Dmda+55oPRH+jqisdMJy17OBxAl+",
+    "grant_b64": [
+      "RDE4RwEAAAAKb3JpZ2luYXRvcgAAAApyZWNlaXZlci1iAY9HoJtsfe+SNFZ4mrze8AAAAAAAAAABrZCKinCKygdYjNp8TtPkTUlmqAqauy8eS7rFPGdBTjRhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWHPKvDh+MW695UdTpX3HJTs8KeV7pfxTA9SZKP65YxiZkTsjtt7s9V0gzirD6ba/3VsrFXoTSe7+sVtluq26n1EG0gcrC7pA6PvuPYcpJBBcVIm+3TyM007zfSufOrqZ7Z93xpRJKbl9DGBZKl0owAE"
+    ],
+    "receiver_a_retains_epochs": [
+      "0"
+    ],
+    "receiver_b_retains_epochs": [
+      "0",
+      "1"
+    ],
+    "receiver_a_new_grant": null
+  },
+  "crash_replay_traces": [
+    {
+      "name": "after-custody-selection",
+      "operation": "replay-plan-and-all-grants",
+      "expected": "prepared"
+    },
+    {
+      "name": "after-plan-write",
+      "operation": "replay-all-grants",
+      "expected": "prepared"
+    },
+    {
+      "name": "after-first-grant",
+      "operation": "replay-remaining-grants",
+      "expected": "prepared"
+    },
+    {
+      "name": "after-all-grants",
+      "operation": "verify-and-activate",
+      "expected": "activated"
+    },
+    {
+      "name": "after-activation-cas",
+      "operation": "verify-exact-plan",
+      "expected": "idempotent"
+    }
+  ],
+  "race_traces": [
+    {
+      "name": "publish-reservation-wins",
+      "operation": "activation",
+      "expected": "pending_append"
+    },
+    {
+      "name": "activation-wins",
+      "operation": "next-publish",
+      "expected": "epoch-1-sequence-preserved"
+    },
+    {
+      "name": "same-candidate-retry",
+      "operation": "custody-selection",
+      "expected": "idempotent"
+    },
+    {
+      "name": "different-candidate-loses",
+      "operation": "custody-selection",
+      "expected": "conflicting_preparation"
+    }
+  ],
+  "stable_error_codes": [
+    "not_initialized",
+    "channel_destroyed",
+    "invalid_plan",
+    "corrupt_record",
+    "pending_append",
+    "unactivated_epoch",
+    "active_key_missing",
+    "conflicting_active_key",
+    "preparation_missing",
+    "conflicting_preparation",
+    "conflicting_plan",
+    "conflicting_grant",
+    "unexpected_epoch",
+    "decreasing_epoch",
+    "epoch_exhausted",
+    "concurrent_update",
+    "storage_error",
+    "custody_error",
+    "crypto_error"
+  ],
+  "negative_scenarios": [
+    {
+      "name": "pending-append",
+      "operation": "activation",
+      "expected": "pending_append"
+    },
+    {
+      "name": "corrupt-public-record",
+      "operation": "recovery",
+      "expected": "corrupt_record"
+    },
+    {
+      "name": "missing-custody",
+      "operation": "activation",
+      "expected": "preparation_missing"
+    },
+    {
+      "name": "destroyed-channel",
+      "operation": "activation",
+      "expected": "channel_destroyed"
+    },
+    {
+      "name": "epoch-exhaustion",
+      "operation": "preparation",
+      "expected": "epoch_exhausted"
+    },
+    {
+      "name": "sixteen-cas-conflicts",
+      "operation": "activation",
+      "expected": "concurrent_update"
+    }
+  ],
+  "secret_erasure_capability": "guaranteed"
+}

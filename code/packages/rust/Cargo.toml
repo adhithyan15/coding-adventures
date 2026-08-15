@@ -1095,4 +1095,5 @@ members = [
   "vault-pm-config",
   "vault-pm-cli-host",
   "vault-pm-cli",
+  "chief-of-staff-channel-epoch-activation",
 ]

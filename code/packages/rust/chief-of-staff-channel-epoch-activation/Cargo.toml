@@ -1,0 +1,20 @@
+[package]
+name = "chief-of-staff-channel-epoch-activation"
+version = "0.1.0"
+edition = "2021"
+description = "Crash-safe durable D18T channel epoch activation"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
+coding_adventures_sha256 = { path = "../sha256" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+coding-adventures-json-parser = { path = "../json-parser" }
+coding_adventures_sha1 = { path = "../sha1" }
