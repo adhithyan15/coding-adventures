@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.3] - 2026-08-15 - atomic memory opcode table, 0xFE prefix (WASM18)
+
+### Added
+
+- New `AtomicOpKind` enum: `Load`, `Store`, `Rmw`, `Cmpxchg`, `Fence`,
+  `Notify`, `Wait` -- each documenting its own pop/push shape.
+- New `AtomicOpInfo` struct (`name`, `sub_opcode`, `kind`, `value_type`,
+  `natural_align`) and `pub static ATOMIC_OPS: &[AtomicOpInfo]`, a single
+  shared 67-entry table covering the entire `0xFE`-prefixed atomics
+  family in one place -- unlike the `0xFB`/`0xFC` prefix families, whose
+  sub-opcode dispatch is duplicated ad hoc per consumer, `wasm-execution`
+  and `wasm-validator` both look atomic ops up here rather than
+  hand-rolling their own tables, since this family is large (67 entries)
+  but fully regular.
+- `get_atomic_op(sub_opcode: u8)` / `get_atomic_op_by_name(name: &str)`
+  lookup helpers.
+- 4 new unit tests, including a count/no-duplicates check
+  (`3 + 1 + 7 + 7 + 7*7 == 67`: notify/wait32/wait64 + fence + 7 loads +
+  7 stores + 7 RMW-op-kinds × 7 width variants) and a byte-range
+  contiguity check (`0x00-0x03` and `0x10-0x4E` present, `0x04-0x0F`
+  absent).
+
+### Corrected (implementation-time, vs. the merged W09 spec)
+
+- The merged spec described `memory.atomic.notify`/`wait32`/`wait64` as
+  "deliberately absent -- meaningless without real threads." Reading the
+  real, pinned-commit `atomic.wast` testsuite file directly showed these
+  three instructions are declared inline in the SAME top-level module as
+  every other atomic op under test, so omitting them would have made
+  `wasm-wast-parser` fail to *parse* the entire file on the first
+  occurrence -- losing all conformance value from vendoring it, not just
+  leaving 3 opcodes ungraded as intended. They also turn out to have
+  fully deterministic, single-agent-computable semantics: `notify`
+  always returns 0 woken (no second agent can ever be waiting);
+  `wait32`/`wait64` return 1 ("not-equal") or 2 ("timed-out") based on a
+  plain memory comparison, since nothing can ever notify a
+  single-threaded VM. Both are implemented for real here, not stubbed.
+
 ## [0.2.2] - 2026-08-15 - reference-types table/ref.func opcodes (WASM17)
 
 ### Added

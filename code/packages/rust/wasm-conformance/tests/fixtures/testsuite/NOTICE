@@ -4,7 +4,9 @@ test suite, unmodified, for use by the `wasm-conformance` crate (see
 
 Source:        https://github.com/WebAssembly/testsuite
 Pinned commit: 28864811cf03bdbf880733786148feaba339582d
-Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
+Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08),
+               extended 2026-08-15 (WASM18 -- proposals/threads/atomic.wast,
+               vendored flat as atomic.wast, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -17,14 +19,20 @@ this repo's conformance baseline reproducible across re-fetches. Bumping
 the pin is a deliberate, reviewed decision, not something a re-run of the
 fetch script does casually.
 
-Only WASM 1.0 MVP-core `.wast` files are vendored here; see
+Mostly WASM 1.0 MVP-core `.wast` files are vendored here; see
 `code/specs/W05-wasm-conformance-harness.md` section 6 for the original
 exclusion rationale (SIMD, threads, exceptions, tail calls, bulk memory
 operations, GC/reference-types beyond this repo's existing narrow slice,
 memory64, the component model, and files needing the `spectest`
 host-import module) -- still the same list after the WASM08 slice
-extension, just a larger set of files that satisfy it. Each excluded
-category becomes its own future phase's vendored slice.
+extension, just a larger set of files that satisfy it. WASM18 (`code/
+specs/W09-wasm-atomics-plain.md`) is the first deliberate exception:
+`atomic.wast` exercises PLAIN atomic memory ops (load/store/RMW/
+cmpxchg/fence), which don't need real multi-threading to be meaningful
+-- `memory.atomic.notify`/`wait32`/`wait64`, in that same file, remain
+genuinely out of scope and are graded `NotYetSupported`. Every other
+excluded category above still becomes its own future phase's vendored
+slice.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

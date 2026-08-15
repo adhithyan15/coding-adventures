@@ -112,6 +112,62 @@
         "not_yet_supported": 0
       }
     },
+    "atomic.wast": {
+      "action": {
+        "pass": 59,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 48,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 142,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 45,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 3,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "block.wast": {
       "action": {
         "pass": 0,
@@ -2635,7 +2691,7 @@
   },
   "aggregate": {
     "action": {
-      "pass": 3,
+      "pass": 62,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 1
@@ -2647,7 +2703,7 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 909,
+      "pass": 957,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 53
@@ -2659,13 +2715,13 @@
       "not_yet_supported": 375
     },
     "assert_return": {
-      "pass": 13874,
+      "pass": 14016,
       "fail": 2,
       "trap": 0,
       "not_yet_supported": 3
     },
     "assert_trap": {
-      "pass": 419,
+      "pass": 464,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 0
@@ -2677,7 +2733,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 108,
+      "pass": 111,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 0
@@ -2698,7 +2754,7 @@
     "global.wast": "at byte 17335: expected an index, found \"funcref\"",
     "id.wast": "at byte 222: duplicate func identifier \"$\"",
     "memory.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
-    "memory_grow.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
+    "memory_grow.wast": "at byte 266: unknown instruction \"$mem1\"",
     "select.wast": "at byte 656: unknown instruction \"result\"",
     "stack.wast": "at byte 1455: unknown instruction \"$body\"",
     "unreached-valid.wast": "at byte 1180: unknown instruction \"call_ref\""

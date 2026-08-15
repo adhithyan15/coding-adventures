@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.9] — 2026-08-15 (WASM18 — plain atomic memory op handlers, no real concurrency)
+
+### Added
+
+- Real opcode handlers for the entire `0xFE`-prefixed atomics family
+  (load/store/RMW/cmpxchg/fence/notify/wait), dispatched via
+  `wasm_opcodes::ATOMIC_OPS` -- one `register_context_opcode(0xFE, ...)`
+  handler matching on `AtomicOpKind` rather than 67 individual handlers.
+  RMW ops (`add`/`sub`/`and`/`or`/`xor`/`xchg`) and `cmpxchg` reuse the
+  existing narrow-width `LinearMemory` load/store methods already built
+  for MVP `i32`/`i64` load/store, so no new memory-access code paths
+  were needed -- only new dispatch and arithmetic.
+- `memory.atomic.notify` always returns 0 woken; `wait32`/`wait64`
+  return 1 ("not-equal") or 2 ("timed-out") based on a plain memory
+  comparison against `expected` -- both fully deterministic without any
+  real threading, since a single-threaded VM can never have a second
+  agent blocked in `wait`. See `wasm-opcodes` 0.2.3's CHANGELOG for why
+  this contradicts the merged W09 spec's original "meaningless without
+  real threads" framing.
+- Runtime alignment trap: atomic instructions now check that the
+  *effective* address (`base + offset`, where `base` can be a runtime
+  value) is a multiple of the operation's natural alignment, trapping
+  with `"unaligned atomic"` if not. This is distinct from (and in
+  addition to) `wasm-validator`'s existing check of the *declared*
+  `align=` immediate, which is a static property of the bytecode and
+  can't see a runtime-computed address. Confirmed against the real,
+  pinned-commit `atomic.wast` testsuite's own 45 `assert_trap
+  ... "unaligned atomic"` cases -- all 45 now pass (previously 0/45,
+  since this check didn't exist at all).
+- 13 new tests, including a misalignment/naturally-aligned pair proving
+  the new runtime check traps exactly where it should and doesn't
+  over-trigger on valid accesses.
+
 ## [0.6.8] — 2026-08-15 (WASM17 — ref.func, table.get, table.set opcode handlers)
 
 ### Added

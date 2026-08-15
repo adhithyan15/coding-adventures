@@ -115,6 +115,20 @@ TESTSUITE_FILES = [
     "utf8-invalid-encoding.wast",
 ]
 
+# Reference-types/threads-proposal files whose UPSTREAM path lives under
+# `proposals/<name>/` rather than the repo root every MVP-core file above
+# is fetched from. Vendored FLAT under `testsuite/` anyway, like every
+# other file here (`wasm_conformance_report`'s file discovery is a plain
+# `fs::read_dir` over that one directory, no subdirectory awareness) --
+# only the fetch SOURCE path differs, not where the file lands locally.
+PROPOSAL_FILES = {
+    # WASM18 (plain atomic load/store/RMW/cmpxchg + fence). memory.atomic.
+    # notify/wait32/wait64, also in this same file, are NotYetSupported --
+    # meaningless without real threads, see code/specs/
+    # W09-wasm-atomics-plain.md.
+    "atomic.wast": "proposals/threads/atomic.wast",
+}
+
 # The corpus itself is Apache-2.0 licensed; vendor the license verbatim
 # alongside the fixture files it covers.
 EXTRA_FILES = ["LICENSE"]
@@ -136,7 +150,12 @@ def main() -> None:
         dest = OUTPUT_DIR / name
         print(f"fetching {name} @ {PINNED_SHA[:12]} -> {dest.relative_to(FIXTURES_DIR)}")
         fetch(name, dest)
-    print(f"done: {len(TESTSUITE_FILES)} testsuite files + {len(EXTRA_FILES)} extra file(s)")
+    for local_name, upstream_path in PROPOSAL_FILES.items():
+        dest = OUTPUT_DIR / local_name
+        print(f"fetching {local_name} (upstream: {upstream_path}) @ {PINNED_SHA[:12]} -> {dest.relative_to(FIXTURES_DIR)}")
+        fetch(upstream_path, dest)
+    total = len(TESTSUITE_FILES) + len(PROPOSAL_FILES)
+    print(f"done: {total} testsuite files + {len(EXTRA_FILES)} extra file(s)")
 
 
 if __name__ == "__main__":
