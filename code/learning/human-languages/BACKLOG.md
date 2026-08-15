@@ -9,6 +9,83 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C183 — VOCABULARY MASS is the dominant remaining cost, and the gate already said so
+
+**Owner, 2026-08-14:** *"a native speaker knows something like 10K words … I want
+at least 500 verbs covered. Lot more adjectives, adverbs and others. This feels
+woefully inadequate."* Measured, and correct.
+
+`LEVEL_VOCABULARY` (`level-gate.ts:42`) already sets the targets:
+
+| level | target | Spanish |
+|---|---:|---:|
+| pre-A1 | 300 | **267 — FAILS** |
+| A1 | 600 | |
+| A2 | 1,200 | |
+| B1 | 2,500 | |
+| B2 | 4,000 | |
+| C1 | 8,000 | |
+| **C2** | **16,000** | **1.7% of it** |
+
+Spanish teaches **267 distinct word tokens** across **211** word/phrase lessons,
+and ~46 look like infinitives against an owner target of **500 verbs** (9%). It
+does not clear pre-A1 — which is exactly why `attained` is null.
+
+**The reframing this forces.** Closing the spine at 33/33 measured **functional
+coverage**: a rung for every can-do statement. It says nothing about **lexical
+mass**, the words needed to stand on those rungs. All 33 nodes were closed with
+211 word lessons, which should have read as a warning rather than a milestone —
+and every progress report in that session led with the spine number.
+
+It also explains something noticed but not understood at the time: three of four
+C1 "gaps" were satisfiable by alias. **A 33-node functional spine is too coarse
+to drive authoring.** Vocabulary is the real cost, and it has a real target.
+
+**Scale.** ~15,700 more words for Spanish alone to reach C2, and the same again
+across 21 other tracks. HL09 §3's estimate of ~8,000 lessons for a complete track
+is consistent; Spanish has 463.
+
+**Order of work:**
+
+1. **Lead with the vocabulary number in every report** — `vocabulary /
+   LEVEL_VOCABULARY[next level]` per track, beside `attained`. Free, and it stops
+   "33/33" reading as completeness. Do this *before* authoring anything.
+2. **Close the `word_class` classifier** (~23% of Spanish lexical lessons today,
+   per [[feedback_measure_before_building_it_redefines_the_task]]) so the
+   verb/adjective/adverb census the owner asked for can exist at all. Prerequisite,
+   not a side quest.
+3. **Plan authoring against the deficit**, cheapest rung first: pre-A1 needs only
+   **33 more words**, A1 another 300. The corpus is nearer a *usable* A1 than the
+   C2 headline suggests.
+4. **The lesson-to-word ratio — and the answer to "is 16,000 even reachable".**
+   463 lessons yield 267 words: **~0.58 new words per lesson.** Holding that
+   density, 16,000 words needs **~27,600 lessons** for Spanish.
+
+   **Owner, 2026-08-14, on being shown the deficit:** *"This is why I kept telling
+   you to ignore the page count and lesson count and focus on teaching with a very
+   gentle ramp. If we end up 50K lessons, that is fine with me. We can split them
+   up later."*
+
+   So the answer is **yes, and without touching the ramp.** 27,600 sits inside the
+   stated budget with room to spare. **The gentle ramp and the vocabulary target
+   were never in tension** — and the sessions that treated them as if they were
+   made a category error worth naming, because it will recur:
+
+   > A gentle ramp means **few new atoms per lesson**. It does NOT mean few
+   > lessons, small chapters, or a compact book. Closing a spine node with a tidy
+   > four-lesson chapter optimises the wrong quantity. The budget that must stay
+   > small is per-lesson load; the quantity that must grow without limit is the
+   > number of lessons.
+
+   Practical consequence: **stop sizing chapters to close nodes.** Size them to
+   carry vocabulary at the density the ramp allows, and let the node close when it
+   closes. See [[feedback_page_count_is_never_a_constraint]] — the instruction was
+   already recorded; what was missing was the arithmetic showing it is the *only*
+   way the target is reachable.
+
+Related: HL-C182 (nothing measures whether a reader could pass anything) — this
+row is the concrete, already-instrumented half of that gap.
+
 ## HL-C166 — CLOSED 2026-08-14. `data/scripts/repin_tests.py`
 
 Committed, documented, and verified by breaking a pin on purpose: the dry run
