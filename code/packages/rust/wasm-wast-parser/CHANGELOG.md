@@ -35,6 +35,18 @@
   itself) is caught by an early flush-to-zero/overflow-to-infinity return
   before the guard/sticky bit-scan loop runs, rather than iterating a
   range sized by the raw exponent value.
+- Security review (round 1) found the DoS guard above was itself
+  unreachable on the exact inputs it was meant to protect against: the
+  arithmetic computing `e` (`base_exp2 + bitlen - 1`) and `base_exp2`
+  itself (`exponent - 4 * frac_part.len()`) used plain `+`/`-` on a fully
+  attacker-controlled `i64` exponent -- a ~25-byte literal like
+  `f64.const 0x1p9223372036854775807` overflow-panicked computing `e`,
+  and `f64.const 0x1.5p-9223372036854775808` underflow-panicked computing
+  `base_exp2`, in both cases BEFORE the guard checks ever ran. Both now
+  use `saturating_add`/`saturating_sub`, which is semantically correct
+  here (a saturated value is always far enough outside the guards'
+  window that they still fire the right way) and closes the crash for
+  both a hand-verified reproduction and a new regression test per case.
 - Regenerated `wasm-conformance`'s baseline: `const.wast`'s
   `assert_return` tally goes from 260/300 to 300/300 (fully clean) and
   `simd_const.wast` improves from 209/240 to 235/240 -- zero regressions

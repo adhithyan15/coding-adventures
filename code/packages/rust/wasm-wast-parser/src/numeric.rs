@@ -148,8 +148,15 @@ fn split_hex_float(hex: &str, text: &str, pos: usize) -> Result<(Vec<u32>, i64),
         .parse()
         .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?;
     // Each hex digit after the point shifts the true value right by
-    // exactly 4 bits (16^-1 = 2^-4).
-    let base_exp2 = exponent - 4 * frac_part.len() as i64;
+    // exactly 4 bits (16^-1 = 2^-4). Saturating, not `-`: `exponent` is a
+    // fully attacker-controlled `i64` from the literal's `p<exponent>`
+    // text (e.g. `p-9223372036854775808`) -- with any non-empty
+    // `frac_part`, plain subtraction near `i64::MIN` underflow-panics
+    // (security review finding, task #80). Saturating to `i64::MIN` is
+    // semantically correct: `round_hex_mantissa`'s underflow guard flushes
+    // any such extreme `base_exp2` to 0.0 regardless of how far past the
+    // real minimum it saturates.
+    let base_exp2 = exponent.saturating_sub(4i64.saturating_mul(frac_part.len() as i64));
     Ok((digits, base_exp2))
 }
 
@@ -277,8 +284,18 @@ fn round_hex_mantissa(digits: &[u32], base_exp2: i64, mantissa_bits: i64, exp_bi
 
     // `value = 1.<mantissa_bits> * 2^e` once normalized -- `e` is the
     // binary exponent of the leading bit (bit `bitlen - 1`) after
-    // `base_exp2` shifts the whole digit sequence into place.
-    let e = base_exp2 + bitlen - 1;
+    // `base_exp2` shifts the whole digit sequence into place. Saturating,
+    // not `+`/`-`: `base_exp2` can already be `i64::MAX`/`i64::MIN`-
+    // adjacent from an attacker-controlled `p<exponent>` (e.g.
+    // `p9223372036854775807`), and plain arithmetic here overflow-panics
+    // BEFORE either guard below gets a chance to run (security review
+    // finding, task #80) -- the guards below only protect the guard/
+    // sticky bit-scan from an unbounded range, they can't help if `e`
+    // itself never finishes computing. Saturating is semantically
+    // correct: an `e` this extreme is always far outside the guards'
+    // `[min_normal_exp - mantissa_bits - 1, exp_bias]` window regardless
+    // of exactly where it saturates, so the guards still fire correctly.
+    let e = base_exp2.saturating_add(bitlen).saturating_sub(1);
 
     // Exponents below `min_normal_exp` have no implicit leading 1 -- the
     // value is a SUBNORMAL, stored as `0.<mantissa_bits> * 2^min_normal_exp`
@@ -615,6 +632,33 @@ mod tests {
     fn hex_float_above_largest_finite_value_overflows_to_signed_infinity() {
         assert_eq!(parse_f64_bits("0x1p+2000", 0).unwrap(), f64::INFINITY.to_bits());
         assert_eq!(parse_f64_bits("-0x1p+2000", 0).unwrap(), f64::NEG_INFINITY.to_bits());
+    }
+
+    /// Security review regression (task #80): `p<exponent>` is a fully
+    /// attacker-controlled `i64` (this parser consumes untrusted `.wast`
+    /// source) -- `p9223372036854775807` (`i64::MAX`) used to
+    /// overflow-panic computing `e = base_exp2 + bitlen - 1` in
+    /// `round_hex_mantissa`, crashing the process on a ~25-byte literal,
+    /// BEFORE the overflow/underflow guards in that function ever got a
+    /// chance to run. Must saturate and flush to infinity, not panic, on
+    /// a debug build (`overflow-checks = true`).
+    #[test]
+    fn hex_float_extreme_positive_exponent_saturates_instead_of_overflow_panicking() {
+        assert_eq!(parse_f64_bits("0x1p9223372036854775807", 0).unwrap(), f64::INFINITY.to_bits());
+        assert_eq!(parse_f32_bits("0x1p9223372036854775807", 0).unwrap(), f32::INFINITY.to_bits());
+    }
+
+    /// Security review regression (task #80): the mirror case --
+    /// `p-9223372036854775808` (`i64::MIN`) combined with any non-empty
+    /// fractional part used to underflow-panic in `split_hex_float`'s
+    /// `base_exp2 = exponent - 4 * frac_part.len()`, again crashing on a
+    /// short, trivially crafted literal. Must saturate and flush to
+    /// (signed) zero, not panic.
+    #[test]
+    fn hex_float_extreme_negative_exponent_with_fraction_saturates_instead_of_underflow_panicking() {
+        assert_eq!(parse_f64_bits("0x1.5p-9223372036854775808", 0).unwrap(), 0);
+        assert_eq!(parse_f64_bits("-0x1.5p-9223372036854775808", 0).unwrap(), 0x8000_0000_0000_0000);
+        assert_eq!(parse_f32_bits("0x1.5p-9223372036854775808", 0).unwrap(), 0);
     }
 
     #[test]
