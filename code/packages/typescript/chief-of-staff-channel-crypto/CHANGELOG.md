@@ -11,6 +11,10 @@
   receiver-state transition, and prospective-revocation fixture.
 - Make the package-native BUILD run this package after installing local crypto
   dependencies, and fix HKDF typed-array compatibility under current TypeScript.
+- Add receiver-key-free D18G signature verification and D18F creation through
+  an injected non-exportable signer callback for D18T orchestration.
+- Seal `RotationPlan` construction behind the trusted D18Q planner boundary so
+  D18T cannot receive a caller-assembled plan.
 
 ## 0.1.0
 

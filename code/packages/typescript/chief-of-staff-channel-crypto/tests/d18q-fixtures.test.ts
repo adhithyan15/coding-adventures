@@ -23,6 +23,7 @@ import {
   sealChannelKey,
   sealChannelKeyWithMaterial,
   secretErasureCapability,
+  verifyGrantSignature,
   type KeyGrantErrorCode,
   type SecureRandomSource,
 } from "../src/index.js";
@@ -236,6 +237,9 @@ describe("D18Q shared grant fixture", () => {
       expect(keyGrantSignatureInput(grant)).toEqual(fromBase64(testCase.signature_input_b64));
       const decoded = grantDeserialize(record);
       expect(grantSerialize(decoded), `${testCase.name}: round trip`).toEqual(record);
+      expect(() => verifyGrantSignature(
+        decoded, originatorId, receiverId, testChannelId, originatorPublicKey,
+      )).not.toThrow();
       expect(openChannelKeyGrant(
         decoded, originatorId, receiverId, testChannelId, receiver, originatorPublicKey,
       ).bytes).toEqual(fromHex(testCase.expected_opened_cmk_hex));
@@ -312,6 +316,26 @@ describe("D18Q shared grant fixture", () => {
       ), testCase.expected_error, testCase.name);
       receiver.destroy();
     }
+  });
+
+  it("verifies public D18G provenance without receiver private-key custody", () => {
+    const positive = fixture.positive_cases[0]!;
+    const grant = grantDeserialize(fromBase64(positive.d18g_b64));
+    expect(() => verifyGrantSignature(
+      grant,
+      fromBase64(positive.originator_id_b64),
+      fromBase64(positive.receiver_id_b64),
+      fromHex(positive.channel_id_hex),
+      originatorPublicKey,
+    )).not.toThrow();
+    const invalid = fixture.opening_negative_cases.find(({ name }) => name === "invalid-signature")!;
+    expectCode(() => verifyGrantSignature(
+      grantDeserialize(fromBase64(invalid.d18g_b64)),
+      fromBase64(invalid.expected_originator_id_b64),
+      fromBase64(invalid.expected_receiver_id_b64),
+      fromHex(invalid.expected_channel_id_hex),
+      originatorPublicKey,
+    ), invalid.expected_error);
   });
 
   it("installs grants atomically, monotonically, and with skipped epochs", () => {

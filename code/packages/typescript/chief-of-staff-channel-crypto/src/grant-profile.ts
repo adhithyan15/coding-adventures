@@ -18,6 +18,7 @@ const MAX_IDENTITY_BYTES = 4096;
 const MAX_U64 = (1n << 64n) - 1n;
 const KEY_GRANT_CONTEXT = new TextEncoder().encode("chief-channel-key-grant-v1");
 const KEY_WRAP_CONTEXT = new TextEncoder().encode("chief-channel-key-wrap-v1");
+const ROTATION_PLAN_FACTORY = Symbol("trusted-rotation-plan-factory");
 
 /** Stable D18Q error codes shared by every portable implementation. */
 export const KEY_GRANT_ERROR_CODES = [
@@ -361,6 +362,30 @@ export function grantSerialize(grant: PortableKeyGrant): Uint8Array {
   );
 }
 
+/** Verify one grant's public bindings and originator signature without a receiver private key. */
+export function verifyGrantSignature(
+  grant: PortableKeyGrant,
+  expectedOriginatorId: Uint8Array,
+  expectedReceiverId: Uint8Array,
+  expectedChannelId: Uint8Array,
+  originatorPublicKey: Uint8Array,
+): void {
+  validateGrant(grant);
+  requireLength(expectedChannelId, 16);
+  requireLength(originatorPublicKey, 32);
+  if (!equalBytes(grant.originatorId, expectedOriginatorId)) fail("unexpected_originator");
+  if (!equalBytes(grant.receiverId, expectedReceiverId)) fail("unexpected_receiver");
+  if (!equalBytes(grant.channelId, expectedChannelId)) fail("unexpected_channel");
+  const signatureInput = grantSignatureInput(
+    grant.originatorId, grant.receiverId, grant.channelId, grant.keyEpoch,
+    grant.ephemeralPublicKey, grant.wrappingNonce, grant.wrappedCmk,
+  );
+  let valid = false;
+  try { valid = verify(signatureInput, grant.originatorSignature, originatorPublicKey); }
+  catch { /* Invalid encoded points are one portable signature failure. */ }
+  if (!valid) fail("invalid_signature");
+}
+
 /** Seal with independently generated ephemeral private-key and nonce material. */
 export function sealChannelKey(
   fields: KeyGrantFields,
@@ -449,19 +474,9 @@ export function openChannelKeyGrant(
   receiverKeyPair: ReceiverKeyPair,
   originatorPublicKey: Uint8Array,
 ): ChannelMasterKey {
-  validateGrant(grant);
-  requireLength(expectedChannelId, 16);
-  requireLength(originatorPublicKey, 32);
-  if (!equalBytes(grant.originatorId, expectedOriginatorId)) fail("unexpected_originator");
-  if (!equalBytes(grant.receiverId, expectedReceiverId)) fail("unexpected_receiver");
-  if (!equalBytes(grant.channelId, expectedChannelId)) fail("unexpected_channel");
-  const signatureInput = grantSignatureInput(
-    grant.originatorId, grant.receiverId, grant.channelId, grant.keyEpoch,
-    grant.ephemeralPublicKey, grant.wrappingNonce, grant.wrappedCmk,
+  verifyGrantSignature(
+    grant, expectedOriginatorId, expectedReceiverId, expectedChannelId, originatorPublicKey,
   );
-  if (!verify(signatureInput, grant.originatorSignature, originatorPublicKey)) {
-    fail("invalid_signature");
-  }
   let sharedSecret: Uint8Array | undefined;
   let wrappingKey: Uint8Array | undefined;
   let plaintext: Uint8Array | undefined;
@@ -630,7 +645,7 @@ export class RotationPlan {
   readonly #newCmk: ChannelMasterKey;
   readonly #grants: readonly PortableKeyGrant[];
 
-  constructor(newEpoch: bigint, newCmk: ChannelMasterKey, grants: readonly PortableKeyGrant[]) {
+  private constructor(newEpoch: bigint, newCmk: ChannelMasterKey, grants: readonly PortableKeyGrant[]) {
     this.newEpoch = newEpoch;
     this.#newCmk = newCmk.clone();
     this.#grants = Object.freeze([...grants]);
@@ -640,6 +655,14 @@ export class RotationPlan {
   get newCmk(): ChannelMasterKey { return this.#newCmk.clone(); }
   get grants(): readonly PortableKeyGrant[] { return this.#grants; }
   destroy(): void { this.#newCmk.destroy(); }
+
+  static [ROTATION_PLAN_FACTORY](
+    newEpoch: bigint,
+    newCmk: ChannelMasterKey,
+    grants: readonly PortableKeyGrant[],
+  ): RotationPlan {
+    return new RotationPlan(newEpoch, newCmk, grants);
+  }
 }
 
 /** Create a complete receiver-sorted next-epoch plan or no plan at all. */
@@ -670,7 +693,7 @@ export function planRotation(
       const fields = new KeyGrantFields(originatorId, receiverId, channelId, currentEpoch + 1n);
       grants.push(receiver.seal(fields, newCmk, signingKey));
     }
-    return new RotationPlan(currentEpoch + 1n, newCmk, grants);
+    return RotationPlan[ROTATION_PLAN_FACTORY](currentEpoch + 1n, newCmk, grants);
   } finally {
     for (const receiver of ordered) receiver.destroy();
   }

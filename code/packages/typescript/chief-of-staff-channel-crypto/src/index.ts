@@ -226,9 +226,19 @@ export function messageCreate(
   signingSecretKey: Uint8Array,
   channelMasterKey: Uint8Array,
 ): D18Message {
+  requireLength(signingSecretKey, 64);
+  return messageCreateWithSigner(fields, plaintext, (message) => sign(message, signingSecretKey), channelMasterKey);
+}
+
+/** Validate, hash, encrypt, and sign using an injected non-exportable signing boundary. */
+export function messageCreateWithSigner(
+  fields: MessageFields,
+  plaintext: Uint8Array,
+  signer: (message: Uint8Array) => Uint8Array,
+  channelMasterKey: Uint8Array,
+): D18Message {
   validateMessageFields(fields);
   if (plaintext.length > MAX_CIPHERTEXT_BYTES) fail("length_limit_exceeded");
-  requireLength(signingSecretKey, 64);
   requireLength(channelMasterKey, 32);
 
   const plaintextHash = sha256(plaintext);
@@ -240,7 +250,8 @@ export function messageCreate(
     nonce,
     header,
   );
-  const originatorSignature = sign(header, signingSecretKey);
+  const originatorSignature = signer(header);
+  requireLength(originatorSignature, 64);
   return new D18Message({
     ...copyFields(fields),
     plaintextHash,
