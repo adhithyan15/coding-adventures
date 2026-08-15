@@ -4223,7 +4223,7 @@
     {
       "language": "sanskrit",
       "chapter": 30,
-      "sourceHash": "fnv1a64:2c1b7bb490617253",
+      "sourceHash": "fnv1a64:055ad239cd0e0fc2",
       "lessonIds": [
         "SA-C30-door",
         "SA-C30-seat",
@@ -4232,6 +4232,97 @@
         "SA-C30-anjali"
       ],
       "tex": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:6bc5210479745d33",
+      "lessonIds": [
+        "SA-C31-sky",
+        "SA-C31-moon",
+        "SA-C31-star",
+        "SA-C31-wind",
+        "SA-C31-snow"
+      ],
+      "tex": "sanskrit/book/chapters/ch31-the-sky.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:cf8be6540157f59b",
+      "lessonIds": [
+        "SA-C32-tree",
+        "SA-C32-leaf",
+        "SA-C32-grass",
+        "SA-C32-vine",
+        "SA-C32-wood"
+      ],
+      "tex": "sanskrit/book/chapters/ch32-the-tree.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:9a752a59b4cb412f",
+      "lessonIds": [
+        "SA-C33-river",
+        "SA-C33-bridge",
+        "SA-C33-mountain",
+        "SA-C33-town",
+        "SA-C33-sea"
+      ],
+      "tex": "sanskrit/book/chapters/ch33-river-and-road.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:445f03affd0b25c7",
+      "lessonIds": [
+        "SA-C34-arm",
+        "SA-C34-neck",
+        "SA-C34-bone",
+        "SA-C34-blood",
+        "SA-C34-body"
+      ],
+      "tex": "sanskrit/book/chapters/ch34-more-of-the-body.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:e15dcbdeebb2d5f9",
+      "lessonIds": [
+        "SA-C35-milk",
+        "SA-C35-honey",
+        "SA-C35-salt",
+        "SA-C35-book",
+        "SA-C35-bed"
+      ],
+      "tex": "sanskrit/book/chapters/ch35-in-the-house.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:289e84dee6e7f63a",
+      "lessonIds": [
+        "SA-C36-also",
+        "SA-C36-all",
+        "SA-C36-likewise",
+        "SA-C36-slowly",
+        "SA-C36-rightly"
+      ],
+      "tex": "sanskrit/book/chapters/ch36-more-short-replies.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:12579e79099d0158",
+      "lessonIds": [
+        "SA-C37-peace",
+        "SA-C37-respectfully",
+        "SA-C37-gracious",
+        "SA-C37-congratulations",
+        "SA-C37-blessing"
+      ],
+      "tex": "sanskrit/book/chapters/ch37-more-courtesy.tex"
     },
     {
       "language": "spanish",

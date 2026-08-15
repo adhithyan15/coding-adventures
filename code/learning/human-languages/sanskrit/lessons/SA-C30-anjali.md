@@ -33,7 +33,7 @@ reviews_of: [SA-C30-garland]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04] -->
 
-[PAUSE 2s] Before the last word of this book: what did *mālā* mean, and what did *dvāram* mean?
+[PAUSE 2s] Before the last word of the chapter: what did *mālā* mean, and what did *dvāram* mean?
 
 ## You'll want to know: अञ्जलिः
 <!-- hl-knowledge: introduces=[SA-LEX-C30-WELCOME-05]; assesses=[] -->
@@ -42,7 +42,7 @@ reviews_of: [SA-C30-garland]
 
 **अञ्जलिः** is the two hands brought together, palms cupped — the gesture your hands make when you say **नमस्ते**.
 
-The root means "to anoint, to smear", and the cupped hands were first of all a vessel: the shape you make to carry water, or an offering. The gesture of greeting began as the shape of giving something away. So the book ends where it began, on the first word you learned, with the hands finally named.
+The root means "to anoint, to smear", and the cupped hands were first of all a vessel: the shape you make to carry water, or an offering. The gesture of greeting began as the shape of giving something away. So the welcome closes where the book opened, on the first word you learned, with the hands finally named.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

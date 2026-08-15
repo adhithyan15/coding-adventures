@@ -7630,7 +7630,7 @@
     {
       "language": "sanskrit",
       "chapter": 30,
-      "sourceHash": "fnv1a64:310f38ae5c6c8c38",
+      "sourceHash": "fnv1a64:37caf6316eb491f8",
       "lessonIds": [
         "SA-C30-door",
         "SA-C30-seat",
@@ -7642,8 +7642,134 @@
       "drivablePrefix": 5,
       "text": "sanskrit/narration/ch30.txt",
       "json": "sanskrit/narration/ch30.json",
-      "textHash": "fnv1a64:0d72450d1a5655d7",
-      "jsonHash": "fnv1a64:ce6646f504ccd03b"
+      "textHash": "fnv1a64:3d47f78534d5f535",
+      "jsonHash": "fnv1a64:031e1ef5fb721ce0"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:53f2f918a9a9e5ab",
+      "lessonIds": [
+        "SA-C31-sky",
+        "SA-C31-moon",
+        "SA-C31-star",
+        "SA-C31-wind",
+        "SA-C31-snow"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch31.txt",
+      "json": "sanskrit/narration/ch31.json",
+      "textHash": "fnv1a64:12640e25e1d98a32",
+      "jsonHash": "fnv1a64:95dca8bd1243a44f"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:3beefa46ef3ec7e7",
+      "lessonIds": [
+        "SA-C32-tree",
+        "SA-C32-leaf",
+        "SA-C32-grass",
+        "SA-C32-vine",
+        "SA-C32-wood"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch32.txt",
+      "json": "sanskrit/narration/ch32.json",
+      "textHash": "fnv1a64:b172ea9f7244f99b",
+      "jsonHash": "fnv1a64:11a38616c123b705"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:80c59f8d2bc38a70",
+      "lessonIds": [
+        "SA-C33-river",
+        "SA-C33-bridge",
+        "SA-C33-mountain",
+        "SA-C33-town",
+        "SA-C33-sea"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch33.txt",
+      "json": "sanskrit/narration/ch33.json",
+      "textHash": "fnv1a64:8fe2525c5df363be",
+      "jsonHash": "fnv1a64:958b3036d67ff35e"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:e0cdf01f279990de",
+      "lessonIds": [
+        "SA-C34-arm",
+        "SA-C34-neck",
+        "SA-C34-bone",
+        "SA-C34-blood",
+        "SA-C34-body"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch34.txt",
+      "json": "sanskrit/narration/ch34.json",
+      "textHash": "fnv1a64:e7a51c08d91e466c",
+      "jsonHash": "fnv1a64:e9fb82235e3bee4c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:b3aa123df2611289",
+      "lessonIds": [
+        "SA-C35-milk",
+        "SA-C35-honey",
+        "SA-C35-salt",
+        "SA-C35-book",
+        "SA-C35-bed"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch35.txt",
+      "json": "sanskrit/narration/ch35.json",
+      "textHash": "fnv1a64:e1d6c58a853ebd08",
+      "jsonHash": "fnv1a64:b5f64cc33d27498d"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:f93a42631b63abcd",
+      "lessonIds": [
+        "SA-C36-also",
+        "SA-C36-all",
+        "SA-C36-likewise",
+        "SA-C36-slowly",
+        "SA-C36-rightly"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch36.txt",
+      "json": "sanskrit/narration/ch36.json",
+      "textHash": "fnv1a64:30d1346d9cef77ef",
+      "jsonHash": "fnv1a64:2b8b1f3fe542323c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:a2a5cda1a2c534a9",
+      "lessonIds": [
+        "SA-C37-peace",
+        "SA-C37-respectfully",
+        "SA-C37-gracious",
+        "SA-C37-congratulations",
+        "SA-C37-blessing"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch37.txt",
+      "json": "sanskrit/narration/ch37.json",
+      "textHash": "fnv1a64:6c39b317a03df6c4",
+      "jsonHash": "fnv1a64:76b892b03e3615c6"
     },
     {
       "language": "spanish",

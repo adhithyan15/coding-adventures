@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 31,
+  "title": "The Sky and Its Lights",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:53f2f918a9a9e5ab",
+  "lessons": [
+    {
+      "id": "SA-C31-sky",
+      "sequence": 1480,
+      "title": "आकाशः (ākāśaḥ) — the sky, open space",
+      "headword": "आकाशः",
+      "romanization": "ākāśaḥ",
+      "gloss": "the sky, open space",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74c892681d6cbe34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did añjaliḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आकाशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकाशः (ākāśaḥ) — \"the sky, open space\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आकाशः (ākāśaḥ) is the openness overhead. It is built on a piece meaning \"to shine, to be visible\", with आ in front — so the sky is named as the bright open place where things can be seen at all, rather than as a lid over the world."
+            },
+            {
+              "kind": "speech",
+              "text": "This one stayed home. Hindi, Marathi, Bengali and Telugu all keep it as ākāś or ākāśam, and traders carried it east, where Malay and Indonesian say angkasa for the sky to this day. Ends in -अः, like दीपः and हस्तः."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A new set of words, and the space that everything else in this chapter sits in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añjaliḥ, then ākāśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añjaliḥ*, then *ākāśaḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आकाशः (ākāśaḥ) mean? (\"the sky, open space\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C31-moon",
+      "sequence": 1490,
+      "title": "चन्द्रः (candraḥ) — the moon",
+      "headword": "चन्द्रः",
+      "romanization": "candraḥ",
+      "gloss": "the moon",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41634a53e1a0b594",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did ākāśaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चन्द्रः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चन्द्रः (candraḥ) — \"the moon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit names the moon by what it does: the root behind चन्द्रः (candraḥ) means \"to shine, to glitter\". The moon is simply the shining one."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin kept that root in candēre, \"to glow white\", and English is full of its children — candle, candid, incandescent, and the candidate, who once wore a bleached white toga to be seen in a crowd. Sanskrit called the moon the glowing thing; Latin called a candle the same thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A second word overhead, and a candle lit from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "candraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *candraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākāśaḥ, then candraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākāśaḥ*, then *candraḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चन्द्रः (candraḥ) mean? (\"the moon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C31-star",
+      "sequence": 1500,
+      "title": "तारा (tārā) — a star",
+      "headword": "तारा",
+      "romanization": "tārā",
+      "gloss": "a star",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6f7b2ad96fb8133",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did candraḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तारा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तारा (tārā) — \"a star\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तारा (tārā) is a star, and it is among the most travelled words in the family. English star, German Stern, Latin stella, Greek astēr — behind astronomy and asterisk and disaster, \"a bad star\" — and Persian setāre are all the same word, from a shape like ster-."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit dropped the s- at the front and kept the rest. Ends in -आ, like माला and यात्रा."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A third light overhead, and a word that reached every branch of the family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārā, and one of its cousins outside India",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārā*, and one of its cousins outside India]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तारा (tārā) mean? (\"a star\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C31-wind",
+      "sequence": 1510,
+      "title": "वायुः (vāyuḥ) — wind, air",
+      "headword": "वायुः",
+      "romanization": "vāyuḥ",
+      "gloss": "wind, air",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63cbdd05069bac15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did tārā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वायुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वायुः (vāyuḥ) — \"wind, air\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वायुः (vāyuḥ) is the wind, and also the air it is made of. Its root means \"to blow\", so the word says what the thing does."
+            },
+            {
+              "kind": "speech",
+              "text": "English wind is the same word worn down, and so are German Wind, Gothic winds and Latin ventus, which gives vent and ventilate. Ends in -uḥ, the ending you had on गुरुः."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A fourth thing overhead — the one you feel rather than the one you look for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "candraḥ, tārā, then vāyuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *candraḥ*, *tārā*, then *vāyuḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वायुः (vāyuḥ) mean? (\"wind, air\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C31-snow",
+      "sequence": 1520,
+      "title": "हिमम् (himam) — snow, frost",
+      "headword": "हिमम्",
+      "romanization": "himam",
+      "gloss": "snow, frost",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a71bd111371b170",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of the chapter: what did vāyuḥ mean, and what did ākāśaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हिमम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिमम् (himam) — \"snow, frost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हिमम् (himam) is snow, and cold generally: the word covers the frost on a field and the season it belongs to."
+            },
+            {
+              "kind": "speech",
+              "text": "Its cousins name the season rather than the snow: Greek kheimōn and Latin hiems, both \"winter\", the second giving English hibernate. And the mountains carry it: Himālaya is हिमम् (himam) joined to ālaya, \"a dwelling\" — the abode of snow. Neuter -अम्, like वस्त्रम्."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things overhead, and a mountain range whose name you can now take apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say what Himālaya means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say what *Himālaya* means]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हिमम् (himam) mean? (\"snow, frost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
