@@ -1,0 +1,64 @@
+% ============================================================================
+% landform-extent — for the landforms whose SAME cited USGS thesaurus span
+% also states an "extent" (size) descriptor, that descriptor
+% (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `landforms.adj` (`landform_description
+% (landform, description)`, ONE defining descriptor per landform: mountain,
+% valley, plateau, plain, canyon). That table's own header already quotes,
+% VERBATIM, the FULL USGS Feature Type Thesaurus span for every row — but
+% the descriptor-only schema reduced each span to a single atom, leaving a
+% distinct "extent" clause unused for two of the five landforms:
+%
+%   plateau → great_extent
+%     "Comparatively flat areas of great extent and elevation..."
+%
+%   plain → considerable_extent
+%     "Regions of general uniform slope, comparatively level and of
+%      considerable extent."
+%
+% "Extent" (how much area the landform covers) is categorically distinct
+% from the parent table's own descriptor for each: plateau's descriptor is
+% flat_elevated (about being FLAT and ELEVATED, not about SIZE), and plain's
+% descriptor is comparatively_level (about being LEVEL, not about SIZE) — so
+% decoding the extent clause is a genuinely separate fact, not a restatement.
+%
+% Recall is a binding query:
+%
+%     ? landform_extent(plateau, $Extent)   % great_extent
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `landforms.adj`'s own `landform_description`): each `row` lowers to a
+% ground relation `landform_extent(landform, extent)` carrying the citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns
+% the extent WITH its source, on the CPU, with zero model calls, and
+% abstains on mountain, valley, and canyon, whose own cited spans never use
+% the word "extent" for their size (mountain and canyon do not discuss
+% areal extent at all; valley's span says "relatively large", a distinct,
+% vaguer word the source itself does not tie to "extent"). The query also
+% runs BACKWARD — bind an extent and recall which landform it names:
+%
+%     ? landform_extent($Landform, considerable_extent)   % plain
+%
+% Provenance: reproduces, byte-for-byte, the SAME two spans already quoted
+% inside `landforms.adj`'s own header, from the SAME USGS-hosted Feature
+% Type Thesaurus page that table already cites — no new WebFetch, only a
+% different schema decoding the extent-clause half of each already-verified
+% quote. `trust authoritative` — the same tier `landforms.adj` already
+% carries (USGS, a U.S. federal .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table landform_extent {
+    columns landform, extent
+
+    row (plateau, great_extent)          % USGS Feature Type Thesaurus
+    row (plain, considerable_extent)     % USGS Feature Type Thesaurus
+
+    source "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent ..."
+    locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    trust authoritative
+
+    cites "Regions of general uniform slope, comparatively level and of considerable extent." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+}
