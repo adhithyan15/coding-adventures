@@ -68,6 +68,30 @@ pub fn parse_i32(text: &str, pos: usize) -> Result<i32, WastParseError> {
     Ok(signed as u32 as i32)
 }
 
+/// As [`parse_i32`], for the 8-bit range `[-2^7, 2^8-1]`. There's no plain
+/// `i8.const` in WASM (`i32` is the smallest scalar integer type) -- this
+/// exists only for `v128.const`'s `i8x16` shape, whose 16 lane literals
+/// are each an 8-bit value.
+pub fn parse_i8(text: &str, pos: usize) -> Result<i8, WastParseError> {
+    let (neg, mag) = parse_int_magnitude(text, pos)?;
+    let signed = if neg { (mag as i128).wrapping_neg() } else { mag as i128 };
+    if !(-(1i128 << 7)..(1i128 << 8)).contains(&signed) {
+        return Err(WastParseError::InvalidNumericLiteralForType { pos, text: text.to_string(), ty: "i8" });
+    }
+    Ok(signed as u8 as i8)
+}
+
+/// As [`parse_i32`], for the 16-bit range `[-2^15, 2^16-1]` -- exists only
+/// for `v128.const`'s `i16x8` shape, same reason as [`parse_i8`].
+pub fn parse_i16(text: &str, pos: usize) -> Result<i16, WastParseError> {
+    let (neg, mag) = parse_int_magnitude(text, pos)?;
+    let signed = if neg { (mag as i128).wrapping_neg() } else { mag as i128 };
+    if !(-(1i128 << 15)..(1i128 << 16)).contains(&signed) {
+        return Err(WastParseError::InvalidNumericLiteralForType { pos, text: text.to_string(), ty: "i16" });
+    }
+    Ok(signed as u16 as i16)
+}
+
 /// As [`parse_i32`], for the 64-bit range `[-2^63, 2^64-1]`.
 pub fn parse_i64(text: &str, pos: usize) -> Result<i64, WastParseError> {
     let (neg, mag) = parse_int_magnitude(text, pos)?;
@@ -231,6 +255,36 @@ mod tests {
     fn i32_extreme_magnitude_negative_literal_errors_cleanly_not_panics() {
         let err = parse_i32("-0x80000000000000000000000000000000", 0).unwrap_err();
         assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { .. }));
+    }
+
+    #[test]
+    fn parses_i8_full_range_both_spellings() {
+        assert_eq!(parse_i8("-1", 0).unwrap(), -1i8);
+        assert_eq!(parse_i8("0xff", 0).unwrap(), -1i8);
+        assert_eq!(parse_i8("255", 0).unwrap(), -1i8);
+        assert_eq!(parse_i8("-128", 0).unwrap(), i8::MIN);
+        assert_eq!(parse_i8("127", 0).unwrap(), i8::MAX);
+    }
+
+    #[test]
+    fn i8_out_of_range_is_rejected() {
+        assert!(parse_i8("256", 0).is_err());
+        assert!(parse_i8("-129", 0).is_err());
+    }
+
+    #[test]
+    fn parses_i16_full_range_both_spellings() {
+        assert_eq!(parse_i16("-1", 0).unwrap(), -1i16);
+        assert_eq!(parse_i16("0xffff", 0).unwrap(), -1i16);
+        assert_eq!(parse_i16("65535", 0).unwrap(), -1i16);
+        assert_eq!(parse_i16("-32768", 0).unwrap(), i16::MIN);
+        assert_eq!(parse_i16("32767", 0).unwrap(), i16::MAX);
+    }
+
+    #[test]
+    fn i16_out_of_range_is_rejected() {
+        assert!(parse_i16("65536", 0).is_err());
+        assert!(parse_i16("-32769", 0).is_err());
     }
 
     #[test]

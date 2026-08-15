@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.5] - 2026-08-15 (SIMD PR1b-2 — type rules for the v128 first slice)
+
+### Added
+
+- A new `0xFD` arm in the per-instruction type-check `match`, mirroring
+  the existing `0xFE` atomics arm's shape (a prefixed sub-opcode family
+  looked up in a `wasm-opcodes` metadata table), but decoding the
+  sub-opcode as a LEB128 `u32` (`wasm_opcodes::get_simd_op`), not a raw
+  byte. Type rules for all 5 SIMD PR1a opcodes: `v128.const` pushes
+  `V128` (also advancing past its 16-byte literal, which doesn't affect
+  the type stack itself); `i32x4.splat` pops `I32` pushes `V128`;
+  `i32x4.add` pops two `V128` pushes `V128`; `i32x4.eq` pops two `V128`
+  pushes `V128` (the SIMD boolean-mask convention -- the comparison
+  RESULT is still a v128, not a plain `i32`, unlike every other
+  comparison opcode this validator handles); `i32x4.extract_lane` pops
+  `V128` pushes `I32`, after advancing past its 1-byte raw lane-index
+  immediate.
+- 8 new end-to-end tests in `tests/type_check.rs`, built via
+  `wasm-wast-parser`'s new SIMD text syntax (SIMD PR1b-2, same release):
+  5 valid-shape cases (including `v128` as a local/global type, not just
+  a param/result) and 3 type-mismatch rejections.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`'s follow-up scope.
+
 ## [0.2.4] - 2026-08-15 (WASM16 — return_call/return_call_indirect type rules)
 
 ### Added

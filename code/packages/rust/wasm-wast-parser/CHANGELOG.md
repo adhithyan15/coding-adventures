@@ -1,5 +1,42 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.11 — 2026-08-15 — v128.const + first-slice SIMD opcodes (SIMD PR1b-2)
+
+### Added
+
+- `v128` as a recognized value type in `(param)`/`(result)`/`(local)`/
+  `(global)` declarations -- `ValueType::V128` already existed in
+  `wasm-types` (SIMD PR1a), but `parse_value_type`'s keyword match never
+  had a `"v128"` arm, so any function signature or global naming it
+  failed with `UnexpectedToken`.
+- `v128.const <shape> <lane0> ... <laneN-1>` text syntax, all 6 shapes
+  (`i8x16`/`i16x8`/`i32x4`/`i64x2`/`f32x4`/`f64x2`), in both folded and
+  flat/stream instruction forms. Every shape packs down to the same 16
+  raw bytes regardless of how it's spelled -- this slice's own executable
+  opcodes (SIMD PR1a) only run `i32x4`-shaped ops, but real corpus files
+  (e.g. `simd_splat.wast`) mix shapes even when testing a single op, so
+  parsing only `i32x4` would leave those files unparseable as a whole
+  (one bad literal fails the whole module's parse in this crate's
+  design), not just missing coverage for the unimplemented shapes' own
+  instructions -- see `parse_v128_const`'s doc comment.
+- `i32x4.splat`/`i32x4.add`/`i32x4.eq`/`i32x4.extract_lane` text syntax,
+  wired through `wasm_opcodes::get_simd_op_by_name` and
+  `wasm_opcodes::SimdOpKind` exactly like the existing `0xFE`-atomics
+  interception (same two-byte-prefix shape, but the sub-opcode is a
+  LEB128 `u32`, not a raw byte -- `i32x4.add`'s real sub-opcode, 174,
+  exercises the multi-byte continuation encoding). `extract_lane`'s lane
+  index is a single raw (non-LEB128) byte immediate, leading in folded
+  form (`(i32x4.extract_lane 2 (...))`) same as `local.get`'s index.
+- `numeric::parse_i8`/`parse_i16` (mirroring the existing `parse_i32`/
+  `parse_i64`), needed only by `v128.const`'s `i8x16`/`i16x8` shapes --
+  WASM has no plain `i8.const`/`i16.const`, `i32` is the smallest scalar
+  integer type.
+- 10 new tests covering all 6 shapes' byte-packing, the multi-byte
+  LEB128 sub-opcode path, folded/flat parity, and 2 clean-error cases
+  (unknown shape keyword, too few lane literals).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`'s follow-up scope.
+
 ## 0.1.10 — 2026-08-15 — return_call/return_call_indirect (WASM16)
 
 ### Added

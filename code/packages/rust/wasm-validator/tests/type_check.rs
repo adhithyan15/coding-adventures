@@ -333,6 +333,57 @@ fn valid_atomic_notify_and_wait_pop_push_shapes() {
     );
 }
 
+// ── SIMD PR1b-2: v128 first slice (v128.const/i32x4.splat/add/eq/extract_lane) ──
+
+#[test]
+fn valid_v128_const_pushes_v128() {
+    assert_valid("(module (func (drop (v128.const i32x4 1 2 3 4))))");
+}
+
+#[test]
+fn valid_i32x4_splat_pops_i32_pushes_v128() {
+    assert_valid("(module (func (param i32) (result v128) (i32x4.splat (local.get 0))))");
+}
+
+#[test]
+fn valid_i32x4_add_pops_two_v128_pushes_v128() {
+    assert_valid(
+        r#"(module (func (param v128 v128) (result v128) (i32x4.add (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_i32x4_eq_pops_two_v128_pushes_v128_not_i32() {
+    // The SIMD boolean-mask convention: `eq`'s RESULT is still a v128 (a
+    // per-lane mask), not a plain i32 -- if this type-checked a bare
+    // `i32` result instead, that would be the wrong rule silently
+    // accepted.
+    assert_valid(
+        r#"(module (func (param v128 v128) (result v128) (i32x4.eq (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_i32x4_extract_lane_pops_v128_pushes_i32() {
+    assert_valid(
+        r#"(module (func (result i32) (i32x4.extract_lane 0 (v128.const i32x4 10 20 30 40))))"#,
+    );
+}
+
+#[test]
+fn valid_v128_local_and_global_round_trip() {
+    // `ValueType::V128` used as a local type and a global type, not just
+    // a param/result -- proves the value-type parser and validator agree
+    // on it everywhere a value type can appear, not just in signatures.
+    assert_valid(
+        r#"(module
+             (global $g v128 (v128.const i32x4 0 0 0 0))
+             (func (local $x v128)
+               (local.set $x (global.get $g))
+               (drop (global.get $g))))"#,
+    );
+}
+
 // ── Invalid modules ─────────────────────────────────────────────────────
 
 #[test]
@@ -520,6 +571,23 @@ fn invalid_block_declared_result_not_actually_produced() {
 #[test]
 fn invalid_local_set_type_mismatch() {
     assert_invalid("(module (func (param i32) (local.set 0 (f64.const 1.0))))");
+}
+
+#[test]
+fn invalid_i32x4_add_given_i32_operands_instead_of_v128() {
+    assert_invalid("(module (func (result v128) (i32x4.add (i32.const 1) (i32.const 2))))");
+}
+
+#[test]
+fn invalid_i32x4_splat_given_a_v128_operand_instead_of_i32() {
+    assert_invalid("(module (func (param v128) (result v128) (i32x4.splat (local.get 0))))");
+}
+
+#[test]
+fn invalid_i32x4_extract_lane_result_type_mismatch() {
+    // extract_lane pushes i32, not v128 -- declaring a v128 result should
+    // be rejected as a mismatch, not silently accepted.
+    assert_invalid("(module (func (result v128) (i32x4.extract_lane 0 (v128.const i32x4 1 2 3 4))))");
 }
 
 #[test]
