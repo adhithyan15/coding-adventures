@@ -9,6 +9,162 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C186 — THE RAMP RULE: one new word per lesson, unlimited reuse
+
+**Owner, 2026-08-15:** *"One new word per lesson but n number of existing words
+can be re-emphasized and used?"* Adopted as the governing rule for authoring.
+
+This is the precise form of "gentle ramp" the project has been circling:
+**the cap is on what is NEW; reuse is free and encouraged.**
+
+### What it settles
+
+* **The ±35% counting ambiguity dissolves.** After splitting, headword count *is*
+  word count. `teaches_items` (proposed in HL-C185) becomes unnecessary — the rule
+  makes it 1 by construction. **Do not build that field.**
+* **List lessons split.** The months become twelve lessons; colours, numbers and
+  seasons likewise.
+* **R1 gets EASIER, not harder.** The reinforcement ratio that blocked Sanskrit
+  (HL-C167) measures whether an atom is revisited within three lessons. If every
+  lesson reuses prior words by design, those windows fill by construction. The
+  drizzle-versus-R1 tension may simply evaporate under this rule — **re-measure
+  HL-C167 after the first tranche before doing any work on it.**
+
+### Migration cost, measured
+
+| | |
+|---|---:|
+| `type: word` lessons, all tracks | 1,407 |
+| teaching more than one item | **400 (28%)** |
+| extra lessons if every one splits | **+718** |
+
+718 is an **upper bound**: the splitter must not fire on multi-token *single*
+items — `la cabeza` is one noun with its article, `السلام عليكم` is one greeting.
+A comma is a reliable list separator in the Latin-script tracks; the Indic and
+Arabic month lists are space-separated. **No single rule covers both, so the
+split is a reviewed pass per track, not one regex.**
+
+### The scale this implies, stated plainly
+
+At one new word per lesson, a track reaches C2's 16,000-word target in **~16,000
+lessons** — fewer than the earlier ~27,600 estimate, because 1.0/lesson is denser
+than the corpus's current 0.58.
+
+**Across 22 tracks that is ~352,000 lessons, not 50,000.** Per track the budget
+holds comfortably; the full programme is roughly seven times the stated figure.
+That is not an argument against the rule — it is the number the rule implies, and
+it should be seen before it is adopted rather than discovered at track four.
+
+### Order of work under the rule
+
+1. **Write the rule into the spec** (HL08/HL11) so it governs authoring, not just
+   this row.
+2. **Split the 400 multi-item lessons**, per track, reviewed — Spanish first as
+   the reference track.
+3. **Re-measure everything**: vocabulary per track, R1, and the atom budget. The
+   211/300 figure will move, and HL-C167 may resolve itself.
+4. **Then** author against the deficit, one new word at a time.
+
+## HL-C185 — `word_class` does not exist. It is a schema addition, not a classifier fix.
+
+**Measured 2026-08-15.** HL-C184c assumed the classifier reached ~23% and needed
+improving. Wrong on both counts:
+
+* **No lesson in any track carries a `word_class` field.** Coverage is **0 of
+  1,692** lexical lessons, across all 22 tracks.
+* **The schema has no part-of-speech field at all.** The frontmatter keys in use
+  are `chapter, concept_tag, delivery, duration, est_minutes, etymology_hook,
+  gloss, headword, id, introduces, modes, practises, prerequisites, register,
+  requires, reviews_of, romanization, roots, schema_version, sequence, skills,
+  slots, sounds, spine_node, strands, teaches_cells, type, variety` — and that is
+  the whole list.
+
+The remembered "23%" was a **classifier experiment**, not stored data. So this is
+*add a field and populate 1,692 lessons*, not *improve an inference*. Materially
+different work, and it must be sized as such.
+
+### The good news: 36% is already mechanical
+
+Many `concept_tag`s encode part of speech in their name. Deriving from the tag:
+
+| class | lessons |
+|---|---:|
+| verb | **400** |
+| greeting | 75 |
+| pronoun | 53 |
+| number | 34 |
+| adjective | 32 |
+| noun | 13 |
+| connective | 10 |
+| adverb | 3 |
+| **derivable** | **620 of 1,692 (36%)** |
+
+**Note the verb number against the owner's 500-verb target: 400 is across ALL 22
+tracks.** Spanish alone has ~46. Per track, the target is far off, and the
+census will say so per track once the field exists.
+
+### Why the other 64% is not derivable
+
+The unmatched tags are **topical, not grammatical** — `AR-COLOUR-BLACK-WHITE`,
+`AR-MONTHS`, `AR-SEASONS`, `AR-FOOD-GENERAL`. They say what a word is *about*,
+not what it *is*. Several are also multi-word list headwords (twelve months in
+one lesson), so "the word class of this lesson" is not even well defined for
+them.
+
+### Plan, and what NOT to do
+
+1. **Add `word_class` to the schema** as optional, with a closed vocabulary
+   (`noun, verb, adjective, adverb, pronoun, number, connective, interjection,
+   phrase, other`).
+2. **Populate the 620 mechanically** from the tag prefixes above, in one scripted
+   pass, with the derivation table committed alongside so it is auditable.
+3. **Leave the other 1,072 UNSET and report the coverage.** Do not guess. An
+   inferred class that is wrong is worse than an absent one, because the census
+   would then report a confident wrong number — the exact failure mode of
+   [[feedback_a_number_that_never_moves_is_not_a_measurement]].
+4. **Then** the per-track verb/adjective/adverb census the owner asked for
+   becomes computable, and HL-C184d's "measure what the tranche cost" means
+   something.
+
+### Correction, same day: a month IS a noun, and the real gap is COUNT not CLASS
+
+The paragraph this replaces claimed multi-word list lessons "cannot be classed at
+all". **Owner: *"A month is a noun isn't it?"*** Yes. Every word in `AR-MONTHS`
+is a noun; the class was never ambiguous. Two different questions were conflated:
+
+* **What class are these words?** Noun. Unambiguous. `word_class` handles it.
+* **How many lexical items does this lesson teach?** Twelve, not one. **This is
+  the unsolved one, and it is not a classification problem.**
+
+**And it makes the headline vocabulary number ambiguous by ±35%.** For Spanish:
+
+| counting method | result |
+|---|---:|
+| headwords (what the gate does today) | **211** |
+| one lexical item per lesson, lists expanded | **~285** |
+| naive whitespace tokens | **361** |
+
+No mechanical rule picks between them. `type` does not: `la cabeza` is
+`type: word` with two tokens and teaches **one** noun, while `negro, blanco` is
+`type: word` with two tokens and teaches **two** adjectives. Splitting on commas
+fixes Spanish and breaks the space-separated Arabic months; splitting on spaces
+fixes the months and breaks `la cabeza` and `السلام عليكم`.
+
+**So the corpus must STATE it.** Add a second field alongside `word_class`:
+
+    teaches_items: 12      # lexical items this lesson introduces, default 1
+
+and make `vocabularyOf` sum it instead of counting headwords. Until then the
+211/300 pre-A1 figure is a **lower bound**, not a measurement — and the true
+number could clear pre-A1 already on some tracks. **That has to be settled before
+HL-C184d authors a single word**, or the tranche will be sized against a number
+that is wrong by a third.
+
+Splitting list lessons one-word-per-lesson remains an option the 50,000-lesson
+budget permits, and it would make `teaches_items` almost always 1 — but that is a
+pedagogical change (twelve month-lessons instead of one), and it is the owner's
+call, not a side effect of a measurement fix.
+
 ## HL-C184 — THE COMPLETION PLAN: 22 tracks to C2, driven by vocabulary
 
 Measured 2026-08-14, once the report finally printed the right number:
