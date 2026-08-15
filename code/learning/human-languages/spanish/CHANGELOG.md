@@ -46,6 +46,28 @@ setting Latin *nebula* aside unclaimed, and closes on `la niebla` collecting it.
 lessons to drop "verb" and "noun"; this one was written without them from the
 start, so the metalanguage pins do not move.
 
+**The book crossed a thousand pages, and the contents page was not ready for it.**
+These seven chapters pushed Spanish from 1244 to 1272 pages, and fourteen contents
+entries acquired a four-digit page number for the first time. `book.cls` packs
+every page number into a box of exactly `\@pnumwidth`, which it sets to 1.55em;
+Latin Modern's digits are 0.5em each, so four of them need 2.00em and overflow by
+0.45em — 4.92747pt at the contents' 10.95pt, which is the width TeX reported,
+identically, fourteen times. `\@pnumwidth` is now 2.8em, enough for five digits,
+matching the number the chapter-number column already uses since HL-C109.
+
+Widening that box narrowed the room left for chapter titles, and chapter 285's
+title — the longest in the book — wrapped for the first time. `book.cls` sets
+contents entries justified, so its first line stretched to badness 1038, just past
+the default `\hbadness` of 1000, and traded the overfull boxes for an underfull
+one. `\l@chapter`'s `\rightskip` and `\parfillskip` now carry `plus 1fil` and
+`plus -1fil`: wrapped titles set ragged right and can never be reported underfull,
+and the two infinities cancel on the final line so the page number does not move.
+Neither warning baseline was touched; both counts are zero because the boxes fit.
+
+Spanish is the only track anywhere near this. Every other book is between 133 and
+355 pages, so the other twenty-one preambles keep `book.cls`'s defaults until they
+need otherwise.
+
 ## Unreleased — Chapters 282-288: thirty-five words on the seven pre-A1 nodes
 
 Spanish stood at 48 distinct headwords against the 300 the pre-A1 vocabulary floor

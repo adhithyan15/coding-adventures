@@ -167,6 +167,27 @@
 % reached 100 chapters can reach 1000, and the fix should not need revisiting
 % then. The section and subsection indents move by the same amount so the
 % columns still line up under the widened chapter number.
+%
+% One further change to book.cls's original, added with HL-C198 below: the
+% \rightskip and \parfillskip carry `plus 1fil' and `plus -1fil'. book.cls sets
+% them to plain \@pnumwidth and -\@pnumwidth, which leaves a chapter title
+% JUSTIFIED. A title short enough to sit on one line never notices; a title long
+% enough to wrap has its first line stretched to the full measure, and a title
+% like "Who Someone Is --- Neighbour, Friend, Teacher, Nurse, Cook" stretches
+% far enough (badness 1038, just past the default \hbadness of 1000) for TeX to
+% report an underfull \hbox. The two fil components make the title ragged right:
+%
+%   * non-final lines end with \rightskip = \@pnumwidth plus 1fil. Infinite
+%     stretch means the line's badness is 0 no matter how short it falls, so a
+%     wrapped title can never be reported underfull again -- by construction,
+%     not by being narrowly under a threshold.
+%   * the final line adds \parfillskip on top, and the two fil components are
+%     equal and opposite, so they cancel exactly. The net glue there is 0, the
+%     same as book.cls's, and the \hfil already in the body of the macro is what
+%     pushes the page number flush right. The number does not move.
+%
+% Ragged right is what a wrapped contents entry wants anyway; justifying one is
+% what produced the loose line in the first place.
 \makeatletter
 \renewcommand*\l@chapter[2]{%
   \ifnum \c@tocdepth >\m@ne
@@ -174,8 +195,8 @@
     \vskip 1.0em \@plus\p@
     \setlength\@tempdima{2.8em}%
     \begingroup
-      \parindent \z@ \rightskip \@pnumwidth
-      \parfillskip -\@pnumwidth
+      \parindent \z@ \rightskip \@pnumwidth plus 1fil
+      \parfillskip -\@pnumwidth plus -1fil
       \leavevmode \bfseries
       \advance\leftskip\@tempdima
       \hskip -\leftskip
@@ -187,6 +208,74 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+\makeatother
+
+% ---------------------------------------------------------------------------
+% Table-of-contents PAGE-number width (HL-C198).
+%
+% The block above widened the column that holds the chapter NUMBER on the left.
+% There is a second, independent column in every contents line: the box on the
+% right that holds the PAGE number. `book.cls` sizes that one too, and sizes it
+% just as optimistically:
+%
+%     \newcommand*\@pnumwidth{1.55em}
+%     \newcommand*\@tocrmarg{2.55em}
+%
+% Every contents line -- \l@chapter above, and \@dottedtocline for sections and
+% subsections -- ends by packing the page number into a box of exactly
+% \@pnumwidth:
+%
+%     \hb@xt@\@pnumwidth{\hss #2}
+%
+% \hb@xt@ means "an \hbox exactly this wide". Put something wider inside and TeX
+% cannot shrink it, so it prints
+%
+%     Overfull \hbox (...pt too wide) detected at line N
+%
+% where N is a line of `book.toc`, not of any file a person wrote. That is why
+% this one is confusing to chase: the warning points into a build artefact.
+%
+% Do the arithmetic, because it explains the number chosen below. Latin Modern's
+% digits are tabular: every one of them is exactly 0.5em wide, so an n-digit
+% page number needs 0.5n em.
+%
+%     column width      1.55em
+%     "999"   3 digits  1.50em   fits, 0.05em to spare
+%     "1000"  4 digits  2.00em   overfull by 0.45em
+%
+% At the contents' 10.95pt that overflow is 0.45 x 10.95 = 4.9275pt -- which is
+% exactly the "4.92747pt too wide" this book started reporting, fourteen times,
+% once for each contents line whose page number had reached four digits. The
+% identical width on every one of them is the tell: one construct, repeated, not
+% fourteen unrelated bad line breaks.
+%
+% This is the same shape of bug as HL-C109 and arrives the same way. A track
+% notices nothing for years and then crosses a threshold -- there, 100 chapters;
+% here, 1000 pages -- and the warning appears all at once, one line per crossing
+% entry. Spanish crossed 1000 pages in the tranche that added chapters 289-295.
+%
+% 2.8em holds five digits (2.50em) with room to spare, so a book may grow past
+% 10000 pages before this needs looking at again; it is also the number the
+% chapter-number column already uses, which keeps the two edits reading as one
+% decision. \@tocrmarg is the right-hand margin the dotted leaders stop at, and
+% book.cls keeps it exactly 1em clear of \@pnumwidth so the dots never touch the
+% number; it moves by the same amount to preserve that gap.
+%
+% Note what is deliberately NOT done here: \hfuzz and \hbadness stay at their
+% defaults. Widening the box makes the number fit; raising the fuzz would only
+% make TeX stop mentioning that it does not.
+%
+% This block is Spanish-only on purpose. Spanish is 1272 pages; the next longest
+% book in the ramp is 355, and the shortest is 133. No other track is within
+% three times of the threshold, so the other twenty-one preambles keep book.cls's
+% defaults rather than take a contents-layout change they cannot yet benefit
+% from. Whichever track crosses 1000 pages next wants this block copied across,
+% together with the two fil components in \l@chapter above -- they are one fix in
+% two halves, and the second half is what keeps the first from trading an
+% overfull box for an underfull one.
+\makeatletter
+\renewcommand*\@pnumwidth{2.8em}
+\renewcommand*\@tocrmarg{3.8em}
 \makeatother
 
 % ---------------------------------------------------------------------------
