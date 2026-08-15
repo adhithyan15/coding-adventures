@@ -370,6 +370,21 @@
         "SA-EXT-206-PEOPLE"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-21-VERBS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "SA-C21-dance",
+        "SA-C21-laugh",
+        "SA-C21-stand",
+        "SA-C21-remember"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-21-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -498,7 +513,8 @@
         "SA-PATH-017",
         "SA-PATH-010",
         "SA-PATH-011",
-        "SA-PATH-012"
+        "SA-PATH-012",
+        "SA-PATH-21-VERBS"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -980,6 +996,20 @@
         "SA-C20-child",
         "SA-C20-old-person",
         "SA-C20-people"
+      ]
+    },
+    {
+      "id": "SA-EXT-21-VERBS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more everyday actions and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C21-dance",
+        "SA-C21-laugh",
+        "SA-C21-stand",
+        "SA-C21-remember"
       ]
     }
   ]

@@ -1277,6 +1277,18 @@
       "tex": "hindi/book/chapters/ch41-describing-things.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:1822be25071bbf4f",
+      "lessonIds": [
+        "HI-C42-come",
+        "HI-C42-sit",
+        "HI-C42-stand",
+        "HI-C42-give"
+      ],
+      "tex": "hindi/book/chapters/ch42-more-verbs.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
@@ -1953,6 +1965,18 @@
         "KA-C42-adjective-system"
       ],
       "tex": "kannada/book/chapters/ch42-describing-things.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:7cecf2b2c5085f88",
+      "lessonIds": [
+        "KA-C43-come",
+        "KA-C43-sit",
+        "KA-C43-stand",
+        "KA-C43-give"
+      ],
+      "tex": "kannada/book/chapters/ch43-more-verbs.tex"
     },
     {
       "language": "latin",
@@ -2766,6 +2790,18 @@
         "ML-C42-adjective-system"
       ],
       "tex": "malayalam/book/chapters/ch42-describing-things.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:6f34d268d35f4e77",
+      "lessonIds": [
+        "ML-C43-run",
+        "ML-C43-sleep",
+        "ML-C43-stand",
+        "ML-C43-give"
+      ],
+      "tex": "malayalam/book/chapters/ch43-more-verbs.tex"
     },
     {
       "language": "marathi",
@@ -3724,6 +3760,18 @@
         "SA-C20-people"
       ],
       "tex": "sanskrit/book/chapters/ch20-people.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:ce6d7b681e7f9753",
+      "lessonIds": [
+        "SA-C21-dance",
+        "SA-C21-laugh",
+        "SA-C21-stand",
+        "SA-C21-remember"
+      ],
+      "tex": "sanskrit/book/chapters/ch21-more-verbs.tex"
     },
     {
       "language": "spanish",
@@ -7215,6 +7263,18 @@
         "TE-C42-adjective-system"
       ],
       "tex": "telugu/book/chapters/ch42-describing-things.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:51d5f16ba078ad2a",
+      "lessonIds": [
+        "TE-C43-come",
+        "TE-C43-sit",
+        "TE-C43-stand",
+        "TE-C43-give"
+      ],
+      "tex": "telugu/book/chapters/ch43-more-verbs.tex"
     },
     {
       "language": "urdu",

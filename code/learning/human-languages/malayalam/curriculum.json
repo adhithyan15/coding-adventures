@@ -516,6 +516,21 @@
         "ML-EXT-201-ADJ"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-43-VERBS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ML-C43-run",
+        "ML-C43-sleep",
+        "ML-C43-stand",
+        "ML-C43-give"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-43-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -648,7 +663,8 @@
       "segments": [
         "ML-PATH-026",
         "ML-PATH-027",
-        "ML-PATH-028"
+        "ML-PATH-028",
+        "ML-PATH-43-VERBS"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1261,6 +1277,20 @@
         "ML-C42-new",
         "ML-C42-old",
         "ML-C42-adjective-system"
+      ]
+    },
+    {
+      "id": "ML-EXT-43-VERBS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more everyday actions and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C43-run",
+        "ML-C43-sleep",
+        "ML-C43-stand",
+        "ML-C43-give"
       ]
     }
   ]

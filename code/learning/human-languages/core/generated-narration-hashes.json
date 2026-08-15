@@ -2767,6 +2767,23 @@
       "jsonHash": "fnv1a64:14223ea517a2f780"
     },
     {
+      "language": "hindi",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:7d0dd0587582a1b3",
+      "lessonIds": [
+        "HI-C42-come",
+        "HI-C42-sit",
+        "HI-C42-stand",
+        "HI-C42-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "hindi/narration/ch42.txt",
+      "json": "hindi/narration/ch42.json",
+      "textHash": "fnv1a64:89da4f5aaa9502eb",
+      "jsonHash": "fnv1a64:1d2dce0752a7b2c3"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
@@ -3870,6 +3887,23 @@
       "json": "kannada/narration/ch42.json",
       "textHash": "fnv1a64:1d3336bb6f8d0025",
       "jsonHash": "fnv1a64:b4f05ca35fd2e130"
+    },
+    {
+      "language": "kannada",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:6a2f6cb5132d84c8",
+      "lessonIds": [
+        "KA-C43-come",
+        "KA-C43-sit",
+        "KA-C43-stand",
+        "KA-C43-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch43.txt",
+      "json": "kannada/narration/ch43.json",
+      "textHash": "fnv1a64:75a7d6816d4f7380",
+      "jsonHash": "fnv1a64:f77683c4198aa7bf"
     },
     {
       "language": "latin",
@@ -5193,6 +5227,23 @@
       "json": "malayalam/narration/ch42.json",
       "textHash": "fnv1a64:c145d3fcf65ce77e",
       "jsonHash": "fnv1a64:85b3f393e089e1a2"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:75ab1fe5b5adbb4f",
+      "lessonIds": [
+        "ML-C43-run",
+        "ML-C43-sleep",
+        "ML-C43-stand",
+        "ML-C43-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "malayalam/narration/ch43.txt",
+      "json": "malayalam/narration/ch43.json",
+      "textHash": "fnv1a64:0b75e893c8cd4413",
+      "jsonHash": "fnv1a64:319bb00914dd7ca7"
     },
     {
       "language": "marathi",
@@ -6936,6 +6987,23 @@
       "json": "sanskrit/narration/ch20.json",
       "textHash": "fnv1a64:a162ff48ba68c86f",
       "jsonHash": "fnv1a64:74652217bc880965"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:f4763804d02be7a6",
+      "lessonIds": [
+        "SA-C21-dance",
+        "SA-C21-laugh",
+        "SA-C21-stand",
+        "SA-C21-remember"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch21.txt",
+      "json": "sanskrit/narration/ch21.json",
+      "textHash": "fnv1a64:1274ab2c8e93c5bb",
+      "jsonHash": "fnv1a64:34d03d9533ef528a"
     },
     {
       "language": "spanish",
@@ -12372,6 +12440,23 @@
       "json": "telugu/narration/ch42.json",
       "textHash": "fnv1a64:9e020212a09db8c3",
       "jsonHash": "fnv1a64:ecf3a5a68bec4444"
+    },
+    {
+      "language": "telugu",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:f689846837768ab5",
+      "lessonIds": [
+        "TE-C43-come",
+        "TE-C43-sit",
+        "TE-C43-stand",
+        "TE-C43-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "telugu/narration/ch43.txt",
+      "json": "telugu/narration/ch43.json",
+      "textHash": "fnv1a64:a09ea8d6339ee676",
+      "jsonHash": "fnv1a64:b4202945eb623ded"
     },
     {
       "language": "urdu",

@@ -494,6 +494,21 @@
         "KA-EXT-201-ADJ"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-43-VERBS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "KA-C43-come",
+        "KA-C43-sit",
+        "KA-C43-stand",
+        "KA-C43-give"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-43-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -625,7 +640,8 @@
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "KA-PATH-025",
-        "KA-PATH-026"
+        "KA-PATH-026",
+        "KA-PATH-43-VERBS"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1250,6 +1266,20 @@
         "KA-C42-new",
         "KA-C42-old",
         "KA-C42-adjective-system"
+      ]
+    },
+    {
+      "id": "KA-EXT-43-VERBS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more everyday actions and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C43-come",
+        "KA-C43-sit",
+        "KA-C43-stand",
+        "KA-C43-give"
       ]
     }
   ]

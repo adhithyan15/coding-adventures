@@ -1241,6 +1241,12 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 42,
+      "output": "hindi/book/chapters/ch42-more-verbs.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "output": "italian/book/chapters/ch02-how-are-you.tex"
@@ -1587,6 +1593,13 @@
       "chapter": 42,
       "output": "kannada/book/chapters/ch42-describing-things.tex",
       "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 43,
+      "output": "kannada/book/chapters/ch43-more-verbs.tex",
+      "unicodeScript": "Kannada",
+      "scriptCommand": "kn"
     },
     {
       "language": "latin",
@@ -2019,6 +2032,13 @@
       "chapter": 42,
       "output": "malayalam/book/chapters/ch42-describing-things.tex",
       "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 43,
+      "output": "malayalam/book/chapters/ch43-more-verbs.tex",
+      "unicodeScript": "Malayalam",
+      "scriptCommand": "ml"
     },
     {
       "language": "marathi",
@@ -2522,6 +2542,13 @@
       "language": "sanskrit",
       "chapter": 20,
       "output": "sanskrit/book/chapters/ch20-people.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 21,
+      "output": "sanskrit/book/chapters/ch21-more-verbs.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
@@ -4349,6 +4376,13 @@
       "chapter": 42,
       "output": "telugu/book/chapters/ch42-describing-things.tex",
       "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 43,
+      "output": "telugu/book/chapters/ch43-more-verbs.tex",
+      "unicodeScript": "Telugu",
+      "scriptCommand": "te"
     },
     {
       "language": "urdu",
