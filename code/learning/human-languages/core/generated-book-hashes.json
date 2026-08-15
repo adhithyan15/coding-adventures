@@ -7234,6 +7234,97 @@
       "tex": "spanish/book/chapters/ch288-la-partida.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 289,
+      "sourceHash": "fnv1a64:c7809983e22f39ab",
+      "lessonIds": [
+        "ES-C289-amanecer",
+        "ES-C289-cielo",
+        "ES-C289-nube",
+        "ES-C289-estrella",
+        "ES-C289-sombra"
+      ],
+      "tex": "spanish/book/chapters/ch289-lo-de-arriba.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 290,
+      "sourceHash": "fnv1a64:36ec81afab10927c",
+      "lessonIds": [
+        "ES-C290-trigo",
+        "ES-C290-arroz",
+        "ES-C290-cebolla",
+        "ES-C290-tomate",
+        "ES-C290-miel"
+      ],
+      "tex": "spanish/book/chapters/ch290-lo-que-se-come.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 291,
+      "sourceHash": "fnv1a64:97c43dc7d152190e",
+      "lessonIds": [
+        "ES-C291-semilla",
+        "ES-C291-raiz",
+        "ES-C291-tronco",
+        "ES-C291-rama",
+        "ES-C291-bosque"
+      ],
+      "tex": "spanish/book/chapters/ch291-de-la-semilla.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 292,
+      "sourceHash": "fnv1a64:aea9b6c761a389b2",
+      "lessonIds": [
+        "ES-C292-pueblo",
+        "ES-C292-colina",
+        "ES-C292-valle",
+        "ES-C292-lago",
+        "ES-C292-montana"
+      ],
+      "tex": "spanish/book/chapters/ch292-la-tierra.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 293,
+      "sourceHash": "fnv1a64:77ccd1eb075edfe5",
+      "lessonIds": [
+        "ES-C293-cuello",
+        "ES-C293-hombro",
+        "ES-C293-espalda",
+        "ES-C293-rodilla",
+        "ES-C293-tobillo"
+      ],
+      "tex": "spanish/book/chapters/ch293-mas-del-cuerpo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 294,
+      "sourceHash": "fnv1a64:c5349fcc51661703",
+      "lessonIds": [
+        "ES-C294-cuchillo",
+        "ES-C294-taza",
+        "ES-C294-olla",
+        "ES-C294-manta",
+        "ES-C294-escoba"
+      ],
+      "tex": "spanish/book/chapters/ch294-cinco-cosas-mas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 295,
+      "sourceHash": "fnv1a64:6f8df0c03d11807f",
+      "lessonIds": [
+        "ES-C295-sendero",
+        "ES-C295-puente",
+        "ES-C295-orilla",
+        "ES-C295-isla",
+        "ES-C295-niebla"
+      ],
+      "tex": "spanish/book/chapters/ch295-el-sendero.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

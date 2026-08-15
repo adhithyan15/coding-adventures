@@ -30,6 +30,21 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C204 — Spanish chapters 8 and 9 share a LaTeX label
+
+`spanish/book/build.sh` emits `Label 'ch:how-are-you' multiply defined`. Chapters 8
+and 9 both claim it. **Pre-existing at HEAD**, unrelated to any tranche, and it has
+been surviving every build because it is a WARNING, not an error -- the build exits
+0 and the PDF is produced.
+
+What it costs: `\ref`/`\hyperref` to that label resolves to whichever chapter LaTeX
+saw last, so a cross-reference silently points at the wrong chapter. Same family as
+the rest of this session's findings -- **renders fine, says the wrong thing.**
+
+Left out of the Spanish round-2 tranche deliberately: relabelling ripples into every
+cross-reference that targets it, which is its own change with its own verification,
+not something to bury in a vocabulary PR.
+
 ## HL-C203 — corpus-wide sweep: 31 mixed-script findings, and a THIRD blind tool
 
 The Kannada round-2 audit ran HL-C202's per-word check over the WHOLE corpus, not

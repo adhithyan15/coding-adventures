@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 295,
+  "title": "The Way Out --- Path, Bridge, Shore, Island, Mist",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f11d87c6a915a19a",
+  "lessons": [
+    {
+      "id": "ES-C295-sendero",
+      "sequence": 3870,
+      "title": "el sendero — a half-sized road",
+      "headword": "el sendero",
+      "romanization": "el sendero",
+      "gloss": "the path — Latin semita, a by-way, with semi- meaning half: a path is a half-road",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edb0fe2b34a824b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what was scopa? (A twig, and a bundle of them.) And what was mantum? (A cloak.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la salida — where one of these begins."
+            },
+            {
+              "kind": "speech",
+              "text": "el bosque — what it usually runs through."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sen-DE-ro, stress in the middle. The d between vowels is soft, and the r is a single tap. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el sendero — \"the path,\" \"the trail.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is Latin semita, a footpath, and semita looks to have been built from semi-, half, and a piece meaning going. A footpath was a half-road: narrower than the paved thing the legions marched on, and going somewhere less official."
+            },
+            {
+              "kind": "speech",
+              "text": "That semi- is the one you already know from semicircle and semifinal. It is doing exactly the same job here as it does there — halving something — and what it halves in sendero is the road itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish also has camino for the larger sort of road. So the language kept the Roman distinction: one word for the way everybody takes, another for the way through the trees."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One word, and the start of a way out."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had la salida since the departure words. A salida is where you leave; a sendero is what you leave along. The two fit together, and this run is going to keep fitting things onto the end of them."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sendero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sendero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sendero del bosque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sendero del bosque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la salida, then el sendero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la salida*, then *el sendero*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was semita? (A footpath.) What does the semi- in it mean? (Half.) And what is el sendero? (The path.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C295-puente",
+      "sequence": 3880,
+      "title": "el puente — why the pope is a bridge-builder",
+      "headword": "el puente",
+      "romanization": "el puente",
+      "gloss": "the bridge — Latin pontem; a pontoon floats one and a pontiff is, underneath, a bridge-builder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da588cc5324fbf89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what was scopa? (A twig.) And what does the semi- in sendero mean? (Half.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el sendero — what this carries across."
+            },
+            {
+              "kind": "speech",
+              "text": "el lago — the sort of thing it goes over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PUEN-te, stress on the first part. The ue is one slide, the same as in pueblo and cuello. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el puente — \"the bridge.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pons, and in its other form pontem. There is the o-to-ue break for the third time — pueblo, cuello, and now puente. By this point you should be able to predict it."
+            },
+            {
+              "kind": "speech",
+              "text": "The English relatives are worth the detour. A pontoon is a floating bridge. To pontificate is to speak as a pontiff does — and pontifex, the Roman priestly title the popes inherited, is pons plus facere: a bridge-maker. Nobody is certain whether the Roman priests literally maintained the bridge over the Tiber or whether the bridge was always a metaphor for the link between people and gods. Both stories have been told for two thousand years."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish also uses puente for a long weekend — the days that bridge a holiday to the nearest Saturday. It is the same idea, doing modern work."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and the way out now crosses something."
+            },
+            {
+              "kind": "speech",
+              "text": "El sendero and el puente. You also have the ue break confirmed three times over, which means the next unfamiliar Spanish word with ue in the middle is probably a Latin o you already know in English."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el puente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el puente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sendero y el puente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sendero y el puente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pueblo, cuello, puente — the same break three times",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pueblo*, *cuello*, *puente* — the same break three times]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was pontem? (A bridge.) What does pontifex mean, taken apart? (Bridge-maker.) And which Latin vowel became ue? (Short o.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C295-orilla",
+      "sequence": 3890,
+      "title": "la orilla — the sixth little one",
+      "headword": "la orilla",
+      "romanization": "la orilla",
+      "gloss": "the shore — Latin ora, an edge or border, with the small ending: the little edge of anything",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:369058554302a02d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what was pontem? (A bridge.) And what was semita? (A footpath.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el lago — one thing that has one."
+            },
+            {
+              "kind": "speech",
+              "text": "el puente — what joins two of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o-RI-lla, stress in the middle. The r between vowels is a single tap, not rolled. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la orilla — \"the shore,\" \"the bank,\" \"the edge.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ora meant a border or an edge — of a country, of a garment, of the sea. Spanish added the small ending and got orilla, \"the little edge,\" and then used it for all three of those things at once."
+            },
+            {
+              "kind": "speech",
+              "text": "That breadth is the useful part. The bank of a river is la orilla. The shore of a lake is la orilla. The hem of a cloth is la orilla. One word covers every place where a thing stops being itself, which is a lot of ground for four syllables."
+            },
+            {
+              "kind": "speech",
+              "text": "And there is the small ending for the sixth time — an onion, a seed, a knee, an ankle, a knife, and now an edge. Six words with nothing in common except the way they were built. When you meet a new Spanish word ending in -illa or -illo, take the ending off and look underneath: the plain word is often waiting there, and is often one you already have."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and the route now reaches water: el sendero, el puente, la orilla."
+            },
+            {
+              "kind": "speech",
+              "text": "The diminutive has become a genuine tool rather than a piece of trivia. That is worth more than any single one of the six words that taught it to you."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la orilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la orilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la orilla del lago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la orilla del lago*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sendero, el puente, la orilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sendero*, *el puente*, *la orilla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did ora mean? (An edge, a border.) Name three things that have una orilla. (A river, a lake, a cloth.) And what does -illa add? (Smallness.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C295-isla",
+      "sequence": 3900,
+      "title": "la isla — and the silent letter English added by mistake",
+      "headword": "la isla",
+      "romanization": "la isla",
+      "gloss": "the island — Latin insula; insular, isolate, peninsula and insulin all come off the same rock",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4abf4d1e2b32d3b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quick pass: what did ora mean? (An edge.) What was pontem? (A bridge.) And what was semita? (A footpath.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la orilla — what one is entirely made of."
+            },
+            {
+              "kind": "speech",
+              "text": "el agua — what is round it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "IS-la, two beats, stress on the first. The s is clean and unvoiced, never a z sound. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la isla — \"the island.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin insula, and Spanish simply let the n go: insula, isla. The English words kept it. Something insular has an island's outlook. To isolate is to make an island of somebody — that one came back through Italian isolato. A peninsula is paene insula, \"almost an island.\" And insulin was named for the little islands of cells in the pancreas that produce it."
+            },
+            {
+              "kind": "speech",
+              "text": "English isle has a stranger history. It came from French ile, with no s in it and none pronounced. Scholars later inserted the s to make the word look more like insula, and it has sat there silently ever since. Then the same scholars put an s into island, which is not from Latin at all and never had one."
+            },
+            {
+              "kind": "speech",
+              "text": "So isla dropped a letter honestly and isle gained one dishonestly, and the two words now look almost the same for opposite reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the way out has run as far as it can go: el sendero, el puente, la orilla, la isla."
+            },
+            {
+              "kind": "speech",
+              "text": "Path, crossing, edge, and the thing past the edge. Four words that put you somewhere, and the last of them arrived with four English relatives and a spelling scandal attached."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la isla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la isla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la orilla de la isla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la orilla de la isla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sendero, el puente, la orilla, la isla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sendero*, *el puente*, *la orilla*, *la isla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was insula? (An island.) What does peninsula say, taken apart? (Almost an island.) And why does isle have an s? (Scholars put it there to imitate Latin.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C295-niebla",
+      "sequence": 3910,
+      "title": "la niebla — the word that was promised",
+      "headword": "la niebla",
+      "romanization": "la niebla",
+      "gloss": "the mist — Latin nebula, the word set aside earlier as the near-cousin of nubes; nebulous is the same mist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5200b0ea97d82966",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what was insula? (An island.) What did ora mean? (An edge.) And what was pontem? (A bridge.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la nube — the near-cousin, set aside earlier for this."
+            },
+            {
+              "kind": "speech",
+              "text": "la orilla — where it sits thickest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "NIE-bla, stress on the first part. The ie is one slide, and the b is soft between the vowel and the l. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la niebla — \"the mist,\" \"the fog.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When la nube was taken apart, one word was deliberately left on the shelf: nebula, which Latin used for mist as against nubes for cloud. This is that word, arrived at last."
+            },
+            {
+              "kind": "speech",
+              "text": "The road from nebula to niebla is short. The short e broke into ie, as it did in cielo and miel. The -bul- in the middle collapsed to -bl-, which Spanish does whenever an unstressed vowel finds itself between two consonants it can be spared from."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept nebula whole and gave it to astronomy, for the faint clouds between the stars. Something nebulous is misty in the figurative sense — an idea you cannot get an edge on. Which is a good word to end a run on, since the whole point of taking words apart is to make them less nebulous than they were."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: el sendero, el puente, la orilla, la isla, la niebla."
+            },
+            {
+              "kind": "speech",
+              "text": "Read in order they are a way out of a place — the path, the crossing, the water's edge, the land beyond it, and the weather closing in behind you."
+            },
+            {
+              "kind": "speech",
+              "text": "This run also shuts a circle. It opened with a cloud and closes with the mist that Latin kept carefully separate from it, and the two words have been waiting for each other since. That is the argument for taking a word apart rather than memorising it: the pieces you find keep turning up, and they keep paying."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la niebla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la niebla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la nube, then la niebla — the cloud and the mist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la nube*, then *la niebla* — the cloud and the mist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — el sendero, el puente, la orilla, la isla, la niebla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *el sendero*, *el puente*, *la orilla*, *la isla*, *la niebla*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was nebula, as against nubes? (Mist, not cloud.) What did the short e become? (Ie.) And what does nebulous mean? (Misty — an idea with no clear edge.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

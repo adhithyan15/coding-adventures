@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 291,
+  "title": "From the Seed Up --- Seed, Root, Trunk, Branch, Wood",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:766bc9fa8027c84c",
+  "lessons": [
+    {
+      "id": "ES-C291-semilla",
+      "sequence": 3670,
+      "title": "la semilla — where a seminar gets its name",
+      "headword": "la semilla",
+      "romanization": "la semilla",
+      "gloss": "the seed — Latin seminalia, the things for sowing; a seminar is a seed-bed and disseminate is scattering",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83d1b672d776e3de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what was mel? (Honey.) And what language gave Spanish tomate? (Nahuatl.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la flor — what this one is left behind by."
+            },
+            {
+              "kind": "speech",
+              "text": "el trigo — a crop that is nothing but these."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se-MI-lla, stress in the middle. The ll is the y sound again, the same as in cebolla. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la semilla — \"the seed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it sits Latin seminalia, \"the things for sowing,\" and behind that semen, which meant a seed long before it meant anything narrower."
+            },
+            {
+              "kind": "speech",
+              "text": "The English family is unusually respectable. A seminar is a seed-bed, a place where ideas are started rather than finished. A seminary is a nursery for people. To disseminate is to scatter seed in every direction, which is what dis- is doing there. And something seminal is the thing everything later grew out of."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the -illa on the end again. This is the second time it has turned up in two chapters' worth of words, and it will keep turning up — a small ending doing quiet work in words nobody thinks of as small any more."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One word, and the beginning of a shape."
+            },
+            {
+              "kind": "speech",
+              "text": "The next few belong together: this is a tree taken from the ground upwards, and you are standing at the bottom of it. Learning words in a set like that is worth more than learning five unrelated ones, because the set itself is a hook."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semilla, then seminar — the seed and the seed-bed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semilla*, then *seminar* — the seed and the seed-bed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semilla del trigo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semilla del trigo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did seminalia mean? (Things for sowing.) What is a seminar, taken apart? (A seed-bed.) And what does dis- add to disseminate? (Scattering in all directions.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C291-raiz",
+      "sequence": 3680,
+      "title": "la raíz — the word this book keeps using about words",
+      "headword": "la raíz",
+      "romanization": "la raíz",
+      "gloss": "the root — Latin radix, which is also the radish, the radical and the thing you eradicate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdcc5e2d22131654",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what was mel? (Honey.) And what is a seminar, taken apart? (A seed-bed.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la semilla — what this comes out of first."
+            },
+            {
+              "kind": "speech",
+              "text": "el árbol — what is standing on top of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ra-ÍZ, two beats, stress on the second. The written accent is doing real work: it splits a and i apart instead of letting them slide together. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la raíz — \"the root.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin radix, and this is the one word in the set you have already been using in English without noticing, because it is what we say about words themselves. When a lesson says a Spanish word and an English word share a root, radix is the metaphor underneath."
+            },
+            {
+              "kind": "speech",
+              "text": "A radish is a radix that got eaten. A radical goes to the root of the matter, which is why the word means both \"fundamental\" and \"extreme\" — it depends whether you approve. To eradicate is to pull up by the roots, e- out plus radix. And a square root in mathematics is a translation of the same Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent on the í is not decoration. Without it, ai would slide into one sound; with it, the two vowels stay separate and the stress lands on the second."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and they are in the right order: the seed, then what comes out of it first."
+            },
+            {
+              "kind": "speech",
+              "text": "You also have the etymology of the word root itself, which is a small thing until you notice that half of what this approach does is claim two words share one. Now you can say that claim in Spanish."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la raíz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la raíz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semilla, then la raíz — in that order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semilla*, then *la raíz* — in that order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ra-íz, two beats, and keep the vowels apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ra-íz*, two beats, and keep the vowels apart]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was radix? (A root.) What does eradicate say, taken apart? (To pull out by the roots.) And what is the accent on raíz doing? (Keeping the two vowels in separate beats.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C291-tronco",
+      "sequence": 3690,
+      "title": "el tronco — a word that means \"cut short\"",
+      "headword": "el tronco",
+      "romanization": "el tronco",
+      "gloss": "the trunk — Latin truncus, meaning lopped or maimed; to truncate is to do it on purpose",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d7328473af3ee1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what was radix? (A root.) And what did seminalia mean? (Things for sowing.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la raíz — what holds this up."
+            },
+            {
+              "kind": "speech",
+              "text": "el árbol — the whole of which this is the middle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "TRON-co, stress on the first part. The c before o is the hard one, and the n closes the first beat. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tronco — \"the trunk.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin truncus, and its first meaning was not a tree at all. Truncus meant lopped, maimed, cut short — a thing with its ends taken off. A tree stripped of branches is a truncus, and the name stuck to the part that was left."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the whole family. A trunk is the same word. To truncate is to cut short deliberately. A truncheon is a stick that is a cut-off piece of something longer. Even the elephant's trunk and the traveller's trunk are the same word wandering off in two directions from one idea of a thick stump."
+            },
+            {
+              "kind": "speech",
+              "text": "That first meaning explains something odd about tronco in Spanish: it is used of a body as well as a tree, for the part left when you set aside the head and the limbs. It has never really stopped meaning \"what remains.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, going upward: la semilla, la raíz, el tronco."
+            },
+            {
+              "kind": "speech",
+              "text": "The set is doing the work of a story. You are not holding three separate items in mind, you are holding one tree, and the order of the words is the order of the thing itself."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tronco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tronco*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semilla, la raíz, el tronco — bottom to middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semilla*, *la raíz*, *el tronco* — bottom to middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tronco del árbol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tronco del árbol*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did truncus mean first? (Lopped, cut short.) What does truncate do? (Cuts something short.) And what are the first three of the set? (La semilla, la raíz, el tronco.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C291-rama",
+      "sequence": 3700,
+      "title": "la rama — what a ramification actually is",
+      "headword": "la rama",
+      "romanization": "la rama",
+      "gloss": "the branch — Latin ramus; when an argument ramifies, it is growing these",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f40536e4cd3be736",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quick pass: what did truncus mean? (Lopped short.) What was radix? (A root.) And what is la semilla? (The seed.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tronco — what these come out of."
+            },
+            {
+              "kind": "speech",
+              "text": "el árbol — the whole thing they belong to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "RA-ma, stress on the first part. The opening r at the start of a word is rolled, not tapped. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la rama — \"the branch.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ramus, and it has barely moved: drop the ending, soften nothing, and there it is."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept ramus only in its abstract clothes, which makes the connection easy to miss. When a problem ramifies, it is growing branches. A ramification is one branch of a consequence. Both words are used almost entirely about arguments and lawsuits, and both are describing a tree."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a pattern worth naming. Spanish very often keeps a Latin word for the physical thing while English keeps it only for the metaphor. Rama is a branch you can snap; ramification is a branch nobody can point at. Same word, and the two languages divided the labour between them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the tree is nearly whole: la semilla, la raíz, el tronco, la rama."
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, and not one of them needed a rule you did not already have. They are ordinary things with ordinary endings, and the only work you have done is hearing what was already inside them."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rama del árbol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rama del árbol*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semilla, la raíz, el tronco, la rama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semilla*, *la raíz*, *el tronco*, *la rama*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was ramus? (A branch.) What is a ramification, underneath? (A branch of a consequence.) And which four do you have so far? (La semilla, la raíz, el tronco, la rama.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C291-bosque",
+      "sequence": 3710,
+      "title": "el bosque — the one in the set that is not Roman",
+      "headword": "el bosque",
+      "romanization": "el bosque",
+      "gloss": "the wood — a Germanic word, not a Latin one; bush, bosky and ambush are its English cousins",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b17b30b8b7e8074",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what was ramus? (A branch.) What was truncus? (Lopped short.) And what was radix? (A root.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el árbol — one of these, many times over."
+            },
+            {
+              "kind": "speech",
+              "text": "la rama — the word before this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "BOS-que, stress on the first part. The qu is a plain hard k and the u is silent, as it is in qué. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el bosque — \"the wood,\" \"the forest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take this one apart and Latin does not answer. Bosque is Germanic — from a root like busk, a thicket — and it walked into Spanish with the Visigoths, who ruled the peninsula for three centuries between Rome and the Arabic arrival."
+            },
+            {
+              "kind": "speech",
+              "text": "Which means its English relative is a native one. A bush is the same word. A bosky wood is a thicketed one. To ambush is to lie in the bushes, in the busk, waiting. And a bouquet is French for a little wood, a small stand of stems, which is a fair description of what is in the vase."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish is often described as Latin plus Arabic, and that is most of the truth, but there is a Germanic layer underneath. You have already met blanco, which is Germanic too. Bosque is that layer showing again."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: la semilla, la raíz, el tronco, la rama, el bosque."
+            },
+            {
+              "kind": "speech",
+              "text": "Said in order they build one tree and then step back to show a thousand of them. Four came from Rome and the fifth from the north, so this short set has quietly handed you the three sources Spanish draws on — Latin, Arabic in the chapter before, and now Germanic."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el bosque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el bosque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bosque, then bush — the same thicket twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bosque*, then *bush* — the same thicket twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — la semilla, la raíz, el tronco, la rama, el bosque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *la semilla*, *la raíz*, *el tronco*, *la rama*, *el bosque*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does bosque come from? (Germanic, not Latin.) Which English words are its cousins? (Bush, bosky, ambush.) And which other Germanic word do you already have? (Blanco.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

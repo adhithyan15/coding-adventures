@@ -3564,6 +3564,118 @@
         "ES-EXT-288-PARTIDA"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-289-01",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C289-amanecer",
+        "ES-C289-cielo",
+        "ES-C289-nube",
+        "ES-C289-estrella",
+        "ES-C289-sombra"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-289-CIELO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-290-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C290-trigo",
+        "ES-C290-arroz",
+        "ES-C290-cebolla",
+        "ES-C290-tomate",
+        "ES-C290-miel"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-290-COSECHA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-291-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C291-semilla",
+        "ES-C291-raiz",
+        "ES-C291-tronco",
+        "ES-C291-rama",
+        "ES-C291-bosque"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-291-ARBOL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-292-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C292-pueblo",
+        "ES-C292-colina",
+        "ES-C292-valle",
+        "ES-C292-lago",
+        "ES-C292-montana"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-292-TIERRA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-293-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C293-cuello",
+        "ES-C293-hombro",
+        "ES-C293-espalda",
+        "ES-C293-rodilla",
+        "ES-C293-tobillo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-293-CUERPO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-294-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C294-cuchillo",
+        "ES-C294-taza",
+        "ES-C294-olla",
+        "ES-C294-manta",
+        "ES-C294-escoba"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-294-CASA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-295-01",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C295-sendero",
+        "ES-C295-puente",
+        "ES-C295-orilla",
+        "ES-C295-isla",
+        "ES-C295-niebla"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-295-SENDERO"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3571,7 +3683,8 @@
       "segments": [
         "ES-PATH-001",
         "ES-PATH-005",
-        "ES-PATH-282-01"
+        "ES-PATH-282-01",
+        "ES-PATH-289-01"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -3583,7 +3696,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "ES-PATH-010",
-        "ES-PATH-283-01"
+        "ES-PATH-283-01",
+        "ES-PATH-290-01"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -3593,7 +3707,8 @@
     "SPINE-RESPOND-BASIC": {
       "segments": [
         "ES-PATH-017",
-        "ES-PATH-284-01"
+        "ES-PATH-284-01",
+        "ES-PATH-291-01"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -3608,7 +3723,8 @@
         "ES-PATH-014",
         "ES-PATH-007-ORIGIN",
         "ES-PATH-021",
-        "ES-PATH-285-01"
+        "ES-PATH-285-01",
+        "ES-PATH-292-01"
       ],
       "omits": [
         "PRONOUN-I",
@@ -3625,7 +3741,8 @@
         "ES-PATH-011",
         "ES-PATH-011-SER-ESTAR",
         "ES-PATH-022",
-        "ES-PATH-286-01"
+        "ES-PATH-286-01",
+        "ES-PATH-293-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -3638,7 +3755,8 @@
         "ES-PATH-018",
         "ES-PATH-024",
         "ES-PATH-024-PRONOUN-EVIDENCE",
-        "ES-PATH-287-01"
+        "ES-PATH-287-01",
+        "ES-PATH-294-01"
       ],
       "omits": [],
       "relocates": {}
@@ -3646,7 +3764,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "ES-PATH-012",
-        "ES-PATH-288-01"
+        "ES-PATH-288-01",
+        "ES-PATH-295-01"
       ],
       "omits": [
         "FAREWELL-CASUAL"
@@ -7252,6 +7371,111 @@
         "ES-C288-vuelta",
         "ES-C288-llegada",
         "ES-C288-despedida"
+      ]
+    },
+    {
+      "id": "ES-EXT-289-CIELO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the daybreak, the sky, a cloud, a star and the shade in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C289-amanecer",
+        "ES-C289-cielo",
+        "ES-C289-nube",
+        "ES-C289-estrella",
+        "ES-C289-sombra"
+      ]
+    },
+    {
+      "id": "ES-EXT-290-COSECHA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name wheat, rice, an onion, a tomato and honey in Spanish, and thank somebody for them.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C290-trigo",
+        "ES-C290-arroz",
+        "ES-C290-cebolla",
+        "ES-C290-tomate",
+        "ES-C290-miel"
+      ]
+    },
+    {
+      "id": "ES-EXT-291-ARBOL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the seed, the root, the trunk, the branch and the wood in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C291-semilla",
+        "ES-C291-raiz",
+        "ES-C291-tronco",
+        "ES-C291-rama",
+        "ES-C291-bosque"
+      ]
+    },
+    {
+      "id": "ES-EXT-292-TIERRA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the village, a hill, a valley, a lake and a mountain in Spanish, and say where I am from.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C292-pueblo",
+        "ES-C292-colina",
+        "ES-C292-valle",
+        "ES-C292-lago",
+        "ES-C292-montana"
+      ]
+    },
+    {
+      "id": "ES-EXT-293-CUERPO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the neck, the shoulder, the back, the knee and the ankle in Spanish, and say which one hurts.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C293-cuello",
+        "ES-C293-hombro",
+        "ES-C293-espalda",
+        "ES-C293-rodilla",
+        "ES-C293-tobillo"
+      ]
+    },
+    {
+      "id": "ES-EXT-294-CASA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask for a knife, a cup, a pot, a blanket and a broom in Spanish, politely.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C294-cuchillo",
+        "ES-C294-taza",
+        "ES-C294-olla",
+        "ES-C294-manta",
+        "ES-C294-escoba"
+      ]
+    },
+    {
+      "id": "ES-EXT-295-SENDERO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the path, the bridge, the shore, the island and the mist in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C295-sendero",
+        "ES-C295-puente",
+        "ES-C295-orilla",
+        "ES-C295-isla",
+        "ES-C295-niebla"
       ]
     }
   ],
