@@ -245,12 +245,12 @@ describe("corpus snapshot", () => {
     // sentence that used to stand here, "the only B1 nodes any track has
     // touched", stopped being true the moment chapters 196-198 landed.
     // B2 opened with HL-C113 step 6: three lessons on SPINE-REPORT-WHAT-OTHERS-SAID.
-    // C2 remains authored-but-unrealized in every track. C1 no longer does:
-    // HL-C174 opened two of its nodes by alias and HL-C175 authored a third.
+    // Neither C1 nor C2 is authored-but-unrealized any longer: HL-C174/175/177
+    // closed C1, and HL-C178 opens C2 with the cultural-weight chapter.
     expect(summary.byLevel.B1).toBe(40); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons) // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1
     expect(summary.byLevel.B2).toBe(17); // +3: HL-C113 step 6 opens B2 with reported speech // +4: step 7 adds the reported questions, the review and the synthesis, closing the node // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C173: +3 -- B2 closes (chapter 271)
     expect(summary.byLevel.C1).toBe(10); // HL-C175: chapter 272, the first C1 lessons in the corpus // HL-C177: +5 -- chapter 273, C1 closes
-    expect(summary.byLevel.C2).toBe(0);
+    expect(summary.byLevel.C2).toBe(5); // HL-C178: chapter 274, the first C2 lessons in the corpus
 
     // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters
     // Chapters 7-9 then map their terminal practices and Chapter 9's remaining

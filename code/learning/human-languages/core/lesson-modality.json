@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0afc146d5d64d550",
+  "sourceHash": "fnv1a64:793c7c9cf1c686d5",
   "summary": {
-    "totalLessons": 2284,
-    "voice": 1511,
+    "totalLessons": 2289,
+    "voice": 1516,
     "sight": 571,
     "pen": 202,
-    "drivableLessons": 1511,
+    "drivableLessons": 1516,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 790,
-    "drivablePrefixTotal": 1305,
-    "fullyDrivableChapters": 487,
+    "chapterCount": 791,
+    "drivablePrefixTotal": 1310,
+    "fullyDrivableChapters": 488,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7436,12 +7436,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 445,
-      "voice": 394,
+      "lessonCount": 450,
+      "voice": 399,
       "sight": 44,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 378,
+      "drivablePrefixTotal": 383,
       "modalities": [
         "voice",
         "sight",
@@ -11897,6 +11897,26 @@
             "ES-C273-por-lo-tanto",
             "ES-C273-lo-cual",
             "ES-C273-practice"
+          ]
+        },
+        {
+          "chapter": 274,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C274-mas-vale-pajaro",
+            "ES-C274-ser-un-quijote",
+            "ES-C274-pasar-a-mejor-vida",
+            "ES-C274-tener-gracia",
+            "ES-C274-practice"
           ]
         }
       ]
@@ -50236,6 +50256,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:4c09145f476241ad"
+    },
+    {
+      "id": "ES-C274-mas-vale-pajaro",
+      "language": "spanish",
+      "chapter": 274,
+      "sequence": 2870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:839d15c8ccbe8b9b"
+    },
+    {
+      "id": "ES-C274-ser-un-quijote",
+      "language": "spanish",
+      "chapter": 274,
+      "sequence": 2880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d36244da95ea724a"
+    },
+    {
+      "id": "ES-C274-pasar-a-mejor-vida",
+      "language": "spanish",
+      "chapter": 274,
+      "sequence": 2890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ca67271fa4c5dd8f"
+    },
+    {
+      "id": "ES-C274-tener-gracia",
+      "language": "spanish",
+      "chapter": 274,
+      "sequence": 2900,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:597651ef61ae8f52"
+    },
+    {
+      "id": "ES-C274-practice",
+      "language": "spanish",
+      "chapter": 274,
+      "sequence": 2910,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c0d1abf4dd24e3d8"
     },
     {
       "id": "TA-C01-vanakkam",

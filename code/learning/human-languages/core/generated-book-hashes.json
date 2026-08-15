@@ -6355,6 +6355,19 @@
       "tex": "spanish/book/chapters/ch273-parrafo.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 274,
+      "sourceHash": "fnv1a64:b715ac60181d2c15",
+      "lessonIds": [
+        "ES-C274-mas-vale-pajaro",
+        "ES-C274-ser-un-quijote",
+        "ES-C274-pasar-a-mejor-vida",
+        "ES-C274-tener-gracia",
+        "ES-C274-practice"
+      ],
+      "tex": "spanish/book/chapters/ch274-peso-cultural.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

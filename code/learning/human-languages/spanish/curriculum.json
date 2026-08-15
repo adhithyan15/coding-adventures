@@ -3240,6 +3240,49 @@
         "ES-EXT-273-COHESION"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-274-01",
+      "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
+      "lessons": [
+        "ES-C274-mas-vale-pajaro"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-274-02",
+      "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
+      "lessons": [
+        "ES-C274-ser-un-quijote"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-274-03",
+      "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
+      "lessons": [
+        "ES-C274-pasar-a-mejor-vida"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-274-04",
+      "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
+      "lessons": [
+        "ES-C274-tener-gracia",
+        "ES-C274-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-274-WEIGHT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3750,13 +3793,13 @@
       "relocates": {}
     },
     "SPINE-READ-CULTURAL-WEIGHT": {
-      "segments": [],
-      "omits": [
-        "CULTURAL-ALLUSION",
-        "PROVERB",
-        "EUPHEMISM-AND-TABOO",
-        "HUMOR-CONVENTION"
+      "segments": [
+        "ES-PATH-274-01",
+        "ES-PATH-274-02",
+        "ES-PATH-274-03",
+        "ES-PATH-274-04"
       ],
+      "omits": [],
       "relocates": {}
     }
   },
@@ -6714,6 +6757,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C273-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-274-WEIGHT",
+      "stage": "C2",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the weight each culturally loaded phrase borrows, and say which can be used without knowing its source.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C274-practice"
       ]
     }
   ],
