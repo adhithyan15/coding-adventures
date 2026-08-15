@@ -1253,6 +1253,12 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 44,
+      "output": "hindi/book/chapters/ch44-sons-daughters.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "output": "italian/book/chapters/ch02-how-are-you.tex"
@@ -1611,6 +1617,13 @@
       "language": "kannada",
       "chapter": 44,
       "output": "kannada/book/chapters/ch44-see-say.tex",
+      "unicodeScript": "Kannada",
+      "scriptCommand": "kn"
+    },
+    {
+      "language": "kannada",
+      "chapter": 45,
+      "output": "kannada/book/chapters/ch45-older-generation.tex",
       "unicodeScript": "Kannada",
       "scriptCommand": "kn"
     },
@@ -2057,6 +2070,13 @@
       "language": "malayalam",
       "chapter": 44,
       "output": "malayalam/book/chapters/ch44-see-say.tex",
+      "unicodeScript": "Malayalam",
+      "scriptCommand": "ml"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 45,
+      "output": "malayalam/book/chapters/ch45-grandparents.tex",
       "unicodeScript": "Malayalam",
       "scriptCommand": "ml"
     },
@@ -2576,6 +2596,13 @@
       "language": "sanskrit",
       "chapter": 22,
       "output": "sanskrit/book/chapters/ch22-more-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 23,
+      "output": "sanskrit/book/chapters/ch23-kinship.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
@@ -4189,6 +4216,12 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 43,
+      "output": "tamil/book/chapters/ch43-household.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",
@@ -4421,6 +4454,13 @@
       "language": "telugu",
       "chapter": 44,
       "output": "telugu/book/chapters/ch44-see-say.tex",
+      "unicodeScript": "Telugu",
+      "scriptCommand": "te"
+    },
+    {
+      "language": "telugu",
+      "chapter": 45,
+      "output": "telugu/book/chapters/ch45-grandparents.tex",
       "unicodeScript": "Telugu",
       "scriptCommand": "te"
     },

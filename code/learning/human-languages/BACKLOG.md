@@ -9,6 +9,38 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C192 — "chapter N" in prose is capped per track, and a new chapter can spend the cap
+
+The family/people tranche (24 lessons, four per track across tamil, kannada,
+telugu, malayalam, hindi and sanskrit) wrote the obvious sentence — *"the
+masculine ending you already met on बच्चा in chapter 39"* — and Hindi went from
+20 cross-chapter prose references to 21. `chapter-references.test.ts` holds each
+track at its current count, and **that pin is not repinnable**: `repin_tests.py`
+reports `STUCK -- not a count pin`, correctly, because HL-C102 already decided
+the fix is prose and never a fresher number. Ten of the 24 lessons carried one;
+all ten were rewritten to name the thing (*"the family lesson"*, *"you already
+met in ಹೋಗು"*, *"the people lesson"*).
+
+**Two things worth carrying forward from this tranche.**
+
+**A new chapter at the END of a track un-exempts the previous last lesson.**
+`continuity.ts` only judges a reinforcement window the track was long enough to
+contain (`at + window.from > last` skips it), so the final lesson's atom is
+exempt from R1 by construction. Append four lessons and it stops being final,
+and its atom starts *missing* R1 — six new misses across six tracks, for content
+nobody touched. Chaining each chapter's FIRST lesson to the previous chapter's
+last (`prerequisites`/`requires`/`practises`/`reviews_of`) closes that window and
+costs nothing, because HL14 makes reuse free. R1 went 1106/3484 (0.31745) to
+1106/3508 (**0.31528**) — the ratio *fell* while 24 atoms were added.
+
+**R2, R3 and R4 all grew (+24/+27/+33) for exactly the same reason**, and those
+are repinnable counts rather than ceilings. The pattern is worth naming: adding
+lessons to the tail of a track converts unmeasured debt into measured debt. It is
+not a regression, and the fix is not to stop appending.
+
+Vocabulary after the tranche: hindi 107, malayalam 107, tamil 103, sanskrit 100,
+kannada 99, telugu 99 — all still short of the 300 pre-A1 floor (HL-C184).
+
 ## HL-C191 — cross-script citations must be ROMANISED; each book loads only its own font
 
 A comparative note in a Telugu lesson cited Kannada's ನೋಡು in Kannada script.

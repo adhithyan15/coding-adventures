@@ -400,6 +400,21 @@
         "SA-EXT-22-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-23-KIN",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "SA-C23-father",
+        "SA-C23-mother",
+        "SA-C23-son",
+        "SA-C23-daughter"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-23-KIN"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -506,7 +521,8 @@
         "SA-PATH-201",
         "SA-PATH-202",
         "SA-PATH-203",
-        "SA-PATH-206"
+        "SA-PATH-206",
+        "SA-PATH-23-KIN"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1040,6 +1056,20 @@
         "SA-C22-lead",
         "SA-C22-play",
         "SA-C22-burn"
+      ]
+    },
+    {
+      "id": "SA-EXT-23-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four inherited kinship words and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C23-father",
+        "SA-C23-mother",
+        "SA-C23-son",
+        "SA-C23-daughter"
       ]
     }
   ]

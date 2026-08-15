@@ -524,6 +524,21 @@
         "KA-EXT-44-SEESAY"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-45-KIN",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "KA-C45-grandfather",
+        "KA-C45-grandmother",
+        "KA-C45-husband",
+        "KA-C45-wife"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-45-KIN"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -635,7 +650,8 @@
         "KA-PATH-014",
         "KA-PATH-023",
         "KA-PATH-200",
-        "KA-PATH-201"
+        "KA-PATH-201",
+        "KA-PATH-45-KIN"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1310,6 +1326,20 @@
         "KA-C44-listen",
         "KA-C44-speak",
         "KA-C44-write"
+      ]
+    },
+    {
+      "id": "KA-EXT-45-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more family members and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C45-grandfather",
+        "KA-C45-grandmother",
+        "KA-C45-husband",
+        "KA-C45-wife"
       ]
     }
   ]

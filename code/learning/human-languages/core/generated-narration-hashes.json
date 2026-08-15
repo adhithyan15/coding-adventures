@@ -2801,6 +2801,23 @@
       "jsonHash": "fnv1a64:4baa0f6a77813e68"
     },
     {
+      "language": "hindi",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:4798dbb915aa746d",
+      "lessonIds": [
+        "HI-C44-son",
+        "HI-C44-daughter",
+        "HI-C44-family",
+        "HI-C44-people"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "hindi/narration/ch44.txt",
+      "json": "hindi/narration/ch44.json",
+      "textHash": "fnv1a64:d222320e2e5c078c",
+      "jsonHash": "fnv1a64:25374706625b2a9a"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
@@ -3938,6 +3955,23 @@
       "json": "kannada/narration/ch44.json",
       "textHash": "fnv1a64:d4505a971fd936b2",
       "jsonHash": "fnv1a64:90e261c19f781be7"
+    },
+    {
+      "language": "kannada",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:2d62fb1f0478ffb4",
+      "lessonIds": [
+        "KA-C45-grandfather",
+        "KA-C45-grandmother",
+        "KA-C45-husband",
+        "KA-C45-wife"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch45.txt",
+      "json": "kannada/narration/ch45.json",
+      "textHash": "fnv1a64:9a1195191c84821e",
+      "jsonHash": "fnv1a64:551bf53fdf576e8e"
     },
     {
       "language": "latin",
@@ -5295,6 +5329,23 @@
       "json": "malayalam/narration/ch44.json",
       "textHash": "fnv1a64:0add227804cb5e78",
       "jsonHash": "fnv1a64:287b8b664d1534a8"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:a8e7308e3b652322",
+      "lessonIds": [
+        "ML-C45-grandfather",
+        "ML-C45-grandmother",
+        "ML-C45-husband",
+        "ML-C45-wife"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "malayalam/narration/ch45.txt",
+      "json": "malayalam/narration/ch45.json",
+      "textHash": "fnv1a64:bd21c685cfab3f9e",
+      "jsonHash": "fnv1a64:6d4411a4a078c48c"
     },
     {
       "language": "marathi",
@@ -7072,6 +7123,23 @@
       "json": "sanskrit/narration/ch22.json",
       "textHash": "fnv1a64:7427cc6649dd2055",
       "jsonHash": "fnv1a64:1dbaecb341507795"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:b4f4ad8cb69dc56a",
+      "lessonIds": [
+        "SA-C23-father",
+        "SA-C23-mother",
+        "SA-C23-son",
+        "SA-C23-daughter"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch23.txt",
+      "json": "sanskrit/narration/ch23.json",
+      "textHash": "fnv1a64:d26c52856e9600b3",
+      "jsonHash": "fnv1a64:7c1d1f8b05e38342"
     },
     {
       "language": "spanish",
@@ -11857,6 +11925,23 @@
       "jsonHash": "fnv1a64:9c25dbe397fd716f"
     },
     {
+      "language": "tamil",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:c95cc1d2d84d1b6f",
+      "lessonIds": [
+        "TA-C43-child",
+        "TA-C43-son",
+        "TA-C43-daughter",
+        "TA-C43-family"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "tamil/narration/ch43.txt",
+      "json": "tamil/narration/ch43.json",
+      "textHash": "fnv1a64:f3cc61dffe89fea4",
+      "jsonHash": "fnv1a64:edc42a6321660468"
+    },
+    {
       "language": "telugu",
       "chapter": 1,
       "sourceHash": "fnv1a64:1a3b4076a4e03286",
@@ -12559,6 +12644,23 @@
       "json": "telugu/narration/ch44.json",
       "textHash": "fnv1a64:0127d395f17f34ca",
       "jsonHash": "fnv1a64:0e71e183556e9016"
+    },
+    {
+      "language": "telugu",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:fcc2f0a9f6330377",
+      "lessonIds": [
+        "TE-C45-grandfather",
+        "TE-C45-grandmother",
+        "TE-C45-husband",
+        "TE-C45-wife"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "telugu/narration/ch45.txt",
+      "json": "telugu/narration/ch45.json",
+      "textHash": "fnv1a64:1c0a32ca5ea7e8df",
+      "jsonHash": "fnv1a64:df5ff051ce3cba57"
     },
     {
       "language": "urdu",

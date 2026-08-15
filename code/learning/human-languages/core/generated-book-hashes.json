@@ -1301,6 +1301,18 @@
       "tex": "hindi/book/chapters/ch43-see-say.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:6f9609838554afc8",
+      "lessonIds": [
+        "HI-C44-son",
+        "HI-C44-daughter",
+        "HI-C44-family",
+        "HI-C44-people"
+      ],
+      "tex": "hindi/book/chapters/ch44-sons-daughters.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
@@ -2001,6 +2013,18 @@
         "KA-C44-write"
       ],
       "tex": "kannada/book/chapters/ch44-see-say.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:2921525d0ce2b056",
+      "lessonIds": [
+        "KA-C45-grandfather",
+        "KA-C45-grandmother",
+        "KA-C45-husband",
+        "KA-C45-wife"
+      ],
+      "tex": "kannada/book/chapters/ch45-older-generation.tex"
     },
     {
       "language": "latin",
@@ -2838,6 +2862,18 @@
         "ML-C44-write"
       ],
       "tex": "malayalam/book/chapters/ch44-see-say.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:cce50486ee16413d",
+      "lessonIds": [
+        "ML-C45-grandfather",
+        "ML-C45-grandmother",
+        "ML-C45-husband",
+        "ML-C45-wife"
+      ],
+      "tex": "malayalam/book/chapters/ch45-grandparents.tex"
     },
     {
       "language": "marathi",
@@ -3820,6 +3856,18 @@
         "SA-C22-burn"
       ],
       "tex": "sanskrit/book/chapters/ch22-more-verbs.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:e08fffbeecff5991",
+      "lessonIds": [
+        "SA-C23-father",
+        "SA-C23-mother",
+        "SA-C23-son",
+        "SA-C23-daughter"
+      ],
+      "tex": "sanskrit/book/chapters/ch23-kinship.tex"
     },
     {
       "language": "spanish",
@@ -6935,6 +6983,18 @@
       "tex": "tamil/book/chapters/ch42-more-verbs.tex"
     },
     {
+      "language": "tamil",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:363b6632b20a4903",
+      "lessonIds": [
+        "TA-C43-child",
+        "TA-C43-son",
+        "TA-C43-daughter",
+        "TA-C43-family"
+      ],
+      "tex": "tamil/book/chapters/ch43-household.tex"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "sourceHash": "fnv1a64:c7f3ae952173dcba",
@@ -7347,6 +7407,18 @@
         "TE-C44-write"
       ],
       "tex": "telugu/book/chapters/ch44-see-say.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:4f3686a5b07a447b",
+      "lessonIds": [
+        "TE-C45-grandfather",
+        "TE-C45-grandmother",
+        "TE-C45-husband",
+        "TE-C45-wife"
+      ],
+      "tex": "telugu/book/chapters/ch45-grandparents.tex"
     },
     {
       "language": "urdu",

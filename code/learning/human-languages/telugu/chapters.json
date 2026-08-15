@@ -932,6 +932,26 @@
           "TE-LEX-WRITE"
         ]
       }
+    },
+    {
+      "chapter": 45,
+      "title": "Grandparents, and the Married Pair",
+      "label": "ch:te-grandparents",
+      "canDo": "I can name a grandfather, a grandmother, a husband and a wife in Telugu.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TE-C45-wife",
+        "kind": "production",
+        "summary": "Complete TE-C45-wife and say all four words in order.",
+        "assesses": [
+          "TE-LEX-GRANDFATHER",
+          "TE-LEX-GRANDMOTHER",
+          "TE-LEX-HUSBAND",
+          "TE-LEX-WIFE"
+        ]
+      }
     }
   ]
 }
