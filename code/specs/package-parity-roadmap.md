@@ -229,7 +229,12 @@ values. They report secret erasure honestly as `best_effort`,
 respectively. The central #11758 gate requires exactly those six consumers,
 runs every package-native build, verifies generator provenance, regenerates the
 manifest byte-for-byte, and feeds both aggregate CI gates. Crash-safe durable
-epoch activation (#11734) remains the explicit follow-up work.
+epoch activation (#11734) remains the explicit follow-up work. D18T (#11781)
+now fixes its D18S version 2 upgrade, atomic originator-key custody, immutable
+activation plan, public-record replay, publish/activate serialization, crash
+recovery, and stable errors. The Rust/shared-fixture slice (#11782), five
+portable consumers (#11783 through #11787), and aggregate gate (#11788) remain
+the ordered implementation backlog.
 
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-
 capability deterministic registry over an injected `StorageBackend`. Its

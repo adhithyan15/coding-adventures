@@ -648,9 +648,10 @@ Issue #131 is complete only after this sequence:
 [D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) reuses D18P's
 immutable grant slots and endpoint boundary for portable sealed-key generation,
 opening, receiver epoch state, and cryptographic rotation. D18P version 1 does
-not yet activate a new epoch durably; that
-crash-safe transition is tracked by #11734 rather than being an implied side
-effect of saving grants. Issue #133 may reuse the structural role interfaces
+not activate a new epoch durably. [D18T](D18T-chief-of-staff-durable-epoch-activation-profile.md)
+defines the version 2 D18S upgrade, originator-key custody, immutable activation
+plan, crash recovery, and active-epoch CAS tracked by #11734; saving grants alone
+does not imply activation. Issue #133 may reuse the structural role interfaces
 while adding the wider SKILL, function, program, stdin/stdout, and bridge
 developer surfaces.
 
