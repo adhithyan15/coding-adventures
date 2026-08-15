@@ -57,6 +57,50 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C167 — R1 and the script drizzle are in STRUCTURAL tension, and more chapters will not fix it
+
+**Measured 2026-08-14, after HL-C163/165/166 took Sanskrit from 15 chapters to
+20.** HL-C161 predicted the ledger would advance once the track had runway. The
+runway worked exactly as predicted for ordinary content — R1 fell 0.3232 →
+0.3175 as chapters 16–20 landed — and then the segments were re-run:
+
+| Sanskrit segments added | R1 ratio | ceiling 0.32 |
+|---:|---:|---|
+| 0 | 0.3175 | pass |
+| 4 | 0.3206 | **over** |
+| 9 | 0.3222 | **over** |
+
+Roughly **+0.0008 per segment**, against 0.0025 of headroom. Three would fit.
+
+**This is not a tuning problem, and the next session should not spend a PR
+tuning it.** R1 asks whether an atom is revisited within *three lessons*. The
+drizzle deliberately spaces script segments about five lessons apart, one per
+chapter — that spacing is the entire point of a gentle ramp (HL11). So a
+drizzled letter is, *by construction*, alone inside R1's window. Making segments
+revisit the previous letter does not help: the previous segment is ~5 lessons
+back, still outside the window.
+
+More chapters raise the denominator and buy a few more segments, but the tension
+returns at every tranche. Shipping three of nine to slip under the ratchet would
+be gaming the measurement, not satisfying it.
+
+**The real question is a scoping one, and it needs deciding before more segments
+are authored:** should a drizzled script atom be *in* the R1 population at all?
+Three candidate answers, in the order I would try them:
+
+1. **Score script atoms on their own window.** A letter's natural reinforcement
+   is the next lesson that *uses* it in a word, which is chapters away by design.
+   A `SCRIPT-R1` window measured in chapters rather than lessons would say
+   something true; the current one says something true about the wrong thing.
+2. **Exclude script atoms from R1 and gate them on letter-ledger closure
+   instead** — which already exists and already measures the right property.
+3. **Re-base R1 per track** with a stated drizzle allowance. Weakest option: it
+   hides the tension behind a number rather than resolving it.
+
+Until that is decided, Sanskrit's ledger stays at 8 of 24 and this row is the
+reason. Everything else about the track is unblocked — 20 chapters, 114 lessons,
+and R1 improving on every content PR.
+
 ## HL-C161 — Sanskrit's ledger is blocked on CHAPTERS, and the ratio proves it
 
 **Measured 2026-08-14, and this row exists because the attempt was reverted
