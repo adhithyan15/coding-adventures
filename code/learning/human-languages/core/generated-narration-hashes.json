@@ -5282,7 +5282,7 @@
     {
       "language": "malayalam",
       "chapter": 44,
-      "sourceHash": "fnv1a64:4291d57bf9259643",
+      "sourceHash": "fnv1a64:af5dd9ae0a6373bc",
       "lessonIds": [
         "ML-C44-look",
         "ML-C44-listen",
@@ -5293,8 +5293,8 @@
       "drivablePrefix": 4,
       "text": "malayalam/narration/ch44.txt",
       "json": "malayalam/narration/ch44.json",
-      "textHash": "fnv1a64:e3fac7687f75bc35",
-      "jsonHash": "fnv1a64:711da858d69c8004"
+      "textHash": "fnv1a64:0add227804cb5e78",
+      "jsonHash": "fnv1a64:287b8b664d1534a8"
     },
     {
       "language": "marathi",
@@ -12512,7 +12512,7 @@
     {
       "language": "telugu",
       "chapter": 44,
-      "sourceHash": "fnv1a64:8398c1d155351052",
+      "sourceHash": "fnv1a64:14c855344e5d26db",
       "lessonIds": [
         "TE-C44-look",
         "TE-C44-listen",
@@ -12523,8 +12523,8 @@
       "drivablePrefix": 4,
       "text": "telugu/narration/ch44.txt",
       "json": "telugu/narration/ch44.json",
-      "textHash": "fnv1a64:357951c7e89e9e29",
-      "jsonHash": "fnv1a64:315e3343bc19b060"
+      "textHash": "fnv1a64:0127d395f17f34ca",
+      "jsonHash": "fnv1a64:0e71e183556e9016"
     },
     {
       "language": "urdu",

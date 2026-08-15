@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8398c1d155351052",
+  "sourceHash": "fnv1a64:14c855344e5d26db",
   "lessons": [
     {
       "id": "TE-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:000835a7288f4adf",
+      "sourceHash": "fnv1a64:430b93c4ff216a0f",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Also 'to see' and 'to look after', the same three-way stem as its Kannada cousin ನೋಡು — the languages are close enough that the pattern travels."
+              "text": "Also 'to see' and 'to look after', the same three-way stem as its Kannada cousin nōḍu — the languages are close enough that the pattern travels."
             }
           ]
         },
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1060d0e0bd89355",
+      "sourceHash": "fnv1a64:27f96a9cf791d50b",
       "notice": null,
       "blocks": [
         {
@@ -277,7 +277,7 @@
             },
             {
               "kind": "speech",
-              "text": "From māṭa, 'word', plus āḍu, 'to play' — the same construction as Kannada's ಮಾತಾಡು, built from the same two pieces."
+              "text": "From māṭa, 'word', plus āḍu, 'to play' — the same construction as Kannada's mātāḍu, built from the same two pieces."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4291d57bf9259643",
+  "sourceHash": "fnv1a64:af5dd9ae0a6373bc",
   "lessons": [
     {
       "id": "ML-C44-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:595fc29a93eb976b",
+      "sourceHash": "fnv1a64:0b36fad91e8d36bb",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same nōkk- stem as Kannada's ನೋಡು, with Malayalam's courteous long ū on the end."
+              "text": "The same nōkk- stem as Kannada's nōḍu, with Malayalam's courteous long ū on the end."
             }
           ]
         },
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2595b1271b184d6",
+      "sourceHash": "fnv1a64:51ad1fe862d53f16",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
             },
             {
               "kind": "speech",
-              "text": "And Kannada's ಕೇಳು again. Malayalam separated from Tamil later than the others, but this stem is older than any of the splits."
+              "text": "And Kannada's kēḷu again. Malayalam separated from Tamil later than the others, but this stem is older than any of the splits."
             }
           ]
         },

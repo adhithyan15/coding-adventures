@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0e7bcef1827f39e9",
+  "sourceHash": "fnv1a64:60cf5931d71f2227",
   "summary": {
     "totalLessons": 2338,
     "voice": 1564,
@@ -34114,7 +34114,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:595fc29a93eb976b"
+      "sourceHash": "fnv1a64:0b36fad91e8d36bb"
     },
     {
       "id": "ML-C44-listen",
@@ -34132,7 +34132,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c2595b1271b184d6"
+      "sourceHash": "fnv1a64:51ad1fe862d53f16"
     },
     {
       "id": "ML-C44-speak",
@@ -57343,7 +57343,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:000835a7288f4adf"
+      "sourceHash": "fnv1a64:430b93c4ff216a0f"
     },
     {
       "id": "TE-C44-listen",
@@ -57379,7 +57379,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c1060d0e0bd89355"
+      "sourceHash": "fnv1a64:27f96a9cf791d50b"
     },
     {
       "id": "TE-C44-write",
