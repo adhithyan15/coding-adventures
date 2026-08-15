@@ -1,0 +1,21 @@
+% ============================================================================
+% landform-extent.query — a worked recall over the geography
+% landform-extent library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how much area does a
+% plateau cover?": it states no geography fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `landform_extent` rows and returns the
+% extent + the table's source/locator/trust. A landform the cited spans
+% give no extent descriptor for abstains honestly — the engine never
+% invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli landform-extent.query.adj
+% ============================================================================
+
+import "landform-extent.adj"
+
+? landform_extent(plateau, $Extent)                % expect great_extent
+? landform_extent($Landform, considerable_extent)  % reverse bind — expect plain
+? landform_extent(canyon, $Extent)                 % expect abstain — canyon's own cited span states no extent descriptor
