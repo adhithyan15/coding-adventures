@@ -3709,3 +3709,125 @@ build tool never discovered it and no CI leg ever compiled it. A `cfg`-gated
 literal inside an unwatched package is doubly invisible. Before concluding "CI
 is green, so this package is fine", confirm the package is actually in the
 build graph — `ls <pkg>/BUILD`.
+## A fixed-once-per-package fix doesn't reach a fallback path — an absent `BUILD_windows` still runs the POSIX `BUILD` verbatim on Windows
+
+PR #11553 (Swift ZIP) repaired the Windows dependency-closure detection so far more
+packages actually get *evaluated* on `windows-latest` than before. That correctly
+exposed 28 packages that were never Windows-tested until this PR, even though the
+`.[dev]`-quoting bug they hit (lesson at line 31) has been documented for a long time.
+
+- **`GetBuildFileForPlatform` (`code/programs/go/build-tool/internal/discovery/discovery.go`)
+  falls back to the generic POSIX `BUILD` file when no `BUILD_windows` exists — for
+  EVERY platform, including Windows.** There is no "this package doesn't support
+  Windows" opt-out mechanism anywhere in the build tool (no marker file, no
+  platform field). A package with only a `BUILD` file is not "skipped on Windows" —
+  its POSIX script is handed to `cmd /C` verbatim. `#!/bin/sh` / `set -eu` headers,
+  `if [ "$(uname)" = "Linux" ]; then ...; fi` guards, and quoted `-e ".[dev]"` all
+  fail loudly (`Environment variable -eu not defined`, `"$(uname)" was unexpected at
+  this time.`, `not a valid editable requirement`) the first time such a package
+  actually gets exercised on Windows.
+- **A known, documented fix (line 31) does not self-propagate.** 21 packages had the
+  exact `-e ".[dev]"` quoting bug the lesson already named, either because they never
+  had a `BUILD_windows` at all, or because their hand-authored `BUILD_windows`
+  predated/diverged from `code/programs/python/scaffold-generator/scaffold_generator.py`
+  (which has always emitted the correct unquoted form). Two packages
+  (`prolog-core`, `swi-prolog-lexer`) used `.venv\Scripts\python -m pip install`
+  instead of `uv pip install` — a second hand-authored variant of the same bug.
+  **Fix:** unquoted `-e .[dev]` — copy an existing multi-dep `BUILD_windows` (e.g.
+  `nib-parser`) as the template rather than re-deriving it.
+- **A POSIX-only guard line (`if [ "$(uname)" = "Linux" ]; then cargo tarpaulin ...;
+  fi`) is not "harmless to skip" on Windows — it is a syntax error there.** `cmd.exe`
+  has no `[ ]`/`$()` and reads `$(uname)` as a literal command name. Fix: give the
+  package a `BUILD_windows` that drops the tarpaulin line entirely (tarpaulin is
+  Linux-only anyway) — see `bytecode-compiler/BUILD_windows` for the established
+  one-line precedent.
+- **When newly exposing a previously-untested platform for dozens of packages at
+  once, budget review time per failure, not just per PR.** Six inherited defects
+  were fixed before this head; 28 were still failing after — because "expose more of
+  the closure" and "fix everything the closure exposes" are different amounts of
+  work, and the former doesn't bound the latter.
+
+## A non-recursive function can still overflow a 1 MiB Windows test-thread stack — debug builds don't reuse stack slots across `match` arms
+
+`chief-of-staff-smart-home-tools` aborted on `windows-latest` with
+`0xC00000FD`/`STATUS_STACK_OVERFLOW` in a two-call, non-recursive integration test.
+The existing stack-overflow lessons (line ~1980, ~2557) are all about *recursive*
+walkers whose frame gets multiplied by depth. This one had no recursion at all.
+
+**Cause:** the tool dispatcher is one `match tool_id.as_str() { ... }` with 364 arms,
+each declaring its own small `let query = ...;` local before calling a handler
+function. In a debug build, rustc does not reuse stack slots across mutually
+exclusive `match` arms (same mechanism as the recursive-eval lessons, just applied
+to breadth instead of depth) — so the function's single stack frame sums roughly
+364 arms' worth of locals. That is comfortably under macOS/Linux's ~8 MiB default
+test-thread stack but over Windows' ~1 MiB floor. Reproduced locally without a
+Windows box: build the test binary, then run it directly (not via `cargo test`,
+which also applies `RUST_MIN_STACK` to `rustc` itself and breaks compilation) with
+`RUST_MIN_STACK=1048576 ./target/debug/deps/<binary> tests::<name> --exact` —
+overflowed at 1 MiB, passed cleanly at 2 MiB.
+
+**Fix, and why raising the stack here is correct (not a band-aid):** the earlier
+recursive-`eval` lesson fixed depth×frame-size by shrinking the frame, because a
+depth cap that keeps growing would eventually re-overflow any fixed stack. Here
+there is no depth to bound — the frame size is fixed regardless of input, so
+widening the stack for this one test binary is a proportionate, permanent fix, not
+a deferral. Set it in `BUILD_windows` (not committed to `Cargo.toml` or a global
+CI env var, since only this package's frame is oversized):
+`set "RUST_MIN_STACK=4194304" && cargo test -p <pkg> && cargo clippy -p <pkg> --all-targets -- -D warnings`.
+Chose 4 MiB (2x the proven-sufficient 2 MiB) for margin. `set "VAR=value" &&
+command` (not bare `VAR=value command`) is required — see the existing Windows
+env-var lesson (line 35); each `BUILD_windows` line runs as its own `cmd /C`
+process, so the `set` and the command it configures must be chained with `&&` on
+one line.
+
+## `Path.write_text(...)` without `newline=""` silently adds a byte on Windows and breaks exact-size assertions
+
+`logic-builtins`' `test_file_path_metadata_facade` asserted a Prolog `size_fileo/2`
+builtin returned `len("fact(a).\n")` (9) for a file it had just written with
+`source_path.write_text("fact(a).\n", encoding="utf-8")`. It got 10 on Windows.
+
+**Cause:** `Path.write_text` defaults to platform newline translation unless
+`newline=""` is passed (the exact mechanism documented at the CRLF lesson,
+line ~3121, but there for a content-generation script — here it silently
+corrupted a test's own fixture size instead of a hash). `\n` became `\r\n` on
+write, so the file the test created was one byte longer than the string literal's
+`len()`, and the byte-count assertion — computed from the string, not the file —
+went stale relative to what was actually on disk.
+
+**Fix:** `source_path.write_text("fact(a).\n", encoding="utf-8", newline="")`
+whenever a test both writes a fixture file with embedded `\n` AND later asserts
+something about that file's exact byte size (not just its content). Content-only
+assertions (`read_text()` back and compare) are unaffected because Python
+normalizes `\r\n` back to `\n` on text-mode read — only a *size*/byte-count
+assertion computed from the pre-write string is at risk. The general write-side
+guidance from line 3145 (open in binary, or pass `newline=''`) applies to test
+fixtures exactly as much as to generated production files.
+
+## A test's own `#[cfg(not(target_os = "windows"))]` guard can be stale evidence, not a platform limitation
+
+`embeddable-http-server`'s `sharded_http_server_serves_concurrent_clients_across_shards`
+test — the ONLY caller of the `#[cfg(target_os = "windows")]` variant of
+`bind_native_sharded_http_server` — was itself gated `#[cfg(not(target_os =
+"windows"))]`. Once the build tool started actually building this package on
+Windows (see the BUILD-closure lesson above), that made the Windows
+`bind_native_sharded_http_server` dead code under `-D warnings`
+(`function 'bind_native_sharded_http_server' is never used`).
+
+**Investigation, not just suppression:** `#[allow(dead_code)]` would have silenced
+this without checking whether the underlying claim (sharded Windows HTTP serving
+doesn't work / isn't tested) was still true. It wasn't: `bind_windows_sharded`
+(`ShardedHttpServer<WindowsTransportPlatform>`, IOCP-backed) is a complete,
+real implementation sitting right next to the Unix ones, not a stub. Two sibling
+tests in the same file (`mailbox_http_server_*`) ARE legitimately Windows-excluded
+because `MailboxHttpServer` has no Windows reactor at all — so the sharded test's
+exclusion reads, at a glance, like it follows the same precedent, but it doesn't:
+different underlying type, different actual platform support.
+
+**Fix:** remove the `#[cfg(not(target_os = "windows"))]` from the sharded test so
+it runs everywhere the implementation exists — verified with
+`cargo check --target x86_64-pc-windows-gnu --tests` under `RUSTFLAGS="-D warnings"`
+(no Windows box needed for a cross-compile check; only actually *running* the test
+needs one, which real Windows CI will do on push). **Lesson:** when a `-D warnings`
+lint fires on a `#[cfg(target_os = "windows")]` item, check whether its only caller
+is excluded from Windows before reaching for `allow` — the cfg may be describing a
+gap that was since closed, not a permanent constraint.
