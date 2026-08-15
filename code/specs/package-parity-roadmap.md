@@ -226,8 +226,10 @@ and Elixir (#11757) consumers
 reproduce that full corpus through repository-owned primitives with immutable
 values. They report secret erasure honestly as `best_effort`,
 `not_enforceable`, `best_effort`, `best_effort`, and `not_enforceable`,
-respectively. The central gate and crash-safe durable epoch activation (#11734)
-remain explicit follow-up work.
+respectively. The central #11758 gate requires exactly those six consumers,
+runs every package-native build, verifies generator provenance, regenerates the
+manifest byte-for-byte, and feeds both aggregate CI gates. Crash-safe durable
+epoch activation (#11734) remains the explicit follow-up work.
 
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-
 capability deterministic registry over an injected `StorageBackend`. Its
