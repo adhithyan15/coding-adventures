@@ -22,6 +22,12 @@ Secret key material is held in `Zeroizing` containers. Receiver epoch state
 accepts a byte-identical retry of the current grant, rejects conflicts and
 decreasing epochs, and retains older CMKs so historic messages remain readable.
 
+The portable key-grant and rotation contract is specified by
+`code/specs/D18Q-chief-of-staff-channel-key-grant-profile.md`. This crate is the
+Rust reference implementation for its cryptographic framing and receiver-state
+rules; crash-safe activation of a rotated epoch remains a caller-owned durable
+composition boundary.
+
 The `wire` module provides bounded, versioned binary records for grants and
 encrypted messages. Its stable storage keys sort messages by sequence and hash
 receiver IDs before putting them into path-like keys, so an external identity

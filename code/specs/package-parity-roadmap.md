@@ -214,6 +214,14 @@ contract while leaving sealed-key generation and rotation to #141. All six
 endpoint implementations follow the D18P store fixture lock rather than
 inventing parallel storage semantics.
 
+D18Q now specifies the portable channel-key grant boundary that #141 owns. It
+keeps the shipped Rust `D18G` v1 record and fixes the X25519/HKDF-SHA256
+wrapping key, XChaCha20-Poly1305 AAD, Ed25519 signature input, validation order,
+receiver epoch installation, pure rotation plan, stable errors, deterministic
+fixture seams, and honest secret-erasure capability reporting. The shared
+fixture/Rust lock, five portable consumers, central gate, and crash-safe durable
+epoch activation (#11734) remain explicit follow-up work.
+
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-
 capability deterministic registry over an injected `StorageBackend`. Its
 bounded versioned host-record codec, identity and lifecycle invariants, stable

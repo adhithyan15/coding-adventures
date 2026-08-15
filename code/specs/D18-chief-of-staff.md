@@ -344,7 +344,9 @@ cross-language durable channel contract: exact D18C/D18S/D18H/D18A records,
 storage keys and content types, reserve-before-encrypt recovery, ordered reads,
 per-receiver cursors, irreversible lifecycle, structural roles, stable failures,
 and the required six-language conformance rollout. D18F continues to own D18M
-message bytes, while channel-key grant generation and rotation remain under #141.
+message bytes. [D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) defines
+the portable D18G sealed-grant, receiver-epoch, and cryptographic rotation
+contract owned by #141.
 
 **Analogy:** A Channel is a one-way pneumatic tube in an office building. Documents go
 in one end and come out the other. You cannot send documents backwards through the
@@ -1291,6 +1293,12 @@ You cannot attack what is not there.
 ---
 
 ### Encrypted Channels
+
+[D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) is the normative
+portable profile for the `D18G` grant bytes, key derivation, authentication,
+receiver epoch state, and pure rotation plan described in this section. Its
+durable activation boundary remains explicit because D18P version 1 does not
+yet provide an atomic current-epoch transition.
 
 All channels are encrypted. This is not optional. There is no plaintext mode. The
 encryption ensures that even if an attacker gains access to the channel's persistent
