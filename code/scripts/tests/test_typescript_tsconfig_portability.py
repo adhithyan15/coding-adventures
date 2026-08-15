@@ -407,12 +407,13 @@ console.log(prose, nested);
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
         # +1: chief-of-staff-channel-crypto, the portable D18F message profile.
         # +1: chief-of-staff-channel-store, the durable D18P profile.
-        self.assertEqual(summary.total_projects, 463)
+        # +1: chief-of-staff-channel-epoch-activation, the D18T coordinator.
+        self.assertEqual(summary.total_projects, 464)
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
         self.assertEqual(summary.inherited_out_dir, 132)
-        self.assertEqual(summary.standalone_emit_projects, 146)
-        self.assertEqual(summary.isolated_standalone_projects, 146)
+        self.assertEqual(summary.standalone_emit_projects, 147)
+        self.assertEqual(summary.isolated_standalone_projects, 147)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -435,7 +436,8 @@ console.log(prose, nested);
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
         # +1: chief-of-staff-channel-crypto locks its standalone compiler.
         # +1: chief-of-staff-channel-store locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 454)
+        # +1: chief-of-staff-channel-epoch-activation locks its compiler.
+        self.assertEqual(summary.locked_compilers, 455)
 
 
 if __name__ == "__main__":
