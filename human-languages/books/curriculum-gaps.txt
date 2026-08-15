@@ -15,6 +15,7 @@ exposure: 305 native-script headwords carry no romanization, so they are load-be
 order: 322 lessons with no declared sequence across 12 tracks; 143 prerequisites and 168 reviews pointing forward
 reinforcement: 560 of 3440 atoms never revisited (16%); missed windows R1 1095, R2 2507, R3 2156, R4 683
 forward references: 500 uses of material a later lesson teaches
+VOCABULARY vs HL09 §3.1 targets: spanish 211/300 (pre-A1), hindi 97/300 (pre-A1), tamil 97/300 (pre-A1), malayalam 95/300 (pre-A1), french 94/300 (pre-A1); 22 of 22 tracks short of the level they are working on
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 0 of 794 book chapters without an HL05 capability; 75 payoffs below the 0.5 representativeness floor; 10 tracks already clean
 
