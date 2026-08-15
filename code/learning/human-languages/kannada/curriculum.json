@@ -62,7 +62,8 @@
         "KA-S121-letter-sa",
         "KA-S122-letter-ca",
         "KA-S123-sign-anusvara",
-        "KA-S124-letter-pa"
+        "KA-S124-letter-pa",
+        "KA-S125-letter-oo"
       ],
       "before": [],
       "inline": [
@@ -889,7 +890,8 @@
         "KA-S121-letter-sa",
         "KA-S122-letter-ca",
         "KA-S123-sign-anusvara",
-        "KA-S124-letter-pa"
+        "KA-S124-letter-pa",
+        "KA-S125-letter-oo"
       ]
     },
     {

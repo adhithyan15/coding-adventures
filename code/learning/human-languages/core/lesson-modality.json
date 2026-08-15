@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a4f790202ce6c1e9",
+  "sourceHash": "fnv1a64:e99277ee4fd207bf",
   "summary": {
-    "totalLessons": 2266,
+    "totalLessons": 2267,
     "voice": 1495,
     "sight": 570,
-    "pen": 201,
+    "pen": 202,
     "drivableLessons": 1495,
     "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 786,
     "drivablePrefixTotal": 1290,
-    "fullyDrivableChapters": 485,
+    "fullyDrivableChapters": 484,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -3415,10 +3415,10 @@
     },
     {
       "language": "kannada",
-      "lessonCount": 124,
+      "lessonCount": 125,
       "voice": 70,
       "sight": 31,
-      "pen": 23,
+      "pen": 24,
       "drivablePercent": 56,
       "drivablePrefixTotal": 61,
       "modalities": [
@@ -3982,16 +3982,18 @@
         },
         {
           "chapter": 34,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 4,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "KA-S125-letter-oo",
+          "drivable": false,
           "drivableLessonIds": [
             "KA-C34-tegeduko",
             "KA-C34-keelu",
@@ -28702,6 +28704,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:fdd0ec6159882e0b"
+    },
+    {
+      "id": "KA-S125-letter-oo",
+      "language": "kannada",
+      "chapter": 34,
+      "sequence": 741,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:eafe4399f7a4c8cd",
+      "detachableSegments": [
+        "Script you'll notice: ಓ",
+        "Writing: ಓ — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "KA-C35-kutumba",
