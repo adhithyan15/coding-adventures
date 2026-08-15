@@ -1,0 +1,1 @@
+set "RUST_MIN_STACK=4194304" && cargo test -p chief-of-staff-smart-home-tools && cargo clippy -p chief-of-staff-smart-home-tools --all-targets -- -D warnings
