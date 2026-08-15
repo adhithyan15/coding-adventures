@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { generateKeypair } from "@coding-adventures/ed25519";
+import { generateKeypair, sign } from "@coding-adventures/ed25519";
 import { describe, expect, it } from "vitest";
 import {
   D18Message,
@@ -9,6 +9,7 @@ import {
   MonotonicUuidV7Generator,
   messageAuthenticatedHeader,
   messageCreate,
+  messageCreateWithSigner,
   messageCreateWithSources,
   messageDeserialize,
   messageFromJson,
@@ -121,6 +122,9 @@ describe("D18F shared fixture", () => {
         key!,
       );
       expect(messageSerialize(recreated), testCase.name).toEqual(binary);
+      expect(messageSerialize(messageCreateWithSigner(
+        fieldsOf(message), plaintext, (header) => sign(header, signingSecretKey), key!,
+      )), testCase.name).toEqual(binary);
     }
   });
 
