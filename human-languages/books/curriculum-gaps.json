@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2456,
+    "totalLessons": 2491,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -27,7 +27,7 @@
     "scriptRampOverBudgetLessons": 62,
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 752,
-    "scriptExposureExemptedGlyphs": 2188,
+    "scriptExposureExemptedGlyphs": 2196,
     "tracksTeachingNoScript": 8,
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
@@ -37,7 +37,7 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2113,
+    "drivableLessons": 2146,
     "drivablePercent": 86,
     "chaptersWithoutDrivablePrefix": 76,
     "unexplainedModalityOverrides": 0
@@ -2082,7 +2082,14 @@
           42,
           43,
           44,
-          45
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52
         ],
         "bookChapters": [
           1,
@@ -2129,7 +2136,14 @@
           42,
           43,
           44,
-          45
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2907,10 +2921,10 @@
       {
         "language": "kannada",
         "status": "mixed",
-        "lessonCount": 137,
+        "lessonCount": 172,
         "versions": {
           "1": 30,
-          "2": 107
+          "2": 142
         }
       },
       {
@@ -3642,8 +3656,8 @@
       },
       {
         "language": "kannada",
-        "bookChapters": 45,
-        "declaredChapters": 45,
+        "bookChapters": 52,
+        "declaredChapters": 52,
         "missingCapability": 0,
         "findings": 3,
         "clean": false
@@ -3746,8 +3760,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 829,
-      "declaredChapters": 829,
+      "bookChapters": 836,
+      "declaredChapters": 836,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3759,9 +3773,9 @@
     }
   },
   "levels": {
-    "totalLessons": 2456,
+    "totalLessons": 2491,
     "byLevel": {
-      "pre-A1": 1194,
+      "pre-A1": 1229,
       "A1": 548,
       "A2": 543,
       "B1": 40,
@@ -3770,7 +3784,7 @@
       "C2": 18
     },
     "unmapped": 86,
-    "mappedPercent": 96,
+    "mappedPercent": 97,
     "tracks": [
       {
         "language": "arabic",
@@ -3909,9 +3923,9 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 137,
+        "lessonCount": 172,
         "byLevel": {
-          "pre-A1": 73,
+          "pre-A1": 108,
           "A1": 38,
           "A2": 22,
           "B1": 0,
@@ -4657,8 +4671,8 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 137,
-        "measurable": 107,
+        "lessonCount": 172,
+        "measurable": 142,
         "unmeasurable": 30,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -5600,11 +5614,11 @@
           "language": "kannada",
           "script": "kannada",
           "latinScript": false,
-          "lessonCount": 137,
-          "totalGlyphs": 66,
+          "lessonCount": 172,
+          "totalGlyphs": 69,
           "lessonViolations": 7,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 36
+          "lessonsWithForeignScript": 38
         },
         {
           "language": "latin",
@@ -5730,7 +5744,7 @@
       "summary": {
         "lessonViolations": 62,
         "systemViolations": 5,
-        "lessonsWithForeignScript": 198,
+        "lessonsWithForeignScript": 200,
         "maxForeignGlyphsInALesson": 27,
         "steepestLesson": {
           "lessonId": "MR-C01-dhanyavad",
@@ -5749,7 +5763,7 @@
       "lessonViolations": 46,
       "chapterViolations": 21,
       "unmeasurableLessons": 607,
-      "measurablePercent": 75,
+      "measurablePercent": 76,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -12395,6 +12409,19 @@
         "language": "hindi",
         "introducedBy": "HI-S116-vowel-sign-ii",
         "introducedAt": 71,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C22-HASIRU-HALADI-01",
+        "language": "kannada",
+        "introducedBy": "KA-C22-hasiru-haladi",
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R2",
@@ -20279,16 +20306,316 @@
         "revisits": 1
       },
       {
-        "atom": "KA-ETYMON-C22-HASIRU-HALADI-01",
+        "atom": "KA-ETYMON-C15-NIIRU-AKKI-01",
+        "language": "kannada",
+        "introducedBy": "KA-C15-niiru-akki",
+        "introducedAt": 59,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C15-NIIRU-AKKI-02",
+        "language": "kannada",
+        "introducedBy": "KA-C15-niiru-akki",
+        "introducedAt": 59,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C19-VAYASSU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C19-vayassu",
+        "introducedAt": 67,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C20-HANNONDU-IPPATTU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C20-hannondu-ippattu",
+        "introducedAt": 69,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C20-HAVAMANA-01",
+        "language": "kannada",
+        "introducedBy": "KA-C20-havamana",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C21-NAAYI-BEKKU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C21-naayi-bekku",
+        "introducedAt": 72,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C21-NAAYI-BEKKU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C21-naayi-bekku",
+        "introducedAt": 72,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C22-HASIRU-HALADI-02",
         "language": "kannada",
         "introducedBy": "KA-C22-hasiru-haladi",
         "introducedAt": 73,
         "missed": [
           "R1",
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C23-DINA-01",
+        "language": "kannada",
+        "introducedBy": "KA-C23-dina",
+        "introducedAt": 74,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C23-DINA-02",
+        "language": "kannada",
+        "introducedBy": "KA-C23-dina",
+        "introducedAt": 74,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C23-DINA-03",
+        "language": "kannada",
+        "introducedBy": "KA-C23-dina",
+        "introducedAt": 74,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C24-RATRI-01",
+        "language": "kannada",
+        "introducedBy": "KA-C24-ratri",
+        "introducedAt": 75,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-ETYMON-C24-RATRI-02",
+        "language": "kannada",
+        "introducedBy": "KA-C24-ratri",
+        "introducedAt": 75,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-ETYMON-C25-SHUBHA-RATRI-01",
+        "language": "kannada",
+        "introducedBy": "KA-C25-shubha-ratri",
+        "introducedAt": 76,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C25-SHUBHA-RATRI-02",
+        "language": "kannada",
+        "introducedBy": "KA-C25-shubha-ratri",
+        "introducedAt": 76,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C25-SHUBHA-RATRI-03",
+        "language": "kannada",
+        "introducedBy": "KA-C25-shubha-ratri",
+        "introducedAt": 76,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C26-BELAGGE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C26-belagge",
+        "introducedAt": 77,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C27-SANJE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C27-sanje",
+        "introducedAt": 78,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C27-SANJE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C27-sanje",
+        "introducedAt": 78,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C28-APARAHNA-01",
+        "language": "kannada",
+        "introducedBy": "KA-C28-aparahna",
+        "introducedAt": 79,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C29-SHUBHODAYA-01",
+        "language": "kannada",
+        "introducedBy": "KA-C29-shubhodaya",
+        "introducedAt": 80,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C30-SHUBHA-SANJE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C30-shubha-sanje",
+        "introducedAt": 81,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C31-SHUBHA-MADHYAHNA-01",
+        "language": "kannada",
+        "introducedBy": "KA-C31-shubha-madhyahna",
+        "introducedAt": 82,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-ETYMON-C33-OODU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C33-oodu",
+        "introducedAt": 91,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C33-YOCISU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C33-yocisu",
+        "introducedAt": 89,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-ETYMON-C33-YOCISU-03",
+        "language": "kannada",
+        "introducedBy": "KA-C33-yocisu",
+        "introducedAt": 89,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "KA-ETYMON-C40-OOTA-02",
@@ -20339,6 +20666,78 @@
         "revisits": 1
       },
       {
+        "atom": "KA-GRAMMAR-C19-VAYASSU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C19-vayassu",
+        "introducedAt": 67,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-GRAMMAR-C32-BAA-02",
+        "language": "kannada",
+        "introducedBy": "KA-C32-baa",
+        "introducedAt": 85,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-GRAMMAR-C32-TINNU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C32-tinnu",
+        "introducedAt": 86,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-GRAMMAR-C33-ARTHA-MAADIKO-02",
+        "language": "kannada",
+        "introducedBy": "KA-C33-artha-maadiko",
+        "introducedAt": 90,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-GRAMMAR-C41-DEIXIS-SYSTEM",
+        "language": "kannada",
+        "introducedBy": "KA-C41-deixis-system",
+        "introducedAt": 118,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "KA-GRAMMAR-C42-ADJ-SYSTEM",
+        "language": "kannada",
+        "introducedBy": "KA-C42-adjective-system",
+        "introducedAt": 124,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "KA-LEX-C06-DATIVE-GE-01",
         "language": "kannada",
         "introducedBy": "KA-C06-dative-ge",
@@ -20387,10 +20786,106 @@
         "revisits": 1
       },
       {
+        "atom": "KA-LEX-C14-KAALAGALU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C14-kaalagalu",
+        "introducedAt": 57,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-C16-TINGALUGALU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C16-tingalugalu",
+        "introducedAt": 61,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-C20-HAVAMANA-02",
+        "language": "kannada",
+        "introducedBy": "KA-C20-havamana",
+        "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-C32-NOODU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C32-noodu",
+        "introducedAt": 87,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C33-ARTHA-MAADIKO-01",
+        "language": "kannada",
+        "introducedBy": "KA-C33-artha-maadiko",
+        "introducedAt": 90,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C33-OODU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C33-oodu",
+        "introducedAt": 91,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C33-YOCISU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C33-yocisu",
+        "introducedAt": 89,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "KA-LEX-C40-OOTA-01",
         "language": "kannada",
         "introducedBy": "KA-C40-oota",
         "introducedAt": 111,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "KA-LEX-GIVE",
+        "language": "kannada",
+        "introducedBy": "KA-C43-give",
+        "introducedAt": 128,
         "missed": [
           "R1",
           "R2",
@@ -20418,6 +20913,90 @@
         "missed": [
           "R2",
           "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C14-KAALAGALU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C14-kaalagalu",
+        "introducedAt": 57,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C16-TINGALUGALU-02",
+        "language": "kannada",
+        "introducedBy": "KA-C16-tingalugalu",
+        "introducedAt": 61,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C26-BELAGGE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C26-belagge",
+        "introducedAt": 77,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-PRAGMATICS-C28-APARAHNA-02",
+        "language": "kannada",
+        "introducedBy": "KA-C28-aparahna",
+        "introducedAt": 79,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C29-SHUBHODAYA-02",
+        "language": "kannada",
+        "introducedBy": "KA-C29-shubhodaya",
+        "introducedAt": 80,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C30-SHUBHA-SANJE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C30-shubha-sanje",
+        "introducedAt": 81,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02",
+        "language": "kannada",
+        "introducedBy": "KA-C31-shubha-madhyahna",
+        "introducedAt": 82,
+        "missed": [
+          "R1",
+          "R2",
           "R4"
         ],
         "revisits": 1
@@ -20586,6 +21165,90 @@
         "missed": [
           "R2",
           "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-118",
+        "language": "kannada",
+        "introducedBy": "KA-S118-letter-dda",
+        "introducedAt": 58,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-119",
+        "language": "kannada",
+        "introducedBy": "KA-S119-vowel-sign-oo",
+        "introducedAt": 60,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-120",
+        "language": "kannada",
+        "introducedBy": "KA-S120-letter-ha",
+        "introducedAt": 62,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-121",
+        "language": "kannada",
+        "introducedBy": "KA-S121-letter-sa",
+        "introducedAt": 64,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-122",
+        "language": "kannada",
+        "introducedBy": "KA-S122-letter-ca",
+        "introducedAt": 66,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-123",
+        "language": "kannada",
+        "introducedBy": "KA-S123-sign-anusvara",
+        "introducedAt": 68,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-124",
+        "language": "kannada",
+        "introducedBy": "KA-S124-letter-pa",
+        "introducedAt": 71,
+        "missed": [
+          "R1",
+          "R2",
           "R4"
         ],
         "revisits": 1
@@ -30296,288 +30959,57 @@
         "revisits": 3
       },
       {
-        "atom": "KA-ETYMON-C15-NIIRU-AKKI-01",
+        "atom": "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
         "language": "kannada",
-        "introducedBy": "KA-C15-niiru-akki",
-        "introducedAt": 59,
+        "introducedBy": "KA-C17-madhyaahna-madhyaraatri",
+        "introducedAt": 63,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 6
       },
       {
-        "atom": "KA-ETYMON-C15-NIIRU-AKKI-02",
+        "atom": "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
         "language": "kannada",
-        "introducedBy": "KA-C15-niiru-akki",
-        "introducedAt": 59,
+        "introducedBy": "KA-C17-madhyaahna-madhyaraatri",
+        "introducedAt": 63,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 6
       },
       {
-        "atom": "KA-ETYMON-C19-VAYASSU-01",
+        "atom": "KA-ETYMON-C18-GANTE-01",
         "language": "kannada",
-        "introducedBy": "KA-C19-vayassu",
-        "introducedAt": 67,
+        "introducedBy": "KA-C18-gante",
+        "introducedAt": 65,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-ETYMON-C20-HANNONDU-IPPATTU-02",
+        "atom": "KA-ETYMON-C20-HANNONDU-IPPATTU-01",
         "language": "kannada",
         "introducedBy": "KA-C20-hannondu-ippattu",
         "introducedAt": 69,
         "missed": [
           "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C20-HAVAMANA-01",
-        "language": "kannada",
-        "introducedBy": "KA-C20-havamana",
-        "introducedAt": 70,
-        "missed": [
-          "R1",
-          "R2"
+          "R4"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-ETYMON-C21-NAAYI-BEKKU-01",
+        "atom": "KA-ETYMON-C32-HOOGU-02",
         "language": "kannada",
-        "introducedBy": "KA-C21-naayi-bekku",
-        "introducedAt": 72,
+        "introducedBy": "KA-C32-hoogu",
+        "introducedAt": 84,
         "missed": [
           "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C21-NAAYI-BEKKU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C21-naayi-bekku",
-        "introducedAt": 72,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C22-HASIRU-HALADI-02",
-        "language": "kannada",
-        "introducedBy": "KA-C22-hasiru-haladi",
-        "introducedAt": 73,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C23-DINA-01",
-        "language": "kannada",
-        "introducedBy": "KA-C23-dina",
-        "introducedAt": 74,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C23-DINA-02",
-        "language": "kannada",
-        "introducedBy": "KA-C23-dina",
-        "introducedAt": 74,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C23-DINA-03",
-        "language": "kannada",
-        "introducedBy": "KA-C23-dina",
-        "introducedAt": 74,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C24-RATRI-01",
-        "language": "kannada",
-        "introducedBy": "KA-C24-ratri",
-        "introducedAt": 75,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-ETYMON-C24-RATRI-02",
-        "language": "kannada",
-        "introducedBy": "KA-C24-ratri",
-        "introducedAt": 75,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-ETYMON-C25-SHUBHA-RATRI-01",
-        "language": "kannada",
-        "introducedBy": "KA-C25-shubha-ratri",
-        "introducedAt": 76,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C25-SHUBHA-RATRI-02",
-        "language": "kannada",
-        "introducedBy": "KA-C25-shubha-ratri",
-        "introducedAt": 76,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C25-SHUBHA-RATRI-03",
-        "language": "kannada",
-        "introducedBy": "KA-C25-shubha-ratri",
-        "introducedAt": 76,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C26-BELAGGE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C26-belagge",
-        "introducedAt": 77,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C27-SANJE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C27-sanje",
-        "introducedAt": 78,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C27-SANJE-02",
-        "language": "kannada",
-        "introducedBy": "KA-C27-sanje",
-        "introducedAt": 78,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C28-APARAHNA-01",
-        "language": "kannada",
-        "introducedBy": "KA-C28-aparahna",
-        "introducedAt": 79,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C29-SHUBHODAYA-01",
-        "language": "kannada",
-        "introducedBy": "KA-C29-shubhodaya",
-        "introducedAt": 80,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C30-SHUBHA-SANJE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C30-shubha-sanje",
-        "introducedAt": 81,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C31-SHUBHA-MADHYAHNA-01",
-        "language": "kannada",
-        "introducedBy": "KA-C31-shubha-madhyahna",
-        "introducedAt": 82,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-ETYMON-C33-OODU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C33-oodu",
-        "introducedAt": 91,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C33-YOCISU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C33-yocisu",
-        "introducedAt": 89,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C33-YOCISU-03",
-        "language": "kannada",
-        "introducedBy": "KA-C33-yocisu",
-        "introducedAt": 89,
-        "missed": [
-          "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
@@ -30769,48 +31201,48 @@
         "revisits": 1
       },
       {
-        "atom": "KA-GRAMMAR-C19-VAYASSU-02",
+        "atom": "KA-GRAMMAR-C18-GANTE-03",
         "language": "kannada",
-        "introducedBy": "KA-C19-vayassu",
-        "introducedAt": 67,
+        "introducedBy": "KA-C18-gante",
+        "introducedAt": 65,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-GRAMMAR-C32-BAA-02",
+        "atom": "KA-GRAMMAR-C32-GOTTU-02",
         "language": "kannada",
-        "introducedBy": "KA-C32-baa",
-        "introducedAt": 85,
+        "introducedBy": "KA-C32-gottu",
+        "introducedAt": 88,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-GRAMMAR-C32-TINNU-02",
+        "atom": "KA-GRAMMAR-C32-IRU-02",
         "language": "kannada",
-        "introducedBy": "KA-C32-tinnu",
-        "introducedAt": 86,
+        "introducedBy": "KA-C32-iru",
+        "introducedAt": 83,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 6
       },
       {
-        "atom": "KA-GRAMMAR-C33-ARTHA-MAADIKO-02",
+        "atom": "KA-GRAMMAR-C32-NOODU-02",
         "language": "kannada",
-        "introducedBy": "KA-C33-artha-maadiko",
-        "introducedAt": 90,
+        "introducedBy": "KA-C32-noodu",
+        "introducedAt": 87,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 2
       },
       {
         "atom": "KA-GRAMMAR-C33-BARE-03",
@@ -30857,28 +31289,6 @@
         "revisits": 1
       },
       {
-        "atom": "KA-GRAMMAR-C41-DEIXIS-SYSTEM",
-        "language": "kannada",
-        "introducedBy": "KA-C41-deixis-system",
-        "introducedAt": 118,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "KA-GRAMMAR-C42-ADJ-SYSTEM",
-        "language": "kannada",
-        "introducedBy": "KA-C42-adjective-system",
-        "introducedAt": 124,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "KA-LEX-C11-BANNAGALU-01",
         "language": "kannada",
         "introducedBy": "KA-C11-bannagalu",
@@ -30912,59 +31322,59 @@
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C14-KAALAGALU-01",
+        "atom": "KA-LEX-C32-BAA-01",
         "language": "kannada",
-        "introducedBy": "KA-C14-kaalagalu",
-        "introducedAt": 57,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C16-TINGALUGALU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C16-tingalugalu",
-        "introducedAt": 61,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C20-HAVAMANA-02",
-        "language": "kannada",
-        "introducedBy": "KA-C20-havamana",
-        "introducedAt": 70,
+        "introducedBy": "KA-C32-baa",
+        "introducedAt": 85,
         "missed": [
           "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C32-NOODU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C32-noodu",
-        "introducedAt": 87,
-        "missed": [
-          "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C33-ARTHA-MAADIKO-01",
+        "atom": "KA-LEX-C32-GOTTU-01",
         "language": "kannada",
-        "introducedBy": "KA-C33-artha-maadiko",
-        "introducedAt": 90,
+        "introducedBy": "KA-C32-gottu",
+        "introducedAt": 88,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C32-HOOGU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C32-hoogu",
+        "introducedAt": 84,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C32-IRU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C32-iru",
+        "introducedAt": 83,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C32-TINNU-01",
+        "language": "kannada",
+        "introducedBy": "KA-C32-tinnu",
+        "introducedAt": 86,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "KA-LEX-C33-BARE-01",
@@ -30976,28 +31386,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C33-OODU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C33-oodu",
-        "introducedAt": 91,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C33-YOCISU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C33-yocisu",
-        "introducedAt": 89,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "KA-LEX-C34-ISHTA-01",
@@ -31220,21 +31608,10 @@
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-GIVE",
+        "atom": "KA-LEX-C41-DEIXIS-06",
         "language": "kannada",
-        "introducedBy": "KA-C43-give",
-        "introducedAt": 128,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "KA-PRAGMATICS-C14-KAALAGALU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C14-kaalagalu",
-        "introducedAt": 57,
+        "introducedBy": "KA-C41-where",
+        "introducedAt": 117,
         "missed": [
           "R2",
           "R3"
@@ -31242,21 +31619,32 @@
         "revisits": 1
       },
       {
-        "atom": "KA-PRAGMATICS-C16-TINGALUGALU-02",
+        "atom": "KA-LEX-C42-ADJ-02",
         "language": "kannada",
-        "introducedBy": "KA-C16-tingalugalu",
-        "introducedAt": 61,
+        "introducedBy": "KA-C42-small",
+        "introducedAt": 120,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
-        "atom": "KA-PRAGMATICS-C26-BELAGGE-02",
+        "atom": "KA-LEX-C42-ADJ-03",
         "language": "kannada",
-        "introducedBy": "KA-C26-belagge",
-        "introducedAt": 77,
+        "introducedBy": "KA-C42-good",
+        "introducedAt": 121,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C42-ADJ-04",
+        "language": "kannada",
+        "introducedBy": "KA-C42-new",
+        "introducedAt": 122,
         "missed": [
           "R2",
           "R3"
@@ -31264,10 +31652,10 @@
         "revisits": 2
       },
       {
-        "atom": "KA-PRAGMATICS-C28-APARAHNA-02",
+        "atom": "KA-LEX-C42-ADJ-05",
         "language": "kannada",
-        "introducedBy": "KA-C28-aparahna",
-        "introducedAt": 79,
+        "introducedBy": "KA-C42-old",
+        "introducedAt": 123,
         "missed": [
           "R2",
           "R3"
@@ -31275,10 +31663,175 @@
         "revisits": 1
       },
       {
-        "atom": "KA-PRAGMATICS-C29-SHUBHODAYA-02",
+        "atom": "KA-LEX-C46-ASK-01",
         "language": "kannada",
-        "introducedBy": "KA-C29-shubhodaya",
-        "introducedAt": 80,
+        "introducedBy": "KA-C46-fruit",
+        "introducedAt": 137,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-02",
+        "language": "kannada",
+        "introducedBy": "KA-C46-cloth",
+        "introducedAt": 138,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-03",
+        "language": "kannada",
+        "introducedBy": "KA-C46-lamp",
+        "introducedAt": 139,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-04",
+        "language": "kannada",
+        "introducedBy": "KA-C46-salt",
+        "introducedAt": 140,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-05",
+        "language": "kannada",
+        "introducedBy": "KA-C46-book",
+        "introducedAt": 141,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C47-leg",
+        "introducedAt": 142,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-02",
+        "language": "kannada",
+        "introducedBy": "KA-C47-tooth",
+        "introducedAt": 143,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C47-hair",
+        "introducedAt": 144,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C47-finger",
+        "introducedAt": 145,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C47-stomach",
+        "introducedAt": 146,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C48-teacher",
+        "introducedAt": 147,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C48-student",
+        "introducedAt": 148,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-03",
+        "language": "kannada",
+        "introducedBy": "KA-C48-doctor",
+        "introducedAt": 149,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-04",
+        "language": "kannada",
+        "introducedBy": "KA-C48-farmer",
+        "introducedAt": 150,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-05",
+        "language": "kannada",
+        "introducedBy": "KA-C48-guest",
+        "introducedAt": 151,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-COME",
+        "language": "kannada",
+        "introducedBy": "KA-C43-come",
+        "introducedAt": 125,
         "missed": [
           "R2",
           "R3"
@@ -31286,10 +31839,10 @@
         "revisits": 1
       },
       {
-        "atom": "KA-PRAGMATICS-C30-SHUBHA-SANJE-02",
+        "atom": "KA-LEX-GRANDFATHER",
         "language": "kannada",
-        "introducedBy": "KA-C30-shubha-sanje",
-        "introducedAt": 81,
+        "introducedBy": "KA-C45-grandfather",
+        "introducedAt": 133,
         "missed": [
           "R2",
           "R3"
@@ -31297,21 +31850,10 @@
         "revisits": 1
       },
       {
-        "atom": "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02",
+        "atom": "KA-LEX-GRANDMOTHER",
         "language": "kannada",
-        "introducedBy": "KA-C31-shubha-madhyahna",
-        "introducedAt": 82,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-SCRIPT-RECOG-118",
-        "language": "kannada",
-        "introducedBy": "KA-S118-letter-dda",
-        "introducedAt": 58,
+        "introducedBy": "KA-C45-grandmother",
+        "introducedAt": 134,
         "missed": [
           "R2",
           "R3"
@@ -31319,10 +31861,21 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-119",
+        "atom": "KA-LEX-HUSBAND",
         "language": "kannada",
-        "introducedBy": "KA-S119-vowel-sign-oo",
-        "introducedAt": 60,
+        "introducedBy": "KA-C45-husband",
+        "introducedAt": 135,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-LISTEN",
+        "language": "kannada",
+        "introducedBy": "KA-C44-listen",
+        "introducedAt": 130,
         "missed": [
           "R2",
           "R3"
@@ -31330,10 +31883,10 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-120",
+        "atom": "KA-LEX-LOOK",
         "language": "kannada",
-        "introducedBy": "KA-S120-letter-ha",
-        "introducedAt": 62,
+        "introducedBy": "KA-C44-look",
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3"
@@ -31341,10 +31894,10 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-121",
+        "atom": "KA-LEX-SIT",
         "language": "kannada",
-        "introducedBy": "KA-S121-letter-sa",
-        "introducedAt": 64,
+        "introducedBy": "KA-C43-sit",
+        "introducedAt": 126,
         "missed": [
           "R2",
           "R3"
@@ -31352,10 +31905,10 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-122",
+        "atom": "KA-LEX-SPEAK",
         "language": "kannada",
-        "introducedBy": "KA-S122-letter-ca",
-        "introducedAt": 66,
+        "introducedBy": "KA-C44-speak",
+        "introducedAt": 131,
         "missed": [
           "R2",
           "R3"
@@ -31363,10 +31916,10 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-123",
+        "atom": "KA-LEX-STAND",
         "language": "kannada",
-        "introducedBy": "KA-S123-sign-anusvara",
-        "introducedAt": 68,
+        "introducedBy": "KA-C43-stand",
+        "introducedAt": 127,
         "missed": [
           "R2",
           "R3"
@@ -31374,15 +31927,48 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-124",
+        "atom": "KA-LEX-WIFE",
         "language": "kannada",
-        "introducedBy": "KA-S124-letter-pa",
-        "introducedAt": 71,
+        "introducedBy": "KA-C45-wife",
+        "introducedAt": 136,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-WRITE",
+        "language": "kannada",
+        "introducedBy": "KA-C44-write",
+        "introducedAt": 132,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+        "language": "kannada",
+        "introducedBy": "KA-C17-madhyaahna-madhyaraatri",
+        "introducedAt": 63,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 6
+      },
+      {
+        "atom": "KA-PRAGMATICS-C18-GANTE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C18-gante",
+        "introducedAt": 65,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "LA-DIALOGUE-MEETING-01",
@@ -42722,152 +43308,12 @@
         "revisits": 1
       },
       {
-        "atom": "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
-        "language": "kannada",
-        "introducedBy": "KA-C17-madhyaahna-madhyaraatri",
-        "introducedAt": 63,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 6
-      },
-      {
-        "atom": "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
-        "language": "kannada",
-        "introducedBy": "KA-C17-madhyaahna-madhyaraatri",
-        "introducedAt": 63,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 6
-      },
-      {
-        "atom": "KA-ETYMON-C18-GANTE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C18-gante",
-        "introducedAt": 65,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C20-HANNONDU-IPPATTU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C20-hannondu-ippattu",
-        "introducedAt": 69,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-ETYMON-C32-HOOGU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C32-hoogu",
-        "introducedAt": 84,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "KA-ETYMON-C33-BARE-02",
         "language": "kannada",
         "introducedBy": "KA-C33-bare",
         "introducedAt": 92,
         "missed": [
           "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-GRAMMAR-C18-GANTE-03",
-        "language": "kannada",
-        "introducedBy": "KA-C18-gante",
-        "introducedAt": 65,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-GRAMMAR-C32-GOTTU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C32-gottu",
-        "introducedAt": 88,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-GRAMMAR-C32-IRU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C32-iru",
-        "introducedAt": 83,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 6
-      },
-      {
-        "atom": "KA-GRAMMAR-C32-NOODU-02",
-        "language": "kannada",
-        "introducedBy": "KA-C32-noodu",
-        "introducedAt": 87,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C32-BAA-01",
-        "language": "kannada",
-        "introducedBy": "KA-C32-baa",
-        "introducedAt": 85,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C32-GOTTU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C32-gottu",
-        "introducedAt": 88,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C32-HOOGU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C32-hoogu",
-        "introducedAt": 84,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C32-IRU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C32-iru",
-        "introducedAt": 83,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C32-TINNU-01",
-        "language": "kannada",
-        "introducedBy": "KA-C32-tinnu",
-        "introducedAt": 86,
-        "missed": [
-          "R1"
         ],
         "revisits": 2
       },
@@ -42892,132 +43338,162 @@
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C41-DEIXIS-06",
+        "atom": "KA-LEX-C42-ADJ-01",
         "language": "kannada",
-        "introducedBy": "KA-C41-where",
-        "introducedAt": 117,
+        "introducedBy": "KA-C42-big",
+        "introducedAt": 119,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C49-REPLY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C49-true",
+        "introducedAt": 152,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
-        "atom": "KA-LEX-C42-ADJ-02",
+        "atom": "KA-LEX-C49-REPLY-02",
         "language": "kannada",
-        "introducedBy": "KA-C42-small",
-        "introducedAt": 120,
+        "introducedBy": "KA-C49-enough",
+        "introducedAt": 153,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C42-ADJ-03",
+        "atom": "KA-LEX-C49-REPLY-03",
         "language": "kannada",
-        "introducedBy": "KA-C42-good",
-        "introducedAt": 121,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C42-ADJ-04",
-        "language": "kannada",
-        "introducedBy": "KA-C42-new",
-        "introducedAt": 122,
+        "introducedBy": "KA-C49-certainly",
+        "introducedAt": 154,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C42-ADJ-05",
+        "atom": "KA-LEX-C49-REPLY-04",
         "language": "kannada",
-        "introducedBy": "KA-C42-old",
-        "introducedAt": 123,
+        "introducedBy": "KA-C49-perhaps",
+        "introducedAt": 155,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-LEX-COME",
+        "atom": "KA-LEX-C49-REPLY-05",
         "language": "kannada",
-        "introducedBy": "KA-C43-come",
-        "introducedAt": 125,
+        "introducedBy": "KA-C49-just-so",
+        "introducedAt": 156,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-LEX-LISTEN",
+        "atom": "KA-LEX-C50-LEAVE-01",
         "language": "kannada",
-        "introducedBy": "KA-C44-listen",
-        "introducedAt": 130,
+        "introducedBy": "KA-C50-now",
+        "introducedAt": 157,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
-        "atom": "KA-LEX-LOOK",
+        "atom": "KA-LEX-C50-LEAVE-02",
         "language": "kannada",
-        "introducedBy": "KA-C44-look",
-        "introducedAt": 129,
+        "introducedBy": "KA-C50-day-after",
+        "introducedAt": 158,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
-        "atom": "KA-LEX-SIT",
+        "atom": "KA-LEX-C50-LEAVE-03",
         "language": "kannada",
-        "introducedBy": "KA-C43-sit",
-        "introducedAt": 126,
+        "introducedBy": "KA-C50-journey",
+        "introducedAt": 159,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-LEX-SPEAK",
+        "atom": "KA-LEX-C50-LEAVE-04",
         "language": "kannada",
-        "introducedBy": "KA-C44-speak",
-        "introducedAt": 131,
+        "introducedBy": "KA-C50-set-out",
+        "introducedAt": 160,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-LEX-STAND",
+        "atom": "KA-LEX-C50-LEAVE-05",
         "language": "kannada",
-        "introducedBy": "KA-C43-stand",
-        "introducedAt": 127,
+        "introducedBy": "KA-C50-farewell",
+        "introducedAt": 161,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+        "atom": "KA-LEX-C51-COURTESY-01",
         "language": "kannada",
-        "introducedBy": "KA-C17-madhyaahna-madhyaraatri",
-        "introducedAt": 63,
+        "introducedBy": "KA-C51-gratitude",
+        "introducedAt": 162,
         "missed": [
-          "R3"
+          "R2"
         ],
-        "revisits": 6
+        "revisits": 4
       },
       {
-        "atom": "KA-PRAGMATICS-C18-GANTE-02",
+        "atom": "KA-LEX-C51-COURTESY-02",
         "language": "kannada",
-        "introducedBy": "KA-C18-gante",
-        "introducedAt": 65,
+        "introducedBy": "KA-C51-favour",
+        "introducedAt": 163,
         "missed": [
-          "R3"
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C51-COURTESY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C51-respect",
+        "introducedAt": 164,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C51-COURTESY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C51-blessing",
+        "introducedAt": 165,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C51-COURTESY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C51-salutation",
+        "introducedAt": 166,
+        "missed": [
+          "R2"
         ],
         "revisits": 2
       },
@@ -51277,11 +51753,11 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 137,
+        "lessonCount": 172,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 177,
+        "atomsTaught": 212,
         "atomsNeverRevisited": 8,
         "forwardReferences": 17
       },
@@ -51411,14 +51887,14 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 3610,
+      "atomsTaught": 3645,
       "atomsNeverRevisited": 573,
       "neverRevisitedPercent": 16,
       "missedByWindow": {
         "R1": 1106,
-        "R2": 2674,
-        "R3": 2356,
-        "R4": 922
+        "R2": 2709,
+        "R3": 2391,
+        "R4": 990
       },
       "forwardReferences": 500
     }
@@ -51506,14 +51982,14 @@
       {
         "language": "kannada",
         "script": "kannada",
-        "lessonCount": 137,
+        "lessonCount": 172,
         "scriptLessons": 24,
         "taughtGlyphs": 51,
-        "shownGlyphs": 66,
-        "neverTaughtGlyphs": 15,
+        "shownGlyphs": 69,
+        "neverTaughtGlyphs": 18,
         "violations": 37,
-        "exposureOnly": 14,
-        "exposureExemptedGlyphs": 154,
+        "exposureOnly": 21,
+        "exposureExemptedGlyphs": 162,
         "headwordsWithoutRomanization": 14
       },
       {
@@ -56904,8 +57380,8 @@
       "tracksWithScript": 16,
       "tracksTeachingNothing": 8,
       "violations": 752,
-      "exposureOnly": 148,
-      "exposureExemptedGlyphs": 2188,
+      "exposureOnly": 155,
+      "exposureExemptedGlyphs": 2196,
       "headwordsWithoutRomanization": 305,
       "tracksWithUnknownScript": 0
     },
@@ -57121,8 +57597,8 @@
         "blockers": [
           {
             "criterion": "vocabulary",
-            "detail": "teaches 47 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 253
+            "detail": "teaches 82 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 218
           },
           {
             "criterion": "atom-budget",
@@ -57135,7 +57611,7 @@
             "shortfall": 47
           }
         ],
-        "vocabulary": 99
+        "vocabulary": 134
       },
       {
         "language": "latin",
@@ -57392,11 +57868,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2456,
-    "voice": 1677,
-    "sight": 577,
+    "totalLessons": 2491,
+    "voice": 1710,
+    "sight": 579,
     "pen": 202,
-    "coreVoice": 2113,
+    "coreVoice": 2146,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 86,
     "tracks": [
@@ -60340,13 +60816,13 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 137,
-        "voice": 82,
-        "sight": 31,
+        "lessonCount": 172,
+        "voice": 115,
+        "sight": 33,
         "pen": 24,
-        "coreVoice": 106,
-        "drivablePercent": 77,
-        "drivablePrefixTotal": 102,
+        "coreVoice": 139,
+        "drivablePercent": 81,
+        "drivablePrefixTotal": 133,
         "chapters": [
           {
             "language": "kannada",
@@ -61011,6 +61487,106 @@
               "voice"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 46,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "KA-C46-book"
+          },
+          {
+            "language": "kannada",
+            "chapter": 47,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "KA-C47-hair"
+          },
+          {
+            "language": "kannada",
+            "chapter": 48,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 49,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 50,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 51,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 52,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null
           }
         ]
@@ -70085,7 +70661,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2456,
+    "lessons": 2491,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -70095,18 +70671,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 2428,
-    "usesBeforeIntroduction": 10374,
-    "technicalUsesBeforeIntroduction": 3028,
-    "technicalLessons": 1530,
+    "lessonsUsingTerms": 2461,
+    "usesBeforeIntroduction": 10429,
+    "technicalUsesBeforeIntroduction": 3035,
+    "technicalLessons": 1536,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 990
+        "lessons": 994
       },
       {
         "term": "noun",
-        "lessons": 512
+        "lessons": 514
       },
       {
         "term": "tense",
@@ -70114,7 +70690,7 @@
       },
       {
         "term": "regular",
-        "lessons": 143
+        "lessons": 144
       },
       {
         "term": "pronoun",
