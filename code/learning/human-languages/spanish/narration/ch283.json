@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 283,
+  "title": "Courtesy Past Thank You --- Excuse Me, With Permission, Kind, A Thousand Thanks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fea4a907ac7f8745",
+  "lessons": [
+    {
+      "id": "ES-C283-disculpe",
+      "sequence": 3270,
+      "title": "disculpe — take the fault off me",
+      "headword": "disculpe",
+      "romanization": "disculpe",
+      "gloss": "excuse me — from culpa, fault: literally, take the fault off me",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09df3b6d6dfcb5e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what is an invitado? (One who has been invited.) And what was la sonrisa built from? (Ridere, to laugh, turned down by sub-.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perdón — the apology you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "por favor — the politeness you already have."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dis-CUL-pe, stress in the middle. The c before u is a hard k, as in casa. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disculpe — \"excuse me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From disculpar: dis-, which undoes, plus culpa, fault. To disculpar is to take the fault off someone. Said to a person — disculpe — it asks them to un-fault you."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin culpa stands intact in English culpable and in mea culpa, my fault, and worn down in culprit. The dis- is the reversing prefix of disappear and disarm: it does not merely deny a thing, it undoes it."
+            },
+            {
+              "kind": "speech",
+              "text": "Disculpe is the usted form, so it is the one for a stranger. To a friend you would say disculpa — the same choice you have been making since you met tú and usted."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now have two apologies, and they are not the same size."
+            },
+            {
+              "kind": "speech",
+              "text": "Perdón asks for pardon, which is a thing granted. Disculpe asks for the fault to be lifted, which is a thing undone. Spanish gives you both, and a language with two words for one moment is telling you the moment has two parts."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, then disculpa, and hear which is the stranger's",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe*, then *disculpa*, and hear which is the stranger's]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perdón, then disculpe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perdón*, then *disculpe*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is inside disculpe? (Culpa, fault.) What does the dis- do? (Undoes it.) Which form would you use with a stranger? (Disculpe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C283-permiso",
+      "sequence": 3280,
+      "title": "con permiso — the one you say before, not after",
+      "headword": "con permiso",
+      "romanization": "con permiso",
+      "gloss": "excuse me, said when you pass — per plus mittere, to let through",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8d2a5857ad97544",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what does the dis- do to culpa? (Undoes it.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disculpe — the other \"excuse me\", for something done."
+            },
+            {
+              "kind": "speech",
+              "text": "por favor — the politeness you attach to a request."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "con per-MI-so, stress on the mi. The r is one tap of the tongue, not the long English glide. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "con permiso — \"excuse me,\" said as you pass in front of someone."
+            },
+            {
+              "kind": "speech",
+              "text": "Permiso is Latin permissum, from permittere: per-, through, plus mittere, to send. To permit is to let a thing through."
+            },
+            {
+              "kind": "speech",
+              "text": "Mittere was one of the most productive words Latin had, and English is full of it. A mission is a sending. A missile is a thing sent. To dismiss is to send away, and to permit is this very word, borrowed unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "The two courtesies are not interchangeable, and the difference is time. Disculpe is for something you have done. Con permiso is for something you are about to do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Politeness in Spanish is often a matter of tense rather than of warmth."
+            },
+            {
+              "kind": "speech",
+              "text": "One formula looks backwards at a fault, the other forwards at an intrusion. Get the direction right and you will sound careful even when your grammar is not."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "con permiso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *con permiso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, then con permiso, and place each one in time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe*, then *con permiso*, and place each one in time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "con permiso, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *con permiso, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of permiso? (Per, through, and mittere, to send.) Which courtesy comes before the act? (Con permiso.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C283-amable",
+      "sequence": 3290,
+      "title": "amable — loveable, before it meant kind",
+      "headword": "amable",
+      "romanization": "amable",
+      "gloss": "kind — Latin amabilis, loveable: the person it is easy to be fond of",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e5ced2b919ad80d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: which courtesy comes before the act? (Con permiso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gracias — what you say to someone who is this."
+            },
+            {
+              "kind": "speech",
+              "text": "disculpe — and what you say when you are not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-MA-ble, stress in the middle. The b between vowels is soft — the lips barely close. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amable — \"kind.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin amabilis, from amare, to love: loveable, a person it is easy to be fond of. Spanish moved the word from what you feel about the person to what the person does."
+            },
+            {
+              "kind": "speech",
+              "text": "English has it twice over. Amiable came through French and kept the sense. Amorous kept the love, and an amateur is one who does a thing for love rather than for money — which is praise in the original and faint praise now."
+            },
+            {
+              "kind": "speech",
+              "text": "The -able on the end is the same ending English writes on its own words. It arrived from the same Latin -abilis, and it means then what it means now: able to have this done to it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Muy amable is the reply you have been missing."
+            },
+            {
+              "kind": "speech",
+              "text": "You could thank someone; you could not say anything about them. One adjective closes that gap, and it costs you nothing new — muy has been yours for a long while."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amable, then muy amable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amable*, then *muy amable*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gracias, muy amable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gracias, muy amable*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amable and amiable, and hear the same word twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amable* and *amiable*, and hear the same word twice]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did amabilis mean in Latin? (Loveable.) Which Latin root is under it? (Amare, to love.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C283-mil-gracias",
+      "sequence": 3300,
+      "title": "mil gracias — a number that stopped counting",
+      "headword": "mil gracias",
+      "romanization": "mil gracias",
+      "gloss": "a thousand thanks — mille, the same thousand that measures a mile",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d0f9db7d0bbaf95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did amabilis mean? (Loveable.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gracias — the half of this you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "amable — what you say about the person you are thanking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mil GRA-cias. The l stays clear and forward, never darkening the way an English l does at the end of a word. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mil gracias — \"a thousand thanks.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Gracias has been yours since near the beginning. Mil is Latin mille, a thousand, and it is the same mille buried in English mile: the Roman mille passuum, a thousand paces, which is why a mile is the awkward length it is and not a round number of anything."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what the phrase is doing. Spanish is not measuring gratitude here; it is reaching for a large number and stopping. Every language keeps a few numbers that have given up counting — English says thanks a million and means the same nothing-in-particular."
+            },
+            {
+              "kind": "speech",
+              "text": "Millimetre, million and millennium are the honest arithmetic uses of mille, and they arrived from the book rather than from the mouth."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four courtesies, and not one of them is a new idea."
+            },
+            {
+              "kind": "speech",
+              "text": "Each is a word you had, or a number you had, put to a use you did not know about. Vocabulary grows fastest at the joins."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mil gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mil gracias*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gracias, then mil gracias, and hear the weight change",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gracias*, then *mil gracias*, and hear the weight change]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mil gracias, muy amable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mil gracias, muy amable*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is mil in Latin? (Mille, a thousand.) What has a mile got to do with it? (It was a thousand paces.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C283-no-hay-de-que",
+      "sequence": 3310,
+      "title": "no hay de qué — four words you already own",
+      "headword": "no hay de qué",
+      "romanization": "no hay de qué",
+      "gloss": "not at all — the reply to thanks, assembled entirely from words you already have",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9238044aa5d5dae2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what is mil in Latin? (Mille, a thousand.) And what did amabilis mean? (Loveable.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de nada — the other reply to thanks, and the same idea."
+            },
+            {
+              "kind": "speech",
+              "text": "mil gracias — what this answers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "no ay de KE, four quick syllables run together. The written accent on qué marks the question word, not a change of stress. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "no hay de qué — \"not at all,\" the reply when someone thanks you."
+            },
+            {
+              "kind": "speech",
+              "text": "Every piece is already yours. No, hay, de, qué — nothing new in the list. What is new is the assembly: literally \"there is nothing of which,\" with the thing not worth mentioning left out of the sentence entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish already gave you de nada, \"of nothing,\" for the same moment. The two are one idea built twice: whatever you are thanking me for, there was nothing in it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth more than a fifth word. A courtesy formula is rarely new vocabulary. It is old vocabulary frozen in an order nobody parses any more — and once you have taken one apart, the rest stop being phrases to memorise."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five ways to be polite: disculpe, con permiso, amable, mil gracias, no hay de qué."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of them look backwards and two look forwards; the fifth is made of scraps. And the fifth is the one that shows you what the others are — sentences that stopped being sentences."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no hay de qué",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no hay de qué*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its four pieces slowly — no, hay, de, qué",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its four pieces slowly — *no*, *hay*, *de*, *qué*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — disculpe, con permiso, amable, mil gracias, no hay de qué",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *disculpe*, *con permiso*, *amable*, *mil gracias*, *no hay de qué*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many new words are in no hay de qué? (None — only the assembly is new.) Which reply to thanks did you already have? (De nada.) And what is inside disculpe? (Culpa, fault.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

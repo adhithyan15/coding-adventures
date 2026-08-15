@@ -11778,6 +11778,132 @@
       "jsonHash": "fnv1a64:a1592d1ab8eb8f19"
     },
     {
+      "language": "spanish",
+      "chapter": 282,
+      "sourceHash": "fnv1a64:4235586e667c5779",
+      "lessonIds": [
+        "ES-C282-bienvenido",
+        "ES-C282-saludo",
+        "ES-C282-abrazo",
+        "ES-C282-sonrisa",
+        "ES-C282-invitado"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch282.txt",
+      "json": "spanish/narration/ch282.json",
+      "textHash": "fnv1a64:84c5850d84bfd34f",
+      "jsonHash": "fnv1a64:85416737b6b105df"
+    },
+    {
+      "language": "spanish",
+      "chapter": 283,
+      "sourceHash": "fnv1a64:fea4a907ac7f8745",
+      "lessonIds": [
+        "ES-C283-disculpe",
+        "ES-C283-permiso",
+        "ES-C283-amable",
+        "ES-C283-mil-gracias",
+        "ES-C283-no-hay-de-que"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch283.txt",
+      "json": "spanish/narration/ch283.json",
+      "textHash": "fnv1a64:efb576c827b9834a",
+      "jsonHash": "fnv1a64:f030630fdbd3aa29"
+    },
+    {
+      "language": "spanish",
+      "chapter": 284,
+      "sourceHash": "fnv1a64:d38359628a3e71bd",
+      "lessonIds": [
+        "ES-C284-de-acuerdo",
+        "ES-C284-seguro",
+        "ES-C284-cierto",
+        "ES-C284-exacto",
+        "ES-C284-por-supuesto"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch284.txt",
+      "json": "spanish/narration/ch284.json",
+      "textHash": "fnv1a64:c72d2d518d6fb3bc",
+      "jsonHash": "fnv1a64:990568d5b92ac29c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 285,
+      "sourceHash": "fnv1a64:086bdc1c6f5f46d8",
+      "lessonIds": [
+        "ES-C285-vecino",
+        "ES-C285-amiga",
+        "ES-C285-maestro",
+        "ES-C285-enfermera",
+        "ES-C285-cocinero"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch285.txt",
+      "json": "spanish/narration/ch285.json",
+      "textHash": "fnv1a64:be64f55256489688",
+      "jsonHash": "fnv1a64:4aa9451255647c7f"
+    },
+    {
+      "language": "spanish",
+      "chapter": 286,
+      "sourceHash": "fnv1a64:877f6d8c9d4dd131",
+      "lessonIds": [
+        "ES-C286-ojo",
+        "ES-C286-boca",
+        "ES-C286-garganta",
+        "ES-C286-dolor",
+        "ES-C286-fiebre"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch286.txt",
+      "json": "spanish/narration/ch286.json",
+      "textHash": "fnv1a64:3b7daacf5b2ccfdf",
+      "jsonHash": "fnv1a64:e1ba6ce8831d8b18"
+    },
+    {
+      "language": "spanish",
+      "chapter": 287,
+      "sourceHash": "fnv1a64:f6d42f1acaabff13",
+      "lessonIds": [
+        "ES-C287-jabon",
+        "ES-C287-toalla",
+        "ES-C287-vaso",
+        "ES-C287-cuchara",
+        "ES-C287-plato"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch287.txt",
+      "json": "spanish/narration/ch287.json",
+      "textHash": "fnv1a64:9edea97fdfdaee22",
+      "jsonHash": "fnv1a64:175d42df051c8e4d"
+    },
+    {
+      "language": "spanish",
+      "chapter": 288,
+      "sourceHash": "fnv1a64:3bd6ae7efae90ef0",
+      "lessonIds": [
+        "ES-C288-salida",
+        "ES-C288-viaje",
+        "ES-C288-vuelta",
+        "ES-C288-llegada",
+        "ES-C288-despedida"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch288.txt",
+      "json": "spanish/narration/ch288.json",
+      "textHash": "fnv1a64:acf12715e57c6556",
+      "jsonHash": "fnv1a64:643312f6266d75fe"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:6df1383fd4404bac",

@@ -3452,13 +3452,126 @@
         "ES-EXT-281-ADJETIVOS"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-282-01",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C282-bienvenido",
+        "ES-C282-saludo",
+        "ES-C282-abrazo",
+        "ES-C282-sonrisa",
+        "ES-C282-invitado"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-282-ENCUENTRO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-283-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C283-disculpe",
+        "ES-C283-permiso",
+        "ES-C283-amable",
+        "ES-C283-mil-gracias",
+        "ES-C283-no-hay-de-que"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-283-CORTESIA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-284-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C284-de-acuerdo",
+        "ES-C284-seguro",
+        "ES-C284-cierto",
+        "ES-C284-exacto",
+        "ES-C284-por-supuesto"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-284-RESPUESTAS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-285-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C285-vecino",
+        "ES-C285-amiga",
+        "ES-C285-maestro",
+        "ES-C285-enfermera",
+        "ES-C285-cocinero"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-285-QUIEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-286-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C286-ojo",
+        "ES-C286-boca",
+        "ES-C286-garganta",
+        "ES-C286-dolor",
+        "ES-C286-fiebre"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-286-DUELE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-287-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C287-jabon",
+        "ES-C287-toalla",
+        "ES-C287-vaso",
+        "ES-C287-cuchara",
+        "ES-C287-plato"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-287-PEDIR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-288-01",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C288-salida",
+        "ES-C288-viaje",
+        "ES-C288-vuelta",
+        "ES-C288-llegada",
+        "ES-C288-despedida"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-288-PARTIDA"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
         "ES-PATH-001",
-        "ES-PATH-005"
+        "ES-PATH-005",
+        "ES-PATH-282-01"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -3469,7 +3582,8 @@
     },
     "SPINE-COURTESY-THANK": {
       "segments": [
-        "ES-PATH-010"
+        "ES-PATH-010",
+        "ES-PATH-283-01"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -3478,7 +3592,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "ES-PATH-017"
+        "ES-PATH-017",
+        "ES-PATH-284-01"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -3492,7 +3607,8 @@
         "ES-PATH-009",
         "ES-PATH-014",
         "ES-PATH-007-ORIGIN",
-        "ES-PATH-021"
+        "ES-PATH-021",
+        "ES-PATH-285-01"
       ],
       "omits": [
         "PRONOUN-I",
@@ -3508,7 +3624,8 @@
         "ES-PATH-008",
         "ES-PATH-011",
         "ES-PATH-011-SER-ESTAR",
-        "ES-PATH-022"
+        "ES-PATH-022",
+        "ES-PATH-286-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -3520,14 +3637,16 @@
         "ES-PATH-013",
         "ES-PATH-018",
         "ES-PATH-024",
-        "ES-PATH-024-PRONOUN-EVIDENCE"
+        "ES-PATH-024-PRONOUN-EVIDENCE",
+        "ES-PATH-287-01"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
       "segments": [
-        "ES-PATH-012"
+        "ES-PATH-012",
+        "ES-PATH-288-01"
       ],
       "omits": [
         "FAREWELL-CASUAL"
@@ -7028,6 +7147,111 @@
         "ES-C281-viejo",
         "ES-C281-limpio",
         "ES-C281-sucio"
+      ]
+    },
+    {
+      "id": "ES-EXT-282-ENCUENTRO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can welcome someone in Spanish and name the greeting, the hug, the smile and the guest that go with it.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C282-bienvenido",
+        "ES-C282-saludo",
+        "ES-C282-abrazo",
+        "ES-C282-sonrisa",
+        "ES-C282-invitado"
+      ]
+    },
+    {
+      "id": "ES-EXT-283-CORTESIA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can apologise, ask to pass, call someone kind and thank them at more than one weight in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C283-disculpe",
+        "ES-C283-permiso",
+        "ES-C283-amable",
+        "ES-C283-mil-gracias",
+        "ES-C283-no-hay-de-que"
+      ]
+    },
+    {
+      "id": "ES-EXT-284-RESPUESTAS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer someone in Spanish with a single short phrase, and say what is inside each one.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C284-de-acuerdo",
+        "ES-C284-seguro",
+        "ES-C284-cierto",
+        "ES-C284-exacto",
+        "ES-C284-por-supuesto"
+      ]
+    },
+    {
+      "id": "ES-EXT-285-QUIEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say who someone is in Spanish — the neighbour, a friend, the teacher, the nurse, the cook.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C285-vecino",
+        "ES-C285-amiga",
+        "ES-C285-maestro",
+        "ES-C285-enfermera",
+        "ES-C285-cocinero"
+      ]
+    },
+    {
+      "id": "ES-EXT-286-DUELE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the eye, the mouth and the throat in Spanish, and say that there is a pain or a fever.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C286-ojo",
+        "ES-C286-boca",
+        "ES-C286-garganta",
+        "ES-C286-dolor",
+        "ES-C286-fiebre"
+      ]
+    },
+    {
+      "id": "ES-EXT-287-PEDIR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask for soap, a towel, a glass, a spoon and a plate in Spanish, politely.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C287-jabon",
+        "ES-C287-toalla",
+        "ES-C287-vaso",
+        "ES-C287-cuchara",
+        "ES-C287-plato"
+      ]
+    },
+    {
+      "id": "ES-EXT-288-PARTIDA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the way out, the journey, the return, the arrival and the farewell in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C288-salida",
+        "ES-C288-viaje",
+        "ES-C288-vuelta",
+        "ES-C288-llegada",
+        "ES-C288-despedida"
       ]
     }
   ],
