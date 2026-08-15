@@ -2,7 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.8.0] - 2026-08-15 (SIMD PR1a — v128 interpreter core, no corpus yet)
+## [0.9.0] - 2026-08-15 (SIMD PR1b-1 — v128 cross-call-boundary materialization)
+
+### Added
+
+- `V128Bytes(pub [u8; 16])` — a new public type, deliberately separate
+  from `WasmValue::V128(u32)` rather than a second meaning layered onto
+  that variant: internally, `V128(u32)` always means "a handle into the
+  currently live `WasmExecutionContext::v128_heap`", which stops being
+  meaningful the instant the context that owns that heap is dropped.
+  `V128Bytes` is what a v128 result becomes once it has actually escaped
+  the engine.
+- `WasmExecutionEngine::call_function_with_v128(func_index, args) ->
+  Result<(Vec<WasmValue>, Vec<Option<V128Bytes>>), TrapError>` — the new
+  entry point host code needs to observe real v128 *contents* returned
+  from a call. `WasmExecutionContext` (and its `v128_heap`) is scoped to
+  a single `call_function` invocation and is dropped when it returns, so
+  a bare `WasmValue::V128(handle)` result is already meaningless to the
+  caller by the time they'd see it — this resolves each `V128` result
+  into its real bytes one statement before `ctx` drops, via a partial
+  move (`self.globals = ctx.globals; ...` moves only specific fields out
+  of `ctx`, leaving `ctx.v128_heap` fully readable afterward since `ctx`
+  itself is never consumed as a whole value before this point).
+- The previously-public `call_function` is now a thin wrapper over a new
+  private `call_function_impl`, which returns the `(results, v128_bytes)`
+  pair `call_function` and `call_function_with_v128` each expose one half
+  of. `call_function`'s existing signature and behavior are unchanged —
+  every existing caller keeps working with no changes.
+
+### Why not a wider fix
+
+An earlier design (threading a `ctx` reference through `WasmValue::
+to_typed`/`from_typed` so `V128` could resolve itself lazily wherever a
+`WasmValue` is observed) was investigated and rejected: those two methods
+alone have ~250 call sites across `push_wasm`/`pop_wasm`/`peek_wasm`/etc.,
+real mass-rewrite territory for a problem that only actually matters at
+one seam — a function's *results*, the one place a v128 value crosses
+out of the engine's control. Internal v128 values living entirely within
+one call's execution never need this treatment; only what escapes does.
 
 ### Added
 

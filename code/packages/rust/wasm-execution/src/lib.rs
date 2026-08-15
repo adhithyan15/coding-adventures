@@ -120,6 +120,20 @@ pub enum WasmValue {
     V128(u32),
 }
 
+/// The real 16 bytes behind a `WasmValue::V128(handle)` RESULT, resolved
+/// from `ctx.v128_heap` before that heap drops at the end of
+/// `WasmExecutionEngine::call_function_with_v128` — see that method's own
+/// doc comment for why a bare post-return handle can't be used directly
+/// (`WasmExecutionEngine` itself has no `v128_heap` field; only that one
+/// call's `ctx` ever holds it). Deliberately a separate type, not a second
+/// meaning layered onto `WasmValue::V128` itself — internally (on the
+/// stack, in locals, as an opcode operand) `V128` always means "a handle
+/// into the CURRENTLY LIVE `ctx.v128_heap`"; conflating that with "16
+/// bytes that already escaped the engine" in the same variant would make
+/// every existing internal use ambiguous about which one it's holding.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct V128Bytes(pub [u8; 16]);
+
 /// The typed-stack tag we use for [`WasmValue::Ref`] when round-tripping through
 /// the GenericVM's `TypedVMValue`.  `0x6E` is the WASM binary type byte for
 /// `anyref`, which is exactly what a lisp reference value *is* in the
@@ -4581,11 +4595,23 @@ impl WasmExecutionEngine {
     /// constrained worker-thread pool, a reactor/executor with small
     /// per-task stacks) without that affecting how deep WASM recursion can
     /// safely go.
-    pub fn call_function(
+    /// See [`Self::call_function`] and [`Self::call_function_with_v128`] --
+    /// both are thin wrappers around this shared implementation, which
+    /// does the real work and additionally resolves any `WasmValue::
+    /// V128(handle)` RESULT into its real 16 bytes (via `ctx.v128_heap`,
+    /// still alive at the point results are collected, right before this
+    /// function returns and `ctx` -- along with the heap the handle
+    /// indexes into -- drops) before that handle becomes meaningless to
+    /// the caller. See `code/specs/W13-wasm-simd-v128-first-slice.md`'s
+    /// follow-up scope for why this exists: `wasm-conformance` needs REAL
+    /// byte-exact v128 comparison, which a bare, post-return handle can't
+    /// provide (`WasmExecutionEngine` itself has no `v128_heap` field --
+    /// only this one call's now-dropped `ctx` ever held it).
+    fn call_function_impl(
         &mut self,
         func_index: usize,
         args: &[WasmValue],
-    ) -> Result<Vec<WasmValue>, TrapError> {
+    ) -> Result<(Vec<WasmValue>, Vec<Option<V128Bytes>>), TrapError> {
         let initial_func_type = self
             .func_types
             .get(func_index)
@@ -4602,9 +4628,16 @@ impl WasmExecutionEngine {
 
         // Check for host function -- unchanged fast path for calling a
         // host-imported function directly; no WASM frame or tail-call
-        // machinery is needed at all here.
+        // machinery is needed at all here. A host function has no engine
+        // `ctx`/`v128_heap` of its own to have produced a real v128
+        // handle from, so its results (whatever their `WasmValue` shape)
+        // carry no resolved v128 bytes -- `None` for each, not a
+        // meaningful absence.
         if let Some(Some(host_func)) = self.host_functions.get(func_index) {
-            return host_func.call(args, self.memory.as_deref_mut());
+            return host_func.call(args, self.memory.as_deref_mut()).map(|results| {
+                let v128_bytes = vec![None; results.len()];
+                (results, v128_bytes)
+            });
         }
 
         // WASM10 (security review): about to spawn a dedicated OS thread
@@ -4959,18 +4992,52 @@ impl WasmExecutionEngine {
             Err(DedicatedThreadFailure::Panicked(panic_payload)) => std::panic::resume_unwind(panic_payload),
         };
 
-        // Collect return values.
+        // Collect return values, resolving any V128 handle into its real
+        // bytes via `ctx.v128_heap` -- still alive here, one statement
+        // before this function returns and `ctx` (and the heap the
+        // handle indexes into) drops for good.
         let mut results = Vec::new();
+        let mut v128_bytes = Vec::new();
         for _ in 0..final_result_count {
             let tv = self
                 .vm
                 .pop_typed()
                 .map_err(|e| TrapError::new(format!("{}", e)))?;
-            results.push(WasmValue::from_typed(&tv)?);
+            let wv = WasmValue::from_typed(&tv)?;
+            v128_bytes.push(match wv {
+                WasmValue::V128(handle) => ctx.v128_heap.get(handle as usize).copied().map(V128Bytes),
+                _ => None,
+            });
+            results.push(wv);
         }
         results.reverse();
+        v128_bytes.reverse();
 
-        Ok(results)
+        Ok((results, v128_bytes))
+    }
+
+    /// Call a WASM function by index. See [`Self::call_function_impl`]'s
+    /// own doc comment for the full design; this is the pre-existing,
+    /// unchanged-signature entry point every current caller in this
+    /// workspace already uses -- it simply discards the resolved v128
+    /// bytes [`Self::call_function_with_v128`] also provides.
+    pub fn call_function(&mut self, func_index: usize, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        self.call_function_impl(func_index, args).map(|(results, _)| results)
+    }
+
+    /// Like [`Self::call_function`], but also returns each result's real
+    /// v128 bytes (`Some` for a `WasmValue::V128` result, `None` for
+    /// every other result shape), resolved before they'd otherwise become
+    /// meaningless — see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`'s follow-up scope. The two
+    /// returned `Vec`s are always the same length and index-aligned with
+    /// each other.
+    pub fn call_function_with_v128(
+        &mut self,
+        func_index: usize,
+        args: &[WasmValue],
+    ) -> Result<(Vec<WasmValue>, Vec<Option<V128Bytes>>), TrapError> {
+        self.call_function_impl(func_index, args)
     }
 }
 
@@ -6293,6 +6360,69 @@ mod tests {
         let result = engine.call_function(0, &[]);
         assert!(result.is_err(), "an unbounded v128-creating loop must trap, not hang or exhaust memory");
         assert!(result.unwrap_err().to_string().contains("v128 heap limit exceeded"));
+    }
+
+    fn simd_engine_returning_v128(code: Vec<u8>) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results: vec![ValueType::V128] };
+        let body = FunctionBody { locals: vec![], code };
+        WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        })
+    }
+
+    /// `call_function_with_v128` must resolve the REAL bytes of a `v128`
+    /// RESULT — not just prove a handle came back, but that the handle
+    /// resolves to the exact bytes the WASM code actually computed, both
+    /// for a bare `v128.const` (a direct literal) and for `i32x4.add` (a
+    /// genuinely computed value) — this is what unblocks real byte-exact
+    /// `wasm-conformance` grading (see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`'s follow-up scope).
+    #[test]
+    fn call_function_with_v128_resolves_real_bytes_for_a_const_and_a_computed_value() {
+        let mut const_code = vec![0xFD, 0x0C];
+        const_code.extend(v128_const_bytes([11, 22, 33, 44]));
+        const_code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(const_code);
+        let (results, v128_bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results.len(), 1);
+        assert!(matches!(results[0], WasmValue::V128(_)));
+        assert_eq!(v128_bytes.len(), 1);
+        assert_eq!(v128_bytes[0], Some(V128Bytes(v128_const_bytes([11, 22, 33, 44]).try_into().unwrap())));
+
+        let mut add_code = vec![0xFD, 0x0C];
+        add_code.extend(v128_const_bytes([1, 2, 3, 4]));
+        add_code.extend([0xFD, 0x0C]);
+        add_code.extend(v128_const_bytes([10, 20, 30, 40]));
+        add_code.extend([0xFD, 0xAE, 0x01]); // i32x4.add
+        add_code.push(0x0B);
+        let mut engine2 = simd_engine_returning_v128(add_code);
+        let (_, v128_bytes2) = engine2.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            v128_bytes2[0],
+            Some(V128Bytes(v128_const_bytes([11, 22, 33, 44]).try_into().unwrap())),
+            "the resolved bytes must reflect the ACTUAL computation (1+10, 2+20, 3+30, 4+40), not just any v128"
+        );
+    }
+
+    /// `call_function` (the pre-existing, unchanged entry point) must
+    /// keep working exactly as before for a v128-returning function too
+    /// -- it just discards the resolved bytes `call_function_with_v128`
+    /// also provides, it doesn't behave differently or error out.
+    #[test]
+    fn call_function_still_works_unchanged_for_a_v128_returning_function() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([1, 2, 3, 4]));
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let results = engine.call_function(0, &[]).unwrap();
+        assert_eq!(results.len(), 1);
+        assert!(matches!(results[0], WasmValue::V128(_)));
     }
 
     // ══════════════════════════════════════════════════════════════════════

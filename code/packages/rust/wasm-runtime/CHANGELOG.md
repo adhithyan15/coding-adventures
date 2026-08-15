@@ -2,7 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.5.4] — 2026-08-15 (SIMD PR1a — V128 arm in the legacy i64 call() path)
+## [0.6.0] — 2026-08-15 (SIMD PR1b-1 — call_typed_with_v128, real v128 results end to end)
+
+### Added
+
+- `WasmRuntime::call_typed_with_v128(&mut WasmInstance, name, args) ->
+  Result<(Vec<WasmValue>, Vec<Option<wasm_execution::V128Bytes>>),
+  TrapError>` — the host-facing sibling of `call_typed` for functions that
+  return real v128 values. Thin-wraps `wasm-execution` 0.9.0's new
+  `WasmExecutionEngine::call_function_with_v128`, resolving each `V128`
+  result to its actual 16 bytes rather than leaving it as an
+  already-meaningless handle once the engine's internal context has been
+  torn down.
+- Internal refactor to support this without duplicating the run+restore
+  bookkeeping: the engine-construction half of `call_engine` (memory/
+  tables/host-function ownership transfer into a fresh
+  `WasmExecutionEngine`) is extracted into a private `build_engine`
+  helper, shared by both the existing `call_engine` (unchanged behavior,
+  confirmed via the full existing test suite) and a new sibling
+  `call_engine_with_v128`.
+
+### Why `wasm_wast_parser` couldn't test this directly
+
+`wasm-wast-parser` doesn't yet support `v128.const`'s text literal syntax
+(deferred to SIMD PR1b-2), so this crate's new integration test
+(`tests/call_typed_with_v128.rs`) hand-constructs a `WasmInstance`
+directly with raw SIMD bytecode rather than going through
+`wasm_wast_parser::parse_module` — every `WasmInstance` field is already
+public, so this needed no new test-only surface.
 
 ### Added
 

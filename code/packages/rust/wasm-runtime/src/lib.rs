@@ -1439,17 +1439,51 @@ impl WasmRuntime {
         self.call_engine(instance, func_index, args)
     }
 
+    /// Like [`Self::call_typed`], but also returns each result's real
+    /// v128 bytes (`Some` for a `WasmValue::V128` result, `None` for
+    /// every other result shape) -- see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`'s follow-up scope, and
+    /// `wasm_execution::WasmExecutionEngine::call_function_with_v128`'s
+    /// own doc comment for why a bare post-return `V128` handle can't be
+    /// used directly (the engine that produced it is dropped by the time
+    /// this returns). The two returned `Vec`s are always the same length
+    /// and index-aligned with each other.
+    pub fn call_typed_with_v128(
+        &self,
+        instance: &mut WasmInstance,
+        name: &str,
+        args: &[WasmValue],
+    ) -> Result<(Vec<WasmValue>, Vec<Option<wasm_execution::V128Bytes>>), TrapError> {
+        let (_, kind, index) = instance
+            .exports
+            .iter()
+            .find(|(n, _, _)| n == name)
+            .ok_or_else(|| TrapError::new(format!("export \"{}\" not found", name)))?;
+
+        if *kind != ExternalKind::Function {
+            return Err(TrapError::new(format!(
+                "export \"{}\" is not a function",
+                name
+            )));
+        }
+
+        let func_index = *index as usize;
+        self.call_engine_with_v128(instance, func_index, args)
+    }
+
     /// Shared by `call()` and `call_typed()`: build a `WasmExecutionEngine`
     /// from `instance`'s state, run `func_index`, and write the engine's
     /// post-call state back into `instance`. Neither caller-facing method
     /// duplicates this plumbing (memory/tables/host-functions ownership
     /// transfer, WasmGC struct field count wiring).
-    fn call_engine(
-        &self,
-        instance: &mut WasmInstance,
-        func_index: usize,
-        wasm_args: &[WasmValue],
-    ) -> Result<Vec<WasmValue>, TrapError> {
+    /// Shared by `call_engine`/`call_engine_with_v128`: build a
+    /// `WasmExecutionEngine` from `instance`'s state (transferring
+    /// memory/tables/host-functions ownership temporarily) and register
+    /// its type section and WasmGC struct field counts. Neither caller
+    /// re-derives this setup -- see the inline comments at each step
+    /// (preserved from before this was split out) for why each one
+    /// matters.
+    fn build_engine(&self, instance: &mut WasmInstance) -> WasmExecutionEngine {
         // Build engine config, transferring ownership temporarily.
         let memory = instance.memory.take();
         let tables = std::mem::take(&mut instance.tables);
@@ -1514,6 +1548,22 @@ impl WasmRuntime {
             engine.set_struct_field_counts(struct_field_counts);
         }
 
+        engine
+    }
+
+    /// Shared by `call()` and `call_typed()`: build a `WasmExecutionEngine`
+    /// from `instance`'s state, run `func_index`, and write the engine's
+    /// post-call state back into `instance`. Neither caller-facing method
+    /// duplicates this plumbing (memory/tables/host-functions ownership
+    /// transfer, WasmGC struct field count wiring).
+    fn call_engine(
+        &self,
+        instance: &mut WasmInstance,
+        func_index: usize,
+        wasm_args: &[WasmValue],
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        let mut engine = self.build_engine(instance);
+
         // Run the call, but restore `instance`'s memory/tables/host-functions
         // from the engine's post-call state REGARDLESS of whether it trapped
         // (`call_function` takes `&mut self`, so `engine` — and everything
@@ -1527,6 +1577,29 @@ impl WasmRuntime {
         // instance fail with a spurious "no memory available"/"undefined
         // table", masking whatever the test was actually checking.
         let result = engine.call_function(func_index, wasm_args);
+        let state = engine.into_state();
+        instance.memory = state.memory;
+        instance.tables = state.tables;
+        instance.globals = state.globals;
+        instance.host_functions = state.host_functions;
+
+        result
+    }
+
+    /// Like [`Self::call_engine`], but calls `call_function_with_v128`
+    /// instead of `call_function`, threading its extra resolved-v128-
+    /// bytes return value straight through. Same state-restore-
+    /// regardless-of-trap discipline as `call_engine` -- see its own
+    /// comment for why that matters.
+    fn call_engine_with_v128(
+        &self,
+        instance: &mut WasmInstance,
+        func_index: usize,
+        wasm_args: &[WasmValue],
+    ) -> Result<(Vec<WasmValue>, Vec<Option<wasm_execution::V128Bytes>>), TrapError> {
+        let mut engine = self.build_engine(instance);
+
+        let result = engine.call_function_with_v128(func_index, wasm_args);
         let state = engine.into_state();
         instance.memory = state.memory;
         instance.tables = state.tables;
