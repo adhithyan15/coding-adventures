@@ -5900,6 +5900,7 @@ pub fn lower_iir_to_wasm(
     {
         vec![wasm_types::MemoryType {
             limits: wasm_types::Limits { min: 1, max: Some(max_memory_pages) },
+            shared: false,
         }]
     } else {
         vec![]

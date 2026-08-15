@@ -434,9 +434,11 @@ mod tests {
             memories: vec![
                 MemoryType {
                     limits: Limits { min: 1, max: None },
+                    shared: false,
                 },
                 MemoryType {
                     limits: Limits { min: 1, max: None },
+                    shared: false,
                 },
             ],
             ..Default::default()
@@ -580,6 +582,7 @@ mod tests {
         let module = WasmModule {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
+                shared: false,
             }],
             data: vec![DataSegment {
                 memory_index: 1, // only index 0 is valid
@@ -597,6 +600,7 @@ mod tests {
         let module = WasmModule {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
+                shared: false,
             }],
             data: vec![DataSegment {
                 memory_index: 0,
@@ -737,6 +741,7 @@ mod tests {
         let module = WasmModule {
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
+                shared: false,
             }],
             exports: vec![Export {
                 name: "mem".to_string(),
@@ -800,10 +805,12 @@ mod tests {
                 kind: ExternalKind::Memory,
                 type_info: ImportTypeInfo::Memory(MemoryType {
                     limits: Limits { min: 1, max: None },
+                    shared: false,
                 }),
             }],
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
+                shared: false,
             }],
             ..Default::default()
         };

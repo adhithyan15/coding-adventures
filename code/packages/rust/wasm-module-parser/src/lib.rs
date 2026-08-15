@@ -462,8 +462,16 @@ fn decode_external_kind(byte: u8, offset: usize) -> Result<ExternalKind, WasmPar
 /// flags: u8
 ///   bit 0 = 0  →  { min: u32leb }
 ///   bit 0 = 1  →  { min: u32leb, max: u32leb }
+///   bit 1 = 1  →  shared (threads proposal, memory only -- WASM18)
 /// ```
-fn parse_limits(p: &mut Parser) -> Result<Limits, WasmParseError> {
+///
+/// Returns `(Limits, shared)`. `shared` is only ever meaningful for a
+/// memory (a real encoder never sets bit 1 on a table's limits, since
+/// tables aren't part of the threads proposal at all), but reading it
+/// unconditionally here -- rather than threading a "which kind is this"
+/// flag through -- keeps this one shared helper simple; table call sites
+/// just discard the second element.
+fn parse_limits(p: &mut Parser) -> Result<(Limits, bool), WasmParseError> {
     let flags = p.read_u8()?;
     let min = p.read_u32leb()?;
     let max = if flags & 0x01 != 0 {
@@ -471,7 +479,8 @@ fn parse_limits(p: &mut Parser) -> Result<Limits, WasmParseError> {
     } else {
         None
     };
-    Ok(Limits { min, max })
+    let shared = flags & 0x02 != 0;
+    Ok((Limits { min, max }, shared))
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -611,15 +620,15 @@ fn parse_import_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), W
             }
             ExternalKind::Table => {
                 let elem_type = p.read_u8()?;
-                let limits = parse_limits(p)?;
+                let (limits, _shared) = parse_limits(p)?;
                 ImportTypeInfo::Table(TableType {
                     element_type: elem_type,
                     limits,
                 })
             }
             ExternalKind::Memory => {
-                let limits = parse_limits(p)?;
-                ImportTypeInfo::Memory(MemoryType { limits })
+                let (limits, shared) = parse_limits(p)?;
+                ImportTypeInfo::Memory(MemoryType { limits, shared })
             }
             ExternalKind::Global => {
                 let vt_byte = p.read_u8()?;
@@ -672,7 +681,7 @@ fn parse_table_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Wa
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
         let element_type = p.read_u8()?;
-        let limits = parse_limits(p)?;
+        let (limits, _shared) = parse_limits(p)?;
         module.tables.push(TableType {
             element_type,
             limits,
@@ -693,8 +702,8 @@ fn parse_table_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Wa
 fn parse_memory_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), WasmParseError> {
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
-        let limits = parse_limits(p)?;
-        module.memories.push(MemoryType { limits });
+        let (limits, shared) = parse_limits(p)?;
+        module.memories.push(MemoryType { limits, shared });
     }
     Ok(())
 }
@@ -1321,7 +1330,8 @@ mod tests {
         assert_eq!(
             m.memories[0],
             MemoryType {
-                limits: Limits { min: 1, max: None }
+                limits: Limits { min: 1, max: None },
+                shared: false,
             }
         );
     }

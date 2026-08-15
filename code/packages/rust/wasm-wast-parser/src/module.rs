@@ -409,7 +409,7 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                     insert_unique(&mut ctx.memory_names, name, idx, f.pos(), "memory")?;
                 }
             }
-            ctx.module.memories.push(MemoryType { limits: Limits { min: 0, max: None } });
+            ctx.module.memories.push(MemoryType { limits: Limits { min: 0, max: None }, shared: false }); // fixed in pass 2
         } else if f.is_keyword_list("global") {
             let items = f.as_list().unwrap();
             if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
@@ -454,7 +454,21 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
     let type_info = match kind {
         "func" => ImportTypeInfo::Function(0), // fixed in pass 2 once the type is known
         "table" => ImportTypeInfo::Table(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None } }),
-        "memory" => ImportTypeInfo::Memory(MemoryType { limits: parse_limits(&desc[1..])? }),
+        "memory" => {
+            // `desc` is `(memory $name? limits... shared?)` -- same
+            // optional-`$name`-at-index-1 shape `global`'s arm below
+            // handles, and the same class of bug WASM19 fixed there: a
+            // named inline-import memory (`(memory $m (import "m" "n")
+            // 1 1)`) desugars to `desc = [memory, $m, 1, 1]`, and
+            // `desc[1..]` alone would hand `parse_memory_limits` a
+            // leading `$m` atom, which its `take_while(digit)` scan
+            // would immediately stop on -- "expected 1 or 2 limit
+            // numbers" on a syntactically valid, real WAT form. Found
+            // while adding WASM18's `shared` keyword support.
+            let limits_start = if desc.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
+            let (limits, shared) = parse_memory_limits(&desc[limits_start..])?;
+            ImportTypeInfo::Memory(MemoryType { limits, shared })
+        }
         "global" => {
             // `desc` is `(global $name? <type>)` -- an optional `$name`
             // (from either the desugared inline-import shorthand or a real
@@ -524,6 +538,18 @@ fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
         [min, max] => Ok(Limits { min: *min, max: Some(*max) }),
         _ => Err(WastParseError::UnexpectedToken { pos: 0, found: "".into(), expected: "1 or 2 limit numbers" }),
     }
+}
+
+/// A memory's limits, plus WASM18's `shared` trailing keyword
+/// (`(memory 1 1 shared)`) -- tables never carry this, so `parse_limits`
+/// itself stays shared/table-agnostic; this wrapper is memory-specific.
+/// `parse_limits`'s own digit-scanning `take_while` already stops at the
+/// first non-digit atom, so a trailing `shared` keyword never confuses
+/// the numeric parse -- this just also checks whether it's present.
+fn parse_memory_limits(fields: &[SExpr]) -> Result<(Limits, bool), WastParseError> {
+    let limits = parse_limits(fields)?;
+    let shared = fields.iter().any(|e| e.as_atom() == Some("shared"));
+    Ok((limits, shared))
 }
 
 fn parse_global_type(expr: &SExpr) -> Result<GlobalType, WastParseError> {
@@ -624,7 +650,9 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 // a module has any memory import.
                 let space_idx = num_import_memories + memory_i;
                 let (limits_start, _) = handle_inline_export(rest, "memory", space_idx, ctx)?;
-                ctx.module.memories[memory_i].limits = parse_limits(&rest[limits_start..])?;
+                let (limits, shared) = parse_memory_limits(&rest[limits_start..])?;
+                ctx.module.memories[memory_i].limits = limits;
+                ctx.module.memories[memory_i].shared = shared;
                 memory_i += 1;
             }
             "table" => {
@@ -1278,6 +1306,28 @@ fn encode_stream_instr(
         out.push(0xD1);
         return Ok(0);
     }
+    // Atomic memory operations (`0xFE`-prefixed, threads proposal --
+    // WASM18): like `ref.null`/`ref.is_null` above, these aren't in
+    // `wasm_opcodes::OPCODES` (a two-byte prefix encoding, same reason
+    // 0xFB/0xFC aren't either) -- `wasm_opcodes::ATOMIC_OPS` is the real
+    // lookup table. `atomic.fence` takes no immediate at all; every other
+    // atomic op takes the identical `memarg` (align + offset) shape the
+    // 20 existing MVP load/store instructions already use, just under
+    // the `0xFE` prefix instead of a bare single byte. See `code/specs/
+    // W09-wasm-atomics-plain.md`.
+    if name == "atomic.fence" {
+        out.push(0xFE);
+        out.push(0x03);
+        return Ok(0);
+    }
+    if let Some(atomic_op) = wasm_opcodes::get_atomic_op_by_name(name) {
+        let (memarg, consumed) = parse_memarg(following, atomic_op.natural_align.trailing_zeros());
+        out.push(0xFE);
+        out.push(atomic_op.sub_opcode);
+        out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+        out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+        return Ok(consumed);
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
     match name {
@@ -1357,7 +1407,7 @@ fn encode_stream_instr(
         | "i32.load16_u" | "i64.load8_s" | "i64.load8_u" | "i64.load16_s" | "i64.load16_u" | "i64.load32_s"
         | "i64.load32_u" | "i32.store" | "i64.store" | "f32.store" | "f64.store" | "i32.store8" | "i32.store16"
         | "i64.store8" | "i64.store16" | "i64.store32" => {
-            let (memarg, consumed) = parse_memarg(following);
+            let (memarg, consumed) = parse_memarg(following, 0);
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
             out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
@@ -1532,6 +1582,25 @@ fn encode_flat_instr(
         out.push(0xD1);
         return Ok(());
     }
+    // Atomic memory operations (WASM18): see the matching comment in
+    // `encode_stream_instr`. `atomic.fence` takes no operands at all
+    // (like `ref.null`, nothing to recurse into); every other atomic op
+    // follows the SAME "memarg leads, operands trail" folded shape the
+    // existing `i32.load`/`i32.store`-family arms below already use.
+    if name == "atomic.fence" {
+        out.push(0xFE);
+        out.push(0x03);
+        return Ok(());
+    }
+    if let Some(atomic_op) = wasm_opcodes::get_atomic_op_by_name(name) {
+        let (memarg, operand_start) = parse_memarg(args, atomic_op.natural_align.trailing_zeros());
+        encode_instr_list(&args[operand_start..], icx, out)?;
+        out.push(0xFE);
+        out.push(atomic_op.sub_opcode);
+        out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+        out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+        return Ok(());
+    }
     let info = wasm_opcodes::get_opcode_by_name(name)
         .ok_or_else(|| WastParseError::UnknownInstruction { pos, name: name.to_string() })?;
 
@@ -1637,7 +1706,7 @@ fn encode_flat_instr(
         | "i32.load16_u" | "i64.load8_s" | "i64.load8_u" | "i64.load16_s" | "i64.load16_u" | "i64.load32_s"
         | "i64.load32_u" | "i32.store" | "i64.store" | "f32.store" | "f64.store" | "i32.store8" | "i32.store16"
         | "i64.store8" | "i64.store16" | "i64.store32" => {
-            let (memarg, operand_start) = parse_memarg(args);
+            let (memarg, operand_start) = parse_memarg(args, 0);
             encode_instr_list(&args[operand_start..], icx, out)?;
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
@@ -1771,8 +1840,23 @@ fn literal_text(expr: Option<&SExpr>, pos: usize) -> Result<(String, usize), Was
 /// 0 -- real alignment *hints* don't affect semantics, only performance,
 /// so defaulting to the loosest hint is always safe). Returns
 /// `((align_log2, offset), first_non_attribute_index)`.
-fn parse_memarg(args: &[SExpr]) -> ((u32, u32), usize) {
-    let mut align_log2 = 0u32;
+/// Parse a `memarg` (`align=N offset=N`, either/both/neither, in either
+/// order... actually always `offset=` then `align=` per real WAT
+/// convention, but this scans generically). `default_align_log2` is what
+/// `align_log2` becomes when NO `align=` token is present at all --
+/// plain loads/stores pass `0` (their existing convention: a missing
+/// align is just a weaker hint, never semantically required to match
+/// anything). Atomic ops (WASM18) pass their own natural alignment's
+/// log2 instead, since the real corpus's atomic instructions are
+/// typically written WITHOUT an explicit `align=` at all, relying on
+/// "defaults to natural" -- and unlike plain ops, atomic ops REQUIRE
+/// exact natural alignment, so silently defaulting to `0` (1-byte) would
+/// make every real atomic op without an explicit `align=` fail
+/// validation. An align=N that a real test case DOES write out
+/// explicitly (e.g. deliberately mis-aligned, to test rejection) always
+/// takes precedence over this default either way.
+fn parse_memarg(args: &[SExpr], default_align_log2: u32) -> ((u32, u32), usize) {
+    let mut align_log2 = default_align_log2;
     let mut offset = 0u32;
     let mut i = 0;
     while i < args.len() {
@@ -2924,5 +3008,127 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, WastParseError::UnknownIdentifier { space: "table", .. }));
+    }
+
+    // ── WASM18: shared memories, atomic load/store/RMW/cmpxchg/fence ────────
+
+    #[test]
+    fn shared_memory_keyword_parses_and_sets_the_flag() {
+        let m = parse_module(r#"(module (memory 1 1 shared))"#).unwrap();
+        assert!(m.memories[0].shared);
+        assert_eq!(m.memories[0].limits, Limits { min: 1, max: Some(1) });
+    }
+
+    #[test]
+    fn non_shared_memory_defaults_shared_to_false() {
+        let m = parse_module(r#"(module (memory 1 1))"#).unwrap();
+        assert!(!m.memories[0].shared);
+    }
+
+    #[test]
+    fn named_shared_memory_import_shorthand_sets_the_flag() {
+        let m = parse_module(r#"(module (memory $m (import "m" "n") 1 1 shared))"#).unwrap();
+        assert_eq!(m.imports.len(), 1);
+        match &m.imports[0].type_info {
+            ImportTypeInfo::Memory(mt) => assert!(mt.shared),
+            other => panic!("expected a memory import, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn atomic_load_store_folded_and_flat_emit_the_0xfe_prefix() {
+        let folded = parse_module(
+            r#"(module (memory 1 1 shared)
+                 (func (i32.atomic.store (i32.const 0) (i32.atomic.load (i32.const 0)))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (memory 1 1 shared)
+                 (func i32.const 0 i32.const 0 i32.atomic.load i32.atomic.store))"#,
+        )
+        .unwrap();
+        // i32.atomic.load: 0xFE 0x10 <align> <offset>; i32.atomic.store:
+        // 0xFE 0x17 <align> <offset>.
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(2).any(|w| w == [0xFE, 0x10]), "missing i32.atomic.load: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFE, 0x17]), "missing i32.atomic.store: {code:?}");
+        }
+    }
+
+    #[test]
+    fn atomic_rmw_and_cmpxchg_emit_correct_sub_opcodes() {
+        let m = parse_module(
+            r#"(module (memory 1 1 shared)
+                 (func (param i32 i32 i32)
+                   (drop (i32.atomic.rmw.add (local.get 0) (local.get 1)))
+                   (drop (i32.atomic.rmw.cmpxchg (local.get 0) (local.get 1) (local.get 2)))))"#,
+        )
+        .unwrap();
+        let code = code_of(&m, 0);
+        assert!(code.windows(2).any(|w| w == [0xFE, 0x1E]), "missing i32.atomic.rmw.add: {code:?}");
+        assert!(code.windows(2).any(|w| w == [0xFE, 0x48]), "missing i32.atomic.rmw.cmpxchg: {code:?}");
+    }
+
+    #[test]
+    fn atomic_fence_folded_and_flat_take_no_immediate() {
+        let folded = parse_module(r#"(module (func (atomic.fence)))"#).unwrap();
+        let flat = parse_module(r#"(module (func atomic.fence))"#).unwrap();
+        assert_eq!(code_of(&folded, 0), &[0xFE, 0x03, 0x0B]);
+        assert_eq!(code_of(&flat, 0), &[0xFE, 0x03, 0x0B]);
+    }
+
+    #[test]
+    fn atomic_load_honors_explicit_align_and_offset() {
+        let m = parse_module(
+            r#"(module (memory 1 1 shared)
+                 (func (result i32) (i32.atomic.load offset=4 align=4 (i32.const 0))))"#,
+        )
+        .unwrap();
+        // 0xFE 0x10 <align_log2=2> <offset=4>
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0xFE, 0x10, 0x02, 0x04, 0x0B]);
+    }
+
+    #[test]
+    fn atomic_op_with_no_explicit_align_defaults_to_natural_not_zero() {
+        // The real corpus's atomic instructions are typically written
+        // WITHOUT an explicit `align=` at all (unlike plain loads/stores,
+        // which are semantically fine defaulting to a 1-byte hint since
+        // their align check only enforces an upper bound). Atomic ops
+        // require EXACT natural alignment, so silently defaulting the
+        // missing align to 0 (log2 of 1 byte) would make ordinary,
+        // spec-legal atomic instructions fail validation. Regression
+        // test for that exact bug, caught while adding wasm-validator's
+        // exact-alignment check.
+        let m = parse_module(
+            r#"(module (memory 1 1 shared)
+                 (func (result i64) (i64.atomic.load (i32.const 0))))"#,
+        )
+        .unwrap();
+        // i64.atomic.load's natural align is 8 bytes -> log2 = 3, NOT 0.
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0xFE, 0x11, 0x03, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn atomic_notify_and_wait_parse_and_emit_correct_sub_opcodes() {
+        // Implementation-time correction of the (already-merged) W09
+        // spec's "deliberately absent" claim -- notify/wait have real,
+        // deterministic single-agent semantics, see wasm-opcodes'
+        // AtomicOpKind::Notify/Wait doc comments.
+        let m = parse_module(
+            r#"(module
+                 (func (drop (memory.atomic.notify (i32.const 0) (i32.const 0))))
+                 (func (drop (memory.atomic.wait32 (i32.const 0) (i32.const 0) (i64.const 0))))
+                 (func (drop (memory.atomic.wait64 (i32.const 0) (i64.const 0) (i64.const 0)))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFE, 0x00]), "notify");
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFE, 0x01]), "wait32");
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFE, 0x02]), "wait64");
+    }
+
+    #[test]
+    fn unknown_atomic_instruction_name_is_a_clean_error() {
+        let err = parse_module(r#"(module (func (drop (i32.atomic.nonsense (i32.const 0)))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnknownInstruction { .. }));
     }
 }

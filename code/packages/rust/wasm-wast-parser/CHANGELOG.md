@@ -1,5 +1,40 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.9 — 2026-08-15 — atomic instructions + `shared` memory keyword (WASM18)
+
+### Added
+
+- `shared` keyword parsing on `(memory ...)` forms, including the named
+  inline-import shorthand (`(memory $m shared 1 1)` and the
+  import-shorthand variant), via a new `parse_memory_limits` wrapper
+  around `parse_limits` that also scans for a `"shared"` atom.
+- Full grammar support for every `0xFE`-prefixed atomic instruction
+  (load/store/RMW/cmpxchg/fence/notify/wait, folded and flat forms),
+  driven entirely off `wasm_opcodes::ATOMIC_OPS` -- no per-instruction
+  special-casing needed once the shared table existed.
+- ~10 new tests: `shared` keyword parsing, named shared-memory import
+  shorthand, atomic instruction encoding (folded + flat), explicit vs.
+  default alignment, unknown atomic instruction name error, notify/
+  wait32/wait64 parsing.
+
+### Fixed
+
+- `parse_memarg` previously always defaulted a missing `align=`
+  immediate to 1-byte alignment (`0`) -- correct for plain loads/stores,
+  whose validator only enforces an *upper bound* on alignment, but wrong
+  for atomics: the real corpus's typical style omits `align=` entirely,
+  and `wasm-validator`'s new atomic type rule requires an *exact* match
+  to natural alignment. Every atomic instruction without an explicit
+  `align=` would have failed validation outright. Fixed by giving
+  `parse_memarg` a `default_align_log2: u32` parameter, with atomic call
+  sites passing the operation's own natural alignment instead of `0`.
+  Locked in by a dedicated regression test
+  (`atomic_op_with_no_explicit_align_defaults_to_natural_not_zero`).
+- Named memory inline-import shorthand (`(memory $m (import "m" "n") 1
+  1)`) mis-parsed `$m` itself as part of the limits -- the same bug class
+  already fixed for named globals in 0.1.8. Fixed by skipping an
+  optional `$name` atom before calling `parse_memory_limits`.
+
 ## 0.1.8 — 2026-08-15 — named global inline-import shorthand (WASM19)
 
 `(global $g0 (import "m" "n") i32)` -- the NAMED form of the global

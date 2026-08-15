@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] - 2026-08-15 (WASM18 — `shared` bit on `MemoryType`)
+
+### Added
+
+- `MemoryType` gained a new `pub shared: bool` field (threads proposal,
+  binary-format flags bit 1). A **breaking** struct-field addition — every
+  `MemoryType { limits, .. }` construction site across the workspace
+  needed a `shared: false`/real value added; see `wasm-module-parser`
+  0.2.2 and `wasm-wast-parser` 0.1.9 for the two places that now decode
+  a real value instead of always defaulting it.
+
+### Corrected (implementation-time, vs. the merged W09 spec)
+
+- The merged `code/specs/W09-wasm-atomics-plain.md` spec claimed atomic
+  instructions require the target memory be declared `shared`. The real,
+  pinned-commit WebAssembly threads-proposal testsuite (`atomic.wast`)
+  directly contradicts this with its own `;; unshared memory is OK`
+  module, exercising every atomic op against a plain, non-shared memory
+  and expecting success. `wasm-validator` 0.2.3 does NOT gate atomic ops
+  on `shared`; this field exists purely so `shared` round-trips
+  correctly through parse/encode, not to drive a validation rule.
+
 ## [0.1.1] - 2026-08-15 (WASM17 — funcref/externref as first-class value types)
 
 ### Added

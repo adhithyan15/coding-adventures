@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] — 2026-08-15 — decode the `shared` memory bit (WASM18)
+
+### Added
+
+- `parse_limits` now decodes flags-byte bit 1 ("shared", threads
+  proposal, memory only) and returns `(Limits, bool)` instead of just
+  `Limits`. All 4 call sites updated; table import/table-section call
+  sites discard the bool (tables aren't part of the threads proposal),
+  memory import/memory-section call sites thread it into the new
+  `MemoryType.shared` field (see `wasm-types` 0.1.2).
+
 ## [0.2.1] — 2026-08-13 — element-section allocation cap (WASM15)
 
 ### Fixed — `parse_element_section`'s `func_count` could trigger a multi-gigabyte allocation

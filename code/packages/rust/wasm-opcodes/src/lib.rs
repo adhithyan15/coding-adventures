@@ -554,6 +554,208 @@ pub static OPCODES: &[OpcodeInfo] = &[
 ];
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Atomic memory operations (0xFE prefix, threads proposal — WASM18)
+// ──────────────────────────────────────────────────────────────────────────────
+//
+// Like `0xFB`/`0xFC`, `0xFE` is a two-byte prefix encoding
+// (`0xFE <sub-opcode> ...`) that doesn't fit this crate's single-byte
+// `OPCODES` table, so these entries live in a SEPARATE table, keyed by
+// the sub-opcode byte (the byte AFTER `0xFE`), not folded into `OPCODES`
+// itself. Unlike `0xFB`/`0xFC` (whose sub-opcode dispatch is duplicated
+// ad hoc in each consumer, since this repo's slice of those prefixes is
+// small and irregular), the atomic family is regular enough — 64
+// opcodes across a handful of repeating shapes — that centralizing the
+// name/value-type/width table here, as the one shared source of truth
+// `wasm-wast-parser`/`wasm-execution`/`wasm-validator` all key off,
+// avoids tripling up the same 31-row table three times. See
+// `code/specs/W09-wasm-atomics-plain.md`.
+
+/// What shape of stack effect an atomic opcode has -- see each variant's
+/// own doc comment for the exact pop/push list a consumer should apply.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AtomicOpKind {
+    /// Pops an `i32` address, pushes the loaded value.
+    Load,
+    /// Pops an `i32` address and a value, pushes nothing.
+    Store,
+    /// Pops an `i32` address and a value, pushes the value that was
+    /// there BEFORE the read-modify-write (the spec's own semantics —
+    /// every RMW op returns the OLD value, not the new one).
+    Rmw,
+    /// Pops an `i32` address, an expected value, and a replacement
+    /// value; pushes whatever was actually there before the (possibly
+    /// no-op) exchange -- same "always returns the old value" shape as
+    /// `Rmw`, just with two value operands instead of one.
+    Cmpxchg,
+    /// No operands, no stack effect at all (`atomic.fence` — a true
+    /// no-op with a single native thread, see the spec's own "Why" for
+    /// the reasoning).
+    Fence,
+    /// `memory.atomic.notify`: pops an `i32` address and an `i32` waiter
+    /// count, pushes an `i32` count of how many waiters were actually
+    /// woken. With one native thread there is never a second agent
+    /// blocked in `wait`, so this always resolves to `0` — a real,
+    /// deterministic answer, not a stand-in for unimplemented behavior.
+    /// `value_type` is `None` (the waiter count isn't the memory's own
+    /// value type).
+    Notify,
+    /// `memory.atomic.wait32`/`wait64`: pops an `i32` address, an
+    /// expected value (`value_type` — `I32` for `wait32`, `I64` for
+    /// `wait64`), and an `i64` timeout; pushes an `i32` result code.
+    /// With one native thread there is never a second agent able to
+    /// `notify` this wait, so the only two REAL spec outcomes reachable
+    /// here are `1` ("not-equal", when the current memory value already
+    /// doesn't match `expected`) and `2` ("timed-out", when it does) —
+    /// `0` ("ok", woken by a real `notify`) can never happen. Confirmed
+    /// against the real, pinned-commit testsuite's own `wait32`/`wait64`
+    /// assertions, which exercise exactly the "not-equal" path.
+    Wait,
+}
+
+/// One entry in the atomic opcode table: everything a consumer needs to
+/// decode, type-check, and execute one `0xFE`-prefixed instruction.
+#[derive(Debug, Clone, Copy)]
+pub struct AtomicOpInfo {
+    /// The canonical text name, e.g. `"i32.atomic.load"`.
+    pub name: &'static str,
+    /// The sub-opcode byte (the byte immediately after the `0xFE` prefix).
+    pub sub_opcode: u8,
+    pub kind: AtomicOpKind,
+    /// The `i32`/`i64` value type this op loads/stores/reads/writes.
+    /// `None` for `Fence`, which touches no value at all.
+    pub value_type: Option<wasm_types::ValueType>,
+    /// The REQUIRED alignment in bytes (1, 2, 4, or 8) -- unlike plain
+    /// loads/stores (whose `align` immediate is only an upper-bound
+    /// hint), atomic accesses must be naturally aligned exactly. `0` for
+    /// `Fence`, which has no memory access to align.
+    pub natural_align: u32,
+}
+
+/// All 64 atomic opcodes: the plain load/store/RMW/cmpxchg/fence family
+/// `code/specs/W09-wasm-atomics-plain.md` designed, PLUS
+/// `memory.atomic.notify`/`wait32`/`wait64` (sub-opcodes `0x00`-`0x02`).
+/// That spec's own prose claims notify/wait are "deliberately absent --
+/// meaningless without real threads"; implementation-time verification
+/// against the real, pinned-commit `proposals/threads/atomic.wast`
+/// testsuite file found otherwise -- notify/wait DO have well-defined,
+/// fully deterministic single-agent semantics (see `AtomicOpKind::
+/// Notify`/`Wait`'s own doc comments), and the vendored file's own
+/// assertions exercise exactly that deterministic path, not anything
+/// requiring a second real thread. Implemented for real here rather than
+/// left as a stub trap.
+pub static ATOMIC_OPS: &[AtomicOpInfo] = &[
+    // ── Notify/wait (WASM18) ───────────────────────────────────────────
+    AtomicOpInfo { name: "memory.atomic.notify", sub_opcode: 0x00, kind: AtomicOpKind::Notify, value_type: None, natural_align: 4 },
+    AtomicOpInfo { name: "memory.atomic.wait32", sub_opcode: 0x01, kind: AtomicOpKind::Wait, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "memory.atomic.wait64", sub_opcode: 0x02, kind: AtomicOpKind::Wait, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "atomic.fence", sub_opcode: 0x03, kind: AtomicOpKind::Fence, value_type: None, natural_align: 0 },
+    // ── Loads ──────────────────────────────────────────────────────────
+    AtomicOpInfo { name: "i32.atomic.load", sub_opcode: 0x10, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.load", sub_opcode: 0x11, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.load8_u", sub_opcode: 0x12, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.load16_u", sub_opcode: 0x13, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.load8_u", sub_opcode: 0x14, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.load16_u", sub_opcode: 0x15, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.load32_u", sub_opcode: 0x16, kind: AtomicOpKind::Load, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+    // ── Stores ─────────────────────────────────────────────────────────
+    AtomicOpInfo { name: "i32.atomic.store", sub_opcode: 0x17, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.store", sub_opcode: 0x18, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.store8", sub_opcode: 0x19, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.store16", sub_opcode: 0x1A, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.store8", sub_opcode: 0x1B, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.store16", sub_opcode: 0x1C, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.store32", sub_opcode: 0x1D, kind: AtomicOpKind::Store, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+    // ── RMW: add (0x1E-0x24), sub (0x25-0x2B), and (0x2C-0x32), or
+    // (0x33-0x39), xor (0x3A-0x40), xchg (0x41-0x47) -- each a 7-slot
+    // block ordered i32, i64, i32-8, i32-16, i64-8, i64-16, i64-32. ─────
+    AtomicOpInfo { name: "i32.atomic.rmw.add", sub_opcode: 0x1E, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.add", sub_opcode: 0x1F, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.add_u", sub_opcode: 0x20, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.add_u", sub_opcode: 0x21, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.add_u", sub_opcode: 0x22, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.add_u", sub_opcode: 0x23, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.add_u", sub_opcode: 0x24, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+
+    AtomicOpInfo { name: "i32.atomic.rmw.sub", sub_opcode: 0x25, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.sub", sub_opcode: 0x26, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.sub_u", sub_opcode: 0x27, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.sub_u", sub_opcode: 0x28, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.sub_u", sub_opcode: 0x29, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.sub_u", sub_opcode: 0x2A, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.sub_u", sub_opcode: 0x2B, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+
+    AtomicOpInfo { name: "i32.atomic.rmw.and", sub_opcode: 0x2C, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.and", sub_opcode: 0x2D, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.and_u", sub_opcode: 0x2E, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.and_u", sub_opcode: 0x2F, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.and_u", sub_opcode: 0x30, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.and_u", sub_opcode: 0x31, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.and_u", sub_opcode: 0x32, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+
+    AtomicOpInfo { name: "i32.atomic.rmw.or", sub_opcode: 0x33, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.or", sub_opcode: 0x34, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.or_u", sub_opcode: 0x35, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.or_u", sub_opcode: 0x36, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.or_u", sub_opcode: 0x37, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.or_u", sub_opcode: 0x38, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.or_u", sub_opcode: 0x39, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+
+    AtomicOpInfo { name: "i32.atomic.rmw.xor", sub_opcode: 0x3A, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.xor", sub_opcode: 0x3B, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.xor_u", sub_opcode: 0x3C, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.xor_u", sub_opcode: 0x3D, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.xor_u", sub_opcode: 0x3E, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.xor_u", sub_opcode: 0x3F, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.xor_u", sub_opcode: 0x40, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+
+    AtomicOpInfo { name: "i32.atomic.rmw.xchg", sub_opcode: 0x41, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.xchg", sub_opcode: 0x42, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.xchg_u", sub_opcode: 0x43, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.xchg_u", sub_opcode: 0x44, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.xchg_u", sub_opcode: 0x45, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.xchg_u", sub_opcode: 0x46, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.xchg_u", sub_opcode: 0x47, kind: AtomicOpKind::Rmw, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+    // ── Cmpxchg (0x48-0x4E), same 7-slot shape, two value operands ────
+    AtomicOpInfo { name: "i32.atomic.rmw.cmpxchg", sub_opcode: 0x48, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I32), natural_align: 4 },
+    AtomicOpInfo { name: "i64.atomic.rmw.cmpxchg", sub_opcode: 0x49, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I64), natural_align: 8 },
+    AtomicOpInfo { name: "i32.atomic.rmw8.cmpxchg_u", sub_opcode: 0x4A, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I32), natural_align: 1 },
+    AtomicOpInfo { name: "i32.atomic.rmw16.cmpxchg_u", sub_opcode: 0x4B, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I32), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw8.cmpxchg_u", sub_opcode: 0x4C, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I64), natural_align: 1 },
+    AtomicOpInfo { name: "i64.atomic.rmw16.cmpxchg_u", sub_opcode: 0x4D, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I64), natural_align: 2 },
+    AtomicOpInfo { name: "i64.atomic.rmw32.cmpxchg_u", sub_opcode: 0x4E, kind: AtomicOpKind::Cmpxchg, value_type: Some(wasm_types::ValueType::I64), natural_align: 4 },
+];
+
+/// Look up an atomic opcode by its sub-opcode byte (the byte after the
+/// `0xFE` prefix).
+///
+/// # Example
+///
+/// ```
+/// use wasm_opcodes::get_atomic_op;
+///
+/// let info = get_atomic_op(0x10).unwrap();
+/// assert_eq!(info.name, "i32.atomic.load");
+/// ```
+pub fn get_atomic_op(sub_opcode: u8) -> Option<&'static AtomicOpInfo> {
+    ATOMIC_OPS.iter().find(|op| op.sub_opcode == sub_opcode)
+}
+
+/// Look up an atomic opcode by its canonical text name, e.g.
+/// `"i32.atomic.load"`, `"i64.atomic.rmw.cmpxchg"`.
+///
+/// # Example
+///
+/// ```
+/// use wasm_opcodes::get_atomic_op_by_name;
+///
+/// let info = get_atomic_op_by_name("i32.atomic.load").unwrap();
+/// assert_eq!(info.sub_opcode, 0x10);
+/// ```
+pub fn get_atomic_op_by_name(name: &str) -> Option<&'static AtomicOpInfo> {
+    ATOMIC_OPS.iter().find(|op| op.name == name)
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Public lookup API
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -829,5 +1031,95 @@ mod tests {
 
         assert!(get_opcode(0xD0).is_none(), "ref.null is intentionally not in this table");
         assert!(get_opcode(0xD1).is_none(), "ref.is_null is intentionally not in this table");
+    }
+
+    // ── WASM18: atomic memory operations (0xFE prefix) ───────────────────────
+
+    #[test]
+    fn atomic_ops_table_has_the_expected_count_and_no_duplicates() {
+        // notify + wait32 + wait64 + fence + 7 loads + 7 stores + (6 RMW
+        // op kinds + cmpxchg = 7 op kinds) * 7 width variants each =
+        // 3 + 1 + 7 + 7 + 49 = 67.
+        assert_eq!(ATOMIC_OPS.len(), 3 + 1 + 7 + 7 + 7 * 7);
+
+        let mut seen_bytes = std::collections::HashSet::new();
+        let mut seen_names = std::collections::HashSet::new();
+        for op in ATOMIC_OPS {
+            assert!(seen_bytes.insert(op.sub_opcode), "duplicate sub-opcode byte {:#04x} ({})", op.sub_opcode, op.name);
+            assert!(seen_names.insert(op.name), "duplicate name {}", op.name);
+        }
+    }
+
+    #[test]
+    fn atomic_ops_byte_range_is_contiguous_and_matches_the_spec() {
+        // notify/wait32/wait64/fence at 0x00-0x03, loads+stores
+        // 0x10-0x1D, RMW+cmpxchg 0x1E-0x4E -- every byte in 0x00..=0x4E
+        // is now a defined atomic op (0x04-0x0F is the only real gap).
+        for byte in 0x00..=0x03 {
+            assert!(get_atomic_op(byte).is_some(), "sub-opcode {byte:#04x} should be a defined sync op");
+        }
+        for byte in 0x10..=0x4E {
+            assert!(get_atomic_op(byte).is_some(), "sub-opcode {byte:#04x} should be a defined atomic op");
+        }
+        for byte in 0x04..=0x0F {
+            assert!(get_atomic_op(byte).is_none(), "sub-opcode {byte:#04x} is a real gap in the encoding, not assigned");
+        }
+    }
+
+    #[test]
+    fn atomic_ops_spot_check_loads_stores_rmw_cmpxchg() {
+        let load = get_atomic_op(0x10).expect("0x10");
+        assert_eq!(load.name, "i32.atomic.load");
+        assert_eq!(load.kind, AtomicOpKind::Load);
+        assert_eq!(load.value_type, Some(wasm_types::ValueType::I32));
+        assert_eq!(load.natural_align, 4);
+
+        let store8 = get_atomic_op(0x1B).expect("0x1B");
+        assert_eq!(store8.name, "i64.atomic.store8");
+        assert_eq!(store8.kind, AtomicOpKind::Store);
+        assert_eq!(store8.value_type, Some(wasm_types::ValueType::I64));
+        assert_eq!(store8.natural_align, 1);
+
+        // First RMW op (add, i32) and last (cmpxchg, i64.rmw32).
+        let rmw_add = get_atomic_op(0x1E).expect("0x1E");
+        assert_eq!(rmw_add.name, "i32.atomic.rmw.add");
+        assert_eq!(rmw_add.kind, AtomicOpKind::Rmw);
+
+        let cmpxchg = get_atomic_op(0x4E).expect("0x4E");
+        assert_eq!(cmpxchg.name, "i64.atomic.rmw32.cmpxchg_u");
+        assert_eq!(cmpxchg.kind, AtomicOpKind::Cmpxchg);
+        assert_eq!(cmpxchg.value_type, Some(wasm_types::ValueType::I64));
+        assert_eq!(cmpxchg.natural_align, 4);
+
+        let fence = get_atomic_op(0x03).expect("0x03");
+        assert_eq!(fence.kind, AtomicOpKind::Fence);
+        assert_eq!(fence.value_type, None);
+
+        assert_eq!(get_atomic_op_by_name("i32.atomic.load").map(|o| o.sub_opcode), Some(0x10));
+        assert_eq!(get_atomic_op_by_name("i64.atomic.rmw32.cmpxchg_u").map(|o| o.sub_opcode), Some(0x4E));
+    }
+
+    #[test]
+    fn atomic_ops_notify_and_wait_are_present_with_correct_shapes() {
+        // Implementation-time correction of the (already-merged) W09
+        // spec's own claim that these are "deliberately absent -- see
+        // AtomicOpKind::Notify/Wait's own doc comments for why the real,
+        // pinned-commit testsuite proved otherwise.
+        let notify = get_atomic_op(0x00).expect("0x00");
+        assert_eq!(notify.name, "memory.atomic.notify");
+        assert_eq!(notify.kind, AtomicOpKind::Notify);
+        assert_eq!(notify.value_type, None);
+
+        let wait32 = get_atomic_op(0x01).expect("0x01");
+        assert_eq!(wait32.name, "memory.atomic.wait32");
+        assert_eq!(wait32.kind, AtomicOpKind::Wait);
+        assert_eq!(wait32.value_type, Some(wasm_types::ValueType::I32));
+
+        let wait64 = get_atomic_op(0x02).expect("0x02");
+        assert_eq!(wait64.name, "memory.atomic.wait64");
+        assert_eq!(wait64.kind, AtomicOpKind::Wait);
+        assert_eq!(wait64.value_type, Some(wasm_types::ValueType::I64));
+
+        assert_eq!(get_atomic_op_by_name("memory.atomic.notify").map(|o| o.sub_opcode), Some(0x00));
     }
 }

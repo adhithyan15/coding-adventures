@@ -994,6 +994,102 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 push_val(&mut stack, ValueType::I32);
             }
 
+            // ── `0xFE`-prefixed atomic memory operations (threads
+            // proposal, WASM18): sub-opcode is a single RAW byte (not
+            // LEB128), same shape 0xFB/0xFC's own sub-opcode read
+            // already uses. `wasm_opcodes::ATOMIC_OPS` is the one shared
+            // name/value-type/width table this crate, `wasm-execution`,
+            // and `wasm-wast-parser` all key off. See `code/specs/
+            // W09-wasm-atomics-plain.md`.
+            0xFE => {
+                let sub = *code.get(offset).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: truncated 0xFE opcode")))?;
+                offset += 1;
+                let atomic_op = wasm_opcodes::get_atomic_op(sub)
+                    .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: unknown atomic sub-opcode {sub:#04x}")))?;
+
+                if atomic_op.kind == wasm_opcodes::AtomicOpKind::Fence {
+                    // atomic.fence: no immediate, no memory requirement
+                    // (meaningful even with zero declared memories,
+                    // though no real module would hit that), no stack
+                    // effect at all.
+                } else {
+                    let (align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad atomic memarg align: {e}")))?;
+                    let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad atomic memarg offset: {e}")))?;
+                    offset += sz1 + sz2;
+
+                    if !ctx.has_memory {
+                        err!("{} used, but module declares no memory", atomic_op.name);
+                    }
+                    // NOTE: this repo does NOT require the memory to be
+                    // declared `shared` for atomic ops to validate --
+                    // confirmed against the real, pinned-commit
+                    // `proposals/threads/atomic.wast` testsuite file
+                    // itself, whose own `;; unshared memory is OK` module
+                    // exercises every atomic instruction in this file
+                    // against a plain, non-`shared` `(memory 1 1)` and
+                    // expects it to validate. `code/specs/
+                    // W09-wasm-atomics-plain.md`'s prose claims otherwise
+                    // (an early-draft-spec assumption that turned out not
+                    // to match the pinned commit's actual corpus) --
+                    // `MemoryType::shared` is still parsed and tracked
+                    // for real, just not enforced as a validation gate.
+                    // Atomic accesses must be naturally aligned EXACTLY --
+                    // stricter than plain loads/stores, which only reject
+                    // align > natural (an upper bound, not equality; see
+                    // the `0x28..=0x3E` arm below).
+                    let required_align = max_align_for(atomic_op.natural_align);
+                    if align as u32 != required_align {
+                        err!("{}: alignment 2^{align} must equal the natural alignment 2^{required_align} exactly", atomic_op.name);
+                    }
+
+                    match atomic_op.kind {
+                        wasm_opcodes::AtomicOpKind::Load => {
+                            let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            push_val(&mut stack, value_type);
+                        }
+                        wasm_opcodes::AtomicOpKind::Store => {
+                            let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
+                            pop_expect(&mut stack, frame!(), value_type)?; // value
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                        }
+                        wasm_opcodes::AtomicOpKind::Rmw => {
+                            let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
+                            pop_expect(&mut stack, frame!(), value_type)?; // operand
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            push_val(&mut stack, value_type); // old value
+                        }
+                        wasm_opcodes::AtomicOpKind::Cmpxchg => {
+                            let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
+                            pop_expect(&mut stack, frame!(), value_type)?; // replacement
+                            pop_expect(&mut stack, frame!(), value_type)?; // expected
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            push_val(&mut stack, value_type); // old value
+                        }
+                        wasm_opcodes::AtomicOpKind::Notify => {
+                            // memory.atomic.notify: pop (addr: i32, count:
+                            // i32), push i32 (how many woken -- always 0
+                            // with one native thread, see AtomicOpKind::
+                            // Notify's own doc comment).
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // count
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            push_val(&mut stack, ValueType::I32);
+                        }
+                        wasm_opcodes::AtomicOpKind::Wait => {
+                            // memory.atomic.wait32/wait64: pop (addr:
+                            // i32, expected: value_type, timeout: i64),
+                            // push i32 (result code).
+                            let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
+                            pop_expect(&mut stack, frame!(), ValueType::I64)?; // timeout
+                            pop_expect(&mut stack, frame!(), value_type)?; // expected
+                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            push_val(&mut stack, ValueType::I32);
+                        }
+                        wasm_opcodes::AtomicOpKind::Fence => unreachable!("handled in the branch above"),
+                    }
+                }
+            }
+
             // ── Conversion (incl. sign-extension, WASM03) ───────────────────
             0xA7..=0xC4 => {
                 let info = get_opcode(byte).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: unknown conversion opcode {byte:#x}")))?;

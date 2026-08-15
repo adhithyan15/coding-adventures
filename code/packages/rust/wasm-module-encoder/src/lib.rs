@@ -213,8 +213,21 @@ fn encode_limits(limits: &Limits) -> Vec<u8> {
     bytes
 }
 
+/// Mirrors `wasm-module-parser`'s `parse_limits` decode exactly: bit 0 of
+/// the flags byte is "max present" (shared with `encode_limits`), bit 1 is
+/// "shared" (threads proposal, memory only -- WASM18). `encode_limits`
+/// alone can't express the shared bit, so memory needs its own encoder
+/// rather than reusing it.
 fn encode_memory_type(memory_type: &MemoryType) -> Vec<u8> {
-    encode_limits(&memory_type.limits)
+    let mut bytes = Vec::new();
+    let has_max = memory_type.limits.max.is_some();
+    let flags = (has_max as u8) | ((memory_type.shared as u8) << 1);
+    bytes.push(flags);
+    bytes.extend(encode_u32(memory_type.limits.min));
+    if let Some(max) = memory_type.limits.max {
+        bytes.extend(encode_u32(max));
+    }
+    bytes
 }
 
 fn encode_table_type(table_type: &TableType) -> Vec<u8> {
@@ -745,6 +758,7 @@ mod tests {
                     min: 1,
                     max: Some(2),
                 },
+                shared: false,
             }],
             globals: vec![Global {
                 global_type: GlobalType {
@@ -786,6 +800,49 @@ mod tests {
     }
 
     #[test]
+    fn encodes_shared_memory_flag_round_trip() {
+        // WASM18: the `shared` bit (threads proposal, flags bit 1) is
+        // orthogonal to `shared: false`'s round trip above -- with
+        // `shared: false` the bug this guards against (never emitting bit
+        // 1 at all) is invisible, since "never set" and "always false"
+        // produce the same bytes. Only a `shared: true` memory actually
+        // exercises the encoder's bit-1 write.
+        let module = WasmModule {
+            memories: vec![MemoryType {
+                limits: Limits { min: 1, max: Some(4) },
+                shared: true,
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        assert_eq!(parsed.memories, module.memories);
+        assert!(parsed.memories[0].shared);
+    }
+
+    #[test]
+    fn encodes_shared_memory_import_flag_round_trip() {
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "mem".to_string(),
+                kind: ExternalKind::Memory,
+                type_info: ImportTypeInfo::Memory(MemoryType {
+                    limits: Limits { min: 1, max: Some(4) },
+                    shared: true,
+                }),
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        match &parsed.imports[0].type_info {
+            ImportTypeInfo::Memory(mt) => assert!(mt.shared),
+            other => panic!("expected Memory import type_info, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn encodes_imports_table_and_custom_section() {
         let module = WasmModule {
             types: vec![FuncType {
@@ -817,6 +874,7 @@ mod tests {
                     kind: ExternalKind::Memory,
                     type_info: ImportTypeInfo::Memory(MemoryType {
                         limits: Limits { min: 1, max: None },
+                        shared: false,
                     }),
                 },
                 Import {
@@ -850,6 +908,7 @@ mod tests {
                 kind: ExternalKind::Function,
                 type_info: ImportTypeInfo::Memory(MemoryType {
                     limits: Limits { min: 1, max: None },
+                    shared: false,
                 }),
             }],
             ..Default::default()
