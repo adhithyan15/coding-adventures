@@ -10,6 +10,17 @@ Every language adapter must consume this manifest directly. Conformance tests
 must not regenerate expected bytes with their own implementation, shell out to
 another language, or substitute host cryptography for repository primitives.
 
+The repository-wide compatibility gate is:
+
+```sh
+python3 code/scripts/validate_d18q_channel_key_grant_conformance.py
+```
+
+It requires exactly the Rust, TypeScript, Python, Go, Ruby, and Elixir
+consumers, runs every package-native `BUILD` command, verifies the generator
+Git blob identity, and regenerates this manifest byte-for-byte. Both push and
+pull-request aggregate CI gates depend on its stable status check.
+
 ## Regeneration
 
 The manifest stores the Git blob SHA-1 of the exact Rust generator so its
