@@ -5474,6 +5474,132 @@
       "jsonHash": "fnv1a64:6d4411a4a078c48c"
     },
     {
+      "language": "malayalam",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:81257f5d7fc03bcb",
+      "lessonIds": [
+        "ML-C46-fruit",
+        "ML-C46-cloth",
+        "ML-C46-lamp",
+        "ML-C46-salt",
+        "ML-C46-book"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "malayalam/narration/ch46.txt",
+      "json": "malayalam/narration/ch46.json",
+      "textHash": "fnv1a64:8adea428692b0db7",
+      "jsonHash": "fnv1a64:b551dcc599cd3984"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:60d4c7983fd72d57",
+      "lessonIds": [
+        "ML-C47-leg",
+        "ML-C47-tooth",
+        "ML-C47-hair",
+        "ML-C47-finger",
+        "ML-C47-stomach"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "malayalam/narration/ch47.txt",
+      "json": "malayalam/narration/ch47.json",
+      "textHash": "fnv1a64:0105f58d205d0dc9",
+      "jsonHash": "fnv1a64:f3ca0e3b6d15ac8f"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:0798d4a9f34c8ea3",
+      "lessonIds": [
+        "ML-C48-teacher",
+        "ML-C48-student",
+        "ML-C48-doctor",
+        "ML-C48-farmer",
+        "ML-C48-guest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "malayalam/narration/ch48.txt",
+      "json": "malayalam/narration/ch48.json",
+      "textHash": "fnv1a64:08924a02c4e74344",
+      "jsonHash": "fnv1a64:944c5abd952994c0"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:15bd8bc9de4a43dc",
+      "lessonIds": [
+        "ML-C49-true",
+        "ML-C49-enough",
+        "ML-C49-certainly",
+        "ML-C49-perhaps",
+        "ML-C49-just-so"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "malayalam/narration/ch49.txt",
+      "json": "malayalam/narration/ch49.json",
+      "textHash": "fnv1a64:7f668a60e3c98dd7",
+      "jsonHash": "fnv1a64:8738765f50f2bf94"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:498b8217e561b143",
+      "lessonIds": [
+        "ML-C50-now",
+        "ML-C50-day-after",
+        "ML-C50-journey",
+        "ML-C50-set-out",
+        "ML-C50-farewell"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "malayalam/narration/ch50.txt",
+      "json": "malayalam/narration/ch50.json",
+      "textHash": "fnv1a64:3b51f74b641f5599",
+      "jsonHash": "fnv1a64:fff45bfe9d2ad246"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:333a2d525a83cbbe",
+      "lessonIds": [
+        "ML-C51-gratitude",
+        "ML-C51-favour",
+        "ML-C51-respect",
+        "ML-C51-blessing",
+        "ML-C51-salutation"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "malayalam/narration/ch51.txt",
+      "json": "malayalam/narration/ch51.json",
+      "textHash": "fnv1a64:41a175295170ce2a",
+      "jsonHash": "fnv1a64:f89d170ff0de1615"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:d8cd3c4ebee60e11",
+      "lessonIds": [
+        "ML-C52-door",
+        "ML-C52-chair",
+        "ML-C52-kolam",
+        "ML-C52-flower",
+        "ML-C52-garland"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 1,
+      "text": "malayalam/narration/ch52.txt",
+      "json": "malayalam/narration/ch52.json",
+      "textHash": "fnv1a64:34bbb1c2bfd4c9ad",
+      "jsonHash": "fnv1a64:90f448dfbe544e49"
+    },
+    {
       "language": "marathi",
       "chapter": 1,
       "sourceHash": "fnv1a64:07798362d454a9f2",

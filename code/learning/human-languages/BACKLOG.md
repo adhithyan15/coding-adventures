@@ -41,7 +41,7 @@ Census of `core/book-generation.json`:
 ```
 track        scriptSet  unicodeScript
 kannada             47              0   <-- FIXED; ch43-45 switched, ch46-52 born correct
-malayalam           37              3   <-- chapters 43, 44, 45
+malayalam           47              0   <-- FIXED; ch43-45 switched, ch46-52 born correct
 telugu              44              3   <-- chapters 43, 44, 45
 ```
 
@@ -70,8 +70,15 @@ generated output and belongs in its own change.
 because that change already owned the kannada book. The rendered .tex for 43-45
 is byte-identical afterwards and their book hashes did not move, which is the
 predicted result: those chapters cite no cousin script today, so the bare
-`unicodeScript` was a latent trap rather than a live defect. **Six remain**, three
-in malayalam and three in telugu.
+`unicodeScript` was a latent trap rather than a live defect.
+
+**Malayalam's three are done too**, folded into that track's own chapters 46-52
+vocabulary tranche for the same reason. The result reproduced exactly: the
+rendered .tex for 43-45 is byte-identical, `generated-book-hashes.json` gains 91
+lines and loses none, and the book still builds at 0 missing characters, 0
+overfull and 0 underfull over 305 pages. **Three remain, all in telugu**
+(chapters 43, 44, 45), and they are the only bare `unicodeScript` targets left in
+any track that has a `*-comparisons` set to move to.
 
 One thing the kannada pass added to the diagnosis: the trap is not only cousin
 SCRIPTS. `KA-C47-finger` cited Malayalam using the old chillu spelling
@@ -79,6 +86,12 @@ SCRIPTS. `KA-C47-finger` cited Malayalam using the old chillu spelling
 catch it — it went to the Latin font and printed one missing character at exit 0.
 The fix is the atomic chillu (U+0D7D). Any Malayalam citation written the old way
 will do the same thing in any track.
+
+The malayalam tranche was the highest-risk place for that trap, since every
+chillu in it is a headword letter rather than a citation, and it was written
+against the hazard from the start: all four chillu characters used across the
+thirty-five lessons (U+0D7B, U+0D7C, U+0D7D, U+0D7E) are atomic, and a scan of
+the new lessons and the changelog finds zero U+200D and zero U+200C.
 
 ## HL-C199 — only ONE track has a book/build.sh; the other 21 have none
 

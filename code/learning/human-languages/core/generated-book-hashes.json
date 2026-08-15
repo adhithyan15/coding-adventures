@@ -2967,6 +2967,97 @@
       "tex": "malayalam/book/chapters/ch45-grandparents.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:613c242abb4fddb6",
+      "lessonIds": [
+        "ML-C46-fruit",
+        "ML-C46-cloth",
+        "ML-C46-lamp",
+        "ML-C46-salt",
+        "ML-C46-book"
+      ],
+      "tex": "malayalam/book/chapters/ch46-things-you-ask-for.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:b288f38df0c925fc",
+      "lessonIds": [
+        "ML-C47-leg",
+        "ML-C47-tooth",
+        "ML-C47-hair",
+        "ML-C47-finger",
+        "ML-C47-stomach"
+      ],
+      "tex": "malayalam/book/chapters/ch47-leg-and-tooth.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:d61aafe0e296b4a8",
+      "lessonIds": [
+        "ML-C48-teacher",
+        "ML-C48-student",
+        "ML-C48-doctor",
+        "ML-C48-farmer",
+        "ML-C48-guest"
+      ],
+      "tex": "malayalam/book/chapters/ch48-roles.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:d3cd0efe5d15e2c5",
+      "lessonIds": [
+        "ML-C49-true",
+        "ML-C49-enough",
+        "ML-C49-certainly",
+        "ML-C49-perhaps",
+        "ML-C49-just-so"
+      ],
+      "tex": "malayalam/book/chapters/ch49-replies.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:1f3646d70b9ef1e0",
+      "lessonIds": [
+        "ML-C50-now",
+        "ML-C50-day-after",
+        "ML-C50-journey",
+        "ML-C50-set-out",
+        "ML-C50-farewell"
+      ],
+      "tex": "malayalam/book/chapters/ch50-taking-leave.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:520dbb95adf38d64",
+      "lessonIds": [
+        "ML-C51-gratitude",
+        "ML-C51-favour",
+        "ML-C51-respect",
+        "ML-C51-blessing",
+        "ML-C51-salutation"
+      ],
+      "tex": "malayalam/book/chapters/ch51-courtesy.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:4f96c095c1916558",
+      "lessonIds": [
+        "ML-C52-door",
+        "ML-C52-chair",
+        "ML-C52-kolam",
+        "ML-C52-flower",
+        "ML-C52-garland"
+      ],
+      "tex": "malayalam/book/chapters/ch52-welcoming-a-guest.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:c4cd9fddda234365",

@@ -561,13 +561,126 @@
         "ML-EXT-45-FAMILY"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-46-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C46-fruit",
+        "ML-C46-cloth",
+        "ML-C46-lamp",
+        "ML-C46-salt",
+        "ML-C46-book"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-46-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-47-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C47-leg",
+        "ML-C47-tooth",
+        "ML-C47-hair",
+        "ML-C47-finger",
+        "ML-C47-stomach"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-47-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-48-ROLE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C48-teacher",
+        "ML-C48-student",
+        "ML-C48-doctor",
+        "ML-C48-farmer",
+        "ML-C48-guest"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-48-ROLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-49-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ML-C49-true",
+        "ML-C49-enough",
+        "ML-C49-certainly",
+        "ML-C49-perhaps",
+        "ML-C49-just-so"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-49-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-50-LEAVE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ML-C50-now",
+        "ML-C50-day-after",
+        "ML-C50-journey",
+        "ML-C50-set-out",
+        "ML-C50-farewell"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-50-LEAVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-51-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ML-C51-gratitude",
+        "ML-C51-favour",
+        "ML-C51-respect",
+        "ML-C51-blessing",
+        "ML-C51-salutation"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-51-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-52-WELCOME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ML-C52-door",
+        "ML-C52-chair",
+        "ML-C52-kolam",
+        "ML-C52-flower",
+        "ML-C52-garland"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-52-WELCOME"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
         "ML-PATH-001",
-        "ML-PATH-100"
+        "ML-PATH-100",
+        "ML-PATH-52-WELCOME"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -579,7 +692,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "ML-PATH-003",
-        "ML-PATH-008"
+        "ML-PATH-008",
+        "ML-PATH-51-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -589,7 +703,8 @@
     "SPINE-RESPOND-BASIC": {
       "segments": [
         "ML-PATH-002",
-        "ML-PATH-004"
+        "ML-PATH-004",
+        "ML-PATH-49-REPLY"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -604,7 +719,8 @@
         "ML-PATH-016",
         "ML-PATH-021",
         "ML-PATH-029",
-        "ML-PATH-030"
+        "ML-PATH-030",
+        "ML-PATH-48-ROLE"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -617,7 +733,8 @@
         "ML-PATH-009",
         "ML-PATH-017",
         "ML-PATH-031",
-        "ML-PATH-032"
+        "ML-PATH-032",
+        "ML-PATH-47-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -630,14 +747,16 @@
         "ML-PATH-013",
         "ML-PATH-019",
         "ML-PATH-033",
-        "ML-PATH-034"
+        "ML-PATH-034",
+        "ML-PATH-46-ASK"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
       "segments": [
-        "ML-PATH-010"
+        "ML-PATH-010",
+        "ML-PATH-50-LEAVE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1351,6 +1470,111 @@
         "ML-C45-grandmother",
         "ML-C45-husband",
         "ML-C45-wife"
+      ]
+    },
+    {
+      "id": "ML-EXT-46-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things I might ask someone for in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C46-fruit",
+        "ML-C46-cloth",
+        "ML-C46-lamp",
+        "ML-C46-salt",
+        "ML-C46-book"
+      ]
+    },
+    {
+      "id": "ML-EXT-47-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C47-leg",
+        "ML-C47-tooth",
+        "ML-C47-hair",
+        "ML-C47-finger",
+        "ML-C47-stomach"
+      ]
+    },
+    {
+      "id": "ML-EXT-48-ROLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what someone's work is in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C48-teacher",
+        "ML-C48-student",
+        "ML-C48-doctor",
+        "ML-C48-farmer",
+        "ML-C48-guest"
+      ]
+    },
+    {
+      "id": "ML-EXT-49-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can give five short replies in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C49-true",
+        "ML-C49-enough",
+        "ML-C49-certainly",
+        "ML-C49-perhaps",
+        "ML-C49-just-so"
+      ]
+    },
+    {
+      "id": "ML-EXT-50-LEAVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can take my leave in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C50-now",
+        "ML-C50-day-after",
+        "ML-C50-journey",
+        "ML-C50-set-out",
+        "ML-C50-farewell"
+      ]
+    },
+    {
+      "id": "ML-EXT-51-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can thank and salute in the formal Malayalam register.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C51-gratitude",
+        "ML-C51-favour",
+        "ML-C51-respect",
+        "ML-C51-blessing",
+        "ML-C51-salutation"
+      ]
+    },
+    {
+      "id": "ML-EXT-52-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a guest meets at a doorway in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C52-door",
+        "ML-C52-chair",
+        "ML-C52-kolam",
+        "ML-C52-flower",
+        "ML-C52-garland"
       ]
     }
   ]

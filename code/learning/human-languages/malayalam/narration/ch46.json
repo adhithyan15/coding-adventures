@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 46,
+  "title": "Things You Ask For",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:81257f5d7fc03bcb",
+  "lessons": [
+    {
+      "id": "ML-C46-fruit",
+      "sequence": 1190,
+      "title": "പഴം (paḻaṁ) — a fruit",
+      "headword": "പഴം",
+      "romanization": "paḻaṁ",
+      "gloss": "a fruit",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c11a069d82234528",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did bharttāvŭ mean, and what did bhārya mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പഴം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പഴം (paḻaṁ) — \"a fruit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind the fruit sits a verb of ripening. Proto-Dravidian paḻ, 'to ripen, to grow old', handed this family both a fruit and an age, and Malayalam kept the pair close enough that a learner can still hear it: പഴയ (paḻaya), the \"old\" from the run of adjectives, is that same root wearing an adjective ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil says பழம் (paḻam), which is very nearly the identical word — the ordinary state of affairs between these two closest sisters. Telugu went to పండు (paṇḍu) and Kannada to ಹಣ್ಣು (haṇṇu), and the Kannada form has lost its opening p- to a shift Malayalam sat out entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "The ഴ in the middle is the letter this book has already called Malayalam's own oddity, the one only these two sisters still write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things you might ask someone for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṁ, then dayavāyi paḻaṁ tarū — \"please give a fruit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṁ*, then *dayavāyi paḻaṁ tarū* — \"please give a fruit\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പഴം (paḻaṁ) mean? (\"a fruit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C46-cloth",
+      "sequence": 1200,
+      "title": "തുണി (tuṇi) — cloth",
+      "headword": "തുണി",
+      "romanization": "tuṇi",
+      "gloss": "cloth",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1f756f90518f10d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did paḻaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തുണി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുണി (tuṇi) — \"cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "തുണി is the plain, unceremonious word: the bolt on the shelf, the washing on the line, the rag in your hand. Tamil writes துணி (tuṇi) and means the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam holds a dressier word for the same stuff — വസ്ത്രം (vastraṁ), out of Sanskrit — and it turns up on a wedding invitation rather than over a washing line. The native word does the daily work; the borrowed one does the ceremony."
+            },
+            {
+              "kind": "speech",
+              "text": "That division of labour is worth watching for, because it repeats through this book: two words, one meaning, and the register telling them apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: a fruit and a cloth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻaṁ, then tuṇi, and ask for each one with dayavāyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻaṁ*, then *tuṇi*, and ask for each one with *dayavāyi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തുണി (tuṇi) mean? (\"cloth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C46-lamp",
+      "sequence": 1210,
+      "title": "വിളക്ക് (viḷakkŭ) — a lamp",
+      "headword": "വിളക്ക്",
+      "romanization": "viḷakkŭ",
+      "gloss": "a lamp",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91d5a734431ac821",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tuṇi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിളക്ക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിളക്ക് (viḷakkŭ) — \"a lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A native word, built on a root about shining. Tamil விளக்கு (viḷakku) is the same word, and in both languages a related sense — making something clear, shining a light on it — sits alongside the object."
+            },
+            {
+              "kind": "speech",
+              "text": "The object itself has a particular shape in Kerala: the നിലവിളക്ക് (nilaviḷakkŭ), the tall standing brass lamp lit at a doorway on an occasion. Its first piece is നില (nila), the ground it stands on."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada reached for a borrowed word here, ದೀಪ (dīpa) from Sanskrit, where Malayalam kept its own. Malayalam has ദീപം (dīpaṁ) as well, in temple and festival senses, which leaves the everyday lamp to the older resident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three. A fruit, a cloth, a lamp."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḷakkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḷakkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḷakkŭ, then tuṇi, and hear which of the two is the older resident",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḷakkŭ*, then *tuṇi*, and hear which of the two is the older resident]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിളക്ക് (viḷakkŭ) mean? (\"a lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C46-salt",
+      "sequence": 1220,
+      "title": "ഉപ്പ് (uppŭ) — salt",
+      "headword": "ഉപ്പ്",
+      "romanization": "uppŭ",
+      "gloss": "salt",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60c738a1f070158e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did viḷakkŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപ്പ് (uppŭ) — \"salt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian uppu, and the whole family kept it very nearly untouched: Tamil உப்பு, Telugu ఉప్పు, Kannada ಉಪ್ಪು. Four sisters, one word, four spellings of it."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a p sitting inside this word, and in Kannada it did not turn into an h the way the p of its fruit-word did. The shift that separated ಹಣ್ಣು from പഴം (paḻaṁ) reached only the FIRST sound of a word. Inside one, the p stays where it was put — which is why salt looks so alike on all four sides of the family."
+            },
+            {
+              "kind": "speech",
+              "text": "The final ് here is the half-vowel this book romanizes -ŭ: a consonant let go of rather than cut off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. Salt, and the fruit, and the cloth, and the lamp."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uppŭ, then paḻaṁ, and notice the p the cousins kept in one word and lost in the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uppŭ*, then *paḻaṁ*, and notice the *p* the cousins kept in one word and lost in the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപ്പ് (uppŭ) mean? (\"salt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C46-book",
+      "sequence": 1230,
+      "title": "പുസ്തകം (pustakaṁ) — a book",
+      "headword": "പുസ്തകം",
+      "romanization": "pustakaṁ",
+      "gloss": "a book",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1813f3380596d209",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did uppŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുസ്തകം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുസ്തകം (pustakaṁ) — \"a book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pustaka, taken whole. Tamil புத்தகம், Telugu పుస్తకం and Kannada ಪುಸ್ತಕ are the same borrowing, so the four sisters agree here for a different reason than they agree about salt: not descent, but a shared debt."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit itself seems to have taken it from further west. The usual trail runs to Persian post, a hide or a skin — the material a book was, before it was paper. A word for the animal became a word for the page."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam also says granthaṁ for a book of weight and age, another Sanskrit word, and that one is built on a root about knotting: palm leaves tied into a bundle. Two borrowings, two different pictures of what a book physically was."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: a fruit, a cloth, a lamp, salt, a book."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — paḻaṁ, tuṇi, viḷakkŭ, uppŭ, pustakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *paḻaṁ*, *tuṇi*, *viḷakkŭ*, *uppŭ*, *pustakaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുസ്തകം (pustakaṁ) mean? (\"a book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
