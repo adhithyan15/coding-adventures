@@ -1100,6 +1100,16 @@ pub struct WasmInstance {
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
     /// Export map: name -> (kind, index).
     pub exports: Vec<(String, ExternalKind, u32)>,
+    /// Persistent v128 (SIMD) value storage for this instance's whole
+    /// lifetime -- see `code/specs/W15-wasm-v128-persistent-storage.md`.
+    /// `WasmValue::V128(handle)` is an index into this `Vec`; without it
+    /// living here, a v128-typed global's handle would go stale the
+    /// moment one call ends (the old bug this field fixes). Index 0 is
+    /// permanently reserved as the all-zero entry, matching
+    /// `wasm_execution::WasmExecutionContext::v128_heap`'s own
+    /// convention. `build_engine`/`call_engine`/`call_engine_with_v128`
+    /// clone/restore it exactly like `globals`.
+    pub v128_heap: Vec<[u8; 16]>,
 }
 
 /// Build a link-error `TrapError` for a failed import (WASM05/W10) --
@@ -1276,17 +1286,26 @@ impl WasmRuntime {
             tables.push(Table::new(table_type.limits.min, table_type.limits.max));
         }
 
+        // The instance's persistent v128 heap (see `code/specs/
+        // W15-wasm-v128-persistent-storage.md`) -- built up here, during
+        // instantiation, so a `v128.const` in a global/data/elem
+        // initializer allocates directly into the SAME `Vec` this
+        // instance will keep for its whole lifetime, not a throwaway one.
+        // Index 0 reserved as the all-zero entry, matching
+        // `wasm_execution::WasmExecutionContext::v128_heap`'s convention.
+        let mut v128_heap: Vec<[u8; 16]> = vec![[0u8; 16]];
+
         // Initialize globals.
         for global in &module.globals {
             global_types.push(global.global_type.clone());
-            let value = evaluate_const_expr(&global.init_expr, &globals)?;
+            let value = evaluate_const_expr(&global.init_expr, &globals, &mut v128_heap)?;
             globals.push(value);
         }
 
         // Apply data segments.
         if let Some(ref mut mem) = memory {
             for seg in &module.data {
-                let offset = evaluate_const_expr(&seg.offset_expr, &globals)?;
+                let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
                 let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize;
                 mem.write_bytes(offset_num, &seg.data)?;
             }
@@ -1295,7 +1314,7 @@ impl WasmRuntime {
         // Apply element segments.
         for elem in &module.elements {
             if let Some(table) = tables.get_mut(elem.table_index as usize) {
-                let offset = evaluate_const_expr(&elem.offset_expr, &globals)?;
+                let offset = evaluate_const_expr(&elem.offset_expr, &globals, &mut v128_heap)?;
                 let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32;
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
                     table.set(offset_num + j as u32, Some(func_idx))?;
@@ -1320,6 +1339,7 @@ impl WasmRuntime {
             func_bodies,
             host_functions,
             exports,
+            v128_heap,
         };
 
         Ok(instance)
@@ -1505,6 +1525,14 @@ impl WasmRuntime {
         // site actually declared instead of skipping the check.
         engine.set_type_section(instance.module.types.clone());
 
+        // Thread the instance's persistent v128 heap into the engine (see
+        // `code/specs/W15-wasm-v128-persistent-storage.md`) -- same
+        // optional-setter pattern as `set_type_section`/
+        // `set_struct_field_counts` above, so a v128-typed global's
+        // handle stays valid across this call instead of indexing into a
+        // throwaway per-call heap.
+        engine.set_v128_heap(instance.v128_heap.clone());
+
         // Register the module's WasmGC struct field counts (LANG77 / McCarthy
         // L3b-3a-3c-2) so the engine knows how many fields each `struct.new`
         // allocates — without this, a `struct.new` traps with "no field count
@@ -1582,6 +1610,7 @@ impl WasmRuntime {
         instance.tables = state.tables;
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
+        instance.v128_heap = state.v128_heap;
 
         result
     }
@@ -1605,6 +1634,7 @@ impl WasmRuntime {
         instance.tables = state.tables;
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
+        instance.v128_heap = state.v128_heap;
 
         result
     }

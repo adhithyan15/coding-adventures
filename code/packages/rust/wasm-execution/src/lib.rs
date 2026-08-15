@@ -800,8 +800,18 @@ pub trait HostInterface {
 /// data segment offsets, and element segment offsets).
 ///
 /// Allowed opcodes: i32.const (0x41), i64.const (0x42), f32.const (0x43),
-/// f64.const (0x44), global.get (0x23), end (0x0B).
-pub fn evaluate_const_expr(expr: &[u8], globals: &[WasmValue]) -> Result<WasmValue, TrapError> {
+/// f64.const (0x44), global.get (0x23), v128.const (0xFD 0x0C), end (0x0B).
+///
+/// `v128_heap` is the instance's own persistent v128 heap (see
+/// `code/specs/W15-wasm-v128-persistent-storage.md`) -- a `v128.const` here
+/// allocates directly into it, so the resulting handle stays valid for the
+/// instance's entire lifetime, not just this one evaluation. Every other
+/// arm ignores it.
+pub fn evaluate_const_expr(
+    expr: &[u8],
+    globals: &[WasmValue],
+    v128_heap: &mut Vec<[u8; 16]>,
+) -> Result<WasmValue, TrapError> {
     let mut result: Option<WasmValue> = None;
     let mut pos: usize = 0;
 
@@ -856,6 +866,38 @@ pub fn evaluate_const_expr(expr: &[u8], globals: &[WasmValue]) -> Result<WasmVal
                     )));
                 }
                 result = Some(globals[idx as usize]);
+            }
+            // v128.const (SIMD, 0xFD-prefixed) -- the sub-opcode is a
+            // LEB128 u32 (verified against the real binary encoding, see
+            // `decode_leb_u32`'s own call site in `decode_immediates`),
+            // `0x0C` is the only SIMD sub-opcode legal in a constant
+            // expression, and its own operand is 16 RAW bytes (not
+            // LEB128) -- the literal lane bytes themselves. Any other
+            // `0xFD`-prefixed sub-opcode here is itself illegal and falls
+            // through to the catch-all below.
+            0xFD => {
+                let (sub_opcode, consumed) = decode_leb_u32(expr, pos);
+                pos += consumed;
+                if sub_opcode != 0x0C {
+                    return Err(TrapError::new(format!(
+                        "illegal SIMD sub-opcode 0x{:02X} in constant expression",
+                        sub_opcode
+                    )));
+                }
+                if pos + 16 > expr.len() {
+                    return Err(TrapError::new("v128.const: not enough bytes"));
+                }
+                if v128_heap.len() >= MAX_V128_HEAP_LEN {
+                    return Err(TrapError::new(
+                        "v128 heap limit exceeded (too many SIMD values created)",
+                    ));
+                }
+                let mut bytes = [0u8; 16];
+                bytes.copy_from_slice(&expr[pos..pos + 16]);
+                pos += 16;
+                let handle = v128_heap.len() as u32;
+                v128_heap.push(bytes);
+                result = Some(WasmValue::V128(handle));
             }
             // end
             0x0B => {
@@ -4499,6 +4541,15 @@ pub struct WasmEngineState {
     pub tables: Vec<Table>,
     pub globals: Vec<WasmValue>,
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
+    /// The instance's persistent v128 heap after this call (see
+    /// `code/specs/W15-wasm-v128-persistent-storage.md`) -- set via
+    /// [`WasmExecutionEngine::set_v128_heap`] before the call (mirroring
+    /// `struct_field_counts`/`type_section`'s optional-setter pattern
+    /// rather than a mandatory `WasmEngineConfig` field, so the ~50
+    /// existing test construction sites that don't care about v128 don't
+    /// all need updating), written back here so the caller can restore it
+    /// onto the owning `WasmInstance`.
+    pub v128_heap: Vec<[u8; 16]>,
 }
 
 /// The WASM execution engine — interprets validated WASM modules.
@@ -4537,6 +4588,14 @@ pub struct WasmExecutionEngine {
     /// [`Self::gc_live_object_count`] / [`Self::gc_profile`] without needing
     /// access to the ephemeral `WasmExecutionContext` itself.
     last_gc_state: gc::GcState,
+    /// The instance's persistent v128 heap (see `code/specs/
+    /// W15-wasm-v128-persistent-storage.md`) -- defaults to just the
+    /// reserved all-zero entry (index 0), matching every `v128_heap`
+    /// elsewhere in this crate; set for real via [`Self::set_v128_heap`]
+    /// (same optional-setter pattern as `struct_field_counts`/
+    /// `type_section`) when the embedder has a persistent instance to
+    /// thread it from.
+    v128_heap: Vec<[u8; 16]>,
 }
 
 impl WasmExecutionEngine {
@@ -4558,6 +4617,7 @@ impl WasmExecutionEngine {
             struct_field_counts: Vec::new(),
             type_section: Vec::new(),
             last_gc_state: gc::GcState::default(),
+            v128_heap: vec![[0u8; 16]],
         }
     }
 
@@ -4588,6 +4648,21 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Register the instance's persistent v128 heap (see `code/specs/
+    /// W15-wasm-v128-persistent-storage.md`) -- same optional-setter
+    /// pattern as [`Self::set_struct_field_counts`]/[`Self::set_type_section`]
+    /// for the identical reason: a mandatory `WasmEngineConfig` field would
+    /// force every existing construction site (including the many
+    /// v128-agnostic hand-built modules in this crate's own unit tests) to
+    /// supply it. Left unset, the engine keeps its `new()`-time default
+    /// (just the reserved all-zero entry at index 0), which is correct for
+    /// any module that never sets a v128 global -- there's nothing to
+    /// persist. Returns `&mut self` for chaining.
+    pub fn set_v128_heap(&mut self, heap: Vec<[u8; 16]>) -> &mut Self {
+        self.v128_heap = heap;
+        self
+    }
+
     /// Live `gc_heap` object count as of the most recently completed
     /// [`Self::call_function`] (W04). `gc_heap` itself resets every call, so
     /// this reflects only that one call's allocation/collection activity,
@@ -4611,6 +4686,7 @@ impl WasmExecutionEngine {
             tables: self.tables.into_iter().map(|table| *table).collect(),
             globals: self.globals,
             host_functions: self.host_functions,
+            v128_heap: self.v128_heap,
         }
     }
 
@@ -4723,9 +4799,13 @@ impl WasmExecutionEngine {
             // back-edges and calls, so a long call no longer grows it
             // without bound.
             gc_heap: Vec::new(),
-            // Index 0 reserved as the all-zero vector -- see `v128_heap`'s
-            // own doc comment.
-            v128_heap: vec![[0u8; 16]],
+            // Cloned from `self.v128_heap`, NOT reseeded to
+            // `vec![[0u8; 16]]` -- see `code/specs/
+            // W15-wasm-v128-persistent-storage.md`. Reseeding here was
+            // the original bug this spec fixes: any v128 handle a global
+            // held across calls became garbage once the heap it indexed
+            // into was thrown away and rebuilt from scratch every call.
+            v128_heap: self.v128_heap.clone(),
             struct_field_counts: self.struct_field_counts.clone(),
             gc_state: gc::GcState::default(),
             call_depth: 0,
@@ -5013,6 +5093,19 @@ impl WasmExecutionEngine {
         // the dedicated thread could fail to produce a normal result.
         self.globals = ctx.globals;
         self.host_functions = ctx.host_functions;
+        // Cloned here (NOT moved), unconditionally alongside globals/
+        // host_functions above -- security review (task #79): a version
+        // of this that only wrote back AFTER the `outcome` trap-check
+        // below (see `final_result_count`) silently lost any `v128.const`
+        // growth from a call that trapped, the exact class of bug
+        // `wasm-runtime::call_engine`'s own doc comment already warns
+        // about for memory/tables ("skip this restoration on any trap ...
+        // masking whatever the test was actually checking"). Cloning
+        // (rather than moving) here is required because the per-result
+        // `V128Bytes` resolution loop below still needs to BORROW
+        // `ctx.v128_heap` after this point -- moving it out now would be
+        // a use-after-move compile error.
+        self.v128_heap = ctx.v128_heap.clone();
         // gc_heap itself is not persisted (see its own doc comment above);
         // the counters are, so a caller can inspect this call's GC activity
         // via gc_live_object_count()/gc_profile() (W04).
@@ -5200,7 +5293,7 @@ mod tests {
     fn test_evaluate_const_expr_i32() {
         // i32.const 42; end
         let expr = vec![0x41, 0x2A, 0x0B];
-        let result = evaluate_const_expr(&expr, &[]).unwrap();
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::I32(42));
     }
 
@@ -5209,7 +5302,7 @@ mod tests {
         // global.get 0; end
         let expr = vec![0x23, 0x00, 0x0B];
         let globals = vec![WasmValue::I32(100)];
-        let result = evaluate_const_expr(&expr, &globals).unwrap();
+        let result = evaluate_const_expr(&expr, &globals, &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::I32(100));
     }
 
@@ -6673,7 +6766,7 @@ mod tests {
     fn test_const_expr_i64() {
         // i64.const 42; end (42 in signed LEB128 = 0x2A)
         let expr = vec![0x42, 0x2A, 0x0B];
-        let result = evaluate_const_expr(&expr, &[]).unwrap();
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::I64(42));
     }
 
@@ -6682,7 +6775,7 @@ mod tests {
         let val: f32 = 3.14;
         let bytes = val.to_le_bytes();
         let expr = vec![0x43, bytes[0], bytes[1], bytes[2], bytes[3], 0x0B];
-        let result = evaluate_const_expr(&expr, &[]).unwrap();
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::F32(3.14));
     }
 
@@ -6693,45 +6786,45 @@ mod tests {
         let mut expr = vec![0x44];
         expr.extend_from_slice(&bytes);
         expr.push(0x0B);
-        let result = evaluate_const_expr(&expr, &[]).unwrap();
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::F64(2.718281828));
     }
 
     #[test]
     fn test_const_expr_global_get_oob() {
         let expr = vec![0x23, 0x05, 0x0B]; // global.get 5
-        assert!(evaluate_const_expr(&expr, &[]).is_err());
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
     }
 
     #[test]
     fn test_const_expr_empty() {
         // Just end opcode
         let expr = vec![0x0B];
-        assert!(evaluate_const_expr(&expr, &[]).is_err()); // "empty constant expression"
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err()); // "empty constant expression"
     }
 
     #[test]
     fn test_const_expr_illegal_opcode() {
         let expr = vec![0x6A, 0x0B]; // i32.add is not allowed in const expr
-        assert!(evaluate_const_expr(&expr, &[]).is_err());
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
     }
 
     #[test]
     fn test_const_expr_missing_end() {
         let expr = vec![0x41, 0x2A]; // i32.const 42 without end
-        assert!(evaluate_const_expr(&expr, &[]).is_err());
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
     }
 
     #[test]
     fn test_const_expr_f32_truncated() {
         let expr = vec![0x43, 0x00, 0x00]; // f32.const but only 2 bytes
-        assert!(evaluate_const_expr(&expr, &[]).is_err());
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
     }
 
     #[test]
     fn test_const_expr_f64_truncated() {
         let expr = vec![0x44, 0x00, 0x00, 0x00]; // f64.const but only 3 bytes
-        assert!(evaluate_const_expr(&expr, &[]).is_err());
+        assert!(evaluate_const_expr(&expr, &[], &mut Vec::new()).is_err());
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -6872,6 +6965,35 @@ mod tests {
         let (results, v128_bytes) = engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(results.len(), 1);
         assert_eq!(v128_bytes[0], Some(V128Bytes(v128_const_bytes([11, 22, 33, 44]).try_into().unwrap())));
+    }
+
+    /// Security review regression (task #79): `self.v128_heap` must be
+    /// written back from `ctx.v128_heap` UNCONDITIONALLY, not only on a
+    /// successful call -- a call that pushes a new `v128.const` entry and
+    /// then traps must not silently lose that heap growth. Before this
+    /// fix, the write-back sat after the `outcome` trap-check (`?` on a
+    /// `TrapError` returns early, skipping it entirely), the exact class
+    /// of bug `wasm-runtime::call_engine`'s own doc comment already warns
+    /// about for memory/tables. Verified via `into_state()` after a
+    /// trapped call, since `WasmExecutionEngine` doesn't expose
+    /// `v128_heap` any other way.
+    #[test]
+    fn v128_heap_growth_survives_a_call_that_traps() {
+        let mut code = vec![0xFD, 0x0C]; // v128.const -- pushes handle 1
+        code.extend(v128_const_bytes([1, 2, 3, 4]));
+        code.push(0x1A); // drop (discard the v128 -- we only care about heap growth)
+        code.push(0x00); // unreachable -- traps
+        code.push(0x0B); // end (unreachable code, never executed)
+        let mut engine = simd_engine(code);
+        let result = engine.call_function(0, &[]);
+        assert!(result.is_err(), "unreachable must trap");
+        let state = engine.into_state();
+        assert_eq!(
+            state.v128_heap.len(),
+            2,
+            "the v128.const pushed before the trap must still be in the restored heap, not discarded"
+        );
+        assert_eq!(&state.v128_heap[1][..], v128_const_bytes([1, 2, 3, 4]).as_slice());
     }
 
     #[test]
