@@ -9,7 +9,19 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
-## HL-C166 — the re-pin patcher lives in a file now, not in the prompt
+## HL-C166 — CLOSED 2026-08-14. `data/scripts/repin_tests.py`
+
+Committed, documented, and verified by breaking a pin on purpose: the dry run
+reports the fix and writes nothing, the real run writes it, and the annotation
+lands AFTER the trailing comma. Both bugs that motivated it are named in the
+file's header, along with the property they share — invisible to a test *count*,
+visible only to an exit *code*.
+
+It re-pins COUNTS only. On a ceiling or a ratio it prints STUCK and stops, which
+is correct: those failing means something regressed, and the answer is to fix the
+content (HL-C167).
+
+## HL-C166-ORIGINAL — superseded, kept for the record
 
 Two self-inflicted delays in one PR, both from retyping the pin-patching script
 inline instead of reusing it:
