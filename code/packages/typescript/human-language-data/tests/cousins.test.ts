@@ -165,7 +165,7 @@ describe("the real corpus", () => {
     const index = buildCousinIndex(lessons);
     const spanish = lessons.filter((entry) => entry.language === "spanish");
     const withCousins = spanish.filter((entry) => cousinsFor(index, entry).length > 0);
-    expect(withCousins.length).toBe(79);
+    expect(withCousins.length).toBe(80); // HL-C178: +5 -- chapter 274, C2 opens
 
     // ...but 76 is the join's reach, NOT the number of panels worth printing.
     // A lesson's headword is often a phrase that merely CONTAINS the relative:

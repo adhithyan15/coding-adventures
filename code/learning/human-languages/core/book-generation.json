@@ -3893,6 +3893,11 @@
       "output": "spanish/book/chapters/ch273-parrafo.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 274,
+      "output": "spanish/book/chapters/ch274-peso-cultural.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
