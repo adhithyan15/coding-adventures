@@ -14,7 +14,7 @@ import struct
 import tempfile
 from contextlib import suppress
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Final
 
 from compiler_ir import (
@@ -3912,9 +3912,27 @@ def _as_immediate(operand: object, context: str) -> IrImmediate:
 
 
 def _validated_output_relative_path(class_filename: str) -> Path:
-    relative_path = Path(class_filename)
-    if relative_path.is_absolute():
+    # class_filename is built via class_name.replace(".", "/") (see
+    # JVMClassArtifact.class_filename above) and class_name is not otherwise
+    # restricted, so an adversarial class_name can still put "/", "\", or ":"
+    # into class_filename. This must reject an absolute path under EITHER
+    # convention regardless of which platform is running the validator --
+    # Path.is_absolute() alone is platform-dependent (e.g. a bare "/..."
+    # path has a root but no drive/UNC prefix, so it reads as NOT absolute
+    # under Windows semantics) and checking only one convention lets an
+    # attacker pick whichever one the host platform's Path class doesn't
+    # catch. PurePosixPath/PureWindowsPath are platform-independent, so
+    # checking both here rejects "/etc/passwd", "C:\\evil.class", and
+    # "\\\\server\\share\\evil.class" the same way on every host. A bare
+    # colon (drive-relative, e.g. "C:evil.class") isn't flagged as absolute
+    # by either convention, so it's rejected explicitly too.
+    if (
+        PurePosixPath(class_filename).is_absolute()
+        or PureWindowsPath(class_filename).is_absolute()
+        or ":" in class_filename
+    ):
         raise JvmBackendError("class_filename escapes the requested output directory")
+    relative_path = Path(class_filename)
     if any(component in ("", ".", "..") for component in relative_path.parts):
         raise JvmBackendError("class_filename escapes the requested output directory")
     return relative_path
