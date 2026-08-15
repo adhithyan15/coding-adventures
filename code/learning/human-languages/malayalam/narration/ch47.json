@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 47,
+  "title": "The Leg and the Tooth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:60d4c7983fd72d57",
+  "lessons": [
+    {
+      "id": "ML-C47-leg",
+      "sequence": 1240,
+      "title": "കാൽ (kāl) — leg, foot",
+      "headword": "കാൽ",
+      "romanization": "kāl",
+      "gloss": "leg, foot",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c5b945a4fa89117",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did uppŭ mean, and what did pustakaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാൽ (kāl) — \"leg, foot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian kāl, and every sister kept it nearly whole: Tamil கால், Telugu కాలు, Kannada ಕಾಲು. Malayalam alone stops the word dead on its l."
+            },
+            {
+              "kind": "speech",
+              "text": "That final ൽ is a chillu — a consonant written with no vowel after it and no virama under it, given a letter of its own. This book has already taught one of them, the ൾ inside നിങ്ങൾ. ൽ is its plainer neighbour."
+            },
+            {
+              "kind": "speech",
+              "text": "കാൽ (kāl) covers the whole limb, foot and leg together. It also names a quarter — a fourth of anything — so a quarter of a rupee and the leg you stand on are written the same way. Nothing joins them but an accident of sound, and context is the only fix, which is what context is for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five more body words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl, then kaṇṇŭ, so the bottom and the top sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl*, then *kaṇṇŭ*, so the bottom and the top sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാൽ (kāl) mean? (\"leg, foot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C47-tooth",
+      "sequence": 1250,
+      "title": "പല്ല് (pallŭ) — a tooth",
+      "headword": "പല്ല്",
+      "romanization": "pallŭ",
+      "gloss": "a tooth",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aefbf3868e254994",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kāl mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പല്ല്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പല്ല് (pallŭ) — \"a tooth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian pal, another word the family barely touched: Tamil பல், Telugu పన్ను, Kannada ಹಲ್ಲು."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada is the odd one again, and for the reason already met with the fruit — an opening p that became h. Set ಹಲ್ಲು beside പല്ല് (pallŭ) and the only real difference is that first letter. Telugu did something else altogether, turning the l into an n."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam doubles the l and then lets the word go with the half-vowel, the same ending as the salt-word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two body words: a leg and a tooth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pallŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pallŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl, then pallŭ, and hear the doubled letter in the second",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl*, then *pallŭ*, and hear the doubled letter in the second]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പല്ല് (pallŭ) mean? (\"a tooth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C47-hair",
+      "sequence": 1260,
+      "title": "മുടി (muṭi) — hair",
+      "headword": "മുടി",
+      "romanization": "muṭi",
+      "gloss": "hair",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b99f714093297223",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pallŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുടി (muṭi) — \"hair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday word for the hair on a head. Tamil முடி (muṭi) is the same word, and in both languages it keeps company with a sense of finishing or topping off — the crown of a thing as well as what grows there."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada took a different route entirely, ಕೂದಲು (kūdalu), which Tamil also has as கூந்தல் (kūntal) for long hair worn loose. So the family has two hair-words and the sisters split over which one became the ordinary one."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam keeps രോമം (rōmaṁ), a Sanskrit word, for hair on the body rather than the head — a second case of a borrowing taking the narrower job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three. A leg, a tooth, hair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭi, then thala, so the head and what grows on it sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭi*, then *thala*, so the head and what grows on it sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുടി (muṭi) mean? (\"hair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C47-finger",
+      "sequence": 1270,
+      "title": "വിരൽ (viral) — a finger",
+      "headword": "വിരൽ",
+      "romanization": "viral",
+      "gloss": "a finger",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c77682610b69ec0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did muṭi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിരൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിരൽ (viral) — \"a finger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian viral, and Tamil விரல் (viral) matches Malayalam letter for letter, chillu and all."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada has ಬೆರಳು (beraḷu), where the opening v- has hardened into a b-. That exchange runs the other way through the family often enough to be worth naming: a v at the front of a Kannada word is frequently a b, and this is one of the clearest cases. Telugu walked away from the root and says వేలు (vēlu)."
+            },
+            {
+              "kind": "speech",
+              "text": "The word ends in the same chillu ൽ as the leg-word, two chapters' worth of body parts stopping on the same letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. A leg, a tooth, hair, a finger."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viral*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viral, then kāl, and hear the same chillu close both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viral*, then *kāl*, and hear the same chillu close both]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിരൽ (viral) mean? (\"a finger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C47-stomach",
+      "sequence": 1280,
+      "title": "വയറ് (vayaṟŭ) — the stomach, the belly",
+      "headword": "വയറ്",
+      "romanization": "vayaṟŭ",
+      "gloss": "the stomach, the belly",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40cd135d1788eb06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did viral mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വയറ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വയറ് (vayaṟŭ) — \"the stomach, the belly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native, and Tamil வயிறு (vayiṟu) is again the near-twin. The two sisters agree on the belly where the other two do not: Kannada says ಹೊಟ್ಟೆ (hoṭṭe) and Telugu పొట్ట (poṭṭa), a pair that plainly belong together and just as plainly do not belong with this one."
+            },
+            {
+              "kind": "speech",
+              "text": "So on a single body the family sorts itself twice over. Leg, tooth and finger run back to one shared ancestor; the belly splits the four into two camps of two."
+            },
+            {
+              "kind": "speech",
+              "text": "The ends of these words are worth a moment as well. This one closes on റ്, the hard ṟ with the half-vowel after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: a leg, a tooth, hair, a finger, a belly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayaṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayaṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — kāl, pallŭ, muṭi, viral, vayaṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *kāl*, *pallŭ*, *muṭi*, *viral*, *vayaṟŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വയറ് (vayaṟŭ) mean? (\"the stomach, the belly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

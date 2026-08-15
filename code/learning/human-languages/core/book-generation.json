@@ -2102,22 +2102,61 @@
       "language": "malayalam",
       "chapter": 43,
       "output": "malayalam/book/chapters/ch43-more-verbs.tex",
-      "unicodeScript": "Malayalam",
-      "scriptCommand": "ml"
+      "scriptSet": "malayalam-comparisons"
     },
     {
       "language": "malayalam",
       "chapter": 44,
       "output": "malayalam/book/chapters/ch44-see-say.tex",
-      "unicodeScript": "Malayalam",
-      "scriptCommand": "ml"
+      "scriptSet": "malayalam-comparisons"
     },
     {
       "language": "malayalam",
       "chapter": 45,
       "output": "malayalam/book/chapters/ch45-grandparents.tex",
-      "unicodeScript": "Malayalam",
-      "scriptCommand": "ml"
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 46,
+      "output": "malayalam/book/chapters/ch46-things-you-ask-for.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 47,
+      "output": "malayalam/book/chapters/ch47-leg-and-tooth.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 48,
+      "output": "malayalam/book/chapters/ch48-roles.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 49,
+      "output": "malayalam/book/chapters/ch49-replies.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 50,
+      "output": "malayalam/book/chapters/ch50-taking-leave.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 51,
+      "output": "malayalam/book/chapters/ch51-courtesy.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 52,
+      "output": "malayalam/book/chapters/ch52-welcoming-a-guest.tex",
+      "scriptSet": "malayalam-comparisons"
     },
     {
       "language": "marathi",

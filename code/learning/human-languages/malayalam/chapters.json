@@ -893,6 +893,153 @@
           "ML-LEX-WIFE"
         ]
       }
+    },
+    {
+      "chapter": 46,
+      "title": "Things You Ask For",
+      "label": "ch:ml-ask-for",
+      "canDo": "I can name five everyday things I might ask someone for in Malayalam, and say which of them the language has held all along and which walked in from elsewhere.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ML-C46-book",
+        "kind": "production",
+        "summary": "Complete ML-C46-book and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C46-ASK-01",
+          "ML-LEX-C46-ASK-02",
+          "ML-LEX-C46-ASK-03",
+          "ML-LEX-C46-ASK-04",
+          "ML-LEX-C46-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
+      "title": "The Leg and the Tooth",
+      "label": "ch:ml-body-more",
+      "canDo": "I can name five more parts of the body in Malayalam, and point to the sound exchanges that separate them from their Tamil, Telugu and Kannada cousins.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ML-C47-stomach",
+        "kind": "production",
+        "summary": "Complete ML-C47-stomach and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C47-BODY-01",
+          "ML-LEX-C47-BODY-02",
+          "ML-LEX-C47-BODY-03",
+          "ML-LEX-C47-BODY-04",
+          "ML-LEX-C47-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 48,
+      "title": "Who Someone Is",
+      "label": "ch:ml-roles",
+      "canDo": "I can say what someone's work is in Malayalam, and recognise the masculine ending that three of the five words share.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ML-C48-guest",
+        "kind": "production",
+        "summary": "Complete ML-C48-guest and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C48-ROLE-01",
+          "ML-LEX-C48-ROLE-02",
+          "ML-LEX-C48-ROLE-03",
+          "ML-LEX-C48-ROLE-04",
+          "ML-LEX-C48-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 49,
+      "title": "Short Replies",
+      "label": "ch:ml-replies",
+      "canDo": "I can answer with five short replies in Malayalam, from a flat agreement to a hedge.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ML-C49-just-so",
+        "kind": "production",
+        "summary": "Complete ML-C49-just-so and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C49-REPLY-01",
+          "ML-LEX-C49-REPLY-02",
+          "ML-LEX-C49-REPLY-03",
+          "ML-LEX-C49-REPLY-04",
+          "ML-LEX-C49-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 50,
+      "title": "Taking Leave",
+      "label": "ch:ml-taking-leave",
+      "canDo": "I can say when I am going and take my leave in Malayalam, using either of the two phrases the language builds for it.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ML-C50-farewell",
+        "kind": "production",
+        "summary": "Complete ML-C50-farewell and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C50-LEAVE-01",
+          "ML-LEX-C50-LEAVE-02",
+          "ML-LEX-C50-LEAVE-03",
+          "ML-LEX-C50-LEAVE-04",
+          "ML-LEX-C50-LEAVE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 51,
+      "title": "Courtesy",
+      "label": "ch:ml-courtesy",
+      "canDo": "I can thank, respect and bless in the formal Malayalam register, and say how each word differs from its everyday partner.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ML-C51-salutation",
+        "kind": "production",
+        "summary": "Complete ML-C51-salutation and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C51-COURTESY-01",
+          "ML-LEX-C51-COURTESY-02",
+          "ML-LEX-C51-COURTESY-03",
+          "ML-LEX-C51-COURTESY-04",
+          "ML-LEX-C51-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 52,
+      "title": "Welcoming a Guest",
+      "label": "ch:ml-welcoming-a-guest",
+      "canDo": "I can name the five things a guest meets at a Kerala doorway in Malayalam.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ML-C52-garland",
+        "kind": "production",
+        "summary": "Complete ML-C52-garland and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C52-WELCOME-01",
+          "ML-LEX-C52-WELCOME-02",
+          "ML-LEX-C52-WELCOME-03",
+          "ML-LEX-C52-WELCOME-04",
+          "ML-LEX-C52-WELCOME-05"
+        ]
+      }
     }
   ]
 }
