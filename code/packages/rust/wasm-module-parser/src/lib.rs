@@ -402,6 +402,9 @@ impl<'a> Parser<'a> {
 /// 0x7E → I64
 /// 0x7D → F32
 /// 0x7C → F64
+/// 0x7B → V128   (SIMD proposal, see below)
+/// 0x6E → Anyref (WasmGC)
+/// 0x6C → I31ref (WasmGC)
 /// ```
 fn decode_value_type(byte: u8, offset: usize) -> Result<ValueType, WasmParseError> {
     match byte {
@@ -409,6 +412,23 @@ fn decode_value_type(byte: u8, offset: usize) -> Result<ValueType, WasmParseErro
         0x7E => Ok(ValueType::I64),
         0x7D => Ok(ValueType::F32),
         0x7C => Ok(ValueType::F64),
+        // `v128` (SIMD proposal, first slice added in SIMD PR1a) -- a
+        // single byte like the 4 MVP scalars above, not a handle or any
+        // other indirection at THIS layer; this crate only decodes the
+        // module's declared SHAPE (what type a param/result/local IS),
+        // never a runtime value, so there's nothing SIMD-specific to do
+        // here beyond recognizing the byte. Needed for any `(module
+        // binary ...)` whose type section declares a `(result v128)` (or
+        // a v128 param/local) -- confirmed against the real, pinned-
+        // commit `simd_const.wast`, whose `(module binary ...)` directives
+        // do exactly this (e.g. its `parse_i32x4`/`parse_f64x2` etc. test
+        // functions). Was previously a real gap: this crate's own binary
+        // decoder had no arm for 0x7B at all, even though `wasm-types`
+        // (0.1.3) and `wasm-wast-parser`'s TEXT-format decoder (SIMD
+        // PR1b-2) already recognized it -- the code SECTION itself never
+        // needed a SIMD-aware fix (it's read as raw, undecoded bytes; see
+        // `parse_code_section`), only the TYPE-section byte did.
+        0x7B => Ok(ValueType::V128),
         // WasmGC single-byte reference types (LANG77 / McCarthy L3b-3a-3c).
         // `structref` (`0x63 <typeidx>`) is multi-byte and is handled by
         // [`read_value_type`], which is why it is absent here.
@@ -1731,6 +1751,61 @@ mod tests {
         assert!(m.types[0].results.is_empty());
         assert!(m.types[1].params.is_empty());
         assert_eq!(m.types[1].results, vec![ValueType::F64]);
+    }
+
+    #[test]
+    fn v128_result_type_decodes_from_the_type_section() {
+        // (SIMD PR1b-3 follow-up, task #75) `0x7B` was previously not in
+        // `decode_value_type`'s match at all -- a `(module binary ...)`
+        // whose type section declared `(result v128)` failed to decode
+        // with "unknown value type byte: 0x7B", even though `wasm-types`
+        // and `wasm-wast-parser`'s TEXT-format decoder already recognized
+        // `v128`. Confirmed needed by the real, pinned-commit
+        // `simd_const.wast`'s own `(module binary ...)` directives.
+        let payload = vec![
+            0x01, // 1 type
+            0x60, 0x00, 0x01, 0x7B, // () -> (v128)
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.types.len(), 1);
+        assert!(m.types[0].params.is_empty());
+        assert_eq!(m.types[0].results, vec![ValueType::V128]);
+    }
+
+    #[test]
+    fn v128_param_and_local_type_decode_from_a_real_function_body() {
+        // A function `(v128) -> (v128)` with a single declared v128 local
+        // -- exercises `decode_value_type` at all three call sites that
+        // feed it (type-section params/results AND a code-section local
+        // declaration), not just the narrower results-only case above.
+        let type_payload = vec![
+            0x01, // 1 type
+            0x60, 0x01, 0x7B, 0x01, 0x7B, // (v128) -> (v128)
+        ];
+        let func_payload = vec![0x01, 0x00]; // 1 function, type index 0
+        let mut body = vec![
+            0x01, // 1 local-decl run
+            0x01, 0x7B, // 1 local of type v128
+        ];
+        body.push(0x20); // local.get
+        body.push(0x00); // local index 0
+        body.push(0x0B); // end
+        let code_payload = {
+            let mut p = vec![0x01]; // 1 function body
+            p.push(body.len() as u8);
+            p.extend(body);
+            p
+        };
+        let data = wasm_with_sections(&[
+            make_section(1, &type_payload),
+            make_section(3, &func_payload),
+            make_section(10, &code_payload),
+        ]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.types[0].params, vec![ValueType::V128]);
+        assert_eq!(m.types[0].results, vec![ValueType::V128]);
+        assert_eq!(m.code[0].locals, vec![ValueType::V128]);
     }
 
     #[test]
