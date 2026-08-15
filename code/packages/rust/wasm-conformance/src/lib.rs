@@ -414,7 +414,30 @@ impl Executor {
         match module {
             ModuleSource::Binary(bytes) => match WasmModuleParser::parse(&bytes) {
                 Err(_) => DirectiveOutcome::Pass,
-                Ok(_) => DirectiveOutcome::Fail("binary module parsed but should have been rejected as malformed".to_string()),
+                // A module that parses can still be malformed by a rule this
+                // crate's decoder doesn't check at PARSE time but its
+                // instruction-level type-checker (`wasm-validator`) DOES walk
+                // through, incidentally, while decoding operands -- e.g. a
+                // memop's align flags encoded with the reserved top bit set
+                // (`align.wast`'s "malformed memop flags" cases) decode as an
+                // absurdly large LEB128 value that `wasm-validator`'s existing
+                // `align > max_align` check already rejects, just under a
+                // different error message than the spec's own "malformed
+                // memop flags" wording. Real bug, found via a prioritization
+                // scan after task #80 (PR #11844): this path never asked
+                // `wasm-validator` at all, so any malformed-ness it happened
+                // to already catch was invisible here. Same "outcome
+                // category, not the specific reason" precedent as
+                // `grade_assert_unlinkable` below -- the spec's malformed-vs-
+                // invalid split is about WHERE a real engine catches the
+                // error, not a promise this harness must replicate that exact
+                // pipeline stage.
+                Ok(built) => match self.runtime.validate(&built) {
+                    Ok(_) => DirectiveOutcome::Fail(
+                        "binary module parsed but should have been rejected as malformed".to_string(),
+                    ),
+                    Err(_) => DirectiveOutcome::Pass,
+                },
             },
             ModuleSource::Quote(bytes) => match std::str::from_utf8(&bytes) {
                 Err(_) => DirectiveOutcome::Pass,
@@ -955,6 +978,35 @@ mod tests {
     #[test]
     fn assert_malformed_quote_unparseable_text_is_correctly_rejected() {
         let results = outcomes(r#"(assert_malformed (module quote "(module (func (") "unexpected token")"#);
+        assert_eq!(results[0], (DirectiveKind::AssertMalformed, DirectiveOutcome::Pass));
+    }
+
+    /// Task #83 (prioritization scan after task #80, PR #11844): a memop's
+    /// align immediate with the reserved top bit set decodes as an absurdly
+    /// large LEB128 value that `wasm-module-parser::parse` alone never
+    /// notices (it stores code-section bytes raw, undecoded) but
+    /// `wasm-validator`'s instruction-level type-checker DOES reject via
+    /// its existing `align > max_align` rule -- `grade_assert_malformed`'s
+    /// binary path used to only call `parse`, never `validate`, so this
+    /// real corpus case (`align.wast`'s "memop flags" cases) wrongly
+    /// graded `Fail` even though the module genuinely IS unusable.
+    #[test]
+    fn assert_malformed_binary_reserved_align_bit_is_caught_via_validate() {
+        let src = concat!(
+            r#"(assert_malformed (module binary "#,
+            r#""\00asm" "\01\00\00\00""#,
+            r#""\01\04\01\60\00\00""#, // Type section: 1 type
+            r#""\03\02\01\00""#,       // Function section: 1 function
+            r#""\05\03\01\00\01""#,    // Memory section: 1 memory
+            r#""\0a\0b\01""#,          // Code section: 1 function
+            r#""\09\00""#,
+            r#""\41\00""#,           // i32.const 0
+            r#""\28\80\01\00""#,     // i32.load offset=0 align="2**128" (malformed)
+            r#""\1a""#,              // drop
+            r#""\0b""#,              // end
+            r#") "malformed memop flags")"#,
+        );
+        let results = outcomes(src);
         assert_eq!(results[0], (DirectiveKind::AssertMalformed, DirectiveOutcome::Pass));
     }
 

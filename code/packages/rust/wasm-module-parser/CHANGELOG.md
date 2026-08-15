@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.4] — 2026-08-15 — reject malformed mutability bytes + data count cross-check (tasks #82, #84)
+
+### Fixed
+
+- A global's (or WasmGC struct field's) mutability byte is a spec-mandated
+  one-bit flag -- `0x00` (immutable) or `0x01` (mutable) only, NOT "any
+  nonzero byte means mutable". All three decode sites (global imports,
+  global definitions, struct fields) used `byte != 0`, silently accepting
+  e.g. `0x04` as mutable instead of rejecting the module as malformed.
+  New shared `decode_mutability` helper enforces the two legal encodings;
+  new tests at each of the three call sites. Found via a
+  `wasm-conformance` prioritization scan after task #80 (PR #11844) --
+  the real testsuite's `global.wast` `assert_malformed` "malformed
+  mutability" cases were wrongly parsing as valid modules.
+- The Data Count section (id 12, bulk-memory-operations proposal) used to
+  fall into the generic "unknown section, skip it" arm -- its declared
+  segment count was never even read, let alone cross-checked against the
+  data section's actual segment count. New `SECTION_DATA_COUNT` handling
+  reads the count and, after the section-parsing loop, rejects the module
+  if it disagrees with `module.data.len()`. Found via the same
+  prioritization scan -- `custom.wast`'s "data count and data section
+  have inconsistent lengths" `assert_malformed` case.
+- Baseline impact (regenerated in `wasm-conformance` 0.1.22): `align.wast`
+  0/2 -> 2/2, `custom.wast` 6/8 -> 8/8, `global.wast` 3/7 -> 7/7 (all
+  `assert_malformed`), zero regressions anywhere else in the 61-file
+  vendored corpus.
+
 ## [0.2.3] — 2026-08-15 — decode the `v128` value-type byte (task #75, SIMD PR1b-3 follow-up)
 
 ### Fixed
