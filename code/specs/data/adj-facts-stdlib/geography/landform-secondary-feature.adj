@@ -8,7 +8,8 @@
 % valley, plateau, plain, canyon). That table's own header already quotes,
 % VERBATIM, the FULL USGS Feature Type Thesaurus span for every row — but
 % the descriptor-only schema reduced each span to a single atom, leaving a
-% SECOND, structural clause unused for three of the five landforms:
+% SECOND (and, for canyon, a THIRD) structural clause unused for four of the
+% five landforms:
 %
 %   valley → contains_stream_with_outlet
 %     "...commonly situated between two mountains or between ranges of
@@ -20,6 +21,13 @@
 %   canyon → continuous_slope_at_bottom
 %     "...the bottom of which generally has a continuous slope."
 %
+%   canyon → steep_sides
+%     "Relatively narrow, deep depressions with steep sides..."
+%
+%   plain → uniform_slope
+%     "Regions of general uniform slope, comparatively level and of
+%      considerable extent."
+%
 % Recall is a binding query:
 %
 %     ? landform_secondary_feature(valley, $Feature)   % contains_stream_with_outlet
@@ -29,20 +37,23 @@
 % ground relation `landform_secondary_feature(landform, feature)` carrying
 % the citation, so the lookup above is the ordinary SLD binding query — the
 % engine returns the secondary feature WITH its source, on the CPU, with
-% zero model calls, and abstains on every other landform `landforms.adj`
-% carries, since mountain's and plain's own cited spans state ONLY the
-% single descriptor already captured by the parent table, with no second
-% structural clause.
+% zero model calls, and abstains on mountain, whose own cited span states
+% ONLY the single descriptor already captured by the parent table, with no
+% second structural clause. `canyon` carries TWO rows in this table (its own
+% cited span states two distinct structural clauses — steep sides AND a
+% continuous slope at the bottom), so a forward recall on canyon is a
+% genuine multi-answer query, the established pattern this stdlib already
+% uses elsewhere (e.g. `geology/igneous-rock-type-eruption-location.adj`).
 %
-% Only THREE of `landforms.adj`'s five landforms have a genuinely distinct
-% secondary feature in the ALREADY-cited spans; this table is deliberately
-% narrow rather than inventing a feature the source does not state. The
-% query also runs BACKWARD — bind a feature and recall which landform it
-% names:
+% Only mountain, among `landforms.adj`'s five landforms, has NO genuinely
+% distinct secondary feature in its already-cited span; this table is
+% deliberately narrow rather than inventing a feature the source does not
+% state. The query also runs BACKWARD — bind a feature and recall which
+% landform it names:
 %
 %     ? landform_secondary_feature($Landform, continuous_slope_at_bottom)   % canyon
 %
-% Provenance: reproduces, byte-for-byte, the SAME three spans already quoted
+% Provenance: reproduces, byte-for-byte, the SAME five spans already quoted
 % inside `landforms.adj`'s own header, from the SAME USGS-hosted Feature
 % Type Thesaurus page that table already cites — no new WebFetch, only a
 % different schema decoding the structural-clause half of each
@@ -58,6 +69,8 @@ table landform_secondary_feature {
     row (valley, contains_stream_with_outlet)     % USGS Feature Type Thesaurus
     row (plateau, bounded_by_abrupt_descent)       % USGS Feature Type Thesaurus
     row (canyon, continuous_slope_at_bottom)       % USGS Feature Type Thesaurus
+    row (canyon, steep_sides)                      % USGS Feature Type Thesaurus
+    row (plain, uniform_slope)                     % USGS Feature Type Thesaurus
 
     source "Low-lying land bordered by higher ground; especially elongate, relatively large gently sloping depressions of the Earth's surface, commonly situated between two mountains or between ranges of hills or mountains, and often containing a stream with an outlet."
     locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
@@ -65,4 +78,5 @@ table landform_secondary_feature {
 
     cites "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent ..." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
     cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    cites "Regions of general uniform slope, comparatively level and of considerable extent." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
 }
