@@ -5441,6 +5441,153 @@
           "ES-ETYMON-SUCIO"
         ]
       }
+    },
+    {
+      "chapter": 282,
+      "title": "Meeting Someone --- Welcome, Greeting, Hug, Smile, Guest",
+      "label": "ch:encuentro",
+      "canDo": "I can welcome someone in Spanish and name the greeting, the hug, the smile and the guest that go with it.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ES-C282-invitado",
+        "kind": "production",
+        "summary": "Complete ES-C282-invitado: say all five words in order, and say which two of them are participles.",
+        "assesses": [
+          "ES-LEX-C282-MEET-01",
+          "ES-LEX-C282-MEET-02",
+          "ES-LEX-C282-MEET-03",
+          "ES-LEX-C282-MEET-04",
+          "ES-LEX-C282-MEET-05"
+        ]
+      }
+    },
+    {
+      "chapter": 283,
+      "title": "Courtesy Past Thank You --- Excuse Me, With Permission, Kind, A Thousand Thanks",
+      "label": "ch:cortesia",
+      "canDo": "I can apologise, ask to pass, call someone kind and thank them at more than one weight in Spanish.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C283-no-hay-de-que",
+        "kind": "production",
+        "summary": "Complete ES-C283-no-hay-de-que: say all five, and take the last one apart into the words you already had.",
+        "assesses": [
+          "ES-LEX-C283-COURTESY-01",
+          "ES-LEX-C283-COURTESY-02",
+          "ES-LEX-C283-COURTESY-03",
+          "ES-LEX-C283-COURTESY-04",
+          "ES-LEX-C283-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 284,
+      "title": "Five Short Answers --- Agreed, Sure, True, Exactly, Of Course",
+      "label": "ch:respuestas-cortas",
+      "canDo": "I can answer someone in Spanish with a single short phrase, and say what is inside each one.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C284-por-supuesto",
+        "kind": "production",
+        "summary": "Complete ES-C284-por-supuesto: give all five answers in order, and name the Latin verb inside each.",
+        "assesses": [
+          "ES-LEX-C284-REPLY-01",
+          "ES-LEX-C284-REPLY-02",
+          "ES-LEX-C284-REPLY-03",
+          "ES-LEX-C284-REPLY-04",
+          "ES-LEX-C284-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 285,
+      "title": "Who Someone Is --- Neighbour, Friend, Teacher, Nurse, Cook",
+      "label": "ch:quien-es",
+      "canDo": "I can say who someone is in Spanish — the neighbour, a friend, the teacher, the nurse, the cook.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C285-cocinero",
+        "kind": "production",
+        "summary": "Complete ES-C285-cocinero: name all five people, and say what each name is really describing.",
+        "assesses": [
+          "ES-LEX-C285-ROLE-01",
+          "ES-LEX-C285-ROLE-02",
+          "ES-LEX-C285-ROLE-03",
+          "ES-LEX-C285-ROLE-04",
+          "ES-LEX-C285-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 286,
+      "title": "Where It Hurts --- Eye, Mouth, Throat, Pain, Fever",
+      "label": "ch:donde-duele",
+      "canDo": "I can name the eye, the mouth and the throat in Spanish, and say that there is a pain or a fever.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C286-fiebre",
+        "kind": "production",
+        "summary": "Complete ES-C286-fiebre: name all five, and separate the three places from the two things that are wrong.",
+        "assesses": [
+          "ES-LEX-C286-BODY-01",
+          "ES-LEX-C286-BODY-02",
+          "ES-LEX-C286-BODY-03",
+          "ES-LEX-C286-BODY-04",
+          "ES-LEX-C286-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 287,
+      "title": "Five Things You Ask For --- Soap, Towel, Glass, Spoon, Plate",
+      "label": "ch:cinco-cosas",
+      "canDo": "I can ask for soap, a towel, a glass, a spoon and a plate in Spanish, politely.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C287-plato",
+        "kind": "production",
+        "summary": "Complete ES-C287-plato: ask for all five in turn, with por favor on the end of each.",
+        "assesses": [
+          "ES-LEX-C287-ASK-01",
+          "ES-LEX-C287-ASK-02",
+          "ES-LEX-C287-ASK-03",
+          "ES-LEX-C287-ASK-04",
+          "ES-LEX-C287-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 288,
+      "title": "Setting Off --- The Way Out, the Journey, the Return, the Arrival, the Farewell",
+      "label": "ch:la-partida",
+      "canDo": "I can name the way out, the journey, the return, the arrival and the farewell in Spanish.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C288-despedida",
+        "kind": "production",
+        "summary": "Complete ES-C288-despedida: name all five stages of a departure in order, from the way out to the goodbye.",
+        "assesses": [
+          "ES-LEX-C288-LEAVE-01",
+          "ES-LEX-C288-LEAVE-02",
+          "ES-LEX-C288-LEAVE-03",
+          "ES-LEX-C288-LEAVE-04",
+          "ES-LEX-C288-LEAVE-05"
+        ]
+      }
     }
   ]
 }
