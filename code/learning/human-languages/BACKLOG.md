@@ -9,6 +9,67 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C184 — THE COMPLETION PLAN: 22 tracks to C2, driven by vocabulary
+
+Measured 2026-08-14, once the report finally printed the right number:
+
+```
+VOCABULARY vs HL09 §3.1 targets: spanish 211/300 (pre-A1), hindi 97/300,
+tamil 97/300, malayalam 95/300, french 94/300;
+22 of 22 tracks short of the level they are working on
+```
+
+**Every track fails pre-A1.** The strongest is at 70% of the *first* rung. This
+row is the ordered plan from here to C2 across all 22, and it is deliberately
+long-horizon: the owner's budget is **50,000 lessons**, and at the corpus's
+current density (~0.58 new words per lesson) reaching C2 on one track costs
+~27,600 lessons. Nothing here is a sprint.
+
+### Phase 0 — make the target visible (in progress)
+
+* **HL-C184a. Print vocabulary in the report.** DONE — this row exists because of it.
+* **HL-C184b. Make the vocabulary floor a REPORT-ONLY gate first**, per the HL05
+  precedent: a gate that fails on inherited debt teaches authors to route around
+  it. It becomes blocking per track as that track clears pre-A1.
+* **HL-C184c. Close the `word_class` classifier** (~23% of Spanish lexical
+  lessons). Without it the verb/adjective/adverb census the owner asked for
+  cannot be computed at all, and "500 verbs" has no measurement.
+
+### Phase 1 — clear pre-A1 on one track, and learn the real cost
+
+* **HL-C184d. Spanish pre-A1: 211 → 300.** Eighty-nine words. Do it as one
+  vocabulary tranche and **measure what it actually costs** — lessons written,
+  wall-clock, how many ceilings move. Every later estimate depends on this
+  number, and it is currently a guess.
+* **HL-C184e. Write down the density that results.** Words per lesson, and
+  whether the ramp gates (R1, atom budget) bind before the target does.
+
+### Phase 2 — the ladder, cheapest rung first
+
+Per track, in order: pre-A1 300 → A1 600 → A2 1,200 → B1 2,500 → B2 4,000 →
+C1 8,000 → C2 16,000. **Author against the vocabulary deficit, not against spine
+nodes** — the spine is 33 functional rungs and is already closed on Spanish while
+the corpus fails pre-A1, which is exactly how coarse it is.
+
+Sequencing across tracks is the owner's alternation rule: Spanish and the Indic
+six move together, and no track is left to rot.
+
+### Phase 3 — what vocabulary alone will not buy
+
+Recorded now so it is not discovered late: HL-C182 lists what none of this
+measures — retention, production under time pressure, listening at natural speed,
+exam task formats. **A track at 16,000 words is a corpus claim, not a learner
+claim.** The honest test needs a human sitting a past paper.
+
+### Standing rules for every item above
+
+* **A gentle ramp caps new atoms PER LESSON, never lesson count.** Chapters are
+  sized to carry vocabulary at that density; a spine node closes when it closes.
+  See [[feedback_gentle_ramp_means_few_atoms_per_lesson_not_few_lessons]].
+* **Lead every report with `vocabulary / target`**, never spine coverage.
+* A ratio going over means the ramp got worse — revert the content, do not
+  re-seat (HL-C167).
+
 ## HL-C183 — VOCABULARY MASS is the dominant remaining cost, and the gate already said so
 
 **Owner, 2026-08-14:** *"a native speaker knows something like 10K words … I want
