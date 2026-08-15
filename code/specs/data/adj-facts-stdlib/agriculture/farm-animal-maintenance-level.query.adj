@@ -1,0 +1,21 @@
+% ============================================================================
+% farm-animal-maintenance-level.query — a worked recall over the
+% agriculture farm-animal-maintenance-level library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how much care does a
+% sheep need?": it states no agriculture fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `farm_animal_maintenance_level` rows and
+% returns the level + the table's source/locator/trust. An animal the
+% cited spans give no maintenance level for abstains honestly — the
+% engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli farm-animal-maintenance-level.query.adj
+% ============================================================================
+
+import "farm-animal-maintenance-level.adj"
+
+? farm_animal_maintenance_level(sheep, $Level)               % expect low_maintenance
+? farm_animal_maintenance_level($Animal, low_maintenance)    % reverse bind — expect sheep
+? farm_animal_maintenance_level(goat, $Level)                 % expect abstain — goat's own cited span states no husbandry-difficulty descriptor
