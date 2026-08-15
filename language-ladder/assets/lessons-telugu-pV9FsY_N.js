@@ -1,0 +1,948 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: TE-C46-lamp
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 1150
+chapter: 46
+type: word
+headword: "దీపం"
+gloss: "a lamp"
+romanization: "dīpaṁ"
+concept_tag: TE-NOUN-LAMP
+prerequisites: [TE-C46-cloth]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C46-ASK-02]
+introduces:
+  knowledge: [TE-LEX-C46-ASK-03]
+practises:
+  knowledge: [TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C46-cloth]
+---
+
+# దీపం (dīpaṁ) — a lamp
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02] -->
+
+[PAUSE 2s] Before the new one: what did *baṭṭa* mean?
+
+## You'll want to know: దీపం
+<!-- hl-knowledge: introduces=[TE-LEX-C46-ASK-03]; assesses=[] -->
+
+**దీపం** (*dīpaṁ*) — "a lamp".
+
+దీపం is the small clay lamp with oil and a wick. Its Sanskrit root *dīp* means "to blaze", so the word names the burning rather than the vessel.
+
+Put దీప together with a word meaning "a row" and you get *dīpāvaḷi*, "a row of lamps" — the festival English spells Diwali. The ending is the tatsama neuter **-ం**, the same shape already carried by హృదయం and భోజనం.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three: a fruit, a cloth, a lamp.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dīpaṁ*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: all three, then name the one that came in from Sanskrit]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03] -->
+
+[PAUSE 3s] What does దీపం mean? ("a lamp".) Say it once more.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: TE-C46-salt
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 1160
+chapter: 46
+type: word
+headword: "ఉప్పు"
+gloss: "salt"
+romanization: "uppu"
+concept_tag: TE-NOUN-SALT
+prerequisites: [TE-C46-lamp]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C46-ASK-03]
+introduces:
+  knowledge: [TE-LEX-C46-ASK-04]
+practises:
+  knowledge: [TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03, TE-LEX-C46-ASK-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C46-lamp]
+---
+
+# ఉప్పు (uppu) — salt
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03] -->
+
+[PAUSE 2s] Before the new one: what did *dīpaṁ* mean?
+
+## You'll want to know: ఉప్పు
+<!-- hl-knowledge: introduces=[TE-LEX-C46-ASK-04]; assesses=[] -->
+
+**ఉప్పు** (*uppu*) — "salt".
+
+Proto-Dravidian had **\\*uppu**, and the whole family kept it almost untouched: Tamil உப்பு, Kannada ಉಪ್ಪು, Malayalam ഉപ്പ്. A word this ordinary gives nobody a reason to replace it.
+
+Notice the doubled ప్ప in the middle. Telugu likes a consonant twice inside a short word — కుక్క, పిల్లి, కన్ను all do it — and the doubling is not decoration: it is the difference between one word and another.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Four. Three of them inherited, one borrowed.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03, TE-LEX-C46-ASK-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *uppu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: all four in order, then say which one has not changed in three thousand years]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-01, TE-LEX-C46-ASK-02, TE-LEX-C46-ASK-03, TE-LEX-C46-ASK-04] -->
+
+[PAUSE 3s] What does ఉప్పు mean? ("salt".) Say it once more.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: TE-C47-finger
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 1210
+chapter: 47
+type: word
+headword: "వేలు"
+gloss: "a finger"
+romanization: "vēlu"
+concept_tag: TE-NOUN-FINGER
+prerequisites: [TE-C47-hair]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C47-BODY-03]
+introduces:
+  knowledge: [TE-LEX-C47-BODY-04]
+practises:
+  knowledge: [TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C47-hair]
+---
+
+# వేలు (vēlu) — a finger
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03] -->
+
+[PAUSE 2s] Before the new one: what did *juṭṭu* mean?
+
+## You'll want to know: వేలు
+<!-- hl-knowledge: introduces=[TE-LEX-C47-BODY-04]; assesses=[] -->
+
+**వేలు** (*vēlu*) — "a finger".
+
+Proto-Dravidian **\\*viral**. Tamil kept விரல் entire; Kannada has ಬೆರಳು; Telugu dropped the *-r-* and came out with వేలు. On the page the three look barely related, and they are the same word.
+
+It is still working inside compounds: బొటనవేలు, the thumb, is the stubby one of the set.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Four. Note that చెయ్యి and వేలు are separate roots — Telugu does not build the finger out of the hand.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *vēlu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *vēlu*, then *ceyyi*, and say which one has five of the other]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04] -->
+
+[PAUSE 3s] What does వేలు mean? ("a finger".) Say it once more.
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: TE-C47-hair
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 1200
+chapter: 47
+type: word
+headword: "జుట్టు"
+gloss: "hair (of the head)"
+romanization: "juṭṭu"
+concept_tag: TE-NOUN-HAIR
+prerequisites: [TE-C47-tooth]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C47-BODY-02]
+introduces:
+  knowledge: [TE-LEX-C47-BODY-03]
+practises:
+  knowledge: [TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C47-tooth]
+---
+
+# జుట్టు (juṭṭu) — hair (of the head)
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02] -->
+
+[PAUSE 2s] Before the new one: what did *pannu* mean?
+
+## You'll want to know: జుట్టు
+<!-- hl-knowledge: introduces=[TE-LEX-C47-BODY-03]; assesses=[] -->
+
+**జుట్టు** (*juṭṭu*) — "hair (of the head)".
+
+జుట్టు is the hair on a head taken as one thing — the mass, not the strand. For a single hair Telugu reaches for a different noun, వెంట్రుక.
+
+English leans on number for the same distinction --- "a hair" against "hair" --- while Telugu simply reaches for a different noun. జుట్టు also names the knot or tuft tied at the back of the head, which is most likely where the word started.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three: a leg, a tooth, hair.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *juṭṭu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *juṭṭu*, then *tala*, and say which one sits on the other]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03] -->
+
+[PAUSE 3s] What does జుట్టు mean? ("hair (of the head)".) Say it once more.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: TE-C47-leg
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 1180
+chapter: 47
+type: word
+headword: "కాలు"
+gloss: "leg, foot"
+romanization: "kālu"
+concept_tag: TE-NOUN-LEG
+prerequisites: [TE-C46-book]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C46-ASK-05]
+introduces:
+  knowledge: [TE-LEX-C47-BODY-01]
+practises:
+  knowledge: [TE-LEX-C46-ASK-04, TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C46-book]
+---
+
+# కాలు (kālu) — leg, foot
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-04, TE-LEX-C46-ASK-05] -->
+
+[PAUSE 2s] Before the new run: what did *pustakaṁ* mean, and what did *uppu* mean?
+
+## You'll want to know: కాలు
+<!-- hl-knowledge: introduces=[TE-LEX-C47-BODY-01]; assesses=[] -->
+
+**కాలు** (*kālu*) — "leg, foot".
+
+Proto-Dravidian **\\*kāl**, and every sister kept it nearly whole: Tamil கால், Kannada ಕಾಲು, Malayalam കാൽ.
+
+Set that beside చెయ్యి, the hand-word, which wore down so far that its family resemblance is hard to see at all. Two body-words of the same age; one held its shape and one did not, and nothing about the meaning predicts which.
+
+కాలు covers the whole limb, foot and leg together. When precision is wanted, Sanskrit's పాదం names the foot alone.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The first of five more body words.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-04, TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kālu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *kālu*, then *tala*, so the top and the bottom sit together]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-04, TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01] -->
+
+[PAUSE 3s] What does కాలు mean? ("leg, foot".) Say it once more.
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+id: TE-C47-stomach
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 1220
+chapter: 47
+type: word
+headword: "కడుపు"
+gloss: "the stomach, the belly"
+romanization: "kaḍupu"
+concept_tag: TE-NOUN-STOMACH
+prerequisites: [TE-C47-finger]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C47-BODY-04]
+introduces:
+  knowledge: [TE-LEX-C47-BODY-05]
+practises:
+  knowledge: [TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C47-finger]
+---
+
+# కడుపు (kaḍupu) — the stomach, the belly
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04] -->
+
+[PAUSE 2s] Before the new one: what did *vēlu* mean?
+
+## You'll want to know: కడుపు
+<!-- hl-knowledge: introduces=[TE-LEX-C47-BODY-05]; assesses=[] -->
+
+**కడుపు** (*kaḍupu*) — "the stomach, the belly".
+
+కడుపు is the unfussy everyday word, and it carries the commonest way of saying you have eaten enough: *kaḍupu niṇḍindi*, "the stomach has filled".
+
+It also says, gently and without ever being explicit, that a woman is expecting. Sanskrit's ఉదరం exists in Telugu and stays where the clinical register lives.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Five more body words: a leg, a tooth, hair, a finger, a belly. With తల, చెయ్యి, కన్ను, ముక్కు, నోరు and చెవి behind them, you can point at most of a person.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kaḍupu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: all five in order, then add *tala* and *ceyyi* and say the seven as one list]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02, TE-LEX-C47-BODY-03, TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05] -->
+
+[PAUSE 3s] What does కడుపు mean? ("the stomach, the belly".) Say it once more.
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+id: TE-C47-tooth
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 1190
+chapter: 47
+type: word
+headword: "పన్ను"
+gloss: "a tooth"
+romanization: "pannu"
+concept_tag: TE-NOUN-TOOTH
+prerequisites: [TE-C47-leg]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C47-BODY-01]
+introduces:
+  knowledge: [TE-LEX-C47-BODY-02]
+practises:
+  knowledge: [TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C47-leg]
+---
+
+# పన్ను (pannu) — a tooth
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01] -->
+
+[PAUSE 2s] Before the new one: what did *kālu* mean?
+
+## You'll want to know: పన్ను
+<!-- hl-knowledge: introduces=[TE-LEX-C47-BODY-02]; assesses=[] -->
+
+**పన్ను** (*pannu*) — "a tooth".
+
+Proto-Dravidian **\\*pal**. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that *p-* to *h-* law working again exactly where the last chapter said to watch for it. Telugu took a third road, the *-l-* coming out as *-n-* and doubling.
+
+An honest warning: పన్ను is also the word for a tax. Nothing joins the tooth to the tax but an accident of sound. Telugu has a fair number of these pairs, and context is the only fix — which is what context is for.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Two: a leg and a tooth.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *pannu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *kālu*, then *pannu*, and say which of the two also names something you pay]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C46-ASK-05, TE-LEX-C47-BODY-01, TE-LEX-C47-BODY-02] -->
+
+[PAUSE 3s] What does పన్ను mean? ("a tooth".) Say it once more.
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+id: TE-C48-doctor
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 1250
+chapter: 48
+type: word
+headword: "వైద్యుడు"
+gloss: "a doctor, a physician"
+romanization: "vaidyuḍu"
+concept_tag: TE-NOUN-DOCTOR
+prerequisites: [TE-C48-student]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C48-ROLE-02]
+introduces:
+  knowledge: [TE-LEX-C48-ROLE-03]
+practises:
+  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C48-student]
+---
+
+# వైద్యుడు (vaidyuḍu) — a doctor, a physician
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02] -->
+
+[PAUSE 2s] Before the new one: what did *vidyārthi* mean?
+
+## You'll want to know: వైద్యుడు
+<!-- hl-knowledge: introduces=[TE-LEX-C48-ROLE-03]; assesses=[] -->
+
+**వైద్యుడు** (*vaidyuḍu*) — "a doctor, a physician".
+
+Look at the middle of it. *vaidya* is built on the very *vid* sitting inside విద్యార్థి: a physician is one versed in the knowledge, the knowledge in question being आयुर्वेद, the science of long life.
+
+The ending **-ుడు** is not Sanskrit's but Telugu's own, marking a masculine person — the same **-ుడు** already carried by స్నేహితుడు.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three roles, and two of them share a root.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *vaidyuḍu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *vidyārthi*, then *vaidyuḍu*, and name the syllable they share]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03] -->
+
+[PAUSE 3s] What does వైద్యుడు mean? ("a doctor, a physician".) Say it once more.
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+id: TE-C48-farmer
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 1260
+chapter: 48
+type: word
+headword: "రైతు"
+gloss: "a farmer"
+romanization: "raitu"
+concept_tag: TE-NOUN-FARMER
+prerequisites: [TE-C48-doctor]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C48-ROLE-03]
+introduces:
+  knowledge: [TE-LEX-C48-ROLE-04]
+practises:
+  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C48-doctor]
+---
+
+# రైతు (raitu) — a farmer
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03] -->
+
+[PAUSE 2s] Before the new one: what did *vaidyuḍu* mean?
+
+## You'll want to know: రైతు
+<!-- hl-knowledge: introduces=[TE-LEX-C48-ROLE-04]; assesses=[] -->
+
+**రైతు** (*raitu*) — "a farmer".
+
+రైతు came the long way round. Arabic *raʿiyyah* meant a flock, then the people a ruler answers for. Persian and Urdu carried it into India as *raʿīyat*, the subject, the tenant; the revenue clerks of the Deccan wrote it on their rolls; and Telugu kept it for the person who works the land.
+
+That is a second arrival from the north-west, after రోజు and పుస్తకం. The words that travel are the words that follow paperwork and trade.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Four.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *raitu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *raitu*, then *rōju*, and say what road the two have in common]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04] -->
+
+[PAUSE 3s] What does రైతు mean? ("a farmer".) Say it once more.
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+id: TE-C48-guest
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 1270
+chapter: 48
+type: word
+headword: "అతిథి"
+gloss: "a guest"
+romanization: "atithi"
+concept_tag: TE-NOUN-GUEST
+prerequisites: [TE-C48-farmer]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C48-ROLE-04]
+introduces:
+  knowledge: [TE-LEX-C48-ROLE-05]
+practises:
+  knowledge: [TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C48-farmer]
+---
+
+# అతిథి (atithi) — a guest
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04] -->
+
+[PAUSE 2s] Before the new one: what did *raitu* mean?
+
+## You'll want to know: అతిథి
+<!-- hl-knowledge: introduces=[TE-LEX-C48-ROLE-05]; assesses=[] -->
+
+**అతిథి** (*atithi*) — "a guest".
+
+*a-tithi* — "one without a *tithi*", without a date on the calendar. The guest is defined by not being expected.
+
+The old formula అతిథి దేవో భవ, "let the guest be a god to you", is built on exactly that: you cannot prepare for a god who arrives unannounced, so you keep the house ready instead. What a Telugu house actually does when the అతిథి arrives has a chapter of its own, at the end of this book.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Five roles: a teacher, a student, a doctor, a farmer, a guest.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *atithi*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: all five, then say *nā pēru* and your own name, and ask *mīru evaru?*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05] -->
+
+[PAUSE 3s] What does అతిథి mean? ("a guest".) Say it once more.
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+id: TE-C48-student
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 1240
+chapter: 48
+type: word
+headword: "విద్యార్థి"
+gloss: "a student"
+romanization: "vidyārthi"
+concept_tag: TE-NOUN-STUDENT
+prerequisites: [TE-C48-teacher]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C48-ROLE-01]
+introduces:
+  knowledge: [TE-LEX-C48-ROLE-02]
+practises:
+  knowledge: [TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C48-teacher]
+---
+
+# విద్యార్థి (vidyārthi) — a student
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01] -->
+
+[PAUSE 2s] Before the new one: what did *guruvu* mean?
+
+## You'll want to know: విద్యార్థి
+<!-- hl-knowledge: introduces=[TE-LEX-C48-ROLE-02]; assesses=[] -->
+
+**విద్యార్థి** (*vidyārthi*) — "a student".
+
+Two Sanskrit pieces welded: *vidyā*, knowledge, and *arthin*, one who seeks. A student is a knowledge-seeker, and the word says so on its face.
+
+*vidyā* grows from the root *vid*, "to know" — the same ancient root behind English *wit* and *wisdom*, and behind Latin *vidēre*, "to see". Knowing and seeing were one word long before either language existed.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Two: a teacher and a student.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *vidyārthi*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *guruvu*, then *vidyārthi*, and say which one seeks and which one weighs]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02] -->
+
+[PAUSE 3s] What does విద్యార్థి mean? ("a student".) Say it once more.
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+id: TE-C48-teacher
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 1230
+chapter: 48
+type: word
+headword: "గురువు"
+gloss: "a teacher"
+romanization: "guruvu"
+concept_tag: TE-NOUN-TEACHER
+prerequisites: [TE-C47-stomach]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C47-BODY-05]
+introduces:
+  knowledge: [TE-LEX-C48-ROLE-01]
+practises:
+  knowledge: [TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C47-stomach]
+---
+
+# గురువు (guruvu) — a teacher
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05] -->
+
+[PAUSE 2s] Before the new run: what did *kaḍupu* mean, and what did *vēlu* mean?
+
+## You'll want to know: గురువు
+<!-- hl-knowledge: introduces=[TE-LEX-C48-ROLE-01]; assesses=[] -->
+
+**గురువు** (*guruvu*) — "a teacher".
+
+Sanskrit *guru* means "heavy". The teacher is the weighty one — the one whose word carries weight — and Telugu added its own **-వు** to make గురువు.
+
+You have already said the word without being told. గురువారం, Thursday, is Guru's day: the guru there is Jupiter, the heaviest wanderer the naked eye can find and the teacher of the gods. Latin named the same weekday for Jove, which is the same planet under another name.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The first of five roles.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *guruvu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *guruvu*, then *guruvāraṁ*, and say what the two have in common]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01] -->
+
+[PAUSE 3s] What does గురువు mean? ("a teacher".) Say it once more.
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+id: TE-C49-alright
+spine_node: SPINE-RESPOND-BASIC
+sequence: 1320
+chapter: 49
+type: word
+headword: "అలాగే"
+gloss: "just so, alright then"
+romanization: "alāgē"
+concept_tag: TE-WORD-JUST-SO
+prerequisites: [TE-C49-perhaps]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C49-REPLY-04]
+introduces:
+  knowledge: [TE-LEX-C49-REPLY-05]
+practises:
+  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C49-perhaps]
+---
+
+# అలాగే (alāgē) — just so, alright then
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04] -->
+
+[PAUSE 2s] Before the new one: what did *ēmō* mean?
+
+## You'll want to know: అలాగే
+<!-- hl-knowledge: introduces=[TE-LEX-C49-REPLY-05]; assesses=[] -->
+
+**అలాగే** (*alāgē*) — "just so, alright then".
+
+అలా means "in that way"; **-గే** is the small emphatic tail that makes it "just so". అలాగే is the yes you give to an instruction — not "that is correct" but "it shall be as you said".
+
+Now look at the front of it. అ- points far, and already carries అది, "that one", and అక్కడ, "there". ఇ- points near: ఇది, ఇక్కడ, and so ఇలా, "in this way". ఎ- asks: ఎక్కడ, ఎలా. Three vowels, one grid, and అలాగే is simply the far corner of it with an ending stuck on.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Five answers, and a three-way grid you can now see running under అది, ఇక్కడ and ఎలా.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *alāgē*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: all five in order, then say *alāgē* as a reply to *dayacēsi kūrcō*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03, TE-LEX-C49-REPLY-04, TE-LEX-C49-REPLY-05] -->
+
+[PAUSE 3s] What does అలాగే mean? ("just so, alright then".) Say it once more.
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+id: TE-C49-certainly
+spine_node: SPINE-RESPOND-BASIC
+sequence: 1300
+chapter: 49
+type: word
+headword: "తప్పకుండా"
+gloss: "certainly, without fail"
+romanization: "tappakuṇḍā"
+concept_tag: TE-WORD-CERTAINLY
+prerequisites: [TE-C49-enough]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C49-REPLY-02]
+introduces:
+  knowledge: [TE-LEX-C49-REPLY-03]
+practises:
+  knowledge: [TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C49-enough]
+---
+
+# తప్పకుండా (tappakuṇḍā) — certainly, without fail
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02] -->
+
+[PAUSE 2s] Before the new one: what did *cālu* mean?
+
+## You'll want to know: తప్పకుండా
+<!-- hl-knowledge: introduces=[TE-LEX-C49-REPLY-03]; assesses=[] -->
+
+**తప్పకుండా** (*tappakuṇḍā*) — "certainly, without fail".
+
+Take it apart: తప్పు, "to miss, to slip, to go wrong", plus **-కుండా**, the ending meaning "without doing". తప్పకుండా is *without missing*.
+
+The ending is worth having on its own, because it attaches to any verb stem: *ceppakuṇḍā*, without telling; *tinakuṇḍā*, without eating. One suffix, and every verb you own gains a negative.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tappakuṇḍā*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *tappakuṇḍā*, then *cālu*, and say which one is a promise]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03] -->
+
+[PAUSE 3s] What does తప్పకుండా mean? ("certainly, without fail".) Say it once more.
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+id: TE-C49-enough
+spine_node: SPINE-RESPOND-BASIC
+sequence: 1290
+chapter: 49
+type: word
+headword: "చాలు"
+gloss: "enough, that will do"
+romanization: "cālu"
+concept_tag: TE-WORD-ENOUGH
+prerequisites: [TE-C49-true]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [TE-LEX-C49-REPLY-01]
+introduces:
+  knowledge: [TE-LEX-C49-REPLY-02]
+practises:
+  knowledge: [TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C49-true]
+---
+
+# చాలు (cālu) — enough, that will do
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01] -->
+
+[PAUSE 2s] Before the new one: what did *nijaṁ* mean?
+
+## You'll want to know: చాలు
+<!-- hl-knowledge: introduces=[TE-LEX-C49-REPLY-02]; assesses=[] -->
+
+**చాలు** (*cālu*) — "enough, that will do".
+
+చాలు is a verb — "it suffices" — used as a complete answer. Held over a glass being filled it stops the pouring; said of an argument it ends it.
+
+చాలా, the everyday word for "very" and "a lot", is the same root wearing a different ending. Sufficiency and abundance sit one letter apart, which is a fair account of how the two ideas are related anywhere.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Two.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *cālu*]
+- [YOU SAY: it once more, slowly]
+- [YOU SAY: *cālu*, then *nijaṁ*, and say which one you would use to stop someone pouring]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02] -->
+
+[PAUSE 3s] What does చాలు mean? ("enough, that will do".) Say it once more.
+`;export{x as a,h as c,l as d,s as f,t as h,C as i,p as l,r as m,D as n,y as o,a as p,T as r,_ as s,k as t,d as u};
