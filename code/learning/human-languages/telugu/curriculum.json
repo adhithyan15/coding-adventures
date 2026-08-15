@@ -548,13 +548,126 @@
         "TE-EXT-45-FAMILY"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-46-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C46-fruit",
+        "TE-C46-cloth",
+        "TE-C46-lamp",
+        "TE-C46-salt",
+        "TE-C46-book"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-46-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-47-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C47-leg",
+        "TE-C47-tooth",
+        "TE-C47-hair",
+        "TE-C47-finger",
+        "TE-C47-stomach"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-47-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-48-ROLE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C48-teacher",
+        "TE-C48-student",
+        "TE-C48-doctor",
+        "TE-C48-farmer",
+        "TE-C48-guest"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-48-ROLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-49-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TE-C49-true",
+        "TE-C49-enough",
+        "TE-C49-certainly",
+        "TE-C49-perhaps",
+        "TE-C49-alright"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-49-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-50-LEAVE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TE-C50-now",
+        "TE-C50-day-after",
+        "TE-C50-journey",
+        "TE-C50-set-out",
+        "TE-C50-farewell"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-50-LEAVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-51-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TE-C51-gratitude",
+        "TE-C51-favour",
+        "TE-C51-respect",
+        "TE-C51-blessing",
+        "TE-C51-salutation"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-51-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-52-WELCOME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TE-C52-door",
+        "TE-C52-chair",
+        "TE-C52-muggu",
+        "TE-C52-flower",
+        "TE-C52-garland"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-52-WELCOME"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
         "TE-PATH-001",
-        "TE-PATH-100"
+        "TE-PATH-100",
+        "TE-PATH-52-WELCOME"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -566,7 +679,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "TE-PATH-003",
-        "TE-PATH-009"
+        "TE-PATH-009",
+        "TE-PATH-51-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -576,7 +690,8 @@
     "SPINE-RESPOND-BASIC": {
       "segments": [
         "TE-PATH-002",
-        "TE-PATH-004"
+        "TE-PATH-004",
+        "TE-PATH-49-REPLY"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -591,7 +706,8 @@
         "TE-PATH-016",
         "TE-PATH-021",
         "TE-PATH-028",
-        "TE-PATH-029"
+        "TE-PATH-029",
+        "TE-PATH-48-ROLE"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -605,7 +721,8 @@
         "TE-PATH-008",
         "TE-PATH-017",
         "TE-PATH-030",
-        "TE-PATH-031"
+        "TE-PATH-031",
+        "TE-PATH-47-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -618,14 +735,16 @@
         "TE-PATH-013",
         "TE-PATH-019",
         "TE-PATH-032",
-        "TE-PATH-033"
+        "TE-PATH-033",
+        "TE-PATH-46-ASK"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
       "segments": [
-        "TE-PATH-010"
+        "TE-PATH-010",
+        "TE-PATH-50-LEAVE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1349,6 +1468,111 @@
         "TE-C45-grandmother",
         "TE-C45-husband",
         "TE-C45-wife"
+      ]
+    },
+    {
+      "id": "TE-EXT-46-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things I might ask someone for in Telugu.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C46-fruit",
+        "TE-C46-cloth",
+        "TE-C46-lamp",
+        "TE-C46-salt",
+        "TE-C46-book"
+      ]
+    },
+    {
+      "id": "TE-EXT-47-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Telugu.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C47-leg",
+        "TE-C47-tooth",
+        "TE-C47-hair",
+        "TE-C47-finger",
+        "TE-C47-stomach"
+      ]
+    },
+    {
+      "id": "TE-EXT-48-ROLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what someone's role is in Telugu.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C48-teacher",
+        "TE-C48-student",
+        "TE-C48-doctor",
+        "TE-C48-farmer",
+        "TE-C48-guest"
+      ]
+    },
+    {
+      "id": "TE-EXT-49-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer in Telugu with more than yes and no.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C49-true",
+        "TE-C49-enough",
+        "TE-C49-certainly",
+        "TE-C49-perhaps",
+        "TE-C49-alright"
+      ]
+    },
+    {
+      "id": "TE-EXT-50-LEAVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can take my leave in Telugu and say when I will be back.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C50-now",
+        "TE-C50-day-after",
+        "TE-C50-journey",
+        "TE-C50-set-out",
+        "TE-C50-farewell"
+      ]
+    },
+    {
+      "id": "TE-EXT-51-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can be polite in Telugu beyond thank you.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C51-gratitude",
+        "TE-C51-favour",
+        "TE-C51-respect",
+        "TE-C51-blessing",
+        "TE-C51-salutation"
+      ]
+    },
+    {
+      "id": "TE-EXT-52-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a Telugu welcome offers a guest.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C52-door",
+        "TE-C52-chair",
+        "TE-C52-muggu",
+        "TE-C52-flower",
+        "TE-C52-garland"
       ]
     }
   ]

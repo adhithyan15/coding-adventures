@@ -12857,6 +12857,132 @@
       "jsonHash": "fnv1a64:df5ff051ce3cba57"
     },
     {
+      "language": "telugu",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:ae963402190d48a0",
+      "lessonIds": [
+        "TE-C46-fruit",
+        "TE-C46-cloth",
+        "TE-C46-lamp",
+        "TE-C46-salt",
+        "TE-C46-book"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "telugu/narration/ch46.txt",
+      "json": "telugu/narration/ch46.json",
+      "textHash": "fnv1a64:fcf2d576cc7f8a8a",
+      "jsonHash": "fnv1a64:f8680cb2f24ab83b"
+    },
+    {
+      "language": "telugu",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:28629dad21d7e699",
+      "lessonIds": [
+        "TE-C47-leg",
+        "TE-C47-tooth",
+        "TE-C47-hair",
+        "TE-C47-finger",
+        "TE-C47-stomach"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch47.txt",
+      "json": "telugu/narration/ch47.json",
+      "textHash": "fnv1a64:cb409ca5f2cab9e8",
+      "jsonHash": "fnv1a64:a832a1bfa3c93268"
+    },
+    {
+      "language": "telugu",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:8f31aa85f30163fb",
+      "lessonIds": [
+        "TE-C48-teacher",
+        "TE-C48-student",
+        "TE-C48-doctor",
+        "TE-C48-farmer",
+        "TE-C48-guest"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 2,
+      "text": "telugu/narration/ch48.txt",
+      "json": "telugu/narration/ch48.json",
+      "textHash": "fnv1a64:69effc2f0194ed19",
+      "jsonHash": "fnv1a64:1faa6f1b9239dca0"
+    },
+    {
+      "language": "telugu",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:023f8658d4139133",
+      "lessonIds": [
+        "TE-C49-true",
+        "TE-C49-enough",
+        "TE-C49-certainly",
+        "TE-C49-perhaps",
+        "TE-C49-alright"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "telugu/narration/ch49.txt",
+      "json": "telugu/narration/ch49.json",
+      "textHash": "fnv1a64:e42b04bb3be76d17",
+      "jsonHash": "fnv1a64:02f3ba6b8bdc7d71"
+    },
+    {
+      "language": "telugu",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:c8dd55defa59b40a",
+      "lessonIds": [
+        "TE-C50-now",
+        "TE-C50-day-after",
+        "TE-C50-journey",
+        "TE-C50-set-out",
+        "TE-C50-farewell"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch50.txt",
+      "json": "telugu/narration/ch50.json",
+      "textHash": "fnv1a64:9eabdaafd89d516e",
+      "jsonHash": "fnv1a64:6cacbaaa175c5a86"
+    },
+    {
+      "language": "telugu",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:7d1f81f19d1dec62",
+      "lessonIds": [
+        "TE-C51-gratitude",
+        "TE-C51-favour",
+        "TE-C51-respect",
+        "TE-C51-blessing",
+        "TE-C51-salutation"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch51.txt",
+      "json": "telugu/narration/ch51.json",
+      "textHash": "fnv1a64:9057300aea9e3920",
+      "jsonHash": "fnv1a64:f211adc4be8da21b"
+    },
+    {
+      "language": "telugu",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:d98138f5ed174cfc",
+      "lessonIds": [
+        "TE-C52-door",
+        "TE-C52-chair",
+        "TE-C52-muggu",
+        "TE-C52-flower",
+        "TE-C52-garland"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch52.txt",
+      "json": "telugu/narration/ch52.json",
+      "textHash": "fnv1a64:dfad965b2e503633",
+      "jsonHash": "fnv1a64:08eabd8ccad1162f"
+    },
+    {
       "language": "urdu",
       "chapter": 1,
       "sourceHash": "fnv1a64:6f9688165869e235",

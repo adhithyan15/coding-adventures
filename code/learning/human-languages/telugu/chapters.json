@@ -952,6 +952,153 @@
           "TE-LEX-WIFE"
         ]
       }
+    },
+    {
+      "chapter": 46,
+      "title": "Things You Ask For",
+      "label": "ch:te-ask-for",
+      "canDo": "I can name five everyday things I might ask someone for in Telugu, and say which of them Telugu has always had and which arrived from elsewhere.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C46-book",
+        "kind": "production",
+        "summary": "Complete TE-C46-book and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C46-ASK-01",
+          "TE-LEX-C46-ASK-02",
+          "TE-LEX-C46-ASK-03",
+          "TE-LEX-C46-ASK-04",
+          "TE-LEX-C46-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
+      "title": "The Leg and the Tooth",
+      "label": "ch:te-body-more",
+      "canDo": "I can name five more parts of the body in Telugu, and say which of them held their old shape and which wore down past recognition.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C47-stomach",
+        "kind": "production",
+        "summary": "Complete TE-C47-stomach and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C47-BODY-01",
+          "TE-LEX-C47-BODY-02",
+          "TE-LEX-C47-BODY-03",
+          "TE-LEX-C47-BODY-04",
+          "TE-LEX-C47-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 48,
+      "title": "Naming Who Someone Is",
+      "label": "ch:te-roles",
+      "canDo": "I can say what someone's role is in Telugu --- teacher, student, doctor, farmer, guest --- and name the root that two of those words share.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C48-guest",
+        "kind": "production",
+        "summary": "Complete TE-C48-guest and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C48-ROLE-01",
+          "TE-LEX-C48-ROLE-02",
+          "TE-LEX-C48-ROLE-03",
+          "TE-LEX-C48-ROLE-04",
+          "TE-LEX-C48-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 49,
+      "title": "Answering With More Than Yes",
+      "label": "ch:te-replies",
+      "canDo": "I can answer in Telugu with more than yes and no --- true, enough, certainly, perhaps, just so --- and see the three-vowel grid running under అది, ఇక్కడ and ఎలా.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TE-C49-alright",
+        "kind": "production",
+        "summary": "Complete TE-C49-alright and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C49-REPLY-01",
+          "TE-LEX-C49-REPLY-02",
+          "TE-LEX-C49-REPLY-03",
+          "TE-LEX-C49-REPLY-04",
+          "TE-LEX-C49-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 50,
+      "title": "Taking Your Leave",
+      "label": "ch:te-leave-more",
+      "canDo": "I can take my leave in Telugu the way a Telugu speaker actually does, and say why the flat \"I am going\" is the one thing never said at a door.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TE-C50-farewell",
+        "kind": "production",
+        "summary": "Complete TE-C50-farewell and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C50-LEAVE-01",
+          "TE-LEX-C50-LEAVE-02",
+          "TE-LEX-C50-LEAVE-03",
+          "TE-LEX-C50-LEAVE-04",
+          "TE-LEX-C50-LEAVE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 51,
+      "title": "Courtesy Words",
+      "label": "ch:te-courtesy",
+      "canDo": "I can be polite in Telugu beyond thank you --- gratitude, a good turn, respect, a blessing, a salutation --- and name the piece that two of those words share.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TE-C51-salutation",
+        "kind": "production",
+        "summary": "Complete TE-C51-salutation and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C51-COURTESY-01",
+          "TE-LEX-C51-COURTESY-02",
+          "TE-LEX-C51-COURTESY-03",
+          "TE-LEX-C51-COURTESY-04",
+          "TE-LEX-C51-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 52,
+      "title": "Welcoming a Guest",
+      "label": "ch:te-welcome",
+      "canDo": "I can name the five things a Telugu welcome puts between the street and the guest, from the mark on the ground to the garland.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TE-C52-garland",
+        "kind": "production",
+        "summary": "Complete TE-C52-garland and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C52-WELCOME-01",
+          "TE-LEX-C52-WELCOME-02",
+          "TE-LEX-C52-WELCOME-03",
+          "TE-LEX-C52-WELCOME-04",
+          "TE-LEX-C52-WELCOME-05"
+        ]
+      }
     }
   ]
 }

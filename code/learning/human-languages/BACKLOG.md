@@ -30,6 +30,42 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C200 — nine chapters diverge from their own track's script convention
+
+Found while verifying the Telugu tranche. A book target declares its script one of
+two ways: `scriptSet` (a named set that also loads the COUSIN scripts a comparison
+table cites) or a bare `unicodeScript` + `scriptCommand` pair (target script only).
+
+Census of `core/book-generation.json`:
+
+```
+track        scriptSet  unicodeScript
+kannada             37              3   <-- chapters 43, 44, 45
+malayalam           37              3   <-- chapters 43, 44, 45
+telugu              44              3   <-- chapters 43, 44, 45
+```
+
+Every other track is internally consistent. Sanskrit is all-`unicodeScript`, which
+is correct -- no sanskrit scriptSet exists.
+
+**These nine are mine**, from the HL-C190 see/say and HL-C192 family-word tranches:
+I copied a sibling track's entry shape instead of the entry directly above in the
+same track, which is precisely what HL-C188 was written to prevent.
+
+**Why it is worth fixing even though the books build clean today.** A bare
+`unicodeScript` leaves cousin-script characters in the Latin font, where they
+render as NOTHING and the build still exits 0. The Telugu tranche hit exactly this
+-- 89 missing characters at exit 0 -- and it was caught only because someone read
+the missing-character count rather than the exit status. Chapters 43-45 pass today
+because they happen to cite no cousin script (HL-C191 romanised those citations).
+They are one comparison table away from dropping glyphs silently.
+
+**Fix:** switch the nine targets to their track's scriptSet
+(`kannada-comparisons`, `malayalam-comparisons`, `telugu-comparisons`), regenerate
+those nine chapters and their book hashes, and confirm missing-characters stays 0.
+Kept out of the Telugu tranche PR deliberately: it touches three other tracks'
+generated output and belongs in its own change.
+
 ## HL-C199 — only ONE track has a book/build.sh; the other 21 have none
 
 The per-track content gate this project keeps citing --

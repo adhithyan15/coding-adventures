@@ -1,0 +1,629 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 51,
+  "title": "Courtesy Words",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7d1f81f19d1dec62",
+  "lessons": [
+    {
+      "id": "TE-C51-gratitude",
+      "sequence": 1380,
+      "title": "కృతజ్ఞత (kṛtajñata) — gratitude",
+      "headword": "కృతజ్ఞత",
+      "romanization": "kṛtajñata",
+      "gloss": "gratitude",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ba3b950c5770466",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did veḷḷostānu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కృతజ్ఞత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కృతజ్ఞత (kṛtajñata) — \"gratitude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "kṛta, \"done\", plus jña, \"knowing\": knowing what was done for you. That is the whole of gratitude in two Sanskrit syllables, and Telugu took it entire."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside ధన్యవాదములు, the thank-you from the first pages of this book, which is \"utterances of 'worthy'\". One word thanks by calling the giver worthy. The other thanks by admitting the debt is remembered. They are not the same gesture, and Telugu keeps both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A second word for thanks, with a different picture inside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛtajñata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛtajñata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛtajñata, then dhanyavādamulu, and say which one remembers a debt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛtajñata*, then *dhanyavādamulu*, and say which one remembers a debt]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కృతజ్ఞత (kṛtajñata) mean? (\"gratitude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C51-favour",
+      "sequence": 1390,
+      "title": "మేలు (mēlu) — a good turn, a benefit",
+      "headword": "మేలు",
+      "romanization": "mēlu",
+      "gloss": "a good turn, a benefit",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9512562edf79d3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kṛtajñata mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మేలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మేలు (mēlu) — \"a good turn, a benefit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and short. మేల్ meant \"above\"; the good is what is above. From it Telugu draws మేలు (mēlu), a benefit or a good turn done to someone, and also the plain comparative sense of \"better\"."
+            },
+            {
+              "kind": "speech",
+              "text": "So idi mēlu says \"this one is higher\" and lets the height do the judging --- which is what English does too, in superior, without anyone noticing any more."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlu, then manci, and say which one is a thing done and which is a quality",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlu*, then *manci*, and say which one is a thing done and which is a quality]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మేలు (mēlu) mean? (\"a good turn, a benefit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C51-respect",
+      "sequence": 1400,
+      "title": "గౌరవం (gauravaṁ) — respect",
+      "headword": "గౌరవం",
+      "romanization": "gauravaṁ",
+      "gloss": "respect",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de7cc809c77b552a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mēlu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గౌరవం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గౌరవం (gauravaṁ) — \"respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "gaurava is the abstract noun of guru --- the very word met one chapter ago as the teacher. Respect is weightiness: to hold someone in గౌరవం (gauravaṁ) is to grant that what they say has mass."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu marks the same idea in its grammar as well as its vocabulary. మీరు rather than నువ్వు, and the -అండి hung on the end of a verb, are గౌరవం (gauravaṁ) turned into endings. A language can be polite in its words or in its shapes, and this one does both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and one of them is a word you already knew wearing a different suit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gauravaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gauravaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gauravaṁ, then guruvu, and name the syllable they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gauravaṁ*, then *guruvu*, and name the syllable they share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గౌరవం (gauravaṁ) mean? (\"respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C51-blessing",
+      "sequence": 1410,
+      "title": "ఆశీర్వాదం (āśīrvādaṁ) — a blessing",
+      "headword": "ఆశీర్వాదం",
+      "romanization": "āśīrvādaṁ",
+      "gloss": "a blessing",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40df5c6da4b864b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gauravaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆశీర్వాదం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆశీర్వాదం (āśīrvādaṁ) — \"a blessing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "āśīs, a wish or a prayer, plus vāda, an utterance: a blessing is a wish said out loud."
+            },
+            {
+              "kind": "speech",
+              "text": "The ceremony behind it is still in daily use. You bend and touch an elder's feet, and what comes back is ఆశీర్వాదం (āśīrvādaṁ) --- a hand on the head --- at a birthday, before an examination, at a wedding, and at every departure."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice vāda sitting there. It is the same piece inside ధన్యవాదములు, \"utterances of 'worthy'\". Twice now this language has counted a thing said as a thing given."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four courtesy words, and two of them are utterances by name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśīrvādaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśīrvādaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśīrvādaṁ, then dhanyavādamulu, and name the piece they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśīrvādaṁ*, then *dhanyavādamulu*, and name the piece they share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆశీర్వాదం (āśīrvādaṁ) mean? (\"a blessing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C51-salutation",
+      "sequence": 1420,
+      "title": "దండం (daṇḍaṁ) — a salutation, \"my respects\"",
+      "headword": "దండం",
+      "romanization": "daṇḍaṁ",
+      "gloss": "a salutation, \"my respects\"",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b48a500be4e04da7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did āśīrvādaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దండం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దండం (daṇḍaṁ) — \"a salutation, \"my respects\"\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దండం (daṇḍaṁ) is what you say with the palms together --- my respects --- offered to an elder, a temple, a photograph on the wall. Children are taught to say it long before anyone explains it."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit daṇḍa is a staff, a stick. The full form of the gesture, daṇḍa-praṇāma, is the prostration where the body lies down straight as a staff. Telugu kept the word and let the body straighten most of the way up."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to దండ; it comes back in the next chapter carrying flowers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five courtesy words: కృతజ్ఞత (kṛtajñata), మేలు (mēlu), గౌరవం (gauravaṁ), ఆశీర్వాదం (āśīrvādaṁ), దండం (daṇḍaṁ). Thanks, a good turn, respect, a blessing, and the greeting you make with your hands."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍaṁ, then namaskāraṁ, and say which one you would give a grandparent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍaṁ*, then *namaskāraṁ*, and say which one you would give a grandparent]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దండం (daṇḍaṁ) mean? (\"a salutation, \"my respects\"\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
