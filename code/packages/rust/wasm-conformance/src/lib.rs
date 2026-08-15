@@ -24,16 +24,20 @@
 //! ## Why some directives are graded `NotYetSupported`, never `Fail`
 //!
 //! Grading a directive `Fail` is a claim that `wasm-execution` got something
-//! wrong. Two specific gaps in this repo's WASM stack make that claim
+//! wrong. Specific gaps in this repo's WASM stack make that claim
 //! impossible to back up honestly for certain directive kinds — see each
 //! one's own doc comment on [`Executor::execute`] for the reasoning, and
 //! `code/specs/W05-wasm-conformance-harness.md` section 4.3 for the design
 //! rationale. In short:
 //! - `assert_invalid` needs an instruction-level type-checker
 //!   `wasm-validator` doesn't have yet (`W02` designs it, isn't implemented).
-//! - `assert_unlinkable` needs `WasmRuntime::instantiate` to actually be
-//!   able to *fail* on an unresolved import — today it always silently
-//!   falls back to a default value instead.
+//! - `assert_unlinkable`/any module import: `WasmRuntime::instantiate`
+//!   genuinely fails on an unresolved or type-mismatched import (WASM05,
+//!   see `code/specs/W10-wasm-real-linking-and-unlinkable.md`), and this
+//!   crate's own `RegistryHost` resolves imports from a `register`ed
+//!   sibling module for real — but there's no real `spectest` host module
+//!   (the official test harness's own fixture module), so an import from
+//!   it still correctly grades `NotYetSupported`, not `Fail`.
 //!
 //! `assert_exhaustion` USED to be a third, unconditional case — this
 //! crate never ran it at all, because `wasm-execution` had no call-depth
@@ -49,10 +53,10 @@ use report::{DirectiveKind, DirectiveOutcome};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_execution::{TrapError, WasmValue};
+use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, WasmValue};
 use wasm_module_parser::WasmModuleParser;
 use wasm_runtime::{WasmInstance, WasmRuntime};
-use wasm_types::ExternalKind;
+use wasm_types::{ExternalKind, FuncType, GlobalType};
 use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
 
@@ -86,6 +90,113 @@ fn directive_kind(d: &Directive) -> DirectiveKind {
     }
 }
 
+/// Keyed by `register` name, or `None` for "the current module". Shared
+/// (not borrowed) between `Executor` and `RegistryHost` -- see each's own
+/// doc comment for why.
+type ModuleRegistry = Rc<RefCell<HashMap<Option<String>, Rc<RefCell<WasmInstance>>>>>;
+
+/// A `HostInterface` backed by the `Executor`'s own module registry
+/// (WASM05/W10) -- lets a module import a function/memory/table/global
+/// from a `register`ed sibling module in the same script, exactly the
+/// shape the real corpus's own `assert_unlinkable`/linking cases use
+/// (`register "test"` earlier in the script, then `(import "test" ...)`
+/// later). No `spectest` support -- `resolve_*` simply returns `None`
+/// for any module name not found in the registry, which correctly
+/// surfaces as a link failure without needing a real `spectest` host.
+struct RegistryHost {
+    /// `Rc<RefCell<..>>`, not a borrowed reference: `HostInterface` (like
+    /// any trait consumed as `Box<dyn HostInterface>`) is implicitly
+    /// `'static`, so a `RegistryHost` can't hold a borrow of `Executor`'s
+    /// own fields -- it needs owned, shared access to the SAME
+    /// underlying registry `Executor` itself reads/writes.
+    registry: ModuleRegistry,
+}
+
+impl RegistryHost {
+    fn find_export(&self, module_name: &str, name: &str, kind: ExternalKind) -> Option<(Rc<RefCell<WasmInstance>>, u32)> {
+        let instance_rc = Rc::clone(self.registry.borrow().get(&Some(module_name.to_string()))?);
+        let index = instance_rc
+            .borrow()
+            .exports
+            .iter()
+            .find(|(n, k, _)| n == name && *k == kind)
+            .map(|(_, _, idx)| *idx)?;
+        Some((instance_rc, index))
+    }
+}
+
+impl HostInterface for RegistryHost {
+    fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Function)?;
+        let func_type = instance_rc.borrow().func_types.get(index as usize)?.clone();
+        Some(Box::new(CrossModuleFunction { instance: instance_rc, export_name: name.to_string(), func_type }))
+    }
+
+    fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Global)?;
+        let instance = instance_rc.borrow();
+        let gtype = instance.global_types.get(index as usize)?.clone();
+        let gval = *instance.globals.get(index as usize)?;
+        Some((gtype, gval))
+    }
+
+    fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory> {
+        let (instance_rc, _) = self.find_export(module_name, name, ExternalKind::Memory)?;
+        // A real clone, not a shared live view: `HostInterface::
+        // resolve_memory` returns an OWNED `LinearMemory`, not a
+        // reference, so a genuinely SHARED-and-mutated-across-instances
+        // memory import isn't observable through this path -- link-time
+        // limits compatibility is still checked for real, but a write
+        // through the importing instance won't become visible to the
+        // exporting one. None of the corpus vendored so far exercises
+        // that (its `assert_unlinkable`/`assert_invalid` cases only
+        // probe link-time acceptance/rejection, never post-link shared
+        // mutation), so this is a real, named limitation, not a silently
+        // wrong answer -- revisit if a future vendored file needs it.
+        let memory = instance_rc.borrow().memory.clone();
+        memory
+    }
+
+    fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table> {
+        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Table)?;
+        // Same clone-not-share caveat as `resolve_memory` above.
+        let table = instance_rc.borrow().tables.get(index as usize).cloned();
+        table
+    }
+}
+
+/// A resolved cross-module function import (WASM05/W10): calling it
+/// re-enters `WasmRuntime::call_typed` against the CALLEE's own instance
+/// state (its own memory/tables/globals/func_bodies), not the caller's --
+/// reusing already-tested machinery rather than new interpreter
+/// internals. `HostFunction::call`'s `memory` parameter (normally the
+/// *caller's* memory, used by e.g. WASI's `fd_write` to read/write guest
+/// pointers) is unused here for exactly that reason: a cross-module call
+/// operates entirely on the callee's own state, not the caller's.
+///
+/// Known limitation, not silently allowed to corrupt anything: a
+/// MUTUAL/circular cross-instance call (this function's own callee
+/// instance, reached via a DIFFERENT import, calls back into the
+/// original caller instance) will panic on a `RefCell` double-borrow --
+/// a clean, safe Rust panic (borrow-checked at runtime), not a
+/// memory-safety issue. None of the corpus vendored so far is circular.
+struct CrossModuleFunction {
+    instance: Rc<RefCell<WasmInstance>>,
+    export_name: String,
+    func_type: FuncType,
+}
+
+impl HostFunction for CrossModuleFunction {
+    fn func_type(&self) -> &FuncType {
+        &self.func_type
+    }
+
+    fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+        let mut instance = self.instance.borrow_mut();
+        WasmRuntime::new().call_typed(&mut instance, &self.export_name, args)
+    }
+}
+
 /// Walks a script's directives in order, maintaining the module registry
 /// `invoke`/`register` need to resolve "the current module" vs. a
 /// previously `register`ed one.
@@ -95,41 +206,60 @@ struct Executor {
     /// most recently processed `(module ...)` directive). A script that
     /// never uses `register` only ever touches the `None` entry.
     ///
-    /// `Rc<RefCell<..>>`, not an owned `WasmInstance`, because a
+    /// `Rc<RefCell<..>>` VALUES, not an owned `WasmInstance`, because a
     /// `register`ed module IS the same live instance as "current" -- same
     /// memory, same globals, same subsequent mutations -- not an
     /// independent copy (and `WasmInstance` isn't `Clone` anyway: it holds
-    /// a `Box<dyn HostFunction>`).
-    registry: HashMap<Option<String>, Rc<RefCell<WasmInstance>>>,
-    /// Set when the current module has any import at all -- this repo has
-    /// no host-import resolver (no `spectest`, no registry-backed linking),
-    /// so an imported function/global/memory/table silently gets a default
-    /// placeholder value instead of the real one (see
-    /// `WasmRuntime::instantiate`'s doc comment). Any directive run against
-    /// such a module is graded `NotYetSupported`, not `Fail` -- a wrong
-    /// answer here would be "we didn't wire up linking," not "the
-    /// interpreter is broken."
-    current_has_imports: bool,
+    /// a `Box<dyn HostFunction>`). The MAP itself is also wrapped in
+    /// `Rc<RefCell<..>>` so `RegistryHost` (WASM05/W10) can hold shared,
+    /// owned access to the exact same registry `Executor` reads/writes,
+    /// satisfying `HostInterface`'s implicit `'static` bound without a
+    /// borrow.
+    registry: ModuleRegistry,
+    /// Set when the current module failed to INSTANTIATE for a reason
+    /// that's a genuine capability gap, not a bug -- today, only "an
+    /// import references `spectest` or another module this crate's
+    /// `RegistryHost` doesn't know about" (WASM05/W10 gave `instantiate`
+    /// a real link-failure path; `RegistryHost` only ever resolves
+    /// `register`ed sibling modules, not a real `spectest` host). Any
+    /// directive run against such a module is graded `NotYetSupported`,
+    /// not `Fail`/`Trap` -- a wrong answer here would be "we didn't wire
+    /// up linking for this specific host module," not "the interpreter
+    /// is broken."
+    current_link_failed: Option<String>,
 }
 
 impl Executor {
     fn new() -> Self {
-        Executor { runtime: WasmRuntime::new(), registry: HashMap::new(), current_has_imports: false }
+        Executor {
+            runtime: WasmRuntime::new(),
+            registry: Rc::new(RefCell::new(HashMap::new())),
+            current_link_failed: None,
+        }
     }
 
     fn execute(&mut self, directive: Directive) -> DirectiveOutcome {
         match directive {
             Directive::Module(module) => {
-                self.current_has_imports = !module.imports.is_empty();
+                self.current_link_failed = None;
                 match self.runtime.validate(&module) {
                     Err(e) => DirectiveOutcome::Fail(format!("module failed structural validation: {e}")),
-                    Ok(validated) => match self.runtime.instantiate(&validated.module) {
-                        Ok(instance) => {
-                            self.registry.insert(None, Rc::new(RefCell::new(instance)));
-                            DirectiveOutcome::Pass
+                    Ok(validated) => {
+                        let host = RegistryHost { registry: Rc::clone(&self.registry) };
+                        match WasmRuntime::with_host(Box::new(host)).instantiate(&validated.module) {
+                            Ok(instance) => {
+                                self.registry.borrow_mut().insert(None, Rc::new(RefCell::new(instance)));
+                                DirectiveOutcome::Pass
+                            }
+                            Err(e) if is_link_error(&e) => {
+                                self.current_link_failed = Some(e.to_string());
+                                DirectiveOutcome::NotYetSupported(format!(
+                                    "module failed to link (real capability gap, not a bug): {e}"
+                                ))
+                            }
+                            Err(e) => DirectiveOutcome::Trap(format!("instantiation trapped: {e}")),
                         }
-                        Err(e) => DirectiveOutcome::Trap(format!("instantiation trapped: {e}")),
-                    },
+                    }
                 }
             }
 
@@ -142,9 +272,10 @@ impl Executor {
                 // look up. Only "register the CURRENT module" is
                 // supported -- the only form any of this phase's vendored
                 // files actually use.
-                match self.registry.get(&None) {
+                let current = self.registry.borrow().get(&None).cloned();
+                match current {
                     Some(current) => {
-                        self.registry.insert(Some(name), Rc::clone(current));
+                        self.registry.borrow_mut().insert(Some(name), current);
                         DirectiveOutcome::Pass
                     }
                     None => DirectiveOutcome::Fail("register: no current module to register".to_string()),
@@ -202,14 +333,7 @@ impl Executor {
 
             Directive::AssertInvalid { module, .. } => self.grade_assert_invalid(module),
             Directive::AssertMalformed { module, .. } => self.grade_assert_malformed(module),
-
-            // `wasm-runtime`'s `instantiate` never fails on an unresolved
-            // import -- it always falls back to a default value (see this
-            // crate's module-level doc comment) -- so there is currently no
-            // path through which linking can be observed to fail.
-            Directive::AssertUnlinkable { .. } => DirectiveOutcome::NotYetSupported(
-                "WasmRuntime::instantiate never fails on an unresolved import, so linking failure can't be observed yet".to_string(),
-            ),
+            Directive::AssertUnlinkable { module, .. } => self.grade_assert_unlinkable(module),
         }
     }
 
@@ -266,18 +390,44 @@ impl Executor {
         }
     }
 
+    /// `assert_unlinkable` expects the module to fail to be usable at all
+    /// -- whether because it doesn't even build, doesn't structurally
+    /// validate, or (WASM05/W10) genuinely fails to LINK. Like
+    /// `grade_assert_invalid`'s own precedent: the harness only needs the
+    /// OUTCOME category (rejected) to match, not the specific reason --
+    /// `assert_trap`'s grading doesn't string-match trap text either.
+    fn grade_assert_unlinkable(&self, module: ModuleSource) -> DirectiveOutcome {
+        match build_module(module) {
+            Err(_) => DirectiveOutcome::Pass,
+            Ok(built) => match self.runtime.validate(&built) {
+                Err(_) => DirectiveOutcome::Pass,
+                Ok(validated) => {
+                    let host = RegistryHost { registry: Rc::clone(&self.registry) };
+                    match WasmRuntime::with_host(Box::new(host)).instantiate(&validated.module) {
+                        Ok(_) => DirectiveOutcome::Fail("module linked successfully; expected unlinkable".to_string()),
+                        Err(_) => DirectiveOutcome::Pass,
+                    }
+                }
+            },
+        }
+    }
+
     fn run_action(&mut self, action: &Action) -> Result<Vec<WasmValue>, ActionError> {
         match action {
             Action::Invoke { module, name, args } => {
                 let key = module.clone();
-                if self.registry_module_has_imports(&key) {
-                    return Err(ActionError::NotYetSupported(
-                        "module has unresolved imports (no host/linking support yet)".to_string(),
-                    ));
+                if key.is_none() {
+                    if let Some(reason) = &self.current_link_failed {
+                        return Err(ActionError::NotYetSupported(format!(
+                            "current module failed to link (real capability gap, not a bug): {reason}"
+                        )));
+                    }
                 }
                 let instance_rc = self
                     .registry
+                    .borrow()
                     .get(&key)
+                    .cloned()
                     .ok_or_else(|| ActionError::Trap(format!("no module registered as {key:?}")))?;
                 let mut instance = instance_rc.borrow_mut();
                 let wasm_args: Vec<WasmValue> = args.iter().map(const_value_to_wasm_value).collect();
@@ -287,9 +437,18 @@ impl Executor {
             }
             Action::Get { module, name } => {
                 let key = module.clone();
+                if key.is_none() {
+                    if let Some(reason) = &self.current_link_failed {
+                        return Err(ActionError::NotYetSupported(format!(
+                            "current module failed to link (real capability gap, not a bug): {reason}"
+                        )));
+                    }
+                }
                 let instance_rc = self
                     .registry
+                    .borrow()
                     .get(&key)
+                    .cloned()
                     .ok_or_else(|| ActionError::Trap(format!("no module registered as {key:?}")))?;
                 let instance = instance_rc.borrow();
                 instance
@@ -301,15 +460,6 @@ impl Executor {
                     .ok_or_else(|| ActionError::Trap(format!("no global export named {name:?}")))
             }
         }
-    }
-
-    /// `Action::Invoke`/`Action::Get` target either "the current module"
-    /// (`module: None`) or a `register`ed one (`module: Some(name)`) --
-    /// this only tracks the CURRENT module's import status (`register`
-    /// only ever registers the current module in this crate's simplified
-    /// model), which is enough for every file this phase vendors.
-    fn registry_module_has_imports(&self, key: &Option<String>) -> bool {
-        key.is_none() && self.current_has_imports
     }
 }
 
@@ -329,6 +479,21 @@ fn const_value_to_wasm_value(c: &ConstValue) -> WasmValue {
         // wraps the identical `Option<u32>` shape `ConstValue::Ref` does.
         ConstValue::Ref(v) => WasmValue::Ref(v),
     }
+}
+
+/// Distinguishes a real LINK failure (an unresolved or type-mismatched
+/// import) from a genuine RUNTIME fault during `instantiate`'s data/
+/// element-segment initialization -- `WasmRuntime::instantiate` reuses
+/// `TrapError` for both rather than a new error type (this crate's own
+/// convention of self-authored, capability-gap-shaped error text; see
+/// `wasm-runtime`'s `link_error` helper), so the message's own prefix is
+/// the only signal. This is matching OUR OWN self-authored text, not the
+/// spec's expected message wording -- a different thing from the
+/// trap-grading discipline elsewhere in this crate that deliberately
+/// never string-matches the SPEC's own trap messages.
+fn is_link_error(e: &TrapError) -> bool {
+    let msg = e.to_string();
+    msg.contains("unknown import") || msg.contains("incompatible import type")
 }
 
 fn build_module(source: ModuleSource) -> Result<wasm_types::WasmModule, String> {
@@ -600,10 +765,58 @@ mod tests {
     }
 
     #[test]
-    fn assert_unlinkable_is_always_not_yet_supported() {
+    fn assert_unlinkable_passes_for_real_on_a_totally_unknown_module() {
+        // WASM05/W10: `instantiate` now genuinely fails to link when no
+        // host resolves the import at all -- no `spectest` support
+        // needed for this specific case, since `RegistryHost` correctly
+        // returns `None` for any module name it has never `register`ed.
         let results = outcomes(r#"(assert_unlinkable (module (import "m" "f" (func))) "unknown import")"#);
         assert_eq!(results.len(), 1);
-        assert!(matches!(results[0].1, DirectiveOutcome::NotYetSupported(_)));
+        assert_eq!(results[0], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn assert_unlinkable_passes_for_real_on_an_unknown_export_within_a_known_module() {
+        let results = outcomes(
+            r#"
+            (module (func (export "func")))
+            (register "test")
+            (assert_unlinkable (module (import "test" "unknown" (func))) "unknown import")
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn assert_unlinkable_passes_for_real_on_a_function_type_mismatch() {
+        let results = outcomes(
+            r#"
+            (module (func (export "func-i32") (param i32)))
+            (register "test")
+            (assert_unlinkable (module (import "test" "func-i32" (func))) "incompatible import type")
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::AssertUnlinkable, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn a_module_importing_a_registered_siblings_function_links_and_calls_across_instances() {
+        // The positive counterpart to the assert_unlinkable cases above:
+        // a real cross-instance function call, exercising
+        // `CrossModuleFunction::call`'s `WasmRuntime::call_typed`
+        // reentrance against the CALLEE's own instance state.
+        let results = outcomes(
+            r#"
+            (module (func (export "double") (param i32) (result i32) local.get 0 local.get 0 i32.add))
+            (register "test")
+            (module
+              (import "test" "double" (func $double (param i32) (result i32)))
+              (func (export "quadruple") (param i32) (result i32)
+                (call $double (call $double (local.get 0)))))
+            (assert_return (invoke "quadruple" (i32.const 3)) (i32.const 12))
+            "#,
+        );
+        assert_eq!(results[3], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
     }
 
     #[test]
@@ -639,6 +852,13 @@ mod tests {
 
     #[test]
     fn module_with_unresolved_import_marks_invoke_not_yet_supported() {
+        // WASM05/W10: `spectest` isn't a `register`ed sibling module, so
+        // this module now genuinely fails to LINK (a real capability
+        // gap, `RegistryHost` has no `spectest` support) rather than
+        // hitting the old blanket "any import present" rule -- same
+        // outcome (`NotYetSupported`, cascading via `current_link_failed`
+        // to the following `assert_return`), different, more honest
+        // reason underneath.
         let results = outcomes(
             r#"
             (module

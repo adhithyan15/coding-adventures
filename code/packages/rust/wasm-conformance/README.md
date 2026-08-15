@@ -52,16 +52,19 @@ Every directive in a `.wast` script is graded one of four ways:
   vice versa for `assert_trap`).
 - **`NotYetSupported`** — grading this directive correctly needs a
   capability this repo's WASM stack doesn't have yet, and claiming `Fail`
-  would misattribute the gap. Three specific cases:
+  would misattribute the gap. Two specific cases remain:
   - `assert_invalid` needs an instruction-level type-checker
     `wasm-validator` doesn't have (`W02`'s own spec already designs it).
-  - `assert_unlinkable` needs `WasmRuntime::instantiate` to actually be
-    able to fail on an unresolved import — today it always falls back to
-    a default value.
-  - `assert_exhaustion` is **never executed at all** — `wasm-execution`
-    has no call-depth guard, so the deliberately unbounded recursion these
-    cases trigger would overflow the real host stack (an uncatchable
-    process abort), not produce a gradeable trap.
+  - `assert_unlinkable`/any module import: `WasmRuntime::instantiate`
+    genuinely fails on an unresolved or type-mismatched import (WASM05),
+    and `wasm-conformance`'s own `RegistryHost` resolves imports from a
+    `register`ed sibling module in the same script for real — but there's
+    no real `spectest` host module (the official test harness's own
+    fixture module), so an import from it still correctly grades
+    `NotYetSupported`, not `Fail`.
+  - `assert_exhaustion` USED to be a third case (never executed at all,
+    since `wasm-execution` had no call-depth guard) — WASM01 added one,
+    so it's graded for real now, the same way `assert_trap` is.
 
 Every `NotYetSupported` case is expected to flip to a real `Pass`/`Fail`
 once the missing capability ships, with **zero changes to this harness**.

@@ -1276,10 +1276,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 3,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 1
       },
       "register": {
         "pass": 0,
@@ -2733,10 +2733,10 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 111,
+      "pass": 110,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 0
+      "not_yet_supported": 1
     },
     "register": {
       "pass": 0,
