@@ -1,0 +1,69 @@
+% ============================================================================
+% reference-line-degree — the exact latitude MAGNITUDE a source states for a
+% tropic, decoded from a clause already sitting unused inside
+% `reference-lines.adj`'s own already-quoted NOAA NESDIS source sentence
+% (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `reference-lines.adj`
+% (`reference_line(line, marks)`, tropic_of_cancer → northernmost_sun_overhead,
+% tropic_of_capricorn → southernmost_sun_overhead): that table's own
+% already-quoted NOAA NESDIS span ALSO states the precise NUMERIC latitude of
+% each tropic -- a fact the line/marks schema had no room for:
+%
+%     "One in the Northern Hemisphere called the Tropic of Cancer at +23.5°
+%      latitude and one in the Southern Hemisphere called the Tropic of
+%      Capricorn at − 23.5° latitude."
+%
+% New `reference_line_degree(line, degrees)` table decodes that span as its
+% own rows: tropic_of_cancer → 23.5, tropic_of_capricorn → -23.5. "Degrees"
+% (a precise signed numeric latitude) is categorically distinct from the
+% parent table's "marks" (a categorical description of what the line marks) --
+% the tropic of Cancer's marks value is northernmost_sun_overhead, but its
+% numeric magnitude is a separate fact the marks column has no room for.
+% Recall is a binding query:
+%
+%     ? reference_line_degree(tropic_of_cancer, $Degrees)   % 23.5
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `reference_line_degree(line, degrees)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query -- the engine returns the
+% degree value WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of these two tropics (it never
+% invents a degree value). The query also runs BACKWARD -- bind a degree
+% value and recall the line it names:
+%
+%     ? reference_line_degree($Line, -23.5)   % tropic_of_capricorn
+%
+% A recall on `equator` or `prime_meridian` -- real, already-tabled reference
+% lines in `reference-lines.adj` whose own quoted spans DO state a numeric
+% degree (0 degrees) -- correctly abstains here, because that exact numeric
+% fact is already fully captured by their own `marks` atoms
+% (`zero_degrees_latitude`/`zero_degrees_longitude`), so decoding it again
+% into this table would restate the parent rather than add a new fact; this
+% table exists specifically for the two tropics, whose numeric magnitude
+% (23.5) is nowhere present in their `marks` atoms
+% (`northernmost_sun_overhead`/`southernmost_sun_overhead`). A recall on
+% `arctic_circle` or `antarctic_circle` -- real, already-tabled lines whose
+% own quoted span never states a numeric degree at all (only "around the
+% North/South Pole") -- also correctly abstains.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
+% inside `reference-lines.adj`'s own header, from the SAME NOAA NESDIS "What
+% Is a Solstice?" page that table already cites -- no new WebFetch, only a
+% different schema decoding a different clause of that already-verified
+% quote. `trust authoritative` -- the same tier the parent table already
+% carries (NOAA NESDIS is a primary U.S. government reference).
+% (See ../README.md.)
+% ============================================================================
+
+table reference_line_degree {
+    columns line, degrees
+
+    row (tropic_of_cancer, 23.5)
+    row (tropic_of_capricorn, -23.5)
+
+    source "One in the Northern Hemisphere called the Tropic of Cancer at +23.5° latitude and one in the Southern Hemisphere called the Tropic of Capricorn at − 23.5° latitude."
+    locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+    trust authoritative
+}
