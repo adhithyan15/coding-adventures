@@ -3283,6 +3283,49 @@
         "ES-EXT-274-WEIGHT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-275-01",
+      "spine_node": "SPINE-EXPRESS-FINE-SHADES",
+      "lessons": [
+        "ES-C275-deber-de"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-275-02",
+      "spine_node": "SPINE-EXPRESS-FINE-SHADES",
+      "lessons": [
+        "ES-C275-cometer-un-error"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-275-03",
+      "spine_node": "SPINE-EXPRESS-FINE-SHADES",
+      "lessons": [
+        "ES-C275-si-que"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-275-04",
+      "spine_node": "SPINE-EXPRESS-FINE-SHADES",
+      "lessons": [
+        "ES-C275-delgado-flaco",
+        "ES-C275-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-275-SHADES"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3773,13 +3816,13 @@
       "relocates": {}
     },
     "SPINE-EXPRESS-FINE-SHADES": {
-      "segments": [],
-      "omits": [
-        "NUANCE-MODALITY",
-        "COLLOCATION-PRECISE",
-        "EMPHASIS-DEVICE",
-        "CONNOTATION-CHOICE"
+      "segments": [
+        "ES-PATH-275-01",
+        "ES-PATH-275-02",
+        "ES-PATH-275-03",
+        "ES-PATH-275-04"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-READ-LITERARY-AND-CLASSICAL": {
@@ -6768,6 +6811,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C274-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-275-SHADES",
+      "stage": "C2",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what English does with each of the four distinctions, and which needs exposure rather than a rule.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C275-practice"
       ]
     }
   ],

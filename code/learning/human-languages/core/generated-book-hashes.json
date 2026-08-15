@@ -6368,6 +6368,19 @@
       "tex": "spanish/book/chapters/ch274-peso-cultural.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 275,
+      "sourceHash": "fnv1a64:4cfe2b583596f14d",
+      "lessonIds": [
+        "ES-C275-deber-de",
+        "ES-C275-cometer-un-error",
+        "ES-C275-si-que",
+        "ES-C275-delgado-flaco",
+        "ES-C275-practice"
+      ],
+      "tex": "spanish/book/chapters/ch275-matices.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",
