@@ -892,6 +892,153 @@
           "HI-LEX-PEOPLE"
         ]
       }
+    },
+    {
+      "chapter": 45,
+      "title": "Things You Ask For",
+      "label": "ch:hi-ask-for",
+      "canDo": "I can name five everyday things I might ask someone for in Hindi, and say which of them came down from Sanskrit and which walked in with Persian.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "HI-C45-soap",
+        "kind": "production",
+        "summary": "Complete HI-C45-soap and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C45-ASK-01",
+          "HI-LEX-C45-ASK-02",
+          "HI-LEX-C45-ASK-03",
+          "HI-LEX-C45-ASK-04",
+          "HI-LEX-C45-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 46,
+      "title": "Hair, Ear, and Throat",
+      "label": "ch:hi-body-more",
+      "canDo": "I can name five more parts of the body in Hindi, and follow the wearing-down that turned each Sanskrit word into the one people say.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "HI-C46-throat",
+        "kind": "production",
+        "summary": "Complete HI-C46-throat and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C46-BODY-01",
+          "HI-LEX-C46-BODY-02",
+          "HI-LEX-C46-BODY-03",
+          "HI-LEX-C46-BODY-04",
+          "HI-LEX-C46-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
+      "title": "Who Someone Is",
+      "label": "ch:hi-roles",
+      "canDo": "I can say what someone's work is in Hindi, and tell an inherited word for a person from a borrowed one.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "HI-C47-neighbour",
+        "kind": "production",
+        "summary": "Complete HI-C47-neighbour and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C47-ROLE-01",
+          "HI-LEX-C47-ROLE-02",
+          "HI-LEX-C47-ROLE-03",
+          "HI-LEX-C47-ROLE-04",
+          "HI-LEX-C47-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 48,
+      "title": "Short Replies",
+      "label": "ch:hi-replies",
+      "canDo": "I can answer someone in Hindi with one word, and pick how certain that one word sounds.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "HI-C48-absolutely",
+        "kind": "production",
+        "summary": "Complete HI-C48-absolutely and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C48-REPLY-01",
+          "HI-LEX-C48-REPLY-02",
+          "HI-LEX-C48-REPLY-03",
+          "HI-LEX-C48-REPLY-04",
+          "HI-LEX-C48-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 49,
+      "title": "Taking Your Leave",
+      "label": "ch:hi-taking-leave",
+      "canDo": "I can say when I am leaving and when I will be back in Hindi.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "HI-C49-meeting",
+        "kind": "production",
+        "summary": "Complete HI-C49-meeting and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C49-LEAVE-01",
+          "HI-LEX-C49-LEAVE-02",
+          "HI-LEX-C49-LEAVE-03",
+          "HI-LEX-C49-LEAVE-04",
+          "HI-LEX-C49-LEAVE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 50,
+      "title": "Courtesy Words",
+      "label": "ch:hi-courtesy",
+      "canDo": "I can thank someone in Hindi at the weight the occasion asks for.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "HI-C50-salutation",
+        "kind": "production",
+        "summary": "Complete HI-C50-salutation and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C50-COURTESY-01",
+          "HI-LEX-C50-COURTESY-02",
+          "HI-LEX-C50-COURTESY-03",
+          "HI-LEX-C50-COURTESY-04",
+          "HI-LEX-C50-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 51,
+      "title": "Welcoming a Guest",
+      "label": "ch:hi-welcoming-a-guest",
+      "canDo": "I can name what a Hindi household puts in front of a guest at the door.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "HI-C51-sweet",
+        "kind": "production",
+        "summary": "Complete HI-C51-sweet and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C51-WELCOME-01",
+          "HI-LEX-C51-WELCOME-02",
+          "HI-LEX-C51-WELCOME-03",
+          "HI-LEX-C51-WELCOME-04",
+          "HI-LEX-C51-WELCOME-05"
+        ]
+      }
     }
   ]
 }
