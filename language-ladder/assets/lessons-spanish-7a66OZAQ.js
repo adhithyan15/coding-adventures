@@ -1,0 +1,665 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-C273-practice
+spine_node: SPINE-STRUCTURE-EXTENDED-TEXT
+sequence: 2860
+chapter: 273
+type: practice
+headword: one paragraph, four joins
+gloss: plan, add, join, refer back
+concept_tag: ES-PRACTICE-COHESION
+prerequisites: [ES-C273-lo-cual]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-EN-PRIMER-LUGAR, ES-LEX-LO-CUAL]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-EN-PRIMER-LUGAR, ES-SEMANTIC-TEXT-PLAN, ES-LEX-ADEMAS, ES-SEMANTIC-ADDITIVE-ESCALATING, ES-LEX-POR-LO-TANTO, ES-SEMANTIC-COHESION-CHAIN, ES-LEX-LO-CUAL, ES-SEMANTIC-ANAPHORA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output]
+register: neutral
+variety: general
+reviews_of: [ES-C273-en-primer-lugar, ES-C273-ademas, ES-C273-por-lo-tanto, ES-C273-lo-cual]
+---
+
+# One paragraph, four joins
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-EN-PRIMER-LUGAR, ES-LEX-ADEMAS] -->
+
+[PAUSE 2s] Four pieces, and the point of them is that they only show their value
+at length. A single sentence never needed any of this.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-EN-PRIMER-LUGAR, ES-SEMANTIC-TEXT-PLAN, ES-LEX-ADEMAS, ES-SEMANTIC-ADDITIVE-ESCALATING, ES-LEX-POR-LO-TANTO, ES-SEMANTIC-COHESION-CHAIN, ES-LEX-LO-CUAL, ES-SEMANTIC-ANAPHORA] -->
+
+[PAUSE 1s] Build one paragraph out loud, on any opinion you hold. Four sentences,
+each with its join.
+
+- [YOU SAY: *en primer lugar*, and your first reason. The listener now knows more
+  is coming.]
+- [YOU SAY: *además*, and a second reason that is **not** the same kind as the
+  first. If it could have taken *también*, choose a different reason.]
+- [YOU SAY: *por lo tanto*, and the conclusion those two reasons earn.]
+- [YOU SAY: one more sentence ending in *lo cual* plus your reaction to the whole
+  of it.]
+
+[PAUSE 2s]
+- [YOU SAY: the same four sentences again with every join REMOVED. Same content,
+  same order.]
+- [YOU SAY: what changed. Nothing became wrong — it became work.]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SEMANTIC-TEXT-PLAN, ES-SEMANTIC-COHESION-CHAIN, ES-SEMANTIC-ANAPHORA] -->
+
+[PAUSE 3s] Which of the four tells the listener how many points are coming?
+(*En primer lugar*.) Which one points back at a whole idea? (*Lo cual*.) What is
+the name for a text whose sentences signal how they relate? (Cohesive.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: ES-C274-mas-vale-pajaro
+spine_node: SPINE-READ-CULTURAL-WEIGHT
+sequence: 2870
+chapter: 274
+type: phrase
+headword: más vale pájaro en mano
+gloss: a bird in the hand — the proverb, and what a proverb is
+concept_tag: PROVERB
+prerequisites: [ES-C273-lo-cual]
+sounds: [vowel-a, vowel-e]
+roots: [valere]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-LO-CUAL]
+introduces:
+  knowledge: [ES-LEX-PAJARO-EN-MANO, ES-SEMANTIC-PROVERB]
+practises:
+  knowledge: [ES-LEX-PAJARO-EN-MANO, ES-SEMANTIC-PROVERB]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C273-lo-cual]
+---
+
+# más vale pájaro en mano — a sentence the language finished for you
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] This chapter is about Spanish that carries more than its meaning: it carries where it came from.
+
+## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- [lo cual](./ES-C273-lo-cual.md) — the last piece of the paragraph chapter.
+- [tomar el pelo](./ES-C272-tomar-el-pelo.md) — the idiom you cannot decode.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- *más VA-le PÁ-ja-ro en MA-no*. → [reference](../pronunciation-reference.md)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-PAJARO-EN-MANO]; assesses=[] -->
+
+**más vale pájaro en mano** — "a bird in the hand is worth more."
+
+Every word is one you have. *Más* from the comparison chapter, *vale* from
+Latin **valere** ("to be worth" — English **value**, **valid**), *mano* from
+**manus**.
+
+And Spanish speakers do not finish it. The full form is *más vale pájaro en mano
+que ciento volando* — "than a hundred flying" — but the second half is so well
+known that saying it marks you as explaining rather than quoting.
+
+English does the same. Nobody says *a bird in the hand is worth two in the bush*;
+they say **a bird in the hand** and stop.
+
+## What you've built
+<!-- hl-knowledge: introduces=[ES-SEMANTIC-PROVERB]; assesses=[] -->
+
+A **proverb** is not an idiom. An idiom's meaning cannot be worked out from its
+words; a proverb's can — *a bird in the hand is worth more* is transparent.
+
+What a proverb carries instead is **communal authority**. Using one is a claim
+that the point is not yours but everybody's, already settled, not up for
+argument. That is why proverbs close conversations and arguments open them.
+
+The half-sentence is the tell. A phrase you are expected to leave unfinished is a
+phrase the room already knows.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PAJARO-EN-MANO, ES-SEMANTIC-PROVERB] -->
+
+[PAUSE 1s]
+- [YOU SAY: the half everyone says]
+- [YOU SAY: the full form, and notice it sounds like explaining]
+- [YOU SAY: what a proverb claims that an argument does not (that it is settled)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PAJARO-EN-MANO, ES-SEMANTIC-PROVERB] -->
+
+[PAUSE 3s] What is the difference between a proverb and an idiom? (A proverb's meaning is
+transparent; an idiom's is not.) Why do speakers stop halfway? (Finishing it
+marks you as explaining rather than quoting.)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: ES-C274-pasar-a-mejor-vida
+spine_node: SPINE-READ-CULTURAL-WEIGHT
+sequence: 2890
+chapter: 274
+type: phrase
+headword: pasar a mejor vida
+gloss: to pass on — and why the language turns away
+concept_tag: EUPHEMISM-AND-TABOO
+prerequisites: [ES-C274-ser-un-quijote]
+sounds: [vowel-a, vowel-e]
+roots: [passus, vita]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-SER-UN-QUIJOTE]
+introduces:
+  knowledge: [ES-LEX-PASAR-A-MEJOR-VIDA, ES-SEMANTIC-EUPHEMISM]
+practises:
+  knowledge: [ES-LEX-PASAR-A-MEJOR-VIDA, ES-SEMANTIC-EUPHEMISM]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C274-ser-un-quijote]
+---
+
+# pasar a mejor vida — the words a language uses to avoid a word
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Some meanings a language will not say directly. This is how Spanish says one of them.
+
+## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- [ser un quijote](./ES-C274-ser-un-quijote.md) — the allusion.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- *pa-SAR a me-JOR VI-da*. → [reference](../pronunciation-reference.md)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-PASAR-A-MEJOR-VIDA]; assesses=[] -->
+
+**pasar a mejor vida** — literally "to pass to a better life": to die.
+
+Spanish has the plain verb, *morir*, and uses it. But alongside it sits a whole
+shelf of ways not to: *pasar a mejor vida*, *fallecer* (the formal one),
+*irse*, *descansar*.
+
+English has exactly the same shelf — *pass away*, *pass on*, *depart*, *rest* —
+and for the same reason. A **euphemism** is not politeness for its own sake. It
+is a language routing around a subject its speakers find hard to name.
+
+## What you've built
+<!-- hl-knowledge: introduces=[ES-SEMANTIC-EUPHEMISM]; assesses=[] -->
+
+Where the euphemisms cluster tells you what a culture treats as difficult, and
+the clusters are largely shared: death, illness, money, the body, dismissal from
+a job.
+
+Two practical consequences. First, **you will meet these before you meet the
+plain word**, because speakers reach for them by default with strangers. Second,
+choosing the plain word when a euphemism was expected is not a neutral act — it
+is a choice the listener will hear, the same way *sí, claro* said flatly is a
+choice.
+
+The euphemism is not the polite version of the sentence. It is a different
+sentence.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PASAR-A-MEJOR-VIDA, ES-SEMANTIC-EUPHEMISM] -->
+
+[PAUSE 1s]
+- [YOU SAY: *pasar a mejor vida*]
+- [YOU SAY: the plain verb it avoids (*morir*)]
+- [YOU SAY: one English euphemism for the same thing]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PASAR-A-MEJOR-VIDA, ES-SEMANTIC-EUPHEMISM] -->
+
+[PAUSE 3s] What is a euphemism doing? (Routing around a subject speakers find hard to
+name.) Name two areas where euphemisms cluster. (Death, illness, money, the body,
+losing a job.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: ES-C274-practice
+spine_node: SPINE-READ-CULTURAL-WEIGHT
+sequence: 2910
+chapter: 274
+type: practice
+headword: four kinds of weight
+gloss: the community, a story, a silence, a sense of charm
+concept_tag: ES-PRACTICE-CULTURAL-WEIGHT
+prerequisites: [ES-C274-tener-gracia]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-PAJARO-EN-MANO, ES-LEX-TENER-GRACIA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-PAJARO-EN-MANO, ES-SEMANTIC-PROVERB, ES-LEX-SER-UN-QUIJOTE, ES-SEMANTIC-ALLUSION, ES-LEX-PASAR-A-MEJOR-VIDA, ES-SEMANTIC-EUPHEMISM, ES-LEX-TENER-GRACIA, ES-SEMANTIC-HUMOR-CONVENTION]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-output]
+register: neutral
+variety: general
+reviews_of: [ES-C274-mas-vale-pajaro, ES-C274-ser-un-quijote, ES-C274-pasar-a-mejor-vida, ES-C274-tener-gracia]
+---
+
+# Four kinds of weight
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PAJARO-EN-MANO, ES-LEX-SER-UN-QUIJOTE] -->
+
+[PAUSE 2s] Each of these four says something plain and carries something else.
+The skill is naming what the something else is.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PAJARO-EN-MANO, ES-SEMANTIC-PROVERB, ES-LEX-SER-UN-QUIJOTE, ES-SEMANTIC-ALLUSION, ES-LEX-PASAR-A-MEJOR-VIDA, ES-SEMANTIC-EUPHEMISM, ES-LEX-TENER-GRACIA, ES-SEMANTIC-HUMOR-CONVENTION] -->
+
+[PAUSE 1s] For each, say the phrase and then name the weight it carries.
+
+- [YOU SAY: *más vale pájaro en mano* — and what it borrows
+  (**the community's authority**: the point is not mine, it is settled)]
+- [YOU SAY: *ser un quijote* — and what it borrows
+  (**a shared story**, which you may use without having read)]
+- [YOU SAY: *pasar a mejor vida* — and what it borrows
+  (**a silence**: the subject the language is routing around)]
+- [YOU SAY: *no tiene gracia* — and what it borrows
+  (**a sense of what is charming**, which is not the same as what is amusing)]
+
+[PAUSE 2s]
+- [YOU SAY: which of the four you could use correctly without knowing its source
+  (*un quijote* — the allusion has been absorbed)]
+- [YOU SAY: which one tells you what a culture finds hard to say (the euphemism)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SEMANTIC-PROVERB, ES-SEMANTIC-ALLUSION, ES-SEMANTIC-EUPHEMISM, ES-SEMANTIC-HUMOR-CONVENTION] -->
+
+[PAUSE 3s] Name the four weights: the community's authority, a shared story, a
+subject avoided, a sense of charm. Which one is transparent in its words but
+borrowed in its force? (The proverb.) Which is the last a learner acquires, and
+why? (Humour — it needs all the others at once.)
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: ES-C274-ser-un-quijote
+spine_node: SPINE-READ-CULTURAL-WEIGHT
+sequence: 2880
+chapter: 274
+type: phrase
+headword: ser un quijote
+gloss: to be a Quixote — an allusion working as a word
+concept_tag: CULTURAL-ALLUSION
+prerequisites: [ES-C274-mas-vale-pajaro]
+sounds: [vowel-a, vowel-e]
+roots: [quijote]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-PAJARO-EN-MANO]
+introduces:
+  knowledge: [ES-LEX-SER-UN-QUIJOTE, ES-SEMANTIC-ALLUSION]
+practises:
+  knowledge: [ES-LEX-SER-UN-QUIJOTE, ES-SEMANTIC-ALLUSION]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C274-mas-vale-pajaro]
+---
+
+# ser un quijote — when a book becomes a common noun
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] A proverb comes from everyone. This comes from one book, and behaves like a word.
+
+## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- [más vale pájaro en mano](./ES-C274-mas-vale-pajaro.md) — the proverb.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- *ser un ki-JO-te*. The *j* is the throat sound. →
+  [reference](../pronunciation-reference.md)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-SER-UN-QUIJOTE]; assesses=[] -->
+
+**ser un quijote** — to be idealistic to the point of impracticality; to fight
+for a lost cause because it is right.
+
+It is Don Quixote, from Cervantes' novel of 1605 — and the word has stopped being
+a name. Written lowercase, *quijote* is an ordinary Spanish noun in the
+dictionary, and so is the adjective *quijotesco*. English took the same journey
+to **quixotic**.
+
+Notice what that means: you can use the word correctly without having read the
+book. Most speakers have not. The allusion has been absorbed into the language
+and no longer requires its source.
+
+## What you've built
+<!-- hl-knowledge: introduces=[ES-SEMANTIC-ALLUSION]; assesses=[] -->
+
+This is a **cultural allusion**, and it is the hardest kind of meaning for a
+learner, because a dictionary will give you the gloss and not the weight.
+
+The practical consequence is worth stating plainly: when a Spanish text uses a
+name as though it were a word — *un quijote*, *un donjuán*, *una celestina* — it
+is pointing at a story its readers are assumed to share. You are not expected to
+know all of them. You are expected to **notice that a name is doing work**, and
+look it up.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER-UN-QUIJOTE, ES-SEMANTIC-ALLUSION] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ser un quijote*]
+- [YOU SAY: what it means, without mentioning the novel]
+- [YOU SAY: the English word that made the same journey (*quixotic*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SER-UN-QUIJOTE, ES-SEMANTIC-ALLUSION] -->
+
+[PAUSE 3s] What is *quijote* in the dictionary — a name or a noun? (A noun; the name was
+absorbed.) What are you expected to notice, rather than already know? (That a
+name is doing the work of a word.)
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+id: ES-C274-tener-gracia
+spine_node: SPINE-READ-CULTURAL-WEIGHT
+sequence: 2900
+chapter: 274
+type: phrase
+headword: tener gracia
+gloss: to be funny — and a word that does not translate
+concept_tag: HUMOR-CONVENTION
+prerequisites: [ES-C274-pasar-a-mejor-vida]
+sounds: [vowel-a, vowel-e]
+roots: [gratia]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-PASAR-A-MEJOR-VIDA]
+introduces:
+  knowledge: [ES-LEX-TENER-GRACIA, ES-SEMANTIC-HUMOR-CONVENTION]
+practises:
+  knowledge: [ES-LEX-TENER-GRACIA, ES-SEMANTIC-HUMOR-CONVENTION]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C274-pasar-a-mejor-vida]
+---
+
+# tener gracia — the last thing a learner gets, and why
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The final piece of the chapter, and the one that stays difficult longest.
+
+## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- [pasar a mejor vida](./ES-C274-pasar-a-mejor-vida.md) — the euphemism.
+- [gracias](./ES-C04-gracias.md) — one of the first words of this book, and the same root.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- *te-NER GRA-cia*. → [reference](../pronunciation-reference.md)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-TENER-GRACIA]; assesses=[] -->
+
+**tener gracia** — "to be funny", and rather more than that.
+
+*Gracia* is Latin **gratia** — favour, charm, grace, and the thing you give
+thanks for. It is the same word inside *gracias*, which you learned on the first
+page of this book, and inside English **grace**, **gracious** and **gratitude**.
+
+So *tener gracia* is not quite "to be funny." It is closer to *to have charm* —
+and a joke that fails is *no tiene gracia*, which says less that it failed to
+amuse than that it lacked a quality it should have had.
+
+## What you've built
+<!-- hl-knowledge: introduces=[ES-SEMANTIC-HUMOR-CONVENTION]; assesses=[] -->
+
+Humour is the last thing a learner acquires, and the reason is structural rather
+than a matter of vocabulary. Every device in the previous two chapters converges
+here: a joke can turn on an implicature, an inversion, an idiom, a proverb bent
+out of shape, an allusion, or a euphemism deployed too plainly.
+
+To find something funny in Spanish you have to hold all of them at once and
+notice which one is being played with — which is why it comes last, and why not
+getting a joke is a poor measure of your Spanish and a good measure of how much
+of the culture you have absorbed.
+
+That closes the chapter. Four kinds of weight a phrase can carry beyond its
+meaning: the community's authority, a shared story, a subject avoided, and a
+sense of what is charming.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER-GRACIA, ES-SEMANTIC-HUMOR-CONVENTION] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tener gracia*, and *no tiene gracia*]
+- [YOU SAY: the first word of this book that shares its root (*gracias*)]
+- [YOU SAY: why humour comes last, in one sentence]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER-GRACIA, ES-SEMANTIC-HUMOR-CONVENTION] -->
+
+[PAUSE 3s] What Latin word is *gracia*, and which word from page one shares it? (*Gratia*;
+*gracias*.) Why is humour the last thing acquired? (It requires holding every
+other implicit device at once.)
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+id: ES-C28-mediodia-medianoche
+spine_node: SPINE-TIME-OF-DAY
+sequence: 1760
+chapter: 146
+type: word
+headword: mediodía, medianoche
+gloss: noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit
+concept_tag: ES-TIME-NOON-MIDNIGHT
+prerequisites: [ES-C27-los-meses]
+sounds: [diphthong-ia, nasal-none]
+roots: [medius-dies-latin, media-nox-latin]
+etymology_hook: "mediodía ← medius diēs, medianoche ← media nox — Spanish kept día/noche fully alive as ordinary words; French's -di (in midi) wore down to an opaque fragment, though its -nuit (in minuit) stayed just as recognizable as Spanish's noche"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02]
+practises:
+  knowledge: [ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C27-los-meses]
+---
+
+# mediodía, medianoche — noon and midnight, spelled out in full
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Two hours that don't get a number — they get a name. And
+Spanish keeps that name far more transparent than its French cousin does.
+
+## The two words, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02]; assesses=[] -->
+
+| Spanish | ← Latin | literally |
+|---|---|---|
+| **mediodía** | *medius diēs* | "**mid**-**day**" (*medio* "middle" + *día* "day") |
+| **medianoche** | *media nox* | "**mid**-**night**" (*media* "middle" + *noche* "night") |
+
+Both halves are **fully alive, ordinary Spanish words on their own**:
+**medio/media** ("middle" — cousin of English *medium, mid, middle*) and
+**día/noche** ("day/night," words you already know). Compare French, which
+took the same Latin phrase down a bumpier road: *minuit*'s second half,
+**-nuit**, is still the plain, everyday French word for "night" — just as
+recognizable as Spanish's *noche*. But *midi*'s second half, **-di**, wore
+down into an opaque fragment: the ordinary French word for "day" is *jour*,
+not *di* — that piece survives only as a fossil, tucked inside weekday
+names like *lundi* and *mardi*. So the erosion split unevenly: French kept
+"night" transparent and lost "day," while Spanish kept both.
+
+They don't need *horas* the way a normal Spanish time (*son las tres*)
+never does either — they simply stand in for the hour on their own:
+
+> **Es mediodía.** — "It is noon." **Es medianoche.** — "It is midnight."
+
+(Fun aside: English **noon** comes from Latin *nōna hōra*, "the **ninth**
+hour" — originally mid-afternoon, it drifted earlier over the centuries to
+mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "mediodía" (noon), "medianoche" (midnight)]
+- [YOU SAY: break them — "medio + día", "media + noche" — both halves
+  still ordinary words]
+- [YOU SAY: "Es mediodía. Es medianoche." — they stand in for the hour]
+- [YOU SAY: the contrast — French kept "night" (nuit) but wore "day" down
+  to a fossil (-di)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NOON-MIDNIGHT-01, ES-ETYMON-NOON-MIDNIGHT-02] -->
+
+[PAUSE 3s] What do *mediodía* and *medianoche* literally mean, and from
+what Latin? ("Mid-day" ← *medius diēs*; "mid-night" ← *media nox*.) Are
+both halves still recognizable, ordinary Spanish words? (**Yes** — *medio/
+media* "middle," *día/noche* "day/night.") Did French erode its phrase
+evenly? (**No** — French's *-nuit* stayed just as transparent as Spanish's
+*noche*, but its *-di* wore down to an opaque fossil, since the everyday
+French word for "day" is actually *jour*.) How do you say "it is noon"?
+(*Es mediodía*.)
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+id: ES-C29-la-hora
+spine_node: SPINE-TIME-OF-DAY
+sequence: 1770
+chapter: 147
+type: word
+headword: la hora
+gloss: hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin
+concept_tag: ES-TIME-HOUR
+prerequisites: [ES-C28-mediodia-medianoche]
+sounds: [silent-h, article-la-las]
+roots: [hora-latin, hora-greek]
+etymology_hook: "hora ← Latin hōra ← Greek hṓrā, 'a season, a time of day' — Spanish inherited it almost unchanged, with a silent h that's a fossil of an already-weak Latin h (NOT the same story as hijo/hacer's silent h, which comes from Spanish's own later f- → h- sound change); the same Latin source as French heure, German's separately-borrowed Uhr, and English hour"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03]
+practises:
+  knowledge: [ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C28-mediodia-medianoche]
+---
+
+# la hora — Spanish's barely-changed Latin hour
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You've now seen this Latin word take three different paths: French wore
+it down to *heure*, German borrowed it centuries later as *Uhr*. Spanish's path is
+the simplest of all — it barely changed.
+
+## The word, taken apart: hora
+<!-- hl-knowledge: introduces=[ES-LEX-HORA-01, ES-ETYMON-HORA-02]; assesses=[] -->
+
+**hora** ← Latin **hōra** ← Greek **hṓrā**, "a season, a time of day" (the Greek
+goddesses of the seasons were the *Hōrai*). Spanish kept the word almost exactly as
+Latin had it — just a silent **h** in spelling, a fossil of a Latin *h* that was
+already weak and barely pronounced by the time Spanish inherited the word (the same
+non-story as French *heure* or English *hour*'s silent *h*). Be careful not to
+confuse this with *hijo* and *hacer*'s silent *h* — those come from a completely
+different, later Spanish sound change (Latin **f-** → Old Spanish aspirated *h-* →
+eventual silence), not from an already-weak Latin *h* the way *hora*'s is. Two
+different roads to the same "silent letter" result. Compare its cousins: French
+wore *hōra* down further to *heure*; German didn't inherit the word at all, but
+borrowed it later as *Uhr*; English took the same Latin *hōra* and made *hour*.
+
+| language | word | what happened |
+|---|---|---|
+| **Spanish** | **hora** | inherited almost unchanged, just a silent *h* |
+| French | *heure* | inherited, but worn down further |
+| German | *Uhr* | not inherited — borrowed later, separately |
+| English | *hour* | inherited via French, silent *h* |
+
+## Grammar Lens: Son las and telling time
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-TELLING-TIME-03]; assesses=[] -->
+
+Spanish uses **ser** ("to be") plus the **feminine plural article** (agreeing with
+the unspoken *horas*) to tell time — and famously switches number for "one":
+
+> **Es la una.** — "It is one o'clock." (singular — *la una*, "the one")
+> **Son las dos.** — "It is two o'clock." (plural — *las dos*, "the two")
+> **Son las diez.** — "It is ten o'clock."
+
+Literally "**it is the one**" / "**they are the two/ten**" — the hour count itself
+is implied by the article and number, without needing to say *hora(s)* at all in
+everyday speech (unlike French's *il est deux heures*, which spells out "hours"
+every time).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: "hora" — silent h, a fossil of an already-weak Latin h]
+- [YOU SAY: "Es la una. Son las dos. Son las diez."]
+- [YOU SAY: "hora / heure / hour" — one Latin root, three different fates]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HORA-01, ES-ETYMON-HORA-02, ES-GRAMMAR-TELLING-TIME-03] -->
+
+[PAUSE 3s] What Latin (and Greek) word is *hora* from? (*hōra* ← Greek *hṓrā*.) How
+did Spanish's path differ from French's and German's? (**Spanish** inherited it
+almost unchanged; **French** wore it down further to *heure*; **German** didn't
+inherit it at all and borrowed *Uhr* separately, much later.) How do you say "it is
+one o'clock" vs. "it is two o'clock"? (*Es la una* — singular; *Son las dos* —
+plural.)
+`;export{s as a,t as c,l as i,p as n,a as o,d as r,r as s,h as t};
