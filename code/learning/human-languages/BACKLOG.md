@@ -30,6 +30,60 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C202 — a COVERED script can still split a word across two fonts
+
+Found while auditing the Telugu round-2 tranche. Four committed strings carried a
+**foreign vowel sign on a cousin-script base**:
+
+```
+TE-C33-caduvu.md   Tamil படி  wearing U+0C41 TELUGU VOWEL SIGN I
+TE-C33-raayu.md    Tamil எழுது wearing U+0C41 TELUGU VOWEL SIGN U
+telugu/CHANGELOG.md x2   Kannada  and  wearing the Telugu sign
+```
+
+The rendered output proves these were live, not cosmetic. The renderer emitted
+
+    \ta{}\te{}
+
+-- a Tamil word wearing a Telugu vowel mark from a different font, mid-word.
+
+**Why every existing guard missed it.** HL-C200 is about a script being
+UNCOVERED, so its glyphs fall to the Latin font and vanish. This is the opposite:
+both scripts are covered, both fonts load, nothing is missing, and the build exits
+0 with 0 missing characters. The page renders -- as the wrong glyph. It is the
+same family as the Malayalam chillu and the Kannada TTA-for-DA slip: **plausible
+wrong text, which no build can detect.**
+
+**The check that finds it** is per-WORD script purity: decompose each run into
+Unicode letter names and flag any run whose characters name two different scripts.
+Per-file checks pass; per-word checks do not.
+
+**Read the bytes, not a pasted string.** An earlier attempt to decompose these same
+strings through a shell pipeline reported them CLEAN -- the shell normalised the
+characters in transit. Only opening the file and reading its bytes found the
+defect. Same failure shape as the empty-pattern NUL grep: the tool being used to
+look was quietly altering what it looked at.
+
+**A second sub-class: a LATIN base carrying an Indic combining mark.** The security
+review of the same PR found five more, all the mirror image of the first four --
+not an Indic word wearing a foreign sign, but a ROMANIZATION wearing one:
+
+```
+telugu/chapters.json ch37 summary, narration/ch37.{txt,json}, lessons/TE-C37-noru.md
+    U+0076 U+0BBE U+0079   =  v + TAMIL VOWEL SIGN AA + y
+    almost certainly meant vay with U+0101 (a macron)
+```
+
+So the per-word purity check must also flag **any Latin run containing a combining
+mark from an Indic block**, not only Indic runs mixing two Indic scripts. Both
+sub-classes render as plausible wrong text and both build at exit 0.
+
+**Still outstanding, deliberately left for their own change:** the same class exists
+in `malayalam/lessons/ML-C11-nirangal.md` and `ML-C37-mookku.md` plus two roadmap
+files. They belong to another track's generated output. The ~30 Devanagari-danda
+hits in punjabi and bengali are conventional usage, NOT defects -- do not "fix"
+them.
+
 ## HL-C201 — appending a chapter can make the PREVIOUS last lesson untrue
 
 Found in the Sanskrit round-2 tranche. `SA-C30-anjali` was the final lesson of the
@@ -114,9 +168,18 @@ predicted result: those chapters cite no cousin script today, so the bare
 vocabulary tranche for the same reason. The result reproduced exactly: the
 rendered .tex for 43-45 is byte-identical, `generated-book-hashes.json` gains 91
 lines and loses none, and the book still builds at 0 missing characters, 0
-overfull and 0 underfull over 305 pages. **Three remain, all in telugu**
-(chapters 43, 44, 45), and they are the only bare `unicodeScript` targets left in
-any track that has a `*-comparisons` set to move to.
+overfull and 0 underfull over 305 pages.
+
+**Telugu's three are done, and that closes HL-C200.** Folded into the telugu
+chapters 53-59 vocabulary tranche, for the third time with the same result: the
+rendered .tex for 43-45 is byte-identical, `generated-book-hashes.json` gains
+lines and loses none, and the telugu book still builds at 0 missing characters,
+0 overfull and 0 underfull. All nine chapters now declare their track's
+`*-comparisons` set, and no track that has such a set carries a bare
+`unicodeScript` target any more. The bare targets that remain in the corpus
+(bengali, chinese, gujarati, marathi, persian, portuguese, punjabi, russian,
+sanskrit, spanish ch139, urdu) are in tracks with no `*-comparisons` set to move
+to, which is the internally-consistent case this entry never counted.
 
 One thing the kannada pass added to the diagnosis: the trap is not only cousin
 SCRIPTS. `KA-C47-finger` cited Malayalam using the old chillu spelling

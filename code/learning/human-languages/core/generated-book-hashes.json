@@ -7958,7 +7958,7 @@
     {
       "language": "telugu",
       "chapter": 33,
-      "sourceHash": "fnv1a64:090059534c359ec7",
+      "sourceHash": "fnv1a64:b0cba9ebee497583",
       "lessonIds": [
         "TE-C33-anuko",
         "TE-C33-artham-cesuko",
@@ -8195,6 +8195,97 @@
         "TE-C52-garland"
       ],
       "tex": "telugu/book/chapters/ch52-welcoming-a-guest.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:175101f79dbbafb9",
+      "lessonIds": [
+        "TE-C53-sky",
+        "TE-C53-sun",
+        "TE-C53-moon",
+        "TE-C53-star",
+        "TE-C53-cloud"
+      ],
+      "tex": "telugu/book/chapters/ch53-the-sky.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:f5f2b1c78ca04ccf",
+      "lessonIds": [
+        "TE-C54-tree",
+        "TE-C54-branch",
+        "TE-C54-root",
+        "TE-C54-seed",
+        "TE-C54-seedling"
+      ],
+      "tex": "telugu/book/chapters/ch54-the-tree.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:adc960361d8c37c0",
+      "lessonIds": [
+        "TE-C55-river",
+        "TE-C55-tank",
+        "TE-C55-hill",
+        "TE-C55-village",
+        "TE-C55-path"
+      ],
+      "tex": "telugu/book/chapters/ch55-river-and-road.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:077e9cbe7832f986",
+      "lessonIds": [
+        "TE-C56-mat",
+        "TE-C56-basket",
+        "TE-C56-knife",
+        "TE-C56-vessel",
+        "TE-C56-box"
+      ],
+      "tex": "telugu/book/chapters/ch56-in-the-house.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:f244f702ecbf938d",
+      "lessonIds": [
+        "TE-C57-neck",
+        "TE-C57-back",
+        "TE-C57-lip",
+        "TE-C57-nail",
+        "TE-C57-bone"
+      ],
+      "tex": "telugu/book/chapters/ch57-more-of-the-body.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:e878033d44b641d7",
+      "lessonIds": [
+        "TE-C58-a-little",
+        "TE-C58-more",
+        "TE-C58-less",
+        "TE-C58-no-thanks",
+        "TE-C58-thats-all"
+      ],
+      "tex": "telugu/book/chapters/ch58-more-short-replies.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:09e598ca5aafe9c3",
+      "lessonIds": [
+        "TE-C59-wind",
+        "TE-C59-mist",
+        "TE-C59-sand",
+        "TE-C59-mud",
+        "TE-C59-fire"
+      ],
+      "tex": "telugu/book/chapters/ch59-weather-and-ground.tex"
     },
     {
       "language": "urdu",

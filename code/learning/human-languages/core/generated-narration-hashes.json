@@ -13400,7 +13400,7 @@
     {
       "language": "telugu",
       "chapter": 33,
-      "sourceHash": "fnv1a64:2d798654b223c361",
+      "sourceHash": "fnv1a64:f8ab9a281e43682e",
       "lessonIds": [
         "TE-C33-anuko",
         "TE-C33-artham-cesuko",
@@ -13411,8 +13411,8 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch33.txt",
       "json": "telugu/narration/ch33.json",
-      "textHash": "fnv1a64:ae0b5efaa850cd94",
-      "jsonHash": "fnv1a64:63b0a95f4c9d0c6a"
+      "textHash": "fnv1a64:6cf429e862d299b4",
+      "jsonHash": "fnv1a64:e4a718d744ded06d"
     },
     {
       "language": "telugu",
@@ -13737,6 +13737,132 @@
       "json": "telugu/narration/ch52.json",
       "textHash": "fnv1a64:dfad965b2e503633",
       "jsonHash": "fnv1a64:08eabd8ccad1162f"
+    },
+    {
+      "language": "telugu",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:744dc2deafce2451",
+      "lessonIds": [
+        "TE-C53-sky",
+        "TE-C53-sun",
+        "TE-C53-moon",
+        "TE-C53-star",
+        "TE-C53-cloud"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch53.txt",
+      "json": "telugu/narration/ch53.json",
+      "textHash": "fnv1a64:b1ee4109ba088699",
+      "jsonHash": "fnv1a64:117a02f3d693afe8"
+    },
+    {
+      "language": "telugu",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:bcf0ea5378d1b762",
+      "lessonIds": [
+        "TE-C54-tree",
+        "TE-C54-branch",
+        "TE-C54-root",
+        "TE-C54-seed",
+        "TE-C54-seedling"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch54.txt",
+      "json": "telugu/narration/ch54.json",
+      "textHash": "fnv1a64:8bc28c6bdc1e1113",
+      "jsonHash": "fnv1a64:5e4a6b6e4bb88e37"
+    },
+    {
+      "language": "telugu",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:296b851b4f9163b4",
+      "lessonIds": [
+        "TE-C55-river",
+        "TE-C55-tank",
+        "TE-C55-hill",
+        "TE-C55-village",
+        "TE-C55-path"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch55.txt",
+      "json": "telugu/narration/ch55.json",
+      "textHash": "fnv1a64:42c11eb7bf3c8329",
+      "jsonHash": "fnv1a64:02366e21d82963e9"
+    },
+    {
+      "language": "telugu",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:51118e0ec266ad1d",
+      "lessonIds": [
+        "TE-C56-mat",
+        "TE-C56-basket",
+        "TE-C56-knife",
+        "TE-C56-vessel",
+        "TE-C56-box"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch56.txt",
+      "json": "telugu/narration/ch56.json",
+      "textHash": "fnv1a64:fe01264de1afb328",
+      "jsonHash": "fnv1a64:fb06bbe55d674397"
+    },
+    {
+      "language": "telugu",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:96a805cc005c3922",
+      "lessonIds": [
+        "TE-C57-neck",
+        "TE-C57-back",
+        "TE-C57-lip",
+        "TE-C57-nail",
+        "TE-C57-bone"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch57.txt",
+      "json": "telugu/narration/ch57.json",
+      "textHash": "fnv1a64:95ab92b9e345f19d",
+      "jsonHash": "fnv1a64:39236be36a87da46"
+    },
+    {
+      "language": "telugu",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:37a3ca3eb4f04269",
+      "lessonIds": [
+        "TE-C58-a-little",
+        "TE-C58-more",
+        "TE-C58-less",
+        "TE-C58-no-thanks",
+        "TE-C58-thats-all"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch58.txt",
+      "json": "telugu/narration/ch58.json",
+      "textHash": "fnv1a64:ce721db6da651398",
+      "jsonHash": "fnv1a64:2ae8b669479f12db"
+    },
+    {
+      "language": "telugu",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:d845d74de385c06b",
+      "lessonIds": [
+        "TE-C59-wind",
+        "TE-C59-mist",
+        "TE-C59-sand",
+        "TE-C59-mud",
+        "TE-C59-fire"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch59.txt",
+      "json": "telugu/narration/ch59.json",
+      "textHash": "fnv1a64:601c18a2382a53ea",
+      "jsonHash": "fnv1a64:9e74006b7f39c1b5"
     },
     {
       "language": "urdu",

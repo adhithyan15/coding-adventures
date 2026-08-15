@@ -1099,6 +1099,153 @@
           "TE-LEX-C52-WELCOME-05"
         ]
       }
+    },
+    {
+      "chapter": 53,
+      "title": "The Sky",
+      "label": "ch:te-sky",
+      "canDo": "I can name five things overhead in Telugu, and say which of them Telugu borrowed and which it has always had.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TE-C53-cloud",
+        "kind": "production",
+        "summary": "Complete TE-C53-cloud and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C53-SKY-01",
+          "TE-LEX-C53-SKY-02",
+          "TE-LEX-C53-SKY-03",
+          "TE-LEX-C53-SKY-04",
+          "TE-LEX-C53-SKY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 54,
+      "title": "The Tree",
+      "label": "ch:te-tree",
+      "canDo": "I can name a tree and its parts in Telugu, from the seed it started as to the branch at the top.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C54-seedling",
+        "kind": "production",
+        "summary": "Complete TE-C54-seedling and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C54-TREE-01",
+          "TE-LEX-C54-TREE-02",
+          "TE-LEX-C54-TREE-03",
+          "TE-LEX-C54-TREE-04",
+          "TE-LEX-C54-TREE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 55,
+      "title": "River and Road",
+      "label": "ch:te-river-road",
+      "canDo": "I can name the water, the ground and the road around a Telugu village, and ask my way with them.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C55-path",
+        "kind": "production",
+        "summary": "Complete TE-C55-path and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C55-ROAD-01",
+          "TE-LEX-C55-ROAD-02",
+          "TE-LEX-C55-ROAD-03",
+          "TE-LEX-C55-ROAD-04",
+          "TE-LEX-C55-ROAD-05"
+        ]
+      }
+    },
+    {
+      "chapter": 56,
+      "title": "In the House",
+      "label": "ch:te-house",
+      "canDo": "I can name five ordinary things inside a Telugu house and thank somebody for handing me one.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TE-C56-box",
+        "kind": "production",
+        "summary": "Complete TE-C56-box and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C56-HOUSE-01",
+          "TE-LEX-C56-HOUSE-02",
+          "TE-LEX-C56-HOUSE-03",
+          "TE-LEX-C56-HOUSE-04",
+          "TE-LEX-C56-HOUSE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 57,
+      "title": "More of the Body",
+      "label": "ch:te-more-body",
+      "canDo": "I can name five more parts of the body in Telugu and say which one hurts.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C57-bone",
+        "kind": "production",
+        "summary": "Complete TE-C57-bone and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C57-BODY-01",
+          "TE-LEX-C57-BODY-02",
+          "TE-LEX-C57-BODY-03",
+          "TE-LEX-C57-BODY-04",
+          "TE-LEX-C57-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 58,
+      "title": "More Short Replies",
+      "label": "ch:te-more-replies",
+      "canDo": "I can say how much I want, refuse politely, and close a conversation in Telugu.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TE-C58-thats-all",
+        "kind": "production",
+        "summary": "Complete TE-C58-thats-all and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C58-REPLY-01",
+          "TE-LEX-C58-REPLY-02",
+          "TE-LEX-C58-REPLY-03",
+          "TE-LEX-C58-REPLY-04",
+          "TE-LEX-C58-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 59,
+      "title": "Weather and Ground",
+      "label": "ch:te-weather-ground",
+      "canDo": "I can name the weather and what is underfoot in Telugu, and use it as a reason to go home.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TE-C59-fire",
+        "kind": "production",
+        "summary": "Complete TE-C59-fire and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C59-WEATHER-01",
+          "TE-LEX-C59-WEATHER-02",
+          "TE-LEX-C59-WEATHER-03",
+          "TE-LEX-C59-WEATHER-04",
+          "TE-LEX-C59-WEATHER-05"
+        ]
+      }
     }
   ]
 }

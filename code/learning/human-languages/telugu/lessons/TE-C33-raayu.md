@@ -66,7 +66,7 @@ Tamil **வரை** (*varai*), Malayalam **വരയ്ക്കുക** (*varay
 Telugu's noun keeps the shape: **రాత** (*rāta*), "handwriting" — and, in speech,
 what is written for you.
 
-One honest note: Tamil's everyday write-verb is **எழుது** (*eḻutu*), not *varai*.
+One honest note: Tamil's everyday write-verb is **எழுது** (*eḻutu*), not *varai*.
 The sisters share the root without agreeing which word does the daily work — the
 picture *caduvu* left you with.
 
