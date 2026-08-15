@@ -791,7 +791,6 @@ pub fn link_macos_arm64_executable(
     out_path: &Path,
 ) -> Result<(), AotError> {
     use std::io::Write as _;
-    use std::os::unix::fs::PermissionsExt;
 
     let mut tmp_obj = tempfile::Builder::new()
         .prefix(&format!("twig-aot-{stem}-"))
@@ -801,10 +800,64 @@ pub fn link_macos_arm64_executable(
     invoke_ld(tmp_obj.path(), out_path)?;
     drop(tmp_obj);
 
-    let mut perms = std::fs::metadata(out_path)?.permissions();
-    perms.set_mode(0o755);
-    std::fs::set_permissions(out_path, perms)?;
+    set_executable(out_path)?;
     Ok(())
+}
+
+/// Mark a just-linked output executable, binding the change to the FILE we
+/// opened rather than to its path.
+///
+/// The previous form was `metadata(path)` then `set_permissions(path, ..)` —
+/// **two** path resolutions, both following symlinks. In an attacker-writable
+/// output directory that is a replace-with-symlink race: swap the path between
+/// the two calls and an unrelated file gets mode 0755 (CWE-367).
+///
+/// Three things make this safe, and each was got wrong on the first attempt:
+///
+/// * **`File::set_permissions` is `fchmod`** on the open descriptor (see std's
+///   `sys/fs/unix.rs`), so a swap AFTER the open cannot redirect it.
+/// * **`O_NOFOLLOW` closes the window BEFORE the open too.** This needs no
+///   `libc` dependency — `OpenOptionsExt::custom_flags` is in std and takes raw
+///   `open(2)` flags. An earlier version of this comment claimed otherwise and
+///   left the window open on that false premise. A planted symlink now fails
+///   `ELOOP` instead of being followed.
+/// * **Open READ-only.** `fchmod` needs no write access, and `chmod(2)` requires
+///   ownership while `open(O_WRONLY)` requires the write BIT — independent
+///   things. Under a `umask` that clears owner-write (e.g. `0222`, used by some
+///   hardened build daemons) the linker succeeds and leaves the output `0555`;
+///   a write-open then fails `EACCES` on a file the old code chmod'd fine.
+///
+/// `O_NOFOLLOW` blocks symlinks but not directories, and on Linux `O_RDONLY` on
+/// a directory succeeds — hence the explicit regular-file check.
+#[cfg(unix)]
+fn set_executable(path: &std::path::Path) -> std::io::Result<()> {
+    use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
+
+    // Raw `open(2)` flag values are per-target, and a wrong bit would silently
+    // mean some other flag. This crate ships aarch64-apple and x86_64-linux, so
+    // those are the two that must be right; anything else degrades to the
+    // previous (post-open-only) protection rather than guessing.
+    #[cfg(target_vendor = "apple")]
+    const O_NOFOLLOW: i32 = 0x0100;
+    #[cfg(target_os = "linux")]
+    const O_NOFOLLOW: i32 = 0o400000;
+    #[cfg(not(any(target_vendor = "apple", target_os = "linux")))]
+    const O_NOFOLLOW: i32 = 0;
+
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .custom_flags(O_NOFOLLOW)
+        .open(path)?;
+    let meta = file.metadata()?; // fstat — bound to the descriptor
+    if !meta.file_type().is_file() {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::InvalidInput,
+            "twig-aot: linker output is not a regular file",
+        ));
+    }
+    let mut perms = meta.permissions();
+    perms.set_mode(0o755);
+    file.set_permissions(perms)
 }
 
 /// Run Apple's system linker on `object_path`, producing `out_path`.
@@ -1696,7 +1749,6 @@ pub fn link_linux_x86_64_executable(
     out: &Path,
 ) -> Result<(), AotError> {
     use std::io::Write as _;
-    use std::os::unix::fs::PermissionsExt;
 
     if RUNTIME_LINUX_X86_64.len() <= 4 {
         return Err(AotError::Linker {
@@ -1753,9 +1805,7 @@ pub fn link_linux_x86_64_executable(
         });
     }
 
-    let mut perms = std::fs::metadata(out)?.permissions();
-    perms.set_mode(0o755);
-    std::fs::set_permissions(out, perms)?;
+    set_executable(out)?;
     Ok(())
 }
 

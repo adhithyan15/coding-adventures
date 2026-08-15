@@ -46,6 +46,7 @@ from .grant_profile import (
     seal_channel_key,
     seal_channel_key_with_material,
     secret_erasure_capability,
+    verify_grant_signature,
 )
 
 _MESSAGE_CONTEXT = b"chief-channel-message-v1"
@@ -334,13 +335,28 @@ def message_create(
     channel_master_key: bytes,
 ) -> D18Message:
     """Validate, hash, sign, and encrypt one D18F message."""
+    signing_key_copy = _copy_bytes(signing_secret_key)
+    _require_length(signing_key_copy, 64)
+    return message_create_with_signer(
+        fields,
+        plaintext,
+        lambda message: sign(message, signing_key_copy),
+        channel_master_key,
+    )
+
+
+def message_create_with_signer(
+    fields: MessageFields,
+    plaintext: bytes,
+    signer: Callable[[bytes], bytes],
+    channel_master_key: bytes,
+) -> D18Message:
+    """Create a D18F message through an injected non-exportable signer."""
     validate_message_fields(fields)
     plaintext_copy = _copy_bytes(plaintext)
-    signing_key_copy = _copy_bytes(signing_secret_key)
     channel_key_copy = _copy_bytes(channel_master_key)
     if len(plaintext_copy) > _MAX_CIPHERTEXT_BYTES:
         _fail("length_limit_exceeded")
-    _require_length(signing_key_copy, 64)
     _require_length(channel_key_copy, 32)
     plaintext_hash = sha256(plaintext_copy)
     header = _authenticated_header_from_fields(fields, plaintext_hash)
@@ -361,7 +377,7 @@ def message_create(
         plaintext_hash=plaintext_hash,
         ciphertext=ciphertext,
         authentication_tag=authentication_tag,
-        originator_signature=sign(header, signing_key_copy),
+        originator_signature=signer(header),
     )
 
 
@@ -426,9 +442,7 @@ def _verify_cryptography(
     _require_length(public_key_copy, 32)
     header = message_authenticated_header(message)
     try:
-        signature_valid = verify(
-            header, message.originator_signature, public_key_copy
-        )
+        signature_valid = verify(header, message.originator_signature, public_key_copy)
     except (ArithmeticError, ValueError):
         signature_valid = False
     if not signature_valid:
@@ -542,9 +556,9 @@ def message_to_json(message: D18Message) -> bytes:
         "originator_signature_b64": _encode_base64(message.originator_signature),
     }
     try:
-        encoded = json.dumps(
-            value, ensure_ascii=False, separators=(",", ":")
-        ).encode("utf-8", errors="strict")
+        encoded = json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode(
+            "utf-8", errors="strict"
+        )
     except (TypeError, UnicodeEncodeError, ValueError):
         _fail("invalid_field")
     if len(encoded) > MAX_MESSAGE_JSON_BYTES:
@@ -588,9 +602,7 @@ def message_from_json(data: bytes) -> D18Message:
     content_type = _string_field(value, "content_type")
     if len(_content_type_bytes(content_type)) > _MAX_CONTENT_TYPE_BYTES:
         _fail("length_limit_exceeded")
-    plaintext_hash = _decode_hex(
-        _string_field(value, "plaintext_hash_hex"), 32
-    )
+    plaintext_hash = _decode_hex(_string_field(value, "plaintext_hash_hex"), 32)
     ciphertext = _decode_base64(
         _string_field(value, "ciphertext_b64"), _MAX_CIPHERTEXT_BYTES
     )
@@ -923,6 +935,7 @@ __all__ = [
     "key_grant_wrapping_key",
     "message_authenticated_header",
     "message_create",
+    "message_create_with_signer",
     "message_create_with_sources",
     "message_deserialize",
     "message_from_json",
@@ -936,4 +949,5 @@ __all__ = [
     "seal_channel_key_with_material",
     "secret_erasure_capability",
     "validate_message_fields",
+    "verify_grant_signature",
 ]
