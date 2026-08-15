@@ -887,6 +887,26 @@
           "TA-LEX-GIVE"
         ]
       }
+    },
+    {
+      "chapter": 43,
+      "title": "The Household",
+      "label": "ch:ta-household",
+      "canDo": "I can name a child, a son, a daughter and the family in Tamil.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TA-C43-family",
+        "kind": "production",
+        "summary": "Complete TA-C43-family and say all four words in order.",
+        "assesses": [
+          "TA-LEX-CHILD",
+          "TA-LEX-SON",
+          "TA-LEX-DAUGHTER",
+          "TA-LEX-FAMILY"
+        ]
+      }
     }
   ]
 }

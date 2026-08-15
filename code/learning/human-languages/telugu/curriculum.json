@@ -533,6 +533,21 @@
         "TE-EXT-44-SEESAY"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-45-FAMILY",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TE-C45-grandfather",
+        "TE-C45-grandmother",
+        "TE-C45-husband",
+        "TE-C45-wife"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-45-FAMILY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -645,7 +660,8 @@
         "TE-PATH-015",
         "TE-PATH-024",
         "TE-PATH-200",
-        "TE-PATH-201"
+        "TE-PATH-201",
+        "TE-PATH-45-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1319,6 +1335,20 @@
         "TE-C44-listen",
         "TE-C44-speak",
         "TE-C44-write"
+      ]
+    },
+    {
+      "id": "TE-EXT-45-FAMILY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four family and people words.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C45-grandfather",
+        "TE-C45-grandmother",
+        "TE-C45-husband",
+        "TE-C45-wife"
       ]
     }
   ]

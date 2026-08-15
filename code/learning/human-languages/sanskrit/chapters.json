@@ -467,6 +467,26 @@
           "SA-LEX-BURN"
         ]
       }
+    },
+    {
+      "chapter": 23,
+      "title": "The Four Oldest Kinship Words",
+      "label": "ch:sa-kinship",
+      "canDo": "I can name a father, a mother, a son and a daughter in Sanskrit, and name a cousin of each outside India.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "SA-C23-daughter",
+        "kind": "production",
+        "summary": "Complete SA-C23-daughter and say all four words in order.",
+        "assesses": [
+          "SA-LEX-FATHER",
+          "SA-LEX-MOTHER",
+          "SA-LEX-SON",
+          "SA-LEX-DAUGHTER"
+        ]
+      }
     }
   ]
 }

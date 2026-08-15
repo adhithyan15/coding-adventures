@@ -600,6 +600,21 @@
         "TA-EXT-42-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-43-KIN",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "TA-C43-child",
+        "TA-C43-son",
+        "TA-C43-daughter",
+        "TA-C43-family"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-43-KIN"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -711,7 +726,8 @@
         "TA-PATH-017",
         "TA-PATH-026",
         "TA-PATH-200",
-        "TA-PATH-201"
+        "TA-PATH-201",
+        "TA-PATH-43-KIN"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1487,6 +1503,20 @@
         "TA-C42-sit",
         "TA-C42-read",
         "TA-C42-give"
+      ]
+    },
+    {
+      "id": "TA-EXT-43-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four of the people in a household and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C43-child",
+        "TA-C43-son",
+        "TA-C43-daughter",
+        "TA-C43-family"
       ]
     }
   ]

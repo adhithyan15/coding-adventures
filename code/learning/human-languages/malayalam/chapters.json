@@ -873,6 +873,26 @@
           "ML-LEX-WRITE"
         ]
       }
+    },
+    {
+      "chapter": 45,
+      "title": "Grandparents, and the Married Pair",
+      "label": "ch:ml-grandparents",
+      "canDo": "I can name four more family and people words in this language.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ML-C45-wife",
+        "kind": "production",
+        "summary": "Complete ML-C45-wife and say all four words in order.",
+        "assesses": [
+          "ML-LEX-GRANDFATHER",
+          "ML-LEX-GRANDMOTHER",
+          "ML-LEX-HUSBAND",
+          "ML-LEX-WIFE"
+        ]
+      }
     }
   ]
 }

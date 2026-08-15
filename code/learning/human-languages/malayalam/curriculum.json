@@ -546,6 +546,21 @@
         "ML-EXT-44-SEESAY"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-45-FAMILY",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ML-C45-grandfather",
+        "ML-C45-grandmother",
+        "ML-C45-husband",
+        "ML-C45-wife"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-45-FAMILY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -657,7 +672,8 @@
         "ML-PATH-015",
         "ML-PATH-024",
         "ML-PATH-200",
-        "ML-PATH-201"
+        "ML-PATH-201",
+        "ML-PATH-45-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1321,6 +1337,20 @@
         "ML-C44-listen",
         "ML-C44-speak",
         "ML-C44-write"
+      ]
+    },
+    {
+      "id": "ML-EXT-45-FAMILY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four family and people words.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C45-grandfather",
+        "ML-C45-grandmother",
+        "ML-C45-husband",
+        "ML-C45-wife"
       ]
     }
   ]

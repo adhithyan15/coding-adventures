@@ -548,6 +548,21 @@
         "HI-EXT-43-SEESAY"
       ],
       "after": []
+    },
+    {
+      "id": "HI-PATH-44-FAMILY",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "HI-C44-son",
+        "HI-C44-daughter",
+        "HI-C44-family",
+        "HI-C44-people"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-44-FAMILY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -653,7 +668,8 @@
         "HI-PATH-014",
         "HI-PATH-023",
         "HI-PATH-200",
-        "HI-PATH-201"
+        "HI-PATH-201",
+        "HI-PATH-44-FAMILY"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1323,6 +1339,20 @@
         "HI-C43-listen",
         "HI-C43-speak",
         "HI-C43-write"
+      ]
+    },
+    {
+      "id": "HI-EXT-44-FAMILY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four family and people words.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C44-son",
+        "HI-C44-daughter",
+        "HI-C44-family",
+        "HI-C44-people"
       ]
     }
   ]

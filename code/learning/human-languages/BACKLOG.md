@@ -9,6 +9,29 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C193 — `git checkout --theirs` DISCARDS your side on additive config files
+
+Resolving a merge conflict in the HL config files with `git checkout --theirs`
+silently threw away every addition this branch had made, in **four** files, and
+each one surfaced as a different failure several steps later:
+
+| file | what was lost | how it showed up |
+|---|---|---|
+| `<track>/curriculum.json` | path + extension nodes | `validate`: "declares SPINE-X but is absent from the local path" |
+| `core/book-generation.json` | the chapter target | `book-cli`: "is in neither targets[] nor handwritten[]" |
+| `<track>/chapters.json` | the chapter entry | `book-cli`: "declaration has no chapters.json capability" |
+| `<track>/book/book.tex` | the `\input` line | `book-cli`: "is never \input into book.tex" |
+
+`--theirs` is right for a **generated** file (regenerate afterwards and the
+content is restored) and wrong for an **authored, additive** one, where both
+sides appended different entries and neither is a superset.
+
+**Do this instead:** resolve additive config by hand or with a script that
+re-derives the entries from the lessons on disk, which is what recovered it here.
+The four failures also arrive in sequence rather than together, so fixing one and
+re-running looks like progress while three more wait — run `validate`, the suite,
+AND `book-cli` before believing a merge is resolved.
+
 ## HL-C191 — cross-script citations must be ROMANISED; each book loads only its own font
 
 A comparative note in a Telugu lesson cited Kannada's ನೋಡು in Kannada script.
