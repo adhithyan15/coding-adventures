@@ -4064,3 +4064,76 @@ time. Grep the job log for the variable name as a first, cheap diagnostic —
 its total absence from the log (build tools rarely echo inherited env) doesn't
 prove failure by itself, but combined with an unchanged crash, it's strong
 evidence the assignment never reached the process that needed it.
+
+## Stop waiting for CI's truncated logs to dribble out failures one round at a time — run the build tool's own detection locally against the same diff base
+
+Four consecutive CI rounds on PR #11553 each fixed a batch of Windows failures
+only to have the NEXT push reveal another batch — 21, then 17, then 16 (13
+identifiable). Two things made this slower than it needed to be:
+
+1. **`get_job_logs` truncates to roughly the last 5,000 lines of a job's
+   combined output, regardless of the `tail_lines` value requested** (100,000
+   and 2,000,000 both returned the identical last-~564KB slice). For a
+   22,784-line "build and test affected packages" step, that's the last
+   ~22% only — the earlier ~78% (including some `--- FAILED: pkg ---`
+   markers) is simply not retrievable through that tool, and there's no
+   `offset` parameter to page through it. Downloading the raw log directly
+   (the Azure blob SAS URL `get_job_logs` returns with `return_content=false`)
+   is also not an option here — the sandbox's outbound proxy denies that
+   specific blob-storage host outright (403 on CONNECT), a policy decision,
+   not a transient failure.
+2. **The fix doesn't require CI at all.** The build tool that decides what's
+   "windows-affected" runs anywhere: `go build -o /tmp/build-tool-local .`
+   in `code/programs/go/build-tool/`, then
+   `./build-tool-local -root . -diff-base <same base CI diffs against> -dry-run
+   -emit-plan plan.json -validate-build-files=false`. The emitted plan JSON's
+   `platform_overrides.windows.affected_packages` is the EXACT list windows-latest
+   CI is about to attempt — computed from git diff + BUILD graph, not from
+   actually running anything, so it doesn't need Windows or even a full build.
+   Cross-referencing every package's resolved `BUILD_windows`/`BUILD` content
+   against the two known bug regexes (`"\.\[dev\]"`, `\$\(uname\)`/`set -eu`)
+   found 23 more failures in one pass — MORE than the partial CI log could
+   even show, comprehensively, without waiting ~80 minutes for a Windows
+   runner and then only seeing the tail of the result.
+
+**Lesson:** once a bug's regex/pattern signature is known (from even one
+confirmed CI hit), don't wait for CI to reveal the rest of its instances one
+truncated log at a time — grep for the pattern across whatever the build
+tool's own "affected on this platform" computation says is in scope, using
+the SAME diff base CI will use. This is strictly more complete than the log
+(reaches packages CI hasn't logged yet) and doesn't burn an ~80-minute round
+trip per increment. Reserve actual CI runs for what can't be predicted from
+static analysis: real test failures, runtime-only platform gaps (permission
+enforcement, ABI-dependent stack sizes), and confirming the fix set is
+actually exhaustive.
+
+## `datetime.fromtimestamp()` silently fails for pre-1970 dates on Windows — pure `timedelta` arithmetic doesn't
+
+`sql-vm`'s `unixepoch` date handling used `datetime.fromtimestamp(seconds,
+tz=UTC)` to convert Unix-epoch seconds to a date. `SELECT date('-1234567890',
+'unixepoch')` — a pre-1970 date — returned `NULL` on Windows only; the
+correct answer (`'1930-11-18'`) came back fine on Linux/macOS, and the code
+already had `except (ValueError, OSError, OverflowError): return None`
+around the call, which is precisely what swallowed the platform-specific
+failure into silent NULL instead of surfacing it.
+
+**Cause:** `datetime.fromtimestamp()` converts through the platform C
+library's time functions. glibc's `gmtime` handles negative `time_t` (dates
+before 1970-01-01) without complaint; the Windows CRT's `_gmtime64`/
+`_localtime64` explicitly reject negative `time_t` with an error — a
+documented, longstanding Windows CRT limitation, not a Python bug.
+
+**Fix:** compute the date by pure calendar arithmetic instead —
+`datetime(1970, 1, 1, tzinfo=UTC) + timedelta(seconds=seconds)` — which
+never touches the platform C library, so it behaves identically on every
+host `datetime`/`timedelta` run on. Verified this doesn't trade the fixed
+platform bug for a worse one: extreme inputs (`1e300`, `inf`, `nan`,
+`-1e300`) still raise `OverflowError`/`ValueError` in microseconds, same
+failure class as before, just now bounded by `datetime`'s actual year
+1-9999 representable range instead of an incidental platform ceiling.
+**Generalizable lesson:** any `datetime.fromtimestamp()` (or `time.gmtime()`/
+`time.localtime()`, same underlying mechanism) call that might see a
+pre-1970 value is a Windows-only landmine — prefer epoch-relative
+`timedelta` arithmetic when the code needs to work the same way
+cross-platform, not just "not crash."
+evidence the assignment never reached the process that needed it.
