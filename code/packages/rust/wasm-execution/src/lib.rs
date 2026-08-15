@@ -3405,6 +3405,7 @@ fn register_atomics(vm: &mut GenericVM) {
                 let expected = pop_wasm(vm)?;
                 let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
                 let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
                 let mem = get_memory(ctx)?;
                 let current = atomic_mem_load(mem, op, addr).map_err(VMError::from)?;
                 let result = if current == expected { 2 } else { 1 };
@@ -5384,6 +5385,26 @@ mod tests {
         ];
         let mut engine = atomic_engine(code, vec![ValueType::I32]);
         assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(2)]);
+    }
+
+    #[test]
+    fn test_atomic_wait32_on_a_misaligned_effective_address_traps() {
+        // `Wait` shares `effective_addr`/`atomic_mem_load` with every
+        // other atomic kind but is handled in its own match arm, so the
+        // alignment check needs its own call site -- this guards against
+        // that call site being forgotten (it was, initially: caught in
+        // security review, not by the vendored testsuite, since
+        // atomic.wast's own "unaligned atomic" assert_trap cases don't
+        // happen to cover wait32/wait64).
+        let code = vec![
+            0x41, 0x01, // i32.const 1 (addr -- not a multiple of 4)
+            0x41, 0x00, // i32.const 0 (expected)
+            0x42, 0x00, // i64.const 0 (timeout)
+            0xFE, 0x01, 0x02, 0x00, // memory.atomic.wait32 align=4 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert!(engine.call_function(0, &[]).is_err());
     }
 
     // ══════════════════════════════════════════════════════════════════════

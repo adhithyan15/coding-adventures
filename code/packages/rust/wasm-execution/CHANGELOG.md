@@ -35,6 +35,19 @@ All notable changes to this package will be documented in this file.
   the new runtime check traps exactly where it should and doesn't
   over-trigger on valid accesses.
 
+### Fixed
+
+- Security review caught the `AtomicOpKind::Wait` handler (`memory.
+  atomic.wait32`/`wait64`) missing the `check_atomic_alignment` call
+  every sibling atomic-op arm has -- a misaligned wait address would
+  silently proceed instead of trapping with `"unaligned atomic"` like
+  the spec requires. Not a memory-safety issue (still routes through
+  bounds-checked `LinearMemory` accessors), but a real spec-conformance
+  gap the vendored `atomic.wast` corpus doesn't happen to exercise
+  (its own `"unaligned atomic"` cases only cover load/store/RMW/
+  cmpxchg, not wait). Fixed with a dedicated regression test, confirmed
+  to fail without the fix via a temporary revert.
+
 ## [0.6.8] — 2026-08-15 (WASM17 — ref.func, table.get, table.set opcode handlers)
 
 ### Added
