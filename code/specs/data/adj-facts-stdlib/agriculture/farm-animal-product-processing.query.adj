@@ -1,0 +1,21 @@
+% ============================================================================
+% farm-animal-product-processing.query — a worked recall over the
+% agriculture farm-animal-product-processing library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how is goat milk
+% processed?": it states no agriculture fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `farm_animal_product_processing` rows and
+% returns the processing method + the table's source/locator/trust. An
+% animal/product pair the cited spans give no processing method for
+% abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli farm-animal-product-processing.query.adj
+% ============================================================================
+
+import "farm-animal-product-processing.adj"
+
+? farm_animal_product_processing(goat, milk, $Processing)          % expect pasteurized
+? farm_animal_product_processing($Animal, $Product, pasteurized)   % reverse bind — expect goat, milk
+? farm_animal_product_processing(sheep, wool, $Processing)         % expect abstain — sheep's own cited span states no processing method for wool

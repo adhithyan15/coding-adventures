@@ -1,0 +1,66 @@
+% ============================================================================
+% farm-animal-product-processing — for the farm animal product whose SAME
+% cited CFSPH span also names how it is processed, that processing method
+% (adj-facts-stdlib, AGRICULTURE).
+% ============================================================================
+% A sibling to the already-shipped `farm-animals.adj` (`farm_animal_product
+% (animal, product)`, chicken → eggs, duck → eggs, sheep → wool, rabbit →
+% wool, goat → milk) and `farm-animal-secondary-product.adj`
+% (`farm_animal_secondary_product(animal, product)`). Goat's own per-row
+% provenance in `farm-animals.adj` already quotes, VERBATIM, a PROCESSING
+% method applied to its already-recorded milk -- but neither existing
+% table's schema had room for it:
+%
+%   goat, milk → pasteurized
+%     "Goat milk may be pasteurized for human consumption."
+%
+% This is explicitly the SAME clause `farm-animal-secondary-product.adj`'s
+% own header already flags as NOT a second product ("goat's own cited span
+% states only a PROCESSING note for its already-recorded milk"), leaving it
+% unshipped until now. Recall is a binding query:
+%
+%     ? farm_animal_product_processing(goat, milk, $Processing)   % pasteurized
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table -- a
+% shape already precedented in this stdlib, e.g. `biology/amino-acids.adj`,
+% `geology/fossil-preservation-subtype.adj`): each `row` lowers to a ground
+% relation `farm_animal_product_processing(animal, product, processing)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query -- the engine returns the processing method WITH its source, on the
+% CPU, with zero model calls, and abstains on every other animal/product
+% pair `farm-animals.adj` carries, since none of the other four cited spans
+% (chicken, duck, sheep, rabbit) states a processing method the way goat's
+% span does -- chicken's and duck's spans state only a second product
+% (meat), sheep's states two second products (meat, milk), and rabbit's
+% states a USE for its wool ("used for fiber arts"), not a processing
+% method applied to it. The query also runs BACKWARD -- bind a processing
+% method and recall which animal/product pair it names:
+%
+%     ? farm_animal_product_processing($Animal, $Product, pasteurized)   % goat, milk
+%
+% Only ONE of `farm-animals.adj`'s five animal/product pairs has a
+% genuinely distinct processing-method fact in the ALREADY-cited spans;
+% this table is deliberately narrow (a single row, the same shape as
+% several other already-shipped single-row siblings in this stdlib, e.g.
+% `anatomy/valve-alternate-name.adj`, `geography/ocean-deepest.adj`)
+% rather than inventing a processing method the source does not state.
+%
+% Provenance: reproduces, byte-for-byte, the SAME goat span already quoted
+% inside `farm-animals.adj`'s own per-row provenance block -- no new
+% WebFetch, only a different schema decoding the processing-method half of
+% that already-verified quote. `trust authoritative` -- the same tier
+% `farm-animals.adj` already carries (Iowa State University CFSPH, a
+% primary university educational source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table farm_animal_product_processing {
+    columns animal, product, processing
+
+    row (goat, milk, pasteurized)   % CFSPH: "Goat milk may be pasteurized for human consumption."
+
+    source "Goat milk may be pasteurized for human consumption."
+    locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+    trust authoritative
+}
