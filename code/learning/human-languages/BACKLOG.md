@@ -69,6 +69,57 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C182 — nothing in this repo measures whether a READER could pass anything
+
+Raised by the owner, 2026-08-14, on seeing Spanish close its spine at 33/33.
+There are **two** gaps between a track's headline number and a person sitting an
+exam, and only the first is currently measured.
+
+**Gap 1 — `touches` to `attained`. Measured.** `touches` moves on one lesson
+pointed at a node; `attained` needs all four HL09 §3.1 criteria at the level and
+every level below. Spanish reads `touches: C2`, `attained: null`. The level gate
+exists precisely to keep these apart and it is doing its job.
+
+**Gap 2 — `attained` to passing. NOT MEASURED, AND NOT PREVIOUSLY WRITTEN DOWN.**
+All four criteria are properties of the **corpus**: nodes realized, cumulative
+vocabulary, atom budget, atoms revisited twice. Every one asks *is the material
+complete and well-paced to spec*. None of them touches:
+
+* whether a learner did the lessons, or retained them a month later
+* **production under time pressure** — speaking and writing to a prompt
+* **listening to unfamiliar voices at natural speed**
+* exam task formats, which are a separate skill from the language
+* an examiner's judgement, which is not a checklist
+
+So `attained: C1` would mean *this book covers C1 to spec*. It would **not** mean
+a reader who finished it can sit a DELE C1. And the corpus claim is itself
+proxied: "cumulative vocabulary ≥ N" and "every atom revisited twice" are
+structural stand-ins for good teaching, not evidence of it.
+
+**Why this belongs in the backlog rather than a footnote.** Every progress report
+in this repo quotes spine coverage. A reader can reasonably infer that 33/33
+says something about learner capability. It does not, and the distance is not
+currently quantified anywhere.
+
+**What would close it, cheapest first:**
+
+1. **Name the gap in the reports.** `report.ts` should print `attained` beside
+   `touches` with a one-line statement that both are corpus measures. Free, and
+   it stops the inference at the source.
+2. **A retrieval measure.** The corpus already tracks atoms and revisits; it
+   could report, per level, what fraction of atoms a spaced-repetition schedule
+   would still hold at 30 days. Still a corpus property, but a much closer proxy.
+3. **Exam-task coverage.** Map each level's real exam task types (DELE, SIELE)
+   against what the corpus asks the learner to DO. HL-C130 already models task
+   shapes; this is a gap analysis on top of it, and it is the first measure that
+   would be about the *reader's* activity rather than the book's contents.
+4. **The honest one, and it needs a human:** a person who has done the track sits
+   a past paper. Nothing computable substitutes, and every number above is a
+   proxy for this.
+
+Related: the MYCIN north star is "pass any board exam" — the same distinction
+applies there and is worth stating in both places.
+
 ## HL-C176 — the forward-reference detector cannot tell SHOWN from USED
 
 Surfaced by HL-C175. `ES-C272-si-claro` is the first lesson to own *claro*, and
