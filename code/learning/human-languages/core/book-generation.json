@@ -3908,6 +3908,11 @@
       "output": "spanish/book/chapters/ch276-literario.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 277,
+      "output": "spanish/book/chapters/ch277-fuentes.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
