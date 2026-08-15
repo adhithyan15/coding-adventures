@@ -70,10 +70,44 @@ them.
    becomes computable, and HL-C184d's "measure what the tranche cost" means
    something.
 
-Multi-word list lessons (months, seasons, colours) need a separate decision
-before they can be classed at all: either split them into one word per lesson —
-which the 50,000-lesson budget permits and the gentle ramp arguably prefers — or
-give the field a `list` value and exclude them from the census denominator.
+### Correction, same day: a month IS a noun, and the real gap is COUNT not CLASS
+
+The paragraph this replaces claimed multi-word list lessons "cannot be classed at
+all". **Owner: *"A month is a noun isn't it?"*** Yes. Every word in `AR-MONTHS`
+is a noun; the class was never ambiguous. Two different questions were conflated:
+
+* **What class are these words?** Noun. Unambiguous. `word_class` handles it.
+* **How many lexical items does this lesson teach?** Twelve, not one. **This is
+  the unsolved one, and it is not a classification problem.**
+
+**And it makes the headline vocabulary number ambiguous by ±35%.** For Spanish:
+
+| counting method | result |
+|---|---:|
+| headwords (what the gate does today) | **211** |
+| one lexical item per lesson, lists expanded | **~285** |
+| naive whitespace tokens | **361** |
+
+No mechanical rule picks between them. `type` does not: `la cabeza` is
+`type: word` with two tokens and teaches **one** noun, while `negro, blanco` is
+`type: word` with two tokens and teaches **two** adjectives. Splitting on commas
+fixes Spanish and breaks the space-separated Arabic months; splitting on spaces
+fixes the months and breaks `la cabeza` and `السلام عليكم`.
+
+**So the corpus must STATE it.** Add a second field alongside `word_class`:
+
+    teaches_items: 12      # lexical items this lesson introduces, default 1
+
+and make `vocabularyOf` sum it instead of counting headwords. Until then the
+211/300 pre-A1 figure is a **lower bound**, not a measurement — and the true
+number could clear pre-A1 already on some tracks. **That has to be settled before
+HL-C184d authors a single word**, or the tranche will be sized against a number
+that is wrong by a third.
+
+Splitting list lessons one-word-per-lesson remains an option the 50,000-lesson
+budget permits, and it would make `teaches_items` almost always 1 — but that is a
+pedagogical change (twelve month-lessons instead of one), and it is the owner's
+call, not a side effect of a measurement fix.
 
 ## HL-C184 — THE COMPLETION PLAN: 22 tracks to C2, driven by vocabulary
 
