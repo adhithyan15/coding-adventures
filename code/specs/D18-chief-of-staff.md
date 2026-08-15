@@ -138,6 +138,12 @@ Orchestrator (Rust actor, D18)     ← signature verification + host supervision
 │                └── D18C membership, D18S reservation, D18A cursor,
 │                    atomic persistence, recovery, roles, and conformance
 │
+├── defines ──► D18Q Portable Channel-Key Grant Profile
+│                └── D18G grants, receiver epoch state, and pure rotation
+│
+├── defines ──► D18T Durable Epoch Activation Profile
+│                └── D18S v2, key custody, immutable plans, replay, and CAS
+│
 └── extended by ──► Store / Job / Tool Layers
                     ├── D18A Store Layer
                     │    └── repository-owned storage abstraction + Context/Artifact/Skill/Memory stores
@@ -161,6 +167,9 @@ from D19's generic `ACTM` actor message. D18P is the normative portable profile 
 the durable channel described below; it preserves the production Rust definition,
 reservation, cursor, storage-key, CAS, recovery, and structural-role behavior while
 leaving D18F message cryptography and channel-key grants in their existing owners.
+D18Q fixes portable grant/receiver/rotation cryptography, while D18T composes D18P
+and D18Q through durable originator-key custody and one publish/activation CAS
+boundary.
 
 **Extended by:** D18A Chief of Staff Stores — repository-owned storage abstraction,
 ContextStore, ArtifactStore, SkillStore, and MemoryStore. D18C Chief of Staff Job
@@ -347,6 +356,9 @@ and the required six-language conformance rollout. D18F continues to own D18M
 message bytes. [D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) defines
 the portable D18G sealed-grant, receiver-epoch, and cryptographic rotation
 contract owned by #141.
+[D18T](D18T-chief-of-staff-durable-epoch-activation-profile.md) composes those
+profiles into the crash-safe durable current-epoch transition tracked by
+#11734.
 
 **Analogy:** A Channel is a one-way pneumatic tube in an office building. Documents go
 in one end and come out the other. You cannot send documents backwards through the
@@ -1297,8 +1309,10 @@ You cannot attack what is not there.
 [D18Q](D18Q-chief-of-staff-channel-key-grant-profile.md) is the normative
 portable profile for the `D18G` grant bytes, key derivation, authentication,
 receiver epoch state, and pure rotation plan described in this section. Its
-durable activation boundary remains explicit because D18P version 1 does not
-yet provide an atomic current-epoch transition.
+durable activation boundary is
+[D18T](D18T-chief-of-staff-durable-epoch-activation-profile.md), which upgrades
+D18P's reservation state so publication and activation share one atomic
+current-epoch transition.
 
 All channels are encrypted. This is not optional. There is no plaintext mode. The
 encryption ensures that even if an attacker gains access to the channel's persistent

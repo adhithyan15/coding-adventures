@@ -385,9 +385,10 @@ An integration with D18P MUST preserve all of these conditions:
   remains immutable
 
 D18P version 1 deliberately makes its channel definition immutable except for
-destruction. It therefore has no portable epoch-activation transaction today.
-That missing durable transition is tracked by #11734 and MUST NOT be claimed as
-implemented merely because an in-memory D18Q rotation plan succeeds.
+destruction. [D18T](D18T-chief-of-staff-durable-epoch-activation-profile.md)
+defines the portable version 2 state, key-custody, plan, replay, and
+epoch-activation transaction tracked by #11734. That transaction MUST NOT be
+claimed as implemented merely because an in-memory D18Q rotation plan succeeds.
 
 ---
 
@@ -560,9 +561,10 @@ Issue #141 is complete only after this sequence:
 5. Close #141 only after that exact-head gate and required Ubuntu, macOS, and
    Windows builds pass.
 
-The durable epoch-activation follow-up #11734 remains required for an end-to-end
-crash-safe rotating channel, but it does not change the D18Q cryptographic bytes
-or receiver-local epoch behavior.
+The [D18T](D18T-chief-of-staff-durable-epoch-activation-profile.md) durable
+epoch-activation follow-up #11734 remains required for an end-to-end crash-safe
+rotating channel, but it does not change the D18Q cryptographic bytes or
+receiver-local epoch behavior.
 
 Part of #141 and #128. The normative profile is tracked by #11727; the shared
 fixture and Rust compatibility lock are tracked by #11735.
