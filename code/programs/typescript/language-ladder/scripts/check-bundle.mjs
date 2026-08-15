@@ -98,8 +98,12 @@ if (handwritingChunks.length !== 1) {
 if (lessonBatches.length >= 400) {
   failures.push(`${lessonBatches.length} lesson requests exceed the 399-request ceiling`);
 }
-if (largestLessonBatch > 33_000) {
-  failures.push(`largest lesson batch is ${largestLessonBatch} bytes (limit 33000)`);
+// Tracks the vite `maxSize` for lesson groups, with a little slack: rolldown
+// caps a batch at the size given but a single module can overshoot it. Raised
+// with the cap itself from 32 kB, to trade request COUNT for request SIZE --
+// see the note in vite.config.ts.
+if (largestLessonBatch > 49_000) {
+  failures.push(`largest lesson batch is ${largestLessonBatch} bytes (limit 49000)`);
 }
 if (largestEagerChunk > 500_000) {
   failures.push(`largest eager chunk is ${largestEagerChunk} bytes (limit 500000)`);

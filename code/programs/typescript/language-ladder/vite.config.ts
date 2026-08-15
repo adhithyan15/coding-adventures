@@ -26,13 +26,21 @@ export default defineConfig({
             {
               // A frontier import should stay small, but corpus-wide modes must
               // not fan out to one request per lesson. Rolldown first groups by
-              // track, then caps each batch at roughly 32 kB.
+              // track, then caps each batch by size.
+              //
+              // The cap was 32 kB, and the Spanish C2 chapters pushed the corpus
+              // to exactly 400 batches -- one over the 399-request ceiling in
+              // scripts/check-bundle.mjs. Raising that ceiling would have bought
+              // one PR of room and made the app slower; raising the cap fixes the
+              // shape. 48 kB gives 262 batches for the same 8.2 MB, a 35% cut in
+              // requests, with the largest batch at ~47 kB -- still a small lazy
+              // fetch, and now with headroom for a corpus that grows every day.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
                 const match = /human-languages\/([^/]+)\/lessons\//.exec(normalized);
                 return match?.[1] ? `lessons-${match[1]}` : null;
               },
-              maxSize: 32_000,
+              maxSize: 48_000,
             },
             {
               name: "script-data",

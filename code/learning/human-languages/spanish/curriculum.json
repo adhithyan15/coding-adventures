@@ -3349,6 +3349,49 @@
         "ES-EXT-276-LITERARY"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-277-01",
+      "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
+      "lessons": [
+        "ES-C277-segun"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-277-02",
+      "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
+      "lessons": [
+        "ES-C277-es-decir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-277-03",
+      "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
+      "lessons": [
+        "ES-C277-por-un-lado"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-277-04",
+      "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
+      "lessons": [
+        "ES-C277-en-resumen",
+        "ES-C277-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-277-SOURCES"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3829,13 +3872,13 @@
       "relocates": {}
     },
     "SPINE-SUMMARIZE-FROM-SOURCES": {
-      "segments": [],
-      "omits": [
-        "SYNTHESIS-MULTI-SOURCE",
-        "PARAPHRASE",
-        "ATTRIBUTION-CITE",
-        "SUMMARY-COMPRESSION"
+      "segments": [
+        "ES-PATH-277-01",
+        "ES-PATH-277-02",
+        "ES-PATH-277-03",
+        "ES-PATH-277-04"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-EXPRESS-FINE-SHADES": {
@@ -6854,6 +6897,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C276-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-277-SOURCES",
+      "stage": "C2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can run the four source moves on two disagreeing texts and say what my summary left out.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C277-practice"
       ]
     }
   ],
