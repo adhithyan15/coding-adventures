@@ -49,6 +49,28 @@ export const LANGUAGE_SCRIPT: Record<string, Script> = {
 /** Lesson types that teach a real concept and take part in the cross-language join. */
 export const CONTENT_TYPES = new Set(["word", "phrase"]);
 
+// Lesson types that can REALIZE a spine concept.
+//
+// Deliberately WIDER than CONTENT_TYPES, and the difference is the point.
+// CONTENT_TYPES answers "is this a lesson that teaches an item of language" --
+// it drives book generation, the level gate, and the rule that a content lesson
+// must carry a concept_tag. Realization answers a different question: "can this
+// lesson be the thing that makes a spine node true?"
+//
+// Half the spine's concepts ARE grammar -- TENSE-BACKSHIFT, RELATIVE-CLAUSE,
+// VOICE-PASSIVE, CONNECTIVE-IF -- and no `word` lesson will ever teach them. With
+// realization restricted to word/phrase, a node declaring them read as
+// unrealized no matter how completely the corpus taught it:
+// SPINE-EXPRESS-CONDITION had ELEVEN lessons behind it and reported 0 of 4
+// (HL-C169). That is a category error, not a content gap, and it sent four
+// separate attempts off to author lessons the corpus already had.
+//
+// Kept separate rather than widening CONTENT_TYPES because that set is read by
+// eight call sites that mean the narrower thing; widening it raised 33
+// validation errors across other tracks on lessons that legitimately carry no
+// concept_tag.
+export const REALIZING_TYPES = new Set(["word", "phrase", "grammar"]);
+
 /**
  * Lesson types that carry a session/orthography label, not a cross-language
  * concept — exempt from the join.

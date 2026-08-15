@@ -69,6 +69,42 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C170 — grammar lessons can realize a spine concept now; HL-C169 was half a diagnosis
+
+HL-C169 called the 73 unclaimed Spanish concepts a **tagging** problem. Measuring
+the mechanism rather than the symptom found the larger half:
+`CONTENT_TYPES = {word, phrase}` gated realization, so **a `grammar` lesson could
+never realize a concept at all** — and half the spine's concepts *are* grammar
+(`TENSE-BACKSHIFT`, `RELATIVE-CLAUSE`, `VOICE-PASSIVE`, `CONNECTIVE-IF`). No
+`word` lesson will ever teach those. A node declaring them read as unrealized no
+matter how completely the corpus taught it.
+
+Fixed with a **separate `REALIZING_TYPES` set**, not by widening `CONTENT_TYPES`
+— that set is read by eight call sites meaning the narrower thing, and widening
+it raised 33 validation errors across other tracks on lessons that legitimately
+carry no `concept_tag`.
+
+The tagging half is real too, and is handled by `conceptAliases` in a track's
+`curriculum.json`: the spine names concepts language-neutrally, a track names
+lessons in its own terms, and an alias lets the second answer the first without
+retagging and discarding the specific name.
+
+**Result: B2 opens at 1/4 and the spine goes 21/33 → 22/33, with no lesson
+written.**
+
+**Still to do, and now cheap:**
+
+* Three declared aliases so far (`CONNECTIVE-IF`, `CONDITIONAL-REAL`,
+  `TENSE-BACKSHIFT`). Sweep the remaining ~70 the same way.
+* **Cross-node aliases are not yet supported.** `VOICE-PASSIVE` and
+  `RELATIVE-CLAUSE` are taught by `ES-C52-se-venden` and `ES-C53-que-relativo`,
+  which sit under `SPINE-GIVE-REASONS` rather than the node declaring the
+  concept, and aliasing across nodes would trip the relocation ledger. Either the
+  lessons move to the declaring node or the relocation rule learns about aliases.
+  Those two alone open `SPINE-READ-EXTENDED-PROSE`.
+* `MODAL-WOULD` is the same case: `ES-C17-condicional` (*hablaría*) sits under
+  `SPINE-TALK-ABOUT-FUTURE`. It is the last omission on `SPINE-EXPRESS-CONDITION`.
+
 ## HL-C169 — the spine's concept names and the corpus's tags were never reconciled
 
 **Measured 2026-08-14. Spanish claims 88 of 161 spine concept names; 73 are

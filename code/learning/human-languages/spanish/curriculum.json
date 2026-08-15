@@ -3486,8 +3486,6 @@
         "ES-PATH-210-DEPENDS"
       ],
       "omits": [
-        "CONDITIONAL-REAL",
-        "CONNECTIVE-IF",
         "MODAL-WOULD"
       ],
       "relocates": {}
@@ -3518,7 +3516,6 @@
       ],
       "omits": [
         "REPORTED-SPEECH",
-        "TENSE-BACKSHIFT",
         "SPEECH-ACT-REPORT",
         "QUOTATION-DIRECT"
       ],
@@ -6548,5 +6545,16 @@
         "ES-C267-negar-preguntar"
       ]
     }
-  ]
+  ],
+  "conceptAliases": {
+    "CONNECTIVE-IF": [
+      "ES-CONDITION-SI-REAL"
+    ],
+    "CONDITIONAL-REAL": [
+      "ES-CONDITION-SI-FUTURE"
+    ],
+    "TENSE-BACKSHIFT": [
+      "ES-REPORT-BACKSHIFT"
+    ]
+  }
 }

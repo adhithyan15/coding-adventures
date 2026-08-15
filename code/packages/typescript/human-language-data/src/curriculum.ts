@@ -1,6 +1,6 @@
 // Pure validation for the structured HL04 language registry and shared spine.
 
-import { CONTENT_TYPES, hasOwn } from "./constants.js";
+import { CONTENT_TYPES, REALIZING_TYPES, hasOwn } from "./constants.js";
 import { DURATION_THRESHOLD_SECONDS, estimateLessonDuration } from "./report.js";
 import { activityContractErrors } from "./activity.js";
 import type {
@@ -299,11 +299,35 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
             .filter(
               (lesson) =>
                 lesson.language === curriculum.language &&
-                CONTENT_TYPES.has(lesson.realization.type),
+                REALIZING_TYPES.has(lesson.realization.type),
             )
             .map((lesson) => lesson.realization.concept),
         );
-        const expectedOmits = node.concepts.filter((concept) => !realizedConcepts.has(concept));
+        // A track may declare that one of its own tags satisfies a spine concept.
+        // The spine names concepts language-neutrally (TENSE-BACKSHIFT); a track
+        // names its lessons in its own terms (ES-REPORT-BACKSHIFT). Aliases let
+        // the second answer the first WITHOUT retagging the lesson and throwing
+        // away the specific name, which carries real information (HL-C169).
+        // `hasOwn` cuts the prototype chain, and Array.isArray closes the
+        // malformed-value case. Both matter because validateCurriculum is a
+        // PUBLIC export: a consumer validating a curriculum it did not author
+        // should get an Issue back, not an uncaught TypeError from `.some`.
+        const aliasesRaw: unknown = curriculum.conceptAliases;
+        const aliases: Record<string, unknown> =
+          aliasesRaw && typeof aliasesRaw === "object"
+            ? (aliasesRaw as Record<string, unknown>)
+            : {};
+        const aliasesFor = (concept: string): string[] => {
+          if (!hasOwn(aliases, concept)) return [];
+          const value = aliases[concept];
+          return Array.isArray(value)
+            ? value.filter((tag): tag is string => typeof tag === "string")
+            : [];
+        };
+        const conceptIsRealized = (concept: string) =>
+          realizedConcepts.has(concept) ||
+          aliasesFor(concept).some((tag) => realizedConcepts.has(tag));
+        const expectedOmits = node.concepts.filter((concept) => !conceptIsRealized(concept));
         if (JSON.stringify(realization.omits) !== JSON.stringify(expectedOmits)) {
           error(
             "curriculum-omission-ledger-drift",

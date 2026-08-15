@@ -215,6 +215,15 @@ export interface LanguageCurriculum {
   /** Every shared node is explicit, including empty/planned coverage. */
   spine: Record<string, SpineRealizationMap>;
   extensions: CurriculumExtensionNode[];
+  /**
+   * Track-local tags that satisfy a language-neutral spine concept.
+   *
+   * The spine names a concept once for all 22 tracks (`TENSE-BACKSHIFT`); a
+   * track names its lessons in its own terms (`ES-REPORT-BACKSHIFT`). This lets
+   * the second answer the first without retagging the lesson and discarding the
+   * specific name, which carries information the spine name does not.
+   */
+  conceptAliases?: Record<string, string[]>;
 }
 
 // ---------------------------------------------------------------------------
