@@ -3641,8 +3641,21 @@ fn register_control(vm: &mut GenericVM) {
         // embedder never set it, there's nothing to check against; skip
         // rather than fail closed on missing type info the caller never
         // promised to provide.
+        //
+        // Security review (WASM16, follow-up): `func_index` comes from
+        // `table.get(elem_index)` -- DATA, not a static part of the
+        // bytecode a validator necessarily already checked (this crate's
+        // own tests construct engines that skip `wasm-validator`
+        // entirely). A direct `ctx.func_types[func_index]` index here
+        // panicked on an out-of-range table entry whenever a type section
+        // was set (the common case); `.get()` makes it a clean trap
+        // instead, matching `return_call_indirect` (0x13)'s identical fix.
         if let Some(expected) = ctx.types.get(type_idx) {
-            let actual = &ctx.func_types[func_index as usize];
+            let actual = ctx.func_types.get(func_index as usize).ok_or_else(|| {
+                VMError::GenericError(
+                    "indirect call: table entry references an undefined function".into(),
+                )
+            })?;
             if expected.params != actual.params || expected.results != actual.results {
                 return Err(VMError::GenericError("indirect call type mismatch".into()));
             }
@@ -3697,11 +3710,10 @@ fn register_control(vm: &mut GenericVM) {
         // part of the bytecode a validator necessarily already checked
         // (this crate's own tests construct engines that skip
         // `wasm-validator` entirely, e.g. `wasm16_tail_calls.rs`'s
-        // `engine_from_wat`). `.get()` here, not `call_indirect`'s own
-        // adjacent `&ctx.func_types[func_index as usize]` (unchanged,
-        // pre-existing, only reached when a type section is set) --
-        // this call site is unconditional, so it must never panic on an
-        // out-of-range table entry.
+        // `engine_from_wat`). `.get()` here -- this call site is
+        // unconditional, so it must never panic on an out-of-range table
+        // entry. `call_indirect` (0x11) has the identical `.get()` fix on
+        // its own equivalent lookup.
         let func_type = ctx
             .func_types
             .get(func_index)
@@ -5475,6 +5487,34 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_call_indirect_through_a_table_entry_referencing_an_undefined_function_is_a_clean_error_not_a_panic() {
+        // Same bug class as `return_call_indirect`'s regression test above,
+        // on `call_indirect` (0x11) itself. The vulnerable branch only
+        // runs when `ctx.types.get(type_idx)` is `Some` (a type section is
+        // set -- the common real-world case, e.g. via `wasm-runtime`), so
+        // this test must call `set_type_section` to actually exercise it,
+        // unlike `return_call_indirect`'s fix which is unconditional. A
+        // hand-built engine with a corrupt table entry used to panic on
+        // the direct `ctx.func_types[func_index]` index inside that block.
+        let code = vec![0x41, 0x00, 0x11, 0x00, 0x00, 0x0B]; // i32.const 0; call_indirect type=0 table=0; end
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut table = Table::new(1, None);
+        table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![table],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type.clone()],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_type_section(vec![func_type]);
         assert!(engine.call_function(0, &[]).is_err());
     }
 
