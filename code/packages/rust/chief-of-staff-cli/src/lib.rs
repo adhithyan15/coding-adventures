@@ -218,15 +218,30 @@ fn sibling_executable(current: &str, windows: bool) -> Result<String, CliAppErro
         }
         Ok(format!(r"{parent}\chief-of-staff-daemon.exe"))
     } else {
-        let parent = Path::new(current)
-            .parent()
-            .filter(|path| !path.as_os_str().is_empty())
-            .ok_or(CliAppError::CurrentExecutableUnavailable)?;
-        Ok(parent
-            .join("chief-of-staff-daemon")
-            .to_str()
-            .ok_or(CliAppError::CurrentExecutableUnavailable)?
-            .to_string())
+        unix_sibling_path(current, "chief-of-staff-daemon")
+            .ok_or(CliAppError::CurrentExecutableUnavailable)
+    }
+}
+
+/// Derive a POSIX sibling path with plain string splitting instead of
+/// `std::path::Path`. This branch always targets a POSIX native supervisor
+/// (launchd or systemd), regardless of which platform `chief-of-staff-cli`
+/// itself was built and tested on — but `Path::join` uses the *host*
+/// platform's separator, so on a Windows host it silently produced a mixed
+/// `/opt/chief\chief-of-staff-daemon` path instead of the required
+/// `/opt/chief/chief-of-staff-daemon`. Matches `Path`'s own POSIX parent
+/// semantics (root normalizes to `/`, a trailing slash is insignificant, a
+/// bare relative name has no usable parent) without depending on the host's
+/// separator convention.
+fn unix_sibling_path(current: &str, filename: &str) -> Option<String> {
+    let trimmed = current.trim_end_matches('/');
+    if trimmed.is_empty() {
+        return None;
+    }
+    match trimmed.rsplit_once('/') {
+        Some(("", _name)) => Some(format!("/{filename}")),
+        Some((parent, _name)) => Some(format!("{parent}/{filename}")),
+        None => None,
     }
 }
 
