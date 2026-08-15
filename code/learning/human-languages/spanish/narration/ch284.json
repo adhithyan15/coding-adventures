@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 284,
+  "title": "Five Short Answers --- Agreed, Sure, True, Exactly, Of Course",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d38359628a3e71bd",
+  "lessons": [
+    {
+      "id": "ES-C284-de-acuerdo",
+      "sequence": 3320,
+      "title": "de acuerdo — hearts brought together",
+      "headword": "de acuerdo",
+      "romanization": "de acuerdo",
+      "gloss": "agreed — from cor, the heart: an agreement is two hearts brought together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:872b0cee4c17ea23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: how many new words were in no hay de qué? (None.) And what does mil mean? (A thousand.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sí — the shortest answer of all, which you have."
+            },
+            {
+              "kind": "speech",
+              "text": "no hay de qué — another formula assembled from small pieces."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de a-CUER-do, stress on the cuer. The ue is one glide, not two vowels taken in turn. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de acuerdo — \"agreed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From acordar, and inside it Latin cor, cordis, the heart. To acordar is to bring hearts together."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the whole family and rarely notices the organ in it. An accord is this word. Concord is hearts together and discord hearts apart. To record is to bring back to the heart — because the Romans located memory there, so recording was memorising long before it was writing anything down. Even courage is cor with a French ending on it."
+            },
+            {
+              "kind": "speech",
+              "text": "The stressed o of cordis opens into ue, the change you have watched happen again and again: cor to cuerdo, as portam went to puerta."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now agree without saying sí."
+            },
+            {
+              "kind": "speech",
+              "text": "That matters more than it sounds. Sí answers a question; de acuerdo accepts a proposal. Conversations run on the second one far more than on the first."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "de acuerdo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *de acuerdo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sí, then de acuerdo, and hear the difference in what each answers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sí*, then *de acuerdo*, and hear the difference in what each answers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "de acuerdo, gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *de acuerdo, gracias*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is inside acuerdo? (Cor, the heart.) Why does record belong to it? (To bring back to the heart — where memory was thought to sit.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C284-seguro",
+      "sequence": 3330,
+      "title": "seguro — without a care, which came to mean reliable",
+      "headword": "seguro",
+      "romanization": "seguro",
+      "gloss": "sure — se- without plus cura, care: free from care, and so reliable",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3852ec8707f5fe66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what is inside acuerdo? (Cor, the heart.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de acuerdo — the answer before this one."
+            },
+            {
+              "kind": "speech",
+              "text": "bien — another one-word answer you already give."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se-GU-ro, stress in the middle. The gu before r is a hard g; the u here is fully pronounced. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seguro — \"sure,\" and also \"safe.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin securus: se-, without, plus cura, care. Free of care. The Romans meant untroubled; Spanish and English both dragged it towards reliable, which is a different thing."
+            },
+            {
+              "kind": "speech",
+              "text": "English took it twice, and the two arrivals do not look alike. Secure came late and whole, out of a book. Sure came early through French, worn down to one syllable, having lost the c on the road. The same Latin word walked in through two doors."
+            },
+            {
+              "kind": "speech",
+              "text": "Cura itself is in English cure, curator and curious — all of them about taking care of something, or taking rather too much."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Se- is another dial worth keeping."
+            },
+            {
+              "kind": "speech",
+              "text": "It means without or apart, and it is doing the same job in seguro that sub- did in sonrisa: a small piece in front changing the whole. You are collecting prefixes now, not only words."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguro and secure, and hear one word twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguro* and *secure*, and hear one word twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "de acuerdo, then seguro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *de acuerdo*, then *seguro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of securus? (Se-, without, and cura, care.) Which English word is the worn-down one? (Sure.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C284-cierto",
+      "sequence": 3340,
+      "title": "cierto — what has been sifted out",
+      "headword": "cierto",
+      "romanization": "cierto",
+      "gloss": "true — Latin certus, sifted: what is left after you separate it out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:848fc7352cbff55f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what are the two pieces of securus? (Se-, without, and cura, care.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seguro — the answer before this one, and a near neighbour in meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "la puerta — where you first watched a stressed o open into ue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CIER-to, stress on the first syllable. The c before i is the th of think in much of Spain and an s elsewhere. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cierto — \"true,\" \"certain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin certus, and it is a participle: from cernere, to sift, to separate, to decide. What is certus is what has been sifted out from everything it was mixed up with."
+            },
+            {
+              "kind": "speech",
+              "text": "The English family is large and the sieve is invisible in all of it. Certain is this word. To discern is to sift apart. To be concerned is to be sifted together with something. And a secret is se-cernere, a thing sifted aside — the same se- you met in seguro, one word ago."
+            },
+            {
+              "kind": "speech",
+              "text": "The stressed e opens into ie here, as it did in puerta with an o: certus to cierto. Two vowels, one habit."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Certainty is a metaphor, and a physical one."
+            },
+            {
+              "kind": "speech",
+              "text": "Sifting, separating, deciding: the Romans had one word for all three, and every English word about being sure still has grain and a sieve at the bottom of it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cierto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cierto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es cierto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es cierto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguro, then cierto, and hear which agrees with a person and which with a fact",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguro*, then *cierto*, and hear which agrees with a person and which with a fact]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did cernere mean? (To sift.) What is a secret, taken apart? (Something sifted aside.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C284-exacto",
+      "sequence": 3350,
+      "title": "exacto — driven out, then weighed out",
+      "headword": "exacto",
+      "romanization": "exacto",
+      "gloss": "exactly — from exigere, to drive out, and then to weigh out precisely",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2fa4af86b77dea2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cernere mean? (To sift.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cierto — the answer before this one."
+            },
+            {
+              "kind": "speech",
+              "text": "sí — the plain agreement these are all sharpening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "e-XAC-to, stress in the middle. The x here is ks, said fully: ek-SAK-to. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exacto — \"exactly,\" used on its own as an answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin exactus, the participle of exigere: ex-, out, plus agere, to drive. To drive out; then to demand; then to weigh out precisely, because a Roman checking a coin was driving the true amount out of the metal."
+            },
+            {
+              "kind": "speech",
+              "text": "Agere is everywhere in English: an act, an agent, an agenda — things to be driven along. Exigent kept the demanding sense unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "As an answer, exacto is the one that agrees with a detail rather than with a person. Somebody has got a number or a name right, and you are confirming the number, not backing the speaker."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four answers, and each agrees with something different."
+            },
+            {
+              "kind": "speech",
+              "text": "De acuerdo accepts a plan, seguro backs a person, cierto confirms a fact, exacto confirms a detail. English leans on one word for all four and lets the tone carry it; Spanish would rather you chose."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exacto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exacto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cierto, then exacto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cierto*, then *exacto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four in order — de acuerdo, seguro, cierto, exacto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four in order — *de acuerdo*, *seguro*, *cierto*, *exacto*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the pieces of exigere? (Ex-, out, and agere, to drive.) What does exacto agree with? (A detail, not a person.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C284-por-supuesto",
+      "sequence": 3360,
+      "title": "por supuesto — it was under the conversation already",
+      "headword": "por supuesto",
+      "romanization": "por supuesto",
+      "gloss": "of course — supponere, to place under: it was already under the conversation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6045a8fb588b352",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what does exacto agree with? (A detail.) And what did cernere mean? (To sift.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exacto — the answer before this one."
+            },
+            {
+              "kind": "speech",
+              "text": "la sonrisa — where you first met sub- doing its work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por su-PUES-to, stress on the pues. Another ue glide, and the s stays clear throughout. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por supuesto — \"of course.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Supuesto is the participle of suponer, Latin supponere: sub-, under, plus ponere, to place. Something supuesto has been placed underneath — assumed, taken as given, sitting under the conversation without ever being said out loud."
+            },
+            {
+              "kind": "speech",
+              "text": "English suppose, supposition and presuppose are that same placing. And English's own \"of course\" is doing something similar with a different picture: the thing runs along the expected course, so nobody had to steer it."
+            },
+            {
+              "kind": "speech",
+              "text": "There is sub- again, and you met it turning a laugh into a smile. Prefixes are worth more than words. One of them unlocks dozens."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five answers: de acuerdo, seguro, cierto, exacto, por supuesto."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the five are participles — acuerdo aside, they name a state something has been put into. Spanish keeps reaching for the finished action when it wants a short answer, and now you have five examples instead of one."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "por supuesto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *por supuesto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sub- and supuesto, and hear the prefix",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sub-* and *supuesto*, and hear the prefix]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — de acuerdo, seguro, cierto, exacto, por supuesto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *de acuerdo*, *seguro*, *cierto*, *exacto*, *por supuesto*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the pieces of supponere? (Sub-, under, and ponere, to place.) Where did you meet sub- before? (Inside sonrisa, turning a laugh down.) And what is inside acuerdo? (Cor, the heart.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 282,
+  "title": "Meeting Someone --- Welcome, Greeting, Hug, Smile, Guest",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4235586e667c5779",
+  "lessons": [
+    {
+      "id": "ES-C282-bienvenido",
+      "sequence": 3220,
+      "title": "bienvenido — well come, in two words you already have",
+      "headword": "bienvenido",
+      "romanization": "bienvenido",
+      "gloss": "welcome — bien plus venido, well come, two pieces you already own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad93e4a4bbcb097b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did sucidus describe before it meant dirty? (Unwashed wool, still greasy.) Now a word with nothing new in it but the joining."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bien — well, and the first half of this word."
+            },
+            {
+              "kind": "speech",
+              "text": "hola — the greeting you have opened with since the start."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bien-ve-NI-do, stress on the ni. The v is the same soft sound you give b — two letters, one sound. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bienvenido — \"welcome.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, both of them plain. bien, well, which you have; and venido, come, the participle of venir. Latin put it the same way round: bene venutus, well come."
+            },
+            {
+              "kind": "speech",
+              "text": "English welcome looks like the identical build and is not one. Old English had wilcuma, from willa, desire, and cuma, a comer: the person you wanted to arrive. Norse and French pressure then bent wil- into wel-, and the word ended up resembling \"well\" plus \"come\" by accident."
+            },
+            {
+              "kind": "speech",
+              "text": "So two languages reached the same shape from opposite directions. Spanish means it literally. English only appears to."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing here was new except the joining."
+            },
+            {
+              "kind": "speech",
+              "text": "Bien you had already, and venido has venir audible inside it. A compound you can take apart is a word you do not have to memorise — and Spanish builds a great many of its politest words this way."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bienvenido, then bienvenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bienvenido*, then *bienvenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces on their own — bien, venido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces on their own — *bien*, *venido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hola, then bienvenido, as you would at a door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hola*, then *bienvenido*, as you would at a door]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of bienvenido? (Bien and venido.) Is English welcome built the same way? (No — it was wilcuma, a desired comer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C282-saludo",
+      "sequence": 3230,
+      "title": "el saludo — a wish for your health, worn smooth",
+      "headword": "el saludo",
+      "romanization": "el saludo",
+      "gloss": "a greeting — from salutem, health: to greet was to wish someone their health",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b60e7921e2d3de1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what are the two pieces of bienvenido? (Bien and venido.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bienvenido — what you say; this is what you are doing."
+            },
+            {
+              "kind": "speech",
+              "text": "hola — one particular instance of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sa-LU-do, stress on the lu. The d between two vowels is soft, closer to the th of English this than to a hard d. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el saludo — \"a greeting.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From saludar, to greet, and behind that Latin salutem, health — the accusative of salus, soundness and safety. To greet a Roman was to wish him his health, and Spanish still raises a glass with salud and answers a sneeze with it."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same Latin word more than once. Salute is the soldier's version, borrowed whole. Salutary and salubrious kept the health and dropped the greeting altogether."
+            },
+            {
+              "kind": "speech",
+              "text": "So a saludo is not really a word. It is a wish, repeated until nobody hears it any more — which is what centuries do to every polite formula, in every language."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have been greeting people since your first lesson without a name for the act."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the name. Having one lets you talk about the thing rather than only do it — and that is a step up in what you can say."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el saludo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el saludo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un saludo, then el saludo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un saludo*, then *el saludo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bienvenido and then el saludo — the word, then the act",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bienvenido* and then *el saludo* — the word, then the act]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is behind saludo? (Salutem, health.) Which English word is the soldier's version of it? (Salute.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C282-abrazo",
+      "sequence": 3240,
+      "title": "el abrazo — the arm is still inside the word",
+      "headword": "el abrazo",
+      "romanization": "el abrazo",
+      "gloss": "a hug — from bracchium, the arm: the word says what the body does",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a95a08c1393daa7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did saludo wish you? (Your health.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mano — a part of the body you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "el saludo — the greeting this one belongs to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-BRA-zo, stress in the middle. The r is a single tap, and the z is the th of think in much of Spain and an s elsewhere. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abrazo — \"a hug.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From abrazar, and inside it Latin bracchium, the arm: ad-bracchiare, to put your arms around. The word says exactly what the body does, and Spanish never hid it — brazo is still the word for the arm itself."
+            },
+            {
+              "kind": "speech",
+              "text": "English embrace is the same build through French, in plus bracchium. A bracelet is a little arm-band. A brace holds a thing the way an arm holds it."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin took bracchium from Greek brakhion, which meant the shorter upper arm — from brakhys, short, the same brachy- that turns up in a scientist's vocabulary. The hug goes back to a word for shortness."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words now, and each of them is something you could point at."
+            },
+            {
+              "kind": "speech",
+              "text": "A welcome, a greeting, an embrace. None of the three needed grammar to be useful — which is worth remembering when a language starts to feel like rules."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el abrazo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el abrazo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un abrazo, which is how a letter ends",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un abrazo*, which is how a letter ends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el saludo and el abrazo one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el saludo* and *el abrazo* one after the other]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is inside abrazo? (Bracchium, the arm.) Which English word is the same build? (Embrace.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C282-sonrisa",
+      "sequence": 3250,
+      "title": "la sonrisa — a laugh with the volume down",
+      "headword": "la sonrisa",
+      "romanization": "la sonrisa",
+      "gloss": "a smile — subridere, to laugh slightly: a laugh with the volume turned down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24e3beade41aee8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what is inside abrazo? (Bracchium, the arm.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abrazo — the last one, and another thing a face or a body does."
+            },
+            {
+              "kind": "speech",
+              "text": "bien — well, which you have had since the beginning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "son-RI-sa, stress on the ri. The s is clear and never buzzes into a z sound the way an English s between vowels does. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sonrisa — \"a smile.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From sonreír, and that is Latin subridere: sub-, under or slightly, plus ridere, to laugh. A smile is a laugh with the volume turned down. The sub- wore to son- on the way in."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps ridere only at the loud end, and only in loans: to deride is to laugh at, ridicule is the laughing itself, and something risible is worth a laugh."
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish built its quiet word out of the noisy one by putting sub- in front. English never built it at all — smile is Germanic and has no Latin in it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sub- is a dial, not a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Under, slightly, a little less than the whole thing. Once you can hear it, a long Latin word stops being one item to memorise and becomes two smaller ones you can already handle."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sonrisa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sonrisa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una sonrisa, then la sonrisa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una sonrisa*, then *la sonrisa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el abrazo and la sonrisa, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el abrazo* and *la sonrisa*, one after the other]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sub- do to ridere? (Turns the laugh down to a smile.) Which English words kept the laughing? (Deride, ridicule, risible.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C282-invitado",
+      "sequence": 3260,
+      "title": "el invitado — named by what was done to him",
+      "headword": "el invitado",
+      "romanization": "el invitado",
+      "gloss": "a guest — the invited one; Spanish names the person by what was done to him",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4a91a81df343400",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what does sub- do to ridere? (Turns the laugh down to a smile.) And what is inside abrazo? (The arm.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abrazo — what you might give this person."
+            },
+            {
+              "kind": "speech",
+              "text": "la sonrisa — and what you would give with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "in-vi-TA-do, stress on the ta. Four syllables, all of them short and even; Spanish does not swallow the unstressed ones the way English does. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el invitado — \"a guest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From invitar, Latin invitare, to invite. Invitado is its participle, \"invited\" — so Spanish names the guest by what was done to him, exactly as bienvenido names a welcome by what is wished."
+            },
+            {
+              "kind": "speech",
+              "text": "Put the two side by side. venido in the first of these five and invitado in the last are the same piece of grammar doing the same job: an action turned into a description of a person."
+            },
+            {
+              "kind": "speech",
+              "text": "English guest is a different word altogether, Germanic gastiz — which is also the source of Latin hostis, a stranger and then an enemy. Two peoples had one word for the man at the door and could not agree whether he was a visitor or a threat."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: bienvenido, el saludo, el abrazo, la sonrisa, el invitado."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of the five are participles, and that is the pattern worth carrying forward. Spanish is unusually willing to name a person or a thing by an action already finished — the one invited, the one welcomed — and once you notice it you will find it everywhere."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el invitado, then la invitada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el invitado*, then *la invitada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — bienvenido, el saludo, el abrazo, la sonrisa, el invitado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *bienvenido*, *el saludo*, *el abrazo*, *la sonrisa*, *el invitado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two participles on their own — bienvenido, invitado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two participles on their own — *bienvenido*, *invitado*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is an invitado, literally? (One who has been invited.) Which other word in this run is a participle? (Bienvenido — well come.) And what did saludo wish you? (Your health.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

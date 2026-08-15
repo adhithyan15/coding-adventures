@@ -4183,6 +4183,41 @@
       "output": "spanish/book/chapters/ch281-cuatro-adjetivos.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 282,
+      "output": "spanish/book/chapters/ch282-encuentro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 283,
+      "output": "spanish/book/chapters/ch283-cortesia.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 284,
+      "output": "spanish/book/chapters/ch284-respuestas-cortas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 285,
+      "output": "spanish/book/chapters/ch285-quien-es.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 286,
+      "output": "spanish/book/chapters/ch286-donde-duele.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 287,
+      "output": "spanish/book/chapters/ch287-cinco-cosas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 288,
+      "output": "spanish/book/chapters/ch288-la-partida.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
