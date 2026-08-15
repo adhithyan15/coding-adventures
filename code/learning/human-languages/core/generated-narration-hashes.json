@@ -7142,6 +7142,132 @@
       "jsonHash": "fnv1a64:7c1d1f8b05e38342"
     },
     {
+      "language": "sanskrit",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:e790e2f50b471093",
+      "lessonIds": [
+        "SA-C24-water",
+        "SA-C24-rice",
+        "SA-C24-fruit",
+        "SA-C24-cloth",
+        "SA-C24-lamp"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch24.txt",
+      "json": "sanskrit/narration/ch24.json",
+      "textHash": "fnv1a64:7a33293c789c6c05",
+      "jsonHash": "fnv1a64:61769c201ca1b522"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:af646fe1e249bbd9",
+      "lessonIds": [
+        "SA-C25-hand",
+        "SA-C25-foot",
+        "SA-C25-head",
+        "SA-C25-tooth",
+        "SA-C25-hair"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch25.txt",
+      "json": "sanskrit/narration/ch25.json",
+      "textHash": "fnv1a64:27bf8b0926e5cd1c",
+      "jsonHash": "fnv1a64:0dcff8bcc3ca7215"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:08a58d31fdb8bbeb",
+      "lessonIds": [
+        "SA-C26-teacher",
+        "SA-C26-student",
+        "SA-C26-king",
+        "SA-C26-guest",
+        "SA-C26-physician"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch26.txt",
+      "json": "sanskrit/narration/ch26.json",
+      "textHash": "fnv1a64:a1ddb9e70f5908ea",
+      "jsonHash": "fnv1a64:43063a3bfd46dfa4"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:5f9d309a5e7f4742",
+      "lessonIds": [
+        "SA-C27-so-be-it",
+        "SA-C27-well-done",
+        "SA-C27-enough",
+        "SA-C27-true",
+        "SA-C27-thus"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "sanskrit/narration/ch27.txt",
+      "json": "sanskrit/narration/ch27.json",
+      "textHash": "fnv1a64:6b343d1eabae5525",
+      "jsonHash": "fnv1a64:b7ec71a82b404aaf"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:f385601cf90448cb",
+      "lessonIds": [
+        "SA-C28-now",
+        "SA-C28-day-after",
+        "SA-C28-journey",
+        "SA-C28-auspicious",
+        "SA-C28-svasti"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch28.txt",
+      "json": "sanskrit/narration/ch28.json",
+      "textHash": "fnv1a64:82004849fe2d1724",
+      "jsonHash": "fnv1a64:dc70227beacce3f8"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:6efd7b2a99d209b5",
+      "lessonIds": [
+        "SA-C29-please",
+        "SA-C29-pardon",
+        "SA-C29-bow",
+        "SA-C29-favour",
+        "SA-C29-fortunate"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch29.txt",
+      "json": "sanskrit/narration/ch29.json",
+      "textHash": "fnv1a64:b983648aef9193d1",
+      "jsonHash": "fnv1a64:4192dd04d84386e5"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:310f38ae5c6c8c38",
+      "lessonIds": [
+        "SA-C30-door",
+        "SA-C30-seat",
+        "SA-C30-flower",
+        "SA-C30-garland",
+        "SA-C30-anjali"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch30.txt",
+      "json": "sanskrit/narration/ch30.json",
+      "textHash": "fnv1a64:0d72450d1a5655d7",
+      "jsonHash": "fnv1a64:ce6646f504ccd03b"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:7f767862168ad0bf",

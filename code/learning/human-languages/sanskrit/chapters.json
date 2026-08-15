@@ -487,6 +487,153 @@
           "SA-LEX-DAUGHTER"
         ]
       }
+    },
+    {
+      "chapter": 24,
+      "title": "Things You Ask For",
+      "label": "ch:sa-ask-for",
+      "canDo": "I can name five everyday things I might ask someone for in Sanskrit, and say which noun family each one belongs to.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "SA-C24-lamp",
+        "kind": "production",
+        "summary": "Complete SA-C24-lamp and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C24-ASK-01",
+          "SA-LEX-C24-ASK-02",
+          "SA-LEX-C24-ASK-03",
+          "SA-LEX-C24-ASK-04",
+          "SA-LEX-C24-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "The Hand and the Foot",
+      "label": "ch:sa-body-more",
+      "canDo": "I can name five more parts of the body in Sanskrit, and name the sound law that ties three of them to their English cousins.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "SA-C25-hair",
+        "kind": "production",
+        "summary": "Complete SA-C25-hair and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C25-BODY-01",
+          "SA-LEX-C25-BODY-02",
+          "SA-LEX-C25-BODY-03",
+          "SA-LEX-C25-BODY-04",
+          "SA-LEX-C25-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Naming Who Someone Is",
+      "label": "ch:sa-roles",
+      "canDo": "I can say what someone's role is in Sanskrit --- teacher, student, king, guest, physician --- and name the everyday meaning hiding inside two of those words.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "SA-C26-physician",
+        "kind": "production",
+        "summary": "Complete SA-C26-physician and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C26-ROLE-01",
+          "SA-LEX-C26-ROLE-02",
+          "SA-LEX-C26-ROLE-03",
+          "SA-LEX-C26-ROLE-04",
+          "SA-LEX-C26-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Answering With More Than Yes",
+      "label": "ch:sa-replies",
+      "canDo": "I can answer in Sanskrit with more than yes and no, and hear the be-verb sitting inside three of the answers.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "SA-C27-thus",
+        "kind": "production",
+        "summary": "Complete SA-C27-thus and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C27-REPLY-01",
+          "SA-LEX-C27-REPLY-02",
+          "SA-LEX-C27-REPLY-03",
+          "SA-LEX-C27-REPLY-04",
+          "SA-LEX-C27-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 28,
+      "title": "Taking Your Leave",
+      "label": "ch:sa-leave-more",
+      "canDo": "I can take my leave in Sanskrit, wish someone a good journey, and take the old farewell apart into the two words that built it.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "SA-C28-svasti",
+        "kind": "production",
+        "summary": "Complete SA-C28-svasti and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C28-LEAVE-01",
+          "SA-LEX-C28-LEAVE-02",
+          "SA-LEX-C28-LEAVE-03",
+          "SA-LEX-C28-LEAVE-04",
+          "SA-LEX-C28-LEAVE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Courtesy Words",
+      "label": "ch:sa-courtesy",
+      "canDo": "I can be polite in Sanskrit --- please, pardon, a bow, a favour --- and say what is inside the thank-you I learned on the first day.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "SA-C29-fortunate",
+        "kind": "production",
+        "summary": "Complete SA-C29-fortunate and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C29-COURTESY-01",
+          "SA-LEX-C29-COURTESY-02",
+          "SA-LEX-C29-COURTESY-03",
+          "SA-LEX-C29-COURTESY-04",
+          "SA-LEX-C29-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Welcoming a Guest",
+      "label": "ch:sa-welcome",
+      "canDo": "I can name the five steps of a Sanskrit welcome, from the door to the hands that make the greeting.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "SA-C30-anjali",
+        "kind": "production",
+        "summary": "Complete SA-C30-anjali and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C30-WELCOME-01",
+          "SA-LEX-C30-WELCOME-02",
+          "SA-LEX-C30-WELCOME-03",
+          "SA-LEX-C30-WELCOME-04",
+          "SA-LEX-C30-WELCOME-05"
+        ]
+      }
     }
   ]
 }

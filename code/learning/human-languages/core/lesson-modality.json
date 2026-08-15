@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:55263f21ad5df81f",
+  "sourceHash": "fnv1a64:10e1ed2b380692e0",
   "summary": {
-    "totalLessons": 2386,
-    "voice": 1612,
-    "sight": 572,
+    "totalLessons": 2421,
+    "voice": 1646,
+    "sight": 573,
     "pen": 202,
-    "drivableLessons": 1612,
+    "drivableLessons": 1646,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 815,
-    "drivablePrefixTotal": 1402,
-    "fullyDrivableChapters": 511,
+    "chapterCount": 822,
+    "drivablePrefixTotal": 1435,
+    "fullyDrivableChapters": 517,
     "unstartableChapters": 181,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7231,12 +7231,12 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 126,
-      "voice": 75,
-      "sight": 37,
+      "lessonCount": 161,
+      "voice": 109,
+      "sight": 38,
       "pen": 14,
-      "drivablePercent": 60,
-      "drivablePrefixTotal": 63,
+      "drivablePercent": 68,
+      "drivablePrefixTotal": 96,
       "modalities": [
         "voice",
         "sight",
@@ -7658,6 +7658,145 @@
             "SA-C23-mother",
             "SA-C23-son",
             "SA-C23-daughter"
+          ]
+        },
+        {
+          "chapter": 24,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C24-water",
+            "SA-C24-rice",
+            "SA-C24-fruit",
+            "SA-C24-cloth",
+            "SA-C24-lamp"
+          ]
+        },
+        {
+          "chapter": 25,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C25-hand",
+            "SA-C25-foot",
+            "SA-C25-head",
+            "SA-C25-tooth",
+            "SA-C25-hair"
+          ]
+        },
+        {
+          "chapter": 26,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C26-teacher",
+            "SA-C26-student",
+            "SA-C26-king",
+            "SA-C26-guest",
+            "SA-C26-physician"
+          ]
+        },
+        {
+          "chapter": 27,
+          "lessonCount": 5,
+          "voice": 4,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": "SA-C27-true",
+          "drivable": false,
+          "drivableLessonIds": [
+            "SA-C27-so-be-it",
+            "SA-C27-well-done",
+            "SA-C27-enough"
+          ]
+        },
+        {
+          "chapter": 28,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C28-now",
+            "SA-C28-day-after",
+            "SA-C28-journey",
+            "SA-C28-auspicious",
+            "SA-C28-svasti"
+          ]
+        },
+        {
+          "chapter": 29,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C29-please",
+            "SA-C29-pardon",
+            "SA-C29-bow",
+            "SA-C29-favour",
+            "SA-C29-fortunate"
+          ]
+        },
+        {
+          "chapter": 30,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C30-door",
+            "SA-C30-seat",
+            "SA-C30-flower",
+            "SA-C30-garland",
+            "SA-C30-anjali"
           ]
         }
       ]
@@ -43534,6 +43673,636 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:5b7438fb17cc64e1"
+    },
+    {
+      "id": "SA-C24-water",
+      "language": "sanskrit",
+      "chapter": 24,
+      "sequence": 1130,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c29789c44a896b3a"
+    },
+    {
+      "id": "SA-C24-rice",
+      "language": "sanskrit",
+      "chapter": 24,
+      "sequence": 1140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3d3085a25d65097f"
+    },
+    {
+      "id": "SA-C24-fruit",
+      "language": "sanskrit",
+      "chapter": 24,
+      "sequence": 1150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:591db1c0370e1d15"
+    },
+    {
+      "id": "SA-C24-cloth",
+      "language": "sanskrit",
+      "chapter": 24,
+      "sequence": 1160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6ca316f30439854a"
+    },
+    {
+      "id": "SA-C24-lamp",
+      "language": "sanskrit",
+      "chapter": 24,
+      "sequence": 1170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ee91ab98d432194c"
+    },
+    {
+      "id": "SA-C25-hand",
+      "language": "sanskrit",
+      "chapter": 25,
+      "sequence": 1180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cdf0549300c973c1"
+    },
+    {
+      "id": "SA-C25-foot",
+      "language": "sanskrit",
+      "chapter": 25,
+      "sequence": 1190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:24331d935ebe860c"
+    },
+    {
+      "id": "SA-C25-head",
+      "language": "sanskrit",
+      "chapter": 25,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0836b2627ceacbb7"
+    },
+    {
+      "id": "SA-C25-tooth",
+      "language": "sanskrit",
+      "chapter": 25,
+      "sequence": 1210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2e7f7cbfb2d8d9d4"
+    },
+    {
+      "id": "SA-C25-hair",
+      "language": "sanskrit",
+      "chapter": 25,
+      "sequence": 1220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5911aca09c0a9670"
+    },
+    {
+      "id": "SA-C26-teacher",
+      "language": "sanskrit",
+      "chapter": 26,
+      "sequence": 1230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4a86fdbc6ab46694"
+    },
+    {
+      "id": "SA-C26-student",
+      "language": "sanskrit",
+      "chapter": 26,
+      "sequence": 1240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:05a98292e7eab1e2"
+    },
+    {
+      "id": "SA-C26-king",
+      "language": "sanskrit",
+      "chapter": 26,
+      "sequence": 1250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a200930d9b387b08"
+    },
+    {
+      "id": "SA-C26-guest",
+      "language": "sanskrit",
+      "chapter": 26,
+      "sequence": 1260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e0e4e5427b8378e5"
+    },
+    {
+      "id": "SA-C26-physician",
+      "language": "sanskrit",
+      "chapter": 26,
+      "sequence": 1270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f0117dff0dfa24fe"
+    },
+    {
+      "id": "SA-C27-so-be-it",
+      "language": "sanskrit",
+      "chapter": 27,
+      "sequence": 1280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:002e857524f36fd0"
+    },
+    {
+      "id": "SA-C27-well-done",
+      "language": "sanskrit",
+      "chapter": 27,
+      "sequence": 1290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:707bc7087c0eae98"
+    },
+    {
+      "id": "SA-C27-enough",
+      "language": "sanskrit",
+      "chapter": 27,
+      "sequence": 1300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cc76d72757c3a020"
+    },
+    {
+      "id": "SA-C27-true",
+      "language": "sanskrit",
+      "chapter": 27,
+      "sequence": 1310,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3a33f4a3194459a7"
+    },
+    {
+      "id": "SA-C27-thus",
+      "language": "sanskrit",
+      "chapter": 27,
+      "sequence": 1320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:69e3ff310085c42a"
+    },
+    {
+      "id": "SA-C28-now",
+      "language": "sanskrit",
+      "chapter": 28,
+      "sequence": 1330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9c9585d7f59d7f6a"
+    },
+    {
+      "id": "SA-C28-day-after",
+      "language": "sanskrit",
+      "chapter": 28,
+      "sequence": 1340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:67ab752b23384db7"
+    },
+    {
+      "id": "SA-C28-journey",
+      "language": "sanskrit",
+      "chapter": 28,
+      "sequence": 1350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:07b1cdb4b93e0b92"
+    },
+    {
+      "id": "SA-C28-auspicious",
+      "language": "sanskrit",
+      "chapter": 28,
+      "sequence": 1360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:de8b13a0820af21f"
+    },
+    {
+      "id": "SA-C28-svasti",
+      "language": "sanskrit",
+      "chapter": 28,
+      "sequence": 1370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:12fcb385c6ae3067"
+    },
+    {
+      "id": "SA-C29-please",
+      "language": "sanskrit",
+      "chapter": 29,
+      "sequence": 1380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b711021d78e7301b"
+    },
+    {
+      "id": "SA-C29-pardon",
+      "language": "sanskrit",
+      "chapter": 29,
+      "sequence": 1390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:70fb908322f609bf"
+    },
+    {
+      "id": "SA-C29-bow",
+      "language": "sanskrit",
+      "chapter": 29,
+      "sequence": 1400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a45ff1eca8ff92da"
+    },
+    {
+      "id": "SA-C29-favour",
+      "language": "sanskrit",
+      "chapter": 29,
+      "sequence": 1410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cfa023567b52fcf3"
+    },
+    {
+      "id": "SA-C29-fortunate",
+      "language": "sanskrit",
+      "chapter": 29,
+      "sequence": 1420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5821073fa871d89b"
+    },
+    {
+      "id": "SA-C30-door",
+      "language": "sanskrit",
+      "chapter": 30,
+      "sequence": 1430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b65a27dbd7cac7f1"
+    },
+    {
+      "id": "SA-C30-seat",
+      "language": "sanskrit",
+      "chapter": 30,
+      "sequence": 1440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6adda01ee07364db"
+    },
+    {
+      "id": "SA-C30-flower",
+      "language": "sanskrit",
+      "chapter": 30,
+      "sequence": 1450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1da49ca5d3f010ec"
+    },
+    {
+      "id": "SA-C30-garland",
+      "language": "sanskrit",
+      "chapter": 30,
+      "sequence": 1460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ac8a469ff7cc0b4e"
+    },
+    {
+      "id": "SA-C30-anjali",
+      "language": "sanskrit",
+      "chapter": 30,
+      "sequence": 1470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2cb9dc10918695ac"
     },
     {
       "id": "ES-C01-hola",

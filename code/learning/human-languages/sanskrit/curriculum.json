@@ -415,6 +415,118 @@
         "SA-EXT-23-KIN"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-24-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "SA-C24-water",
+        "SA-C24-rice",
+        "SA-C24-fruit",
+        "SA-C24-cloth",
+        "SA-C24-lamp"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-24-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-25-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C25-hand",
+        "SA-C25-foot",
+        "SA-C25-head",
+        "SA-C25-tooth",
+        "SA-C25-hair"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-25-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-26-ROLE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "SA-C26-teacher",
+        "SA-C26-student",
+        "SA-C26-king",
+        "SA-C26-guest",
+        "SA-C26-physician"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-26-ROLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-27-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "SA-C27-so-be-it",
+        "SA-C27-well-done",
+        "SA-C27-enough",
+        "SA-C27-true",
+        "SA-C27-thus"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-27-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-28-LEAVE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "SA-C28-now",
+        "SA-C28-day-after",
+        "SA-C28-journey",
+        "SA-C28-auspicious",
+        "SA-C28-svasti"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-28-LEAVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-29-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "SA-C29-please",
+        "SA-C29-pardon",
+        "SA-C29-bow",
+        "SA-C29-favour",
+        "SA-C29-fortunate"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-29-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-30-WELCOME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-C30-door",
+        "SA-C30-seat",
+        "SA-C30-flower",
+        "SA-C30-garland",
+        "SA-C30-anjali"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-30-WELCOME"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -422,7 +534,8 @@
       "segments": [
         "SA-PATH-001",
         "SA-PATH-003",
-        "SA-PATH-100"
+        "SA-PATH-100",
+        "SA-PATH-30-WELCOME"
       ],
       "omits": [
         "GREETING-PEACE"
@@ -432,7 +545,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "SA-PATH-002",
-        "SA-PATH-007"
+        "SA-PATH-007",
+        "SA-PATH-29-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -441,7 +555,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "SA-PATH-004"
+        "SA-PATH-004",
+        "SA-PATH-27-REPLY"
       ],
       "omits": [
         "RESPONSE-YES",
@@ -453,7 +568,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "SA-PATH-005",
-        "SA-PATH-014"
+        "SA-PATH-014",
+        "SA-PATH-26-ROLE"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -464,7 +580,8 @@
       "segments": [
         "SA-PATH-006",
         "SA-PATH-015",
-        "SA-PATH-016"
+        "SA-PATH-016",
+        "SA-PATH-25-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -474,7 +591,8 @@
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "SA-PATH-013"
+        "SA-PATH-013",
+        "SA-PATH-24-ASK"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -484,7 +602,8 @@
     },
     "SPINE-TAKE-LEAVE": {
       "segments": [
-        "SA-PATH-008"
+        "SA-PATH-008",
+        "SA-PATH-28-LEAVE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1070,6 +1189,111 @@
         "SA-C23-mother",
         "SA-C23-son",
         "SA-C23-daughter"
+      ]
+    },
+    {
+      "id": "SA-EXT-24-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things I might ask someone for in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C24-water",
+        "SA-C24-rice",
+        "SA-C24-fruit",
+        "SA-C24-cloth",
+        "SA-C24-lamp"
+      ]
+    },
+    {
+      "id": "SA-EXT-25-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C25-hand",
+        "SA-C25-foot",
+        "SA-C25-head",
+        "SA-C25-tooth",
+        "SA-C25-hair"
+      ]
+    },
+    {
+      "id": "SA-EXT-26-ROLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what someone's role is in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C26-teacher",
+        "SA-C26-student",
+        "SA-C26-king",
+        "SA-C26-guest",
+        "SA-C26-physician"
+      ]
+    },
+    {
+      "id": "SA-EXT-27-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer in Sanskrit with more than yes and no.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C27-so-be-it",
+        "SA-C27-well-done",
+        "SA-C27-enough",
+        "SA-C27-true",
+        "SA-C27-thus"
+      ]
+    },
+    {
+      "id": "SA-EXT-28-LEAVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can take my leave in Sanskrit and wish someone well.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C28-now",
+        "SA-C28-day-after",
+        "SA-C28-journey",
+        "SA-C28-auspicious",
+        "SA-C28-svasti"
+      ]
+    },
+    {
+      "id": "SA-EXT-29-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can be polite in Sanskrit beyond thank you.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C29-please",
+        "SA-C29-pardon",
+        "SA-C29-bow",
+        "SA-C29-favour",
+        "SA-C29-fortunate"
+      ]
+    },
+    {
+      "id": "SA-EXT-30-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a Sanskrit welcome offers a guest.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C30-door",
+        "SA-C30-seat",
+        "SA-C30-flower",
+        "SA-C30-garland",
+        "SA-C30-anjali"
       ]
     }
   ]
