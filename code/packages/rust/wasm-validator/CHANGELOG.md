@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.7] - 2026-08-15 (W16, task #85 — multi-memory first slice)
+
+### Changed (breaking)
+
+- New `wasm-execution` dependency, for `MAX_MEMORIES`.
+- The memory-count check ("Check 1") no longer rejects a module with more
+  than 1 memory outright -- the cap is now `wasm_execution::MAX_MEMORIES`
+  (64), replacing WASM 1.0's hardcoded "at most 1". `ValidationError::
+  TooManyMemories`'s message is now generically worded ("too many"), not
+  "more than 1", so it reads correctly regardless of where the cap sits.
+- The data-segment memory-index check ("Check 8") stays exactly "must be
+  0" -- deliberately NOT widened alongside the count cap. `wasm-runtime::
+  instantiate()` only ever applies a data segment to memory 0 regardless
+  of `seg.memory_index`; widening this check alone would let a module
+  targeting a non-zero memory index PASS validation and then have its
+  segment silently misapplied to the wrong memory at instantiation time.
+  See `code/specs/W16-wasm-multi-memory-first-slice.md`'s implementation
+  note for the full reasoning (this diverges from that spec's original
+  design, found during implementation).
+
+See `code/specs/W16-wasm-multi-memory-first-slice.md` for the full design.
+
 ## [0.2.6] - 2026-08-15 (task #81 — v128/funcref/externref single-value blocktypes)
 
 ### Fixed

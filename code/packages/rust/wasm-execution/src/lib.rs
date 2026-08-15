@@ -32,7 +32,7 @@
 //! use wasm_execution::*;
 //!
 //! let engine = WasmExecutionEngine::new(WasmEngineConfig {
-//!     memory: None,
+//!     memories: vec![],
 //!     tables: vec![],
 //!     globals: vec![],
 //!     global_types: vec![],
@@ -1501,7 +1501,11 @@ pub struct GcStruct {
 
 /// The WASM execution context — all runtime state for WASM instructions.
 pub struct WasmExecutionContext {
-    pub memory: Option<*mut LinearMemory>,
+    /// Every memory this instance declared/imported, in index order
+    /// (multi-memory proposal, W16, task #85). Index 0 is "the" default
+    /// memory every pre-existing load/store/bulk-memory instruction still
+    /// implicitly targets -- see `get_memory()` below.
+    pub memories: Vec<*mut LinearMemory>,
     pub tables: Vec<*mut Table>,
     pub globals: Vec<WasmValue>,
     pub global_types: Vec<GlobalType>,
@@ -1719,6 +1723,18 @@ const MAX_DEDICATED_THREAD_DEPTH: usize = 64;
 /// cap, not a separately-chosen or unbounded one.
 pub const MAX_V128_HEAP_LEN: usize = 1_000_000;
 
+/// Caps how many linear memories a single module may declare + import
+/// (multi-memory proposal, W16, task #85). Real WASM has no spec-mandated
+/// numeric ceiling here (unlike MVP's hardcoded 1) -- concrete limits are
+/// implementation-defined. 64 is comfortably past `memory_grow.wast`'s
+/// real count of 4 and any plausible legitimate module, while still
+/// bounding a maliciously-crafted module's memory-section entry count
+/// before any allocation runs, matching `MAX_V128_HEAP_LEN`'s own
+/// reasoning above. `pub` so `wasm-validator` enforces the identical cap
+/// rather than a separately-chosen one -- same cross-crate reuse pattern
+/// `MAX_V128_HEAP_LEN` already established.
+pub const MAX_MEMORIES: usize = 64;
+
 thread_local! {
     /// How many WASM10 dedicated threads deep the CURRENT thread is
     /// nested, relative to the original (non-WASM-spawned) caller — see
@@ -1920,11 +1936,27 @@ fn get_ctx(ctx: &mut dyn Any) -> &mut WasmExecutionContext {
         .expect("context must be WasmExecutionContext")
 }
 
-// ── Helper: get memory from context ───────────────────────────────────────
+// ── Helper: get the default (index 0) memory from context ─────────────────
+//
+// Every load/store/bulk-memory instruction except `memory.size`/
+// `memory.grow` still only ever targets memory 0 (W16 scopes multi-memory
+// support to exactly those two instructions -- see
+// `code/specs/W16-wasm-multi-memory-first-slice.md`'s "What does NOT
+// change"), so this stays the common-case helper; `get_memory_at` below is
+// for the two instructions that need a real, non-default index.
 fn get_memory<'a>(ctx: &WasmExecutionContext) -> Result<&'a mut LinearMemory, VMError> {
-    match ctx.memory {
-        Some(ptr) => Ok(unsafe { &mut *ptr }),
-        None => Err(VMError::GenericError("no memory available".to_string())),
+    get_memory_at(ctx, 0)
+}
+
+// ── Helper: get a specific memory from context by index ───────────────────
+fn get_memory_at<'a>(ctx: &WasmExecutionContext, memidx: usize) -> Result<&'a mut LinearMemory, VMError> {
+    match ctx.memories.get(memidx) {
+        Some(&ptr) => Ok(unsafe { &mut *ptr }),
+        None => Err(VMError::GenericError(format!(
+            "memory index {} out of range ({} memories)",
+            memidx,
+            ctx.memories.len()
+        ))),
     }
 }
 
@@ -3586,11 +3618,18 @@ fn register_memory(vm: &mut GenericVM) {
         Ok(None)
     });
 
-    // memory.size (0x3F)
-    vm.register_context_opcode(0x3F, |vm, _instr, _code, ctx| {
+    // memory.size (0x3F) -- `instr.operand` carries the real memory index
+    // (multi-memory, W16, task #85); `convert_operand` already maps the
+    // decoded `memidx` LEB128 straight through to `Operand::Index`, so
+    // this only needed to start reading it instead of ignoring it.
+    vm.register_context_opcode(0x3F, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let size = match ctx.memory {
-            Some(ptr) => unsafe { (*ptr).size() as i32 },
+        let memidx = match &instr.operand {
+            Some(Operand::Index(i)) => *i,
+            _ => 0,
+        };
+        let size = match ctx.memories.get(memidx) {
+            Some(&ptr) => unsafe { (*ptr).size() as i32 },
             None => 0,
         };
         push_wasm(vm, WasmValue::I32(size));
@@ -3598,12 +3637,16 @@ fn register_memory(vm: &mut GenericVM) {
         Ok(None)
     });
 
-    // memory.grow (0x40)
-    vm.register_context_opcode(0x40, |vm, _instr, _code, ctx| {
+    // memory.grow (0x40) -- same memidx plumbing as memory.size above.
+    vm.register_context_opcode(0x40, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
+        let memidx = match &instr.operand {
+            Some(Operand::Index(i)) => *i,
+            _ => 0,
+        };
         let delta = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let result = match ctx.memory {
-            Some(ptr) => unsafe { (*ptr).grow(delta as u32) },
+        let result = match ctx.memories.get(memidx) {
+            Some(&ptr) => unsafe { (*ptr).grow(delta as u32) },
             None => -1,
         };
         push_wasm(vm, WasmValue::I32(result));
@@ -4342,7 +4385,7 @@ fn call_function_inner(
         // on the very first iteration.
         if let Some(Some(host_func)) = ctx.host_functions.get(current_func_index) {
             let results = host_func
-                .call(&args, ctx.memory.map(|ptr| unsafe { &mut *ptr }))
+                .call(&args, ctx.memories.first().map(|&ptr| unsafe { &mut *ptr }))
                 .map_err(VMError::from)?;
             for r in results {
                 push_wasm(vm, r);
@@ -4532,7 +4575,9 @@ fn call_function_inner(
 
 /// Configuration for the execution engine.
 pub struct WasmEngineConfig {
-    pub memory: Option<LinearMemory>,
+    /// Every memory this instance declared/imported, in index order
+    /// (multi-memory proposal, W16, task #85).
+    pub memories: Vec<LinearMemory>,
     pub tables: Vec<Table>,
     pub globals: Vec<WasmValue>,
     pub global_types: Vec<GlobalType>,
@@ -4543,7 +4588,7 @@ pub struct WasmEngineConfig {
 
 /// Mutable engine state that should be written back to a long-lived instance.
 pub struct WasmEngineState {
-    pub memory: Option<LinearMemory>,
+    pub memories: Vec<LinearMemory>,
     pub tables: Vec<Table>,
     pub globals: Vec<WasmValue>,
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
@@ -4561,11 +4606,14 @@ pub struct WasmEngineState {
 /// The WASM execution engine — interprets validated WASM modules.
 pub struct WasmExecutionEngine {
     vm: GenericVM,
-    memory: Option<Box<LinearMemory>>,
-    // Boxing is intentional, NOT redundant: `call_indirect` stores `*mut Table`
-    // raw pointers into the execution context (see `table_ptrs` below). Boxing
-    // gives each `Table` a stable heap address so those pointers stay valid even
-    // if this Vec reallocates; a plain `Vec<Table>` would invalidate them.
+    // Boxing is intentional, NOT redundant: `memory.size $mem1`/etc. and
+    // `call_indirect` both store `*mut _` raw pointers into the execution
+    // context (see `memory_ptrs`/`table_ptrs` below). Boxing gives each
+    // entry a stable heap address so those pointers stay valid even if
+    // this Vec reallocates; a plain `Vec<LinearMemory>`/`Vec<Table>` would
+    // invalidate them.
+    #[allow(clippy::vec_box)]
+    memories: Vec<Box<LinearMemory>>,
     #[allow(clippy::vec_box)]
     tables: Vec<Box<Table>>,
     globals: Vec<WasmValue>,
@@ -4613,7 +4661,7 @@ impl WasmExecutionEngine {
 
         WasmExecutionEngine {
             vm,
-            memory: config.memory.map(Box::new),
+            memories: config.memories.into_iter().map(Box::new).collect(),
             tables: config.tables.into_iter().map(Box::new).collect(),
             globals: config.globals,
             global_types: config.global_types,
@@ -4688,7 +4736,7 @@ impl WasmExecutionEngine {
     /// Consume the engine and return the mutated runtime state.
     pub fn into_state(self) -> WasmEngineState {
         WasmEngineState {
-            memory: self.memory.map(|memory| *memory),
+            memories: self.memories.into_iter().map(|memory| *memory).collect(),
             tables: self.tables.into_iter().map(|table| *table).collect(),
             globals: self.globals,
             host_functions: self.host_functions,
@@ -4750,7 +4798,8 @@ impl WasmExecutionEngine {
         // carry no resolved v128 bytes -- `None` for each, not a
         // meaningful absence.
         if let Some(Some(host_func)) = self.host_functions.get(func_index) {
-            return host_func.call(args, self.memory.as_deref_mut()).map(|results| {
+            let memory = self.memories.first_mut().map(|m| &mut **m);
+            return host_func.call(args, memory).map(|results| {
                 let v128_bytes = vec![None; results.len()];
                 (results, v128_bytes)
             });
@@ -4774,7 +4823,11 @@ impl WasmExecutionEngine {
         // Build raw pointers for the context -- shared VM-level state,
         // computed once regardless of how many WASM16 tail-call
         // transitions follow below.
-        let memory_ptr = self.memory.as_mut().map(|m| &mut **m as *mut LinearMemory);
+        let memory_ptrs: Vec<*mut LinearMemory> = self
+            .memories
+            .iter_mut()
+            .map(|m| &mut **m as *mut LinearMemory)
+            .collect();
         let table_ptrs: Vec<*mut Table> = self
             .tables
             .iter_mut()
@@ -4783,7 +4836,7 @@ impl WasmExecutionEngine {
         let host_functions = std::mem::take(&mut self.host_functions);
 
         let mut ctx = WasmExecutionContext {
-            memory: memory_ptr,
+            memories: memory_ptrs,
             tables: table_ptrs,
             globals: self.globals.clone(),
             global_types: self.global_types.clone(),
@@ -4941,7 +4994,7 @@ impl WasmExecutionEngine {
                                 // exactly like `call_function_inner`'s own host branch
                                 // does, and stop.
                                 if let Some(Some(host_func)) = ctx.host_functions.get(current_func_index) {
-                                    match host_func.call(&current_args, ctx.memory.map(|ptr| unsafe { &mut *ptr })) {
+                                    match host_func.call(&current_args, ctx.memories.first().map(|&ptr| unsafe { &mut *ptr })) {
                                         Ok(results) => {
                                             for r in results {
                                                 push_wasm(vm, r);
@@ -5340,7 +5393,7 @@ mod tests {
         };
 
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5366,7 +5419,7 @@ mod tests {
         };
 
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5410,7 +5463,7 @@ mod tests {
             code: vec![0x41, 0x2A, 0xFB, 0x1C, 0xFB, 0x1D, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5429,7 +5482,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![] };
         let body = FunctionBody { locals: vec![], code: vec![0xFB, 0x77, 0x0B] };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5452,7 +5505,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results };
         let body = FunctionBody { locals: vec![], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5568,7 +5621,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
         let body = FunctionBody { locals: vec![ValueType::Anyref], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5743,7 +5796,7 @@ mod tests {
             code,
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -5797,7 +5850,7 @@ mod tests {
         };
 
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6078,6 +6131,40 @@ mod tests {
         assert_eq!(mem.size(), 2);
     }
 
+    /// End-to-end proof `memory.size`/`memory.grow` actually target the
+    /// memory index they decode (multi-memory, W16, task #85), not always
+    /// memory 0 -- growing memory 1 must leave memory 0 completely
+    /// unaffected, and `memory.size 0` read AFTER that grow must still
+    /// report memory 0's own, untouched page count.
+    #[test]
+    fn memory_size_and_grow_target_the_correct_memory_by_index() {
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x02, // i32.const 2 (delta)
+                0x40, 0x01, // memory.grow memidx=1 -- pushes memory 1's OLD page count
+                0x3F, 0x00, // memory.size memidx=0 -- pushes memory 0's CURRENT page count
+                0x0B, // end
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None), LinearMemory::new(3, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let results = engine.call_function(0, &[]).unwrap();
+        assert_eq!(results, vec![WasmValue::I32(3), WasmValue::I32(1)], "memory 1's old size was 3; memory 0's size must stay 1, unaffected by growing memory 1");
+
+        let state = engine.into_state();
+        assert_eq!(state.memories[0].size(), 1, "memory 0 must not have grown");
+        assert_eq!(state.memories[1].size(), 5, "memory 1 must have grown by 2 (3 -> 5)");
+    }
+
     #[test]
     fn test_memory_write_bytes() {
         let mut mem = LinearMemory::new(1, None);
@@ -6141,7 +6228,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
         let body = FunctionBody { locals: vec![], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6158,7 +6245,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
         let body = FunctionBody { locals: vec![], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6183,7 +6270,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
         let body = FunctionBody { locals: vec![], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![Table::new(10, None)],
             globals: vec![],
             global_types: vec![],
@@ -6200,7 +6287,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
         let body = FunctionBody { locals: vec![], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![Table::new(5, None)],
             globals: vec![],
             global_types: vec![],
@@ -6217,7 +6304,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
         let body = FunctionBody { locals: vec![], code };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![Table::new(5, None)],
             globals: vec![],
             global_types: vec![],
@@ -6244,7 +6331,7 @@ mod tests {
         let mut table = Table::new(1, None);
         table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![table],
             globals: vec![],
             global_types: vec![],
@@ -6271,7 +6358,7 @@ mod tests {
         let mut table = Table::new(1, None);
         table.set(0, Some(99)).unwrap(); // function index 99 doesn't exist -- only index 0 (this function itself) does
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![table],
             globals: vec![],
             global_types: vec![],
@@ -6302,7 +6389,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
         let body = FunctionBody { locals: vec![], code: vec![0x41, 0x2a, 0x0B] }; // i32.const 42; end
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6325,7 +6412,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
         let body = FunctionBody { locals: vec![], code: vec![0x41, 0x2a, 0x0B] }; // i32.const 42; end
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6345,7 +6432,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
         let body = FunctionBody { locals: vec![], code };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6499,7 +6586,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results: vec![ValueType::V128] };
         let body = FunctionBody { locals: vec![], code };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -6566,7 +6653,7 @@ mod tests {
         let func_type = FuncType { params: vec![], results };
         let body = FunctionBody { locals: vec![], code };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: Some(LinearMemory::new(1, None)),
+            memories: vec![LinearMemory::new(1, None)],
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7103,7 +7190,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7124,7 +7211,7 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7402,7 +7489,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7422,7 +7509,7 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7523,7 +7610,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x50, 0x0B], // local.get 0; i64.eqz; end
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7551,7 +7638,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x51, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7572,7 +7659,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x53, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7602,7 +7689,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7622,7 +7709,7 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7803,7 +7890,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x5B, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7824,7 +7911,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x5D, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7854,7 +7941,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -7874,7 +7961,7 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8028,7 +8115,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x61, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8049,7 +8136,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x20, 0x01, 0x61, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8084,7 +8171,7 @@ mod tests {
             code: vec![0x20, 0x00, opcode, 0x0B],
         };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8291,7 +8378,7 @@ mod tests {
         let func_type = FuncType { params: vec![param], results: vec![result] };
         let body = FunctionBody { locals: vec![], code: vec![0x20, 0x00, 0xFC, sub, 0x0B] };
         WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8468,7 +8555,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8502,7 +8589,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8535,7 +8622,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8571,7 +8658,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8602,7 +8689,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8627,7 +8714,7 @@ mod tests {
             code: vec![0x00, 0x0B], // unreachable; end
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8649,7 +8736,7 @@ mod tests {
             code: vec![0x01, 0x01, 0x41, 0x05, 0x0B], // nop; nop; i32.const 5; end
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8684,7 +8771,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8715,7 +8802,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8748,7 +8835,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![WasmValue::I32(10)],
             global_types: vec![GlobalType {
@@ -8785,7 +8872,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8817,7 +8904,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8848,7 +8935,7 @@ mod tests {
             ],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8877,7 +8964,7 @@ mod tests {
             code: vec![0x20, 0x00, 0x0B],
         };
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],
@@ -8892,7 +8979,7 @@ mod tests {
     #[test]
     fn test_engine_undefined_function() {
         let engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory: None,
+            memories: Vec::new(),
             tables: vec![],
             globals: vec![],
             global_types: vec![],

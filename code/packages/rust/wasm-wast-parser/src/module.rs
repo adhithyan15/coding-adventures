@@ -1453,6 +1453,21 @@ fn encode_stream_instr(
             Ok(consumed)
         }
         "memory.size" | "memory.grow" => {
+            // Multi-memory (W16, task #85): deliberately NOT given the
+            // same leading-memidx-token support the folded form (`encode_
+            // instr`'s matching arm) got. In THIS flat/stream form, the
+            // token right after "memory.grow" is ambiguous -- it's either
+            // an explicit memidx OR the start of the FOLLOWING
+            // instruction's own keyword (both are plain, unparenthesized
+            // atoms here; the folded form's operands are always
+            // parenthesized, so `Atom` vs `List` disambiguates cleanly
+            // there but not here) -- resolving that needs a real
+            // instruction-keyword lookahead check this crate doesn't have
+            // yet. No vendored corpus file exercises a non-default memory
+            // index through this flat form (only the folded form, per
+            // `code/specs/W16-wasm-multi-memory-first-slice.md`), so this
+            // stays a named, deferred scope boundary rather than a rushed
+            // fix.
             out.push(info.opcode);
             out.push(0x00);
             Ok(0)
@@ -1789,10 +1804,21 @@ fn encode_flat_instr(
             Ok(())
         }
         "memory.size" | "memory.grow" => {
-            let (operands, _) = split_operands_and_immediates(args, 0);
+            // Multi-memory (W16, task #85): an optional LEADING memory-
+            // index token -- `(memory.size $mem1)`, `(memory.grow $mem1
+            // (i32.const 1))` -- distinguished from `memory.grow`'s value
+            // operand (always a nested, parenthesized instruction in
+            // folded form, so always an `SExpr::List`) by checking
+            // whether the first arg is an `Atom` at all. Same
+            // leading-immediate-then-operands shape as `"call" |
+            // "return_call"` above, not a new pattern.
+            let (memidx, operands) = match args.first() {
+                Some(expr @ SExpr::Atom(..)) => (resolve_idx(&icx.module.memory_names, expr, "memory")?, &args[1..]),
+                _ => (0, args),
+            };
             encode_instr_list(operands, icx, out)?;
             out.push(info.opcode);
-            out.push(0x00); // memory index, always 0
+            out.extend(wasm_leb128::encode_unsigned(memidx as u64));
             Ok(())
         }
         "i32.const" => {
@@ -2279,6 +2305,31 @@ mod tests {
         let m = parse_module("(module (func (result i32) (i32.add (i32.const 1) (i32.const 2))))").unwrap();
         // i32.const 1; i32.const 2; i32.add; end
         assert_eq!(code_of(&m, 0), &[0x41, 0x01, 0x41, 0x02, 0x6A, 0x0B]);
+    }
+
+    // ── Multi-memory (W16, task #85) ──────────────────────────────────────
+
+    #[test]
+    fn memory_size_and_grow_default_to_memory_zero_when_no_index_is_given() {
+        let m = parse_module("(module (memory 1) (func (result i32) (memory.size)))").unwrap();
+        assert_eq!(code_of(&m, 0), &[0x3F, 0x00, 0x0B]); // memory.size memidx=0; end
+    }
+
+    #[test]
+    fn memory_grow_resolves_a_named_memory_index_in_folded_form() {
+        let m = parse_module(
+            "(module (memory $mem0 1) (memory $mem1 1) \
+             (func (param i32) (result i32) (memory.grow $mem1 (local.get 0))))",
+        )
+        .unwrap();
+        // local.get 0; memory.grow memidx=1; end
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x40, 0x01, 0x0B]);
+    }
+
+    #[test]
+    fn memory_size_resolves_a_numeric_memory_index_in_folded_form() {
+        let m = parse_module("(module (memory 1) (memory 1) (func (result i32) (memory.size 1)))").unwrap();
+        assert_eq!(code_of(&m, 0), &[0x3F, 0x01, 0x0B]); // memory.size memidx=1; end
     }
 
     // ── Multi-value blocktype (WASM06/WASM04) ────────────────────────────

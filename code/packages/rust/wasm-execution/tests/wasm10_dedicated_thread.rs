@@ -25,7 +25,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let func_bodies: Vec<Option<FunctionBody>> = module.code.iter().cloned().map(Some).collect();
     let host_functions: Vec<Option<Box<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
     let engine = WasmExecutionEngine::new(WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables: vec![],
         globals: vec![],
         global_types: vec![],
@@ -168,7 +168,7 @@ fn a_panic_inside_the_dedicated_thread_restores_engine_state_before_propagating(
     // fn 0: host import "boom" (panics); fn 1: host import "echo" (returns
     // 99); fn 2: "$panics" (call fn 0; end).
     let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables: vec![],
         globals: vec![],
         global_types: vec![],
@@ -224,7 +224,7 @@ fn make_chain_link(next: Option<Rc<RefCell<WasmExecutionEngine>>>, loop_type: Fu
     let host_functions: Vec<Option<Box<dyn HostFunction>>> =
         vec![Some(Box::new(ChainHostFunction { next, func_type: loop_type.clone() }) as Box<dyn HostFunction>), None];
     Rc::new(RefCell::new(WasmExecutionEngine::new(WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables: vec![],
         globals: vec![],
         global_types: vec![],

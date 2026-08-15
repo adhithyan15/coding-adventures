@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.4] - 2026-08-15 (W16, task #85 — multi-memory first slice)
+
+### Changed (breaking)
+
+- `WasmExecutionContext.memory: Option<*mut LinearMemory>` is now
+  `memories: Vec<*mut LinearMemory>`. Same shape for
+  `WasmEngineConfig.memory`/`WasmEngineState.memory`/
+  `WasmExecutionEngine`'s private `memory` field (all `Option<...>` ->
+  `Vec<...>`/`Vec<Box<...>>`). Every existing load/store/bulk-memory
+  opcode handler still only ever targets memory 0 (`get_memory()` is now
+  a thin `get_memory_at(ctx, 0)` wrapper; new `get_memory_at(ctx, memidx)`
+  added for the two handlers that need a real index) -- this is purely a
+  representation widening, not a behavior change, for every instruction
+  except the two below.
+- `memory.size`/`memory.grow` (0x3F/0x40) now actually read the memory
+  index `wasm-opcodes` already declared an immediate for and this crate's
+  own generic operand decoder already decoded -- previously discarded,
+  always targeting memory 0 regardless of the real encoded index.
+- New `pub const MAX_MEMORIES: usize = 64` -- the real, bounded cap on
+  total memory count (imported + declared) a module may have, replacing
+  WASM 1.0's hardcoded "at most 1". `pub` so `wasm-validator` enforces the
+  identical cap, matching `MAX_V128_HEAP_LEN`'s existing cross-crate reuse
+  pattern.
+
+See `code/specs/W16-wasm-multi-memory-first-slice.md` for the full design
+and root-cause writeup. Closes the last remaining conformance gap in the
+61-file vendored corpus: `memory_grow.wast` (declares 4 memories) was the
+only file keeping `module` (933/934) and `register` (1/2) below 100% --
+both now at 100%, with zero regressions anywhere else in the corpus
+(verified via a full before/after baseline diff).
+
 ## [0.9.3] - 2026-08-15 (task #86, W15 follow-up — v128 invoke arguments)
 
 ### Changed

@@ -2,6 +2,36 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.2] — 2026-08-15 (W16, task #85 — multi-memory first slice)
+
+### Changed (breaking)
+
+- `WasmInstance.memory: Option<LinearMemory>` is now `memories:
+  Vec<LinearMemory>`. Import resolution now accumulates (`memories.
+  push(...)`) instead of overwriting, so a module importing more than one
+  memory keeps all of them instead of silently retaining only the last.
+  `instantiate()` allocates every entry in `module.memories`, not just
+  `module.memories[0]`.
+- `build_engine`/`call_engine`/`call_engine_with_v128` thread the
+  `Vec<LinearMemory>` through via the same unconditional-even-on-trap
+  restore discipline the singular field already used.
+- Data-segment application still only ever targets memory 0 regardless of
+  `seg.memory_index` -- a deliberate scope boundary, not an oversight; see
+  `code/specs/W16-wasm-multi-memory-first-slice.md`'s "What does NOT
+  change".
+
+### Fixed
+
+- `RegistryHost::resolve_memory` (`wasm-conformance`) discarded the
+  resolved export's memory INDEX and always cloned "the" single memory --
+  harmless before this change (an instance had at most one memory), but a
+  real latent bug once an exporting instance can have more than one:
+  importing memory export #1 from a 2-memory module would have silently
+  returned memory #0 instead. Fixed alongside this crate's own change
+  since it shares the same root field.
+
+See `code/specs/W16-wasm-multi-memory-first-slice.md` for the full design.
+
 ## [0.6.1] — 2026-08-15 (W15, task #79 — v128 persistent storage)
 
 ### Fixed (breaking)

@@ -34,7 +34,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     }
 
     let engine = WasmExecutionEngine::new(WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables,
         globals: vec![],
         global_types: vec![],
@@ -187,7 +187,7 @@ fn host_functions_survive_a_trapped_call_and_are_usable_by_a_later_call() {
     let echo_type = FuncType { params: vec![], results: vec![ValueType::I32] };
     let trap_type = FuncType { params: vec![], results: vec![] };
     let engine_config = WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables: vec![],
         globals: vec![],
         global_types: vec![],

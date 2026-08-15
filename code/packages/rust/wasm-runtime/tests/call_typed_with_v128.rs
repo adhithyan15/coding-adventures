@@ -27,7 +27,7 @@ fn instance_with_v128_const(lanes: [i32; 4]) -> wasm_runtime::WasmInstance {
 
     wasm_runtime::WasmInstance {
         module: WasmModule::default(),
-        memory: None,
+        memories: vec![],
         tables: vec![],
         globals: vec![],
         global_types: vec![],

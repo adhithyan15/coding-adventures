@@ -1,5 +1,24 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.15 — 2026-08-15 — multi-memory: named memory index on memory.size/memory.grow (W16, task #85)
+
+### Fixed
+
+- `memory.size`/`memory.grow`'s FOLDED-form encoding (`(memory.size
+  $mem1)`, `(memory.grow $mem1 (i32.const 1))`) now resolves a leading
+  memory-index token via the existing `ctx.memory_names`/`resolve_idx`
+  machinery instead of unconditionally hardcoding the memory-index byte
+  to `0x00` and misparsing the `$name` token as an unknown nested
+  instruction. Matches the exact leading-immediate-then-operands shape
+  `"call" | "return_call"` already use.
+- The STREAM-form encoding (`encode_stream_instr`) is deliberately left
+  unchanged: the token after `memory.grow` there is an unparenthesized
+  atom indistinguishable from the next instruction's own keyword without
+  a real lookahead check this crate doesn't have yet, and no vendored
+  corpus file needs it through this form. See `code/specs/
+  W16-wasm-multi-memory-first-slice.md` for the full design and this
+  scope boundary's reasoning.
+
 ## 0.1.14 — 2026-08-15 — correctly-rounded hex-float literals (task #80)
 
 ### Fixed

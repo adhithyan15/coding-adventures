@@ -21,7 +21,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     let func_bodies: Vec<Option<FunctionBody>> = module.code.iter().cloned().map(Some).collect();
     let host_functions: Vec<Option<Box<dyn HostFunction>>> = module.functions.iter().map(|_| None).collect();
     let engine = WasmExecutionEngine::new(WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables: vec![],
         globals: vec![],
         global_types: vec![],

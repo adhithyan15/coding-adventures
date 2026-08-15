@@ -167,11 +167,17 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         .filter(|i| i.kind == ExternalKind::Global)
         .count();
 
-    // ── Check 1: Memory count ≤ 1 ──────────────────────────────────────
+    // ── Check 1: Memory count ≤ MAX_MEMORIES ───────────────────────────
+    //
+    // Multi-memory proposal, W16, task #85: WASM 1.0's own hardcoded "at
+    // most 1" cap is gone; `wasm_execution::MAX_MEMORIES` is a real,
+    // bounded cap on total memory count (imported + declared) instead --
+    // see its own doc comment for why 64.
     let total_memories = imported_memories + module.memories.len();
-    if total_memories > 1 {
+    if total_memories > wasm_execution::MAX_MEMORIES {
         return Err(ValidationError::TooManyMemories(format!(
-            "WASM 1.0 allows at most 1 memory, found {} ({} imported + {} declared)",
+            "at most {} memories allowed, found {} ({} imported + {} declared)",
+            wasm_execution::MAX_MEMORIES,
             total_memories,
             imported_memories,
             module.memories.len()
@@ -279,6 +285,17 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     }
 
     // ── Check 8: Data segments ──────────────────────────────────────────
+    //
+    // Deliberately NOT widened alongside Check 1's memory-count cap
+    // (multi-memory, W16, task #85): `wasm-runtime::instantiate()` only
+    // ever applies a data segment to memory 0, regardless of
+    // `seg.memory_index` (see `code/specs/
+    // W16-wasm-multi-memory-first-slice.md`'s "What does NOT change").
+    // Accepting a segment targeting a non-zero index here would let it
+    // silently land on the WRONG memory at instantiation time instead of
+    // being rejected -- keeping this check at "must be 0" means a module
+    // using this real, spec-legal (but not yet supported HERE) feature
+    // fails loudly at validation instead.
     for (i, seg) in module.data.iter().enumerate() {
         if seg.memory_index != 0 || (total_memories == 0 && !module.data.is_empty()) {
             if total_memories == 0 {
@@ -428,23 +445,34 @@ mod tests {
         assert!(matches!(err, ValidationError::DuplicateExport(_)));
     }
 
+    /// Multi-memory (W16, task #85) raised the cap from 1 to
+    /// `wasm_execution::MAX_MEMORIES`, so a module needs MORE than that
+    /// many memories to still be rejected -- proving the cap MOVED, not
+    /// disappeared.
     #[test]
     fn rejects_too_many_memories() {
         let module = WasmModule {
-            memories: vec![
-                MemoryType {
-                    limits: Limits { min: 1, max: None },
-                    shared: false,
-                },
-                MemoryType {
-                    limits: Limits { min: 1, max: None },
-                    shared: false,
-                },
-            ],
+            memories: (0..=wasm_execution::MAX_MEMORIES)
+                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false })
+                .collect(),
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::TooManyMemories(_)));
+    }
+
+    /// A module with exactly `MAX_MEMORIES` (previously rejected under
+    /// the old hardcoded "at most 1" WASM-1.0 cap) now validates
+    /// successfully -- the concrete case this whole spec exists to fix.
+    #[test]
+    fn accepts_up_to_max_memories() {
+        let module = WasmModule {
+            memories: (0..wasm_execution::MAX_MEMORIES)
+                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false })
+                .collect(),
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
     }
 
     #[test]
@@ -798,6 +826,9 @@ mod tests {
 
     #[test]
     fn imported_memory_counts_toward_limit() {
+        // 1 imported + MAX_MEMORIES declared = MAX_MEMORIES + 1, over the
+        // cap -- proves the imported one counts toward the SAME limit as
+        // declared memories, not a separate budget.
         let module = WasmModule {
             imports: vec![Import {
                 module_name: "env".to_string(),
@@ -808,10 +839,9 @@ mod tests {
                     shared: false,
                 }),
             }],
-            memories: vec![MemoryType {
-                limits: Limits { min: 1, max: None },
-                shared: false,
-            }],
+            memories: (0..wasm_execution::MAX_MEMORIES)
+                .map(|_| MemoryType { limits: Limits { min: 1, max: None }, shared: false })
+                .collect(),
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
