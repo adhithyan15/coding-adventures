@@ -30,6 +30,39 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C197 — the corrected number changes the plan: every track is ~1/6 of pre-A1, and Hindi leads
+
+HL-C195's fix landed, and the picture it reveals is not the one the old line
+implied:
+
+```
+spanish 48/300 at-or-below pre-A1 (227 total)   hindi 50/300 (107 total)
+malayalam 49/300 (107)   tamil 49/300 (103)     sanskrit 34/300 (100)
+```
+
+**Hindi is AHEAD of Spanish on the criterion that counts** — 50 against 48 —
+despite having under half the total vocabulary. Spanish's 227 is real teaching,
+but most of it sits on A1-and-above nodes and does nothing for the pre-A1 gate.
+
+Three consequences for the plan:
+
+1. **The tracks are far closer together than the totals suggested.** "Spanish is
+   ahead, the Indic six are behind" was an artefact of the wrong number. On the
+   criterion, all six sit between 34 and 50 out of 300.
+2. **Sanskrit is the real laggard** at 34, not because it has fewest words but
+   because fewest of them are on pre-A1 nodes.
+3. **Authoring must target pre-A1 SPINE NODES**, not just add words. That is in
+   tension with HL-C192's chaining rule (append to the end, chain to the previous
+   chapter's last lesson), because pre-A1 nodes live early in the book. Resolving
+   that tension is the next design question, and it blocks efficient authoring:
+   until it is settled, every tranche risks being another sixteen good words that
+   move the blocker by zero.
+
+The likely resolution is that a lesson's SPINE NODE and its POSITION are
+independent — a lesson appended at the end may still declare a pre-A1 node if its
+prerequisites are all met. Worth verifying against the gate before authoring on
+it, because the whole tranche depends on it.
+
 ## HL-C195 — "spanish 211/300 (pre-A1)" was the WRONG NUMBER, and I quoted it all night
 
 The report line I added in HL-C184a prints a track's **track-wide** vocabulary

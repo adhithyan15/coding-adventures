@@ -683,7 +683,16 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
               .map((t) => {
                 const next = t.inProgressAt ?? "C2";
                 const target = report.levelGate!.vocabularyTargets[next];
-                return `${t.language} ${t.vocabulary}/${target} (${next})`;
+                // TWO numbers, because printing only the first one misled a whole
+                // session (HL-C195). `vocabulary` is the track's TOTAL headword
+                // count; the level gate's criterion counts only headwords taught
+                // AT OR BELOW the level in progress. Spanish read "227/300" while
+                // the blocker said 48 — and sixteen new words on an A1 node moved
+                // the blocker by zero. The second number is the one to author
+                // against; the first is context.
+                const atLevel = t.blockers.find((b) => b.criterion === "vocabulary");
+                const scoped = atLevel ? target - atLevel.shortfall : t.vocabulary;
+                return `${t.language} ${scoped}/${target} at-or-below ${next} (${t.vocabulary} total)`;
               })
               .join(", ") +
             `; ${report.levelGate.tracks.filter((t) => {
