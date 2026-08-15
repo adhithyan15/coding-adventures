@@ -852,6 +852,26 @@
           "HI-LEX-GIVE"
         ]
       }
+    },
+    {
+      "chapter": 43,
+      "title": "Verbs of Seeing and Saying",
+      "label": "ch:hi-see-say",
+      "canDo": "I can name four verbs of perceiving and expressing in Hindi and recognise the infinitive ending they share.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "HI-C43-write",
+        "kind": "production",
+        "summary": "Complete HI-C43-write and say all four verbs in order.",
+        "assesses": [
+          "HI-LEX-LOOK",
+          "HI-LEX-LISTEN",
+          "HI-LEX-SPEAK",
+          "HI-LEX-WRITE"
+        ]
+      }
     }
   ]
 }

@@ -518,6 +518,21 @@
         "TE-EXT-43-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-44-SEESAY",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "TE-C44-look",
+        "TE-C44-listen",
+        "TE-C44-speak",
+        "TE-C44-write"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-44-SEESAY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -651,7 +666,8 @@
       "segments": [
         "TE-PATH-026",
         "TE-PATH-027",
-        "TE-PATH-43-VERBS"
+        "TE-PATH-43-VERBS",
+        "TE-PATH-44-SEESAY"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1289,6 +1305,20 @@
         "TE-C43-sit",
         "TE-C43-stand",
         "TE-C43-give"
+      ]
+    },
+    {
+      "id": "TE-EXT-44-SEESAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four verbs of perceiving and expressing.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C44-look",
+        "TE-C44-listen",
+        "TE-C44-speak",
+        "TE-C44-write"
       ]
     }
   ]

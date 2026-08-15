@@ -531,6 +531,21 @@
         "ML-EXT-43-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-44-SEESAY",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ML-C44-look",
+        "ML-C44-listen",
+        "ML-C44-speak",
+        "ML-C44-write"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-44-SEESAY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -664,7 +679,8 @@
         "ML-PATH-026",
         "ML-PATH-027",
         "ML-PATH-028",
-        "ML-PATH-43-VERBS"
+        "ML-PATH-43-VERBS",
+        "ML-PATH-44-SEESAY"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1291,6 +1307,20 @@
         "ML-C43-sleep",
         "ML-C43-stand",
         "ML-C43-give"
+      ]
+    },
+    {
+      "id": "ML-EXT-44-SEESAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four verbs of perceiving and expressing.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C44-look",
+        "ML-C44-listen",
+        "ML-C44-speak",
+        "ML-C44-write"
       ]
     }
   ]

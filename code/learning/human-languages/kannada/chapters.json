@@ -924,6 +924,26 @@
           "KA-LEX-GIVE"
         ]
       }
+    },
+    {
+      "chapter": 44,
+      "title": "Verbs of Seeing and Saying",
+      "label": "ch:ka-see-say",
+      "canDo": "I can tell someone to look, listen, speak and write in Kannada.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "KA-C44-write",
+        "kind": "production",
+        "summary": "Complete KA-C44-write and say all four verbs in order.",
+        "assesses": [
+          "KA-LEX-LOOK",
+          "KA-LEX-LISTEN",
+          "KA-LEX-SPEAK",
+          "KA-LEX-WRITE"
+        ]
+      }
     }
   ]
 }

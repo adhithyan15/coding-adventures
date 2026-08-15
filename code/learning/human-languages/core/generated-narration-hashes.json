@@ -2784,6 +2784,23 @@
       "jsonHash": "fnv1a64:1d2dce0752a7b2c3"
     },
     {
+      "language": "hindi",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:dd2d5c7fa6dbd18c",
+      "lessonIds": [
+        "HI-C43-look",
+        "HI-C43-listen",
+        "HI-C43-speak",
+        "HI-C43-write"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "hindi/narration/ch43.txt",
+      "json": "hindi/narration/ch43.json",
+      "textHash": "fnv1a64:6671fb58d17ab73f",
+      "jsonHash": "fnv1a64:4baa0f6a77813e68"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
@@ -3904,6 +3921,23 @@
       "json": "kannada/narration/ch43.json",
       "textHash": "fnv1a64:75a7d6816d4f7380",
       "jsonHash": "fnv1a64:f77683c4198aa7bf"
+    },
+    {
+      "language": "kannada",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:05dceaf27326c18f",
+      "lessonIds": [
+        "KA-C44-look",
+        "KA-C44-listen",
+        "KA-C44-speak",
+        "KA-C44-write"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch44.txt",
+      "json": "kannada/narration/ch44.json",
+      "textHash": "fnv1a64:d4505a971fd936b2",
+      "jsonHash": "fnv1a64:90e261c19f781be7"
     },
     {
       "language": "latin",
@@ -5244,6 +5278,23 @@
       "json": "malayalam/narration/ch43.json",
       "textHash": "fnv1a64:0b75e893c8cd4413",
       "jsonHash": "fnv1a64:319bb00914dd7ca7"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:4291d57bf9259643",
+      "lessonIds": [
+        "ML-C44-look",
+        "ML-C44-listen",
+        "ML-C44-speak",
+        "ML-C44-write"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "malayalam/narration/ch44.txt",
+      "json": "malayalam/narration/ch44.json",
+      "textHash": "fnv1a64:e3fac7687f75bc35",
+      "jsonHash": "fnv1a64:711da858d69c8004"
     },
     {
       "language": "marathi",
@@ -12457,6 +12508,23 @@
       "json": "telugu/narration/ch43.json",
       "textHash": "fnv1a64:a09ea8d6339ee676",
       "jsonHash": "fnv1a64:b4202945eb623ded"
+    },
+    {
+      "language": "telugu",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:8398c1d155351052",
+      "lessonIds": [
+        "TE-C44-look",
+        "TE-C44-listen",
+        "TE-C44-speak",
+        "TE-C44-write"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "telugu/narration/ch44.txt",
+      "json": "telugu/narration/ch44.json",
+      "textHash": "fnv1a64:357951c7e89e9e29",
+      "jsonHash": "fnv1a64:315e3343bc19b060"
     },
     {
       "language": "urdu",

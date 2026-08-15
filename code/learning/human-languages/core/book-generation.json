@@ -1247,6 +1247,12 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 43,
+      "output": "hindi/book/chapters/ch43-see-say.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "output": "italian/book/chapters/ch02-how-are-you.tex"
@@ -1598,6 +1604,13 @@
       "language": "kannada",
       "chapter": 43,
       "output": "kannada/book/chapters/ch43-more-verbs.tex",
+      "unicodeScript": "Kannada",
+      "scriptCommand": "kn"
+    },
+    {
+      "language": "kannada",
+      "chapter": 44,
+      "output": "kannada/book/chapters/ch44-see-say.tex",
       "unicodeScript": "Kannada",
       "scriptCommand": "kn"
     },
@@ -2037,6 +2050,13 @@
       "language": "malayalam",
       "chapter": 43,
       "output": "malayalam/book/chapters/ch43-more-verbs.tex",
+      "unicodeScript": "Malayalam",
+      "scriptCommand": "ml"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 44,
+      "output": "malayalam/book/chapters/ch44-see-say.tex",
       "unicodeScript": "Malayalam",
       "scriptCommand": "ml"
     },
@@ -4381,6 +4401,13 @@
       "language": "telugu",
       "chapter": 43,
       "output": "telugu/book/chapters/ch43-more-verbs.tex",
+      "unicodeScript": "Telugu",
+      "scriptCommand": "te"
+    },
+    {
+      "language": "telugu",
+      "chapter": 44,
+      "output": "telugu/book/chapters/ch44-see-say.tex",
       "unicodeScript": "Telugu",
       "scriptCommand": "te"
     },
