@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 59,
+  "title": "Weather and Ground",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c925d7853eea9a9e",
+  "lessons": [
+    {
+      "id": "KA-C59-wind",
+      "sequence": 1790,
+      "title": "ಗಾಳಿ (gāḷi) — wind, air",
+      "headword": "ಗಾಳಿ",
+      "romanization": "gāḷi",
+      "gloss": "wind, air",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d188ec2d857ac3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did bēḍa mean, and what did aṣṭē mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಾಳಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಾಳಿ (gāḷi) — \"wind, air\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and it holds the moving wind and the still air on one shape. ಗಾಳಿ (gāḷi) ಬರುತ್ತಿದೆ is a breeze coming up; ಗಾಳಿ (gāḷi) ಇಲ್ಲ in a shut room is that there is no air in it."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put it beside the weather-word you already have. ಹವಾಮಾನ was built from a Persian piece meaning air and a Sanskrit piece meaning measure — a borrowed air-word for the forecast on the radio. ಗಾಳಿ (gāḷi) is the air on your face. The formal report and the thing itself ended up in different layers of the language, and a Kannada speaker moves between them without noticing."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಾಳಿ (gāḷi) also carries rumour, the way English talks about something being in the air."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things the weather does to the ground."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḷi, then havāmāna, and say which of the two you can feel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḷi*, then *havāmāna*, and say which of the two you can feel]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಾಳಿ (gāḷi) mean? (\"wind, air\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C59-mist",
+      "sequence": 1800,
+      "title": "ಮಂಜು (mañju) — mist, fog, frost",
+      "headword": "ಮಂಜು",
+      "romanization": "mañju",
+      "gloss": "mist, fog, frost",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35807fefb75a0169",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gāḷi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಂಜು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಂಜು (mañju) — \"mist, fog, frost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "One word for cold water in the air, however it arrives: the fog on a ಬೆಟ್ಟ before sunrise, the mist in a valley, the frost on a leaf at dawn. Kannada did not think the difference worth a second word, which tells you something about the climate it grew up in — the state has hill country and coast and dry plain, and none of it has much use for a snow vocabulary."
+            },
+            {
+              "kind": "speech",
+              "text": "The Kodagu and Chikkamagaluru hills are where this word lives hardest. Coffee country sits high enough that ಮಂಜು (mañju) is what the mornings are made of for months at a stretch."
+            },
+            {
+              "kind": "speech",
+              "text": "Held up beside ಮೋಡ the pair is tidy: the ಮೋಡ is the water overhead, the ಮಂಜು (mañju) is the same water come down to stand among the trees."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and the second is the first one's water at ground level."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañju",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañju*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōḍa, then mañju, and say which of them you can walk into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōḍa*, then *mañju*, and say which of them you can walk into]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಂಜು (mañju) mean? (\"mist, fog, frost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C59-sand",
+      "sequence": 1810,
+      "title": "ಮರಳು (maraḷu) — sand",
+      "headword": "ಮರಳು",
+      "romanization": "maraḷu",
+      "gloss": "sand",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfb5a491f9538c47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mañju mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮರಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರಳು (maraḷu) — \"sand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it slowly and you will see ಮರ standing at the front of it. Do not trust that. The tree-word and the sand-word are separate items that happen to begin alike, and a learner who joins them has invented an etymology. Kannada has plenty of real ones; this is not one, and knowing when to stop is part of the skill."
+            },
+            {
+              "kind": "speech",
+              "text": "What ಮರಳು (maraḷu) genuinely does share is a shape with a doing-word. ಮರಳು (maraḷu) also means to turn back, to return — so the same run of letters is both the sand on a river bed and the act of going home. In a chapter about taking your leave that is a happy accident and nothing more, but it is the kind of accident worth noticing, because the two are told apart by nothing except what sits around them."
+            },
+            {
+              "kind": "speech",
+              "text": "The ಮರಳು (maraḷu) you meet most is on the bank of a ನದಿ, where the river drops what it has been carrying."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and one warning about reading too much into a spelling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mara, then maraḷu, and say why they are not relatives",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mara*, then *maraḷu*, and say why they are not relatives]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮರಳು (maraḷu) mean? (\"sand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C59-mud",
+      "sequence": 1820,
+      "title": "ಕೆಸರು (kesaru) — mud",
+      "headword": "ಕೆಸರು",
+      "romanization": "kesaru",
+      "gloss": "mud",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3784de21b418a39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did maraḷu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೆಸರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೆಸರು (kesaru) — \"mud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and unavoidable. From June onward the ಮಳೆಗಾಲ turns every ದಾರಿ that is not paved into ಕೆಸರು (kesaru), and a ಹಳ್ಳಿ measures the season by how much of it there is between the house and the road."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the mud a rice field wants. Paddy is planted into standing water and soft ground, so ಕೆಸರು (kesaru) is not a complaint in a farmer's mouth the way it is in a city one — the ರೈತ needs it, and a dry season without it is the bad outcome."
+            },
+            {
+              "kind": "speech",
+              "text": "Then, as everywhere, it goes figurative. To throw ಕೆಸರು (kesaru) at somebody is to smear their name, and Kannada arrived at that picture on its own, from a place where mud is genuinely at hand for half the year."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one the season makes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraḷu, then kesaru, and say which one the rain makes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraḷu*, then *kesaru*, and say which one the rain makes]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೆಸರು (kesaru) mean? (\"mud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C59-fire",
+      "sequence": 1830,
+      "title": "ಬೆಂಕಿ (beṅki) — fire",
+      "headword": "ಬೆಂಕಿ",
+      "romanization": "beṅki",
+      "gloss": "fire",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04d19b737fb7783c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kesaru mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೆಂಕಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಂಕಿ (beṅki) — \"fire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada's own, and once again it stands apart from its sisters: Tamil reaches for neruppu, Telugu for maṇṭa, and Kannada for ಬೆಂಕಿ (beṅki). The bone-word did this to you a chapter ago. Being close relatives has never obliged four languages to agree."
+            },
+            {
+              "kind": "speech",
+              "text": "The ದೀಪ from the asking-chapter needs this word before it is any use, and so does the ಬಿಸಿ under ಬಿಸಿಲು. Fire is the thing the ಗಾಳಿ (gāḷi) feeds and the ಕೆಸರು (kesaru) puts out."
+            },
+            {
+              "kind": "speech",
+              "text": "And with ಬೆಂಕಿ (beṅki) the run closes the way it opened, on something you can point at. ಆಕಾಶ was overhead and out of reach; this one is on the floor of the kitchen, close enough to warm your hands at."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಗಾಳಿ (gāḷi), ಮಂಜು (mañju), ಮರಳು (maraḷu), ಕೆಸರು (kesaru), ಬೆಂಕಿ (beṅki). Air, water, ground and the thing that undoes all three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṅki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then dīpa and beṅki, and say which one needs the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *dīpa* and *beṅki*, and say which one needs the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೆಂಕಿ (beṅki) mean? (\"fire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

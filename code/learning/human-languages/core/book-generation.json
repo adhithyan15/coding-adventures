@@ -4950,6 +4950,48 @@
       "chapter": 59,
       "output": "telugu/book/chapters/ch59-weather-and-ground.tex",
       "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 53,
+      "output": "kannada/book/chapters/ch53-the-sky.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 54,
+      "output": "kannada/book/chapters/ch54-the-tree.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 55,
+      "output": "kannada/book/chapters/ch55-river-and-road.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 56,
+      "output": "kannada/book/chapters/ch56-in-the-house.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 57,
+      "output": "kannada/book/chapters/ch57-more-of-the-body.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 58,
+      "output": "kannada/book/chapters/ch58-more-short-replies.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 59,
+      "output": "kannada/book/chapters/ch59-weather-and-ground.tex",
+      "scriptSet": "kannada-comparisons"
     }
   ],
   "handwritten": [

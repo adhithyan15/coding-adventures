@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 58,
+  "title": "More Short Replies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f4d06368f5e12f11",
+  "lessons": [
+    {
+      "id": "KA-C58-a-little",
+      "sequence": 1740,
+      "title": "ಸ್ವಲ್ಪ (svalpa) — a little, a bit",
+      "headword": "ಸ್ವಲ್ಪ",
+      "romanization": "svalpa",
+      "gloss": "a little, a bit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08e0c1131a936516",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did bhuja mean, and what did mūḷe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸ್ವಲ್ಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಲ್ಪ (svalpa) — \"a little, a bit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit, and it comes apart cleanly: su-, \"well, nicely\", on alpa, \"small\". Nicely small. The same su- that opens the good-morning word you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "But the useful thing about ಸ್ವಲ್ಪ (svalpa) is not its size. It is what it does to whatever follows it. Ask for something flat and you are instructing; put ಸ್ವಲ್ಪ (svalpa) in front and you are asking. ಸ್ವಲ್ಪ (svalpa) ನೀರು ಕೊಡಿ leaves the other person room to move in a way that ನೀರು ಕೊಡಿ does not."
+            },
+            {
+              "kind": "speech",
+              "text": "The word measures a quantity in the dictionary and a manner in the mouth. English does the same thing with \"just\" and \"a bit\", and neither of those measures much any more either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that softens the next one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svalpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svalpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīru koḍi, then svalpa nīru koḍi, and hear how much softer the second one is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīru koḍi*, then *svalpa nīru koḍi*, and hear how much softer the second one is]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸ್ವಲ್ಪ (svalpa) mean? (\"a little, a bit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C58-more",
+      "sequence": 1750,
+      "title": "ಹೆಚ್ಚು (heccu) — more, a lot",
+      "headword": "ಹೆಚ್ಚು",
+      "romanization": "heccu",
+      "gloss": "more, a lot",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ebe8ef7cdfef894",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did svalpa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೆಚ್ಚು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಚ್ಚು (heccu) — \"more, a lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and the opening h puts it in the same layer as ಹಣ್ಣು and ಹಳ್ಳಿ. The borrowed word softened your request; this one is Kannada's own, and it does the opposite job."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೆಚ್ಚು (heccu) is both \"more\" and \"much\". It answers a question about quantity all by itself, and it goes in front of whatever it is measuring: ಹೆಚ್ಚು (heccu) ಹಣ್ಣು, more fruit. It is also the word for a comparison, so ಹೆಚ್ಚು (heccu) is how a Kannada speaker says one thing outweighs another without needing a separate word for \"than\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Held against ಸ್ವಲ್ಪ (svalpa) it gives you a scale you can answer with. ಸ್ವಲ್ಪ (svalpa) when a little will do; ಹೆಚ್ಚು (heccu) when it will not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and they point in opposite directions."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svalpa hālu, then heccu hālu, and hear the amount change in front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svalpa hālu*, then *heccu hālu*, and hear the amount change in front]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೆಚ್ಚು (heccu) mean? (\"more, a lot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C58-less",
+      "sequence": 1760,
+      "title": "ಕಡಿಮೆ (kaḍime) — less, fewer",
+      "headword": "ಕಡಿಮೆ",
+      "romanization": "kaḍime",
+      "gloss": "less, fewer",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:516749eb89d5ade6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did heccu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಡಿಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಡಿಮೆ (kaḍime) — \"less, fewer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath sits ಕಡಿ (kaḍi), to cut, to reduce. ಕಡಿಮೆ (kaḍime) is the cut-down amount — a quantity named for the act that produced it, which is the same move Kannada made with the fruit-word, where the ripening gave the ripe thing its name."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೆಚ್ಚು (heccu) and ಕಡಿಮೆ (kaḍime) travel together as a pair, and the pair has its own life. ಹೆಚ್ಚು (heccu) ಕಡಿಮೆ (kaḍime), said as one phrase, means \"more or less, roughly\" — two opposites put side by side to make a hedge. English builds \"more or less\" out of exactly the same two pieces, and Kannada leaves out the \"or\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That is three of the five now, and none of them names a thing. This chapter is about the words that adjust everything else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and two of them make a phrase together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍime*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heccu kaḍime, and say what the pair means when it travels as one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heccu kaḍime*, and say what the pair means when it travels as one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಡಿಮೆ (kaḍime) mean? (\"less, fewer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C58-no-thanks",
+      "sequence": 1770,
+      "title": "ಬೇಡ (bēḍa) — no thank you, I don't want it",
+      "headword": "ಬೇಡ",
+      "romanization": "bēḍa",
+      "gloss": "no thank you, I don't want it",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbf633dabef06768",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kaḍime mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೇಡ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಡ (bēḍa) — \"no thank you, I don't want it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the refusal a guest actually needs, and it is not the ಇಲ್ಲ you learned on the first page. ಇಲ್ಲ denies that something exists or is so. ಬೇಡ (bēḍa) declines it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the negative twin of ಬೇಕು (bēku), \"wanted, needed\" — the word that turns up in the sort of sentence Kannada builds with nothing doing at all. ಬೇಕು and ಬೇಡ (bēḍa) answer the same question in opposite directions, and neither of them bothers to name who is doing the wanting. The offer is made, and one word settles it."
+            },
+            {
+              "kind": "speech",
+              "text": "At a Kannada table you will be offered more food several times after you are finished. ಬೇಡ (bēḍa), said once and pleasantly, is the whole of the reply. Adding ಸ್ವಲ್ಪ (svalpa) in front turns it into \"just a little\", which is the answer that gets you served anyway."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one is the polite way out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēḍa, then illa, and say which one refuses and which one denies",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēḍa*, then *illa*, and say which one refuses and which one denies]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೇಡ (bēḍa) mean? (\"no thank you, I don't want it\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C58-thats-all",
+      "sequence": 1780,
+      "title": "ಅಷ್ಟೇ (aṣṭē) — that's all, just that",
+      "headword": "ಅಷ್ಟೇ",
+      "romanization": "aṣṭē",
+      "gloss": "that's all, just that",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:889ea2a53a5fe730",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bēḍa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಷ್ಟೇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಷ್ಟೇ (aṣṭē) — \"that's all, just that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces. ಅಷ್ಟು (aṣṭu) is \"that much\", and it belongs to the pointing family you already have — the a- of ಅದು and ಅಲ್ಲಿ, the one that means away from the speaker. Then the long -ē on the end, which Kannada hangs on a word to mean \"and nothing besides\"."
+            },
+            {
+              "kind": "speech",
+              "text": "So ಅಷ್ಟೇ (aṣṭē) is \"that much, and no more\". It closes a list, ends an order, and stops a question. Asked what else you would like: ಅಷ್ಟೇ (aṣṭē)."
+            },
+            {
+              "kind": "speech",
+              "text": "That closing -ē is worth keeping. Put it on almost anything and you get \"only that one\": ಇಲ್ಲಿಯೇ, right here and nowhere else. One small sound doing the work English needs a whole separate word for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಸ್ವಲ್ಪ (svalpa), ಹೆಚ್ಚು (heccu), ಕಡಿಮೆ (kaḍime), ಬೇಡ (bēḍa), ಅಷ್ಟೇ (aṣṭē). You can answer an offer five ways."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṣṭē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṣṭē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then aṣṭē, as though closing a list",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *aṣṭē*, as though closing a list]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಷ್ಟೇ (aṣṭē) mean? (\"that's all, just that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

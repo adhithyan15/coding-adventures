@@ -85,7 +85,7 @@ order; `HL-B24` tracks publishing Chapters 6–31 from the same source.
   நினை *ninai* does as everyday thinking. **‑ಕೊ**, the worn ಕೊಳ್ಳು, hands an
   action back to its doer, beside the verbless ನನಗೆ ಅರ್ಥವಾಯಿತು. Then ಓದು, the
   inherited recite-word Kannada alone left in its ordinary job, and the payoff
-  ಬರೆ — Proto-Dravidian *\*warV-* "draw a line," Tamil வರை — which finally sets
+  ಬರೆ — Proto-Dravidian *\*warV-* "draw a line," Tamil வரை — which finally sets
   the *v* → *b* law beside *p* → *h* and counts the chapter's four verbs onto
   Ch. 32's six to reach *hattu*. **Authored.**
 

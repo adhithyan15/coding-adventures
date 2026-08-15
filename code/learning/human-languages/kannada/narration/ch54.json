@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 54,
+  "title": "The Tree",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:817313e9f3d74cfa",
+  "lessons": [
+    {
+      "id": "KA-C54-tree",
+      "sequence": 1540,
+      "title": "ಮರ (mara) — a tree",
+      "headword": "ಮರ",
+      "romanization": "mara",
+      "gloss": "a tree",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8989ad959b671dcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did cukki mean, and what did mōḍa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರ (mara) — \"a tree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two syllables, and one of the oldest words the family has. Tamil says maram, Malayalam maram, and Kannada let the closing -m fall away, as it has a habit of doing."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮರ (mara) is the standing tree and equally the wood it is cut into. A carpenter and a forester reach for the same word, and Kannada has felt no need to split them — the thing and the material are one item as far as the language is concerned."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the first word of this chapter for a plain reason: everything else here is a part of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The thing the next four words belong to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doḍḍa mara — \"a big tree\" — with the describing word in front, where Kannada keeps it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doḍḍa mara* — \"a big tree\" — with the describing word in front, where Kannada keeps it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮರ (mara) mean? (\"a tree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C54-branch",
+      "sequence": 1550,
+      "title": "ಕೊಂಬೆ (kombe) — a branch",
+      "headword": "ಕೊಂಬೆ",
+      "romanization": "kombe",
+      "gloss": "a branch",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b17aa27f07e6862",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mara mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೊಂಬೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೊಂಬೆ (kombe) — \"a branch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Beside it stands ಕೊಂಬು (kombu), a horn, and the two are the same word wearing different endings. A branch is what a ಮರ (mara) has on its head, and the language saw an animal's horn and a tree's limb as one shape: something hard that grows outward and forks."
+            },
+            {
+              "kind": "speech",
+              "text": "That picture is not a Kannada peculiarity. Tamil keeps kombu doing both jobs as well, so the joining is old — older than any of the four sisters."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the reverse trick and puts the tree onto the animal, calling the branched horns of a stag its antlers and its crown. The picture travels in whichever direction a language happens to take it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: the tree, and what comes out of it sideways."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kombe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kombe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mara, then kombe, and say which one holds the other up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mara*, then *kombe*, and say which one holds the other up]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೊಂಬೆ (kombe) mean? (\"a branch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C54-leaf",
+      "sequence": 1560,
+      "title": "ಎಲೆ (ele) — a leaf",
+      "headword": "ಎಲೆ",
+      "romanization": "ele",
+      "gloss": "a leaf",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03f183f802ed029b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kombe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಎಲೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಲೆ (ele) — \"a leaf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and close to its sisters: Tamil ilai, Malayalam ila. Telugu is the one that walked off, using āku instead."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday weight of ಎಲೆ (ele) is heavier than \"leaf\" suggests. Say it on its own in a Kannada house and you are usually talking about the betel leaf — ಎಲೆ (ele) ಅಡಿಕೆ, leaf and areca nut, handed to a guest at the end of an ūṭa and at the end of a welcome. The ಬಾಗಿಲು, the ಕುರ್ಚಿ, the ರಂಗೋಲಿ and the ಹೂಮಾಲೆ each had their moment; the ಎಲೆ (ele) is what the visitor is holding on the way out."
+            },
+            {
+              "kind": "speech",
+              "text": "The other big ಎಲೆ (ele) is the plantain leaf a meal is served on, which is a plate you do not wash."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this one is handed to people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ele",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ele*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasiru ele — \"a green leaf\" — and ele, kombe, mara upward in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasiru ele* — \"a green leaf\" — and *ele*, *kombe*, *mara* upward in order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಎಲೆ (ele) mean? (\"a leaf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C54-root",
+      "sequence": 1570,
+      "title": "ಬೇರು (bēru) — a root",
+      "headword": "ಬೇರು",
+      "romanization": "bēru",
+      "gloss": "a root",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ad946f96bc9186c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ele mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೇರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇರು (bēru) — \"a root\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil says vēr, Malayalam says vēr, Telugu says vēru — and Kannada says ಬೇರು (bēru). That opening b against everybody else's v is the trade you have watched at the ಬಾಗಿಲು and again in ಬರೆ, and here it is once more with the letters lined up so plainly that you can hear the law rather than be told about it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two sound laws now separate Kannada from its sisters, and both of them are visible in a single chapter: the p that became h in ಹಣ್ಣು and ಹೂವು, and the v that became b in this word."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೇರು (bēru) also does the figurative work English gives roots: where a family comes from, what a word descends from. Both languages dug the same hole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the lowest one shows the law."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēru, then bāgilu, and hear the same b opening both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēru*, then *bāgilu*, and hear the same *b* opening both]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೇರು (bēru) mean? (\"a root\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C54-seed",
+      "sequence": 1580,
+      "title": "ಬೀಜ (bīja) — a seed",
+      "headword": "ಬೀಜ",
+      "romanization": "bīja",
+      "gloss": "a seed",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:948ebdedc76e6763",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bēru mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೀಜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೀಜ (bīja) — \"a seed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Four inherited words, and then this one, straight out of Sanskrit and unaltered. The chapter closes on a borrowing, which is a fair picture of the language: the tree is Dravidian from the ಬೇರು (bēru) up, and the word for what starts it came from elsewhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada kept its own word for the act, though. ಬಿತ್ತು (bittu) is to sow, and it is as native as ಮರ (mara). So a ರೈತ sows with an inherited word and names what he is sowing with a borrowed one, in the same breath and without noticing."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೀಜ (bīja) also does the abstract job — the seed of a quarrel, the seed of an idea — in Kannada exactly as in English, and it was doing it in Sanskrit long before either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಮರ (mara), ಕೊಂಬೆ (kombe), ಎಲೆ (ele), ಬೇರು (bēru), ಬೀಜ (bīja). A tree from the ground up, and the thing it began as."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say which one of them Kannada borrowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say which one of them Kannada borrowed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೀಜ (bīja) mean? (\"a seed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

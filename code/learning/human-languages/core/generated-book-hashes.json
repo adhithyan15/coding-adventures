@@ -2209,6 +2209,97 @@
       "tex": "kannada/book/chapters/ch52-welcoming-a-guest.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:b4eb50b1aed0c1da",
+      "lessonIds": [
+        "KA-C53-sky",
+        "KA-C53-sunshine",
+        "KA-C53-moon",
+        "KA-C53-star",
+        "KA-C53-cloud"
+      ],
+      "tex": "kannada/book/chapters/ch53-the-sky.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:a214964635afbf75",
+      "lessonIds": [
+        "KA-C54-tree",
+        "KA-C54-branch",
+        "KA-C54-leaf",
+        "KA-C54-root",
+        "KA-C54-seed"
+      ],
+      "tex": "kannada/book/chapters/ch54-the-tree.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:450598b619a6e76e",
+      "lessonIds": [
+        "KA-C55-river",
+        "KA-C55-tank",
+        "KA-C55-hill",
+        "KA-C55-village",
+        "KA-C55-path"
+      ],
+      "tex": "kannada/book/chapters/ch55-river-and-road.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:66318e27eaa4eb61",
+      "lessonIds": [
+        "KA-C56-mat",
+        "KA-C56-basket",
+        "KA-C56-knife",
+        "KA-C56-vessel",
+        "KA-C56-box"
+      ],
+      "tex": "kannada/book/chapters/ch56-in-the-house.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:4a5bd1088f6d997c",
+      "lessonIds": [
+        "KA-C57-neck",
+        "KA-C57-back",
+        "KA-C57-lip",
+        "KA-C57-shoulder",
+        "KA-C57-bone"
+      ],
+      "tex": "kannada/book/chapters/ch57-more-of-the-body.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:2b85482f8acc78ca",
+      "lessonIds": [
+        "KA-C58-a-little",
+        "KA-C58-more",
+        "KA-C58-less",
+        "KA-C58-no-thanks",
+        "KA-C58-thats-all"
+      ],
+      "tex": "kannada/book/chapters/ch58-more-short-replies.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:0c75a56982cd525b",
+      "lessonIds": [
+        "KA-C59-wind",
+        "KA-C59-mist",
+        "KA-C59-sand",
+        "KA-C59-mud",
+        "KA-C59-fire"
+      ],
+      "tex": "kannada/book/chapters/ch59-weather-and-ground.tex"
+    },
+    {
       "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:e487ced01dcb7f2f",

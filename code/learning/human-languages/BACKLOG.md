@@ -30,6 +30,58 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C203 — corpus-wide sweep: 31 mixed-script findings, and a THIRD blind tool
+
+The Kannada round-2 audit ran HL-C202's per-word check over the WHOLE corpus, not
+just its own track. **31 pre-existing findings.** One was in kannada and is fixed
+(`kannada/roadmap.md:88` -- a Tamil word wearing U+0CB0 KANNADA LETTER RA
+mid-word, rendering `\ta{}\kn{}\ta{}` across two fonts at exit 0). The rest
+belong to other tracks and were deliberately left for their own change:
+
+```
+malayalam/roadmap.md:87            Tamil  wearing U+0D41 MALAYALAM VOWEL SIGN U
+malayalam/ML-C37-mookku.md + ch37  Kannada  wearing U+0D41
+malayalam/ML-C11-nirangal.md+ch11  mixing Malayalam and Tamil letters
+telugu/TE-C37-noru.md + ch37       Latin v + TAMIL VOWEL SIGN AA + y  (sub-class b)
+telugu/chapters.json:770           Latin v + TELUGU VOWEL SIGN AA + y
+arabic/AR-C16-al-saa.md + ch16     Aramaic in ARABIC letters wearing HEBREW points
+ZWNJ U+200C                        telugu ch05 (x3), persian CHANGELOG + roadmap
+```
+
+**The Arabic/Hebrew one widens the class beyond Indic.** Two right-to-left scripts
+mixing inside one word is the same defect and the same silent render. Any detector
+must be script-general, not a hardcoded Indic list.
+
+**Note telugu/chapters.json:770.** Telugu's own round 2 fixed two TE-C33 lessons
+and MISSED this one, because it audited its new files and the two it had touched
+rather than the whole track. **Sweep the track, not the diff.**
+
+### The third blind tool this session
+
+The audit's first version used `\w` to find words. `\w` is isalnum()-based, so it
+**stopped at every combining vowel sign -- exactly the character being inspected.**
+It reported clean. Fixed by walking Unicode categories L/Mn/Mc/Me instead.
+
+That is three in one session, all the same shape -- **the instrument silently
+altered or excluded what it was measuring**:
+
+1. `grep $'\x00'` is an EMPTY pattern in the shell; it flagged all 71 files as
+   NUL-corrupted, including ones where only integers had changed.
+2. A shell pipeline NORMALISED the very codepoints being decomposed and reported
+   defective strings clean.
+3. `\w` EXCLUDED combining marks, so the vowel-sign audit could not see vowel signs.
+
+**Rule: before trusting a check that reports clean, run it against a case known to
+be dirty.** All three were caught that way and none would have been caught by
+reading the code.
+
+**A fourth instance proved the rule within the hour.** The independent security
+review of this same PR built its own detector, ran it against ten known-dirty
+controls, and found it reported ALL TEN clean -- a shell heredoc had mangled the
+literals in transit. It rebuilt the harness and only then trusted the result. That
+is the procedure working exactly as intended, and it is why the self-test is not
+optional: the detector looked correct in every case, and was wrong in all four.
+
 ## HL-C202 — a COVERED script can still split a word across two fonts
 
 Found while auditing the Telugu round-2 tranche. Four committed strings carried a

@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 56,
+  "title": "In the House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d2ebe18a18d878e5",
+  "lessons": [
+    {
+      "id": "KA-C56-mat",
+      "sequence": 1640,
+      "title": "ಚಾಪೆ (cāpe) — a mat",
+      "headword": "ಚಾಪೆ",
+      "romanization": "cāpe",
+      "gloss": "a mat",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45d10cbc19ccf8b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did haḷḷi mean, and what did dāri mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಾಪೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಾಪೆ (cāpe) — \"a mat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The woven mat that gets unrolled on the floor: for sitting on, for eating on, for sleeping on, and for putting away against the wall in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The ಕುರ್ಚಿ arrived from outside with its Persian name, and it arrived late. The ಚಾಪೆ (cāpe) was already there. A Kannada house has for a very long time sat and eaten and slept at floor level, and the ಚಾಪೆ (cāpe) is the piece of furniture that arrangement needs — one object doing what a chair, a table and a bed do elsewhere, then rolling up to occupy nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "Offering a guest a ಚಾಪೆ (cāpe) is the older form of the courtesy the ಕುರ್ಚಿ now performs, and in a ಹಳ್ಳಿ it is still the usual one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things a Kannada house keeps to hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāpe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāpe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷitukō, then cāpe, and say who is offered which",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷitukō*, then *cāpe*, and say who is offered which]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಾಪೆ (cāpe) mean? (\"a mat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C56-basket",
+      "sequence": 1650,
+      "title": "ಬುಟ್ಟಿ (buṭṭi) — a basket",
+      "headword": "ಬುಟ್ಟಿ",
+      "romanization": "buṭṭi",
+      "gloss": "a basket",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db87a4e9d1aad76f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cāpe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬುಟ್ಟಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬುಟ್ಟಿ (buṭṭi) — \"a basket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Woven, usually from bamboo, and carried on the hip or the head rather than in the hand. ಹಣ್ಣಿನ ಬುಟ್ಟಿ (buṭṭi) is a basket of fruit; a ಹೂವಿನ ಬುಟ್ಟಿ (buṭṭi) is what flowers come to the door in."
+            },
+            {
+              "kind": "speech",
+              "text": "The little -ina in the middle of those is the joining piece Kannada slips between two names to say the second belongs to the first. Fruit-of basket. You can build the same shape with anything you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬುಟ್ಟಿ (buṭṭi) shares its ending with the ಚಾಪೆ (cāpe)'s world rather than the ಕುರ್ಚಿ's: another light, cheap, repairable thing made from what grows nearby, and one that a house replaces every few years without thinking about it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: a thing to sit on, and a thing to carry with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇṇina buṭṭi, then hūvina buṭṭi, and hear the joining piece in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇṇina buṭṭi*, then *hūvina buṭṭi*, and hear the joining piece in the middle]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬುಟ್ಟಿ (buṭṭi) mean? (\"a basket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C56-knife",
+      "sequence": 1660,
+      "title": "ಚಾಕು (cāku) — a knife",
+      "headword": "ಚಾಕು",
+      "romanization": "cāku",
+      "gloss": "a knife",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:191a3b28dddb701c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did buṭṭi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಾಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಾಕು (cāku) — \"a knife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian chāqū, a small knife, carried down into the subcontinent along the same road that delivered the ಕುರ್ಚಿ, and handed on to Hindi, Marathi, Telugu and this. Two objects in two chapters, both borrowed, both arriving by the north."
+            },
+            {
+              "kind": "speech",
+              "text": "The borrowing did not push anything out. Kannada's own blade is ಕತ್ತಿ (katti), and it is the big one — the household and field blade, the one a ರೈತ works with. ಚಾಕು (cāku) is the small one: the pocket knife, the paring knife, the thing that cuts a ಹಣ್ಣು."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern is the one the chair showed. When a language borrows a word for a thing it already has, the borrowed word usually takes a narrower job and the old word keeps the wider one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and the second of them arrived by the northern road."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kurci, then cāku, and say what the two of them have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kurci*, then *cāku*, and say what the two of them have in common]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಾಕು (cāku) mean? (\"a knife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C56-vessel",
+      "sequence": 1670,
+      "title": "ಪಾತ್ರೆ (pātre) — a vessel, a cooking pot",
+      "headword": "ಪಾತ್ರೆ",
+      "romanization": "pātre",
+      "gloss": "a vessel, a cooking pot",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df280058cb60fb13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cāku mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಾತ್ರೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಾತ್ರೆ (pātre) — \"a vessel, a cooking pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pātra, and it began by meaning a drinking or eating vessel. Then it did something quietly remarkable: it moved from the container to the person. A pātra is also one fit to receive — a worthy recipient of a gift, of teaching, of trust."
+            },
+            {
+              "kind": "speech",
+              "text": "From there it took one more step, and the pātra of a play is a character, a part, a role. The same word holds the pot, the deserving person and the actor's part, because all three are shapes that something is poured into."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada carries the whole set. ಪಾತ್ರೆ (pātre) in the kitchen is the vessel; ಪಾತ್ರ on the stage is the role. One Sanskrit word, and the ending tells you which of its lives is being lived."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one keeps three meanings in one shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātre, then nīru, and say which one holds the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātre*, then *nīru*, and say which one holds the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಾತ್ರೆ (pātre) mean? (\"a vessel, a cooking pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C56-box",
+      "sequence": 1680,
+      "title": "ಪೆಟ್ಟಿಗೆ (peṭṭige) — a box",
+      "headword": "ಪೆಟ್ಟಿಗೆ",
+      "romanization": "peṭṭige",
+      "gloss": "a box",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ef4a4c3cf091d7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pātre mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪೆಟ್ಟಿಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೆಟ್ಟಿಗೆ (peṭṭige) — \"a box\"."
+            },
+            {
+              "kind": "speech",
+              "text": "All four sisters have this word and it is nearly the same in each: Tamil peṭṭi, Malayalam peṭṭi, Telugu peṭṭe, and Kannada ಪೆಟ್ಟಿಗೆ (peṭṭige). Only Kannada carries the extra closing syllable, which is a habit you have now seen a few times — Kannada tends to be the long one."
+            },
+            {
+              "kind": "speech",
+              "text": "A ಪೆಟ್ಟಿಗೆ (peṭṭige) is the wooden or tin chest a household keeps its papers and its good ಬಟ್ಟೆ in, standing in a corner with a padlock on it. It is also the word that stretched to cover a suitcase, a jewellery box and the case a musical instrument travels in."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice how much of this chapter is containers. The ಬುಟ್ಟಿ (buṭṭi) carries, the ಪಾತ್ರೆ (pātre) cooks, the ಪೆಟ್ಟಿಗೆ (peṭṭige) keeps. A house is largely a set of things for putting other things into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಚಾಪೆ (cāpe), ಬುಟ್ಟಿ (buṭṭi), ಚಾಕು (cāku), ಪಾತ್ರೆ (pātre), ಪೆಟ್ಟಿಗೆ (peṭṭige). You can furnish a room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭṭige",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭṭige*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say which three of them hold something",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say which three of them hold something]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪೆಟ್ಟಿಗೆ (peṭṭige) mean? (\"a box\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

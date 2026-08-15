@@ -651,6 +651,118 @@
         "KA-EXT-52-WELCOME"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-53-SKY",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "KA-C53-sky",
+        "KA-C53-sunshine",
+        "KA-C53-moon",
+        "KA-C53-star",
+        "KA-C53-cloud"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-53-SKY"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-54-TREE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C54-tree",
+        "KA-C54-branch",
+        "KA-C54-leaf",
+        "KA-C54-root",
+        "KA-C54-seed"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-54-TREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-55-ROAD",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C55-river",
+        "KA-C55-tank",
+        "KA-C55-hill",
+        "KA-C55-village",
+        "KA-C55-path"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-55-ROAD"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-56-HOUSE",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "KA-C56-mat",
+        "KA-C56-basket",
+        "KA-C56-knife",
+        "KA-C56-vessel",
+        "KA-C56-box"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-56-HOUSE"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-57-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C57-neck",
+        "KA-C57-back",
+        "KA-C57-lip",
+        "KA-C57-shoulder",
+        "KA-C57-bone"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-57-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-58-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "KA-C58-a-little",
+        "KA-C58-more",
+        "KA-C58-less",
+        "KA-C58-no-thanks",
+        "KA-C58-thats-all"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-58-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-59-GROUND",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "KA-C59-wind",
+        "KA-C59-mist",
+        "KA-C59-sand",
+        "KA-C59-mud",
+        "KA-C59-fire"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-59-GROUND"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -658,7 +770,8 @@
       "segments": [
         "KA-PATH-001",
         "KA-PATH-100",
-        "KA-PATH-52-WELCOME"
+        "KA-PATH-52-WELCOME",
+        "KA-PATH-53-SKY"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -671,7 +784,8 @@
       "segments": [
         "KA-PATH-002",
         "KA-PATH-008",
-        "KA-PATH-51-COURTESY"
+        "KA-PATH-51-COURTESY",
+        "KA-PATH-56-HOUSE"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -681,7 +795,8 @@
     "SPINE-RESPOND-BASIC": {
       "segments": [
         "KA-PATH-003",
-        "KA-PATH-49-REPLY"
+        "KA-PATH-49-REPLY",
+        "KA-PATH-58-REPLY"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -697,7 +812,8 @@
         "KA-PATH-020",
         "KA-PATH-027",
         "KA-PATH-028",
-        "KA-PATH-48-ROLE"
+        "KA-PATH-48-ROLE",
+        "KA-PATH-54-TREE"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -712,7 +828,8 @@
         "KA-PATH-016",
         "KA-PATH-029",
         "KA-PATH-030",
-        "KA-PATH-47-BODY"
+        "KA-PATH-47-BODY",
+        "KA-PATH-57-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -726,7 +843,8 @@
         "KA-PATH-018",
         "KA-PATH-031",
         "KA-PATH-032",
-        "KA-PATH-46-ASK"
+        "KA-PATH-46-ASK",
+        "KA-PATH-55-ROAD"
       ],
       "omits": [],
       "relocates": {}
@@ -734,7 +852,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "KA-PATH-009",
-        "KA-PATH-50-LEAVE"
+        "KA-PATH-50-LEAVE",
+        "KA-PATH-59-GROUND"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1564,6 +1683,111 @@
         "KA-C52-rangoli",
         "KA-C52-flower",
         "KA-C52-garland"
+      ]
+    },
+    {
+      "id": "KA-EXT-53-SKY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a Kannada speaker looks up at.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C53-sky",
+        "KA-C53-sunshine",
+        "KA-C53-moon",
+        "KA-C53-star",
+        "KA-C53-cloud"
+      ]
+    },
+    {
+      "id": "KA-EXT-54-TREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a Kannada tree and four of its parts.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C54-tree",
+        "KA-C54-branch",
+        "KA-C54-leaf",
+        "KA-C54-root",
+        "KA-C54-seed"
+      ]
+    },
+    {
+      "id": "KA-EXT-55-ROAD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four Kannada landmarks and ask for the way to one.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C55-river",
+        "KA-C55-tank",
+        "KA-C55-hill",
+        "KA-C55-village",
+        "KA-C55-path"
+      ]
+    },
+    {
+      "id": "KA-EXT-56-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a Kannada household keeps to hand.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C56-mat",
+        "KA-C56-basket",
+        "KA-C56-knife",
+        "KA-C56-vessel",
+        "KA-C56-box"
+      ]
+    },
+    {
+      "id": "KA-EXT-57-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Kannada.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C57-neck",
+        "KA-C57-back",
+        "KA-C57-lip",
+        "KA-C57-shoulder",
+        "KA-C57-bone"
+      ]
+    },
+    {
+      "id": "KA-EXT-58-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can adjust or decline an offer in Kannada without saying yes or no.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C58-a-little",
+        "KA-C58-more",
+        "KA-C58-less",
+        "KA-C58-no-thanks",
+        "KA-C58-thats-all"
+      ]
+    },
+    {
+      "id": "KA-EXT-59-GROUND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the wind, the mist and the three things underfoot.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C59-wind",
+        "KA-C59-mist",
+        "KA-C59-sand",
+        "KA-C59-mud",
+        "KA-C59-fire"
       ]
     }
   ]
