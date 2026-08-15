@@ -3,7 +3,13 @@ Set-Location ../sha256
 npm install --silent
 Set-Location ../sha512
 npm install --silent
+Set-Location ../hmac
+npm install --silent
+Set-Location ../hkdf
+npm install --silent
 Set-Location ../ed25519
+npm install --silent
+Set-Location ../x25519
 npm install --silent
 Set-Location ../chacha20-poly1305
 npm install --silent
