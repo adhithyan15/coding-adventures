@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Describing an Experience --- How It Felt, How Long, How It Compared",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e49dc7f498718f50",
+  "sourceHash": "fnv1a64:380ae85d189acd9e",
   "lessons": [
     {
       "id": "ES-C269-feliz",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55198e1937a71b1a",
+      "sourceHash": "fnv1a64:d7da1e38fb4b5bb8",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "más carries a written accent to keep it apart from mas, an old word for \"but.\" Two words, one sound, and the accent is the only thing telling them apart on the page. see reference."
+              "text": "más carries a written accent, and it earns it: there is an older word spelled the same way without one. Two words, one sound, and the accent is the only thing telling them apart on the page. You meet the other at the end of the book. see reference."
             }
           ]
         },
@@ -436,7 +436,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the fixed pattern? (Más + adjective + que.) Why does más carry an accent? (To separate it from mas, \"but.\") Which two comparatives kept their Latin endings? (Mejor and peor.)"
+              "text": "What is the fixed pattern? (Más + adjective + que.) Why does más carry an accent? (To separate it in writing from an older word spelled the same way without it — you will meet that one at the end of the book.) Which two comparatives kept their Latin endings? (Mejor and peor.)"
             }
           ]
         }

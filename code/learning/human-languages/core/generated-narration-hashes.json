@@ -7012,7 +7012,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:cf958ef40456beaa",
+      "sourceHash": "fnv1a64:6273018aad9aac02",
       "lessonIds": [
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
@@ -7025,7 +7025,7 @@
       "text": "spanish/narration/ch05.txt",
       "json": "spanish/narration/ch05.json",
       "textHash": "fnv1a64:5ab0d546d806b5e6",
-      "jsonHash": "fnv1a64:5ad954cb56bf9416"
+      "jsonHash": "fnv1a64:666482775d0bc25f"
     },
     {
       "language": "spanish",
@@ -10848,7 +10848,7 @@
     {
       "language": "spanish",
       "chapter": 269,
-      "sourceHash": "fnv1a64:e49dc7f498718f50",
+      "sourceHash": "fnv1a64:380ae85d189acd9e",
       "lessonIds": [
         "ES-C269-feliz",
         "ES-C269-espero",
@@ -10859,8 +10859,8 @@
       "drivablePrefix": 4,
       "text": "spanish/narration/ch269.txt",
       "json": "spanish/narration/ch269.json",
-      "textHash": "fnv1a64:a247775eae3967ca",
-      "jsonHash": "fnv1a64:927c5e09455bb363"
+      "textHash": "fnv1a64:3d4994592e28cea2",
+      "jsonHash": "fnv1a64:851cadb4b666149d"
     },
     {
       "language": "spanish",
@@ -10966,6 +10966,22 @@
       "json": "spanish/narration/ch275.json",
       "textHash": "fnv1a64:baece80ce3c01ed6",
       "jsonHash": "fnv1a64:6ba918dafb67c020"
+    },
+    {
+      "language": "spanish",
+      "chapter": 276,
+      "sourceHash": "fnv1a64:841e25ee2a9eb3bb",
+      "lessonIds": [
+        "ES-C276-mas",
+        "ES-C276-asonancia",
+        "ES-C276-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "spanish/narration/ch276.txt",
+      "json": "spanish/narration/ch276.json",
+      "textHash": "fnv1a64:75b0695109f469b6",
+      "jsonHash": "fnv1a64:af4808116e995500"
     },
     {
       "language": "tamil",

@@ -44,9 +44,10 @@ refuses to. It puts one small word in front and leaves the adjective alone.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- *más* carries a written accent to keep it apart from *mas*, an old word for
-  "but." Two words, one sound, and the accent is the only thing telling them
-  apart on the page. → [reference](../pronunciation-reference.md)
+- *más* carries a written accent, and it earns it: there is an older word spelled
+  the same way without one. Two words, one sound, and the accent is the only
+  thing telling them apart on the page. You meet the other at the end of the
+  book. → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-MAS-QUE]; assesses=[] -->
@@ -82,5 +83,6 @@ Two words sit outside it, kept from Latin because they are used constantly:
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MAS-QUE, ES-GRAMMAR-COMPARATIVE] -->
 
 [PAUSE 3s] What is the fixed pattern? (*Más* + adjective + *que*.) Why does *más*
-carry an accent? (To separate it from *mas*, "but.") Which two comparatives kept
+carry an accent? (To separate it in writing from an older word spelled the
+same way without it — you will meet that one at the end of the book.) Which two comparatives kept
 their Latin endings? (*Mejor* and *peor*.)

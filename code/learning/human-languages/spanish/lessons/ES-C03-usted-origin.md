@@ -5,6 +5,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 180
 chapter: 5
 type: etymology
+concept_tag: ARCHAIC-FORM
 headword: vuestra merced → usted
 gloss: the respectful title inside usted
 prerequisites: [ES-C03-tu-usted, ES-C03-tu-usted-register, ES-C03-vos]
