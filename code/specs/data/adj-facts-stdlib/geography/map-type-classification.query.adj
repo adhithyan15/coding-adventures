@@ -1,0 +1,16 @@
+% ============================================================================
+% map-type-classification.query.adj — worked recall over the
+% map-type-classification library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of map is a
+% topographic map?" (direct) or "which map type is a reference map?"
+% (reverse) — it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries. A map type not tabled here abstains
+% honestly — the engine never invents a classification.
+% ============================================================================
+
+import "map-type-classification.adj"
+
+? map_type_classification(topographic, $Classification)   % expect reference_map
+? map_type_classification($Type, reference_map)             % reverse bind — expect topographic
+? map_type_classification(political, $Classification)        % expect abstain -- a real, already-tabled map type whose own quote never classifies it as a kind of map

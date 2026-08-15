@@ -1,0 +1,63 @@
+% ============================================================================
+% map-type-classification — the CLASSIFICATION word a source gives for a map
+% type, decoded from a clause already sitting unused inside `map-type.adj`'s
+% own already-quoted Geology.com source sentence (adj-facts-stdlib,
+% GEOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `map-type.adj` (`map_type(type,
+% description)`, topographic → shows_the_shape_of_earths_surface): that
+% table's own already-quoted span for the topographic row ALSO classifies
+% topographic maps as a KIND of map -- a fact the type/description schema had
+% no room for:
+%
+%     "Topographic maps are reference maps that show the shape of Earth's
+%      surface."
+%
+% New `map_type_classification(type, classification)` table decodes that
+% span as its own row: topographic → reference_map. "Classification" (what
+% KIND of map it is) is categorically distinct from the parent table's
+% "description" (what the map SHOWS) -- topographic maps' description is
+% shows_the_shape_of_earths_surface, but their classification as a
+% reference_map is a separate fact the description column has no room for.
+% Recall is a binding query:
+%
+%     ? map_type_classification(topographic, $Classification)   % reference_map
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `map_type_classification(type, classification)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query -- the engine returns
+% the classification WITH its source, on the CPU, with zero model calls,
+% and abstains on anything that is not the topographic type (it never
+% invents a classification). The query also runs BACKWARD -- bind a
+% classification and recall the map type it names:
+%
+%     ? map_type_classification($Type, reference_map)   % topographic
+%
+% A recall on `political` or `physical` -- real, already-tabled map types in
+% `map-type.adj`, but whose own quoted spans ("Political maps show
+% boundaries between countries, states, counties, and other political
+% units." and "Physical maps are designed to show the natural landscape
+% features of Earth.") never classify the map as a KIND of map the way the
+% topographic row's span does -- correctly abstains rather than inventing a
+% classification for either.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
+% inside `map-type.adj`'s own header, from the SAME Geology.com "Types of
+% Maps" article that table already cites -- no new WebFetch, only a
+% different schema decoding a different clause of that already-verified
+% quote. `trust consensus` -- the same tier the parent table already
+% carries (Geology.com is a reputable secondary reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table map_type_classification {
+    columns type, classification
+
+    row (topographic, reference_map)
+
+    source "Topographic maps are reference maps that show the shape of Earth's surface."
+    locator "https://geology.com/maps/types-of-maps/"
+    trust consensus
+}
