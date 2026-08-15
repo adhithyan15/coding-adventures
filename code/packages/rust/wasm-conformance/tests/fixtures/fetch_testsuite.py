@@ -113,6 +113,22 @@ TESTSUITE_FILES = [
     "custom.wast",
     "obsolete-keywords.wast",
     "utf8-invalid-encoding.wast",
+    # SIMD proposal (v128) -- this repo's first-slice implementation
+    # (SIMD PR1a/PR1b, code/specs/W13-wasm-simd-v128-first-slice.md) only
+    # covers 5 opcodes (v128.const/i32x4.splat/add/eq/extract_lane), so
+    # only the narrowest real corpus file is vendored: `simd_const.wast`
+    # tests v128.const's OWN literal syntax across all 6 shapes (this
+    # repo's wast-parser already handles all 6, SIMD PR1b-2/1b-3) and is
+    # almost entirely gradeable already; its one instruction beyond this
+    # slice (a single `i64x2.add` line) now grades NotYetSupported for
+    # just that one directive rather than blocking the whole file (W14,
+    # code/specs/W14-wasm-conformance-lazy-module-build.md) -- the first
+    # real corpus file this repo can vendor from a post-MVP proposal.
+    # The other 3 root-level simd_*.wast files (simd_splat.wast,
+    # simd_i32x4_arith.wast, simd_i32x4_cmp.wast) each reference many
+    # more unsupported opcode families and are deferred to a future PR
+    # once coverage widens further (task #76's logged follow-up).
+    "simd_const.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

@@ -2856,6 +2856,62 @@
         "not_yet_supported": 0
       }
     },
+    "simd_const.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 72,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 109
+      },
+      "assert_return": {
+        "pass": 189,
+        "fail": 51,
+        "trap": 0,
+        "not_yet_supported": 25
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 307,
+        "fail": 1,
+        "trap": 1,
+        "not_yet_supported": 3
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "stack.wast": {
       "action": {
         "pass": 0,
@@ -3381,16 +3437,16 @@
       "not_yet_supported": 84
     },
     "assert_malformed": {
-      "pass": 136,
+      "pass": 208,
       "fail": 8,
       "trap": 0,
-      "not_yet_supported": 407
+      "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 15240,
-      "fail": 40,
+      "pass": 15429,
+      "fail": 91,
       "trap": 0,
-      "not_yet_supported": 484
+      "not_yet_supported": 509
     },
     "assert_trap": {
       "pass": 478,
@@ -3405,10 +3461,10 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 624,
-      "fail": 1,
-      "trap": 0,
-      "not_yet_supported": 29
+      "pass": 931,
+      "fail": 2,
+      "trap": 1,
+      "not_yet_supported": 32
     },
     "register": {
       "pass": 1,
