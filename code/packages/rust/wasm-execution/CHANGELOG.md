@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.12] - 2026-08-15 (security fix — pre-existing `call_indirect` panic)
+
+### Fixed
+
+- `call_indirect` (0x11)'s type-check block indexed `ctx.func_types[func_index]`
+  directly, where `func_index` comes from `table.get(elem_index)` -- DATA, not
+  a static part of the bytecode a validator necessarily already checked (this
+  crate's own tests, and real embedders that skip `wasm-validator`, can drive
+  this engine directly). A crafted or corrupt table entry pointing past
+  `func_types.len()` panicked instead of trapping cleanly, whenever the
+  embedder had set a type section via `set_type_section` (the common case --
+  `wasm-runtime` always does). This is the exact bug class WASM16's own
+  security review fixed in the new `return_call_indirect` (0x13) handler
+  (0.6.11); that review explicitly flagged this pre-existing, untouched
+  occurrence in `call_indirect` as a follow-up rather than in-scope for that
+  PR. Fixed with the same `.get().ok_or_else(...)` pattern. New regression
+  test (`test_call_indirect_through_a_table_entry_referencing_an_undefined_
+  function_is_a_clean_error_not_a_panic`), verified via TEMP-REVERT-CHECK to
+  reproduce the exact real panic (`index out of bounds: the len is 1 but the
+  index is 99`) with the fix reverted.
+
 ## [0.6.11] - 2026-08-15 (WASM16 — real tail calls, genuinely constant Rust-stack space)
 
 ### Added
