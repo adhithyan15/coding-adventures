@@ -2,6 +2,46 @@
 
 
 
+
+## 0.55.0 - 2026-08-15 - a compile-time string fact dies when the register is rewritten
+
+Fixes the ALGOL `string procedure` result printing nothing on native AOT, and —
+found by the security review on that fix — an **information disclosure** that
+predates it.
+
+**The reported bug.** ALGOL `s := pick(1)` lowers to `str_const s = ""` (the
+declaration) then `str_concat s = _t3 ++ ""`. `str_concat`'s runtime path
+declined to RECORD a literal for `dest` but never REMOVED the stale one, so
+`print_str s` folded to the empty literal: the program printed nothing while the
+runtime concat ran and its result was discarded.
+
+**The disclosure.** `str_const` guards its insert with `!runtime_str_vars`; the
+`str_concat` fold path and both `str_slice` inserts did not. A branch-selected
+string therefore got a compile-time length whose `const` lives in the OTHER arm,
+so `print_string(s + 8, len)` read an UNINITIALISED register as the length. The
+reviewer measured **4,063,232 bytes of process memory on stdout** — heap
+pointers, stack addresses, allocator magic — from:
+
+```algol
+begin string s; string t; integer n; n := 1;
+  t := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if n > 0 then s := 'HI' else s := t;
+  print(s) end
+```
+
+All four insert sites now respect `runtime_str_vars`, and a `mov` from a source
+with no known fact erases any fact `dest` held rather than silently keeping it.
+
+One rule, three backends: `iir-to-wasm` (#11214), `iir-to-llvm` before it, and
+now here. **A compile-time fact about a register dies the moment anything writes
+that register** — declining to record is not the same as invalidating.
+
+Two stale-fact leaks remain and are tracked rather than fixed here: the default
+instruction arm (`call`/`call_builtin`/`input`/`field_load` never invalidate)
+and `str_len`/`str_index`/`str_eq` leaving stale `ints` entries. The robust
+repair is to port `iir-to-llvm`'s default-invalidate plus `MANAGES_OWN_STRING_FACTS`
+allowlist, which closes both structurally instead of arm by arm.
+
 ## 0.54.0 - 2026-08-15 - chmod binds to the file, not to its path
 
 Both post-link `chmod 0755` sites did `std::fs::metadata(path)` then

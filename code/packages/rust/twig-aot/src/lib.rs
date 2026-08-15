@@ -2647,11 +2647,26 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             if let (Some(dest), Some(Operand::Var(src))) =
                 (instr.dest.as_ref(), instr.srcs.first())
             {
-                if let Some(value) = ints.get(src).copied() {
-                    ints.insert(dest.clone(), value);
+                // A `mov` from a source with NO known fact must ERASE any fact
+                // `dest` already had — copying-when-known but doing nothing
+                // otherwise leaves the old literal in place, and `print_str`
+                // then folds a length the register no longer holds.
+                // `iir-to-llvm` learned this as `forget_literal_string`.
+                match ints.get(src).copied() {
+                    Some(value) => {
+                        ints.insert(dest.clone(), value);
+                    }
+                    None => {
+                        ints.remove(dest);
+                    }
                 }
-                if let Some(string) = strings.get(src).cloned() {
-                    strings.insert(dest.clone(), string);
+                match strings.get(src).cloned() {
+                    Some(string) => {
+                        strings.insert(dest.clone(), string);
+                    }
+                    None => {
+                        strings.remove(dest);
+                    }
                 }
             }
             lowered.push(instr);
@@ -2748,7 +2763,18 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                         vec![Operand::Var(buf_var)],
                         "i64",
                     ));
-                    strings.insert(dest.clone(), (dest, len_var, lit));
+                    // A branch-selected string must NEVER get a compile-time
+                    // length. `str_const` guards its insert this way; these
+                    // paths did not, so a literal was registered for a register
+                    // whose length const lives in the OTHER arm — and
+                    // `print_string(s+8, len)` then read an UNINITIALISED
+                    // register as the length. Measured: 4 MB of process memory
+                    // (heap pointers, stack addresses) written to stdout.
+                    if runtime_str_vars.contains(&dest) {
+                        strings.remove(&dest);
+                    } else {
+                        strings.insert(dest.clone(), (dest, len_var, lit));
+                    }
                     continue;
                 }
             }
@@ -2757,7 +2783,20 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             // time literal — or the joined literal isn't printable ASCII. Delegate to
             // `__twig_str_concat(a, b)`, which reads both `[i64 len][bytes]` headers and
             // returns a fresh block handle. `dest` is deliberately NOT recorded in
-            // `strings`, so downstream `print_str`/`str_len` take their runtime
+            // `strings` — but NOT recording it is not enough when `dest` was
+            // already in there. ALGOL's `s := pick(1)` lowers to `str_const s =
+            // ""` (the declaration) and then `str_concat s = _t3 ++ ""`, so a
+            // stale `s -> ""` entry from the declaration survived the
+            // reassignment and `print_str s` folded to the empty literal: the
+            // program printed nothing instead of "HI", with the runtime call
+            // emitted and its result discarded.
+            //
+            // Reassignment must INVALIDATE, not merely decline to record. This
+            // is the same defect `iir-to-wasm` had (#11214) and `iir-to-llvm`
+            // before it — third backend, one rule: a compile-time fact about a
+            // register dies the moment anything else writes that register.
+            strings.remove(&dest);
+            // so downstream `print_str`/`str_len` take their runtime
             // header-reading paths rather than folding a length that isn't known.
             lowered.push(IIRInstr::new(
                 "call_builtin",
@@ -2795,7 +2834,14 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
                 let (bv, lv, lt) = push_aot_string_literal(&mut lowered, &mut next, String::new());
                 lowered.push(IIRInstr::new("mov", Some(dest.clone()), vec![Operand::Var(bv)], "i64"));
-                strings.insert(dest.clone(), (dest, lv, lt));
+                if runtime_str_vars.contains(&dest) {
+                    // Branch-selected: a compile-time length here would point
+                    // at a const emitted in the OTHER arm — uninitialised on
+                    // the taken path. See the str_concat fold path above.
+                    strings.remove(&dest);
+                } else {
+                    strings.insert(dest.clone(), (dest, lv, lt));
+                }
                 continue;
             }
             let slice = literal.as_bytes()[start as usize..end as usize].to_vec();
@@ -2809,7 +2855,14 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             }
             let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
             lowered.push(IIRInstr::new("mov", Some(dest.clone()), vec![Operand::Var(buf_var)], "i64"));
-            strings.insert(dest.clone(), (dest, len_var, lit));
+                if runtime_str_vars.contains(&dest) {
+                    // Branch-selected: a compile-time length here would point
+                    // at a const emitted in the OTHER arm — uninitialised on
+                    // the taken path. See the str_concat fold path above.
+                    strings.remove(&dest);
+                } else {
+                strings.insert(dest.clone(), (dest, len_var, lit));
+                }
             continue;
         }
 
