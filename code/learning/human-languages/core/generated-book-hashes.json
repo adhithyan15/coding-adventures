@@ -6549,6 +6549,54 @@
       "tex": "spanish/book/chapters/ch277-fuentes.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 278,
+      "sourceHash": "fnv1a64:f75526bb706b87ca",
+      "lessonIds": [
+        "ES-C278-viento",
+        "ES-C278-nieve",
+        "ES-C278-arbol",
+        "ES-C278-flor"
+      ],
+      "tex": "spanish/book/chapters/ch278-al-aire-libre.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 279,
+      "sourceHash": "fnv1a64:8b115f8be827a33e",
+      "lessonIds": [
+        "ES-C279-puerta",
+        "ES-C279-ventana",
+        "ES-C279-silla",
+        "ES-C279-cama"
+      ],
+      "tex": "spanish/book/chapters/ch279-la-habitacion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 280,
+      "sourceHash": "fnv1a64:a8fc700e8e57301e",
+      "lessonIds": [
+        "ES-C280-queso",
+        "ES-C280-huevo",
+        "ES-C280-manzana",
+        "ES-C280-dinero"
+      ],
+      "tex": "spanish/book/chapters/ch280-la-compra.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 281,
+      "sourceHash": "fnv1a64:19a631bcb35e8c76",
+      "lessonIds": [
+        "ES-C281-nuevo",
+        "ES-C281-viejo",
+        "ES-C281-limpio",
+        "ES-C281-sucio"
+      ],
+      "tex": "spanish/book/chapters/ch281-cuatro-adjetivos.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

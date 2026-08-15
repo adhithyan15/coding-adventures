@@ -152,7 +152,7 @@ describe("corpus snapshot", () => {
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight
     // measurable teaching lessons carry the current corpus across another point.
-    expect(report.summary.measurablePercent).toBe(74); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable // +1: vocabulary wave 6 added 54 schema-v2 lessons, all measurable // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all schema-v2 and all atom-bearing, so the measurable share rises // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C156: letter ledgers replicated to all six — 85 one-character segments // HL-C166: +11 -- Sanskrit chapters 19 and 20
+    expect(report.summary.measurablePercent).toBe(75); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable // +1: vocabulary wave 6 added 54 schema-v2 lessons, all measurable // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all schema-v2 and all atom-bearing, so the measurable share rises // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C156: letter ledgers replicated to all six — 85 one-character segments // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C194: +16 Spanish pre-A1 words
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
