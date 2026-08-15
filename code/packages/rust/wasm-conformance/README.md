@@ -69,12 +69,14 @@ once the missing capability ships, with **zero changes to this harness**.
 A handful of `.wast` files in the vendored slice fail to parse entirely —
 tracked separately from directive-level outcomes as `parse_failures` in
 the report, not folded into a misleading all-zero tally. These are
-legitimate, out-of-scope gaps for this phase (multi-value block
-signatures, reference-types' `externref` and generalized `elem` syntax,
-post-MVP saturating-truncation/sign-extension opcodes, and the
-`func`/`global` inline-import shorthand) — see this crate's own report
-output and `code/specs/W05-wasm-conformance-harness.md` section 6 for the
-exact, current breakdown.
+legitimate, out-of-scope gaps (`select`'s explicit `(result T)`-annotated
+opcode, the reference-types proposal's extended/generalized `elem`-segment
+syntax, concrete `(ref null $t)` heap types, and a named global
+inline-import shorthand — WASM17's spec, `code/specs/
+W08-wasm-funcref-externref.md`, tracks exactly which reference-types
+pieces are and aren't in scope) — see this crate's own report output and
+`code/specs/W05-wasm-conformance-harness.md` section 6 for the exact,
+current breakdown.
 
 ## The golden baseline
 

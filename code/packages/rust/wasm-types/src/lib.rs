@@ -154,6 +154,25 @@ pub enum ValueType {
     /// local variable holding a nullable `$LispyPair` reference has type
     /// `StructRef(1)` and is encoded as `[0x63, 0x01]`.
     StructRef(u32),
+
+    /// `funcref` — nullable reference to a function (reference-types
+    /// proposal; also WASM 1.0's implicit, hardcoded table element type).
+    ///
+    /// Encoded as a single byte `0x70`. Like `Anyref`, the wrapped handle is
+    /// an opaque `u32` (a function index) carried at the value level by
+    /// `wasm-execution::WasmValue::Ref` — only this static type distinguishes
+    /// a `funcref` from any other reference kind (see `code/specs/
+    /// W08-wasm-funcref-externref.md`).
+    Funcref,
+
+    /// `externref` — nullable, opaque reference to a host-supplied value
+    /// (reference-types proposal).
+    ///
+    /// Encoded as a single byte `0x6F`. This repo has no host environment
+    /// producing real external references; the only `externref` values
+    /// exercised are the WASM testsuite's own `ref.extern N` script literals
+    /// (see `code/specs/W08-wasm-funcref-externref.md`).
+    Externref,
 }
 
 impl ValueType {
@@ -177,6 +196,8 @@ impl ValueType {
             ValueType::Anyref => Some(0x6E),
             ValueType::I31ref => Some(0x6C),
             ValueType::StructRef(_) => None,
+            ValueType::Funcref => Some(0x70),
+            ValueType::Externref => Some(0x6F),
         }
     }
 
@@ -209,6 +230,8 @@ impl ValueType {
                 bytes.extend(encode_unsigned(*idx as u64));
                 bytes
             }
+            ValueType::Funcref => vec![0x70],
+            ValueType::Externref => vec![0x6F],
         }
     }
 }
@@ -833,6 +856,9 @@ mod tests {
         assert_eq!(ValueType::StructRef(0).encode(), vec![0x63, 0x00], "struct ref tag");
         // StructRef(1) → [0x63, 0x01]
         assert_eq!(ValueType::StructRef(1).encode(), vec![0x63, 0x01]);
+        // Reference-types proposal (WASM17): funcref / externref.
+        assert_eq!(ValueType::Funcref.encode(), vec![0x70], "funcref tag");
+        assert_eq!(ValueType::Externref.encode(), vec![0x6F], "externref tag");
     }
 
     #[test]
@@ -845,6 +871,18 @@ mod tests {
         assert_eq!(ValueType::I31ref.byte_tag(), Some(0x6C));
         // StructRef has no single-byte tag.
         assert_eq!(ValueType::StructRef(0).byte_tag(), None);
+        assert_eq!(ValueType::Funcref.byte_tag(), Some(0x70));
+        assert_eq!(ValueType::Externref.byte_tag(), Some(0x6F));
+    }
+
+    #[test]
+    fn value_type_funcref_externref_are_distinct() {
+        // Funcref and Externref must not compare equal to each other or to
+        // Anyref — the validator relies on ValueType's PartialEq to catch a
+        // funcref-vs-externref mixup (see W08 spec's wasm-validator section).
+        assert_ne!(ValueType::Funcref, ValueType::Externref);
+        assert_ne!(ValueType::Funcref, ValueType::Anyref);
+        assert_ne!(ValueType::Externref, ValueType::Anyref);
     }
 
     // ── Test 2: ExternalKind byte values ─────────────────────────────────────

@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.2] — 2026-08-15 (WASM17 — exhaustive-match fix for Funcref/Externref)
+
+### Fixed
+
+- `call()`'s param-type-to-`WasmValue` conversion match was non-exhaustive
+  after `wasm-types` 0.1.1 added `ValueType::Funcref`/`Externref` (a
+  compile error, not a behavior change). Added both to the same lossy
+  "pass the raw i64 as a null-pointer sentinel" arm the existing GC
+  reference types (`Anyref`/`I31ref`/`StructRef`) already use -- this is
+  `call()`'s pre-existing legacy behavior; `call_typed()` should be used
+  instead when a real `WasmValue::Ref` needs to be passed. No behavior
+  change for any existing `ValueType`.
+
 ## [0.5.1] — 2026-08-13 (WASM07 — a trapped call must not lose an instance's state)
 
 `call_engine` (shared by `call()` and `call_typed()`) temporarily

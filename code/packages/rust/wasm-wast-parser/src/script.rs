@@ -51,6 +51,16 @@ pub enum ConstValue {
     /// harness compares bits directly, never `==` on the float value.
     F32Bits(u32),
     F64Bits(u64),
+    /// A reference value (WASM17): `None` for an exact `(ref.null func)` /
+    /// `(ref.null extern)` literal, `Some(n)` for a `(ref.extern n)`
+    /// literal (the official testsuite's own script-syntax convenience for
+    /// constructing an externref test value from a plain integer — not a
+    /// real WASM instruction, see `code/specs/
+    /// W08-wasm-funcref-externref.md`). The bare, type-less `(ref.null)`
+    /// and `(ref.func)` wildcard forms are NOT representable here — they
+    /// only appear as `assert_return` expectations, never as an exact
+    /// argument or result, so they live in [`Expected`] instead.
+    Ref(Option<u32>),
 }
 
 /// One expected result slot in `assert_return` — either an exact value, or
@@ -66,6 +76,18 @@ pub enum Expected {
     NanArithmeticF32,
     NanCanonicalF64,
     NanArithmeticF64,
+    /// Bare `(ref.null)` with no heap-type keyword (WASM17) — matches the
+    /// null reference of ANY reference type. Used by the real testsuite
+    /// when the static result type is ambiguous at the script level (e.g.
+    /// `select.wast`'s `join-funcnull` / `global.wast`'s table-initialized
+    /// `get-elem`). Distinct from `Value(ConstValue::Ref(None))`, which is
+    /// an EXACT `(ref.null func)`/`(ref.null extern)` literal.
+    RefNullAny,
+    /// Bare `(ref.func)` with no function-index argument (WASM17) —
+    /// matches ANY non-null `funcref`, since the real testsuite can't
+    /// predict which specific function pointer a table lookup returns,
+    /// only that it isn't null.
+    RefFuncAny,
 }
 
 /// The three ways a `.wast` script can embed a module for `assert_invalid`/
@@ -229,6 +251,21 @@ fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
         "i64.const" => Ok(ConstValue::I64(parse_i64(lit, pos)?)),
         "f32.const" => Ok(ConstValue::F32Bits(parse_f32_bits(lit, pos)?)),
         "f64.const" => Ok(ConstValue::F64Bits(parse_f64_bits(lit, pos)?)),
+        // `(ref.null func)` / `(ref.null extern)` (WASM17) -- an EXACT null
+        // literal. The bare, heap-type-less `(ref.null)` wildcard never
+        // reaches this function; `parse_expected` intercepts it first (see
+        // that function's own match) since it's only valid as an
+        // `assert_return` expectation, never a concrete argument or result.
+        "ref.null" => match lit {
+            "func" | "extern" => Ok(ConstValue::Ref(None)),
+            other => Err(WastParseError::UnexpectedToken { pos, found: other.to_string(), expected: "func or extern" }),
+        },
+        // `(ref.extern N)` (WASM17) -- the testsuite's own script-syntax
+        // convenience for an externref test value; not a real instruction.
+        "ref.extern" => {
+            let n = lit.parse::<u32>().map_err(|_| WastParseError::UnexpectedToken { pos, found: lit.to_string(), expected: "an integer" })?;
+            Ok(ConstValue::Ref(Some(n)))
+        }
         other => Err(WastParseError::UnexpectedToken { pos, found: other.to_string(), expected: "a *.const expression" }),
     }
 }
@@ -242,6 +279,12 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
         ("f32.const", Some("nan:arithmetic")) => Ok(Expected::NanArithmeticF32),
         ("f64.const", Some("nan:canonical")) => Ok(Expected::NanCanonicalF64),
         ("f64.const", Some("nan:arithmetic")) => Ok(Expected::NanArithmeticF64),
+        // Bare `(ref.null)` / `(ref.func)` (WASM17) -- wildcard expectations
+        // only meaningful as an `assert_return` result, see [`Expected`]'s
+        // own doc comments. `lit` is `None` here precisely because these
+        // forms carry no second element at all.
+        ("ref.null", None) => Ok(Expected::RefNullAny),
+        ("ref.func", None) => Ok(Expected::RefFuncAny),
         _ => Ok(Expected::Value(parse_const_value(e)?)),
     }
 }
@@ -488,5 +531,60 @@ mod tests {
             err,
             WastParseError::UnexpectedToken { .. } | WastParseError::UnexpectedEof
         ));
+    }
+
+    // ── WASM17: ref.null / ref.func / ref.extern script literals ────────────
+
+    #[test]
+    fn ref_extern_literal_as_invoke_arg_and_exact_expected_value() {
+        // The real corpus's own shape: `(assert_return (invoke "f"
+        // (ref.extern 1) (ref.extern 2)) (ref.extern 1))`.
+        let dirs = parse_script(
+            r#"(assert_return (invoke "f" (ref.extern 1) (ref.extern 2)) (ref.extern 1))"#,
+        )
+        .unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { action: Action::Invoke { args, .. }, expected } => {
+                assert_eq!(*args, vec![ConstValue::Ref(Some(1)), ConstValue::Ref(Some(2))]);
+                assert_eq!(*expected, vec![Expected::Value(ConstValue::Ref(Some(1)))]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ref_null_func_and_extern_literals_are_exact_null() {
+        let dirs = parse_script(
+            r#"(assert_return (invoke "f" (ref.null func)) (ref.null extern))"#,
+        )
+        .unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { action: Action::Invoke { args, .. }, expected } => {
+                assert_eq!(*args, vec![ConstValue::Ref(None)]);
+                assert_eq!(*expected, vec![Expected::Value(ConstValue::Ref(None))]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bare_ref_null_and_ref_func_are_wildcard_expectations() {
+        // Bare forms (no heap-type keyword / no funcidx) only ever appear
+        // as `assert_return` expectations, matching "any null" / "any
+        // non-null funcref" respectively -- see select.wast's
+        // `join-funcnull` and global.wast's table-initialized `get-elem`.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (ref.null) (ref.func))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(*expected, vec![Expected::RefNullAny, Expected::RefFuncAny]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ref_extern_non_integer_literal_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_return (invoke "f") (ref.extern nope))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
     }
 }

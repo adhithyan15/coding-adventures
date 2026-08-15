@@ -1,5 +1,51 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.7 — 2026-08-15 — funcref/externref, ref.null/ref.func/ref.is_null, table.get/table.set (WASM17)
+
+This crate had ZERO reference-types-proposal support before this release
+(confirmed by grep: no match on any `ref.*` instruction name anywhere in
+`module.rs`) — everything below is added from scratch. Unblocks real
+conformance-testsuite content in the already-vendored `global.wast`,
+`select.wast`, `br_table.wast`, `unreached-valid.wast` — none of those four
+files fully flips to passing yet (each has its own separate, already-scoped
+gap: `select`'s `(result T)`-annotated opcode 0x1C, `call_indirect.wast`'s
+extended `elem`-segment syntax, `br_table.wast`'s concrete `(ref null $t)`
+heap type, and a newly-discovered `global.wast` gap logged as WASM19 — see
+that file's own backlog note), but the parse error in three of them moved
+substantially deeper into real content, confirmed via a full baseline diff
+with zero regressions on any already-parsing file. See `code/specs/
+W08-wasm-funcref-externref.md`.
+
+### Added
+
+- `funcref`/`externref` as `ValueType` keywords wherever `parse_value_type`
+  already recognized `i32`/`i64`/`f32`/`f64` (params, results, locals,
+  globals) -- plus the verbose `(ref null func)`/`(ref null extern)` form
+  found in the real corpus (`br_table.wast`), which parses to the identical
+  `ValueType`. Non-null `(ref func)` and concrete `(ref null $t)`/`(ref $t)`
+  forms are deliberately NOT recognized (out of scope, see the spec).
+- `ref.null func`/`ref.null extern` (0xD0 + heap-type byte 0x70/0x6F) as a
+  genuinely new instruction in both folded and flat form -- intercepted
+  before the `wasm_opcodes::get_opcode_by_name` lookup (like the existing
+  `trunc_sat` interception), since `wasm-opcodes` deliberately has no entry
+  for 0xD0. `ref.is_null` (0xD1) intercepted the same way.
+- `ref.func $x` (0xD2, `funcidx`) and `table.get $t`/`table.set $t` (0x25/
+  0x26, `tableidx`) as ordinary new instructions routing through the
+  normal `get_opcode_by_name` path, resolving `$name`s against
+  `func_names`/`table_names` the same way `call`/`global.get` already do.
+- Script-level `(ref.extern N)` literal (`ConstValue::Ref(Some(n))`) --
+  the official testsuite's own script-syntax convenience for an externref
+  test value, not a real instruction (confirmed absent from every real
+  `.wat` function body in the corpus). Exact `(ref.null func/extern)`
+  literals (`ConstValue::Ref(None)`), and the bare, type-less wildcard
+  forms `(ref.null)`/`(ref.func)` (new `Expected::RefNullAny`/`RefFuncAny`
+  variants -- only ever meaningful as an `assert_return` expectation, per
+  the real corpus's `select.wast`/`global.wast` usage).
+- 9 new unit tests in `module.rs`, 4 in `script.rs`, plus a documented
+  known-gap test (`select_with_explicit_result_type_annotation_is_a_known_gap`)
+  proving `select (result T)` fails cleanly with `UnknownInstruction`
+  rather than silently mis-parsing.
+
 ## 0.1.6 — 2026-08-13 — multi-value block/loop/if blocktypes (WASM04)
 
 `block.wast`, `if.wast`, and `loop.wast` never parsed at all — every one

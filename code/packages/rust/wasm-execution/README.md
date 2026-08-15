@@ -37,6 +37,17 @@ All GC failure modes (null dereference, out-of-range field, missing arity,
 unknown opcode, or a handle to an already-collected object) are clean
 traps, never panics.
 
+- **`ref.func` / `table.get` / `table.set`** (0.6.8, WASM17) — the
+  reference-types proposal's `funcref` value now moves through tables and
+  standalone references, not just the implicit table element type:
+  `ref.func $f` pushes a non-null `funcref` for a function by index;
+  `table.get`/`table.set` are thin wrappers around the pre-existing
+  `Table::get`/`Table::set` methods. All three reuse the same
+  `WasmValue::Ref(Option<handle>)` representation `ref.null`/`ref.is_null`
+  already use — only the *static* type (tracked by `wasm-validator`)
+  distinguishes a `funcref` from an `anyref` from a `structref`. See
+  `code/specs/W08-wasm-funcref-externref.md`.
+
 ## Dependencies
 
 - gc-core (W04 — `GcProfile`/`GcCycleStats` diagnostics for the object-heap collector)

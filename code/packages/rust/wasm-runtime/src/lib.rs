@@ -1303,11 +1303,16 @@ impl WasmRuntime {
                 ValueType::I64 => WasmValue::I64(arg),
                 ValueType::F32 => WasmValue::F32(arg as f32),
                 ValueType::F64 => WasmValue::F64(arg as f64),
-                // GC reference types: pass the raw i64 as a null-pointer
-                // sentinel until the runtime grows native GC support.
-                ValueType::Anyref | ValueType::I31ref | ValueType::StructRef(_) => {
-                    WasmValue::I32(arg as i32)
-                }
+                // GC and funcref/externref reference types: pass the raw i64
+                // as a null-pointer sentinel until the runtime grows native
+                // GC support. This lossy path is `call()`'s pre-existing
+                // legacy behavior; `call_typed()` should be used instead
+                // when a real `WasmValue::Ref` needs to be passed.
+                ValueType::Anyref
+                | ValueType::I31ref
+                | ValueType::StructRef(_)
+                | ValueType::Funcref
+                | ValueType::Externref => WasmValue::I32(arg as i32),
             })
             .collect();
 

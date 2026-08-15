@@ -226,6 +226,34 @@ fn valid_unreachable_opcode_makes_following_dead_code_permissive() {
     assert_valid("(module (func (result i32) (unreachable) (f64.const 1) (drop) (i32.const 1)))");
 }
 
+// ── WASM17: funcref/externref, ref.func, table.get/table.set ────────────
+
+#[test]
+fn valid_funcref_externref_params_locals_results() {
+    assert_valid(
+        r#"(module
+             (func (param $p funcref) (result externref)
+               (local $l externref)
+               (ref.null extern)))"#,
+    );
+}
+
+#[test]
+fn valid_ref_func_matches_declared_result_type() {
+    assert_valid(r#"(module (func $f) (func (result funcref) (ref.func $f)))"#);
+}
+
+#[test]
+fn valid_table_get_set_round_trip() {
+    assert_valid(
+        r#"(module
+             (table $t 1 funcref)
+             (func (param $v funcref)
+               (table.set $t (i32.const 0) (local.get $v))
+               (drop (table.get $t (i32.const 0)))))"#,
+    );
+}
+
 // ── Invalid modules ─────────────────────────────────────────────────────
 
 #[test]
@@ -246,6 +274,31 @@ fn invalid_local_index_out_of_bounds() {
 #[test]
 fn invalid_global_index_out_of_bounds() {
     assert_invalid("(module (func (result i32) (global.get 0)))");
+}
+
+#[test]
+fn invalid_ref_func_index_out_of_bounds() {
+    assert_invalid("(module (func (result funcref) (ref.func 99)))");
+}
+
+#[test]
+fn invalid_table_get_without_a_declared_table() {
+    assert_invalid("(module (func (result funcref) (table.get 0 (i32.const 0))))");
+}
+
+#[test]
+fn invalid_table_set_index_out_of_bounds() {
+    // Only table index 0 (`$t`) exists -- index 1 must be rejected, not
+    // just "table.set used but no table at all exists".
+    assert_invalid("(module (table $t 1 funcref) (func (param funcref) (table.set 1 (i32.const 0) (local.get 0))))");
+}
+
+#[test]
+fn invalid_funcref_externref_mixup_now_caught_by_the_upgraded_ref_null_type() {
+    // WASM17's ref.null upgrade (Unknown -> real static type) is what makes
+    // this catchable at all -- before, both nulls looked like the same
+    // Unknown and this module type-checked.
+    assert_invalid("(module (func (param externref) (drop (select (ref.null func) (local.get 0) (i32.const 1)))))");
 }
 
 #[test]

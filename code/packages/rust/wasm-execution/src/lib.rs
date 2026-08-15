@@ -226,8 +226,12 @@ impl WasmValue {
             ValueType::F64 => WasmValue::F64(0.0),
             // An `i31ref` is its `i32` payload, so its zero value is I32(0).
             ValueType::I31ref => WasmValue::I32(0),
-            // Nullable GC reference types default to the null reference.
-            ValueType::Anyref | ValueType::StructRef(_) => WasmValue::Ref(None),
+            // Nullable reference types (GC and funcref/externref alike)
+            // default to the null reference.
+            ValueType::Anyref
+            | ValueType::StructRef(_)
+            | ValueType::Funcref
+            | ValueType::Externref => WasmValue::Ref(None),
         }
     }
 
@@ -1999,6 +2003,25 @@ fn register_numeric_i64(vm: &mut GenericVM) {
         Ok(None)
     });
 
+    // ref.func (0xD2 <funcidx>) — push a non-null funcref referring to a
+    // function by index (WASM17). The wrapped `u32` is a function index
+    // into `ctx.func_types`/`ctx.func_bodies`, reusing the same uniform
+    // `Ref(Option<u32>)` handle `ref.null`/`ref.is_null` already carry —
+    // only the *static* type (tracked by `wasm-validator`) distinguishes a
+    // funcref from any other reference kind, see `code/specs/
+    // W08-wasm-funcref-externref.md`. Bounds-checked against the same
+    // `func_types` table `call_function_inner`'s own bounds check uses.
+    vm.register_context_opcode(0xD2, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let func_index = operand_int(instr) as usize;
+        if func_index >= ctx.func_types.len() {
+            return Err(VMError::GenericError(format!("undefined function {func_index}")));
+        }
+        push_wasm(vm, WasmValue::Ref(Some(func_index as u32)));
+        vm.advance_pc();
+        Ok(None)
+    });
+
     // i64.eqz (0x50)
     vm.register_context_opcode(0x50, |vm, _instr, _code, _ctx| {
         let a = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
@@ -2776,6 +2799,40 @@ fn register_variable(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let index = operand_int(instr) as usize;
         ctx.globals[index] = pop_wasm(vm)?;
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // table.get (0x25 <tableidx>) — push table[tableidx][index] as a
+    // funcref (WASM17). Thin wrapper around `Table::get`, same pattern
+    // `call_indirect`'s table lookup already uses, but honoring the real
+    // decoded table index instead of `call_indirect`'s hardcoded 0 (WASM
+    // 1.0 has exactly one table either way, but the text form can name it
+    // explicitly, so this resolves whichever index `wasm-wast-parser`
+    // actually emitted).
+    vm.register_context_opcode(0x25, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let table_idx = operand_int(instr) as usize;
+        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        let table = get_table(ctx, table_idx)?;
+        let func_index = table.get(elem_index as u32).map_err(VMError::from)?;
+        push_wasm(vm, WasmValue::Ref(func_index));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // table.set (0x26 <tableidx>) — pop a funcref and an i32 index, store
+    // into table[tableidx][index] (WASM17). Thin wrapper around `Table::set`.
+    vm.register_context_opcode(0x26, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let table_idx = operand_int(instr) as usize;
+        let value = match pop_wasm(vm)? {
+            WasmValue::Ref(v) => v,
+            other => return Err(VMError::GenericError(format!("type mismatch: expected funcref, got {other:?}"))),
+        };
+        let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+        let table = get_table(ctx, table_idx)?;
+        table.set(elem_index as u32, value).map_err(VMError::from)?;
         vm.advance_pc();
         Ok(None)
     });
@@ -4778,6 +4835,105 @@ mod tests {
         assert_eq!(table.get(2).unwrap(), Some(42));
         table.set(2, None).unwrap();
         assert_eq!(table.get(2).unwrap(), None);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // WASM17: ref.func, table.get, table.set opcode handlers
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_ref_func_pushes_non_null_funcref_for_valid_index() {
+        // ref.func 0 -- the function's own index, always valid for a
+        // single-function module.
+        let code = vec![0xD2, 0x00, 0x0B];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(0))]);
+    }
+
+    #[test]
+    fn test_ref_func_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let code = vec![0xD2, 0x63, 0x0B]; // ref.func 99 -- no function 99 exists
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_table_get_set_opcodes_round_trip_through_a_real_table() {
+        // table.set 0 (i32.const 3) (ref.func 0); table.get 0 (i32.const 3)
+        let code = vec![
+            0x41, 0x03, // i32.const 3
+            0xD2, 0x00, // ref.func 0
+            0x26, 0x00, // table.set 0
+            0x41, 0x03, // i32.const 3
+            0x25, 0x00, // table.get 0
+            0x0B,
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![Table::new(10, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(Some(0))]);
+    }
+
+    #[test]
+    fn test_table_get_uninitialized_slot_returns_null_ref() {
+        let code = vec![0x41, 0x00, 0x25, 0x00, 0x0B]; // i32.const 0; table.get 0
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::Ref(None)]);
+    }
+
+    #[test]
+    fn test_table_get_out_of_bounds_index_is_a_clean_error_not_a_panic() {
+        let code = vec![0x41, 0x63, 0x25, 0x00, 0x0B]; // i32.const 99; table.get 0
+        let func_type = FuncType { params: vec![], results: vec![ValueType::Funcref] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
     }
 
     // ══════════════════════════════════════════════════════════════════════
