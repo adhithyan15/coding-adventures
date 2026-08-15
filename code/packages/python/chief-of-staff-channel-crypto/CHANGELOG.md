@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add public grant-signature verification for trusted activation-plan validation.
+- Add injected-signer message creation and seal `RotationPlan` construction behind
+  the trusted rotation planner.
+
 - Add the immutable Python D18Q `D18G` v1 channel-key grant codec and sealed
   X25519/HKDF-SHA256/XChaCha20-Poly1305/Ed25519 workflow.
 - Add managed channel, receiver, and signing keys; atomic monotonic receiver

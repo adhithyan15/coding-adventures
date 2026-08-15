@@ -26,6 +26,7 @@ _MAX_IDENTITY_BYTES = 4096
 _MAX_U64 = (1 << 64) - 1
 _KEY_GRANT_CONTEXT = b"chief-channel-key-grant-v1"
 _KEY_WRAP_CONTEXT = b"chief-channel-key-wrap-v1"
+_ROTATION_PLAN_TOKEN = object()
 
 KEY_GRANT_ERROR_CODES = (
     "invalid_magic",
@@ -474,6 +475,47 @@ def open_channel_key_grant(
     originator_public_key: bytes,
 ) -> ChannelMasterKey:
     """Verify expected bindings in normative order, then unwrap one CMK."""
+    verify_grant_signature(
+        grant,
+        expected_originator_id,
+        expected_receiver_id,
+        expected_channel_id,
+        originator_public_key,
+    )
+    shared_secret = receiver_key_pair.agree(grant.ephemeral_public_key)
+    wrapping_key = _derive_wrapping_key(
+        shared_secret, grant.channel_id, grant.key_epoch, grant.receiver_id
+    )
+    aad = _grant_aad(
+        grant.originator_id,
+        grant.receiver_id,
+        grant.channel_id,
+        grant.key_epoch,
+        grant.ephemeral_public_key,
+    )
+    try:
+        plaintext = xchacha20_poly1305_aead_decrypt(
+            grant.wrapped_cmk[:32],
+            wrapping_key,
+            grant.wrapping_nonce,
+            aad,
+            grant.wrapped_cmk[32:],
+        )
+    except (ArithmeticError, TypeError, ValueError):
+        _fail("authentication_failed")
+    if len(plaintext) != 32:
+        _fail("invalid_wrapped_key")
+    return ChannelMasterKey.from_bytes(plaintext)
+
+
+def verify_grant_signature(
+    grant: PortableKeyGrant,
+    expected_originator_id: bytes,
+    expected_receiver_id: bytes,
+    expected_channel_id: bytes,
+    originator_public_key: bytes,
+) -> None:
+    """Verify public D18G bindings and signature without a receiver secret."""
     _validate_grant(grant)
     originator_copy = _copy_bytes(expected_originator_id)
     receiver_copy = _copy_bytes(expected_receiver_id)
@@ -504,30 +546,6 @@ def open_channel_key_grant(
         signature_valid = False
     if not signature_valid:
         _fail("invalid_signature")
-    shared_secret = receiver_key_pair.agree(grant.ephemeral_public_key)
-    wrapping_key = _derive_wrapping_key(
-        shared_secret, grant.channel_id, grant.key_epoch, grant.receiver_id
-    )
-    aad = _grant_aad(
-        grant.originator_id,
-        grant.receiver_id,
-        grant.channel_id,
-        grant.key_epoch,
-        grant.ephemeral_public_key,
-    )
-    try:
-        plaintext = xchacha20_poly1305_aead_decrypt(
-            grant.wrapped_cmk[:32],
-            wrapping_key,
-            grant.wrapping_nonce,
-            aad,
-            grant.wrapped_cmk[32:],
-        )
-    except (ArithmeticError, TypeError, ValueError):
-        _fail("authentication_failed")
-    if len(plaintext) != 32:
-        _fail("invalid_wrapped_key")
-    return ChannelMasterKey.from_bytes(plaintext)
 
 
 class ReceiverEpochKeys:
@@ -711,7 +729,11 @@ class RotationPlan:
         new_epoch: int,
         new_cmk: ChannelMasterKey,
         grants: tuple[PortableKeyGrant, ...],
+        *,
+        _token: object,
     ) -> None:
+        if _token is not _ROTATION_PLAN_TOKEN:
+            _fail("invalid_field")
         self.new_epoch = new_epoch
         self._new_cmk = new_cmk.clone()
         self.grants = tuple(grants)
@@ -758,7 +780,12 @@ def plan_rotation(
                 current_epoch + 1,
             )
             grants.append(receiver.seal(fields, new_cmk, signing_key))
-        return RotationPlan(current_epoch + 1, new_cmk, tuple(grants))
+        return RotationPlan(
+            current_epoch + 1,
+            new_cmk,
+            tuple(grants),
+            _token=_ROTATION_PLAN_TOKEN,
+        )
     finally:
         for receiver in ordered:
             receiver.destroy()
@@ -1026,4 +1053,5 @@ __all__ = [
     "seal_channel_key",
     "seal_channel_key_with_material",
     "secret_erasure_capability",
+    "verify_grant_signature",
 ]
