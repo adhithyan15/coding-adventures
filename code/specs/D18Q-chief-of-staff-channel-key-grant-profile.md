@@ -493,7 +493,7 @@ secret-bearing state.
 
 ## Required shared fixtures
 
-The fixture package will live under:
+The fixture package lives under:
 
 ```text
 code/fixtures/chief-of-staff-channel-key-grant/v1/
@@ -507,6 +507,12 @@ Each consumer declares its own capability beside its native fixture test; the
 central gate reports those declarations without rewriting the Rust-generated
 cryptographic corpus. The content-addressed generator identity remains stable
 across rebase and squash merges.
+
+The Rust `chief-of-staff-channel-crypto::grant_profile` adapter is the
+reference consumer. It routes production and explicit-material sealing through
+the same D18G implementation, exposes immutable high-level values and stable
+errors, consumes the complete manifest, and declares `guaranteed` controlled
+destruction through the repository-owned volatile-zeroization container.
 
 The corpus must cover at least:
 

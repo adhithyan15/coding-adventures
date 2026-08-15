@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add the portable D18Q grant adapter with high-level field validation,
+  explicit-material sealing, stable errors, immutable grants, receiver epoch
+  state, deterministic rotation planning, honest erasure reporting, and the
+  Rust-generated shared compatibility corpus.
 - Add the portable D18F profile adapter with high-level UUID-v7/MIME
   validation, canonical lossless JSON, stable error codes, epoch-key
   resolution, deterministic UUID-v7 source injection, and shared fixture

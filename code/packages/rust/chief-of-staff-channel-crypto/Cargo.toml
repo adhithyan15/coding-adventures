@@ -17,3 +17,6 @@ coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_uuid = { path = "../uuid" }
 coding_adventures_x25519 = { path = "../x25519" }
 coding_adventures_zeroize = { path = "../zeroize" }
+
+[dev-dependencies]
+coding_adventures_sha1 = { path = "../sha1" }
