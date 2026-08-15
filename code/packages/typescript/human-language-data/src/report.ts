@@ -668,6 +668,28 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     `forward references: ${report.continuity.summary.forwardReferences} uses of material a later lesson teaches`,
     ...(report.levelGate
       ? [
+          // VOCABULARY FIRST, and deliberately so (HL-C183). Spine coverage was
+          // being quoted as the headline for a corpus that had not cleared
+          // pre-A1: Spanish read "33/33 spine nodes" while teaching 267 words
+          // against a 300-word pre-A1 floor and a 16,000-word C2 one. Spine
+          // coverage measures FUNCTIONAL reach — a rung per can-do statement.
+          // This measures whether there are enough words to stand on the rungs.
+          // Printing it above the level line is what stops the wrong number
+          // being read as completeness.
+          `VOCABULARY vs HL09 §3.1 targets: ` +
+            [...report.levelGate.tracks]
+              .sort((a, b) => b.vocabulary - a.vocabulary || a.language.localeCompare(b.language))
+              .slice(0, 5)
+              .map((t) => {
+                const next = t.inProgressAt ?? "C2";
+                const target = report.levelGate!.vocabularyTargets[next];
+                return `${t.language} ${t.vocabulary}/${target} (${next})`;
+              })
+              .join(", ") +
+            `; ${report.levelGate.tracks.filter((t) => {
+              const next = t.inProgressAt ?? "C2";
+              return t.vocabulary < report.levelGate!.vocabularyTargets[next];
+            }).length} of ${report.levelGate.tracks.length} tracks short of the level they are working on`,
           `levels ATTAINED (HL09 §3.1): ${CEFR_LEVELS.filter((l) => report.levelGate!.summary.attainedByLevel[l] > 0)
             .map((l) => `${report.levelGate!.summary.attainedByLevel[l]} tracks at ${l}`)
             .join(", ") || "none"}; ` +
