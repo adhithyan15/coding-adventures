@@ -892,6 +892,26 @@
           "TE-GRAMMAR-C42-ADJ-SYSTEM"
         ]
       }
+    },
+    {
+      "chapter": 43,
+      "title": "More Everyday Verbs",
+      "label": "ch:te-more-verbs",
+      "canDo": "I can tell someone to come, sit, stand and give in Telugu.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "TE-C43-give",
+        "kind": "production",
+        "summary": "Complete TE-C43-give and say all four verbs in order.",
+        "assesses": [
+          "TE-LEX-COME",
+          "TE-LEX-SIT",
+          "TE-LEX-STAND",
+          "TE-LEX-GIVE"
+        ]
+      }
     }
   ]
 }

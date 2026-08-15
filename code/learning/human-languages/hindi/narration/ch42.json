@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 42,
+  "title": "More Everyday Verbs",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:7d0dd0587582a1b3",
+  "lessons": [
+    {
+      "id": "HI-C42-come",
+      "sequence": 1230,
+      "title": "आना (ānā) — to come",
+      "headword": "आना",
+      "romanization": "ānā",
+      "gloss": "to come",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01790514485d03e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A short run of everyday verbs, one at a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आना (ānā) — \"to come\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Every Hindi infinitive ends in -ना (-nā), so this is 'to come' in the form a dictionary lists."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आना (ānā) mean? (\"to come\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C42-sit",
+      "sequence": 1240,
+      "title": "बैठना (baiṭhnā) — to sit",
+      "headword": "बैठना",
+      "romanization": "baiṭhnā",
+      "gloss": "to sit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7620238c0d369df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ānā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बैठना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बैठना (baiṭhnā) — \"to sit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Same -ना ending. Once you see it, you can spot an infinitive anywhere in a text without knowing the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṭhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṭhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it after ānā, so the two sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it after *ānā*, so the two sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बैठना (baiṭhnā) mean? (\"to sit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C42-stand",
+      "sequence": 1250,
+      "title": "खड़ा होना (khaṛā honā) — to stand",
+      "headword": "खड़ा होना",
+      "romanization": "khaṛā honā",
+      "gloss": "to stand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93428151b71ddcc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did baiṭhnā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खड़ा होना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खड़ा होना (khaṛā honā) — \"to stand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words: an adjective khaṛā, 'upright', plus honā, 'to be'. Hindi builds many verbs this way, from a word plus a light verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṛā honā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṛā honā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it after baiṭhnā, so the two sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it after *baiṭhnā*, so the two sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खड़ा होना (khaṛā honā) mean? (\"to stand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C42-give",
+      "sequence": 1260,
+      "title": "देना (denā) — to give",
+      "headword": "देना",
+      "romanization": "denā",
+      "gloss": "to give",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8670689fa226ad2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did khaṛā honā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: देना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "देना (denā) — \"to give\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The plain 'give', and one of the light verbs Hindi uses to build compounds of its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. That closes the run: four everyday actions, each met on its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "denā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *denā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it after khaṛā honā, so the two sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it after *khaṛā honā*, so the two sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does देना (denā) mean? (\"to give\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

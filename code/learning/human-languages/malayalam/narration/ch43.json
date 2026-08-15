@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 43,
+  "title": "More Everyday Verbs",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:75ab1fe5b5adbb4f",
+  "lessons": [
+    {
+      "id": "ML-C43-run",
+      "sequence": 1070,
+      "title": "ഓടൂ (ōṭū) — run",
+      "headword": "ഓടൂ",
+      "romanization": "ōṭū",
+      "gloss": "run",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82fd1470a121dd9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A short run of everyday verbs, one at a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഓടൂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓടൂ (ōṭū) — \"run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The long final ū softens a command into an invitation — Malayalam marks courtesy in the verb ending itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōṭū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōṭū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഓടൂ (ōṭū) mean? (\"run\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C43-sleep",
+      "sequence": 1080,
+      "title": "ഉറങ്ങൂ (uṟaṅṅū) — sleep",
+      "headword": "ഉറങ്ങൂ",
+      "romanization": "uṟaṅṅū",
+      "gloss": "sleep",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8f5d6425fafc0a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ōṭū mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉറങ്ങൂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറങ്ങൂ (uṟaṅṅū) — \"sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Same softening vowel — said to a child at night rather than as an order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟaṅṅū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟaṅṅū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it after ōṭū, so the two sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it after *ōṭū*, so the two sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉറങ്ങൂ (uṟaṅṅū) mean? (\"sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C43-stand",
+      "sequence": 1090,
+      "title": "നിൽക്കൂ (nilkkū) — stand",
+      "headword": "നിൽക്കൂ",
+      "romanization": "nilkkū",
+      "gloss": "stand",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d300e8bf70669577",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did uṟaṅṅū mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിൽക്കൂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിൽക്കൂ (nilkkū) — \"stand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Its pair, with the same courteous ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. Three more follow, and each reuses the ones before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilkkū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilkkū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it after uṟaṅṅū, so the two sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it after *uṟaṅṅū*, so the two sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിൽക്കൂ (nilkkū) mean? (\"stand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C43-give",
+      "sequence": 1100,
+      "title": "തരൂ (tarū) — give",
+      "headword": "തരൂ",
+      "romanization": "tarū",
+      "gloss": "give",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c3ddbcc90d185d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nilkkū mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തരൂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തരൂ (tarū) — \"give\"."
+            },
+            {
+              "kind": "speech",
+              "text": "'Give — to me.' Malayalam distinguishes giving toward the speaker from giving away; this is the toward-me one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more everyday action. That closes the run: four everyday actions, each met on its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, to someone standing in a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, to someone standing in a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it after nilkkū, so the two sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it after *nilkkū*, so the two sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തരൂ (tarū) mean? (\"give\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

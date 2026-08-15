@@ -503,6 +503,21 @@
         "TE-EXT-201-ADJ"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-43-VERBS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "TE-C43-come",
+        "TE-C43-sit",
+        "TE-C43-stand",
+        "TE-C43-give"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-43-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -635,7 +650,8 @@
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "TE-PATH-026",
-        "TE-PATH-027"
+        "TE-PATH-027",
+        "TE-PATH-43-VERBS"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1259,6 +1275,20 @@
         "TE-C42-new",
         "TE-C42-old",
         "TE-C42-adjective-system"
+      ]
+    },
+    {
+      "id": "TE-EXT-43-VERBS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more everyday actions and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C43-come",
+        "TE-C43-sit",
+        "TE-C43-stand",
+        "TE-C43-give"
       ]
     }
   ]
