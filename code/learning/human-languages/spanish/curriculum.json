@@ -3392,6 +3392,66 @@
         "ES-EXT-277-SOURCES"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-278-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C278-viento",
+        "ES-C278-nieve",
+        "ES-C278-arbol",
+        "ES-C278-flor"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-278-AFUERA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-279-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C279-puerta",
+        "ES-C279-ventana",
+        "ES-C279-silla",
+        "ES-C279-cama"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-279-HABITACION"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-280-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C280-queso",
+        "ES-C280-huevo",
+        "ES-C280-manzana",
+        "ES-C280-dinero"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-280-COMPRA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-281-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C281-nuevo",
+        "ES-C281-viejo",
+        "ES-C281-limpio",
+        "ES-C281-sucio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-281-ADJETIVOS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3586,7 +3646,11 @@
         "ES-PATH-A1-DISTRIB",
         "ES-PATH-A1-INF-SUJETO",
         "ES-PATH-A1-ORDEN",
-        "ES-PATH-A1-REVIEW-CIERRE"
+        "ES-PATH-A1-REVIEW-CIERRE",
+        "ES-PATH-278-01",
+        "ES-PATH-279-01",
+        "ES-PATH-280-01",
+        "ES-PATH-281-01"
       ],
       "omits": [],
       "relocates": {}
@@ -6908,6 +6972,62 @@
       "prerequisites": [],
       "lessons": [
         "ES-C277-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-278-AFUERA",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the wind, the snow, a tree and a flower in Spanish, and say for each whether its English relative is an inherited cousin or a later borrowing.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C278-viento",
+        "ES-C278-nieve",
+        "ES-C278-arbol",
+        "ES-C278-flor"
+      ]
+    },
+    {
+      "id": "ES-EXT-279-HABITACION",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the door, the window, the chair and the bed in Spanish, and say which of the four has no settled origin.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C279-puerta",
+        "ES-C279-ventana",
+        "ES-C279-silla",
+        "ES-C279-cama"
+      ]
+    },
+    {
+      "id": "ES-EXT-280-COMPRA",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name cheese, an egg, an apple and money in Spanish, and say which of them is named after a Roman gardener and which after a Roman coin.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C280-queso",
+        "ES-C280-huevo",
+        "ES-C280-manzana",
+        "ES-C280-dinero"
+      ]
+    },
+    {
+      "id": "ES-EXT-281-ADJETIVOS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say new, old, clean and dirty in Spanish, and say what each of them meant in Latin before it meant what it means now.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C281-nuevo",
+        "ES-C281-viejo",
+        "ES-C281-limpio",
+        "ES-C281-sucio"
       ]
     }
   ],

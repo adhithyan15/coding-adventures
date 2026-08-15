@@ -11206,6 +11206,74 @@
       "jsonHash": "fnv1a64:0f52620028e421ad"
     },
     {
+      "language": "spanish",
+      "chapter": 278,
+      "sourceHash": "fnv1a64:6b211c02528a2206",
+      "lessonIds": [
+        "ES-C278-viento",
+        "ES-C278-nieve",
+        "ES-C278-arbol",
+        "ES-C278-flor"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch278.txt",
+      "json": "spanish/narration/ch278.json",
+      "textHash": "fnv1a64:8e035ee8dbfc6936",
+      "jsonHash": "fnv1a64:f3195c1f3eebf6aa"
+    },
+    {
+      "language": "spanish",
+      "chapter": 279,
+      "sourceHash": "fnv1a64:97abf3313d714f60",
+      "lessonIds": [
+        "ES-C279-puerta",
+        "ES-C279-ventana",
+        "ES-C279-silla",
+        "ES-C279-cama"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch279.txt",
+      "json": "spanish/narration/ch279.json",
+      "textHash": "fnv1a64:2e4ab418c89f64ff",
+      "jsonHash": "fnv1a64:a4fb997ebcdcfe99"
+    },
+    {
+      "language": "spanish",
+      "chapter": 280,
+      "sourceHash": "fnv1a64:1c512fe978f4e7be",
+      "lessonIds": [
+        "ES-C280-queso",
+        "ES-C280-huevo",
+        "ES-C280-manzana",
+        "ES-C280-dinero"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch280.txt",
+      "json": "spanish/narration/ch280.json",
+      "textHash": "fnv1a64:9c1abf63214d5366",
+      "jsonHash": "fnv1a64:9dd8a6c64acf7fb5"
+    },
+    {
+      "language": "spanish",
+      "chapter": 281,
+      "sourceHash": "fnv1a64:9a1b56eb2593ec91",
+      "lessonIds": [
+        "ES-C281-nuevo",
+        "ES-C281-viejo",
+        "ES-C281-limpio",
+        "ES-C281-sucio"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch281.txt",
+      "json": "spanish/narration/ch281.json",
+      "textHash": "fnv1a64:e782a26017f822ad",
+      "jsonHash": "fnv1a64:a1592d1ab8eb8f19"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:6df1383fd4404bac",

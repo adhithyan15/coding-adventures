@@ -1,0 +1,631 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 280,
+  "title": "Four Things You Buy --- Cheese, Egg, Apple, Money",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:1c512fe978f4e7be",
+  "lessons": [
+    {
+      "id": "ES-C280-queso",
+      "sequence": 3140,
+      "title": "el queso — the same word as cheese, honestly",
+      "headword": "el queso",
+      "romanization": "el queso",
+      "gloss": "cheese — Latin caseus, the very same word as English cheese by another road",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bdca3836e7d414d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four things you might buy. The first of them looks nothing like its English translation, and is nevertheless the identical word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la comida — food, and the meal."
+            },
+            {
+              "kind": "speech",
+              "text": "el pan — bread, which you already have."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "KE-so. The qu- before e is a plain hard k; the u is written but never said. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el queso — \"the cheese.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin caseus. Spanish inherited it and wore it down to queso."
+            },
+            {
+              "kind": "speech",
+              "text": "Now consider English. Cheese is caseus as well. Germanic speakers along the Roman frontier took the word — with the thing, which the Romans were better at — some time before the year 500, and it went through the Germanic sound changes until caseus had become Old English cyse. German did the same and got Käse."
+            },
+            {
+              "kind": "speech",
+              "text": "So queso and cheese are one Latin noun that spent fifteen centuries in two different mouths. They no longer share a single sound in the same position, and they are still the same word. Casein, the protein, is the modern loan, taken straight from the book and untouched."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Resemblance is a poor guide to relatedness, in both directions."
+            },
+            {
+              "kind": "speech",
+              "text": "Queso and cheese look unrelated and are the same word. Meanwhile Spanish is full of words that look reassuringly like an English one and mean something else entirely — you have already met a few of those. Sound alone decides nothing; the history has to be traced."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el queso, with a silent u",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el queso*, with a silent *u*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin word behind both languages (caseus)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin word behind both languages (*caseus*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pan y el queso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pan y el queso*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Are queso and cheese related? (They are the same Latin word, caseus.) Which one is the loan and which the inheritance? (English borrowed it; Spanish inherited it.) Is the u in queso pronounced? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C280-huevo",
+      "sequence": 3150,
+      "title": "el huevo — a letter put there for the reader",
+      "headword": "el huevo",
+      "romanization": "el huevo",
+      "gloss": "egg — Latin ovum, wearing an h that exists only to help your eyes",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1cacd7efe7abc3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A short word with a letter in front of it that does nothing at all — and the reason it is there is one of the more human facts in Spanish spelling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el queso — the cheese, from caseus."
+            },
+            {
+              "kind": "speech",
+              "text": "f becomes h — the other place an h turns up unpronounced."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "WE-bo. The h is silent, the ue is one glide, and the v is that soft lips-barely-touching sound again. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el huevo — \"the egg.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ovum, with the stressed o opening into ue — the change you already know from puerta. That gives uevo, which is exactly what the word sounds like."
+            },
+            {
+              "kind": "speech",
+              "text": "So where did the h come from? Not from Latin, and not from the sound. It came from scribes. In medieval handwriting u and v were the same letter, so a word beginning ue- could be read as ve- by anyone in a hurry. Putting a silent h in front made the following letter unmistakably a vowel. The h of huevo is a reading aid, frozen into the spelling centuries after the fact."
+            },
+            {
+              "kind": "speech",
+              "text": "English took ovum straight from Latin and left the sense alone: oval, ovary, ovulate. English egg itself is Norse, and it displaced the older native ey — one more everyday word the Vikings left behind."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Not every letter in a word records a sound. Some record a problem somebody had while reading."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a useful thing to hold on to, because it stops silent letters from looking like arbitrary cruelty. Huevo, hueso, huerto — the h appears before ue right across the language, always for the same reason, and once you know the reason you can predict it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el huevo, starting on the w sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el huevo*, starting on the *w* sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin word (ovum) and the change that gave ue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin word (*ovum*) and the change that gave *ue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the h is written",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the *h* is written]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does the h of huevo come from Latin? (No.) What is it doing there? (Marking the u as a vowel, for readers of handwriting.) Which Latin word is underneath? (Ovum, the source of English oval.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C280-manzana",
+      "sequence": 3160,
+      "title": "la manzana — a variety name that ate the fruit",
+      "headword": "la manzana",
+      "romanization": "la manzana",
+      "gloss": "apple — named after a Roman gardener whose variety outlived him",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:134f0cb69c3f50cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This one is a person's name, worn down for two thousand years until nobody notices the person inside it any more."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "María, España, profesor — how Spanish handles proper names."
+            },
+            {
+              "kind": "speech",
+              "text": "el huevo — the egg, and its silent h."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "man-ZA-na, stress in the middle. The z is a soft th in most of Spain and an s almost everywhere else; both are standard. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la manzana — \"the apple.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin's general word for apple was malum, and Spanish did not keep it. What it kept was a variety."
+            },
+            {
+              "kind": "speech",
+              "text": "Gaius Matius was a Roman of the first century before our era, a friend of Julius Caesar, and a writer on cooking and gardening. A kind of apple carried his name: mala Mattiana, the Matian apples. That phrase wore down — mattiana into manzana — and along the way the adjective swallowed the noun. The variety name became the word for the fruit, and the man vanished inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "English does this too, and recently enough that the joins are still obvious. A satsuma is named after a Japanese province, a greengage after Sir William Gage, a boysenberry after Rudolph Boysen. Give any of them another fifteen centuries of ordinary use and they will look as opaque as manzana does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An ordinary word can have a proper name inside it, completely invisible."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth holding because it explains a shape you will keep meeting: a word whose Latin ancestor looks like an adjective rather than a noun. Mattiana was an adjective agreeing with mala. The noun dropped out, the adjective stayed, and the ending it still carries is the feminine ending it needed in order to agree with a fruit that is no longer in the sentence."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la manzana, stress in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la manzana*, stress in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose apples they were (Matius)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose apples they were (*Matius*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el queso, el huevo, la manzana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el queso, el huevo, la manzana*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was mala Mattiana? (The apples of Matius, a Roman variety.) Which half of that phrase survived? (The adjective.) What was Latin's ordinary word for an apple? (Malum — and Spanish let it go.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C280-dinero",
+      "sequence": 3170,
+      "title": "el dinero — one coin, three survivals",
+      "headword": "el dinero",
+      "romanization": "el dinero",
+      "gloss": "money — the name of a Roman coin, still doing service two thousand years later",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98b2e3d929747ac7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have just seen a person's name inside a fruit. Here is a coin inside the word for money — and this one left tracks in three languages."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comprar — to buy, which this word makes possible."
+            },
+            {
+              "kind": "speech",
+              "text": "uno, dos, tres, cuatro, cinco — counting, for prices."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "di-NE-ro, stress in the middle. The d between vowels is soft, closer to the th of English the than to a hard d. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dinero — \"the money.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin denarius, a silver coin. The name means \"by tens\": at its introduction it was reckoned as ten of the smaller bronze coins, and the coin kept the arithmetic in its name long after the exchange rate had moved."
+            },
+            {
+              "kind": "speech",
+              "text": "That coin outlived its empire three separate times. Spanish turned it into dinero, the general word for money — a particular coin generalised into all money, the same move you have just watched a particular apple make. Arabic borrowed it as dinar, which is still the name of the currency in several countries. And in Britain the penny was abbreviated d — for denarius — right up until decimalisation in 1971, so that a price written 3d was quoting a Roman coin to a shopper who had never heard of one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Twice in two lessons, a specific thing has become a general one: Matius's apples became all apples, and one silver coin became all money."
+            },
+            {
+              "kind": "speech",
+              "text": "That widening is one of the commonest ways a word changes meaning, and it is worth watching for, because it runs the other way too. When an old text uses a word you know, ask whether it was still the narrow version. A medieval dinero might be an actual coin in somebody's hand rather than money in the abstract."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el dinero, with a soft d",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el dinero*, with a soft *d*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what denarius meant (by tens — ten of the smaller coins)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *denarius* meant (by tens — ten of the smaller coins)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three places the coin survives (dinero, dinar, British d)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three places the coin survives (*dinero*, *dinar*, British *d*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Roman coin is dinero? (The denarius.) What did its name count? (Tens.) What did d stand for on a British price tag? (Denarius — the penny.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

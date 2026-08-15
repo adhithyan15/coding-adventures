@@ -5345,6 +5345,102 @@
           "ES-SEMANTIC-COMPRESSION"
         ]
       }
+    },
+    {
+      "chapter": 278,
+      "title": "Four Things Outdoors --- Wind, Snow, Tree, Flower",
+      "label": "ch:al-aire-libre",
+      "canDo": "I can name the wind, the snow, a tree and a flower in Spanish, and say for each whether its English relative is an inherited cousin or a later borrowing.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C278-flor",
+        "kind": "task",
+        "summary": "Complete ES-C278-flor: say all four words, then sort their English relatives into cousins and loans.",
+        "assesses": [
+          "ES-LEX-VIENTO",
+          "ES-ETYMON-VIENTO",
+          "ES-LEX-NIEVE",
+          "ES-ETYMON-NIEVE",
+          "ES-LEX-ARBOL",
+          "ES-ETYMON-ARBOL",
+          "ES-LEX-FLOR",
+          "ES-ETYMON-FLOR"
+        ]
+      }
+    },
+    {
+      "chapter": 279,
+      "title": "Four Things in a Room --- Door, Window, Chair, Bed",
+      "label": "ch:la-habitacion",
+      "canDo": "I can name the door, the window, the chair and the bed in Spanish, and say which of the four has no settled origin.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C279-cama",
+        "kind": "task",
+        "summary": "Complete ES-C279-cama: name the four things around you, and say which one nobody has managed to trace.",
+        "assesses": [
+          "ES-LEX-PUERTA",
+          "ES-ETYMON-PUERTA",
+          "ES-LEX-VENTANA",
+          "ES-ETYMON-VENTANA",
+          "ES-LEX-SILLA",
+          "ES-ETYMON-SILLA",
+          "ES-LEX-CAMA",
+          "ES-ETYMON-CAMA"
+        ]
+      }
+    },
+    {
+      "chapter": 280,
+      "title": "Four Things You Buy --- Cheese, Egg, Apple, Money",
+      "label": "ch:la-compra",
+      "canDo": "I can name cheese, an egg, an apple and money in Spanish, and say which of them is named after a Roman gardener and which after a Roman coin.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C280-dinero",
+        "kind": "task",
+        "summary": "Complete ES-C280-dinero: name the four, then say which two carry a proper name and a coin inside them.",
+        "assesses": [
+          "ES-LEX-QUESO",
+          "ES-ETYMON-QUESO",
+          "ES-LEX-HUEVO",
+          "ES-ETYMON-HUEVO",
+          "ES-LEX-MANZANA",
+          "ES-ETYMON-MANZANA",
+          "ES-LEX-DINERO",
+          "ES-ETYMON-DINERO"
+        ]
+      }
+    },
+    {
+      "chapter": 281,
+      "title": "Four Ordinary Adjectives --- New, Old, Clean, Dirty",
+      "label": "ch:cuatro-adjetivos",
+      "canDo": "I can say new, old, clean and dirty in Spanish, and say what each of them meant in Latin before it meant what it means now.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C281-sucio",
+        "kind": "task",
+        "summary": "Complete ES-C281-sucio: say each adjective with its four endings, and give the Latin sense it started from.",
+        "assesses": [
+          "ES-LEX-NUEVO",
+          "ES-ETYMON-NUEVO",
+          "ES-LEX-VIEJO",
+          "ES-ETYMON-VIEJO",
+          "ES-LEX-LIMPIO",
+          "ES-ETYMON-LIMPIO",
+          "ES-LEX-SUCIO",
+          "ES-ETYMON-SUCIO"
+        ]
+      }
     }
   ]
 }

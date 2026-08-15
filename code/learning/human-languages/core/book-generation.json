@@ -3994,6 +3994,26 @@
       "output": "spanish/book/chapters/ch277-fuentes.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 278,
+      "output": "spanish/book/chapters/ch278-al-aire-libre.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 279,
+      "output": "spanish/book/chapters/ch279-la-habitacion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 280,
+      "output": "spanish/book/chapters/ch280-la-compra.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 281,
+      "output": "spanish/book/chapters/ch281-cuatro-adjetivos.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

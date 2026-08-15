@@ -1,0 +1,639 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 279,
+  "title": "Four Things in a Room --- Door, Window, Chair, Bed",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:97abf3313d714f60",
+  "lessons": [
+    {
+      "id": "ES-C279-puerta",
+      "sequence": 3100,
+      "title": "la puerta — a city gate, shrunk to fit a house",
+      "headword": "la puerta",
+      "romanization": "la puerta",
+      "gloss": "door — Latin porta, a gate, and the o that opened into ue",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:877426c26a0d41bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Come indoors. The next four words are things in the room you are probably sitting in, and the first of them started life very much larger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casa — the house these things are inside."
+            },
+            {
+              "kind": "speech",
+              "text": "e becomes ie and o becomes ue — the two vowels that open under stress."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PUER-ta, stress on the first syllable. The ue is one glide, not two separate vowels. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la puerta — \"the door.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin porta, with the short stressed o opening into ue — the partner of the change that gave you viento. Same event, other vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "But porta did not mean a door in a house. It meant a gate: the opening in a city wall, the thing guarded and shut at night. Spanish took the grand word and let it shrink until it would fit a bedroom."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds porta in several shapes. A portal is a doorway that still sounds like a gate. A porch came through French from porticus, the covered way at the entrance. And one of English's two porters — the one who keeps the door of a college or a hotel — is the gate-keeper of porta, while the porter who carries your luggage comes from a different Latin verb entirely. Two unrelated words, spelled identically, sitting in the same hotel lobby."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Words shrink. A gate in a wall becomes a door in a wall becomes a door in a room, and nothing marks the moment it happened."
+            },
+            {
+              "kind": "speech",
+              "text": "This matters for reading older Spanish, where a word you know may still be carrying more weight than it does today. When a text seems to make a small thing sound grand, check whether the word was once grand."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la puerta, one glide in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la puerta*, one glide in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what porta meant to a Roman (a city gate)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *porta* meant to a Roman (a city gate)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which English porter belongs here (the one who keeps the door)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which English *porter* belongs here (the one who keeps the door)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which vowel change turned porta into puerta? (Stressed o opening into ue.) What did the Latin word name? (A gate in a city wall.) Which English word keeps that sense most plainly? (Portal.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C279-ventana",
+      "sequence": 3110,
+      "title": "la ventana — two languages, one idea, no contact",
+      "headword": "la ventana",
+      "romanization": "la ventana",
+      "gloss": "window — a wind-hole, built on the same Latin ventus as viento",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b076600b7dbe5658",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met the wind a few lessons ago. It is about to come back indoors, and so is English, by a completely separate road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el viento — the wind, from Latin ventus."
+            },
+            {
+              "kind": "speech",
+              "text": "la puerta — the other opening in the wall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ven-TA-na, stress in the middle. Three even syllables, no written accent needed because the stress lands where the default puts it. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ventana — \"the window.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take Latin ventus, the wind, and add an ending. That is the whole word: a ventana is the wind's opening. Notice that the e stayed put here — it does not open into ie, because in this longer word the stress moved off it and onto the a. The change you learned needs a stressed vowel to work on."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the good part. English window has nothing to do with Latin. It came from Old Norse vindauga, which is vindr plus auga: wind-eye. Two languages, no contact between them on this point, both looked at a hole in a wall and named it after the draught coming through."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had its own word, fenestra, and Spanish let it go. French and Italian kept it — fenêtre, finestra — and English borrowed it for one splendid purpose only: defenestration, throwing somebody out of a window."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two things worth carrying out of this one."
+            },
+            {
+              "kind": "speech",
+              "text": "First, the sound change has a condition attached. Ventus gave viento when the e was stressed and ventana when it was not, and the same vowel behaved differently in the same century for that reason alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Second, unrelated languages reach the same metaphor often enough that a shared idea is weak evidence of a shared word. Ventana and window agree on meaning and share no ancestor at all."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ventana, stress in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ventana*, stress in the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el viento, then la ventana — the same Latin word, stressed and unstressed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el viento*, then *la ventana* — the same Latin word, stressed and unstressed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what vindauga meant, part by part (wind, eye)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *vindauga* meant, part by part (wind, eye)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does ventana keep a plain e where viento has ie? (The stress moved off the vowel.) Which Latin word for a window did Spanish drop? (Fenestra.) Where does English still keep it? (Defenestration.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C279-silla",
+      "sequence": 3120,
+      "title": "la silla — a word you are sitting on",
+      "headword": "la silla",
+      "romanization": "la silla",
+      "gloss": "chair — Latin sella, a seat, from the verb to sit",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ed03f0b57f1268b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two openings in the wall, and now the furniture. This word turns out to be a close relative of several English words you would never have guessed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sentarse — to sit down, the action this object exists for."
+            },
+            {
+              "kind": "speech",
+              "text": "cl-, pl-, fl- becomes ll- — the ll sound, and where Spanish gets it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "SI-ya in most of the Spanish-speaking world, SI-zha or SI-sha around the River Plate. The ll is one sound, never two l sounds in a row. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la silla — \"the chair.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin sella, a seat, and behind sella the verb sedere, to sit. The object is named after the posture, which is so obvious once said that most people never notice it."
+            },
+            {
+              "kind": "speech",
+              "text": "Sedere is generous. English sedentary is a life spent sitting. A session is a sitting, which is why parliaments and courts still have them. A resident is somebody sitting back down in a place. The Holy See is a seat, from Latin sedes, and a bishop's cathedral is named for his cathedra, the chair he speaks from."
+            },
+            {
+              "kind": "speech",
+              "text": "And saddle belongs here too, by the cousin route rather than the loan: it comes down the Germanic line from the same ancient root for sitting, without ever passing through Latin."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One root, and you can now recognise it in half a dozen English words you already knew separately."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what makes etymology worth the time. You are not memorising trivia about silla; you are getting a hook that catches sedentary, session, resident and cathedral on the way past — and, next time you meet an unfamiliar Spanish word starting sed- or sen-, a first guess worth testing."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la silla, with one ll sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la silla*, with one *ll* sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin verb behind it (sedere, to sit)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin verb behind it (*sedere*, to sit)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three English words from that verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three English words from that verb]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin noun is silla? (Sella, a seat.) What verb lies behind it? (Sedere, to sit.) Is English saddle a loan from Latin or a cousin? (A cousin, down the Germanic line.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C279-cama",
+      "sequence": 3130,
+      "title": "la cama — the second word nobody can explain",
+      "headword": "la cama",
+      "romanization": "la cama",
+      "gloss": "bed — one of the commonest Spanish words, and nobody has settled where it came from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63dee7e9a9b53c4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have already met one everyday Spanish word with no agreed origin. Here is the other one, and it is even harder to avoid using."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perro — the dog, and the honest shrug that came with it."
+            },
+            {
+              "kind": "speech",
+              "text": "dormir — to sleep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CA-ma, two short even syllables, the c hard as in casa. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cama — \"the bed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin's word was lectum, and Spanish did keep it: lecho survives, but it has gone literary, the sort of bed a character dies in. What you actually sleep in is cama, and cama is not Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "The earliest witness is Isidore of Seville, writing in the 600s, who glosses it as a bed low to the ground and treats it as a local word rather than a Latin one. After that the trail forks. One proposal takes it from Greek khamai, \"on the ground\", which fits Isidore's own definition suspiciously well. Another puts it in the pre-Roman languages of the peninsula, which are barely recorded and so can neither be confirmed nor ruled out."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the plainest words in the language — the dog and the bed — have no settled history, and that is not a gap in your notes."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth being clear about why. Both proposals for cama predict evidence that would decide the matter, and in both cases the evidence would have had to be written down by people who mostly did not write. The question is open because the record is thin, not because nobody has thought about it."
+            },
+            {
+              "kind": "speech",
+              "text": "Meanwhile the word itself is completely secure. You can sleep in a cama every night of your life without the etymology ever coming up."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin word Spanish half-kept, and what became of it (lectum, now the literary lecho)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin word Spanish half-kept, and what became of it (*lectum*, now the literary *lecho*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two proposals, and why neither is settled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two proposals, and why neither is settled]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is cama inherited from Latin? (No.) Who is the earliest witness for it? (Isidore of Seville, in the 600s.) Which other everyday word you have already met has the same unsettled status? (Perro.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

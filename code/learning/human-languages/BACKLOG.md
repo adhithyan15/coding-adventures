@@ -9,6 +9,58 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C196 — `repin_tests.py` oscillates on a field name shared with a synthetic fixture
+
+Found by the Spanish tranche. `drivablePercent` appears twice in
+`modality-manifest.test.ts`: line 359 is a **hand-built 3-lesson unit fixture**
+(2 of 3 drivable = 67) and line ~998 is the **corpus** pin. The patcher matches on
+field NAME, so it rewrote the synthetic fixture to the corpus value, which broke
+the unit test, then flipped the corpus pin back — for 60 rounds, appending its
+annotation tag **57 times** to one line before bailing.
+
+The script's `MAX_ROUNDS` backstop worked; the damage was cosmetic and was undone
+by hand. But it will recur on any tranche that moves `drivablePercent`.
+
+**Fix:** the object-pin branch must confine its search to the failing assertion's
+own block, not the whole file — take the line number vitest reports and only
+rewrite fields within that `expect(...)` call. A `key: value` search across the
+file is wrong wherever a test holds both a fixture and a corpus pin for the same
+field, and `drivablePercent` will not be the only one.
+
+Until it is fixed: when the script reports it did not converge, check whether it
+edited a fixture, and look for a repeated annotation tag on a single line.
+
+## HL-C195 — "spanish 211/300 (pre-A1)" was the WRONG NUMBER, and I quoted it all night
+
+The report line I added in HL-C184a prints a track's **track-wide** vocabulary
+against the **next level's** target. It reads as progress toward pre-A1. It is
+not. The level gate's actual pre-A1 criterion counts only headwords taught on
+**pre-A1 spine nodes**:
+
+```
+blocker: vocabulary - teaches 48 distinct headwords at or below pre-A1, against 300
+```
+
+**Spanish is at 48/300 on the criterion that matters, not 227/300.** The gap is
+252 words, not 73.
+
+Consequence, and it is the important part: **adding vocabulary on an A1-or-higher
+node does not advance pre-A1 at all.** HL-C194 added sixteen good words on
+`SPINE-DEFINITE-REFERENCE` (A1) and moved the pre-A1 blocker by **zero**. The
+words are worth having and the tranche should land — but it did not do the job it
+was aimed at.
+
+**Fix the report line first** (it is actively misleading, and it is mine):
+print the blocker's own number — headwords at or below the in-progress level —
+beside the track-wide count, not instead of it. Both are real; only one is the
+criterion.
+
+**Then re-plan the authoring.** Clearing pre-A1 means authoring on **pre-A1 spine
+nodes**, which are early in the book, which is a forward-reference risk and is in
+tension with "chain to the previous chapter's last lesson" (HL-C192). That
+tension needs resolving before the next vocabulary tranche, or the next one will
+also miss.
+
 ## HL-C193 — `git checkout --theirs` DISCARDS your side on additive config files
 
 Resolving a merge conflict in the HL config files with `git checkout --theirs`
@@ -31,6 +83,19 @@ re-derives the entries from the lessons on disk, which is what recovered it here
 The four failures also arrive in sequence rather than together, so fixing one and
 re-running looks like progress while three more wait — run `validate`, the suite,
 AND `book-cli` before believing a merge is resolved.
+
+## HL-C192 — family and people words, six Indic tracks (LANDED)
+
+Twenty-four lessons, four per track, one new word each. Two structural findings
+came out of it and are the reason the row is kept:
+
+* **A chapter-number reference is not a repinnable pin.** The gate reports STUCK
+  rather than offering a number, which is correct — HL-C102 says the fix is prose.
+* **Appending a chapter un-exempts the previous last lesson from R1.**
+  `continuity.ts` skips a window the track is too short to contain, so each
+  track's final atom was exempt; adding four lessons would have created six
+  silent new R1 misses. Chaining each new chapter's first lesson to the previous
+  chapter's last closed them, and R1 FELL instead of rising.
 
 ## HL-C191 — cross-script citations must be ROMANISED; each book loads only its own font
 
