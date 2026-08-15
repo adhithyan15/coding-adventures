@@ -69,6 +69,40 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C169 — the spine's concept names and the corpus's tags were never reconciled
+
+**Measured 2026-08-14. Spanish claims 88 of 161 spine concept names; 73 are
+unclaimed.** That number is not a content gap, and reading it as one has now
+misdirected work four times in a single session:
+
+| node | read as | actually |
+|---|---|---|
+| `SPINE-TALK-ABOUT-PAST` (A2) | unrealized | 29 path segments teaching preterite + imperfect |
+| `SPINE-TALK-ABOUT-FUTURE` (A2) | unrealized | near future taught; only the synthetic future was missing |
+| `SPINE-EXPRESS-CONDITION` (B1) | unrealized | **11 lessons**, chapters 123 and 196-210 |
+| `SPINE-REPORT-WHAT-OTHERS-SAID` / `SPINE-READ-EXTENDED-PROSE` (B2) | unrealized | `ES-REPORT-BACKSHIFT`, `ES-GRAMMAR-SE-PASSIVE-AGREEMENT`, `ES-GRAMMAR-RELATIVE-QUE` all exist |
+
+Each time the obvious move was to author the missing concepts, and each time
+measuring first showed that would have **duplicated real teaching**. The lessons
+exist; they simply carry corpus-local tags (`ES-CONDITION-SI-REAL`,
+`ES-REPORT-BACKSHIFT`) rather than the bare spine names the ledger looks for.
+
+**This is one reconciliation pass, not sixteen content PRs**, and it should be
+done before any more B2/C1/C2 authoring, because every future stage will hit it:
+
+1. For each unclaimed spine concept, search the corpus for a lesson that already
+   teaches it. Most will have one.
+2. Decide the convention **once** — either the realizing lesson carries the bare
+   spine name as its `concept_tag`, or `spine.json` gains an `aliases` field
+   mapping a concept to the corpus tags that satisfy it. The second is less
+   invasive and keeps the specific tags, which carry real information.
+3. Author only what genuinely has no teacher. On the evidence so far that is a
+   minority — `ayer`, the synthetic future and `depende` were three such, and
+   each was one lesson rather than four.
+
+Until this is done, "N of 33 spine nodes" understates the corpus and the
+omission ledger records tagging debt as if it were missing content.
+
 ## HL-C167 — R1 and the script drizzle are in STRUCTURAL tension, and more chapters will not fix it
 
 **Measured 2026-08-14, after HL-C163/165/166 took Sanskrit from 15 chapters to
