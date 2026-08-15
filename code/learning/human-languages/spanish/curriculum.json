@@ -3197,6 +3197,49 @@
         "ES-EXT-272-IMPLICIT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-273-01",
+      "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
+      "lessons": [
+        "ES-C273-en-primer-lugar"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-273-02",
+      "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
+      "lessons": [
+        "ES-C273-ademas"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-273-03",
+      "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
+      "lessons": [
+        "ES-C273-por-lo-tanto"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-273-04",
+      "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
+      "lessons": [
+        "ES-C273-lo-cual",
+        "ES-C273-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-273-COHESION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3649,13 +3692,13 @@
       "relocates": {}
     },
     "SPINE-STRUCTURE-EXTENDED-TEXT": {
-      "segments": [],
-      "omits": [
-        "DISCOURSE-COHESION",
-        "PARAGRAPH-PLAN",
-        "CONNECTIVE-FURTHERMORE",
-        "REFERENCE-ANAPHORA"
+      "segments": [
+        "ES-PATH-273-01",
+        "ES-PATH-273-02",
+        "ES-PATH-273-03",
+        "ES-PATH-273-04"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-SHIFT-REGISTER": {
@@ -6660,6 +6703,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C272-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-273-COHESION",
+      "stage": "C1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can build a cohesive paragraph and say what is lost when its joins are removed.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C273-practice"
       ]
     }
   ],

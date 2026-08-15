@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:6d8214e38643ac65",
+  "sourceHash": "fnv1a64:0afc146d5d64d550",
   "summary": {
-    "totalLessons": 2279,
-    "voice": 1506,
+    "totalLessons": 2284,
+    "voice": 1511,
     "sight": 571,
     "pen": 202,
-    "drivableLessons": 1506,
+    "drivableLessons": 1511,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 789,
-    "drivablePrefixTotal": 1300,
-    "fullyDrivableChapters": 486,
+    "chapterCount": 790,
+    "drivablePrefixTotal": 1305,
+    "fullyDrivableChapters": 487,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7436,12 +7436,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 440,
-      "voice": 389,
+      "lessonCount": 445,
+      "voice": 394,
       "sight": 44,
       "pen": 7,
-      "drivablePercent": 88,
-      "drivablePrefixTotal": 373,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 378,
       "modalities": [
         "voice",
         "sight",
@@ -11877,6 +11877,26 @@
             "ES-C272-es-que",
             "ES-C272-si-claro",
             "ES-C272-tomar-el-pelo"
+          ]
+        },
+        {
+          "chapter": 273,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C273-en-primer-lugar",
+            "ES-C273-ademas",
+            "ES-C273-por-lo-tanto",
+            "ES-C273-lo-cual",
+            "ES-C273-practice"
           ]
         }
       ]
@@ -50126,6 +50146,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:b286c291f6b7cbf0"
+    },
+    {
+      "id": "ES-C273-en-primer-lugar",
+      "language": "spanish",
+      "chapter": 273,
+      "sequence": 2820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f304ad2439a0426c"
+    },
+    {
+      "id": "ES-C273-ademas",
+      "language": "spanish",
+      "chapter": 273,
+      "sequence": 2830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:09b77ffc3fe533b8"
+    },
+    {
+      "id": "ES-C273-por-lo-tanto",
+      "language": "spanish",
+      "chapter": 273,
+      "sequence": 2840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:779650b4b448159d"
+    },
+    {
+      "id": "ES-C273-lo-cual",
+      "language": "spanish",
+      "chapter": 273,
+      "sequence": 2850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e8cd4b7550c395f4"
+    },
+    {
+      "id": "ES-C273-practice",
+      "language": "spanish",
+      "chapter": 273,
+      "sequence": 2860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4c09145f476241ad"
     },
     {
       "id": "TA-C01-vanakkam",

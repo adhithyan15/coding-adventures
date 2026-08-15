@@ -6342,6 +6342,19 @@
       "tex": "spanish/book/chapters/ch272-entrelineas.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 273,
+      "sourceHash": "fnv1a64:36461f5aba08d09a",
+      "lessonIds": [
+        "ES-C273-en-primer-lugar",
+        "ES-C273-ademas",
+        "ES-C273-por-lo-tanto",
+        "ES-C273-lo-cual",
+        "ES-C273-practice"
+      ],
+      "tex": "spanish/book/chapters/ch273-parrafo.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

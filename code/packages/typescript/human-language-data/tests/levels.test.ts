@@ -249,7 +249,7 @@ describe("corpus snapshot", () => {
     // HL-C174 opened two of its nodes by alias and HL-C175 authored a third.
     expect(summary.byLevel.B1).toBe(40); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons) // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1
     expect(summary.byLevel.B2).toBe(17); // +3: HL-C113 step 6 opens B2 with reported speech // +4: step 7 adds the reported questions, the review and the synthesis, closing the node // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C173: +3 -- B2 closes (chapter 271)
-    expect(summary.byLevel.C1).toBe(5); // HL-C175: chapter 272, the first C1 lessons in the corpus
+    expect(summary.byLevel.C1).toBe(10); // HL-C175: chapter 272, the first C1 lessons in the corpus // HL-C177: +5 -- chapter 273, C1 closes
     expect(summary.byLevel.C2).toBe(0);
 
     // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters

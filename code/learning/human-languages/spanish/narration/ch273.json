@@ -1,0 +1,764 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 273,
+  "title": "Building a Paragraph --- Plan, Add, Join, Refer Back",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3da742b28a088e33",
+  "lessons": [
+    {
+      "id": "ES-C273-en-primer-lugar",
+      "sequence": 2820,
+      "title": "en primer lugar — telling the reader the shape before you fill it",
+      "headword": "en primer lugar",
+      "romanization": "en primer lugar",
+      "gloss": "in the first place, firstly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f304ad2439a0426c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can build a sentence that means more than it says. This chapter is about building something longer than a sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mira — the marker that re-tunes what follows."
+            },
+            {
+              "kind": "speech",
+              "text": "por ejemplo — the evidence move."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en pri-MER lu-GAR. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en primer lugar — \"in the first place, firstly.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Primer is Latin primarius, \"of the first rank\" — English primary, prime. Lugar is locus, \"place\" — English local, locate. Literally: in the first place, and English kept the phrase intact."
+            },
+            {
+              "kind": "speech",
+              "text": "Its partners are en segundo lugar and por último, \"lastly.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is not a connective. It does not join two ideas — it tells the listener how many are coming."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a different job, and it is what makes extended text followable. A reader who hears en primer lugar knows to expect a second point and holds a slot open for it. Take the phrase away and the same three points arrive as an undifferentiated list."
+            },
+            {
+              "kind": "speech",
+              "text": "Signposting is most of what separates a paragraph from a pile of sentences."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en primer lugar and make a point",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en primer lugar* and make a point]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en segundo lugar and make another",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en segundo lugar* and make another]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "por último and close",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *por último* and close]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin words are inside primer and lugar? (Primarius and locus.) What does the phrase tell a listener that a connective does not? (How many points are coming.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C273-ademas",
+      "sequence": 2830,
+      "title": "además — adding a point, not adding an item",
+      "headword": "además",
+      "romanization": "además",
+      "gloss": "furthermore, moreover",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09b77ffc3fe533b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have también, \"also.\" This is not the same word, and the difference is the same one pero and sin embargo had."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en primer lugar — the signpost before this."
+            },
+            {
+              "kind": "speech",
+              "text": "también — the \"also\" you already own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-de-MÁS, and the accent tells you so. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "además — \"furthermore, moreover, besides.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart: a + de + más — \"to, of, more.\" It is built out of three words you already have, and más is the comparison word from the experience chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "So it means, quite literally, \"in addition to more.\" Spanish built its heaviest additive connector out of its lightest pieces."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "También adds an item: hablo español; también hablo francés. Además adds a point: es difícil. Además, es caro."
+            },
+            {
+              "kind": "speech",
+              "text": "The first says one more of the same kind. The second says and here is a further reason, and it is what an argument uses when the reasons are not interchangeable."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same distinction you met with pero and sin embargo: the light word joins inside a breath, the heavy one opens a new sentence and carries argumentative weight."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two like items with también",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two like items with *también*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two separate reasons with además",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two separate reasons with *además*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two an argument needs, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two an argument needs, and why]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What three words is además built from? (A, de, más.) What does también add, and what does además add? (An item; a point.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C273-por-lo-tanto",
+      "sequence": 2840,
+      "title": "por lo tanto — the word that makes a text hold together",
+      "headword": "por lo tanto",
+      "romanization": "por lo tanto",
+      "gloss": "therefore",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:779650b4b448159d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Signpost, addition — and now the join that turns a list of points into an argument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "además — adding a further point."
+            },
+            {
+              "kind": "speech",
+              "text": "así que — the everyday \"so\" you already have."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por lo TAN-to. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por lo tanto — \"therefore, consequently.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Tanto is Latin tantus, \"so much, so great.\" The phrase is for so much — given all that, therefore."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have así que, which does the same job in conversation. Por lo tanto is its written, weight-bearing form: the one that appears in an argument where the conclusion has to look earned."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the thing this chapter is really about. The English word for what these connectives create is cohesion — the property that makes a text feel like one thing rather than several."
+            },
+            {
+              "kind": "speech",
+              "text": "Cohesion is not achieved by the sentences being about the same topic. It is achieved by each sentence carrying an explicit signal of how it relates to the last one: another point (además), a consequence (por lo tanto), a concession (sin embargo), an example (por ejemplo)."
+            },
+            {
+              "kind": "speech",
+              "text": "Remove those signals and a paragraph does not become wrong. It becomes work."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a claim, then por lo tanto, then its consequence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a claim, then *por lo tanto*, then its consequence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same pair with así que, and hear the register drop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same pair with *así que*, and hear the register drop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what cohesion is, in your own words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what cohesion is, in your own words]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tanto mean, and which Latin word is it? (So much — tantus.) What is cohesion? (Each sentence signalling how it relates to the last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C273-lo-cual",
+      "sequence": 2850,
+      "title": "lo cual — pointing back at everything you just said",
+      "headword": "lo cual",
+      "romanization": "lo cual",
+      "gloss": "which — pointing back at a whole clause",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8cd4b7550c395f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last piece: a way to refer to a whole idea rather than a thing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por lo tanto — the cohesion join."
+            },
+            {
+              "kind": "speech",
+              "text": "lo que — naming a thing you cannot name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo KUAL. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lo cual — \"which\", where the which points at an entire preceding clause."
+            },
+            {
+              "kind": "speech",
+              "text": "Cual is Latin qualis, \"of what kind\" — English quality and the -al of equal. The neuter lo in front is what widens its target: not a noun, but everything just said."
+            },
+            {
+              "kind": "speech",
+              "text": "Llegó tarde, lo cual me sorprendió. — \"He arrived late, which surprised me.\" What surprised me is not he, and not late. It is the whole fact."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pointing back at something already said is called anaphora, and it is the other half of cohesion. Connectives say how sentences relate; anaphora lets a sentence pick up what came before without repeating it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish is precise here in a way English is not. English which can point at a noun or a clause and leaves you to work out which. Spanish splits the job: que and el cual take a noun, lo cual takes the whole idea. The neuter lo is the marker that says \"what follows refers to no single thing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With that, the chapter's four pieces are complete: plan the text, add to it, join it, and refer back within it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence, then lo cual, then your reaction to the whole of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence, then *lo cual*, then your reaction to the whole of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what lo cual points at that que cannot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *lo cual* points at that *que* cannot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for pointing back (anaphora)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for pointing back (*anaphora*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word is cual? (Qualis, \"of what kind.\") What does the neuter lo do to its target? (Widens it from a noun to a whole idea.) What is the name for pointing back? (Anaphora.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C273-practice",
+      "sequence": 2860,
+      "title": "One paragraph, four joins",
+      "headword": "one paragraph, four joins",
+      "romanization": "one paragraph, four joins",
+      "gloss": "plan, add, join, refer back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c09145f476241ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces, and the point of them is that they only show their value at length. A single sentence never needed any of this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build one paragraph out loud, on any opinion you hold. Four sentences, each with its join."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en primer lugar, and your first reason. The listener now knows more is coming.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en primer lugar*, and your first reason. The listener now knows more is coming.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "además, and a second reason that is not the same kind as the first. If it could have taken también, choose a different reason.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *además*, and a second reason that is **not** the same kind as the first. If it could have taken *también*, choose a different reason.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "por lo tanto, and the conclusion those two reasons earn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *por lo tanto*, and the conclusion those two reasons earn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one more sentence ending in lo cual plus your reaction to the whole of it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one more sentence ending in *lo cual* plus your reaction to the whole of it.]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same four sentences again with every join REMOVED. Same content, same order.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same four sentences again with every join REMOVED. Same content, same order.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what changed. Nothing became wrong — it became work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what changed. Nothing became wrong — it became work.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four tells the listener how many points are coming? (En primer lugar.) Which one points back at a whole idea? (Lo cual.) What is the name for a text whose sentences signal how they relate? (Cohesive.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
