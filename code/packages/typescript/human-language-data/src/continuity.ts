@@ -306,11 +306,27 @@ function usableAsMatcher(word: string): boolean {
  * found with `indexOf` — which is a native substring search costing a fraction of a
  * microsecond — and the two lookarounds are re-expressed as this one shared class,
  * compiled once and applied to the single code point on each side of the hit.
+ *
+ * Four regexes need this class, and all four are built from this ONE string rather
+ * than written out four times. That is not tidiness. The candidate index and the run
+ * skip are each only sound while their class agrees with the one the boundary test
+ * uses: widen the boundary class alone and the index starts hiding real forward
+ * references; widen the run class alone and the skip jumps over positions that could
+ * still match. Written out separately, a future edit that adds `\p{N}` to one of them
+ * would do exactly that — silently, and with a green suite, because no test can see a
+ * class that is merely inconsistent with another. Sharing the source makes that
+ * divergence unrepresentable rather than merely unlikely.
  */
-const WORD_ADJACENT = /[\p{L}\p{M}-]/u;
+const WORD_ADJACENT_CLASS = "[\\p{L}\\p{M}-]";
+
+/** One code point: is it word-adjacent? */
+const WORD_ADJACENT = new RegExp(WORD_ADJACENT_CLASS, "u");
 
 /** Maximal runs of that same class — the only places a match can begin or end. */
-const WORD_RUN = /[\p{L}\p{M}-]+/gu;
+const WORD_RUN = new RegExp(`${WORD_ADJACENT_CLASS}+`, "gu");
+
+/** A word's own leading run, anchored. */
+const LEADING_RUN = new RegExp(`^${WORD_ADJACENT_CLASS}+`, "u");
 
 /**
  * Add every candidate that any run of `text` could possibly reach.
@@ -342,7 +358,7 @@ function addReachableCandidates(
  * the caller must then treat as un-indexable rather than as matching nothing.
  */
 function leadingRun(word: string): string {
-  const match = /^[\p{L}\p{M}-]+/u.exec(word);
+  const match = LEADING_RUN.exec(word);
   return match ? match[0] : "";
 }
 
@@ -357,7 +373,7 @@ function isWordAdjacent(codePoint: string): boolean {
  * Sticky rather than global, and `lastIndex` is set on every call rather than
  * carried between them, so this shared instance holds no state across calls.
  */
-const WORD_RUN_AT = /[\p{L}\p{M}-]*/uy;
+const WORD_RUN_AT = new RegExp(`${WORD_ADJACENT_CLASS}*`, "uy");
 
 /**
  * The first position after the word-adjacent run beginning at `at` — the next place
