@@ -530,48 +530,50 @@ class Pager:
                 header = j.read(_JOURNAL_HEADER_SIZE)
                 if len(header) < _JOURNAL_HEADER_SIZE:
                     # Partial header → commit never began → discard.
-                    self._drop_journal()
-                    return
-                magic, page_size, record_count, initial_size = struct.unpack(
-                    _JOURNAL_HEADER_FMT, header
-                )
-                if magic != _JOURNAL_MAGIC:
-                    raise JournalError(f"bad journal magic: {magic!r}")
-                if page_size != self._page_size:
-                    raise JournalError(
-                        f"journal page size {page_size} != main {self._page_size}"
+                    header = None
+                else:
+                    magic, page_size, record_count, initial_size = struct.unpack(
+                        _JOURNAL_HEADER_FMT, header
                     )
-                if record_count == _JOURNAL_SENTINEL:
-                    # Not finalised → commit aborted mid-flight → main is
-                    # still pre-txn → no replay needed.
-                    self._drop_journal()
-                    return
+                    if magic != _JOURNAL_MAGIC:
+                        raise JournalError(f"bad journal magic: {magic!r}")
+                    if page_size != self._page_size:
+                        raise JournalError(
+                            f"journal page size {page_size} != main {self._page_size}"
+                        )
 
-                # Finalised: replay every record to undo the partial
-                # application on main.
-                assert self._f is not None
-                for _ in range(record_count):
-                    prefix = j.read(_RECORD_PREFIX_SIZE)
-                    if len(prefix) < _RECORD_PREFIX_SIZE:
-                        raise JournalError("journal record prefix truncated")
-                    (page_no,) = struct.unpack(_RECORD_PREFIX_FMT, prefix)
-                    payload = j.read(self._page_size)
-                    if len(payload) < self._page_size:
-                        raise JournalError("journal record payload truncated")
-                    self._f.seek((page_no - 1) * self._page_size)
-                    self._f.write(payload)
-                # Truncate main back to the pre-txn size so any pages
-                # allocated during the failed txn disappear.
-                self._f.truncate(initial_size * self._page_size)
-                self._f.flush()
-                os.fsync(self._f.fileno())
-                self._size_pages = initial_size
-                self._initial_size_pages = initial_size
+                if header is not None and record_count != _JOURNAL_SENTINEL:
+                    # Finalised: replay every record to undo the partial
+                    # application on main. (record_count == _JOURNAL_SENTINEL
+                    # means the commit aborted mid-flight — main is still
+                    # pre-txn, so there is nothing to replay.)
+                    assert self._f is not None
+                    for _ in range(record_count):
+                        prefix = j.read(_RECORD_PREFIX_SIZE)
+                        if len(prefix) < _RECORD_PREFIX_SIZE:
+                            raise JournalError("journal record prefix truncated")
+                        (page_no,) = struct.unpack(_RECORD_PREFIX_FMT, prefix)
+                        payload = j.read(self._page_size)
+                        if len(payload) < self._page_size:
+                            raise JournalError("journal record payload truncated")
+                        self._f.seek((page_no - 1) * self._page_size)
+                        self._f.write(payload)
+                    # Truncate main back to the pre-txn size so any pages
+                    # allocated during the failed txn disappear.
+                    self._f.truncate(initial_size * self._page_size)
+                    self._f.flush()
+                    os.fsync(self._f.fileno())
+                    self._size_pages = initial_size
+                    self._initial_size_pages = initial_size
         except JournalError:
             raise
         except OSError as e:
             raise JournalError(f"journal recovery failed: {e}") from e
 
+        # `j` is closed by now — Windows refuses to remove a file that is
+        # still open elsewhere, so the drop must happen after the `with`
+        # block above, in every case (partial header, aborted commit, and
+        # successful replay all converge here).
         self._drop_journal()
 
     def _drop_journal(self) -> None:
