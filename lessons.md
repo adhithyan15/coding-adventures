@@ -4238,3 +4238,36 @@ opens+reads before the winner's `fchmod`, then fails the strict-permissions
 check) — a different symptom from the real CI's `AccessFailed`, confirming
 these are two distinct issues and the local root reproduction cannot be used
 to validate this particular fix.
+
+## `smart-home-platform-http`: Windows RST-on-close race in test HTTP client — same accepted quirk as the embeddable TCP tests, this time on the client side
+
+`build (windows-latest)` failed with exactly 2 of 54 `smart-home-platform-http`
+tests down — `runtime_web_app_serves_runtime_snapshot_over_repo_http_server`
+and `runtime_web_app_serves_smoke_script_over_repo_http_server` — both
+panicking at the *first* `read_line` call for the HTTP status line:
+`Os { code: 10054, kind: ConnectionReset, message: "An existing connection
+was forcibly closed by the remote host." }`. The other 52 tests, which hit the
+same shared `WebServer::bind_windows` instance through the same `http_request`
+test helper with `Connection: close` on every request, passed.
+
+This is the client-side twin of a quirk this very PR already normalized on
+the server side (see `embeddable-tcp-server::assert_peer_closed`, which
+explicitly treats `io::ErrorKind::ConnectionReset` as an acceptable outcome
+of a deliberate peer close): on Windows, closing a socket while there is any
+unflushed/unacknowledged data in play can produce a hard RST instead of a
+graceful FIN, and it appears more readily on the two endpoints serving the
+largest response bodies (a JSON runtime snapshot and a generated shell
+script) — plausibly a larger multi-chunk write racing the reactor's own
+`Connection: close` teardown. It reproduces only on `windows-latest`; the
+identical test passes reliably on Linux and macOS CI.
+
+Rather than touch the Windows reactor's write/close sequencing in
+`tcp-runtime`/`embeddable-http-server` (large, shared, security-sensitive
+surface, out of scope for this rescue), the fix stays in the test helper:
+`http_request()` in `smart-home-platform-http/src/lib.rs` now retries the
+*whole* request (fresh `TcpStream`, up to 5 attempts) specifically when the
+underlying I/O call — connect, write, or any read — returns
+`io::ErrorKind::ConnectionReset`; any other error still panics immediately.
+This mirrors the "known Windows platform quirk, not a correctness bug" idiom
+already established elsewhere in this codebase rather than introducing a new
+one.
