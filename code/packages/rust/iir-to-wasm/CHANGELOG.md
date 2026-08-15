@@ -1,5 +1,79 @@
 # Changelog — iir-to-wasm
 
+## [0.48.3] — 2026-08-14 (a local's declared type must match what is stored into it)
+
+`wasm-validator` gained an instruction-level type checker (WASM06 / W02 Phase
+2). It immediately rejected 42 cross-language matrix cells that had been
+passing — DartmouthBasic (26), Algol60 (8+), Twig (4), Nib (3).
+
+**The validator is right.** This backend had been emitting ill-typed modules
+all along: the previous validator never looked at instruction operand types,
+and `wasm-execution` is untyped at runtime, so nothing failed. WASM is
+strictly typed — `local.set $x` demands exactly `$x`'s declared type, with no
+coercion — which makes the locals section a contract every store must honour.
+Three independent places broke it:
+
+1. **A comparison's destination was declared from its operand type.**
+   `infer_local_type_hints` used `instr.type_hint` as the destination's type.
+   For a comparison that hint describes the *operands* — it is what picks
+   `f64.ge` over `i64.ge_s` — but WASM comparisons always push an **i32** 0/1.
+   Dartmouth BASIC made this unmissable: REAL is its only numeric type, so
+   `10 PRINT 42` emitted `f64.ge` followed by `local.set` into an `f64` local
+   (`TypeMismatch: expected F64, found I32`), and *every* BASIC comparison hit
+   it. New `dest_type_hint` answers `"bool"` for a comparison whose hint is
+   neither `i32` nor `i64`. `i64` is deliberately left alone: it is a
+   legitimate widened boolean (`concretize_scalar_any_for_wasm` retypes a
+   scalar `any` to `i64`) and the comparison lowering already emits
+   `i64.extend_i32_u` for it, so the Brainfuck / tagged-Twig i64 register
+   model is byte-for-byte unchanged.
+
+2. **`slot_is_i64` disagreed with `hint_to_value_type`.** It decided a local's
+   width by matching hint spellings (`"i64" | "u64"`) rather than asking the
+   one function that decides what goes in the locals section. It therefore
+   answered "no" for every hint `hint_to_value_type` also widens: the narrow
+   unsigned types `u4`/`u8`/`u16`/`u32` (the LANG-FULL E2 i64 register model)
+   and `array<T>` handles. So Nib's `12 & 10` computed `i64.and` and then
+   "corrected" its own result with `i32.wrap_i64` before storing into the
+   `i64` local (`expected I64, found I32`). Now derived from
+   `hint_to_value_type`, giving one source of truth for a slot's width.
+
+3. **The lisp predicate builtins stored their boolean blind.** `pair?`
+   (`ref.test`), `not` (`i32.eqz`) and `equal?` (`i32.eq`) each `local.set`
+   their i32 result with no widening when the destination slot is `i64` —
+   every Twig symbol and record cell. The comparison arm's long-standing
+   widening is extracted as `widen_bool_to_slot` and applied at all three.
+
+No assertion, gate, or validator rule was weakened: all three fixes are in the
+emitter, which is where the defect was.
+
+The security review of the above found two further members of the same family,
+neither currently reachable by a matrix cell but both fixed here rather than
+filed:
+
+- `is_null` (`ref.is_null`) is the fourth predicate and was the one still
+  storing its i32 blind; it now widens like the other three.
+- `call_builtin "not"` read its argument with a hardcoded `i32.eqz`. Now that
+  a predicate's result widens to i64 when its slot is i64, a hardcoded narrow
+  read would be the mirror image of the bug being fixed — ill-typed on the
+  consumer side instead of the producer side. It now selects `i64.eqz` /
+  `i32.eqz` from the argument's declared width, exactly as the
+  `jmp_if_true` / `jmp_if_false` guards already do.
+
+New `tests/local_slot_widths.rs` pins the two shapes that can be built from
+hand-written IIR (float-operand comparisons, narrow-unsigned bitwise ops),
+plus the two behaviours deliberately left unchanged (an `i64` comparison
+destination stays `i64`; the `i32` model stays `i32`). Each test runs through
+`WasmRuntime::load_and_run`, which validates before executing — lowering and
+encoding alone would pass on an ill-typed module and pin nothing. The three
+tests covering fixed behaviour were confirmed to fail against the pre-fix
+emitter. The third bug's shape needs the WasmGC `$LispyPair` / `i31ref` value
+model and is covered end-to-end by `lang-aot`'s Twig matrix cells.
+
+Verified by a full `LANG_MATRIX_REPORT_ALL=1` sweep of all 2386 proven cells,
+0 skipped: **46 confirmed failures → 4**, exactly the pre-existing set
+(`NativeAot`/`Clr` Algol60, and COBOL `COMPUTE R = A / B + C` on `Clr` and
+`Jvm`), none of them on the WASM path.
+
 ## [0.48.2] — 2026-08-13 (valid value-returning dispatch fallthrough)
 
 Value-returning functions that use the dispatch-loop lowering now mark the
