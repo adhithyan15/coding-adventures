@@ -40,7 +40,7 @@ Census of `core/book-generation.json`:
 
 ```
 track        scriptSet  unicodeScript
-kannada             37              3   <-- chapters 43, 44, 45
+kannada             47              0   <-- FIXED; ch43-45 switched, ch46-52 born correct
 malayalam           37              3   <-- chapters 43, 44, 45
 telugu              44              3   <-- chapters 43, 44, 45
 ```
@@ -65,6 +65,20 @@ They are one comparison table away from dropping glyphs silently.
 those nine chapters and their book hashes, and confirm missing-characters stays 0.
 Kept out of the Telugu tranche PR deliberately: it touches three other tracks'
 generated output and belongs in its own change.
+
+**Kannada's three are done**, folded into the chapters 46-52 vocabulary tranche
+because that change already owned the kannada book. The rendered .tex for 43-45
+is byte-identical afterwards and their book hashes did not move, which is the
+predicted result: those chapters cite no cousin script today, so the bare
+`unicodeScript` was a latent trap rather than a live defect. **Six remain**, three
+in malayalam and three in telugu.
+
+One thing the kannada pass added to the diagnosis: the trap is not only cousin
+SCRIPTS. `KA-C47-finger` cited Malayalam using the old chillu spelling
+`ല` + virama + ZWJ, and U+200D is in no script block at all, so no scriptSet can
+catch it — it went to the Latin font and printed one missing character at exit 0.
+The fix is the atomic chillu (U+0D7D). Any Malayalam citation written the old way
+will do the same thing in any track.
 
 ## HL-C199 — only ONE track has a book/build.sh; the other 21 have none
 

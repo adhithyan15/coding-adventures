@@ -1,0 +1,629 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 49,
+  "title": "Answering With More Than Yes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b3fd0578054eb63c",
+  "lessons": [
+    {
+      "id": "KA-C49-true",
+      "sequence": 1290,
+      "title": "ನಿಜ (nija) — true",
+      "headword": "ನಿಜ",
+      "romanization": "nija",
+      "gloss": "true",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29d11b36fe7e7224",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did atithi mean, and what did raita mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿಜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಜ (nija) — \"true\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit nija began as 'one's own, innate, born in' — what belongs to a thing by nature rather than by accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada and Telugu both took that and turned it toward truth, and you can watch the turn happen inside the word: what is true of a thing is what the thing is in itself, as against what is merely said about it. Said alone, ನಿಜ (nija) does the work of a whole sentence — 'true', 'that's right'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five replies that do more than agree or refuse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nija",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nija*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nija, then haudu, and hear how much more the first one claims",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nija*, then *haudu*, and hear how much more the first one claims]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿಜ (nija) mean? (\"true\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C49-enough",
+      "sequence": 1300,
+      "title": "ಸಾಕು (sāku) — enough",
+      "headword": "ಸಾಕು",
+      "romanization": "sāku",
+      "gloss": "enough",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26d145ae7159cf57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nija mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಾಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾಕು (sāku) — \"enough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾಕು (sāku) is a complete sentence with one word in it. Held up over a plate while someone is ladling rice, it means 'that's enough' and stops the ladle."
+            },
+            {
+              "kind": "speech",
+              "text": "No Sanskrit anywhere in it — ಸಾಕು (sāku) is Kannada's own, resting on an inherited verb for sufficing. It covers a whole English shelf on its own: enough, plenty, stop, that will do. Kannada is content to let the situation and the tone sort out which."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: true, and enough."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāku over an imaginary plate, then nija to something just said",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāku* over an imaginary plate, then *nija* to something just said]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಾಕು (sāku) mean? (\"enough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C49-certainly",
+      "sequence": 1310,
+      "title": "ಖಂಡಿತ (khaṇḍita) — certainly",
+      "headword": "ಖಂಡಿತ",
+      "romanization": "khaṇḍita",
+      "gloss": "certainly",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f79afa2c84248d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did sāku mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಖಂಡಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಂಡಿತ (khaṇḍita) — \"certainly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit khaṇḍita means 'broken, cut off' — a piece severed from the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "The road from there to 'certainly' is worth walking. A matter that has been cut is a matter that has been settled: nothing left hanging, no remainder to argue over. English does the very same thing with decide, which is Latin for cutting off, and with a clear-cut answer. Two languages, no contact between them, one metaphor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: true, enough, certainly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍita as an answer to an invitation, then nija as an answer to a claim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍita* as an answer to an invitation, then *nija* as an answer to a claim]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಖಂಡಿತ (khaṇḍita) mean? (\"certainly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C49-perhaps",
+      "sequence": 1320,
+      "title": "ಬಹುಶಃ (bahuśaḥ) — perhaps",
+      "headword": "ಬಹುಶಃ",
+      "romanization": "bahuśaḥ",
+      "gloss": "perhaps",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a6f47b3bd217a5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did khaṇḍita mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಹುಶಃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಹುಶಃ (bahuśaḥ) — \"perhaps\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit bahuśas, 'in many ways, in many instances', from bahu, 'much, many'. If a thing can fall out in many ways then no one of them is settled, and the word slid quietly from 'in many ways' to 'probably, perhaps'. It is the exact opposite journey to the one ಖಂಡಿತ (khaṇḍita) took."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the last mark: ಃ, the visarga, a light breath let out at the end of a word. It is uncommon in everyday Kannada, and this is one of the few ordinary words that carries it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and the fourth one takes back what the third one promised."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahuśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahuśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍita, then bahuśaḥ, and hear the certainty drain out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍita*, then *bahuśaḥ*, and hear the certainty drain out]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಹುಶಃ (bahuśaḥ) mean? (\"perhaps\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C49-just-so",
+      "sequence": 1330,
+      "title": "ಹಾಗೆ (hāge) — that way, just so",
+      "headword": "ಹಾಗೆ",
+      "romanization": "hāge",
+      "gloss": "that way, just so",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ad2a1d7924a066b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bahuśaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಾಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಾಗೆ (hāge) — \"that way, just so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಾಗೆ (hāge) means 'that way, like that', and offered on its own it agrees: 'just so'. ಹಾಗೇ ಆಗಲಿ — let it be that way."
+            },
+            {
+              "kind": "speech",
+              "text": "Now set it beside ಹೇಗೆ, the question word for 'how' that this book gave you early on. They differ in one vowel. Supply the third and the shape is complete:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೀಗೆ — this way. ಹಾಗೆ (hāge) — that way. ಹೇಗೆ — which way?"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same three-way grid as ಇದು, ಅದು and ಎಲ್ಲಿ: ಇ- for what is near, ಅ- for what is away, ಎ- for what is being asked about. Kannada builds a great many of its small words on those three vowels, and once you can hear them you stop learning such words one at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five replies: true, enough, certainly, perhaps, just so."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then hīge, hāge, hēge as one run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *hīge*, *hāge*, *hēge* as one run]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಾಗೆ (hāge) mean? (\"that way, just so\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

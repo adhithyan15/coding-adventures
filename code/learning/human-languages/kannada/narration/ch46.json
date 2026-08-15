@@ -1,0 +1,640 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 46,
+  "title": "Things You Ask For",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:38f58df481aeaec5",
+  "lessons": [
+    {
+      "id": "KA-C46-fruit",
+      "sequence": 1140,
+      "title": "ಹಣ್ಣು (haṇṇu) — a fruit",
+      "headword": "ಹಣ್ಣು",
+      "romanization": "haṇṇu",
+      "gloss": "a fruit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a47f523d4118a16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did heṇḍati mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಣ್ಣು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಣ್ಣು (haṇṇu) — \"a fruit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it there is a verb: ಹಣ್ಣಾಗು, to ripen. The fruit is named for what happened to it — the ripened thing — and Kannada saw no need to invent a second noun for the object itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian paḻ, 'to ripen, to grow old', is the source, and the sound law this book keeps returning to is at work in the very first letter. Tamil kept பழம் (paḻam); Telugu has పండు (paṇḍu); Kannada turned that p- into h- and arrived at ಹಣ್ಣು (haṇṇu). It is the same law that made milk ಹಾಲು here and left it pāl next door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things you might ask someone for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇṇu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇṇu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇṇu, then dayaviṭṭu haṇṇu koḍi — \"please give a fruit\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇṇu*, then *dayaviṭṭu haṇṇu koḍi* — \"please give a fruit\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಣ್ಣು (haṇṇu) mean? (\"a fruit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C46-cloth",
+      "sequence": 1150,
+      "title": "ಬಟ್ಟೆ (baṭṭe) — cloth",
+      "headword": "ಬಟ್ಟೆ",
+      "romanization": "baṭṭe",
+      "gloss": "cloth",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f088e874037255e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did haṇṇu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಟ್ಟೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಟ್ಟೆ (baṭṭe) — \"cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಟ್ಟೆ (baṭṭe) is the plain word for cloth: the bolt on the shelf, the washing on the line, the rag in your hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit has paṭṭa, 'a strip of cloth, a bandage', and here the borrowing most likely ran the unusual way — out of Dravidian and into Sanskrit, rather than the direction this book has shown so often. The same strip reached English by another road: Hindi paṭṭī, a wrapping, is the soldier's puttee."
+            },
+            {
+              "kind": "speech",
+              "text": "Older Kannada also used ಬಟ್ಟೆ (baṭṭe) for a road — the way you go — a sense the modern language has quietly let go of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: a fruit and a cloth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭṭe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṇṇu, then baṭṭe, and ask for each one with dayaviṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṇṇu*, then *baṭṭe*, and ask for each one with *dayaviṭṭu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಟ್ಟೆ (baṭṭe) mean? (\"cloth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C46-lamp",
+      "sequence": 1160,
+      "title": "ದೀಪ (dīpa) — a lamp",
+      "headword": "ದೀಪ",
+      "romanization": "dīpa",
+      "gloss": "a lamp",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14cd80ed78d78656",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did baṭṭe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದೀಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೀಪ (dīpa) — \"a lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit dīpa, from a root meaning to blaze, to shine. Kannada took it whole and wore not one letter off it."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it beside āvali, 'a row', and you have Dīpāvali — a row of lamps — a festival whose name explains itself the moment the seam is visible."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada has a word of its own as well, ಹಣತೆ (haṇate), and it means something narrower: the small clay saucer with a wick lying in it. The borrowed word covers every lamp; the native one names a particular thing you can hold in one hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and one of them came from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three so far, and say which of them a potter makes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three so far, and say which of them a potter makes]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದೀಪ (dīpa) mean? (\"a lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C46-salt",
+      "sequence": 1170,
+      "title": "ಉಪ್ಪು (uppu) — salt",
+      "headword": "ಉಪ್ಪು",
+      "romanization": "uppu",
+      "gloss": "salt",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fedefcbfe63fe45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did dīpa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಪ್ಪು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪ್ಪು (uppu) — \"salt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian uppu, and the whole family kept it very nearly untouched: Tamil உப்பு, Telugu ఉప్పు, Malayalam ഉപ്പ്."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a p sitting in the middle of this word, and it did not become h. That is worth stopping over, because the law that made ಹಣ್ಣು (haṇṇu) out of an older p-word only ever reached the FIRST sound of a word. Inside one, the p stays where it was put."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. Salt, and the fruit, and the cloth, and the lamp."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uppu, then haṇṇu, and hear the p survive in one and vanish from the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uppu*, then *haṇṇu*, and hear the *p* survive in one and vanish from the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಪ್ಪು (uppu) mean? (\"salt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C46-book",
+      "sequence": 1180,
+      "title": "ಪುಸ್ತಕ (pustaka) — a book",
+      "headword": "ಪುಸ್ತಕ",
+      "romanization": "pustaka",
+      "gloss": "a book",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:572365c5c68d92ab",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did uppu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪುಸ್ತಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪುಸ್ತಕ (pustaka) — \"a book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pustaka is the source, but the trail behind it leaves India altogether. Middle Persian post meant 'hide, skin' — the thing written on before there was paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at its first letter. ಪುಸ್ತಕ (pustaka) opens with p-, and that p- stayed. So did the p- of every other word Kannada took in from Sanskrit. The law that turned inherited p- into h- had finished its work before these words walked in, and it left them alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of these five came from outside; three were here already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things you might ask for: a fruit, a cloth, a lamp, salt, a book."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then sort them into the inherited and the borrowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then sort them into the inherited and the borrowed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪುಸ್ತಕ (pustaka) mean? (\"a book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
