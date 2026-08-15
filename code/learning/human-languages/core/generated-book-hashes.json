@@ -1289,6 +1289,18 @@
       "tex": "hindi/book/chapters/ch42-more-verbs.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:d1316da09935110e",
+      "lessonIds": [
+        "HI-C43-look",
+        "HI-C43-listen",
+        "HI-C43-speak",
+        "HI-C43-write"
+      ],
+      "tex": "hindi/book/chapters/ch43-see-say.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
@@ -1977,6 +1989,18 @@
         "KA-C43-give"
       ],
       "tex": "kannada/book/chapters/ch43-more-verbs.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:b4846b978fe3fe7c",
+      "lessonIds": [
+        "KA-C44-look",
+        "KA-C44-listen",
+        "KA-C44-speak",
+        "KA-C44-write"
+      ],
+      "tex": "kannada/book/chapters/ch44-see-say.tex"
     },
     {
       "language": "latin",
@@ -2802,6 +2826,18 @@
         "ML-C43-give"
       ],
       "tex": "malayalam/book/chapters/ch43-more-verbs.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:223d0fe488502203",
+      "lessonIds": [
+        "ML-C44-look",
+        "ML-C44-listen",
+        "ML-C44-speak",
+        "ML-C44-write"
+      ],
+      "tex": "malayalam/book/chapters/ch44-see-say.tex"
     },
     {
       "language": "marathi",
@@ -7299,6 +7335,18 @@
         "TE-C43-give"
       ],
       "tex": "telugu/book/chapters/ch43-more-verbs.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:63acae2d22179943",
+      "lessonIds": [
+        "TE-C44-look",
+        "TE-C44-listen",
+        "TE-C44-speak",
+        "TE-C44-write"
+      ],
+      "tex": "telugu/book/chapters/ch44-see-say.tex"
     },
     {
       "language": "urdu",

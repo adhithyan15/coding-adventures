@@ -325,7 +325,7 @@ describe("the script ramp against the real corpus", () => {
     // cousin forms the same way earlier waves did.
     // 173 -> 184: vocabulary wave 5's telugu/malayalam lessons cite Dravidian cousin
     // forms in cousin scripts the same way.
-    expect(report.summary.lessonsWithForeignScript).toBe(196); // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
+    expect(report.summary.lessonsWithForeignScript).toBe(196); // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them // HL-C190: +16 -- see/say verbs, Kannada Telugu Malayalam Hindi // HL-C190
     expect(report.summary.maxForeignGlyphsInALesson).toBe(27); // HL11: +1. Reordering moved which lesson is the FIRST to show a given cousin-script glyph, so one cousin table now carries one more first-sighting. Cousin glyphs are counted and never charged to the budget (HL08)
   });
 

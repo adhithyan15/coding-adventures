@@ -9,6 +9,21 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C191 — cross-script citations must be ROMANISED; each book loads only its own font
+
+A comparative note in a Telugu lesson cited Kannada's ನೋಡು in Kannada script.
+The Telugu book has no Kannada font, so it built at **exit=0 with 37 missing
+characters** — and Malayalam the same, with 31. Zero overfull, zero underfull,
+exit 0: indistinguishable from clean unless the missing-character count is read.
+
+Comparative content across the six Indic tracks is *valuable* — Kannada
+ಮಾತಾಡು and Telugu మాట్లాడు are both *word* + *play*, and saying so teaches
+something neither lesson could alone. **Cite the cousin in romanisation**
+(*mātāḍu*), never in its own script, unless that book is known to load the font.
+
+Applies to every track pair. The check is mechanical: a lesson's body should
+contain no codepoints from a script other than its own track's.
+
 ## HL-C188 — copy the SIBLING target's script mechanism; HL-C164 is not a corpus-wide law
 
 HL-C164 says a new generated chapter must declare `unicodeScript` and
