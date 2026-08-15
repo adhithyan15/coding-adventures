@@ -586,8 +586,8 @@
         "not_yet_supported": 20
       },
       "assert_return": {
-        "pass": 260,
-        "fail": 40,
+        "pass": 300,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -2882,8 +2882,8 @@
         "not_yet_supported": 109
       },
       "assert_return": {
-        "pass": 209,
-        "fail": 31,
+        "pass": 235,
+        "fail": 5,
         "trap": 0,
         "not_yet_supported": 25
       },
@@ -3443,8 +3443,8 @@
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 15449,
-      "fail": 71,
+      "pass": 15515,
+      "fail": 5,
       "trap": 0,
       "not_yet_supported": 509
     },
