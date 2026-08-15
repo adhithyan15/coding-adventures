@@ -41,7 +41,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // out of a track whose vocabulary has not cleared pre-A1. `attained` is unmoved
     // at null, which is exactly the distinction this module exists for, and the gap
     // between the two numbers widens every time the ladder is climbed.
-    expect(spanish.touches).toBe("B2");
+    // HL-C175: chapter 272 touches SPINE-INFER-IMPLICIT-MEANING, so `touches`
+    // rises to C1 while `attained` stays null. That widening gap is not a
+    // regression -- it is the entire point of this module: five lessons on a C1
+    // node do not make a C1 reader, and the gate says so.
+    expect(spanish.touches).toBe("C1");
     // The number that does not: Spanish has not met even pre-A1's criteria.
     expect(spanish.attained).toBeNull();
     expect(spanish.inProgressAt).toBe("pre-A1");
@@ -77,7 +81,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
-    expect(spanish.vocabulary).toBe(189); // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271)
+    expect(spanish.vocabulary).toBe(193); // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 

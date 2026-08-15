@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5db31dca12eb780b",
+  "sourceHash": "fnv1a64:6d8214e38643ac65",
   "summary": {
-    "totalLessons": 2274,
-    "voice": 1502,
-    "sight": 570,
+    "totalLessons": 2279,
+    "voice": 1506,
+    "sight": 571,
     "pen": 202,
-    "drivableLessons": 1502,
+    "drivableLessons": 1506,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 788,
-    "drivablePrefixTotal": 1297,
+    "chapterCount": 789,
+    "drivablePrefixTotal": 1300,
     "fullyDrivableChapters": 486,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
@@ -7436,12 +7436,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 435,
-      "voice": 385,
-      "sight": 43,
+      "lessonCount": 440,
+      "voice": 389,
+      "sight": 44,
       "pen": 7,
-      "drivablePercent": 89,
-      "drivablePrefixTotal": 370,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 373,
       "modalities": [
         "voice",
         "sight",
@@ -11858,6 +11858,25 @@
             "ES-C271-quizas",
             "ES-C271-supongo-que",
             "ES-C271-practice"
+          ]
+        },
+        {
+          "chapter": 272,
+          "lessonCount": 5,
+          "voice": 4,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": "ES-C272-mira",
+          "drivable": false,
+          "drivableLessonIds": [
+            "ES-C272-es-que",
+            "ES-C272-si-claro",
+            "ES-C272-tomar-el-pelo"
           ]
         }
       ]
@@ -50017,6 +50036,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:45043b25f3befac5"
+    },
+    {
+      "id": "ES-C272-es-que",
+      "language": "spanish",
+      "chapter": 272,
+      "sequence": 2770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:96746d24a5ad8b93"
+    },
+    {
+      "id": "ES-C272-si-claro",
+      "language": "spanish",
+      "chapter": 272,
+      "sequence": 2780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5507efdf72e3c554"
+    },
+    {
+      "id": "ES-C272-tomar-el-pelo",
+      "language": "spanish",
+      "chapter": 272,
+      "sequence": 2790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:18783ffaa958b342"
+    },
+    {
+      "id": "ES-C272-mira",
+      "language": "spanish",
+      "chapter": 272,
+      "sequence": 2800,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f65367a5a9497e04"
+    },
+    {
+      "id": "ES-C272-practice",
+      "language": "spanish",
+      "chapter": 272,
+      "sequence": 2810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b286c291f6b7cbf0"
     },
     {
       "id": "TA-C01-vanakkam",

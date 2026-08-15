@@ -5228,6 +5228,26 @@
           "ES-SEMANTIC-HEDGE-INFERENTIAL"
         ]
       }
+    },
+    {
+      "chapter": 272,
+      "title": "Reading Between the Lines --- Imply, Invert, Look It Up, Re-tune",
+      "label": "ch:entrelineas",
+      "canDo": "I can tell the four ways a Spanish sentence means more than it says, and say which strategy each one asks of the listener.",
+      "spineNodes": [
+        "SPINE-INFER-IMPLICIT-MEANING"
+      ],
+      "payoff": {
+        "lesson": "ES-C272-practice",
+        "kind": "task",
+        "summary": "Complete ES-C272-practice: name the listener strategy each of the four devices requires, and which one a written text hides.",
+        "assesses": [
+          "ES-SEMANTIC-IMPLICATURE",
+          "ES-SEMANTIC-IRONY",
+          "ES-SEMANTIC-IDIOM-OPAQUE",
+          "ES-SEMANTIC-TONE-SHIFT"
+        ]
+      }
     }
   ]
 }

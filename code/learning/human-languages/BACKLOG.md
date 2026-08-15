@@ -69,6 +69,39 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C176 — the forward-reference detector cannot tell SHOWN from USED
+
+Surfaced by HL-C175. `ES-C272-si-claro` is the first lesson to own *claro*, and
+the detector immediately reported an early use 356 lessons back in
+`ES-C56-mente`. Looking at it:
+
+```
+> *claro* → *clara* → **claramente**
+```
+
+That is a **citation form inside a derivation table**. The word is being *shown*
+as an example of how `-mente` adverbs are built, not *used* to mean "clear" in a
+sentence a reader has to decode. The reader is never asked to know what *claro*
+means there.
+
+The detector counts it identically to a real early use, and it is the same family
+as the HL-C150 substring cases (Tamil `-அது`, Malayalam `അതെ`) — a heuristic that
+is right often enough to be worth having and wrong often enough to inflate a
+ceiling that is supposed to mean something.
+
+**Sharpening, in rough order of value:**
+
+1. Exclude words appearing inside a **derivation or paradigm row** — the
+   `a → b → c` arrow form is mechanical to detect and is always exemplification.
+2. Exclude **block-quoted example lines** generally: a `>` line in these lessons
+   is display material, not running prose the reader must parse.
+3. Only then consider word-boundary matching, which HL-C150 already logged.
+
+Each of these lowers the count *without* lowering the standard, which is the
+opposite of re-seating the ceiling. Until it is done, every new lesson that
+happens to own a common word will push the ceiling up by one for a reason that is
+not real debt.
+
 ## HL-C174 — C1 opens at 2 of 4 on two aliases; what remains needs authoring
 
 `HONORIFIC-SYSTEM` → `ES-REGISTER-TU-USTED` and `DIALECT-FEATURE` →
