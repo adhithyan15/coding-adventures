@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-chief-of-staff-channel-crypto"
 version = "0.1.0"
-description = "Portable D18F immutable encrypted-message profile for Chief of Staff channels"
+description = "Portable D18F messages and D18Q channel-key grants for Chief of Staff channels"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -13,8 +13,10 @@ readme = "README.md"
 dependencies = [
     "coding-adventures-chacha20-poly1305",
     "coding-adventures-ed25519",
+    "coding-adventures-hkdf",
     "coding-adventures-sha256",
     "coding-adventures-uuid",
+    "coding-adventures-x25519",
 ]
 
 [project.optional-dependencies]

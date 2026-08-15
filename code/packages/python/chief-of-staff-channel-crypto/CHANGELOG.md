@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Add the immutable Python D18Q `D18G` v1 channel-key grant codec and sealed
+  X25519/HKDF-SHA256/XChaCha20-Poly1305/Ed25519 workflow.
+- Add managed channel, receiver, and signing keys; atomic monotonic receiver
+  epoch state; and deterministic prospective rotation plans.
+- Consume every canonical positive, negative, state, and rotation fixture and
+  report Python secret erasure honestly as `not_enforceable`.
+
 ## 0.1.0
 
 - Add the frozen, slotted Python D18F message model.
