@@ -2573,6 +2573,13 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 22,
+      "output": "sanskrit/book/chapters/ch22-more-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "output": "spanish/book/chapters/ch01-first-words.tex"
@@ -4173,6 +4180,12 @@
       "language": "tamil",
       "chapter": 41,
       "output": "tamil/book/chapters/ch41-describing-things.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 42,
+      "output": "tamil/book/chapters/ch42-more-verbs.tex",
       "scriptSet": "tamil-comparisons"
     },
     {

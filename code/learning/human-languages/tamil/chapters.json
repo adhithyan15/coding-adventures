@@ -867,6 +867,26 @@
           "TA-GRAMMAR-C41-ADJ-SYSTEM"
         ]
       }
+    },
+    {
+      "chapter": 42,
+      "title": "More Everyday Verbs",
+      "label": "ch:ta-more-verbs",
+      "canDo": "I can tell someone to come, sit, read and give in Tamil.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "TA-C42-give",
+        "kind": "production",
+        "summary": "Complete TA-C42-give and say all four verbs in order.",
+        "assesses": [
+          "TA-LEX-COME",
+          "TA-LEX-SIT",
+          "TA-LEX-READ",
+          "TA-LEX-GIVE"
+        ]
+      }
     }
   ]
 }

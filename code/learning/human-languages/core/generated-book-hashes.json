@@ -3810,6 +3810,18 @@
       "tex": "sanskrit/book/chapters/ch21-more-verbs.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:b295328fbc0f7ef4",
+      "lessonIds": [
+        "SA-C22-hear",
+        "SA-C22-lead",
+        "SA-C22-play",
+        "SA-C22-burn"
+      ],
+      "tex": "sanskrit/book/chapters/ch22-more-verbs.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:55f690de8a10e9cb",
@@ -6909,6 +6921,18 @@
         "TA-C41-adjective-system"
       ],
       "tex": "tamil/book/chapters/ch41-describing-things.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:18b8100442455001",
+      "lessonIds": [
+        "TA-C42-come",
+        "TA-C42-sit",
+        "TA-C42-read",
+        "TA-C42-give"
+      ],
+      "tex": "tamil/book/chapters/ch42-more-verbs.tex"
     },
     {
       "language": "telugu",

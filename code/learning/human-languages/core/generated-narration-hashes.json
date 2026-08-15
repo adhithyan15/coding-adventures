@@ -7057,6 +7057,23 @@
       "jsonHash": "fnv1a64:34d03d9533ef528a"
     },
     {
+      "language": "sanskrit",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:80a1806eac2c723e",
+      "lessonIds": [
+        "SA-C22-hear",
+        "SA-C22-lead",
+        "SA-C22-play",
+        "SA-C22-burn"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch22.txt",
+      "json": "sanskrit/narration/ch22.json",
+      "textHash": "fnv1a64:7427cc6649dd2055",
+      "jsonHash": "fnv1a64:1dbaecb341507795"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:7f767862168ad0bf",
@@ -11821,6 +11838,23 @@
       "json": "tamil/narration/ch41.json",
       "textHash": "fnv1a64:a4f6e3d40908f9c2",
       "jsonHash": "fnv1a64:0df4bc54671dd90e"
+    },
+    {
+      "language": "tamil",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:cd5b9a3733d6b4b5",
+      "lessonIds": [
+        "TA-C42-come",
+        "TA-C42-sit",
+        "TA-C42-read",
+        "TA-C42-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "tamil/narration/ch42.txt",
+      "json": "tamil/narration/ch42.json",
+      "textHash": "fnv1a64:32f9714a4650f5e3",
+      "jsonHash": "fnv1a64:9c25dbe397fd716f"
     },
     {
       "language": "telugu",
