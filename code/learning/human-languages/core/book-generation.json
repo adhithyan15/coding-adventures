@@ -2607,6 +2607,55 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 24,
+      "output": "sanskrit/book/chapters/ch24-things-you-ask-for.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 25,
+      "output": "sanskrit/book/chapters/ch25-hand-and-foot.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 26,
+      "output": "sanskrit/book/chapters/ch26-roles.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 27,
+      "output": "sanskrit/book/chapters/ch27-replies.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 28,
+      "output": "sanskrit/book/chapters/ch28-taking-leave.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 29,
+      "output": "sanskrit/book/chapters/ch29-courtesy.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 30,
+      "output": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "output": "spanish/book/chapters/ch01-first-words.tex"

@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 29,
+  "title": "Courtesy Words",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6efd7b2a99d209b5",
+  "lessons": [
+    {
+      "id": "SA-C29-please",
+      "sequence": 1380,
+      "title": "कृपया (kṛpayā) — please",
+      "headword": "कृपया",
+      "romanization": "kṛpayā",
+      "gloss": "please",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b711021d78e7301b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did svasti mean, and what were its two pieces?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कृपया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृपया (kṛpayā) — \"please\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कृपया (kṛpayā) is please, and like most polite words in most languages it is not really a word for \"please\" at all. It is the noun kṛpā, \"compassion, kindness\", put into the case that means by means of. You are saying by your kindness."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the same thing and hides it just as well: please was once if it please you. Two languages, two buried sentences, one small polite noise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A polite word with a whole clause folded inside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛpayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛpayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛpayā, and say what it literally claims",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛpayā*, and say what it literally claims]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कृपया (kṛpayā) mean? (\"please\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C29-pardon",
+      "sequence": 1390,
+      "title": "क्षम्यताम् (kṣamyatām) — pardon me; let it be forgiven",
+      "headword": "क्षम्यताम्",
+      "romanization": "kṣamyatām",
+      "gloss": "pardon me; let it be forgiven",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70fb908322f609bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did kṛpayā literally claim?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्षम्यताम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्षम्यताम् (kṣamyatām) — \"pardon me; let it be forgiven\"."
+            },
+            {
+              "kind": "speech",
+              "text": "क्षम्यताम् (kṣamyatām) is the apology. It is longer than sorry and it is doing more work: the root means \"to be patient, to bear with, to forgive\", and the form is a command addressed to nobody in particular. Let it be forgiven."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that Sanskrit has now given you three of these impersonal commands: अस्तु, \"let it be\", क्षम्यताम् (kṣamyatām), \"let it be forgiven\", and स्वस्ति, \"may it be well\". A polite language often prefers to leave the person out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An apology that never names who should do the forgiving."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣamyatām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣamyatām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astu, then kṣamyatām, and say what both leave out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *astu*, then *kṣamyatām*, and say what both leave out]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्षम्यताम् (kṣamyatām) mean? (\"pardon me; let it be forgiven\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C29-bow",
+      "sequence": 1400,
+      "title": "प्रणामः (praṇāmaḥ) — a bow, a respectful salutation",
+      "headword": "प्रणामः",
+      "romanization": "praṇāmaḥ",
+      "gloss": "a bow, a respectful salutation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a45ff1eca8ff92da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did kṣamyatām mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रणामः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रणामः (praṇāmaḥ) — \"a bow, a respectful salutation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रणामः (praṇāmaḥ) is a bow — the act, named as a thing. It is pra + nam, \"to bend forward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "And you have met that nam twice already without being told. नमस्ते is namas + te, \"a bow to you\". नमस्कारः is namas + kāra, \"the making of a bow\". Now प्रणामः (praṇāmaḥ): the same bending root, a third time, with a prefix. Three of the first words in this book turn out to be one gesture described three ways."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A root you had used twice, finally named."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praṇāmaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praṇāmaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namaste, namaskāraḥ, praṇāmaḥ — and name what all three share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namaste*, *namaskāraḥ*, *praṇāmaḥ* — and name what all three share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रणामः (praṇāmaḥ) mean? (\"a bow, a respectful salutation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C29-favour",
+      "sequence": 1410,
+      "title": "उपकारः (upakāraḥ) — a favour, a good turn",
+      "headword": "उपकारः",
+      "romanization": "upakāraḥ",
+      "gloss": "a favour, a good turn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfa023567b52fcf3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did praṇāmaḥ mean, and which root was inside it?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपकारः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपकारः (upakāraḥ) — \"a favour, a good turn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उपकारः (upakāraḥ) is a favour — something done for someone. Take it apart: upa, \"near, toward\", plus kāra, \"a doing\", from the root behind करोमि, \"I do\"."
+            },
+            {
+              "kind": "speech",
+              "text": "So a favour is a doing-toward. And you have already seen kāra once, in नमस्कारः, \"the making of a bow\" — the same piece, in a word you have said since the first chapter. Prefixes and pieces are how Sanskrit builds, and by now you can watch it happen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A second word built from the doing-root you already had."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upakāraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upakāraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karomi, then namaskāraḥ, then upakāraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karomi*, then *namaskāraḥ*, then *upakāraḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपकारः (upakāraḥ) mean? (\"a favour, a good turn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C29-fortunate",
+      "sequence": 1420,
+      "title": "धन्यः (dhanyaḥ) — fortunate, blessed",
+      "headword": "धन्यः",
+      "romanization": "dhanyaḥ",
+      "gloss": "fortunate, blessed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5821073fa871d89b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of this run: what did upakāraḥ mean, and what did kṛpayā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धन्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धन्यः (dhanyaḥ) — \"fortunate, blessed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "धन्यः (dhanyaḥ) means fortunate, blessed, rich in what matters. It is built on dhana, wealth."
+            },
+            {
+              "kind": "speech",
+              "text": "And it closes a circle. The very first thank-you in this book was धन्यवादः — and that word is dhanya + vāda, a saying of \"you are fortunate\". Sanskrit does not thank you by reporting your gift; it thanks you by calling you lucky. You said the word on the first day and could not see inside it. You can now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five courtesies, and the first word of this book opened up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then take dhanyavādaḥ apart into its two pieces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then take *dhanyavādaḥ* apart into its two pieces]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धन्यः (dhanyaḥ) mean? (\"fortunate, blessed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

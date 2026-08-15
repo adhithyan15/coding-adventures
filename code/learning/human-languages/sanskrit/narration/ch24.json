@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 24,
+  "title": "Things You Ask For",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e790e2f50b471093",
+  "lessons": [
+    {
+      "id": "SA-C24-water",
+      "sequence": 1130,
+      "title": "जलम् (jalam) — water (the stuff, not the drink)",
+      "headword": "जलम्",
+      "romanization": "jalam",
+      "gloss": "water (the stuff, not the drink)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c29789c44a896b3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did duhitā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जलम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जलम् (jalam) — \"water (the stuff, not the drink)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have one water-word: पानीयम् (pānīyam), which names water by what you do with it — \"the thing to be drunk\". जलम् names the stuff. Rain is jalam; the river is full of jalam; nobody offers you a cup of it in that word."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit keeps several words here — jalam, pānīyam, udakam, āpaḥ — and a poet chooses between them the way an English poet chooses between water, drink, and the waters. The ending puts जलम् in the neuter family you met with अन्नम् and गृहम्: -अम्."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two words for water now, and a reason to prefer one over the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānīyam, then jalam, and say which one you would ask for at a table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānīyam*, then *jalam*, and say which one you would ask for at a table]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जलम् (jalam) mean? (\"water (the stuff, not the drink)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C24-rice",
+      "sequence": 1140,
+      "title": "ओदनः (odanaḥ) — cooked rice",
+      "headword": "ओदनः",
+      "romanization": "odanaḥ",
+      "gloss": "cooked rice",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d3085a25d65097f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did jalam name, and what did pānīyam name?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओदनः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओदनः (odanaḥ) — \"cooked rice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अन्नम् (annam) was food in general — \"the eaten thing\". ओदनः (odanaḥ) is narrower and warmer: the grain after it has met the water. Cooked rice, on a plate, now."
+            },
+            {
+              "kind": "speech",
+              "text": "The traditional derivation takes it from a root meaning \"to wet\", which reads the word as grain that has been moistened — a description of cooking rather than of rice. Its ending -अः puts it in the masculine family beside मार्गः and ग्रामः, so ओदनः (odanaḥ) and अन्नम् sit in different families while naming the same meal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A general word for food, and a particular thing on the plate."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odanaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odanaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annam, then odanaḥ, and name the ending each one carries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annam*, then *odanaḥ*, and name the ending each one carries]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ओदनः (odanaḥ) mean? (\"cooked rice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C24-fruit",
+      "sequence": 1150,
+      "title": "फलम् (phalam) — fruit (and the result of anything)",
+      "headword": "फलम्",
+      "romanization": "phalam",
+      "gloss": "fruit (and the result of anything)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:591db1c0370e1d15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did odanaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फलम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फलम् (phalam) — \"fruit (and the result of anything)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फलम् is the fruit on the tree. It is also, in the same breath and with no metaphor felt, the fruit of an action — the result, the reward, the yield. A Sanskrit sentence about the phalam of your work is not reaching for a poetic image; it has one word where English has two."
+            },
+            {
+              "kind": "speech",
+              "text": "The root behind it means \"to burst, to bear fruit\", which is the fruit split open at the moment it is ripe. Neuter -अम्, like जलम् (jalam) and अन्नम् before it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that carries an orchard and a consequence at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalam, and then jalam and phalam together, naming the ending they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalam*, and then *jalam* and *phalam* together, naming the ending they share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फलम् (phalam) mean? (\"fruit (and the result of anything)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C24-cloth",
+      "sequence": 1160,
+      "title": "वस्त्रम् (vastram) — cloth, a garment",
+      "headword": "वस्त्रम्",
+      "romanization": "vastram",
+      "gloss": "cloth, a garment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ca316f30439854a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did phalam mean — both of its meanings?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वस्त्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वस्त्रम् (vastram) — \"cloth, a garment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You know वसामि (vasāmi), \"I dwell\", from the root vas. वस्त्रम् (vastram) looks like it belongs to that root and does not. Sanskrit has two roots spelled vas: one for dwelling, one for wearing. वसामि belongs to the first, वस्त्रम् (vastram) to the second, and no amount of staring at the letters will separate them — only the meanings do."
+            },
+            {
+              "kind": "speech",
+              "text": "The wearing one travelled. Latin vestis, and through it English vest, vestment, invest — which originally meant to clothe someone in the robes of an office. Neuter -अम्."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that warns you: same letters, different root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vasāmi, then vastram, and say which root each one belongs to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vasāmi*, then *vastram*, and say which root each one belongs to]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वस्त्रम् (vastram) mean? (\"cloth, a garment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C24-lamp",
+      "sequence": 1170,
+      "title": "दीपः (dīpaḥ) — a lamp",
+      "headword": "दीपः",
+      "romanization": "dīpaḥ",
+      "gloss": "a lamp",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee91ab98d432194c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of this run: what did vastram mean, and what did odanaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दीपः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीपः (dīpaḥ) — \"a lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दीपः (dīpaḥ) is a lamp — the small clay one with oil and a wick. Its root means \"to blaze\", so the word names the burning rather than the vessel."
+            },
+            {
+              "kind": "speech",
+              "text": "Put दीप together with a word meaning \"a row\" and you get dīpāvalī, \"a row of lamps\" — the festival English writes as Diwali. Masculine -अः, like ओदनः (odanaḥ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things you might ask for: water, rice, fruit, cloth, a lamp."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīpaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīpaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, and sort them into the two noun families",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, and sort them into the two noun families]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दीपः (dīpaḥ) mean? (\"a lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

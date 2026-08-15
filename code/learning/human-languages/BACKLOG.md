@@ -30,6 +30,30 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C199 — only ONE track has a book/build.sh; the other 21 have none
+
+The per-track content gate this project keeps citing --
+
+    code/learning/human-languages/<track>/book/build.sh ; echo "exit=$?"
+
+-- exists for **spanish only**. `ls */book/build.sh` returns exactly one path.
+Every instruction that told an author to run it for tamil, sanskrit or any other
+track named a file that is not there.
+
+Why it matters: a missing script fails with a shell error, which is easy to read
+as "the build is broken" or, worse, to skip. The Sanskrit tranche was verified by
+running what spanish/book/build.sh runs, by hand, from the track's book dir:
+
+    latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+
+That is correct but it is not discoverable, and it means the exit-code discipline
+(a failed build prints ZERO warnings and reads exactly like a clean one) rests on
+each author reconstructing the command.
+
+**Fix:** give every track the same build.sh, or replace all 22 with one
+`build.sh <track>` at the corpus root. Prefer the latter -- one file to keep
+correct rather than 22 copies that will drift.
+
 ## HL-C198 — ANSWERED: a lesson's spine NODE and its POSITION are independent
 
 HL-C197 left the next tranche blocked on a design question: pre-A1 spine nodes

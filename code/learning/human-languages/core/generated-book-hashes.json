@@ -3870,6 +3870,97 @@
       "tex": "sanskrit/book/chapters/ch23-kinship.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:3435c9aa05a8fea7",
+      "lessonIds": [
+        "SA-C24-water",
+        "SA-C24-rice",
+        "SA-C24-fruit",
+        "SA-C24-cloth",
+        "SA-C24-lamp"
+      ],
+      "tex": "sanskrit/book/chapters/ch24-things-you-ask-for.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:4a1b5cabfc1c1b24",
+      "lessonIds": [
+        "SA-C25-hand",
+        "SA-C25-foot",
+        "SA-C25-head",
+        "SA-C25-tooth",
+        "SA-C25-hair"
+      ],
+      "tex": "sanskrit/book/chapters/ch25-hand-and-foot.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:577e7da9b8830ac3",
+      "lessonIds": [
+        "SA-C26-teacher",
+        "SA-C26-student",
+        "SA-C26-king",
+        "SA-C26-guest",
+        "SA-C26-physician"
+      ],
+      "tex": "sanskrit/book/chapters/ch26-roles.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:fe163e95534a8b6b",
+      "lessonIds": [
+        "SA-C27-so-be-it",
+        "SA-C27-well-done",
+        "SA-C27-enough",
+        "SA-C27-true",
+        "SA-C27-thus"
+      ],
+      "tex": "sanskrit/book/chapters/ch27-replies.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:c802a71569d25973",
+      "lessonIds": [
+        "SA-C28-now",
+        "SA-C28-day-after",
+        "SA-C28-journey",
+        "SA-C28-auspicious",
+        "SA-C28-svasti"
+      ],
+      "tex": "sanskrit/book/chapters/ch28-taking-leave.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:31e8c28cbad3067a",
+      "lessonIds": [
+        "SA-C29-please",
+        "SA-C29-pardon",
+        "SA-C29-bow",
+        "SA-C29-favour",
+        "SA-C29-fortunate"
+      ],
+      "tex": "sanskrit/book/chapters/ch29-courtesy.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:2c1b7bb490617253",
+      "lessonIds": [
+        "SA-C30-door",
+        "SA-C30-seat",
+        "SA-C30-flower",
+        "SA-C30-garland",
+        "SA-C30-anjali"
+      ],
+      "tex": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:55f690de8a10e9cb",
