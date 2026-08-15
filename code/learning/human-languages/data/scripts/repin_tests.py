@@ -154,6 +154,17 @@ def patch_object(path, fields, tag, dry):
             text = after
             edits.append("%s %s->%s" % (key, old, new))
             continue
+        # An INLINE object pin, all on one line:
+        #     expect(byNamespace).toEqual({ roots: 2148, "etymon-atom": 867 });
+        # PIN_FIELD anchors on a newline, so it never matches these. This shape
+        # has defeated the script on every single tranche, which is why it is
+        # here rather than being hand-patched again each time.
+        inline = re.sub(r'([{,]\s*"?%s"?:\s*)%s(\s*[,}])' % (re.escape(key), old),
+                        r"\g<1>%s\g<2>" % new, text, count=1)
+        if inline != text:
+            text = inline
+            edits.append("%s %s->%s (inline)" % (key, old, new))
+            continue
         # A metalanguage row: { term: "verb", lessons: N }. Its field name is
         # `lessons` for every term, so the number is what identifies the row.
         for term in TERMS:

@@ -3091,6 +3091,46 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-270-01",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C270-en-mi-opinion"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-270-02",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C270-por-ejemplo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-270-03",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C270-sin-embargo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-270-04",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C270-aunque"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -3492,14 +3532,13 @@
       "segments": [
         "ES-PATH-B2-PERO",
         "ES-PATH-B2-TAMBIEN",
-        "ES-PATH-B2-TAMPOCO"
+        "ES-PATH-B2-TAMPOCO",
+        "ES-PATH-270-01",
+        "ES-PATH-270-02",
+        "ES-PATH-270-03",
+        "ES-PATH-270-04"
       ],
-      "omits": [
-        "ARGUMENT-CLAIM",
-        "ARGUMENT-EVIDENCE",
-        "CONNECTIVE-HOWEVER",
-        "CONNECTIVE-ALTHOUGH"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-REPORT-WHAT-OTHERS-SAID": {
