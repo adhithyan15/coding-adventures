@@ -1430,7 +1430,118 @@ pub struct WasmExecutionContext {
 /// leaving the unguarded host-crash risk in place while that larger,
 /// separate architectural change (blocked on this crate's `*mut
 /// LinearMemory`/`*mut Table` raw pointers not being `Send`) is pending.
-const MAX_CALL_DEPTH: usize = 80;
+///
+/// **WASM10 update**: the blocker above is resolved (see
+/// [`DEDICATED_STACK_SIZE`] and `call_function`'s own doc comment) —
+/// `call_function` now always runs its decode/dispatch loop on a
+/// dedicated thread with an explicit, generous stack, so this ceiling no
+/// longer depends on what stack the CALLER happens to provide. Re-bisected
+/// directly against that new stack size (see `code/specs/
+/// W12-wasm-dedicated-thread-call-depth.md` for the full methodology) —
+/// a bounded, terminating countdown-recursion WASM module, run at
+/// increasing depths
+/// via `call_function` (so through the real `DEDICATED_STACK_SIZE`
+/// dedicated thread, not a simulation of one), each depth its own
+/// subprocess (a stack overflow aborts the whole process, so bisection
+/// can't share one). Measured, real, reproducible (3 repeats, identical
+/// result each time) debug-build floor: **safe at depth 1820, overflows
+/// at depth 1830** on an 8 MiB stack. Applying the same ~33%-margin-below-
+/// the-safe-floor convention the original 80 used (`120 * 0.67 ≈ 80`):
+/// `1820 * 0.67 ≈ 1214`, rounded down to a clean **1200**. This clears
+/// `call.wast`'s `even(100)`/`odd(200)` cases (previously the only 2
+/// `assert_return` failures in that file, now both pass) with over 10x
+/// margin to spare, not just barely.
+const MAX_CALL_DEPTH: usize = 1200;
+
+/// The stack size `call_function` gives its internally-spawned dedicated
+/// execution thread (WASM10). 8 MiB — 16x the 512 KiB floor the original
+/// (caller-stack-dependent) `MAX_CALL_DEPTH` was bisected against — chosen
+/// as a generous, round starting point, then [`MAX_CALL_DEPTH`] was
+/// re-measured directly against THIS value rather than assumed via linear
+/// scaling. If this ever changes, `MAX_CALL_DEPTH` must be re-bisected
+/// again the same way, not just recomputed by ratio.
+const DEDICATED_STACK_SIZE: usize = 8 * 1024 * 1024;
+
+/// Caps how many WASM10 dedicated threads may be nested inside one
+/// another via cross-module host calls (e.g. `wasm-conformance`'s
+/// `CrossModuleFunction`, which re-enters a DIFFERENT engine's own
+/// `call_function` from inside a host-function call reached through
+/// `HostFunction::call`). Each nested `call_function` invocation spawns
+/// its OWN dedicated thread and `DEDICATED_STACK_SIZE` stack — unlike
+/// ordinary same-instance recursion (bounded by `MAX_CALL_DEPTH`/
+/// `ctx.call_depth`, which resets to 0 per top-level call and therefore
+/// does NOT see across this boundary at all). Security review (WASM10):
+/// without a separate bound, an ordinary, non-circular chain of N linked
+/// module instances calling into each other spawns N nested OS threads,
+/// each reserving `DEDICATED_STACK_SIZE` — a materially larger and more
+/// exhaustible resource than the old unbounded-Rust-stack-recursion
+/// version of this same reentrancy pattern. `64` bounds worst-case
+/// address-space use to `64 * DEDICATED_STACK_SIZE` (512 MiB at the
+/// current stack size) while comfortably covering legitimate multi-
+/// module linking chains.
+const MAX_DEDICATED_THREAD_DEPTH: usize = 64;
+
+thread_local! {
+    /// How many WASM10 dedicated threads deep the CURRENT thread is
+    /// nested, relative to the original (non-WASM-spawned) caller — see
+    /// `MAX_DEDICATED_THREAD_DEPTH`'s own doc comment. Deliberately a
+    /// `thread_local!`, NOT a single process-global counter: thread-
+    /// locals do not inherit across `std::thread::spawn`/`spawn_scoped`
+    /// on their own, so each `call_function` invocation explicitly reads
+    /// its OWN thread's current depth, passes `depth + 1` into the
+    /// spawned closure's payload, and that closure sets its own (fresh)
+    /// thread's local value at the top before doing anything else. A
+    /// global counter would incorrectly conflate two unrelated,
+    /// genuinely-concurrent top-level `call_function` chains (e.g. a
+    /// multi-threaded host serving independent requests), tripping a
+    /// false trap on one because of unrelated depth building up
+    /// elsewhere — this per-thread, explicitly-propagated design avoids
+    /// that.
+    static DEDICATED_THREAD_DEPTH: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+/// Crosses `call_function`'s internal dedicated-thread boundary (WASM10)
+/// for data this crate cannot make genuinely `Send` without a breaking
+/// change to public API: `WasmExecutionContext`'s raw `*mut
+/// LinearMemory`/`*mut Table` pointers, and its `Box<dyn HostFunction>`
+/// entries (`HostFunction`/`HostInterface` deliberately do NOT require
+/// `Send` — see `code/specs/W12-wasm-dedicated-thread-call-depth.md` for
+/// why: adding it would force a breaking `Rc<RefCell<..>>` ->
+/// `Arc<Mutex<..>>` rewrite of `wasm-conformance`'s real cross-module
+/// linking, WASM05, for no benefit to this goal).
+///
+/// SAFETY (must hold at every call site that constructs one): the wrapped
+/// value is moved into a thread spawned via `Builder::spawn_scoped`, and
+/// the spawning thread calls `.join()` on the returned handle immediately,
+/// with no other work happening on the spawning thread in between. So the
+/// wrapped data is accessed from exactly one thread at a time — the
+/// spawned thread, for the whole duration of the call, then nothing, since
+/// the spawning thread is blocked in `.join()` for the spawned thread's
+/// entire lifetime. This is never true "shared across threads" access,
+/// only "which one OS thread's stack this synchronous call happens to run
+/// on" — the same "logically sequential, never actually concurrent"
+/// shape `wasm-conformance`'s own `RefCell`-based cross-module registry
+/// already relies on (different mechanism, same argument), made explicit
+/// here because `unsafe impl Send` needs its own standalone justification.
+struct AssertSend<T>(T);
+// SAFETY: see `AssertSend`'s own doc comment above.
+unsafe impl<T> Send for AssertSend<T> {}
+
+impl<T> AssertSend<T> {
+    /// Unwraps back to `T`. Deliberately a *method call*, not a `let
+    /// AssertSend(inner) = x;` destructure or `.0` field access, at every
+    /// call site inside a spawned closure: Rust's 2021 disjoint-capture
+    /// analysis reaches straight through direct field-projection syntax,
+    /// capturing `x`'s INNER (non-`Send`) fields individually rather than
+    /// `x` itself — silently defeating this wrapper's whole purpose (the
+    /// closure would then require `Send` on the unwrapped raw pointers
+    /// directly, the exact compile error this type exists to avoid). A
+    /// method call with a by-value `self` is not a field-projection path,
+    /// so it forces whole-value capture of the wrapper instead.
+    fn into_inner(self) -> T {
+        self.0
+    }
+}
 
 /// One decoded WasmGC instruction's immediates — see [`DecodedOperand::Gc`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -4158,19 +4269,19 @@ impl WasmExecutionEngine {
 
     /// Call a WASM function by index.
     ///
-    /// **Caller stack requirement**: nested WASM `call`/`call_indirect`
-    /// recurse through the calling thread's real Rust stack, one level per
-    /// nested call, up to [`MAX_CALL_DEPTH`] (currently 80) before this
-    /// returns a "call stack exhausted" trap. That ceiling was measured
-    /// assuming the calling thread has **at least 512 KiB** of stack space
-    /// available at the point this is called — Rust's own default spawned-
-    /// thread stack (2 MiB) and the main thread's default on every major OS
-    /// both clear this comfortably. If you invoke this on a thread you've
-    /// deliberately given a smaller stack than that (a constrained worker-
-    /// thread pool, an embedded target, a reactor/executor with small
-    /// per-task stacks), this guard cannot promise a clean trap instead of
-    /// a host-process abort — give the calling thread at least 512 KiB, or
-    /// treat a smaller stack as unsupported for now.
+    /// **WASM10**: nested WASM `call`/`call_indirect` recurse through a
+    /// Rust call stack one level per nested call, up to [`MAX_CALL_DEPTH`]
+    /// before this returns a "call stack exhausted" trap — but that
+    /// recursion now runs entirely on a dedicated OS thread this call
+    /// spawns internally with an explicit [`DEDICATED_STACK_SIZE`], not on
+    /// whatever stack the CALLER of `call_function` happens to have. The
+    /// calling thread only spawns and immediately `.join()`s; it does none
+    /// of the recursive work itself. This means, unlike before WASM10,
+    /// there is no caller-stack-size requirement at all — `call_function`
+    /// is safe to invoke from a thread with a small or unusual stack (a
+    /// constrained worker-thread pool, a reactor/executor with small
+    /// per-task stacks) without that affecting how deep WASM recursion can
+    /// safely go.
     pub fn call_function(
         &mut self,
         func_index: usize,
@@ -4195,6 +4306,21 @@ impl WasmExecutionEngine {
         // machinery is needed at all here.
         if let Some(Some(host_func)) = self.host_functions.get(func_index) {
             return host_func.call(args, self.memory.as_deref_mut());
+        }
+
+        // WASM10 (security review): about to spawn a dedicated OS thread
+        // for this call. If a `HostFunction::call` reached from inside
+        // that thread re-enters a DIFFERENT engine's own `call_function`
+        // (as `wasm-conformance`'s real cross-module linking does), THAT
+        // nested call spawns its OWN dedicated thread, nested inside this
+        // one -- unlike same-instance recursion, this isn't bounded by
+        // `MAX_CALL_DEPTH`/`ctx.call_depth` at all (that resets to 0 per
+        // top-level call). Reject before spawning rather than let an
+        // ordinary, non-circular multi-module chain exhaust OS threads.
+        // See `MAX_DEDICATED_THREAD_DEPTH`'s own doc comment.
+        let dedicated_thread_depth = DEDICATED_THREAD_DEPTH.with(|d| d.get());
+        if dedicated_thread_depth >= MAX_DEDICATED_THREAD_DEPTH {
+            return Err(TrapError::new("cross-module call nesting exhausted".to_string()));
         }
 
         // Build raw pointers for the context -- shared VM-level state,
@@ -4240,151 +4366,279 @@ impl WasmExecutionEngine {
         self.vm.reset();
         register_all_handlers(&mut self.vm);
 
-        let mut current_func_index = func_index;
-        let mut pending_args: Option<Vec<WasmValue>> = Some(args.to_vec());
-        let mut final_result_count = 0usize;
+        // WASM10: everything below that actually recurses (this loop,
+        // plus every NESTED `call`/`call_indirect` it triggers through
+        // `call_function_inner`) runs on a dedicated OS thread with an
+        // explicit `DEDICATED_STACK_SIZE`, decoupling `MAX_CALL_DEPTH`
+        // from whatever stack the CALLER of `call_function` happens to
+        // have. Security review (WASM10, round 2): `ctx` stays OWNED
+        // here, in this (spawning) stack frame -- only a raw pointer to
+        // it (`ctx_ptr`, alongside `vm_ptr`) crosses the thread boundary,
+        // the same treatment `vm_ptr` already gets. This is deliberate:
+        // an earlier version moved `ctx` BY VALUE into the spawned
+        // closure, which meant a `Builder::spawn_scoped` failure (a real
+        // possibility under OS thread/resource exhaustion -- this
+        // feature can spawn up to `MAX_DEDICATED_THREAD_DEPTH` nested
+        // threads per call chain) would drop the closure -- and `ctx`
+        // along with it -- before `self.host_functions` (moved out via
+        // `mem::take` above) was ever restored, permanently corrupting
+        // engine state for later, unrelated calls (the exact WASM07 bug
+        // class, via a THIRD trigger beyond the trap/panic cases already
+        // fixed). Keeping `ctx` owned here means it's always available to
+        // restore from, regardless of whether the thread spawns, panics,
+        // or completes normally. See `AssertSend`'s own doc comment for
+        // the full cross-thread-access safety argument (identical to
+        // `vm_ptr`'s).
+        let vm_ptr: *mut GenericVM = &mut self.vm;
+        let ctx_ptr: *mut WasmExecutionContext = &mut ctx;
+        let payload = AssertSend((vm_ptr, ctx_ptr, func_index, args.to_vec(), dedicated_thread_depth));
 
-        // WASM16: this top-level entry point has its own separate
-        // instruction-decode-and-dispatch path (it doesn't go through
-        // `call_function_inner`, which only handles NESTED calls) — so
-        // a `return_call`/`return_call_indirect` chain that starts at
-        // the very top level needs the SAME "swap the current frame
-        // instead of recursing" handling duplicated here. See
-        // `call_function_inner`'s matching loop and
-        // `WasmExecutionContext::pending_tail_call`'s own doc comment.
-        let exec_result: VMResult<()> = loop {
-            let func_type = match ctx
-                .func_types
-                .get(current_func_index)
-                .ok_or_else(|| VMError::GenericError(format!("undefined function {current_func_index}")))
-            {
-                Ok(t) => t.clone(),
-                Err(e) => break Err(e),
-            };
-            let current_args = pending_args.take().expect("pending_args is always Some at the top of each loop iteration");
+        /// The three ways the dedicated thread can fail to produce a
+        /// normal `VMResult<usize>` -- kept distinct from `VMError`
+        /// (an ordinary WASM-level trap, handled via `Ok(Err(..))`
+        /// below) because a spawn failure and a panic both need
+        /// `ctx`'s state restored before propagating, but must be
+        /// propagated differently (a spawn failure becomes a clean
+        /// `TrapError`; a panic must keep unwinding via `resume_unwind`).
+        enum DedicatedThreadFailure {
+            SpawnFailed(std::io::Error),
+            Panicked(Box<dyn std::any::Any + Send>),
+        }
 
-            // A tail call landing on a host import is still a leaf call
-            // (no further WASM frames) -- call it, push its results
-            // exactly like `call_function_inner`'s own host branch
-            // does, and stop. `final_result_count` lets the shared
-            // "collect return values" step below pop them back off
-            // uniformly, whether this loop ran zero, one, or many
-            // tail-call transitions before landing here.
-            if let Some(Some(host_func)) = ctx.host_functions.get(current_func_index) {
-                match host_func.call(&current_args, ctx.memory.map(|ptr| unsafe { &mut *ptr })) {
-                    Ok(results) => {
-                        for r in results {
-                            push_wasm(&mut self.vm, r);
-                        }
-                        final_result_count = func_type.results.len();
-                        break Ok(());
-                    }
-                    Err(e) => break Err(VMError::from(e)),
-                }
+        let outcome: Result<VMResult<usize>, DedicatedThreadFailure> = std::thread::scope(|scope| {
+            match std::thread::Builder::new().stack_size(DEDICATED_STACK_SIZE).spawn_scoped(scope, move || {
+                    let (vm_ptr, ctx_ptr, func_index, initial_args, parent_depth) = payload.into_inner();
+                    // Propagate this THREAD's own nesting depth before
+                    // doing anything else -- see `DEDICATED_THREAD_DEPTH`'s
+                    // own doc comment. A fresh OS thread starts with a
+                    // fresh (zeroed) thread-local, so this must be set
+                    // explicitly from the parent's depth, not inherited.
+                    DEDICATED_THREAD_DEPTH.with(|d| d.set(parent_depth + 1));
+                    // SAFETY: see `AssertSend`'s doc comment -- for the
+                    // whole lifetime of this closure, the spawning thread
+                    // is blocked in `.join()` below (or, if spawning
+                    // itself failed, this closure never ran at all) and
+                    // touches nothing reachable through `vm_ptr`/
+                    // `ctx_ptr`, so this is the only thread ever
+                    // dereferencing them at a time.
+                    let vm = unsafe { &mut *vm_ptr };
+                    let ctx = unsafe { &mut *ctx_ptr };
+
+                    // WASM10 (security review): the loop below can call
+                    // arbitrary embedder-supplied `Box<dyn HostFunction>`
+                    // code, including (via `wasm-conformance`'s real
+                    // `CrossModuleFunction`) a re-entrant call into a
+                    // DIFFERENT engine's own `call_function`, which might
+                    // panic. `catch_unwind` here, rather than letting the
+                    // panic unwind straight out of this thread past
+                    // `handle.join()` below, lets the calling thread
+                    // restore `self.globals`/`self.host_functions` from
+                    // `ctx` BEFORE the panic is re-raised -- the same
+                    // "restore engine state before propagating ANY
+                    // failure" rule the WASM07 security review already
+                    // established for traps, extended here to panics
+                    // (a bare `resume_unwind` before that restoration
+                    // would permanently leave `self.host_functions` empty
+                    // -- moved out via `mem::take` above -- for every
+                    // LATER, unrelated call on this same engine).
+                    // `AssertUnwindSafe` is sound here specifically
+                    // because a caught panic means this call is being
+                    // abandoned regardless (about to be re-raised) --
+                    // `ctx`'s post-panic contents are only ever used for
+                    // that restoration, never assumed logically
+                    // consistent for anything else.
+                    let panic_result: std::thread::Result<VMResult<usize>> =
+                        std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                            let mut current_func_index = func_index;
+                            let mut pending_args: Option<Vec<WasmValue>> = Some(initial_args);
+
+                            // WASM16: this top-level entry point has its own
+                            // separate instruction-decode-and-dispatch path (it
+                            // doesn't go through `call_function_inner`, which
+                            // only handles NESTED calls) — so a
+                            // `return_call`/`return_call_indirect` chain that
+                            // starts at the very top level needs the SAME "swap
+                            // the current frame instead of recursing" handling
+                            // duplicated here. See `call_function_inner`'s
+                            // matching loop and
+                            // `WasmExecutionContext::pending_tail_call`'s own
+                            // doc comment.
+                            //
+                            // The `Ok` variant carries the result arity
+                            // alongside `()` (as `usize`) so it can be read
+                            // back out after `catch_unwind` returns without
+                            // needing a separate `&mut final_result_count`
+                            // capture into this closure.
+                            let exec_result: VMResult<usize> = loop {
+                                let func_type = match ctx
+                                    .func_types
+                                    .get(current_func_index)
+                                    .ok_or_else(|| VMError::GenericError(format!("undefined function {current_func_index}")))
+                                {
+                                    Ok(t) => t.clone(),
+                                    Err(e) => break Err(e),
+                                };
+                                let current_args = pending_args.take().expect("pending_args is always Some at the top of each loop iteration");
+
+                                // A tail call landing on a host import is still a leaf call
+                                // (no further WASM frames) -- call it, push its results
+                                // exactly like `call_function_inner`'s own host branch
+                                // does, and stop.
+                                if let Some(Some(host_func)) = ctx.host_functions.get(current_func_index) {
+                                    match host_func.call(&current_args, ctx.memory.map(|ptr| unsafe { &mut *ptr })) {
+                                        Ok(results) => {
+                                            for r in results {
+                                                push_wasm(vm, r);
+                                            }
+                                            break Ok(func_type.results.len());
+                                        }
+                                        Err(e) => break Err(VMError::from(e)),
+                                    }
+                                }
+
+                                // Module-defined function.
+                                let body = match ctx
+                                    .func_bodies
+                                    .get(current_func_index)
+                                    .and_then(|b| b.as_ref())
+                                    .ok_or_else(|| VMError::GenericError(format!("no body for function {current_func_index}")))
+                                {
+                                    Ok(b) => b.clone(),
+                                    Err(e) => break Err(e),
+                                };
+
+                                // Decode the function body.
+                                let decoded = decode_function_body(&body);
+                                ctx.control_flow_map = build_control_flow_map(&decoded);
+
+                                // Convert to VM instructions, building this function's
+                                // side-tables (br_table targets + WasmGC ops) in lockstep.
+                                // Each complex instruction stores its index into the
+                                // relevant Vec as its Operand::Index. Nested calls save/
+                                // restore these on the saved-frame stack so callee and
+                                // caller don't collide; a tail-call transition here simply
+                                // overwrites them, matching the fact that no new logical
+                                // call frame is being pushed.
+                                let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
+                                let mut gc_ops: Vec<GcOp> = Vec::new();
+                                let mut vm_instructions: Vec<Instruction> = Vec::new();
+                                for d in &decoded {
+                                    let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops);
+                                    vm_instructions.push(Instruction {
+                                        opcode: d.opcode,
+                                        operand,
+                                    });
+                                }
+                                ctx.br_table_targets = br_table_targets;
+                                ctx.gc_ops = gc_ops;
+
+                                // Initialize locals.
+                                let mut typed_locals: Vec<WasmValue> = current_args;
+                                for t in &body.locals {
+                                    typed_locals.push(WasmValue::default_for(*t));
+                                }
+                                ctx.typed_locals = typed_locals;
+
+                                // See `call_function_inner`'s matching comment: a WASM
+                                // function body is itself an implicit outer `block` whose
+                                // label is the function's own end, so `br`/`br_if`/
+                                // `br_table` at a depth that walks out of every *explicit*
+                                // block (including a bare top-level `(br 0)`, which is
+                                // ordinary, spec-legal WASM meaning "return") needs a label
+                                // on `label_stack` to resolve against. `stack_height: 0` is
+                                // correct on every iteration, not just the first: the
+                                // validator requires a `return_call`/`return_call_indirect`
+                                // site to leave the operand stack at exactly this
+                                // function's entry height once the callee's args are
+                                // popped (the same "stack-polymorphic, like `return`" rule
+                                // that lets `return_call` type-check at all), so control
+                                // never reaches a later iteration with anything extra left
+                                // on `vm`'s stack.
+                                ctx.label_stack = vec![Label {
+                                    arity: func_type.results.len(),
+                                    param_arity: func_type.params.len(),
+                                    target_pc: vm_instructions.len(),
+                                    stack_height: 0,
+                                    is_loop: false,
+                                }];
+
+                                let code = CodeObject {
+                                    instructions: vm_instructions,
+                                    constants: vec![],
+                                    names: vec![],
+                                };
+
+                                vm.pc = 0;
+                                vm.halted = false;
+                                // `ctx` is already `&mut WasmExecutionContext` here (obtained
+                                // via `ctx_ptr`) -- pass it directly, relying on Rust's
+                                // implicit reborrow, NOT `&mut ctx` (which would build a
+                                // `&mut &mut WasmExecutionContext` and break
+                                // `execute_with_context`'s downcast).
+                                if let Err(e) = vm.execute_with_context(&code, ctx) {
+                                    break Err(e);
+                                }
+
+                                if let Some((next_func_index, next_args)) = ctx.pending_tail_call.take() {
+                                    current_func_index = next_func_index;
+                                    pending_args = Some(next_args);
+                                    continue;
+                                }
+
+                                break Ok(func_type.results.len());
+                            };
+
+                            exec_result
+                        }));
+
+                    panic_result
+                }) {
+                Ok(handle) => match handle.join() {
+                    // `panic_result` is itself `std::thread::Result<
+                    // VMResult<usize>>` -- flatten its `Err` (a caught
+                    // panic, from the `catch_unwind` inside the closure)
+                    // into `DedicatedThreadFailure::Panicked` too, so
+                    // both this and the `join()`-level `Err` arm below
+                    // are handled uniformly by the caller.
+                    Ok(panic_result) => panic_result.map_err(DedicatedThreadFailure::Panicked),
+                    // Defensive fallback only: `catch_unwind` above
+                    // already catches every panic reachable from
+                    // ordinary WASM execution or host-function calls, so
+                    // this thread should always return normally via the
+                    // `Ok` arm above. This arm exists only for a panic
+                    // reached OUTSIDE that `catch_unwind` (e.g. in
+                    // `payload.into_inner()` or the raw-pointer derefs
+                    // immediately above it) -- effectively unreachable
+                    // in practice, but handled the same way as a caught
+                    // panic below rather than silently ignored.
+                    Err(join_panic_payload) => Err(DedicatedThreadFailure::Panicked(join_panic_payload)),
+                },
+                Err(spawn_err) => Err(DedicatedThreadFailure::SpawnFailed(spawn_err)),
             }
+        });
 
-            // Module-defined function.
-            let body = match ctx
-                .func_bodies
-                .get(current_func_index)
-                .and_then(|b| b.as_ref())
-                .ok_or_else(|| VMError::GenericError(format!("no body for function {current_func_index}")))
-            {
-                Ok(b) => b.clone(),
-                Err(e) => break Err(e),
-            };
-
-            // Decode the function body.
-            let decoded = decode_function_body(&body);
-            ctx.control_flow_map = build_control_flow_map(&decoded);
-
-            // Convert to VM instructions, building this function's
-            // side-tables (br_table targets + WasmGC ops) in lockstep.
-            // Each complex instruction stores its index into the
-            // relevant Vec as its Operand::Index. Nested calls save/
-            // restore these on the saved-frame stack so callee and
-            // caller don't collide; a tail-call transition here simply
-            // overwrites them, matching the fact that no new logical
-            // call frame is being pushed.
-            let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
-            let mut gc_ops: Vec<GcOp> = Vec::new();
-            let mut vm_instructions: Vec<Instruction> = Vec::new();
-            for d in &decoded {
-                let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops);
-                vm_instructions.push(Instruction {
-                    opcode: d.opcode,
-                    operand,
-                });
-            }
-            ctx.br_table_targets = br_table_targets;
-            ctx.gc_ops = gc_ops;
-
-            // Initialize locals.
-            let mut typed_locals: Vec<WasmValue> = current_args;
-            for t in &body.locals {
-                typed_locals.push(WasmValue::default_for(*t));
-            }
-            ctx.typed_locals = typed_locals;
-
-            // See `call_function_inner`'s matching comment: a WASM
-            // function body is itself an implicit outer `block` whose
-            // label is the function's own end, so `br`/`br_if`/
-            // `br_table` at a depth that walks out of every *explicit*
-            // block (including a bare top-level `(br 0)`, which is
-            // ordinary, spec-legal WASM meaning "return") needs a label
-            // on `label_stack` to resolve against. `stack_height: 0` is
-            // correct on every iteration, not just the first: the
-            // validator requires a `return_call`/`return_call_indirect`
-            // site to leave the operand stack at exactly this
-            // function's entry height once the callee's args are
-            // popped (the same "stack-polymorphic, like `return`" rule
-            // that lets `return_call` type-check at all), so control
-            // never reaches a later iteration with anything extra left
-            // on `self.vm`'s stack.
-            ctx.label_stack = vec![Label {
-                arity: func_type.results.len(),
-                param_arity: func_type.params.len(),
-                target_pc: vm_instructions.len(),
-                stack_height: 0,
-                is_loop: false,
-            }];
-
-            let code = CodeObject {
-                instructions: vm_instructions,
-                constants: vec![],
-                names: vec![],
-            };
-
-            self.vm.pc = 0;
-            self.vm.halted = false;
-            if let Err(e) = self.vm.execute_with_context(&code, &mut ctx) {
-                break Err(e);
-            }
-
-            if let Some((next_func_index, next_args)) = ctx.pending_tail_call.take() {
-                current_func_index = next_func_index;
-                pending_args = Some(next_args);
-                continue;
-            }
-
-            final_result_count = func_type.results.len();
-            break Ok(());
-        };
-
-        // Update globals back UNCONDITIONALLY, before propagating a trap
-        // (WASM07 security review): `self.host_functions` was moved out via
-        // `mem::take` above, so on a trapped call the ONLY way it's ever
-        // seen again is `ctx.host_functions` here. Propagating the error
-        // via `?` before this line (the original shape) permanently left
-        // `self.host_functions` empty after the FIRST trap on this engine
-        // — every later call, however unrelated, would then fail with "no
-        // body for function N" for what used to be a host-imported
-        // function. `wasm-runtime`'s real embedding path wires WASI
+        // Update engine state back UNCONDITIONALLY, before propagating
+        // ANY failure -- a trap, a panic, OR a thread-spawn failure
+        // (WASM07 security review, extended twice over by WASM10's own
+        // security review: once to cover the panic case, and again to
+        // cover the spawn-failure case, which an earlier version of this
+        // fix still missed -- `ctx` moving BY VALUE into the spawned
+        // closure meant a `spawn_scoped` failure dropped it, along with
+        // `self.host_functions`, before this restoration ever ran).
+        // `self.host_functions` was moved out via `mem::take` above, so
+        // the ONLY way it's ever seen again is `ctx.host_functions` here.
+        // Propagating a failure before this line permanently leaves
+        // `self.host_functions` empty for every LATER, unrelated call on
+        // this engine. `wasm-runtime`'s real embedding path wires WASI
         // imports (fd_write, random_get, clock_time_get, ...) through
         // exactly this field, so this was a real, reachable bug, not a
         // theoretical one: `wasm-runtime`'s own `call_engine` had the
         // identical bug for `instance.memory`/`instance.tables` (fixed in
-        // this same PR) one layer further out.
+        // this same PR, WASM07) one layer further out. Keeping `ctx`
+        // OWNED by this (spawning) stack frame the whole time -- see the
+        // comment where `ctx_ptr` is built above -- is what makes this
+        // restoration reachable regardless of which of the three ways
+        // the dedicated thread could fail to produce a normal result.
         self.globals = ctx.globals;
         self.host_functions = ctx.host_functions;
         // gc_heap itself is not persisted (see its own doc comment above);
@@ -4392,7 +4646,13 @@ impl WasmExecutionEngine {
         // via gc_live_object_count()/gc_profile() (W04).
         self.last_gc_state = ctx.gc_state;
 
-        exec_result.map_err(|e| TrapError::new(format!("{}", e)))?;
+        let final_result_count = match outcome {
+            Ok(exec_result) => exec_result.map_err(|e| TrapError::new(format!("{}", e)))?,
+            Err(DedicatedThreadFailure::SpawnFailed(spawn_err)) => {
+                return Err(TrapError::new(format!("failed to spawn dedicated execution thread: {spawn_err}")));
+            }
+            Err(DedicatedThreadFailure::Panicked(panic_payload)) => std::panic::resume_unwind(panic_payload),
+        };
 
         // Collect return values.
         let mut results = Vec::new();
@@ -5516,6 +5776,59 @@ mod tests {
         });
         engine.set_type_section(vec![func_type]);
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // WASM10: dedicated-thread call_function, cross-module nesting guard
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// Security review (WASM10): white-box test of `MAX_DEDICATED_THREAD_
+    /// DEPTH`'s guard itself -- directly sets this thread's own depth
+    /// counter to the maximum (simulating what it would read if a real
+    /// chain of that many cross-module `HostFunction` re-entries into
+    /// `call_function` got this far -- see `wasm10_dedicated_thread.rs`'s
+    /// own integration test for the end-to-end propagation proof) and
+    /// confirms `call_function` rejects cleanly -- crucially, WITHOUT
+    /// spawning another OS thread at all -- rather than only catching the
+    /// problem after actually exhausting real threads.
+    #[test]
+    fn dedicated_thread_depth_guard_traps_without_spawning_when_already_at_max() {
+        DEDICATED_THREAD_DEPTH.with(|d| d.set(MAX_DEDICATED_THREAD_DEPTH));
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code: vec![0x41, 0x2a, 0x0B] }; // i32.const 42; end
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[]);
+        DEDICATED_THREAD_DEPTH.with(|d| d.set(0)); // don't leak into other tests on this thread
+        assert!(result.is_err(), "call_function must reject once already at MAX_DEDICATED_THREAD_DEPTH");
+        assert!(result.unwrap_err().to_string().contains("cross-module call nesting exhausted"));
+    }
+
+    /// Companion: confirms the guard does NOT false-trip on ordinary,
+    /// shallow calls -- depth 0 (the default for any thread that never
+    /// nested through a nested `call_function`) must succeed normally.
+    #[test]
+    fn dedicated_thread_depth_guard_does_not_trip_at_the_default_depth() {
+        DEDICATED_THREAD_DEPTH.with(|d| d.set(0));
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code: vec![0x41, 0x2a, 0x0B] }; // i32.const 42; end
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(42)]);
     }
 
     // ══════════════════════════════════════════════════════════════════════

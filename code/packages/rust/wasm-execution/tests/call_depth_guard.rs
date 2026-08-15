@@ -122,15 +122,20 @@ fn sibling_calls_after_a_trapped_recursive_call_are_unaffected() {
 /// ~1 MiB, because its justification compared against a *different*
 /// crate's measured floor on a *different*, lighter recursive path
 /// instead of measuring `wasm-execution`'s own (heavier) recursion
-/// directly. This test is that direct measurement, committed as a
-/// permanent regression guard: run the exact unbounded-recursion shape on
-/// a thread with the documented minimum stack size (see
-/// `MAX_CALL_DEPTH`'s own doc comment for the full methodology and
-/// margin), with **no** `RUST_MIN_STACK` env var trick — a real
-/// `Builder::stack_size`, so this is testing the actual condition, not a
-/// simulation of one. A clean `Err` (not a `join()` failure from a
-/// crashed thread) proves the guard trips before the native overflow
-/// point at the stack size this crate assumes callers provide.
+/// directly. This test was that direct measurement, and remains a
+/// permanent regression guard, but its meaning changed under WASM10:
+/// `call_function` no longer runs its recursive dispatch loop on
+/// whatever thread calls it — it spawns its OWN dedicated thread with an
+/// explicit `DEDICATED_STACK_SIZE` internally, and that internal thread
+/// is what `MAX_CALL_DEPTH` is actually bisected against now (see its own
+/// doc comment). So this test, still spawning a 512 KiB CALLING thread,
+/// no longer exercises the guard's real stack-size assumption at all —
+/// it instead proves something strictly stronger: `call_function` works
+/// correctly (unbounded recursion still traps cleanly, not a host crash)
+/// even when invoked from a caller thread with far less stack than
+/// `DEDICATED_STACK_SIZE`, because the calling thread does none of the
+/// recursive work itself. Kept as a regression guard for that
+/// decoupling, not for the original caller-stack-size claim.
 #[test]
 fn depth_guard_trips_before_overflow_on_the_documented_minimum_stack() {
     let handle = std::thread::Builder::new()

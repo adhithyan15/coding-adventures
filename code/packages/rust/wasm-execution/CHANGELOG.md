@@ -2,6 +2,161 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.7.0] - 2026-08-15 (WASM10 — dedicated-thread `call_function`, raised `MAX_CALL_DEPTH`)
+
+### Changed
+
+- `call_function` (the top-level, public entry point) now spawns one
+  dedicated OS thread per call, via `Builder::stack_size(DEDICATED_STACK_SIZE)
+  .spawn_scoped(...)`, and runs its entire recursive decode/dispatch loop —
+  including every nested `call`/`call_indirect` through `call_function_inner`
+  — on that thread, joining synchronously before returning. `MAX_CALL_DEPTH`'s
+  safety margin no longer depends on whatever stack the CALLER happens to
+  provide; the calling thread only spawns and blocks in `.join()`, doing
+  none of the recursive work itself. See `code/specs/
+  W12-wasm-dedicated-thread-call-depth.md` for the full design and the
+  reasoning for rejecting a `Send`-bound change to `HostFunction`/
+  `HostInterface` in favor of this approach.
+- New private `AssertSend<T>` newtype (with an explicit, in-code safety
+  argument) crosses the thread boundary for the call-local raw memory/table
+  pointers and `Box<dyn HostFunction>` entries — this is the mechanism that
+  avoids the breaking trait change. One real gotcha hit and fixed during
+  implementation: Rust 2021's disjoint-closure-capture analysis reaches
+  straight through a `let AssertSend(inner) = x;` destructure at the top of
+  a spawned closure, capturing `x`'s non-`Send` INNER fields individually
+  rather than `x` itself -- silently defeating the wrapper (the closure then
+  fails to compile, requiring `Send` on the raw pointers directly, the exact
+  error this type exists to avoid). Fixed by adding `AssertSend::into_inner`,
+  a method call (not a field-projection/destructure), which forces
+  whole-value capture of the wrapper instead.
+- `MAX_CALL_DEPTH` re-bisected directly against the new `DEDICATED_STACK_SIZE`
+  (8 MiB) rather than scaled by assumption from the old 512-KiB-based value:
+  a real bounded countdown-recursion WASM module, run at increasing depths
+  through `call_function` (so through the real dedicated-thread path), one
+  depth per subprocess (a stack overflow aborts the whole process). Measured,
+  reproducible (3 repeats, identical result) debug-build floor: safe at
+  depth 1820, overflows at depth 1830. Applying the same ~33%-margin-below-
+  the-safe-floor convention the original 80 used: raised from **80 to
+  1200**.
+- `call.wast`'s `even(100)`/`odd(200)` mutual-recursion cases -- previously
+  the only 2 `assert_return` failures in that file, a known, honestly-
+  documented trade-off since the original `MAX_CALL_DEPTH` guard shipped --
+  now both pass. `wasm-conformance` baseline regen: `call.wast`
+  `assert_return` moves from `pass: 67, fail: 2` to `pass: 69, fail: 0`;
+  confirmed via a full baseline diff that this is the ONLY file affected,
+  zero regressions elsewhere.
+- New `tests/wasm10_dedicated_thread.rs`: the exact `call.wast` even/odd
+  shape as a standalone regression guard; a caller-thread-with-a-256-KiB-
+  stack test proving `call_function` now completes ~1000 levels of
+  recursion that would overflow a Rust stack that size directly, since the
+  heavy work runs elsewhere (verified this is load-bearing via
+  TEMP-REVERT-CHECK: temporarily shrinking `DEDICATED_STACK_SIZE` to 64 KiB
+  reproduced the exact same crash the dedicated thread exists to prevent);
+  an unbounded-recursion-still-traps-cleanly test at the new ceiling.
+  `tests/call_depth_guard.rs`'s existing
+  `depth_guard_trips_before_overflow_on_the_documented_minimum_stack` test
+  doc comment updated to reflect its changed meaning under WASM10 (it now
+  proves the caller-stack decoupling, not the original caller-stack-size
+  claim, which no longer applies).
+
+### Non-goals (unchanged from the spec)
+
+- `HostFunction`/`HostInterface` — no `Send` bound added, no signature
+  change; `wasm-conformance`'s real `Rc<RefCell<..>>`-based cross-module
+  linking (WASM05) is untouched.
+- Real concurrent/multi-threaded WASM execution — this dedicated thread is
+  purely an implementation detail for stack-size control; `call_function`
+  remains synchronous and single-result from the outside, identical to
+  before.
+- Thread pooling/reuse for performance — explicitly deferred; the known
+  trade-off (per-call OS thread spawn overhead, most visible in
+  `wasm-conformance`'s full baseline run) is accepted for this first slice.
+
+### Fixed — 2 findings from this PR's own `/security-review`, before shipping
+
+- **Panic during the dedicated thread skipped the mandatory state
+  write-back.** A panic reached through `Box<dyn HostFunction>::call`
+  (e.g. `wasm-conformance`'s real `CrossModuleFunction` hitting its own
+  documented `RefCell` double-borrow panic on a circular cross-module
+  import) used to `resume_unwind` BEFORE `self.host_functions`/
+  `self.globals` were restored from `ctx` — the exact bug class WASM07's
+  security review already fixed once for TRAPS, reintroduced here for
+  PANICS (`self.host_functions`, emptied via `mem::take` for the
+  panicking call, would stay empty for every LATER, unrelated call on the
+  same engine). Fixed by wrapping the dedicated thread's loop in
+  `std::panic::catch_unwind(AssertUnwindSafe(...))` and restoring engine
+  state UNCONDITIONALLY before ever propagating the caught panic via
+  `resume_unwind`. New regression test
+  (`a_panic_inside_the_dedicated_thread_restores_engine_state_before_propagating`),
+  verified via TEMP-REVERT-CHECK to reproduce the exact bug (a later call
+  to an unrelated, previously-working host-imported function fails with
+  `"no body for function 1"`) when the restore is reordered back to after
+  the panic check.
+- **Unbounded OS-thread nesting via cross-module host calls.** Every
+  top-level `call_function` now spawns a dedicated 8 MiB-stack thread —
+  including calls reached through `HostFunction::call` re-entering a
+  DIFFERENT engine's own `call_function` (exactly `wasm-conformance`'s
+  real cross-module linking, WASM05). `MAX_CALL_DEPTH`/`ctx.call_depth`
+  resets to 0 per top-level call and does not see across this boundary at
+  all, so an ordinary, non-circular chain of N linked module instances
+  would spawn N nested OS threads with no bound — a materially larger,
+  more exhaustible resource than the old unbounded-Rust-stack-recursion
+  version of this same reentrancy pattern. Fixed with a new
+  `MAX_DEDICATED_THREAD_DEPTH` (64) guard, tracked via a `thread_local!`
+  counter explicitly propagated parent-thread → child-thread at each
+  `call_function` invocation (deliberately NOT a single process-global
+  counter, which would incorrectly conflate unrelated, genuinely-
+  concurrent top-level call chains from separate caller threads). New
+  regression tests: a white-box pair in `lib.rs` proving the guard trips
+  exactly at the max and not below it, and a black-box
+  `a_long_but_finite_cross_module_chain_traps_cleanly_before_exhausting_os_threads`
+  integration test (a real 100-engine `Rc<RefCell<..>>` chain), verified
+  via TEMP-REVERT-CHECK to reproduce the unbounded-spawn behavior (the
+  full 100-deep chain completes instead of trapping) with the guard
+  disabled.
+
+### Fixed — round 2: 1 more finding from re-reviewing the fixes above
+
+- **A thread-spawn failure could ALSO skip the state write-back.** The
+  first version of the panic-safety fix above still moved `ctx` BY VALUE
+  into the closure passed to `Builder::spawn_scoped`. If spawning the
+  dedicated thread itself failed (a real possibility under OS thread/
+  resource exhaustion — this feature can spawn up to
+  `MAX_DEDICATED_THREAD_DEPTH` nested 8 MiB-stack threads per call chain,
+  on top of one thread per concurrent top-level call from a multi-
+  threaded host), the closure — and `ctx`, and `self.host_functions`
+  moved into it — was dropped without ever running, and the `.expect(...)`
+  on the failed `spawn_scoped` call panicked immediately, unwinding
+  straight out of `call_function` BEFORE the `let AssertSend((ctx, ...))
+  = ...` binding (and the restoration after it) was ever reached — the
+  same WASM07 bug class, reintroduced via a THIRD trigger the first round
+  of fixes didn't cover. Fixed by keeping `ctx` OWNED in `call_function`'s
+  own (spawning) stack frame for the entire call — only a raw pointer to
+  it (`ctx_ptr`, given the exact same `AssertSend`/safety treatment
+  `vm_ptr` already had) crosses into the spawned closure, so `ctx` is
+  provably still there to restore from regardless of whether the thread
+  spawns, panics, or completes normally. Restructured the three possible
+  outcomes (success / panic / spawn failure) into a small local
+  `DedicatedThreadFailure` enum so the mandatory restoration runs exactly
+  once, unconditionally, before any of the three is handled. This
+  invariant is now also compiler-enforced, not just test-enforced: since
+  `ctx` is never moved into the closure, any future regression that tried
+  to move it there again would fail to compile (`self.host_functions =
+  ctx.host_functions;` after the `thread::scope(...)` call requires `ctx`
+  to still be a valid, non-moved binding).
+- Fixing the above surfaced a real, independent bug in the FIRST draft of
+  this restructuring (caught by the full test suite, not by the security
+  review): `ctx` inside the spawned closure became `&mut
+  WasmExecutionContext` (a reference, via `ctx_ptr`) instead of an owned
+  value, so every existing `&mut ctx` call site (e.g. `vm.
+  execute_with_context(&code, &mut ctx)`) silently built a `&mut &mut
+  WasmExecutionContext` instead of `&mut WasmExecutionContext` — type-
+  checks fine, but breaks the opcode dispatcher's downcast at runtime
+  ("context must be WasmExecutionContext"), which 128 of 213 unit tests
+  caught immediately. Fixed by relying on Rust's implicit reborrow
+  (passing `ctx` directly, not `&mut ctx`, since `ctx` is already a `&mut`
+  reference) at the one call site that needed it.
+
 ## [0.6.12] - 2026-08-15 (security fix — pre-existing `call_indirect` panic)
 
 ### Fixed
