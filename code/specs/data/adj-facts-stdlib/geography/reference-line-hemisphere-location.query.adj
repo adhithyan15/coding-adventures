@@ -1,0 +1,21 @@
+% ============================================================================
+% reference-line-hemisphere-location.query — a worked recall over the
+% geography reference-line-hemisphere-location library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which hemisphere is
+% the Tropic of Cancer in?": it states no geography fact of its own — it
+% only `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `reference_line_hemisphere_location` rows
+% and returns the hemisphere + the table's source/locator/trust. A line the
+% cited span gives no single containing hemisphere for abstains honestly —
+% the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli reference-line-hemisphere-location.query.adj
+% ============================================================================
+
+import "reference-line-hemisphere-location.adj"
+
+? reference_line_hemisphere_location(tropic_of_cancer, $Hemisphere)  % expect northern
+? reference_line_hemisphere_location($Line, southern)                % reverse bind — expect tropic_of_capricorn
+? reference_line_hemisphere_location(equator, $Hemisphere)           % expect abstain — equator's own cited span states no single containing hemisphere (it DIVIDES hemispheres, already captured in reference_line_hemisphere_split)
