@@ -615,6 +615,118 @@
         "TA-EXT-43-KIN"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-44-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TA-C44-fruit",
+        "TA-C44-cloth",
+        "TA-C44-lamp",
+        "TA-C44-salt",
+        "TA-C44-book"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-44-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-45-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C45-eye",
+        "TA-C45-ear",
+        "TA-C45-nose",
+        "TA-C45-tooth",
+        "TA-C45-stomach"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-45-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-46-ROLE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C46-teacher",
+        "TA-C46-student",
+        "TA-C46-doctor",
+        "TA-C46-farmer",
+        "TA-C46-guest"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-46-ROLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-47-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TA-C47-true",
+        "TA-C47-enough",
+        "TA-C47-certainly",
+        "TA-C47-perhaps",
+        "TA-C47-just-so"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-47-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-48-LEAVE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TA-C48-now",
+        "TA-C48-time",
+        "TA-C48-journey",
+        "TA-C48-later",
+        "TA-C48-set-out"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-48-LEAVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-49-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TA-C49-affection",
+        "TA-C49-respect",
+        "TA-C49-gladness",
+        "TA-C49-good-wish",
+        "TA-C49-many-thanks"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-49-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-50-WELCOME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TA-C50-threshold",
+        "TA-C50-kolam",
+        "TA-C50-flower",
+        "TA-C50-betel-leaf",
+        "TA-C50-welcome"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-50-WELCOME"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -623,7 +735,8 @@
         "TA-PATH-001",
         "TA-PATH-003",
         "TA-PATH-100",
-        "TA-PATH-031"
+        "TA-PATH-031",
+        "TA-PATH-50-WELCOME"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -635,7 +748,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "TA-PATH-005",
-        "TA-PATH-011"
+        "TA-PATH-011",
+        "TA-PATH-49-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -646,7 +760,8 @@
       "segments": [
         "TA-PATH-002",
         "TA-PATH-004",
-        "TA-PATH-006"
+        "TA-PATH-006",
+        "TA-PATH-47-REPLY"
       ],
       "omits": [],
       "relocates": {}
@@ -658,7 +773,8 @@
         "TA-PATH-013",
         "TA-PATH-018",
         "TA-PATH-023",
-        "TA-PATH-033"
+        "TA-PATH-033",
+        "TA-PATH-46-ROLE"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -671,7 +787,8 @@
         "TA-PATH-008",
         "TA-PATH-010",
         "TA-PATH-019",
-        "TA-PATH-034"
+        "TA-PATH-034",
+        "TA-PATH-45-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -683,7 +800,8 @@
       "segments": [
         "TA-PATH-015",
         "TA-PATH-021",
-        "TA-PATH-032"
+        "TA-PATH-032",
+        "TA-PATH-44-ASK"
       ],
       "omits": [],
       "relocates": {}
@@ -691,7 +809,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "TA-PATH-012",
-        "TA-PATH-035"
+        "TA-PATH-035",
+        "TA-PATH-48-LEAVE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1517,6 +1636,111 @@
         "TA-C43-son",
         "TA-C43-daughter",
         "TA-C43-family"
+      ]
+    },
+    {
+      "id": "TA-EXT-44-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things I might ask somebody for in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C44-fruit",
+        "TA-C44-cloth",
+        "TA-C44-lamp",
+        "TA-C44-salt",
+        "TA-C44-book"
+      ]
+    },
+    {
+      "id": "TA-EXT-45-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C45-eye",
+        "TA-C45-ear",
+        "TA-C45-nose",
+        "TA-C45-tooth",
+        "TA-C45-stomach"
+      ]
+    },
+    {
+      "id": "TA-EXT-46-ROLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what somebody's work is in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C46-teacher",
+        "TA-C46-student",
+        "TA-C46-doctor",
+        "TA-C46-farmer",
+        "TA-C46-guest"
+      ]
+    },
+    {
+      "id": "TA-EXT-47-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can give five short replies in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C47-true",
+        "TA-C47-enough",
+        "TA-C47-certainly",
+        "TA-C47-perhaps",
+        "TA-C47-just-so"
+      ]
+    },
+    {
+      "id": "TA-EXT-48-LEAVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say I am setting out in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C48-now",
+        "TA-C48-time",
+        "TA-C48-journey",
+        "TA-C48-later",
+        "TA-C48-set-out"
+      ]
+    },
+    {
+      "id": "TA-EXT-49-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can thank and wish well in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C49-affection",
+        "TA-C49-respect",
+        "TA-C49-gladness",
+        "TA-C49-good-wish",
+        "TA-C49-many-thanks"
+      ]
+    },
+    {
+      "id": "TA-EXT-50-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things a guest meets at a Tamil doorway.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C50-threshold",
+        "TA-C50-kolam",
+        "TA-C50-flower",
+        "TA-C50-betel-leaf",
+        "TA-C50-welcome"
       ]
     }
   ]

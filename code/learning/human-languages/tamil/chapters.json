@@ -907,6 +907,153 @@
           "TA-LEX-FAMILY"
         ]
       }
+    },
+    {
+      "chapter": 44,
+      "title": "Things You Ask For",
+      "label": "ch:ta-things-you-ask-for",
+      "canDo": "I can name five everyday things I might ask somebody for in Tamil, and say which of them Tamil has held all along and which arrived from elsewhere.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TA-C44-book",
+        "kind": "production",
+        "summary": "Complete TA-C44-book and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C44-ASK-01",
+          "TA-LEX-C44-ASK-02",
+          "TA-LEX-C44-ASK-03",
+          "TA-LEX-C44-ASK-04",
+          "TA-LEX-C44-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 45,
+      "title": "More of the Body",
+      "label": "ch:ta-body-more",
+      "canDo": "I can name five more parts of the body in Tamil, and point to the sound changes that separate them from their Malayalam, Telugu and Kannada cousins.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TA-C45-stomach",
+        "kind": "production",
+        "summary": "Complete TA-C45-stomach and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C45-BODY-01",
+          "TA-LEX-C45-BODY-02",
+          "TA-LEX-C45-BODY-03",
+          "TA-LEX-C45-BODY-04",
+          "TA-LEX-C45-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 46,
+      "title": "Who Somebody Is",
+      "label": "ch:ta-roles",
+      "canDo": "I can say what somebody's work is in Tamil, and recognise the endings that mark a man, a woman and respect.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TA-C46-guest",
+        "kind": "production",
+        "summary": "Complete TA-C46-guest and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C46-ROLE-01",
+          "TA-LEX-C46-ROLE-02",
+          "TA-LEX-C46-ROLE-03",
+          "TA-LEX-C46-ROLE-04",
+          "TA-LEX-C46-ROLE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
+      "title": "Short Replies",
+      "label": "ch:ta-replies",
+      "canDo": "I can answer with five short replies in Tamil, from a flat agreement to a hedge.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TA-C47-just-so",
+        "kind": "production",
+        "summary": "Complete TA-C47-just-so and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C47-REPLY-01",
+          "TA-LEX-C47-REPLY-02",
+          "TA-LEX-C47-REPLY-03",
+          "TA-LEX-C47-REPLY-04",
+          "TA-LEX-C47-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 48,
+      "title": "Setting Out",
+      "label": "ch:ta-setting-out",
+      "canDo": "I can say that it is time, that I have a journey, and that I am setting out in Tamil.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TA-C48-set-out",
+        "kind": "production",
+        "summary": "Complete TA-C48-set-out and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C48-LEAVE-01",
+          "TA-LEX-C48-LEAVE-02",
+          "TA-LEX-C48-LEAVE-03",
+          "TA-LEX-C48-LEAVE-04",
+          "TA-LEX-C48-LEAVE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 49,
+      "title": "Courtesy",
+      "label": "ch:ta-courtesy",
+      "canDo": "I can thank somebody warmly in Tamil, show respect, and wish them well.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TA-C49-many-thanks",
+        "kind": "production",
+        "summary": "Complete TA-C49-many-thanks and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C49-COURTESY-01",
+          "TA-LEX-C49-COURTESY-02",
+          "TA-LEX-C49-COURTESY-03",
+          "TA-LEX-C49-COURTESY-04",
+          "TA-LEX-C49-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 50,
+      "title": "At the Doorway",
+      "label": "ch:ta-at-the-doorway",
+      "canDo": "I can name the five things a guest meets at a Tamil doorway, and welcome them.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TA-C50-welcome",
+        "kind": "production",
+        "summary": "Complete TA-C50-welcome and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C50-WELCOME-01",
+          "TA-LEX-C50-WELCOME-02",
+          "TA-LEX-C50-WELCOME-03",
+          "TA-LEX-C50-WELCOME-04",
+          "TA-LEX-C50-WELCOME-05"
+        ]
+      }
     }
   ]
 }
