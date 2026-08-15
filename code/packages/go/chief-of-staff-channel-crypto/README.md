@@ -1,12 +1,13 @@
 # Chief of Staff Channel Crypto (Go)
 
 This package implements the portable D18F immutable encrypted-message profile
-for Go Chief of Staff agents. It consumes the shared fixture corpus in
-`code/fixtures/chief-of-staff-message/v1` and produces the same authenticated
-header, `D18M` version 1 record, canonical JSON, ciphertext, tag, and Ed25519
-signature as the production Rust implementation.
+and D18Q channel-key grant profile for Go Chief of Staff agents. It consumes
+the shared fixture corpora in `code/fixtures/chief-of-staff-message/v1` and
+`code/fixtures/chief-of-staff-channel-key-grant/v1`, producing the same
+authenticated `D18M` messages and sealed `D18G` grants as the production Rust
+implementation.
 
-The implementation uses repository-owned SHA-256, Ed25519, and
+The implementation uses repository-owned SHA-256, HKDF, X25519, Ed25519, and
 XChaCha20-Poly1305 primitives. It never falls back to D19 `ACTM`, plaintext, a
 host crypto API, or a JSON-only envelope.
 
@@ -24,6 +25,33 @@ host-specific clocks.
 Errors are `ProfileError` values with the stable D18F `Code` taxonomy.
 Verification returns plaintext only after field validation, epoch resolution,
 signature verification, AEAD authentication, and plaintext-hash comparison.
+
+## Channel-key grants
+
+D18Q wraps one channel master key for one receiver. Public grant fields remain
+unexported and every byte accessor returns a defensive copy. Managed CMK,
+receiver-private-key, and signing-key values expose explicit `Destroy` methods;
+receiver epoch installation is atomic and monotonic.
+
+```go
+cmk, err := channelcrypto.GenerateChannelMasterKey()
+grant, err := channelcrypto.SealChannelKey(
+    fields, cmk, receiverPublicKey, signingKey,
+)
+receiverEpochs, err := channelcrypto.NewReceiverEpochKeys(
+    fields.OriginatorID(), fields.ReceiverID(), fields.ChannelID(),
+    receiverKeyPair, originatorPublicKey,
+)
+outcome, err := receiverEpochs.InstallGrant(grant)
+epochKey, err := receiverEpochs.Key(fields.KeyEpoch())
+```
+
+`PlanRotation` creates a complete receiver-sorted prospective plan and emits no
+grant for a revoked receiver. D18Q failures are `KeyGrantProfileError` values
+with stable codes. `GrantSecretErasureCapability()` honestly reports
+`best_effort`: owned arrays and slices are cleared on controlled destruction,
+but Go value copies, garbage collection, and repository primitive intermediates
+prevent a physical-memory guarantee.
 
 ## Development
 

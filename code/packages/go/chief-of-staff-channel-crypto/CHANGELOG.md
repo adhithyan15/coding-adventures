@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add immutable-by-convention D18Q `D18G` v1 grants using repository X25519,
+  HKDF-SHA256, XChaCha20-Poly1305, and Ed25519 primitives.
+- Add managed keys, atomic monotonic receiver epoch state, deterministic
+  prospective rotation, stable errors, and honest `best_effort` erasure.
+- Consume every canonical positive, negative, state, and rotation fixture.
+
 ## 0.1.0 - 2026-08-14
 
 - Add the immutable Go D18F message model with defensive byte ownership.
