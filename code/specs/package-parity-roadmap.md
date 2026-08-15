@@ -221,11 +221,12 @@ receiver epoch installation, pure rotation plan, stable errors, deterministic
 fixture seams, and honest secret-erasure capability reporting. The shared
 fixture/Rust lock now fixes every cryptographic intermediate, D18G byte,
 validation-order failure, receiver-state transition, and A+B to B-only
-rotation. The TypeScript (#11753), Python (#11754), and Go (#11755) consumers
+rotation. The TypeScript (#11753), Python (#11754), Go (#11755), and Ruby
+(#11756) consumers
 reproduce that full corpus through repository-owned primitives with immutable
 values. They report secret erasure honestly as `best_effort`,
-`not_enforceable`, and `best_effort`, respectively. Ruby and Elixir consumers,
-the central gate, and crash-safe durable epoch activation (#11734) remain
+`not_enforceable`, `best_effort`, and `best_effort`, respectively. The Elixir
+consumer, central gate, and crash-safe durable epoch activation (#11734) remain
 explicit follow-up work.
 
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-

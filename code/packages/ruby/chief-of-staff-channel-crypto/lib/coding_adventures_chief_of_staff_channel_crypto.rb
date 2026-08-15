@@ -606,3 +606,5 @@ module CodingAdventures
     end
   end
 end
+
+require_relative "coding_adventures_chief_of_staff_channel_crypto/grant_profile"
