@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.3] — 2026-08-15 — decode the `v128` value-type byte (task #75, SIMD PR1b-3 follow-up)
+
+### Fixed
+
+- `decode_value_type` gains a `0x7B => Ok(ValueType::V128)` arm.
+  Previously the ONLY value-type byte this crate's binary decoder didn't
+  recognize at all — `wasm-types` (0.1.3) and `wasm-wast-parser`'s
+  TEXT-format decoder (SIMD PR1b-2) already handled `v128`, but a
+  `(module binary ...)` whose type section declared `(result v128)` (or
+  a v128 param/local) failed to decode with "unknown value type byte:
+  0x7B". Confirmed needed by the real, pinned-commit `simd_const.wast`'s
+  own `(module binary ...)` directives (e.g. `parse_i32x4`/`parse_f64x2`
+  etc.). The code SECTION never needed a fix — function bodies are read
+  as raw, undecoded bytes (`parse_code_section`), so `0xFD`-prefixed SIMD
+  instructions inside one were already opaque to this crate either way;
+  only the TYPE-section value-type byte needed recognizing.
+- 2 new tests: a `(result v128)` function type decoding from the type
+  section, and a `(v128) -> (v128)` function with a declared v128 LOCAL
+  decoding from a real function body (exercises all 3 `decode_value_type`
+  call sites the fix touches, not just the narrower results-only case).
+
 ## [0.2.2] — 2026-08-15 — decode the `shared` memory bit (WASM18)
 
 ### Added
