@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 50,
+  "title": "Courtesy Words",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:62e3fc6e3fc19078",
+  "lessons": [
+    {
+      "id": "HI-C50-gratitude",
+      "sequence": 1600,
+      "title": "आभार (ābhār) — gratitude",
+      "headword": "आभार",
+      "romanization": "ābhār",
+      "gloss": "gratitude",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f71e7f2a0f25de50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did nikalnā mean, and what did mulāqāt mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आभार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभार (ābhār) — \"gratitude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit ā-bhāra, 'a load carried toward' — built on bhṛ-, 'to bear', which is the same ancient root as Latin ferre and English \"bear\". To be grateful, on the evidence of this word, is to be carrying a weight that somebody else put there."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands above धन्यवाद in formality, and well above शुक्रिया. It is the word a written speech uses, or a letter, or the last line of a printed programme."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five courtesy words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābhār, then mulāqāt, the thanks and the meeting it ends",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābhār*, then *mulāqāt*, the thanks and the meeting it ends]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आभार (ābhār) mean? (\"gratitude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C50-favour",
+      "sequence": 1610,
+      "title": "एहसान (ehsān) — a favour",
+      "headword": "एहसान",
+      "romanization": "ehsān",
+      "gloss": "a favour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c0346591969a2d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ābhār mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एहसान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एहसान (ehsān) — \"a favour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic iḥsān, 'the doing of what is good', on the root ḥ-s-n, which carries both beauty and goodness and also gives the names ḥasan and ḥusn. Persian passed it on to Hindi as the word for a kindness done to you and not forgotten."
+            },
+            {
+              "kind": "speech",
+              "text": "Two phrases live on it and point opposite ways. Ehsān mānnā is to acknowledge a favour; ehsān jatānā is to keep reminding somebody that you did them one. The language leaves you in no doubt which of the two it thinks less of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: gratitude, and the thing it is owed for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ehsān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ehsān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ehsān, then ābhār, the favour and the thanks for it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ehsān*, then *ābhār*, the favour and the thanks for it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does एहसान (ehsān) mean? (\"a favour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C50-respect",
+      "sequence": 1620,
+      "title": "आदर (ādar) — respect",
+      "headword": "आदर",
+      "romanization": "ādar",
+      "gloss": "respect",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb28962cc82ed90a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ehsān mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आदर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आदर (ādar) — \"respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit ādara, 'regard, attentiveness', from ā-dṛ-, 'to heed'. Hindi carries this word inside its own machinery: the आप form is called ādar-sūcak, the respect-marking form."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is not only a word for a feeling somebody has. It is the name of a choice the language makes you make in nearly every sentence you speak, whether you have thought about it or not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this one is built into the grammar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādar, then ehsān, then ābhār, back down the run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādar*, then *ehsān*, then *ābhār*, back down the run]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आदर (ādar) mean? (\"respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C50-blessing",
+      "sequence": 1630,
+      "title": "आशीर्वाद (āśīrvād) — a blessing",
+      "headword": "आशीर्वाद",
+      "romanization": "āśīrvād",
+      "gloss": "a blessing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fc1e405d94ce9ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ādar mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आशीर्वाद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशीर्वाद (āśīrvād) — \"a blessing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit āśīr-vāda: āśis, 'a wish, a prayer', joined to vāda, 'speech'. A blessing is literally a wish said out loud. The s turning into r before the v is a regular joint in Sanskrit rather than a quirk of this one word."
+            },
+            {
+              "kind": "speech",
+              "text": "It travels downward. An elder gives आशीर्वाद (āśīrvād); the younger person asks for it by bending to touch the elder's feet, and the giving is spoken over the bent head."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one is given rather than said."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśīrvād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśīrvād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśīrvād, then ādar, the blessing and the respect that asks for it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśīrvād*, then *ādar*, the blessing and the respect that asks for it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आशीर्वाद (āśīrvād) mean? (\"a blessing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C50-salutation",
+      "sequence": 1640,
+      "title": "प्रणाम (praṇām) — a bow, a salutation",
+      "headword": "प्रणाम",
+      "romanization": "praṇām",
+      "gloss": "a bow, a salutation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82d548303d513726",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did āśīrvād mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रणाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रणाम (praṇām) — \"a bow, a salutation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pra-ṇāma, 'a bending forward', on nam-, 'to bow' — the identical root standing inside नमस्ते and नमस्कार. Three words, one gesture, three heights of formality."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रणाम (praṇām) is what a younger person says to an elder, often while bending to touch the feet, and what it expects back is आशीर्वाद (āśīrvād). The pair of words is the pair of movements: one goes down, one comes back over the top."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: gratitude, a favour, respect, a blessing, a bow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praṇām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praṇām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — ābhār, ehsān, ādar, āśīrvād, praṇām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *ābhār*, *ehsān*, *ādar*, *āśīrvād*, *praṇām*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रणाम (praṇām) mean? (\"a bow, a salutation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

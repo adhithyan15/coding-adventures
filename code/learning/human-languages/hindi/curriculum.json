@@ -563,6 +563,118 @@
         "HI-EXT-44-FAMILY"
       ],
       "after": []
+    },
+    {
+      "id": "HI-PATH-45-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "HI-C45-fruit",
+        "HI-C45-cloth",
+        "HI-C45-lamp",
+        "HI-C45-salt",
+        "HI-C45-soap"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-45-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-46-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C46-hair",
+        "HI-C46-finger",
+        "HI-C46-ear",
+        "HI-C46-nose",
+        "HI-C46-throat"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-46-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-47-ROLE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C47-teacher",
+        "HI-C47-student",
+        "HI-C47-farmer",
+        "HI-C47-guest",
+        "HI-C47-neighbour"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-47-ROLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-48-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "HI-C48-true",
+        "HI-C48-enough",
+        "HI-C48-certainly",
+        "HI-C48-perhaps",
+        "HI-C48-absolutely"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-48-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-49-LEAVE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C49-now",
+        "HI-C49-day-after",
+        "HI-C49-journey",
+        "HI-C49-set-out",
+        "HI-C49-meeting"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-49-LEAVE"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-50-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "HI-C50-gratitude",
+        "HI-C50-favour",
+        "HI-C50-respect",
+        "HI-C50-blessing",
+        "HI-C50-salutation"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-50-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-51-WELCOME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C51-flower",
+        "HI-C51-garland",
+        "HI-C51-courtyard",
+        "HI-C51-table",
+        "HI-C51-sweet"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-51-WELCOME"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -570,7 +682,8 @@
       "segments": [
         "HI-PATH-001",
         "HI-PATH-100",
-        "HI-PATH-030"
+        "HI-PATH-030",
+        "HI-PATH-51-WELCOME"
       ],
       "omits": [
         "GREETING-PEACE",
@@ -581,14 +694,16 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "HI-PATH-002",
-        "HI-PATH-005"
+        "HI-PATH-005",
+        "HI-PATH-50-COURTESY"
       ],
       "omits": [],
       "relocates": {}
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "HI-PATH-011"
+        "HI-PATH-011",
+        "HI-PATH-48-REPLY"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -602,7 +717,8 @@
         "HI-PATH-007",
         "HI-PATH-015",
         "HI-PATH-020",
-        "HI-PATH-033"
+        "HI-PATH-033",
+        "HI-PATH-47-ROLE"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -614,7 +730,8 @@
         "HI-PATH-006",
         "HI-PATH-027",
         "HI-PATH-016",
-        "HI-PATH-032"
+        "HI-PATH-032",
+        "HI-PATH-46-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -626,7 +743,8 @@
       "segments": [
         "HI-PATH-012",
         "HI-PATH-018",
-        "HI-PATH-031"
+        "HI-PATH-031",
+        "HI-PATH-45-ASK"
       ],
       "omits": [],
       "relocates": {}
@@ -635,7 +753,8 @@
       "segments": [
         "HI-PATH-003",
         "HI-PATH-009",
-        "HI-PATH-025"
+        "HI-PATH-025",
+        "HI-PATH-49-LEAVE"
       ],
       "omits": [
         "FAREWELL-SOON"
@@ -1353,6 +1472,111 @@
         "HI-C44-daughter",
         "HI-C44-family",
         "HI-C44-people"
+      ]
+    },
+    {
+      "id": "HI-EXT-45-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things I might ask someone for in Hindi.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C45-fruit",
+        "HI-C45-cloth",
+        "HI-C45-lamp",
+        "HI-C45-salt",
+        "HI-C45-soap"
+      ]
+    },
+    {
+      "id": "HI-EXT-46-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Hindi.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C46-hair",
+        "HI-C46-finger",
+        "HI-C46-ear",
+        "HI-C46-nose",
+        "HI-C46-throat"
+      ]
+    },
+    {
+      "id": "HI-EXT-47-ROLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say what someone's work is in Hindi.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C47-teacher",
+        "HI-C47-student",
+        "HI-C47-farmer",
+        "HI-C47-guest",
+        "HI-C47-neighbour"
+      ]
+    },
+    {
+      "id": "HI-EXT-48-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer someone in Hindi with a single short word.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C48-true",
+        "HI-C48-enough",
+        "HI-C48-certainly",
+        "HI-C48-perhaps",
+        "HI-C48-absolutely"
+      ]
+    },
+    {
+      "id": "HI-EXT-49-LEAVE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say when I am leaving in Hindi.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C49-now",
+        "HI-C49-day-after",
+        "HI-C49-journey",
+        "HI-C49-set-out",
+        "HI-C49-meeting"
+      ]
+    },
+    {
+      "id": "HI-EXT-50-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can thank someone in Hindi in more than one register.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C50-gratitude",
+        "HI-C50-favour",
+        "HI-C50-respect",
+        "HI-C50-blessing",
+        "HI-C50-salutation"
+      ]
+    },
+    {
+      "id": "HI-EXT-51-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Hindi household welcomes a guest with.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C51-flower",
+        "HI-C51-garland",
+        "HI-C51-courtyard",
+        "HI-C51-table",
+        "HI-C51-sweet"
       ]
     }
   ]

@@ -1259,6 +1259,48 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 45,
+      "output": "hindi/book/chapters/ch45-things-you-ask-for.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 46,
+      "output": "hindi/book/chapters/ch46-hair-ear-throat.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 47,
+      "output": "hindi/book/chapters/ch47-who-someone-is.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 48,
+      "output": "hindi/book/chapters/ch48-short-replies.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 49,
+      "output": "hindi/book/chapters/ch49-taking-your-leave.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 50,
+      "output": "hindi/book/chapters/ch50-courtesy-words.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 51,
+      "output": "hindi/book/chapters/ch51-welcoming-a-guest.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "output": "italian/book/chapters/ch02-how-are-you.tex"

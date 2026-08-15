@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 51,
+  "title": "Welcoming a Guest",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9c9d075b1b211d3c",
+  "lessons": [
+    {
+      "id": "HI-C51-flower",
+      "sequence": 1650,
+      "title": "फूल (phūl) — a flower",
+      "headword": "फूल",
+      "romanization": "phūl",
+      "gloss": "a flower",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:173a576c6874cb44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did āśīrvād mean, and what did praṇām mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फूल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फूल (phūl) — \"a flower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit phulla, 'blossomed, opened out', from phull-, 'to bloom'. So the Hindi word for a flower is at bottom a word for the act of opening, with the object named after the event."
+            },
+            {
+              "kind": "speech",
+              "text": "The double ll collapsed and paid for itself by lengthening the vowel in front of it, which is the standard trade in this family — the same bargain that gave you कान out of karṇa. It is also the measure of lightness: something that weighs nothing at all is phūl jaisā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things at a welcome."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phūl, then praṇām, the flower and the bow at the door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phūl*, then *praṇām*, the flower and the bow at the door]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फूल (phūl) mean? (\"a flower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C51-garland",
+      "sequence": 1660,
+      "title": "माला (mālā) — a garland",
+      "headword": "माला",
+      "romanization": "mālā",
+      "gloss": "a garland",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5a15ff38e973861",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did phūl mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: माला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माला (mālā) — \"a garland\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit mālā, a garland or a string of beads, and the second sense has travelled furthest: the string of a hundred and eight beads counted through the fingers is a mālā, and English borrowed the word back, unchanged, for that same object."
+            },
+            {
+              "kind": "speech",
+              "text": "Around the neck of a guest it is a welcome. Around the frame of a photograph it is mourning. The object does not change at all; where it is hung decides everything."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: a flower and a garland made of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālā, then phūl, the string and the thing it is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālā*, then *phūl*, the string and the thing it is made of]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does माला (mālā) mean? (\"a garland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C51-courtyard",
+      "sequence": 1670,
+      "title": "आँगन (āṁgan) — a courtyard",
+      "headword": "आँगन",
+      "romanization": "āṁgan",
+      "gloss": "a courtyard",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40b83642d5558482",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mālā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आँगन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आँगन (āṁgan) — \"a courtyard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit aṅgaṇa, the open ground a house encloses — the room with no roof over it. Old town houses are built around one, and a great deal of what English would put in a living room happens there instead: the drying, the talking, the sitting with a guest."
+            },
+            {
+              "kind": "speech",
+              "text": "The mark above the line marks a nasal that used to be a whole consonant, exactly as it does in uṅglī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this one is where you seat the guest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṁgan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṁgan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṁgan, then mālā, then phūl, back down the run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṁgan*, then *mālā*, then *phūl*, back down the run]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आँगन (āṁgan) mean? (\"a courtyard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C51-table",
+      "sequence": 1680,
+      "title": "मेज़ (mez) — a table",
+      "headword": "मेज़",
+      "romanization": "mez",
+      "gloss": "a table",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fd162530062e183",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did āṁgan mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेज़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेज़ (mez) — \"a table\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian mez, and behind the Persian sits Portuguese mesa, out of Latin mēnsa. Portuguese ships carried the object and its name into the Indian Ocean, which is the same route that brought कमरा in from camera."
+            },
+            {
+              "kind": "speech",
+              "text": "There was no inherited word for a raised surface on four legs because the household had not had one; people ate and wrote and worked at floor level. The word arrived with the furniture, which is usually how that happens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and one of them came off a ship."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mez",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mez*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mez, then āṁgan, one of them standing inside the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mez*, then *āṁgan*, one of them standing inside the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेज़ (mez) mean? (\"a table\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C51-sweet",
+      "sequence": 1690,
+      "title": "मिठाई (miṭhāī) — a sweet",
+      "headword": "मिठाई",
+      "romanization": "miṭhāī",
+      "gloss": "a sweet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba00cfe6777cc700",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mez mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिठाई",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिठाई (miṭhāī) — \"a sweet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From mīṭhā, 'sweet', with the -āī ending that turns a quality into a thing you can hold — sweetness first, then the sweet itself. Behind mīṭhā is Sanskrit miṣṭa, 'sweetened, relished'."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing closes a welcome better: the garland at the door, the seat in the courtyard, and something sweet in the hand before anybody says why they have come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: a flower, a garland, a courtyard, a table, a sweet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miṭhāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miṭhāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — phūl, mālā, āṁgan, mez, miṭhāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *phūl*, *mālā*, *āṁgan*, *mez*, *miṭhāī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिठाई (miṭhāī) mean? (\"a sweet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

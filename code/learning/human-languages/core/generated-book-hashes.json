@@ -1313,6 +1313,97 @@
       "tex": "hindi/book/chapters/ch44-sons-daughters.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:4c850bd00e146040",
+      "lessonIds": [
+        "HI-C45-fruit",
+        "HI-C45-cloth",
+        "HI-C45-lamp",
+        "HI-C45-salt",
+        "HI-C45-soap"
+      ],
+      "tex": "hindi/book/chapters/ch45-things-you-ask-for.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:2eef008015750468",
+      "lessonIds": [
+        "HI-C46-hair",
+        "HI-C46-finger",
+        "HI-C46-ear",
+        "HI-C46-nose",
+        "HI-C46-throat"
+      ],
+      "tex": "hindi/book/chapters/ch46-hair-ear-throat.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:291c85d54b445924",
+      "lessonIds": [
+        "HI-C47-teacher",
+        "HI-C47-student",
+        "HI-C47-farmer",
+        "HI-C47-guest",
+        "HI-C47-neighbour"
+      ],
+      "tex": "hindi/book/chapters/ch47-who-someone-is.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:3a6282d4ca8160a2",
+      "lessonIds": [
+        "HI-C48-true",
+        "HI-C48-enough",
+        "HI-C48-certainly",
+        "HI-C48-perhaps",
+        "HI-C48-absolutely"
+      ],
+      "tex": "hindi/book/chapters/ch48-short-replies.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:bb610ca50b6a121c",
+      "lessonIds": [
+        "HI-C49-now",
+        "HI-C49-day-after",
+        "HI-C49-journey",
+        "HI-C49-set-out",
+        "HI-C49-meeting"
+      ],
+      "tex": "hindi/book/chapters/ch49-taking-your-leave.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:56e63e326f262515",
+      "lessonIds": [
+        "HI-C50-gratitude",
+        "HI-C50-favour",
+        "HI-C50-respect",
+        "HI-C50-blessing",
+        "HI-C50-salutation"
+      ],
+      "tex": "hindi/book/chapters/ch50-courtesy-words.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:65fe668589e0caeb",
+      "lessonIds": [
+        "HI-C51-flower",
+        "HI-C51-garland",
+        "HI-C51-courtyard",
+        "HI-C51-table",
+        "HI-C51-sweet"
+      ],
+      "tex": "hindi/book/chapters/ch51-welcoming-a-guest.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",

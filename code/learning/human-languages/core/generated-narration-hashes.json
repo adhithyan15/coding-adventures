@@ -2818,6 +2818,132 @@
       "jsonHash": "fnv1a64:25374706625b2a9a"
     },
     {
+      "language": "hindi",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:1209d4e5f87fc0dc",
+      "lessonIds": [
+        "HI-C45-fruit",
+        "HI-C45-cloth",
+        "HI-C45-lamp",
+        "HI-C45-salt",
+        "HI-C45-soap"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch45.txt",
+      "json": "hindi/narration/ch45.json",
+      "textHash": "fnv1a64:25a18fb2c072f8d0",
+      "jsonHash": "fnv1a64:2cbba22e99287d03"
+    },
+    {
+      "language": "hindi",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:940fd9319f463f9b",
+      "lessonIds": [
+        "HI-C46-hair",
+        "HI-C46-finger",
+        "HI-C46-ear",
+        "HI-C46-nose",
+        "HI-C46-throat"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch46.txt",
+      "json": "hindi/narration/ch46.json",
+      "textHash": "fnv1a64:b00b6b07ee6afde4",
+      "jsonHash": "fnv1a64:11c2cfaa453471df"
+    },
+    {
+      "language": "hindi",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:69bd0c1b96ca2d0a",
+      "lessonIds": [
+        "HI-C47-teacher",
+        "HI-C47-student",
+        "HI-C47-farmer",
+        "HI-C47-guest",
+        "HI-C47-neighbour"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch47.txt",
+      "json": "hindi/narration/ch47.json",
+      "textHash": "fnv1a64:6690fd414194da57",
+      "jsonHash": "fnv1a64:94c3cb232207d303"
+    },
+    {
+      "language": "hindi",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:95b14ebe3fa00fa8",
+      "lessonIds": [
+        "HI-C48-true",
+        "HI-C48-enough",
+        "HI-C48-certainly",
+        "HI-C48-perhaps",
+        "HI-C48-absolutely"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch48.txt",
+      "json": "hindi/narration/ch48.json",
+      "textHash": "fnv1a64:da48d1529b393908",
+      "jsonHash": "fnv1a64:29ef68e54d4df839"
+    },
+    {
+      "language": "hindi",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:56764eb1be8fc968",
+      "lessonIds": [
+        "HI-C49-now",
+        "HI-C49-day-after",
+        "HI-C49-journey",
+        "HI-C49-set-out",
+        "HI-C49-meeting"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch49.txt",
+      "json": "hindi/narration/ch49.json",
+      "textHash": "fnv1a64:12a270684ee87aeb",
+      "jsonHash": "fnv1a64:c692110fef56ae58"
+    },
+    {
+      "language": "hindi",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:62e3fc6e3fc19078",
+      "lessonIds": [
+        "HI-C50-gratitude",
+        "HI-C50-favour",
+        "HI-C50-respect",
+        "HI-C50-blessing",
+        "HI-C50-salutation"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch50.txt",
+      "json": "hindi/narration/ch50.json",
+      "textHash": "fnv1a64:eeb9ddb1acbca007",
+      "jsonHash": "fnv1a64:ec12c21c8a88930d"
+    },
+    {
+      "language": "hindi",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:9c9d075b1b211d3c",
+      "lessonIds": [
+        "HI-C51-flower",
+        "HI-C51-garland",
+        "HI-C51-courtyard",
+        "HI-C51-table",
+        "HI-C51-sweet"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch51.txt",
+      "json": "hindi/narration/ch51.json",
+      "textHash": "fnv1a64:913e09d42235b894",
+      "jsonHash": "fnv1a64:1bc0788dd86193e4"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
