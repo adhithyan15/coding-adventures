@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 37,
+  "title": "More Courtesy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a2a5cda1a2c534a9",
+  "lessons": [
+    {
+      "id": "SA-C37-peace",
+      "sequence": 1780,
+      "title": "शान्तिः (śāntiḥ) — peace, stillness",
+      "headword": "शान्तिः",
+      "romanization": "śāntiḥ",
+      "gloss": "peace, stillness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f24958f0029cd5b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did samyak mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शान्तिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शान्तिः (śāntiḥ) — \"peace, stillness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शान्तिः (śāntiḥ) is peace of a particular kind: not the absence of war so much as the settling of something that had been disturbed. It comes from śam, \"to grow calm, to come to rest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A great many Sanskrit texts close on it, said three times over, once for each of the troubles a person can meet. You already have स्वस्ति for a wish of wellbeing; शान्तिः (śāntiḥ) is the quieter one, and the one you would say last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word for peace, and the way Sanskrit texts stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāntiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāntiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samyak, then śāntiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samyak*, then *śāntiḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शान्तिः (śāntiḥ) mean? (\"peace, stillness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C37-respectfully",
+      "sequence": 1790,
+      "title": "सादरम् (sādaram) — respectfully, with respect",
+      "headword": "सादरम्",
+      "romanization": "sādaram",
+      "gloss": "respectfully, with respect",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:353271ff29a08021",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did śāntiḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सादरम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सादरम् (sādaram) — \"respectfully, with respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सादरम् (sādaram) is sa-, \"with\", joined to ādara, \"regard, esteem\" — so, \"with regard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes at the front of a request, where English would put its politeness at the end of a letter. Set beside कृपया it makes a request about as courteous as Sanskrit gets: sādaram kṛpayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A politeness that goes at the front rather than the end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādaram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādaram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāntiḥ, then sādaram kṛpayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāntiḥ*, then *sādaram kṛpayā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सादरम् (sādaram) mean? (\"respectfully, with respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C37-gracious",
+      "sequence": 1800,
+      "title": "प्रसन्नः (prasannaḥ) — pleased, gracious, clear",
+      "headword": "प्रसन्नः",
+      "romanization": "prasannaḥ",
+      "gloss": "pleased, gracious, clear",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca1591e75705340b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did sādaram mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रसन्नः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रसन्नः (prasannaḥ) — \"pleased, gracious, clear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रसन्नः (prasannaḥ) describes a face that has cleared. The one word covers still water, a settled mind and a kindly host, because it is pra-, \"forth\", with sad, \"to settle\": what was cloudy has dropped its silt."
+            },
+            {
+              "kind": "speech",
+              "text": "To say that a guest left you प्रसन्नः (prasannaḥ) is to say they left you at ease. The offering handed back from a temple, prasāda, is this same word — grace, given a physical form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word for water, a mind and a host, all at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prasannaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prasannaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādaram, then prasannaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādaram*, then *prasannaḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रसन्नः (prasannaḥ) mean? (\"pleased, gracious, clear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C37-congratulations",
+      "sequence": 1810,
+      "title": "अभिनन्दनम् (abhinandanam) — congratulation, a greeting of delight",
+      "headword": "अभिनन्दनम्",
+      "romanization": "abhinandanam",
+      "gloss": "congratulation, a greeting of delight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33d8b67680f686ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did prasannaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अभिनन्दनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अभिनन्दनम् (abhinandanam) — \"congratulation, a greeting of delight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अभिनन्दनम् (abhinandanam) is what you offer when something has gone well for somebody else. It is abhi, \"towards\", with nand, \"to rejoice\" — gladness turned towards another person rather than kept."
+            },
+            {
+              "kind": "speech",
+              "text": "That nand is the piece inside आनन्दः, the joy you met near the beginning of this book. The two words are the same delight, one held and one given away. Neuter -अम्."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Joy from the beginning of this book, turned outwards towards somebody else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandaḥ, then abhinandanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandaḥ*, then *abhinandanam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अभिनन्दनम् (abhinandanam) mean? (\"congratulation, a greeting of delight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C37-blessing",
+      "sequence": 1820,
+      "title": "आशीर्वादः (āśīrvādaḥ) — a blessing",
+      "headword": "आशीर्वादः",
+      "romanization": "āśīrvādaḥ",
+      "gloss": "a blessing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28450d82ab41f749",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of the chapter: what did abhinandanam mean, and what did śāntiḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आशीर्वादः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आशीर्वादः (āśīrvādaḥ) — \"a blessing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आशीर्वादः (āśīrvādaḥ) is a blessing spoken aloud: āśis, \"a wish, a prayer\", joined to vāda, \"a speaking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That second piece is the one inside धन्यवादः, the thanks you learned on your very first page — thanks is a speaking too. An elder gives आशीर्वादः (āśīrvādaḥ); you answer with धन्यवादः; and the two are built the same way, out of a wish and a word for saying it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five courtesies, and the piece shared by a blessing and a thanks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśīrvādaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśīrvādaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then āśīrvādaḥ and dhanyavādaḥ together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *āśīrvādaḥ* and *dhanyavādaḥ* together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आशीर्वादः (āśīrvādaḥ) mean? (\"a blessing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

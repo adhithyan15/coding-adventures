@@ -527,6 +527,118 @@
         "SA-EXT-30-WELCOME"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-31-SKY",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-C31-sky",
+        "SA-C31-moon",
+        "SA-C31-star",
+        "SA-C31-wind",
+        "SA-C31-snow"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-31-SKY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-32-TREE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "SA-C32-tree",
+        "SA-C32-leaf",
+        "SA-C32-grass",
+        "SA-C32-vine",
+        "SA-C32-wood"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-32-TREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-33-LAND",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "SA-C33-river",
+        "SA-C33-bridge",
+        "SA-C33-mountain",
+        "SA-C33-town",
+        "SA-C33-sea"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-33-LAND"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-34-LIMB",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C34-arm",
+        "SA-C34-neck",
+        "SA-C34-bone",
+        "SA-C34-blood",
+        "SA-C34-body"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-34-LIMB"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-35-HOUSE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "SA-C35-milk",
+        "SA-C35-honey",
+        "SA-C35-salt",
+        "SA-C35-book",
+        "SA-C35-bed"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-35-HOUSE"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-36-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "SA-C36-also",
+        "SA-C36-all",
+        "SA-C36-likewise",
+        "SA-C36-slowly",
+        "SA-C36-rightly"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-36-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-37-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "SA-C37-peace",
+        "SA-C37-respectfully",
+        "SA-C37-gracious",
+        "SA-C37-congratulations",
+        "SA-C37-blessing"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-37-COURTESY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -535,7 +647,8 @@
         "SA-PATH-001",
         "SA-PATH-003",
         "SA-PATH-100",
-        "SA-PATH-30-WELCOME"
+        "SA-PATH-30-WELCOME",
+        "SA-PATH-31-SKY"
       ],
       "omits": [
         "GREETING-PEACE"
@@ -546,7 +659,8 @@
       "segments": [
         "SA-PATH-002",
         "SA-PATH-007",
-        "SA-PATH-29-COURTESY"
+        "SA-PATH-29-COURTESY",
+        "SA-PATH-37-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -556,7 +670,8 @@
     "SPINE-RESPOND-BASIC": {
       "segments": [
         "SA-PATH-004",
-        "SA-PATH-27-REPLY"
+        "SA-PATH-27-REPLY",
+        "SA-PATH-36-REPLY"
       ],
       "omits": [
         "RESPONSE-YES",
@@ -569,7 +684,8 @@
       "segments": [
         "SA-PATH-005",
         "SA-PATH-014",
-        "SA-PATH-26-ROLE"
+        "SA-PATH-26-ROLE",
+        "SA-PATH-32-TREE"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -581,7 +697,8 @@
         "SA-PATH-006",
         "SA-PATH-015",
         "SA-PATH-016",
-        "SA-PATH-25-BODY"
+        "SA-PATH-25-BODY",
+        "SA-PATH-34-LIMB"
       ],
       "omits": [
         "WORD-GOOD",
@@ -592,7 +709,8 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "SA-PATH-013",
-        "SA-PATH-24-ASK"
+        "SA-PATH-24-ASK",
+        "SA-PATH-35-HOUSE"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -603,7 +721,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "SA-PATH-008",
-        "SA-PATH-28-LEAVE"
+        "SA-PATH-28-LEAVE",
+        "SA-PATH-33-LAND"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1294,6 +1413,111 @@
         "SA-C30-flower",
         "SA-C30-garland",
         "SA-C30-anjali"
+      ]
+    },
+    {
+      "id": "SA-EXT-31-SKY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things overhead in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C31-sky",
+        "SA-C31-moon",
+        "SA-C31-star",
+        "SA-C31-wind",
+        "SA-C31-snow"
+      ]
+    },
+    {
+      "id": "SA-EXT-32-TREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a tree and four things that grow in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C32-tree",
+        "SA-C32-leaf",
+        "SA-C32-grass",
+        "SA-C32-vine",
+        "SA-C32-wood"
+      ]
+    },
+    {
+      "id": "SA-EXT-33-LAND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five pieces of country in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C33-river",
+        "SA-C33-bridge",
+        "SA-C33-mountain",
+        "SA-C33-town",
+        "SA-C33-sea"
+      ]
+    },
+    {
+      "id": "SA-EXT-34-LIMB",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C34-arm",
+        "SA-C34-neck",
+        "SA-C34-bone",
+        "SA-C34-blood",
+        "SA-C34-body"
+      ]
+    },
+    {
+      "id": "SA-EXT-35-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things in a house in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C35-milk",
+        "SA-C35-honey",
+        "SA-C35-salt",
+        "SA-C35-book",
+        "SA-C35-bed"
+      ]
+    },
+    {
+      "id": "SA-EXT-36-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can give five more short replies in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C36-also",
+        "SA-C36-all",
+        "SA-C36-likewise",
+        "SA-C36-slowly",
+        "SA-C36-rightly"
+      ]
+    },
+    {
+      "id": "SA-EXT-37-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can offer five more courtesies in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C37-peace",
+        "SA-C37-respectfully",
+        "SA-C37-gracious",
+        "SA-C37-congratulations",
+        "SA-C37-blessing"
       ]
     }
   ]

@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:310f38ae5c6c8c38",
+  "sourceHash": "fnv1a64:37caf6316eb491f8",
   "lessons": [
     {
       "id": "SA-C30-door",
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb9dc10918695ac",
+      "sourceHash": "fnv1a64:87a65d41f4e139d4",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the last word of this book: what did mālā mean, and what did dvāram mean?"
+              "text": "Before the last word of the chapter: what did mālā mean, and what did dvāram mean?"
             }
           ]
         },
@@ -542,7 +542,7 @@
             },
             {
               "kind": "speech",
-              "text": "The root means \"to anoint, to smear\", and the cupped hands were first of all a vessel: the shape you make to carry water, or an offering. The gesture of greeting began as the shape of giving something away. So the book ends where it began, on the first word you learned, with the hands finally named."
+              "text": "The root means \"to anoint, to smear\", and the cupped hands were first of all a vessel: the shape you make to carry water, or an offering. The gesture of greeting began as the shape of giving something away. So the welcome closes where the book opened, on the first word you learned, with the hands finally named."
             }
           ]
         },

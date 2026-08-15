@@ -30,6 +30,44 @@ field, and `drivablePercent` will not be the only one.
 Until it is fixed: when the script reports it did not converge, check whether it
 edited a fixture, and look for a repeated annotation tag on a single line.
 
+## HL-C201 — appending a chapter can make the PREVIOUS last lesson untrue
+
+Found in the Sanskrit round-2 tranche. `SA-C30-anjali` was the final lesson of the
+book and said so, twice: *"before the last word of this book"* and *"the book ends
+where it began."* Both were true when written and both became **false the moment
+chapter 31 existed.** Nothing failed. No test checks whether a lesson's prose still
+describes the book it is now in.
+
+This is not a Sanskrit problem. **Every tranche in this rotation appends after the
+current last lesson**, so every tranche can silently falsify it. Seven tranches
+have already landed this way and only this one was checked.
+
+**The class is wider than "last".** Any prose asserting a position -- first, last,
+only, "so far", "the final chapter", "nothing after this" -- is a claim about the
+corpus, not about the language, and the corpus moves underneath it.
+
+**Immediate action:** before appending, READ the current last lesson of the track
+and reword any finality claim. Costs one file read per tranche.
+
+**Real fix:** a detector for position-asserting prose, checked against the lesson's
+actual position -- the same shape as the existing chapter-number-in-prose gate,
+which catches "chapter 16" but not "the last chapter". Worth building because the
+failure is invisible: the page still renders, the build still exits 0, and the
+sentence is simply a lie to the reader.
+
+**Audit DONE, and it came back clean.** The previously-final lessons of the six
+other tracks -- ES-C281-sucio, TA-C43-family, TE-C45-wife, KA-C45-wife,
+ML-C45-wife, HI-C44-people -- were each appended after without this check, so all
+six were re-read. **None makes a finality claim.** Sanskrit's was the only one.
+
+Worth recording for whoever builds the detector: a first-pass regex flagged three
+of the six, and **all three were false positives.** Spanish, Telugu and Malayalam
+each say *"the last word"* meaning THE PREVIOUS LESSON'S HEADWORD, which stays
+true forever. So the detector cannot key on the phrase alone -- it has to
+distinguish a claim about the BOOK's last word from a reference to the PRECEDING
+word, and those read almost identically. A naive rule here would fire on the
+common case and be turned off.
+
 ## HL-C200 — nine chapters diverge from their own track's script convention
 
 Found while verifying the Telugu tranche. A book target declares its script one of

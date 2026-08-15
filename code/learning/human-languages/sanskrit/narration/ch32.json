@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 32,
+  "title": "The Tree and What Grows",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3beefa46ef3ec7e7",
+  "lessons": [
+    {
+      "id": "SA-C32-tree",
+      "sequence": 1530,
+      "title": "तरुः (taruḥ) — a tree",
+      "headword": "तरुः",
+      "romanization": "taruḥ",
+      "gloss": "a tree",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f89c2a7b73f84ed8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did himam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तरुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तरुः (taruḥ) — \"a tree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had वनम्, a forest, for a long while now. तरुः (taruḥ) is one tree standing in it."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit keeps several names for a tree — vṛkṣa, druma, and this one — and तरुः (taruḥ) is the shortest and the easiest to say. It ends in -uḥ, like गुरुः and वायुः, so you already know how it behaves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One tree, picked out of a forest you already know."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taruḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taruḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himam, then taruḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himam*, then *taruḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तरुः (taruḥ) mean? (\"a tree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C32-leaf",
+      "sequence": 1540,
+      "title": "पत्रम् (patram) — a leaf",
+      "headword": "पत्रम्",
+      "romanization": "patram",
+      "gloss": "a leaf",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac89c3ba56203b36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did taruḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पत्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्रम् (patram) — \"a leaf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पत्रम् (patram) is a leaf. It is also a wing, and also a written page — one word for all three, because the root under it means \"to fly\". A leaf is the flying thing on a branch; a page is a leaf of another kind."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek pteron, \"wing\", is its cousin, behind helicopter and pterodactyl; so is Latin penna, \"feather\", behind pen and pinnate; and so is English feather itself. Neuter -अम्, like वस्त्रम् and आसनम्."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A leaf, a wing and a page, all carried by one word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taruḥ, then patram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taruḥ*, then *patram*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पत्रम् (patram) mean? (\"a leaf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C32-grass",
+      "sequence": 1550,
+      "title": "तृणम् (tṛṇam) — grass, a blade of grass",
+      "headword": "तृणम्",
+      "romanization": "tṛṇam",
+      "gloss": "grass, a blade of grass",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef88a4a51a58aa16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did patram mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तृणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तृणम् (tṛṇam) — \"grass, a blade of grass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तृणम् (tṛṇam) covers a single blade and a whole field of it. It is the low green stuff a तरुः (taruḥ) stands in."
+            },
+            {
+              "kind": "speech",
+              "text": "English thorn is the same word: Old English thorn, Gothic thaurnus, from a shape like trnus, \"a stiff thing that grows up out of the ground\". Sanskrit kept the mild end of that meaning and Germanic kept the sharp end, which is a common way for one word to become two things."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A third growing thing, and the reason grass and a thorn are the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tṛṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tṛṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patram, then tṛṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patram*, then *tṛṇam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तृणम् (tṛṇam) mean? (\"grass, a blade of grass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C32-vine",
+      "sequence": 1560,
+      "title": "लता (latā) — a creeper, a climbing plant",
+      "headword": "लता",
+      "romanization": "latā",
+      "gloss": "a creeper, a climbing plant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b2c7ed6ab912585",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did tṛṇam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लता (latā) — \"a creeper, a climbing plant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लता (latā) is anything that climbs rather than stands: a vine, a creeper, a trailing branch."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit poetry pairs it with तरुः (taruḥ) so often that the two almost arrive together — the creeper and the tree it climbs. Unlike most of this chapter it has no European cousin worth naming; it is homegrown, and it went on to become one of the commonest given names in India. Ends in -आ, like तारा."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A fourth growing thing, and a name half of India answers to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "latā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *latā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taruḥ, then latā, in the order they grow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taruḥ*, then *latā*, in the order they grow]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लता (latā) mean? (\"a creeper, a climbing plant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C32-wood",
+      "sequence": 1570,
+      "title": "दारु (dāru) — wood, timber",
+      "headword": "दारु",
+      "romanization": "dāru",
+      "gloss": "wood, timber",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc6ba698b4d186f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of the chapter: what did latā mean, and what did taruḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दारु",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दारु (dāru) — \"wood, timber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दारु (dāru) is the substance a तरुः (taruḥ) is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "It is one of the securest cousins in this book. English tree is it, and so are Gothic triu, Greek drus \"oak\", Welsh derwen and Russian derevo; through a Celtic word for one who knows the oak comes druid. English true and trust belong to the same family, on the old idea that to be true is to be as firm as a tree. Ends in short -u, like साधु."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five growing things, and the tree standing inside the English word true."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then name the English word hiding in dāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then name the English word hiding in *dāru*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दारु (dāru) mean? (\"wood, timber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
