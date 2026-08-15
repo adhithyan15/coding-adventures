@@ -219,7 +219,9 @@ keeps the shipped Rust `D18G` v1 record and fixes the X25519/HKDF-SHA256
 wrapping key, XChaCha20-Poly1305 AAD, Ed25519 signature input, validation order,
 receiver epoch installation, pure rotation plan, stable errors, deterministic
 fixture seams, and honest secret-erasure capability reporting. The shared
-fixture/Rust lock, five portable consumers, central gate, and crash-safe durable
+fixture/Rust lock now fixes every cryptographic intermediate, D18G byte,
+validation-order failure, receiver-state transition, and A+B to B-only
+rotation. Five portable consumers, the central gate, and crash-safe durable
 epoch activation (#11734) remain explicit follow-up work.
 
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-

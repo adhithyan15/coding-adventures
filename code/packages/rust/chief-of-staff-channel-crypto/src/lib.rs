@@ -8,6 +8,8 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18Q channel-key grant, receiver-state, and rotation profile.
+pub mod grant_profile;
 /// Portable D18F validation, JSON, verification, and UUID-v7 helpers.
 pub mod profile;
 /// Versioned binary codecs and stable storage-record key derivation.
@@ -224,6 +226,32 @@ pub fn seal_channel_key(
 ) -> Result<SealedChannelKeyGrant, ChannelCryptoError> {
     let ephemeral_private =
         Zeroizing::new(random_array().map_err(|_| ChannelCryptoError::RandomnessUnavailable)?);
+    let wrapping_nonce = random_array().map_err(|_| ChannelCryptoError::RandomnessUnavailable)?;
+    seal_channel_key_with_material_raw(
+        originator_id,
+        receiver_id,
+        channel_id,
+        key_epoch,
+        cmk,
+        receiver_public_key,
+        signing_key,
+        ephemeral_private,
+        wrapping_nonce,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn seal_channel_key_with_material_raw(
+    originator_id: &[u8],
+    receiver_id: &[u8],
+    channel_id: ChannelId,
+    key_epoch: KeyEpoch,
+    cmk: &ChannelMasterKey,
+    receiver_public_key: &[u8; 32],
+    signing_key: &OriginatorSigningKey,
+    ephemeral_private: Zeroizing<[u8; 32]>,
+    wrapping_nonce: [u8; 24],
+) -> Result<SealedChannelKeyGrant, ChannelCryptoError> {
     let ephemeral_public_key = x25519_public_key(&ephemeral_private)
         .map_err(|_| ChannelCryptoError::InvalidKeyAgreement)?;
     let shared_secret = Zeroizing::new(
@@ -231,7 +259,6 @@ pub fn seal_channel_key(
             .map_err(|_| ChannelCryptoError::InvalidKeyAgreement)?,
     );
     let wrapping_key = derive_wrapping_key(&shared_secret, channel_id, key_epoch, receiver_id)?;
-    let wrapping_nonce = random_array().map_err(|_| ChannelCryptoError::RandomnessUnavailable)?;
     let aad = grant_aad(
         originator_id,
         receiver_id,
@@ -332,11 +359,12 @@ pub fn open_channel_key_grant(
         )
         .ok_or(ChannelCryptoError::AuthenticationFailed)?,
     );
-    let cmk_bytes: [u8; 32] = plaintext
-        .as_slice()
-        .try_into()
-        .map_err(|_| ChannelCryptoError::InvalidWrappedKey)?;
-    Ok(ChannelMasterKey::from_bytes(cmk_bytes))
+    if plaintext.len() != 32 {
+        return Err(ChannelCryptoError::InvalidWrappedKey);
+    }
+    let mut cmk_bytes = Zeroizing::new([0u8; 32]);
+    cmk_bytes.copy_from_slice(&plaintext);
+    Ok(ChannelMasterKey { bytes: cmk_bytes })
 }
 
 /// Result of installing a sealed key grant into receiver epoch state.

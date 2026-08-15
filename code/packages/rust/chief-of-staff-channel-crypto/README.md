@@ -28,6 +28,14 @@ Rust reference implementation for its cryptographic framing and receiver-state
 rules; crash-safe activation of a rotated epoch remains a caller-owned durable
 composition boundary.
 
+The `grant_profile` module adds validated immutable grant values,
+explicit-material sealing, stable cross-language errors, receiver epoch
+installation, pure ordered rotation planning, and the Rust `guaranteed`
+controlled-destruction declaration without changing D18G version 1 bytes. The
+checked-in corpus under `code/fixtures/chief-of-staff-channel-key-grant/v1`
+locks every derivation intermediate, record, failure order, state transition,
+and A+B to B-only rotation for the remaining language ports.
+
 The `wire` module provides bounded, versioned binary records for grants and
 encrypted messages. Its stable storage keys sort messages by sequence and hash
 receiver IDs before putting them into path-like keys, so an external identity
