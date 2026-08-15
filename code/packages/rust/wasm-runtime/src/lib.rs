@@ -1999,6 +1999,7 @@ mod tests {
             }],
             memories: vec![MemoryType {
                 limits: Limits { min: 1, max: None },
+                shared: false,
             }],
             data: vec![DataSegment {
                 memory_index: 0,

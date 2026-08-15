@@ -886,6 +886,18 @@ pub enum DecodedOperand {
         type_idx: u32,
         field_idx: u32,
     },
+    /// An atomic memory operation's (WASM18) decoded immediates: the
+    /// `0xFE` sub-opcode plus the memarg offset. Unlike `Gc` (which needs
+    /// a side-table since two full `u32` indices plus a sub-opcode don't
+    /// fit in one `usize` on every target), a `u8` sub-opcode and a
+    /// `u32` offset together need at most 40 bits, well inside `usize`
+    /// on every platform this repo targets -- so `convert_operand` packs
+    /// them directly into one `Operand::Index` instead of spilling into
+    /// a side-table the way `Gc` does.
+    Atomic {
+        sub: u8,
+        offset: u32,
+    },
 }
 
 /// Decode all instructions in a function body.
@@ -987,6 +999,39 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             instructions.push(DecodedInstruction {
                 opcode: 0xFC,
                 operand: DecodedOperand::Int(sub as i64),
+            });
+            continue;
+        }
+
+        // ── `0xFE`-prefixed atomic memory operations (threads proposal,
+        // WASM18): `0xFE <sub-opcode> [<align:u32leb> <offset:u32leb>]` --
+        // same two-byte-prefix shape as `0xFB`/`0xFC` above.
+        // `atomic.fence` (sub-opcode `0x03`) carries no memarg at all;
+        // every other atomic op does, identical to the plain
+        // load/store family's own memarg encoding. `align` is a
+        // validation-time-only constraint (this repo's execution layer
+        // never reads it, same as `DecodedOperand::MemArg`'s own unused
+        // `_align` field) -- only `offset` needs to survive into the
+        // decoded instruction. See `code/specs/W09-wasm-atomics-plain.md`.
+        if opcode_byte == 0xFE {
+            let sub = if offset < code.len() {
+                let s = code[offset];
+                offset += 1;
+                s
+            } else {
+                0
+            };
+            let decoded_offset = if sub == 0x03 {
+                0
+            } else {
+                let (_align, sz1) = decode_leb_u32(code, offset);
+                let (mem_offset, sz2) = decode_leb_u32(code, offset + sz1);
+                offset += sz1 + sz2;
+                mem_offset
+            };
+            instructions.push(DecodedInstruction {
+                opcode: 0xFE,
+                operand: DecodedOperand::Atomic { sub, offset: decoded_offset },
             });
             continue;
         }
@@ -1416,7 +1461,18 @@ fn convert_operand(
             });
             Some(Operand::Index(idx))
         }
+        DecodedOperand::Atomic { sub, offset } => Some(Operand::Index(((*sub as usize) << 32) | (*offset as usize))),
     }
+}
+
+/// Unpack a `0xFE` atomic instruction's `(sub_opcode, offset)` from the
+/// packed `Operand::Index` `convert_operand` built above.
+fn unpack_atomic_operand(instr: &Instruction) -> (u8, u32) {
+    let packed = match &instr.operand {
+        Some(Operand::Index(i)) => *i,
+        _ => 0,
+    };
+    ((packed >> 32) as u8, (packed & 0xFFFF_FFFF) as u32)
 }
 
 // ── Helper: pop a WasmValue from the VM's typed stack ─────────────────────
@@ -1619,6 +1675,7 @@ pub fn register_all_handlers(vm: &mut GenericVM) {
     register_variable(vm);
     register_parametric(vm);
     register_memory(vm);
+    register_atomics(vm);
     register_control(vm);
 }
 
@@ -3147,6 +3204,214 @@ fn register_memory(vm: &mut GenericVM) {
             None => -1,
         };
         push_wasm(vm, WasmValue::I32(result));
+        vm.advance_pc();
+        Ok(None)
+    });
+}
+
+// ── Atomic memory operations (0xFE prefix, threads proposal — WASM18) ────
+//
+// Every atomic op here is a plain, unsynchronized memory access -- with
+// one native thread of execution, nothing else can ever observe a
+// location mid-operation, so a read-modify-write done as an ordinary
+// Rust read, then compute, then write, in one uninterrupted native call
+// already satisfies the spec's atomicity guarantee. See `code/specs/
+// W09-wasm-atomics-plain.md`'s own "Why every atomic op is trivially
+// atomic here" section for the full reasoning. `memory.atomic.notify`/
+// `wait32`/`wait64` are not registered at all -- they need a second real
+// thread to make sense, which `wasm_opcodes::ATOMIC_OPS` doesn't even
+// list (see that table's own doc comment).
+
+/// Read a value of the shape `op` describes (its `value_type` +
+/// `natural_align` byte width) from `mem` at `addr` -- the same set of
+/// per-width `LinearMemory` methods the plain MVP load family already
+/// uses, just selected generically by width instead of one opcode
+/// handler per width.
+fn atomic_mem_load(mem: &LinearMemory, op: &wasm_opcodes::AtomicOpInfo, addr: usize) -> Result<WasmValue, TrapError> {
+    use wasm_types::ValueType;
+    match (op.value_type, op.natural_align) {
+        (Some(ValueType::I32), 4) => Ok(WasmValue::I32(mem.load_i32(addr)?)),
+        (Some(ValueType::I32), 2) => Ok(WasmValue::I32(mem.load_i32_16u(addr)?)),
+        (Some(ValueType::I32), 1) => Ok(WasmValue::I32(mem.load_i32_8u(addr)?)),
+        (Some(ValueType::I64), 8) => Ok(WasmValue::I64(mem.load_i64(addr)?)),
+        (Some(ValueType::I64), 4) => Ok(WasmValue::I64(mem.load_i64_32u(addr)?)),
+        (Some(ValueType::I64), 2) => Ok(WasmValue::I64(mem.load_i64_16u(addr)?)),
+        (Some(ValueType::I64), 1) => Ok(WasmValue::I64(mem.load_i64_8u(addr)?)),
+        _ => Err(TrapError::new(format!("unsupported atomic load shape for {}", op.name))),
+    }
+}
+
+/// Write `value` at `addr`, using the width `op` describes -- the store
+/// counterpart to `atomic_mem_load`.
+fn atomic_mem_store(mem: &mut LinearMemory, op: &wasm_opcodes::AtomicOpInfo, addr: usize, value: WasmValue) -> Result<(), TrapError> {
+    use wasm_types::ValueType;
+    match (op.value_type, op.natural_align) {
+        (Some(ValueType::I32), 4) => mem.store_i32(addr, value.as_i32()?),
+        (Some(ValueType::I32), 2) => mem.store_i32_16(addr, value.as_i32()?),
+        (Some(ValueType::I32), 1) => mem.store_i32_8(addr, value.as_i32()?),
+        (Some(ValueType::I64), 8) => mem.store_i64(addr, value.as_i64()?),
+        (Some(ValueType::I64), 4) => mem.store_i64_32(addr, value.as_i64()?),
+        (Some(ValueType::I64), 2) => mem.store_i64_16(addr, value.as_i64()?),
+        (Some(ValueType::I64), 1) => mem.store_i64_8(addr, value.as_i64()?),
+        _ => Err(TrapError::new(format!("unsupported atomic store shape for {}", op.name))),
+    }
+}
+
+/// Apply an RMW operator to `(old, operand)`, both already the same
+/// width/signedness this op's `atomic_mem_load`/`atomic_mem_store` calls
+/// use. The specific operator (add/sub/and/or/xor/xchg) is the LAST
+/// dot-segment of the op's name with any `_u` suffix trimmed --
+/// `"i32.atomic.rmw.add"` -> `"add"`, `"i32.atomic.rmw8.add_u"` ->
+/// `"add"` -- since `wasm_opcodes::ATOMIC_OPS` already spells this out in
+/// the name and duplicating it as a second enum would just be the same
+/// information twice.
+fn apply_rmw_op(op_name: &str, old: WasmValue, operand: WasmValue) -> Result<WasmValue, TrapError> {
+    let operator = op_name.rsplit('.').next().unwrap_or("").trim_end_matches("_u");
+    match (old, operand) {
+        (WasmValue::I32(a), WasmValue::I32(b)) => {
+            let result = match operator {
+                "add" => a.wrapping_add(b),
+                "sub" => a.wrapping_sub(b),
+                "and" => a & b,
+                "or" => a | b,
+                "xor" => a ^ b,
+                "xchg" => b,
+                other => return Err(TrapError::new(format!("unknown atomic RMW operator: {other}"))),
+            };
+            Ok(WasmValue::I32(result))
+        }
+        (WasmValue::I64(a), WasmValue::I64(b)) => {
+            let result = match operator {
+                "add" => a.wrapping_add(b),
+                "sub" => a.wrapping_sub(b),
+                "and" => a & b,
+                "or" => a | b,
+                "xor" => a ^ b,
+                "xchg" => b,
+                other => return Err(TrapError::new(format!("unknown atomic RMW operator: {other}"))),
+            };
+            Ok(WasmValue::I64(result))
+        }
+        _ => Err(TrapError::new("atomic RMW type mismatch")),
+    }
+}
+
+fn register_atomics(vm: &mut GenericVM) {
+    // Effective address = i32 base (popped from the stack) + the memarg
+    // offset decoded onto the instruction -- identical to `register_memory`'s
+    // own `effective_addr`, just reading the packed `(sub, offset)` this
+    // prefix's decoder built instead of a bare `MemArg`.
+    fn effective_addr(offset_imm: u32, base: i32) -> usize {
+        (base as u32 as usize).wrapping_add(offset_imm as usize)
+    }
+
+    // The real spec requires atomic instructions to trap at RUNTIME if
+    // the EFFECTIVE address isn't a multiple of the operation's natural
+    // alignment -- distinct from (and in addition to) `wasm-validator`'s
+    // check that the DECLARED `align=` immediate matches natural
+    // alignment exactly. The declared immediate is a static property of
+    // the bytecode; the effective address is `base + offset`, a runtime
+    // value the validator can't know in advance (e.g. `base` might come
+    // from a `local.get`). Confirmed against the real, pinned-commit
+    // `atomic.wast` testsuite file's own `"unaligned atomic"` trap
+    // assertions (e.g. `i32.atomic.load` at address 1, not a multiple of
+    // its natural 4-byte alignment).
+    fn check_atomic_alignment(align: u32, addr: usize) -> Result<(), TrapError> {
+        if align > 0 && !addr.is_multiple_of(align as usize) {
+            return Err(TrapError::new("unaligned atomic"));
+        }
+        Ok(())
+    }
+
+    vm.register_context_opcode(0xFE, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let (sub, offset_imm) = unpack_atomic_operand(instr);
+        let op = wasm_opcodes::get_atomic_op(sub)
+            .ok_or_else(|| VMError::GenericError(format!("unknown atomic sub-opcode {sub:#04x}")))?;
+
+        use wasm_opcodes::AtomicOpKind;
+        match op.kind {
+            AtomicOpKind::Fence => {
+                // A true no-op with one native thread -- nothing to
+                // order, no memory or stack effect at all.
+            }
+            AtomicOpKind::Load => {
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
+                let mem = get_memory(ctx)?;
+                let val = atomic_mem_load(mem, op, addr).map_err(VMError::from)?;
+                push_wasm(vm, val);
+            }
+            AtomicOpKind::Store => {
+                let value = pop_wasm(vm)?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
+                let mem = get_memory(ctx)?;
+                atomic_mem_store(mem, op, addr, value).map_err(VMError::from)?;
+            }
+            AtomicOpKind::Rmw => {
+                let operand = pop_wasm(vm)?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
+                let mem = get_memory(ctx)?;
+                let old = atomic_mem_load(mem, op, addr).map_err(VMError::from)?;
+                let new_val = apply_rmw_op(op.name, old, operand).map_err(VMError::from)?;
+                atomic_mem_store(mem, op, addr, new_val).map_err(VMError::from)?;
+                push_wasm(vm, old);
+            }
+            AtomicOpKind::Cmpxchg => {
+                let replacement = pop_wasm(vm)?;
+                let expected = pop_wasm(vm)?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
+                let mem = get_memory(ctx)?;
+                let old = atomic_mem_load(mem, op, addr).map_err(VMError::from)?;
+                if old == expected {
+                    atomic_mem_store(mem, op, addr, replacement).map_err(VMError::from)?;
+                }
+                push_wasm(vm, old);
+            }
+            AtomicOpKind::Notify => {
+                // memory.atomic.notify: with one native thread, no other
+                // agent is EVER blocked in `wait` on this address, so the
+                // real, deterministic answer is always "0 woken" -- not a
+                // stand-in for unimplemented behavior (see
+                // `wasm_opcodes::AtomicOpKind::Notify`'s own doc
+                // comment). The address is still bounds-checked (a real
+                // `i32.atomic.load`-shaped access), even though its value
+                // is unused, since the spec still requires the address be
+                // valid for `notify` to succeed.
+                let _count = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
+                get_memory(ctx)?.load_i32(addr).map_err(VMError::from)?;
+                push_wasm(vm, WasmValue::I32(0));
+            }
+            AtomicOpKind::Wait => {
+                // memory.atomic.wait32/wait64: with one native thread, no
+                // other agent can ever `notify` this wait, so the only
+                // two real outcomes are "not-equal" (1, when the current
+                // value already differs from `expected` -- no wait
+                // needed at all) and "timed-out" (2, when it matches --
+                // nothing will ever wake it). "ok" (0, woken by a real
+                // notify) can never happen here. See `wasm_opcodes::
+                // AtomicOpKind::Wait`'s own doc comment.
+                let _timeout = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+                let expected = pop_wasm(vm)?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = effective_addr(offset_imm, base);
+                check_atomic_alignment(op.natural_align, addr).map_err(VMError::from)?;
+                let mem = get_memory(ctx)?;
+                let current = atomic_mem_load(mem, op, addr).map_err(VMError::from)?;
+                let result = if current == expected { 2 } else { 1 };
+                push_wasm(vm, WasmValue::I32(result));
+            }
+        }
         vm.advance_pc();
         Ok(None)
     });
@@ -4933,6 +5198,212 @@ mod tests {
             func_bodies: vec![Some(body)],
             host_functions: vec![None],
         });
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // WASM18: atomic memory operations (0xFE prefix)
+    // ══════════════════════════════════════════════════════════════════════
+
+    fn atomic_engine(code: Vec<u8>, results: Vec<ValueType>) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results };
+        let body = FunctionBody { locals: vec![], code };
+        WasmExecutionEngine::new(WasmEngineConfig {
+            memory: Some(LinearMemory::new(1, None)),
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        })
+    }
+
+    #[test]
+    fn test_atomic_store_then_load_round_trips() {
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (addr)
+            0x41, 0x2A, // i32.const 42 (value)
+            0xFE, 0x17, 0x02, 0x00, // i32.atomic.store align=4 offset=0
+            0x41, 0x00, // i32.const 0 (addr)
+            0xFE, 0x10, 0x02, 0x00, // i32.atomic.load align=4 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(42)]);
+    }
+
+    #[test]
+    fn test_atomic_rmw_add_returns_the_old_value_and_updates_memory() {
+        // All constants kept in -64..63 so their signed-LEB128 encoding is
+        // exactly one byte equal to the raw value -- values >= 64 need a
+        // 2-byte encoding (bit 6 set looks like a sign bit otherwise).
+        let code = vec![
+            0x41, 0x00, 0x41, 0x32, 0xFE, 0x17, 0x02, 0x00, // store 50 at addr 0
+            0x41, 0x00, 0x41, 0x05, 0xFE, 0x1E, 0x02, 0x00, // rmw.add 5 -> pushes OLD (50)
+            0x41, 0x00, 0xFE, 0x10, 0x02, 0x00, // load -> pushes NEW (55)
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32, ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(50), WasmValue::I32(55)]);
+    }
+
+    #[test]
+    fn test_atomic_cmpxchg_success_replaces_and_returns_old_value() {
+        let code = vec![
+            0x41, 0x00, 0x41, 0x07, 0xFE, 0x17, 0x02, 0x00, // store 7 at addr 0
+            0x41, 0x00, 0x41, 0x07, 0x41, 0x32, 0xFE, 0x48, 0x02, 0x00, // cmpxchg(expected=7, replacement=50) -> pushes OLD (7)
+            0x41, 0x00, 0xFE, 0x10, 0x02, 0x00, // load -> pushes NEW (50, exchange happened)
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32, ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7), WasmValue::I32(50)]);
+    }
+
+    #[test]
+    fn test_atomic_cmpxchg_failure_leaves_memory_unchanged() {
+        let code = vec![
+            0x41, 0x00, 0x41, 0x07, 0xFE, 0x17, 0x02, 0x00, // store 7 at addr 0
+            0x41, 0x00, 0x41, 0x32, 0x41, 0x2A, 0xFE, 0x48, 0x02, 0x00, // cmpxchg(expected=50, replacement=42) -- mismatch
+            0x41, 0x00, 0xFE, 0x10, 0x02, 0x00, // load -> still 7, no exchange
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32, ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7), WasmValue::I32(7)]);
+    }
+
+    #[test]
+    fn test_atomic_fence_is_a_true_no_op() {
+        let code = vec![0xFE, 0x03, 0x0B]; // atomic.fence; end
+        let mut engine = atomic_engine(code, vec![]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), Vec::<WasmValue>::new());
+    }
+
+    #[test]
+    fn test_atomic_narrow_i64_load_store_round_trip() {
+        // i64.atomic.store8 (0x1B) then i64.atomic.load8_u (0x14):
+        // narrow-width RMW/load/store dispatch (natural_align=1, not the
+        // full 8-byte width) exercises a DIFFERENT arm of
+        // atomic_mem_load/store than the other tests here.
+        let code = vec![
+            0x41, 0x00, 0x42, 0xFF, 0x01, // i32.const 0 (addr); i64.const 255
+            0xFE, 0x1B, 0x00, 0x00, // i64.atomic.store8 align=1 offset=0
+            0x41, 0x00, 0xFE, 0x14, 0x00, 0x00, // i64.atomic.load8_u align=1 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I64]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I64(255)]);
+    }
+
+    #[test]
+    fn test_atomic_op_on_out_of_bounds_address_is_a_clean_error_not_a_panic() {
+        let code = vec![
+            0x41, 0x7F, // i32.const -1 -- as u32, far past the 1-page (65536-byte) memory
+            0xFE, 0x10, 0x02, 0x00, // i32.atomic.load
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_atomic_op_on_a_misaligned_effective_address_traps() {
+        // `i32.atomic.load`'s natural alignment is 4 bytes. Address 1 is
+        // in-bounds (so this isn't the OOB case above) but not a
+        // multiple of 4 -- the real, pinned-commit `atomic.wast`
+        // testsuite asserts this traps with message "unaligned atomic".
+        // This is a RUNTIME check distinct from wasm-validator's static
+        // check of the declared `align=` immediate: the effective
+        // address here is `base + offset` where `base` is a runtime
+        // value (from `i32.const 1`), not knowable at validation time.
+        let code = vec![
+            0x41, 0x01, // i32.const 1 (addr -- not a multiple of 4)
+            0xFE, 0x10, 0x02, 0x00, // i32.atomic.load align=4 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_atomic_op_on_a_naturally_aligned_effective_address_still_succeeds() {
+        // Companion to the misalignment trap above: address 4 IS a
+        // multiple of i32's natural 4-byte alignment, so this must
+        // still succeed -- proves the alignment check doesn't
+        // over-trigger on valid accesses.
+        let code = vec![
+            0x41, 0x04, 0x41, 0x2A, 0xFE, 0x17, 0x02, 0x00, // store 42 at addr 4
+            0x41, 0x04, 0xFE, 0x10, 0x02, 0x00, // load from addr 4
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(42)]);
+    }
+
+    #[test]
+    fn test_atomic_notify_always_returns_zero_woken() {
+        // With one native thread, no other agent is ever blocked in
+        // `wait`, so the only real, deterministic answer is 0 -- not a
+        // stand-in for unimplemented behavior.
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (addr)
+            0x41, 0x05, // i32.const 5 (count -- ignored either way)
+            0xFE, 0x00, 0x02, 0x00, // memory.atomic.notify align=4 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_atomic_wait32_returns_not_equal_when_current_differs_from_expected() {
+        // Fresh memory is all-zero, so `expected = 1` never matches --
+        // the deterministic "not-equal" outcome (1), reachable with zero
+        // real threads.
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (addr)
+            0x41, 0x01, // i32.const 1 (expected, mismatched)
+            0x42, 0x00, // i64.const 0 (timeout)
+            0xFE, 0x01, 0x02, 0x00, // memory.atomic.wait32 align=4 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
+    }
+
+    #[test]
+    fn test_atomic_wait64_returns_timed_out_when_current_equals_expected() {
+        // Fresh memory is all-zero, so `expected = 0` DOES match --
+        // nothing will ever notify this wait, so the only sound outcome
+        // is "timed-out" (2).
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (addr)
+            0x42, 0x00, // i64.const 0 (expected, matches current mem)
+            0x42, 0x00, // i64.const 0 (timeout)
+            0xFE, 0x02, 0x03, 0x00, // memory.atomic.wait64 align=8 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(2)]);
+    }
+
+    #[test]
+    fn test_atomic_wait32_on_a_misaligned_effective_address_traps() {
+        // `Wait` shares `effective_addr`/`atomic_mem_load` with every
+        // other atomic kind but is handled in its own match arm, so the
+        // alignment check needs its own call site -- this guards against
+        // that call site being forgotten (it was, initially: caught in
+        // security review, not by the vendored testsuite, since
+        // atomic.wast's own "unaligned atomic" assert_trap cases don't
+        // happen to cover wait32/wait64).
+        let code = vec![
+            0x41, 0x01, // i32.const 1 (addr -- not a multiple of 4)
+            0x41, 0x00, // i32.const 0 (expected)
+            0x42, 0x00, // i64.const 0 (timeout)
+            0xFE, 0x01, 0x02, 0x00, // memory.atomic.wait32 align=4 offset=0
+            0x0B,
+        ];
+        let mut engine = atomic_engine(code, vec![ValueType::I32]);
         assert!(engine.call_function(0, &[]).is_err());
     }
 

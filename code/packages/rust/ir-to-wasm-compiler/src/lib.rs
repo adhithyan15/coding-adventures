@@ -132,6 +132,7 @@ impl IrToWasmCompiler {
                     min: page_count,
                     max: None,
                 },
+                shared: false,
             });
             module.exports.push(Export {
                 name: "memory".to_string(),

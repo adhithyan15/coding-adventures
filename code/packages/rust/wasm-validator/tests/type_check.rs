@@ -93,6 +93,7 @@ fn valid_narrow_memory_access_family() {
 fn valid_bulk_memory_copy_and_fill() {
     let memory = wasm_types::MemoryType {
         limits: wasm_types::Limits { min: 1, max: None },
+        shared: false,
     };
     let mut copy = module_with_body(
         wasm_types::FuncType { params: vec![], results: vec![] },
@@ -254,6 +255,68 @@ fn valid_table_get_set_round_trip() {
     );
 }
 
+// ── WASM18: atomic load/store/RMW/cmpxchg/fence, shared memory guard ────
+
+#[test]
+fn valid_atomic_load_and_store_on_a_shared_memory() {
+    assert_valid(
+        r#"(module (memory 1 1 shared)
+             (func (i32.atomic.store (i32.const 0) (i32.atomic.load (i32.const 0)))))"#,
+    );
+}
+
+#[test]
+fn valid_atomic_rmw_and_cmpxchg_pop_push_shapes() {
+    assert_valid(
+        r#"(module (memory 1 1 shared)
+             (func (param i32 i32 i32) (result i32 i32)
+               (i32.atomic.rmw.add (local.get 0) (local.get 1))
+               (i32.atomic.rmw.cmpxchg (local.get 0) (local.get 1) (local.get 2))))"#,
+    );
+}
+
+#[test]
+fn valid_atomic_fence_needs_no_memory_at_all() {
+    assert_valid("(module (func (atomic.fence)))");
+}
+
+#[test]
+fn valid_narrow_i64_atomic_ops() {
+    assert_valid(
+        r#"(module (memory 1 1 shared)
+             (func (result i64) (i64.atomic.load8_u (i32.const 0))))"#,
+    );
+}
+
+#[test]
+fn valid_atomic_ops_on_a_non_shared_memory() {
+    // Confirmed against the real, pinned-commit `proposals/threads/
+    // atomic.wast` testsuite file itself: its own `;; unshared memory is
+    // OK` module exercises every atomic instruction in the file against
+    // a plain, non-`shared` `(memory 1 1)` and expects it to validate --
+    // `shared` is parsed and tracked for real (WASM18), but is NOT a
+    // validation gate atomic ops enforce.
+    assert_valid(
+        r#"(module (memory 1 1)
+             (func (drop (i32.atomic.load (i32.const 0))))
+             (func (i32.atomic.store (i32.const 0) (i32.const 0)))
+             (func (drop (i32.atomic.rmw.add (i32.const 0) (i32.const 0)))))"#,
+    );
+}
+
+#[test]
+fn valid_atomic_notify_and_wait_pop_push_shapes() {
+    // Matches the real corpus's own shape: notify/wait declared and
+    // invoked within a module that has a real memory (unlike the
+    // `assert_invalid` "unknown memory" cases, which have none at all).
+    assert_valid(
+        r#"(module (memory 1 1 shared)
+             (func (result i32) (memory.atomic.notify (i32.const 0) (i32.const 0)))
+             (func (result i32) (memory.atomic.wait32 (i32.const 0) (i32.const 0) (i64.const 0)))
+             (func (result i32) (memory.atomic.wait64 (i32.const 0) (i64.const 0) (i64.const 0))))"#,
+    );
+}
+
 // ── Invalid modules ─────────────────────────────────────────────────────
 
 #[test]
@@ -299,6 +362,29 @@ fn invalid_funcref_externref_mixup_now_caught_by_the_upgraded_ref_null_type() {
     // this catchable at all -- before, both nulls looked like the same
     // Unknown and this module type-checked.
     assert_invalid("(module (func (param externref) (drop (select (ref.null func) (local.get 0) (i32.const 1)))))");
+}
+
+#[test]
+fn invalid_atomic_op_with_no_memory_at_all() {
+    assert_invalid("(module (func (drop (i32.atomic.load (i32.const 0)))))");
+}
+
+#[test]
+fn invalid_atomic_notify_and_wait_with_no_memory_at_all() {
+    // Matches the real corpus's own "Fails with no memory" assertions --
+    // notify/wait still require SOME memory to exist, even though (per
+    // `valid_atomic_ops_on_a_non_shared_memory`) it doesn't need to be
+    // `shared`.
+    assert_invalid("(module (func (drop (memory.atomic.notify (i32.const 0) (i32.const 0)))))");
+    assert_invalid("(module (func (drop (memory.atomic.wait32 (i32.const 0) (i32.const 0) (i64.const 0)))))");
+}
+
+#[test]
+fn invalid_atomic_load_with_under_aligned_access() {
+    // Plain loads only reject align > natural; atomic ops must reject
+    // align < natural too (exact match required, not just an upper
+    // bound) -- align=1 (2^0) on a 4-byte-natural i32.atomic.load.
+    assert_invalid("(module (memory 1 1 shared) (func (drop (i32.atomic.load align=1 (i32.const 0)))))");
 }
 
 #[test]

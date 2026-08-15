@@ -463,6 +463,15 @@ pub struct Limits {
 pub struct MemoryType {
     /// The size constraints on this memory.
     pub limits: Limits,
+    /// Whether this memory is declared `shared` (WASM18 / threads
+    /// proposal, `(memory 1 1 shared)` in text). Purely a static/
+    /// validation-time property in this repo — `wasm-execution` is a
+    /// single-threaded interpreter, so there is no second agent to
+    /// actually share memory with; `shared`-ness only gates which
+    /// memories the atomic instruction family is allowed to touch (see
+    /// `code/specs/W09-wasm-atomics-plain.md`). Defaults to `false`,
+    /// matching every pre-existing (non-atomic) module.
+    pub shared: bool,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -967,6 +976,7 @@ mod tests {
     fn memory_type_construction() {
         let mt = MemoryType {
             limits: Limits { min: 2, max: Some(8) },
+            shared: false,
         };
         assert_eq!(mt.limits.min, 2);
         assert_eq!(mt.limits.max, Some(8));
@@ -1035,6 +1045,7 @@ mod tests {
             kind: ExternalKind::Memory,
             type_info: ImportTypeInfo::Memory(MemoryType {
                 limits: Limits { min: 1, max: Some(2) },
+                shared: false,
             }),
         };
         assert_eq!(imp.kind, ExternalKind::Memory);
@@ -1143,7 +1154,7 @@ mod tests {
             imports: vec![],
             functions: vec![0],
             tables: vec![],
-            memories: vec![MemoryType { limits: Limits { min: 1, max: None } }],
+            memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
             globals: vec![],
             exports: vec![Export { name: "main".to_string(), kind: ExternalKind::Function, index: 0 }],
             start: Some(0),

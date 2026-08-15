@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.3] - 2026-08-15 (WASM18 — atomic memory op type rules)
+
+### Added
+
+- Type rules for the entire `0xFE`-prefixed atomics family, looked up
+  via `wasm_opcodes::get_atomic_op` and branching on `AtomicOpKind`:
+  `Fence` is a pure no-op; every other kind requires `ctx.has_memory`
+  and enforces its declared `align=` immediate matches the operation's
+  natural alignment *exactly* (stricter than plain load/store's
+  upper-bound-only check), then pops/pushes per its kind (`Load`,
+  `Store`, `Rmw`, `Cmpxchg`, `Notify`, `Wait`).
+- 9 new tests covering valid/invalid shapes for every `AtomicOpKind`,
+  narrow-width `i64` variants, and the missing-memory error case.
+
+### Corrected (implementation-time, vs. the merged W09 spec)
+
+- Initially implemented a `has_shared_memory` requirement per the merged
+  spec's literal wording ("atomic ops require the memory be shared").
+  Directly contradicted by the real, pinned-commit `atomic.wast`
+  testsuite file's own `;; unshared memory is OK` module, which
+  exercises every atomic op against a non-shared `(memory 1 1)`
+  expecting success. Removed the `has_shared_memory` check entirely
+  (and the `ModuleContext` field backing it) -- only `has_memory` is
+  required. The now-wrong `invalid_atomic_op_on_a_non_shared_memory`
+  test was deleted and replaced with
+  `valid_atomic_ops_on_a_non_shared_memory`, proving the correction.
+
 ## [0.2.2] - 2026-08-15 (WASM17 — funcref/externref type rules)
 
 - Upgraded `ref.null`'s existing type rule: instead of unconditionally
