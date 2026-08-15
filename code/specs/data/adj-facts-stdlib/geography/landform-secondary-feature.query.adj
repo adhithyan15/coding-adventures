@@ -19,3 +19,5 @@ import "landform-secondary-feature.adj"
 ? landform_secondary_feature(valley, $Feature)                    % expect contains_stream_with_outlet
 ? landform_secondary_feature($Landform, continuous_slope_at_bottom) % reverse bind — expect canyon
 ? landform_secondary_feature(mountain, $Feature)                  % expect abstain — mountain's own cited span states no second structural clause
+? landform_secondary_feature(canyon, $CanyonFeature)              % multi-answer — expect continuous_slope_at_bottom AND steep_sides
+? landform_secondary_feature(plain, $Feature)                     % expect uniform_slope
