@@ -346,6 +346,42 @@ function leadingRun(word: string): string {
   return match ? match[0] : "";
 }
 
+/** Is this code point one that may not sit against a match? `""` never is. */
+function isWordAdjacent(codePoint: string): boolean {
+  return codePoint !== "" && WORD_ADJACENT.test(codePoint);
+}
+
+/**
+ * The run of word-adjacent characters starting at `at`, consumed in one step.
+ *
+ * Sticky rather than global, and `lastIndex` is set on every call rather than
+ * carried between them, so this shared instance holds no state across calls.
+ */
+const WORD_RUN_AT = /[\p{L}\p{M}-]*/uy;
+
+/**
+ * The first position after the word-adjacent run beginning at `at` — the next place
+ * a match could possibly start.
+ *
+ * This is what keeps `occursAsWholeWord` linear in the haystack rather than
+ * quadratic. When an occurrence is rejected, retrying one character later is
+ * pointless work: every position inside a run is preceded by a word-adjacent
+ * character, so every one of them fails the same way, and a long needle pays a full
+ * comparison at each. A body of a million `a`s against a 4,000-character headword
+ * took ~3.9 SECONDS that way and takes two `indexOf` calls now. That input is not
+ * reachable today — the corpus is repo-controlled, and its longest matcher is 94
+ * characters — but a fix for a superlinear walk should not leave a superlinear walk
+ * behind it.
+ *
+ * When `haystack[at]` is not word-adjacent the run is empty and this is just
+ * `at + 1`, which is the naive step; nothing is ever skipped that could have matched.
+ */
+function afterRunAt(haystack: string, at: number): number {
+  WORD_RUN_AT.lastIndex = at;
+  const run = WORD_RUN_AT.exec(haystack);
+  return at + (run ? run[0].length : 0) + 1;
+}
+
 /** Would slicing `text` at `at` cut a surrogate pair in half? */
 function splitsSurrogatePair(text: string, at: number): boolean {
   if (at <= 0 || at >= text.length) return false;
@@ -374,7 +410,9 @@ function codePointBefore(text: string, end: number): string {
  */
 function occursAsWholeWord(haystack: string, needle: string): boolean {
   if (needle.length === 0) return false;
-  for (let at = haystack.indexOf(needle); at >= 0; at = haystack.indexOf(needle, at + 1)) {
+  for (let from = 0; from <= haystack.length; ) {
+    const at = haystack.indexOf(needle, from);
+    if (at < 0) return false;
     // A `u`-flag match runs from one code-point boundary to another, so an
     // occurrence that begins or ends halfway through a surrogate pair is one the
     // regex would refuse — `indexOf` finds the high half of `𐀀` when asked for a
@@ -383,14 +421,18 @@ function occursAsWholeWord(haystack: string, needle: string): boolean {
     // comparisons to keep the two definitions provably the same rather than the
     // same in practice.
     const end = at + needle.length;
-    if (splitsSurrogatePair(haystack, at) || splitsSurrogatePair(haystack, end)) continue;
-    const before = codePointBefore(haystack, at);
-    if (before !== "" && WORD_ADJACENT.test(before)) continue;
-    if (end < haystack.length) {
-      const after = String.fromCodePoint(haystack.codePointAt(end)!);
-      if (WORD_ADJACENT.test(after)) continue;
-    }
-    return true;
+    const splits = splitsSurrogatePair(haystack, at) || splitsSurrogatePair(haystack, end);
+    const fits =
+      !splits &&
+      !isWordAdjacent(codePointBefore(haystack, at)) &&
+      (end >= haystack.length || !isWordAdjacent(String.fromCodePoint(haystack.codePointAt(end)!)));
+    if (fits) return true;
+    // The run skip is only meaningful from a code-point boundary: asked to scan
+    // from inside a surrogate pair, a `u`-flag regex sees the whole astral
+    // character and would skip past positions that can still match. A split is
+    // rare and cannot drive the quadratic case, so it takes the plain step. Found
+    // by fuzzing this against the regex it replaced, not by reading it.
+    from = splits ? at + 1 : afterRunAt(haystack, at);
   }
   return false;
 }

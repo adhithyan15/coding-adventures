@@ -411,6 +411,28 @@ describe("forward references", () => {
     expect(report.forwardReferences).toHaveLength(0);
   });
 
+  it("stays linear on a body built to defeat the matcher", () => {
+    // A security review of the rewrite found this: rejecting an occurrence and
+    // retrying ONE character later pays a full comparison at every position inside
+    // a run, so a long headword against a long run of near-misses went quadratic —
+    // 3.9 SECONDS for one word in one lesson, on a walk whose whole purpose was to
+    // stop being quadratic. The matcher now skips the rest of the run, since every
+    // position in it is preceded by a word-adjacent character and fails identically.
+    //
+    // The budget is deliberately loose: this asserts the SHAPE (a linear scan of a
+    // few megabytes, tens of milliseconds) against a regression that costs seconds,
+    // so it cannot flake on a slow runner and still catches the bug it exists for.
+    const word = "a".repeat(4_000);
+    const body = `**${"a".repeat(4_000_000)} ${word}**`;
+    const started = performance.now();
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, headword: "hola", body }),
+      lesson({ id: "ES-2", chapter: 2, sequence: 20, headword: word }),
+    ]);
+    expect(performance.now() - started).toBeLessThan(1_000);
+    expect(report.tracks[0]?.lessonCount).toBe(2);
+  });
+
   it("matches a non-Latin word at its own boundaries", () => {
     // Devanagari carries its vowels as combining marks, so the adjacency class does
     // most of its work outside Latin script. `घरमें` is not a use of `घर`.
