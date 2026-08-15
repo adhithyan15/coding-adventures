@@ -1,5 +1,34 @@
 # Changelog — `twig-aot`
 
+
+## 0.53.0 - 2026-08-14 - source_map moves with the instructions
+
+`source_map` is a POSITIONAL side table — `source_map[i]` describes
+`instructions[i]`, and `aot-debug` (lib.rs:98) indexes it exactly that way. Three
+passes in this crate moved instructions without moving the map, so a debugger
+reported the wrong source line for the rest of the function. Nothing crashed:
+the map kept a plausible length full of plausible numbers.
+
+* `strip_dead_string_consts` and `strip_dead_aot_string_allocs` delete
+  instructions and now route through a new `retain_instructions_with_map`
+  helper, which filters both together. This is the FOURTH site in the campaign
+  to need it (see `iir-builtin-lowering`'s `materialize_immediate_operands` and
+  `lower_global_io`), hence one helper rather than a fourth hand-rolled copy.
+* `lower_string_literals_for_aot` EXPANDS instructions — one `str_const` becomes
+  `alloc_bytes` + N `store_byte` + `mov` — and now carries the map through the
+  expansion, crediting each output to its input instruction.
+
+The third point is the one that mattered. A first attempt fixed only the two
+strip passes and guarded on `source_map.len() == instructions.len()`, which is
+FALSE by the time they run for any function containing a string literal —
+because the expanding pass had already desynced it. That version passed a green
+unit test while doing nothing on the shipped path; the guard is now a
+`debug_assert!` that fails loudly instead of skipping silently.
+
+Three tests, including one that walks the whole pipeline (`lower` → both strips)
+rather than a single pass in isolation — the isolated test passes against the
+no-op version, the pipeline test does not.
+
 ## Unreleased - CI actually runs this crate's tests now
 
 One latent breakage, fixed in three parts: the crate's test targets did not

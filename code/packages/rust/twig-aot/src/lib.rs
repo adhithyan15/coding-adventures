@@ -353,6 +353,7 @@ static RUNTIME_WINDOWS_X86_64: &[u8] =
 /// pull nothing from this archive and pay no size/duplicate-symbol cost.
 static GC_CORE_ARCHIVE: &[u8] = include_bytes!(env!("GC_CORE_CAPI_ARCHIVE"));
 use interpreter_ir::function::IIRFunction;
+use interpreter_ir::source_loc::SourceLoc;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
 use iir_builtin_lowering::{
@@ -2150,6 +2151,52 @@ fn resolve_src_aot_type(src: Option<&Operand>, env: &HashMap<String, String>) ->
 /// appears in any other instruction's `srcs`.  Instructions that are
 /// still referenced (e.g. as arg to an un-lowered `call_builtin`, or as
 /// a `make_closure` name register) are retained.
+/// Drop instructions by mask, taking their `source_map` entries with them.
+///
+/// `source_map` is a POSITIONAL side table — `source_map[i]` describes
+/// `instructions[i]`, and `aot-debug` (lib.rs:98) indexes it exactly that way.
+/// A pass that removes an instruction without removing its entry shifts every
+/// later entry onto the wrong instruction, so a debugger reports the wrong
+/// source line for the rest of the function. Nothing crashes; the map keeps a
+/// plausible length full of plausible numbers, which is why it survives review.
+///
+/// This is the FOURTH site in this campaign to need it (see
+/// `iir-builtin-lowering`'s `materialize_immediate_operands` and
+/// `lower_global_io`), hence one helper rather than a fourth hand-rolled copy.
+/// Route every instruction removal in this crate through here.
+fn retain_instructions_with_map(func: &mut IIRFunction, keep: &[bool]) {
+    debug_assert_eq!(
+        keep.len(),
+        func.instructions.len(),
+        "mask must cover exactly the instruction list"
+    );
+    if !func.source_map.is_empty() {
+        // A short map means an upstream pass already desynced it. Be loud in
+        // debug rather than silently skipping the filter — skipping is how the
+        // first attempt at this fix became a no-op on the real pipeline path.
+        debug_assert_eq!(
+            func.source_map.len(),
+            func.instructions.len(),
+            "source_map desynced BEFORE this pass: {} entries for {} instructions",
+            func.source_map.len(),
+            func.instructions.len()
+        );
+        let old = std::mem::take(&mut func.source_map);
+        func.source_map = keep
+            .iter()
+            .enumerate()
+            .filter(|(_, k)| **k)
+            .map(|(i, _)| old.get(i).copied().unwrap_or(SourceLoc::SYNTHETIC))
+            .collect();
+    }
+    let mut idx = 0;
+    func.instructions.retain(|_| {
+        let k = keep[idx];
+        idx += 1;
+        k
+    });
+}
+
 fn strip_dead_string_consts(func: &mut IIRFunction) {
     use std::collections::HashSet;
 
@@ -2164,16 +2211,35 @@ fn strip_dead_string_consts(func: &mut IIRFunction) {
 
     // Remove const instructions of the form `%dest = Var("text")` whose
     // dest is not in `used`.  These are dead name-register loads.
-    func.instructions.retain(|instr| {
-        if instr.op == "const" {
-            if let Some(Operand::Var(_)) = instr.srcs.first() {
-                if let Some(dest) = &instr.dest {
-                    return used.contains(dest);
+    //
+    // `source_map` is filtered in LOCKSTEP. It is a positional side table —
+    // `source_map[i]` describes `instructions[i]` — so deleting an instruction
+    // without deleting its entry shifts every entry after it onto the wrong
+    // instruction. Nothing crashes: `aot-debug` (lib.rs:98) reads
+    // `func.source_map[i]` and would simply report the wrong source line for the
+    // rest of the function, and a later pass that rebuilds the map at the
+    // correct LENGTH launders the wrong content past any length assertion.
+    //
+    // This is the third time this exact bug has appeared in the campaign (see
+    // `iir-builtin-lowering`'s `materialize_immediate_operands` and
+    // `lower_global_io`). If you add, remove, or reorder instructions here,
+    // the map moves with them.
+    let keep: Vec<bool> = func
+        .instructions
+        .iter()
+        .map(|instr| {
+            if instr.op == "const" {
+                if let Some(Operand::Var(_)) = instr.srcs.first() {
+                    if let Some(dest) = &instr.dest {
+                        return used.contains(dest);
+                    }
                 }
             }
-        }
-        true // keep everything else
-    });
+            true // keep everything else
+        })
+        .collect();
+
+    retain_instructions_with_map(func, &keep);
 }
 
 /// After `lower_string_literals_for_aot`, some `push_aot_string_literal` blocks
@@ -2317,7 +2383,10 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
     //    alloc_bytes for buf).
     //  - Any `store_byte` or `field_store` instruction whose first src is a dead buf.
     //  - Any alias-mov `mov alias = dead_buf` (safe because alias dest is not live).
-    func.instructions.retain(|instr| {
+    let keep: Vec<bool> = func
+        .instructions
+        .iter()
+        .map(|instr| {
         if let Some(dest) = &instr.dest {
             for prefix in &dead_prefixes {
                 if dest.starts_with(&format!("{prefix}_")) {
@@ -2343,7 +2412,9 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
             }
         }
         true
-    });
+        })
+        .collect();
+    retain_instructions_with_map(func, &keep);
 }
 
 /// Lower the landed E4 literal-output string ops to native byte-buffer I/O.
@@ -2490,7 +2561,28 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
     let mut ints: HashMap<String, i64> = HashMap::new();
     let mut next = 0usize;
 
-    for instr in std::mem::take(&mut func.instructions) {
+    // Carry `source_map` through the expansion. This pass turns one
+    // `str_const` into an `alloc_bytes` + N `store_byte` + a `mov`, so without
+    // this the map is short by the time the strip passes run — which is exactly
+    // how the first attempt at the lockstep fix became a NO-OP on every
+    // function containing a string literal.
+    //
+    // The flush happens at the TOP of each iteration, crediting the PREVIOUS
+    // input instruction with however many outputs it produced. That works even
+    // though the loop body is full of `continue`s, which an end-of-body hook
+    // would skip.
+    let old_map = std::mem::take(&mut func.source_map);
+    let had_map = !old_map.is_empty();
+    let mut new_map: Vec<SourceLoc> = Vec::new();
+    let mut prev_loc = SourceLoc::SYNTHETIC;
+
+    for (in_idx, instr) in std::mem::take(&mut func.instructions).into_iter().enumerate() {
+        if had_map {
+            while new_map.len() < lowered.len() {
+                new_map.push(prev_loc);
+            }
+            prev_loc = old_map.get(in_idx).copied().unwrap_or(SourceLoc::SYNTHETIC);
+        }
         if instr.op == "const" {
             if let (Some(dest), Some(Operand::Int(value))) =
                 (instr.dest.as_ref(), instr.srcs.first())
@@ -2883,6 +2975,15 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
         lowered.push(instr);
     }
 
+    // Final flush: the last input instruction's outputs, plus any trailing
+    // instructions the loop appended after its final `continue`.
+    if had_map {
+        while new_map.len() < lowered.len() {
+            new_map.push(prev_loc);
+        }
+        new_map.truncate(lowered.len());
+        func.source_map = new_map;
+    }
     func.instructions = lowered;
 }
 
@@ -4928,5 +5029,138 @@ mod tests {
             "both alias-movs feeding `s` must survive: {:?}",
             f.instructions
         );
+    }
+
+    /// `strip_dead_string_consts` deletes instructions, so it must delete their
+    /// `source_map` entries too.
+    ///
+    /// `source_map` is POSITIONAL — `source_map[i]` describes `instructions[i]`
+    /// — and `aot-debug` (lib.rs:98) indexes it exactly that way. Dropping an
+    /// instruction without its entry shifts every later entry onto the wrong
+    /// instruction, so a debugger reports the wrong source line for the rest of
+    /// the function. Nothing crashes, which is why this survived: the map stays
+    /// a plausible length and the values are plausible numbers.
+    ///
+    /// The fixture puts a DEAD name-const between two live instructions, so a
+    /// stale map is detectable by content, not just by length.
+    #[test]
+    fn strip_dead_string_consts_filters_the_source_map_in_lockstep() {
+        use interpreter_ir::source_loc::SourceLoc;
+
+        let mut func = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                // live: kept
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+                // DEAD name-const: `%dead = Var("gone")`, never read
+                IIRInstr::new("const", Some("dead".into()), vec![Operand::Var("gone".into())], "str"),
+                // live: kept, and reads `a` so `a` stays used
+                IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+            ],
+        );
+        func.source_map = vec![
+            SourceLoc { line: 10, column: 1 },
+            SourceLoc { line: 20, column: 1 }, // the dead one
+            SourceLoc { line: 30, column: 1 },
+        ];
+
+        strip_dead_string_consts(&mut func);
+
+        assert_eq!(func.instructions.len(), 2, "the dead name-const must be removed");
+        assert_eq!(
+            func.source_map.len(),
+            func.instructions.len(),
+            "source_map must stay the same length as instructions"
+        );
+        // Content, not just length: the surviving entries must be the LIVE
+        // instructions' lines. A map that merely got truncated would read
+        // [10, 20] here and put `ret` on the deleted const's line.
+        assert_eq!(func.source_map[0].line, 10, "first instruction keeps its line");
+        assert_eq!(
+            func.source_map[1].line, 30,
+            "ret must keep line 30, not inherit the deleted const's line 20"
+        );
+    }
+
+    /// The PIPELINE path, which the isolated test above cannot reach.
+    ///
+    /// `prepare_module_for_aot` runs `lower_string_literals_for_aot` (which
+    /// expands one `str_const` into alloc_bytes + N store_byte + mov) and only
+    /// THEN the two strip passes. The first attempt at this fix guarded on
+    /// `source_map.len() == instructions.len()` and so silently skipped every
+    /// function containing a string literal — green test, unfixed shipped path.
+    /// This test pins the invariant after the whole sequence.
+    #[test]
+    fn source_map_survives_the_whole_aot_string_pipeline() {
+        use interpreter_ir::source_loc::SourceLoc;
+
+        let mut func = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hi".into())], "str"),
+                // dead name-const between two live instructions
+                IIRInstr::new("const", Some("dead".into()), vec![Operand::Var("gone".into())], "str"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        func.source_map = vec![
+            SourceLoc { line: 1, column: 1 },
+            SourceLoc { line: 2, column: 1 },
+            SourceLoc { line: 3, column: 1 },
+            SourceLoc { line: 4, column: 1 },
+        ];
+
+        lower_string_literals_for_aot(&mut func);
+        assert_eq!(
+            func.source_map.len(),
+            func.instructions.len(),
+            "the expanding pass must carry the map: {} entries for {} instructions",
+            func.source_map.len(),
+            func.instructions.len()
+        );
+
+        strip_dead_string_consts(&mut func);
+        assert_eq!(func.source_map.len(), func.instructions.len(), "after strip_dead_string_consts");
+
+        strip_dead_aot_string_allocs(&mut func);
+        assert_eq!(func.source_map.len(), func.instructions.len(), "after strip_dead_aot_string_allocs");
+
+        // Content check: the `ret` must still carry its own line 4, not inherit
+        // a deleted instruction's line.
+        let ret_idx = func
+            .instructions
+            .iter()
+            .position(|i| i.op == "ret")
+            .expect("ret survives");
+        assert_eq!(
+            func.source_map[ret_idx].line, 4,
+            "ret kept the wrong source line — the map slid"
+        );
+    }
+
+    /// A function whose frontend emitted no locations must come out with none —
+    /// the passes must not fabricate entries.
+    #[test]
+    fn absent_source_map_is_left_absent() {
+        let mut func = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("dead".into()), vec![Operand::Var("gone".into())], "str"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        assert!(func.source_map.is_empty());
+        lower_string_literals_for_aot(&mut func);
+        strip_dead_string_consts(&mut func);
+        strip_dead_aot_string_allocs(&mut func);
+        assert!(func.source_map.is_empty(), "no map in, no map out");
     }
 }
