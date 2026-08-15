@@ -4534,6 +4534,48 @@
       "scriptCommand": "te"
     },
     {
+      "language": "telugu",
+      "chapter": 46,
+      "output": "telugu/book/chapters/ch46-things-you-ask-for.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 47,
+      "output": "telugu/book/chapters/ch47-leg-and-tooth.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 48,
+      "output": "telugu/book/chapters/ch48-roles.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 49,
+      "output": "telugu/book/chapters/ch49-replies.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 50,
+      "output": "telugu/book/chapters/ch50-taking-leave.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 51,
+      "output": "telugu/book/chapters/ch51-courtesy.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 52,
+      "output": "telugu/book/chapters/ch52-welcoming-a-guest.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "output": "urdu/book/chapters/ch03-ask-and-answer-names.tex",

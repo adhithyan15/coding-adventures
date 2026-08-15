@@ -1,0 +1,625 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 47,
+  "title": "The Leg and the Tooth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:28629dad21d7e699",
+  "lessons": [
+    {
+      "id": "TE-C47-leg",
+      "sequence": 1180,
+      "title": "కాలు (kālu) — leg, foot",
+      "headword": "కాలు",
+      "romanization": "kālu",
+      "gloss": "leg, foot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8110971c43e00c95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did pustakaṁ mean, and what did uppu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాలు (kālu) — \"leg, foot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian kāl, and every sister kept it nearly whole: Tamil கால், Kannada ಕಾಲು, Malayalam കാൽ."
+            },
+            {
+              "kind": "speech",
+              "text": "Set that beside చెయ్యి, the hand-word, which wore down so far that its family resemblance is hard to see at all. Two body-words of the same age; one held its shape and one did not, and nothing about the meaning predicts which."
+            },
+            {
+              "kind": "speech",
+              "text": "కాలు (kālu) covers the whole limb, foot and leg together. When precision is wanted, Sanskrit's పాదం names the foot alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five more body words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālu, then tala, so the top and the bottom sit together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālu*, then *tala*, so the top and the bottom sit together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాలు (kālu) mean? (\"leg, foot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C47-tooth",
+      "sequence": 1190,
+      "title": "పన్ను (pannu) — a tooth",
+      "headword": "పన్ను",
+      "romanization": "pannu",
+      "gloss": "a tooth",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55bc21a7049a7b4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kālu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పన్ను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పన్ను (pannu) — \"a tooth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian pal. Tamil kept பல்; Kannada has ಹಲ್ಲು, with that p- to h- law working again exactly where the last chapter said to watch for it. Telugu took a third road, the -l- coming out as -n- and doubling."
+            },
+            {
+              "kind": "speech",
+              "text": "An honest warning: పన్ను (pannu) is also the word for a tax. Nothing joins the tooth to the tax but an accident of sound. Telugu has a fair number of these pairs, and context is the only fix — which is what context is for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: a leg and a tooth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pannu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pannu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālu, then pannu, and say which of the two also names something you pay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālu*, then *pannu*, and say which of the two also names something you pay]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పన్ను (pannu) mean? (\"a tooth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C47-hair",
+      "sequence": 1200,
+      "title": "జుట్టు (juṭṭu) — hair (of the head)",
+      "headword": "జుట్టు",
+      "romanization": "juṭṭu",
+      "gloss": "hair (of the head)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e375f7b991ee834",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pannu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జుట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జుట్టు (juṭṭu) — \"hair (of the head)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జుట్టు (juṭṭu) is the hair on a head taken as one thing — the mass, not the strand. For a single hair Telugu reaches for a different noun, వెంట్రుక."
+            },
+            {
+              "kind": "speech",
+              "text": "English leans on number for the same distinction --- \"a hair\" against \"hair\" --- while Telugu simply reaches for a different noun. జుట్టు (juṭṭu) also names the knot or tuft tied at the back of the head, which is most likely where the word started."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: a leg, a tooth, hair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juṭṭu, then tala, and say which one sits on the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *juṭṭu*, then *tala*, and say which one sits on the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జుట్టు (juṭṭu) mean? (\"hair (of the head)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C47-finger",
+      "sequence": 1210,
+      "title": "వేలు (vēlu) — a finger",
+      "headword": "వేలు",
+      "romanization": "vēlu",
+      "gloss": "a finger",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bccb4cbd2f2a1d0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did juṭṭu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వేలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేలు (vēlu) — \"a finger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Dravidian viral. Tamil kept விரல் entire; Kannada has ಬೆರಳು; Telugu dropped the -r- and came out with వేలు (vēlu). On the page the three look barely related, and they are the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "It is still working inside compounds: బొటనవేలు, the thumb, is the stubby one of the set."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. Note that చెయ్యి and వేలు (vēlu) are separate roots — Telugu does not build the finger out of the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlu, then ceyyi, and say which one has five of the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlu*, then *ceyyi*, and say which one has five of the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వేలు (vēlu) mean? (\"a finger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C47-stomach",
+      "sequence": 1220,
+      "title": "కడుపు (kaḍupu) — the stomach, the belly",
+      "headword": "కడుపు",
+      "romanization": "kaḍupu",
+      "gloss": "the stomach, the belly",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0fe379232059a77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vēlu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కడుపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కడుపు (kaḍupu) — \"the stomach, the belly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కడుపు is the unfussy everyday word, and it carries the commonest way of saying you have eaten enough: kaḍupu niṇḍindi, \"the stomach has filled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It also says, gently and without ever being explicit, that a woman is expecting. Sanskrit's ఉదరం exists in Telugu and stays where the clinical register lives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five more body words: a leg, a tooth, hair, a finger, a belly. With తల, చెయ్యి, కన్ను, ముక్కు, నోరు and చెవి behind them, you can point at most of a person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then add tala and ceyyi and say the seven as one list",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then add *tala* and *ceyyi* and say the seven as one list]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కడుపు (kaḍupu) mean? (\"the stomach, the belly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

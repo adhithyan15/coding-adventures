@@ -7560,6 +7560,97 @@
       "tex": "telugu/book/chapters/ch45-grandparents.tex"
     },
     {
+      "language": "telugu",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:2156645f89f34a75",
+      "lessonIds": [
+        "TE-C46-fruit",
+        "TE-C46-cloth",
+        "TE-C46-lamp",
+        "TE-C46-salt",
+        "TE-C46-book"
+      ],
+      "tex": "telugu/book/chapters/ch46-things-you-ask-for.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:9cfd020fdbd8118b",
+      "lessonIds": [
+        "TE-C47-leg",
+        "TE-C47-tooth",
+        "TE-C47-hair",
+        "TE-C47-finger",
+        "TE-C47-stomach"
+      ],
+      "tex": "telugu/book/chapters/ch47-leg-and-tooth.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:9d9015125c43497d",
+      "lessonIds": [
+        "TE-C48-teacher",
+        "TE-C48-student",
+        "TE-C48-doctor",
+        "TE-C48-farmer",
+        "TE-C48-guest"
+      ],
+      "tex": "telugu/book/chapters/ch48-roles.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:8b06a43f236f3623",
+      "lessonIds": [
+        "TE-C49-true",
+        "TE-C49-enough",
+        "TE-C49-certainly",
+        "TE-C49-perhaps",
+        "TE-C49-alright"
+      ],
+      "tex": "telugu/book/chapters/ch49-replies.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:869a2a5ed96f0517",
+      "lessonIds": [
+        "TE-C50-now",
+        "TE-C50-day-after",
+        "TE-C50-journey",
+        "TE-C50-set-out",
+        "TE-C50-farewell"
+      ],
+      "tex": "telugu/book/chapters/ch50-taking-leave.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:a379408e09cd4d72",
+      "lessonIds": [
+        "TE-C51-gratitude",
+        "TE-C51-favour",
+        "TE-C51-respect",
+        "TE-C51-blessing",
+        "TE-C51-salutation"
+      ],
+      "tex": "telugu/book/chapters/ch51-courtesy.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:a1ad25b1b3de9a18",
+      "lessonIds": [
+        "TE-C52-door",
+        "TE-C52-chair",
+        "TE-C52-muggu",
+        "TE-C52-flower",
+        "TE-C52-garland"
+      ],
+      "tex": "telugu/book/chapters/ch52-welcoming-a-guest.tex"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "sourceHash": "fnv1a64:1524be4104638c47",

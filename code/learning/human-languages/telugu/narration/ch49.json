@@ -1,0 +1,639 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 49,
+  "title": "Answering With More Than Yes",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:023f8658d4139133",
+  "lessons": [
+    {
+      "id": "TE-C49-true",
+      "sequence": 1280,
+      "title": "నిజం (nijaṁ) — true; the truth",
+      "headword": "నిజం",
+      "romanization": "nijaṁ",
+      "gloss": "true; the truth",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:480986b33de40f0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did atithi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిజం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిజం (nijaṁ) — \"true; the truth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit nija meant \"one's own, innate\" — what belongs to a thing by its nature. Telugu moved it one step: what belongs to a thing by nature is what is really so, and నిజం (nijaṁ) became the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Alone it answers a doubt: nijaṁ, \"true\". With a question on the end it becomes perhaps the commonest interjection in the language: nijamā?, \"really?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five answers that are neither అవును nor లేదు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nijaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nijaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nijaṁ, then nijamā?, and say which one asks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nijaṁ*, then *nijamā?*, and say which one asks]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిజం (nijaṁ) mean? (\"true; the truth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C49-enough",
+      "sequence": 1290,
+      "title": "చాలు (cālu) — enough, that will do",
+      "headword": "చాలు",
+      "romanization": "cālu",
+      "gloss": "enough, that will do",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38863b2b35aa9738",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nijaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చాలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చాలు (cālu) — \"enough, that will do\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలు (cālu) is a verb — \"it suffices\" — used as a complete answer. Held over a glass being filled it stops the pouring; said of an argument it ends it."
+            },
+            {
+              "kind": "speech",
+              "text": "చాలా, the everyday word for \"very\" and \"a lot\", is the same root wearing a different ending. Sufficiency and abundance sit one letter apart, which is a fair account of how the two ideas are related anywhere."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cālu, then nijaṁ, and say which one you would use to stop someone pouring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cālu*, then *nijaṁ*, and say which one you would use to stop someone pouring]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చాలు (cālu) mean? (\"enough, that will do\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C49-certainly",
+      "sequence": 1300,
+      "title": "తప్పకుండా (tappakuṇḍā) — certainly, without fail",
+      "headword": "తప్పకుండా",
+      "romanization": "tappakuṇḍā",
+      "gloss": "certainly, without fail",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcf443942ac572b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cālu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తప్పకుండా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తప్పకుండా (tappakuṇḍā) — \"certainly, without fail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Take it apart: తప్పు, \"to miss, to slip, to go wrong\", plus -కుండా, the ending meaning \"without doing\". తప్పకుండా (tappakuṇḍā) is without missing."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is worth having on its own, because it attaches to any verb stem: ceppakuṇḍā, without telling; tinakuṇḍā, without eating. One suffix, and every verb you own gains a negative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappakuṇḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappakuṇḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappakuṇḍā, then cālu, and say which one is a promise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappakuṇḍā*, then *cālu*, and say which one is a promise]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తప్పకుండా (tappakuṇḍā) mean? (\"certainly, without fail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C49-perhaps",
+      "sequence": 1310,
+      "title": "ఏమో (ēmō) — perhaps, who knows",
+      "headword": "ఏమో",
+      "romanization": "ēmō",
+      "gloss": "perhaps, who knows",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8317db7c55f9fcf5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tappakuṇḍā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఏమో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏమో (ēmō) — \"perhaps, who knows\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏమో (ēmō) is a shrug made into a word: perhaps, it may be so, who knows."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the front of it and you will find the questioning ఏ- that already stands in ఏమిటి, \"what\". ఏమో (ēmō) is that question with the asking taken out and only the uncertainty left behind."
+            },
+            {
+              "kind": "speech",
+              "text": "It also hangs on the end of a whole sentence, where English would need a separate clause: vastāḍēmō, \"he may come\". A language with a settled, unembarrassed word for not knowing is telling you something about its manners."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēmō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēmō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēmō, then tappakuṇḍā, and say which one commits you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēmō*, then *tappakuṇḍā*, and say which one commits you]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఏమో (ēmō) mean? (\"perhaps, who knows\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C49-alright",
+      "sequence": 1320,
+      "title": "అలాగే (alāgē) — just so, alright then",
+      "headword": "అలాగే",
+      "romanization": "alāgē",
+      "gloss": "just so, alright then",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a57e7573d3e3c12f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ēmō mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అలాగే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అలాగే (alāgē) — \"just so, alright then\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అలా means \"in that way\"; -గే is the small emphatic tail that makes it \"just so\". అలాగే (alāgē) is the yes you give to an instruction — not \"that is correct\" but \"it shall be as you said\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at the front of it. అ- points far, and already carries అది, \"that one\", and అక్కడ, \"there\". ఇ- points near: ఇది, ఇక్కడ, and so ఇలా, \"in this way\". ఎ- asks: ఎక్కడ, ఎలా. Three vowels, one grid, and అలాగే (alāgē) is simply the far corner of it with an ending stuck on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five answers, and a three-way grid you can now see running under అది, ఇక్కడ and ఎలా."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alāgē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alāgē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say alāgē as a reply to dayacēsi kūrcō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say *alāgē* as a reply to *dayacēsi kūrcō*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అలాగే (alāgē) mean? (\"just so, alright then\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 50,
+  "title": "Taking Your Leave",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c8dd55defa59b40a",
+  "lessons": [
+    {
+      "id": "TE-C50-now",
+      "sequence": 1330,
+      "title": "ఇప్పుడు (ippuḍu) — now",
+      "headword": "ఇప్పుడు",
+      "romanization": "ippuḍu",
+      "gloss": "now",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f567c8733e06fa9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did alāgē mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇప్పుడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇప్పుడు (ippuḍu) — \"now\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The grid from the last chapter has a time row, and this is its near corner. -ప్పుడు is the time-piece; put a pointing vowel in front of it and the word makes itself."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇప్పుడు (ippuḍu) is \"this time\" — now. అప్పుడు is \"that time\" — then. ఎప్పుడు is \"which time\" — when? You already owned the vowels; the row costs you one word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now — and a shape that gives you two more words for free."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippuḍu, then ippuḍu veḷḷu — \"go now\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippuḍu*, then *ippuḍu veḷḷu* — \"go now\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇప్పుడు (ippuḍu) mean? (\"now\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C50-day-after",
+      "sequence": 1340,
+      "title": "ఎల్లుండి (elluṇḍi) — the day after tomorrow",
+      "headword": "ఎల్లుండి",
+      "romanization": "elluṇḍi",
+      "gloss": "the day after tomorrow",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cf6ef7f3206f835",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ippuḍu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎల్లుండి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎల్లుండి (elluṇḍi) — \"the day after tomorrow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "One settled noun for the day after tomorrow. English needs four words and still sounds unsure of itself; Telugu, like its sisters, simply has the word."
+            },
+            {
+              "kind": "speech",
+              "text": "There is an older tomorrow hiding at the front of it. ఎల్లి once meant tomorrow, and though రేపు took that job in everyday speech, ఎల్లి is still in service inside ఎల్లుండి (elluṇḍi), doing its old work one day further out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: now, and the day after tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elluṇḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elluṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippuḍu, then elluṇḍi, and say which one is further off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippuḍu*, then *elluṇḍi*, and say which one is further off]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎల్లుండి (elluṇḍi) mean? (\"the day after tomorrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C50-journey",
+      "sequence": 1350,
+      "title": "ప్రయాణం (prayāṇaṁ) — a journey",
+      "headword": "ప్రయాణం",
+      "romanization": "prayāṇaṁ",
+      "gloss": "a journey",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cc4ded7e7604b7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did elluṇḍi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రయాణం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రయాణం (prayāṇaṁ) — \"a journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pra-yāṇa: the root yā, \"to go\", with pra-, \"forth\". A journey is a going-forth, and the word is transparent to anyone holding the pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is the -ం you have now sorted three times: the tatsama neuter, as on దీపం, హృదయం and భోజనం. When a Telugu noun ends in -ం and names an abstraction, Sanskrit is usually behind it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāṇaṁ, then dīpaṁ, and name the ending they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāṇaṁ*, then *dīpaṁ*, and name the ending they share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రయాణం (prayāṇaṁ) mean? (\"a journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C50-set-out",
+      "sequence": 1360,
+      "title": "బయలుదేరు (bayaludēru) — to set out, to start off",
+      "headword": "బయలుదేరు",
+      "romanization": "bayaludēru",
+      "gloss": "to set out, to start off",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5498826f1751796e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did prayāṇaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బయలుదేరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బయలుదేరు (bayaludēru) — \"to set out, to start off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native, and a picture rather than an abstraction. బయలు is open ground, the outside; దేరు is to rise, to come forth. To set out is to come out into the open."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside ప్రయాణం (prayāṇaṁ) and you have two languages building the same idea from opposite ends: Sanskrit from the going, Telugu from the doorstep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaludēru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaludēru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bayaludēru, then prayāṇaṁ, and say which of the two is inherited",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bayaludēru*, then *prayāṇaṁ*, and say which of the two is inherited]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బయలుదేరు (bayaludēru) mean? (\"to set out, to start off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C50-farewell",
+      "sequence": 1370,
+      "title": "వెళ్ళొస్తాను (veḷḷostānu) — I'll go and come back --- the everyday goodbye",
+      "headword": "వెళ్ళొస్తాను",
+      "romanization": "veḷḷostānu",
+      "gloss": "I'll go and come back --- the everyday goodbye",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d2e174787320cc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bayaludēru mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెళ్ళొస్తాను",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళొస్తాను (veḷḷostānu) — \"I'll go and come back --- the everyday goodbye\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs you already have, welded at the seam: వెళ్ళి, \"having gone\", and వస్తాను, \"I will come\". వెళ్ళొస్తాను (veḷḷostānu) is I'll go and come back, and it is what is said at the door."
+            },
+            {
+              "kind": "speech",
+              "text": "What is not said is the flat \"I am going\". Leaving without the returning half is what is said of the dead, and the rule holds right across the South. The politeness here is not decoration laid over the grammar; it is the grammar. The reply comes back in the same shape: వెళ్ళి రండి — \"go, and come\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ఇప్పుడు (ippuḍu), ఎల్లుండి (elluṇḍi), ప్రయాణం (prayāṇaṁ), బయలుదేరు (bayaludēru), and a goodbye that refuses to be one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷostānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷostānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷostānu, then the reply veḷḷi raṇḍi, and say why neither half stands alone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷostānu*, then the reply *veḷḷi raṇḍi*, and say why neither half stands alone]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెళ్ళొస్తాను (veḷḷostānu) mean? (\"I'll go and come back --- the everyday goodbye\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
