@@ -69,6 +69,47 @@ is checked on warning counts and not just on its exit code.
 **Applies to every non-Latin track**, not just Sanskrit. Add both keys whenever a
 new chapter target is registered.
 
+## HL-C171 — cross-node aliases work; the relocation worry was unfounded
+
+HL-C170 left cross-node aliasing as blocked, on the reasoning that pointing a
+concept at a lesson filed under a *different* spine node would trip the
+relocation ledger. **Tested, and it does not.** The relocation check fires when a
+lesson's own `concept_tag` appears in `node.concepts` while its `spine_node`
+differs — and an aliased lesson's tag is a track-local name that is never in
+`node.concepts`, so the two mechanisms do not meet.
+
+Five aliases added on that basis:
+
+| concept | satisfied by | note |
+|---|---|---|
+| `REPORTED-SPEECH` | `ES-REPORT-QUE-OBLIGATORY` | *dice que* — he says THAT |
+| `SPEECH-ACT-REPORT` | `ES-REPORT-DECIR-PRETERITE` | *dijo* |
+| `MODAL-WOULD` | `ES-CONDITIONAL` | *hablaría*, cross-node |
+| `VOICE-PASSIVE` | `ES-GRAMMAR-SE-PASSIVE-AGREEMENT` | cross-node |
+| `RELATIVE-CLAUSE` | `ES-GRAMMAR-RELATIVE-QUE` | cross-node |
+
+**`SPINE-EXPRESS-CONDITION` is now complete — omissions empty.**
+**`SPINE-READ-EXTENDED-PROSE` opens. B2 goes 1/4 → 2/4, the spine 22/33 → 23/33,
+and B1 is complete at the CONCEPT level, not just the node level.** No lesson
+written.
+
+**Deliberately NOT aliased**, because the match would have been wishful rather
+than true — each of these needs authoring:
+
+* `CONNECTIVE-HOWEVER` / `CONNECTIVE-ALTHOUGH` (`SPINE-ARGUE-A-VIEW`). The track
+  has *pero*, *también*, *tampoco*. **`pero` is "but", not "however"** —
+  *sin embargo* and *aunque* are genuinely absent. Aliasing `pero` here would
+  have made the ledger lie.
+* `GREETING-EVENING` (`SPINE-TIME-OF-DAY`) against `GREETING-GOODNIGHT`: evening
+  is not night.
+* `QUOTATION-DIRECT`: the track's `ES-REPORT-WH-ACCENT` and `ES-REPORT-YESNO-SI`
+  are INDIRECT questions. Direct quotation is untaught.
+
+The rule this establishes: an alias asserts *this lesson teaches that concept*.
+Where it does not, the concept stays in `omits` and gets authored. The remaining
+~65 unclaimed concepts should be swept with that test applied one at a time, not
+pattern-matched in bulk.
+
 ## HL-C170 — grammar lessons can realize a spine concept now; HL-C169 was half a diagnosis
 
 HL-C169 called the 73 unclaimed Spanish concepts a **tagging** problem. Measuring
