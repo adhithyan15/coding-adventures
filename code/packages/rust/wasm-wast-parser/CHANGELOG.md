@@ -1,5 +1,47 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.14 — 2026-08-15 — correctly-rounded hex-float literals (task #80)
+
+### Fixed
+
+- Hex-float literal parsing (`0x1.8p3`-style, used by `f32.const`/
+  `f64.const`) no longer double-rounds. The previous implementation
+  accumulated the mantissa digit-by-digit via plain `f64` arithmetic
+  (`mantissa = mantissa * 16.0 + d as f64`), performing a SEPARATE
+  rounding step at every hex digit instead of one correctly-rounded
+  (round-to-nearest, ties-to-even) conversion from the true mathematical
+  value. Invisible for short literals, this produced genuinely WRONG
+  results for the real spec testsuite's own deliberately-crafted
+  over-precision edge cases -- confirmed via `simd_const.wast` (vendored
+  in 0.1.12) and `const.wast`, both of which have `assert_return` cases
+  built specifically to catch this class of bug.
+  New `round_hex_mantissa` extracts the leading-1-normalized mantissa bits
+  directly from the hex digit sequence and applies the classic
+  guard/round/sticky rule once, at the end, against the TRUE value --
+  correctly handling exact ties (round to even), subnormals (values below
+  the smallest normal exponent, which have no implicit leading bit), and
+  overflow/underflow to signed infinity/zero.
+- `f32.const` hex literals ALSO no longer double-round: the previous
+  `parse_f32_bits` rounded to `f64` first and narrowed via `as f32`, which
+  is itself a double rounding (round to 53-bit significand, then round
+  that result to 24-bit) -- not always equivalent to rounding the true
+  value to `f32` once directly. `round_hex_mantissa` is now
+  width-parameterized (`(mantissa_bits, exp_bias)`, `(52, 1023)` for
+  `f64`, `(23, 127)` for `f32`) so both formats round independently and
+  correctly from the same exact digit sequence, instead of one narrowing
+  the other's already-rounded result.
+- Both fixes are DoS-guarded: an adversarial literal with an extreme
+  `p<exponent>` (unbounded by the digit count, unlike the mantissa
+  itself) is caught by an early flush-to-zero/overflow-to-infinity return
+  before the guard/sticky bit-scan loop runs, rather than iterating a
+  range sized by the raw exponent value.
+- Regenerated `wasm-conformance`'s baseline: `const.wast`'s
+  `assert_return` tally goes from 260/300 to 300/300 (fully clean) and
+  `simd_const.wast` improves from 209/240 to 235/240 -- zero regressions
+  anywhere else in the 61-file vendored corpus (verified via a full
+  before/after diff of every file's per-kind tally, not just the two
+  files known to be affected).
+
 ## 0.1.13 — 2026-08-15 — lazy per-module build (W14, task #76)
 
 ### Changed (breaking)
