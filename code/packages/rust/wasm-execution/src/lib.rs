@@ -4334,7 +4334,7 @@ impl WasmExecutionEngine {
             .collect();
         let host_functions = std::mem::take(&mut self.host_functions);
 
-        let ctx = WasmExecutionContext {
+        let mut ctx = WasmExecutionContext {
             memory: memory_ptr,
             tables: table_ptrs,
             globals: self.globals.clone(),
@@ -4371,19 +4371,43 @@ impl WasmExecutionEngine {
         // `call_function_inner`) runs on a dedicated OS thread with an
         // explicit `DEDICATED_STACK_SIZE`, decoupling `MAX_CALL_DEPTH`
         // from whatever stack the CALLER of `call_function` happens to
-        // have. `vm_ptr` (raw, since `GenericVM` must stay reachable both
-        // here and from inside the spawned closure) and `ctx` (which owns
-        // the raw memory/table pointers and host-function trait objects)
-        // cross the thread boundary via `AssertSend` -- see its own doc
-        // comment for the full safety argument.
+        // have. Security review (WASM10, round 2): `ctx` stays OWNED
+        // here, in this (spawning) stack frame -- only a raw pointer to
+        // it (`ctx_ptr`, alongside `vm_ptr`) crosses the thread boundary,
+        // the same treatment `vm_ptr` already gets. This is deliberate:
+        // an earlier version moved `ctx` BY VALUE into the spawned
+        // closure, which meant a `Builder::spawn_scoped` failure (a real
+        // possibility under OS thread/resource exhaustion -- this
+        // feature can spawn up to `MAX_DEDICATED_THREAD_DEPTH` nested
+        // threads per call chain) would drop the closure -- and `ctx`
+        // along with it -- before `self.host_functions` (moved out via
+        // `mem::take` above) was ever restored, permanently corrupting
+        // engine state for later, unrelated calls (the exact WASM07 bug
+        // class, via a THIRD trigger beyond the trap/panic cases already
+        // fixed). Keeping `ctx` owned here means it's always available to
+        // restore from, regardless of whether the thread spawns, panics,
+        // or completes normally. See `AssertSend`'s own doc comment for
+        // the full cross-thread-access safety argument (identical to
+        // `vm_ptr`'s).
         let vm_ptr: *mut GenericVM = &mut self.vm;
-        let payload = AssertSend((vm_ptr, ctx, func_index, args.to_vec(), dedicated_thread_depth));
+        let ctx_ptr: *mut WasmExecutionContext = &mut ctx;
+        let payload = AssertSend((vm_ptr, ctx_ptr, func_index, args.to_vec(), dedicated_thread_depth));
 
-        let AssertSend((ctx, panic_result)) = std::thread::scope(|scope| {
-            let handle = std::thread::Builder::new()
-                .stack_size(DEDICATED_STACK_SIZE)
-                .spawn_scoped(scope, move || {
-                    let (vm_ptr, mut ctx, func_index, initial_args, parent_depth) = payload.into_inner();
+        /// The three ways the dedicated thread can fail to produce a
+        /// normal `VMResult<usize>` -- kept distinct from `VMError`
+        /// (an ordinary WASM-level trap, handled via `Ok(Err(..))`
+        /// below) because a spawn failure and a panic both need
+        /// `ctx`'s state restored before propagating, but must be
+        /// propagated differently (a spawn failure becomes a clean
+        /// `TrapError`; a panic must keep unwinding via `resume_unwind`).
+        enum DedicatedThreadFailure {
+            SpawnFailed(std::io::Error),
+            Panicked(Box<dyn std::any::Any + Send>),
+        }
+
+        let outcome: Result<VMResult<usize>, DedicatedThreadFailure> = std::thread::scope(|scope| {
+            match std::thread::Builder::new().stack_size(DEDICATED_STACK_SIZE).spawn_scoped(scope, move || {
+                    let (vm_ptr, ctx_ptr, func_index, initial_args, parent_depth) = payload.into_inner();
                     // Propagate this THREAD's own nesting depth before
                     // doing anything else -- see `DEDICATED_THREAD_DEPTH`'s
                     // own doc comment. A fresh OS thread starts with a
@@ -4392,10 +4416,13 @@ impl WasmExecutionEngine {
                     DEDICATED_THREAD_DEPTH.with(|d| d.set(parent_depth + 1));
                     // SAFETY: see `AssertSend`'s doc comment -- for the
                     // whole lifetime of this closure, the spawning thread
-                    // is blocked in `.join()` below and touches nothing
-                    // reachable through `vm_ptr`/`ctx`, so this is the
-                    // only thread ever dereferencing `vm_ptr` at a time.
+                    // is blocked in `.join()` below (or, if spawning
+                    // itself failed, this closure never ran at all) and
+                    // touches nothing reachable through `vm_ptr`/
+                    // `ctx_ptr`, so this is the only thread ever
+                    // dereferencing them at a time.
                     let vm = unsafe { &mut *vm_ptr };
+                    let ctx = unsafe { &mut *ctx_ptr };
 
                     // WASM10 (security review): the loop below can call
                     // arbitrary embedder-supplied `Box<dyn HostFunction>`
@@ -4543,7 +4570,12 @@ impl WasmExecutionEngine {
 
                                 vm.pc = 0;
                                 vm.halted = false;
-                                if let Err(e) = vm.execute_with_context(&code, &mut ctx) {
+                                // `ctx` is already `&mut WasmExecutionContext` here (obtained
+                                // via `ctx_ptr`) -- pass it directly, relying on Rust's
+                                // implicit reborrow, NOT `&mut ctx` (which would build a
+                                // `&mut &mut WasmExecutionContext` and break
+                                // `execute_with_context`'s downcast).
+                                if let Err(e) = vm.execute_with_context(&code, ctx) {
                                     break Err(e);
                                 }
 
@@ -4559,28 +4591,42 @@ impl WasmExecutionEngine {
                             exec_result
                         }));
 
-                    AssertSend((ctx, panic_result))
-                })
-                .expect("failed to spawn WASM10 dedicated execution thread");
-
-            match handle.join() {
-                Ok(v) => v,
-                // Defensive fallback only: `catch_unwind` above already
-                // catches every panic reachable from ordinary WASM
-                // execution or host-function calls, so this thread
-                // should always return normally. Propagate exactly as if
-                // it had happened on the calling thread directly, same
-                // as before -- this thread boundary is an implementation
-                // detail, not a fault-isolation layer.
-                Err(panic_payload) => std::panic::resume_unwind(panic_payload),
+                    panic_result
+                }) {
+                Ok(handle) => match handle.join() {
+                    // `panic_result` is itself `std::thread::Result<
+                    // VMResult<usize>>` -- flatten its `Err` (a caught
+                    // panic, from the `catch_unwind` inside the closure)
+                    // into `DedicatedThreadFailure::Panicked` too, so
+                    // both this and the `join()`-level `Err` arm below
+                    // are handled uniformly by the caller.
+                    Ok(panic_result) => panic_result.map_err(DedicatedThreadFailure::Panicked),
+                    // Defensive fallback only: `catch_unwind` above
+                    // already catches every panic reachable from
+                    // ordinary WASM execution or host-function calls, so
+                    // this thread should always return normally via the
+                    // `Ok` arm above. This arm exists only for a panic
+                    // reached OUTSIDE that `catch_unwind` (e.g. in
+                    // `payload.into_inner()` or the raw-pointer derefs
+                    // immediately above it) -- effectively unreachable
+                    // in practice, but handled the same way as a caught
+                    // panic below rather than silently ignored.
+                    Err(join_panic_payload) => Err(DedicatedThreadFailure::Panicked(join_panic_payload)),
+                },
+                Err(spawn_err) => Err(DedicatedThreadFailure::SpawnFailed(spawn_err)),
             }
         });
 
-        // Update globals back UNCONDITIONALLY, before propagating a trap
-        // OR a panic (WASM07 security review, extended by WASM10's own
-        // security review to cover the panic case too): `self.
-        // host_functions` was moved out via `mem::take` above, so the
-        // ONLY way it's ever seen again is `ctx.host_functions` here.
+        // Update engine state back UNCONDITIONALLY, before propagating
+        // ANY failure -- a trap, a panic, OR a thread-spawn failure
+        // (WASM07 security review, extended twice over by WASM10's own
+        // security review: once to cover the panic case, and again to
+        // cover the spawn-failure case, which an earlier version of this
+        // fix still missed -- `ctx` moving BY VALUE into the spawned
+        // closure meant a `spawn_scoped` failure dropped it, along with
+        // `self.host_functions`, before this restoration ever ran).
+        // `self.host_functions` was moved out via `mem::take` above, so
+        // the ONLY way it's ever seen again is `ctx.host_functions` here.
         // Propagating a failure before this line permanently leaves
         // `self.host_functions` empty for every LATER, unrelated call on
         // this engine. `wasm-runtime`'s real embedding path wires WASI
@@ -4588,7 +4634,11 @@ impl WasmExecutionEngine {
         // exactly this field, so this was a real, reachable bug, not a
         // theoretical one: `wasm-runtime`'s own `call_engine` had the
         // identical bug for `instance.memory`/`instance.tables` (fixed in
-        // this same PR, WASM07) one layer further out.
+        // this same PR, WASM07) one layer further out. Keeping `ctx`
+        // OWNED by this (spawning) stack frame the whole time -- see the
+        // comment where `ctx_ptr` is built above -- is what makes this
+        // restoration reachable regardless of which of the three ways
+        // the dedicated thread could fail to produce a normal result.
         self.globals = ctx.globals;
         self.host_functions = ctx.host_functions;
         // gc_heap itself is not persisted (see its own doc comment above);
@@ -4596,9 +4646,12 @@ impl WasmExecutionEngine {
         // via gc_live_object_count()/gc_profile() (W04).
         self.last_gc_state = ctx.gc_state;
 
-        let final_result_count = match panic_result {
+        let final_result_count = match outcome {
             Ok(exec_result) => exec_result.map_err(|e| TrapError::new(format!("{}", e)))?,
-            Err(panic_payload) => std::panic::resume_unwind(panic_payload),
+            Err(DedicatedThreadFailure::SpawnFailed(spawn_err)) => {
+                return Err(TrapError::new(format!("failed to spawn dedicated execution thread: {spawn_err}")));
+            }
+            Err(DedicatedThreadFailure::Panicked(panic_payload)) => std::panic::resume_unwind(panic_payload),
         };
 
         // Collect return values.

@@ -115,6 +115,48 @@ All notable changes to this package will be documented in this file.
   full 100-deep chain completes instead of trapping) with the guard
   disabled.
 
+### Fixed — round 2: 1 more finding from re-reviewing the fixes above
+
+- **A thread-spawn failure could ALSO skip the state write-back.** The
+  first version of the panic-safety fix above still moved `ctx` BY VALUE
+  into the closure passed to `Builder::spawn_scoped`. If spawning the
+  dedicated thread itself failed (a real possibility under OS thread/
+  resource exhaustion — this feature can spawn up to
+  `MAX_DEDICATED_THREAD_DEPTH` nested 8 MiB-stack threads per call chain,
+  on top of one thread per concurrent top-level call from a multi-
+  threaded host), the closure — and `ctx`, and `self.host_functions`
+  moved into it — was dropped without ever running, and the `.expect(...)`
+  on the failed `spawn_scoped` call panicked immediately, unwinding
+  straight out of `call_function` BEFORE the `let AssertSend((ctx, ...))
+  = ...` binding (and the restoration after it) was ever reached — the
+  same WASM07 bug class, reintroduced via a THIRD trigger the first round
+  of fixes didn't cover. Fixed by keeping `ctx` OWNED in `call_function`'s
+  own (spawning) stack frame for the entire call — only a raw pointer to
+  it (`ctx_ptr`, given the exact same `AssertSend`/safety treatment
+  `vm_ptr` already had) crosses into the spawned closure, so `ctx` is
+  provably still there to restore from regardless of whether the thread
+  spawns, panics, or completes normally. Restructured the three possible
+  outcomes (success / panic / spawn failure) into a small local
+  `DedicatedThreadFailure` enum so the mandatory restoration runs exactly
+  once, unconditionally, before any of the three is handled. This
+  invariant is now also compiler-enforced, not just test-enforced: since
+  `ctx` is never moved into the closure, any future regression that tried
+  to move it there again would fail to compile (`self.host_functions =
+  ctx.host_functions;` after the `thread::scope(...)` call requires `ctx`
+  to still be a valid, non-moved binding).
+- Fixing the above surfaced a real, independent bug in the FIRST draft of
+  this restructuring (caught by the full test suite, not by the security
+  review): `ctx` inside the spawned closure became `&mut
+  WasmExecutionContext` (a reference, via `ctx_ptr`) instead of an owned
+  value, so every existing `&mut ctx` call site (e.g. `vm.
+  execute_with_context(&code, &mut ctx)`) silently built a `&mut &mut
+  WasmExecutionContext` instead of `&mut WasmExecutionContext` — type-
+  checks fine, but breaks the opcode dispatcher's downcast at runtime
+  ("context must be WasmExecutionContext"), which 128 of 213 unit tests
+  caught immediately. Fixed by relying on Rust's implicit reborrow
+  (passing `ctx` directly, not `&mut ctx`, since `ctx` is already a `&mut`
+  reference) at the one call site that needed it.
+
 ## [0.6.12] - 2026-08-15 (security fix — pre-existing `call_indirect` panic)
 
 ### Fixed
