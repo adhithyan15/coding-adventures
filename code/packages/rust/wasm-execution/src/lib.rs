@@ -1711,7 +1711,13 @@ const MAX_DEDICATED_THREAD_DEPTH: usize = 64;
 /// real `simd_*.wast` conformance case or legitimate program needs
 /// (typically a few hundred SIMD operations at most), while still
 /// bounding worst-case memory to a small, safe amount.
-const MAX_V128_HEAP_LEN: usize = 1_000_000;
+///
+/// `pub` (task #86, W15 follow-up): an embedder allocating directly into
+/// `WasmInstance.v128_heap` OUTSIDE this crate's own execution loop --
+/// e.g. `wasm-conformance` converting a `v128.const` `invoke` ARGUMENT
+/// into a real handle before a call even starts -- needs the identical
+/// cap, not a separately-chosen or unbounded one.
+pub const MAX_V128_HEAP_LEN: usize = 1_000_000;
 
 thread_local! {
     /// How many WASM10 dedicated threads deep the CURRENT thread is
