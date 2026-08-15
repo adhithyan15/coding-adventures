@@ -1,5 +1,29 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.13 — 2026-08-15 — lazy per-module build (W14, task #76)
+
+### Changed (breaking)
+
+- `Directive::Module` now wraps `Result<WasmModule, String>` instead of a
+  bare `WasmModule`. `parse_script` no longer aborts the WHOLE file with
+  an `Err` when one `(module ...)` directive's own instruction stream
+  fails to build (e.g. names an opcode this repo doesn't implement yet) --
+  that failure is captured as `Directive::Module(Err(_))`, a per-directive
+  data value, so every other directive in the file (independently
+  parseable, whether earlier or later) is still returned normally.
+  Genuine tokenizer/S-expression *syntax* errors (`parse_source`) are
+  unaffected -- a truly malformed script still fails `parse_script` as a
+  whole, since directive boundaries can't be reliably identified at all
+  in that case. See `code/specs/W14-wasm-conformance-lazy-module-build.md`
+  for the full design and the concrete motivating case (`simd_const.wast`'s
+  sole `i64x2.add` usage previously blocked grading ~445 other, unrelated
+  directives in that same file).
+- 2 new tests proving the split: one script with a broken module
+  bracketed by two independently-buildable modules parses as a whole
+  (the broken one captured as `Err`, the others as `Ok`); one genuinely
+  malformed script (unbalanced parens) still fails `parse_script`
+  entirely, unchanged.
+
 ## 0.1.12 — 2026-08-15 — ConstValue::V128 for assert_return/invoke (SIMD PR1b-3)
 
 ### Added

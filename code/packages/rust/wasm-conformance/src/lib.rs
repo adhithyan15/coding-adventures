@@ -216,17 +216,26 @@ struct Executor {
     /// satisfying `HostInterface`'s implicit `'static` bound without a
     /// borrow.
     registry: ModuleRegistry,
-    /// Set when the current module failed to INSTANTIATE for a reason
-    /// that's a genuine capability gap, not a bug -- today, only "an
-    /// import references `spectest` or another module this crate's
-    /// `RegistryHost` doesn't know about" (WASM05/W10 gave `instantiate`
-    /// a real link-failure path; `RegistryHost` only ever resolves
-    /// `register`ed sibling modules, not a real `spectest` host). Any
-    /// directive run against such a module is graded `NotYetSupported`,
-    /// not `Fail`/`Trap` -- a wrong answer here would be "we didn't wire
-    /// up linking for this specific host module," not "the interpreter
-    /// is broken."
-    current_link_failed: Option<String>,
+    /// Set (W14) whenever the current `(module ...)` directive did NOT
+    /// leave a live instance registered under `None` -- for any of 3
+    /// reasons that are genuine capability gaps, not bugs: the module's
+    /// own instruction stream failed to BUILD (an opcode this repo
+    /// doesn't implement yet, `wasm-wast-parser`'s
+    /// `Directive::Module(Err(_))`), or it failed to INSTANTIATE because
+    /// an import references `spectest` or another module this crate's
+    /// `RegistryHost` doesn't know about (WASM05/W10's link-failure
+    /// path). Any directive run against "the current module" while this
+    /// is `Some` is graded `NotYetSupported`, not `Fail`/`Trap` -- a wrong
+    /// answer here would be "we haven't built/linked this yet," not "the
+    /// interpreter is broken." (Renamed and broadened from the
+    /// link-failure-only `current_link_failed` -- a real, genuine
+    /// structural-validation failure or instantiation TRAP is a
+    /// different, non-capability-gap kind of failure and does NOT set
+    /// this field, even though it also leaves no live instance
+    /// registered; see the `Directive::Module` match arm below for how
+    /// the registry's `None` slot is kept consistent across all 4
+    /// possible outcomes regardless.)
+    current_module_status: Option<String>,
 }
 
 impl Executor {
@@ -234,14 +243,33 @@ impl Executor {
         Executor {
             runtime: WasmRuntime::new(),
             registry: Rc::new(RefCell::new(HashMap::new())),
-            current_link_failed: None,
+            current_module_status: None,
         }
     }
 
     fn execute(&mut self, directive: Directive) -> DirectiveOutcome {
         match directive {
-            Directive::Module(module) => {
-                self.current_link_failed = None;
+            Directive::Module(module_result) => {
+                // W14: clear BOTH the status flag and the registry's
+                // "current module" slot unconditionally, before looking at
+                // which of this directive's 4 possible outcomes actually
+                // happened -- a module that fails to build/validate/link/
+                // instantiate must never leave a STALE PREVIOUS module
+                // registered as "current" (a real, previously rarely-
+                // exercised bug: only the success path ever wrote this
+                // slot, so a broken module used to silently inherit
+                // whatever instance came before it).
+                self.current_module_status = None;
+                self.registry.borrow_mut().remove(&None);
+                let module = match module_result {
+                    Err(e) => {
+                        let reason =
+                            format!("module failed to parse/build (real capability gap, not a bug): {e}");
+                        self.current_module_status = Some(reason.clone());
+                        return DirectiveOutcome::NotYetSupported(reason);
+                    }
+                    Ok(module) => module,
+                };
                 match self.runtime.validate(&module) {
                     Err(e) => DirectiveOutcome::Fail(format!("module failed structural validation: {e}")),
                     Ok(validated) => {
@@ -252,7 +280,7 @@ impl Executor {
                                 DirectiveOutcome::Pass
                             }
                             Err(e) if is_link_error(&e) => {
-                                self.current_link_failed = Some(e.to_string());
+                                self.current_module_status = Some(e.to_string());
                                 DirectiveOutcome::NotYetSupported(format!(
                                     "module failed to link (real capability gap, not a bug): {e}"
                                 ))
@@ -278,7 +306,15 @@ impl Executor {
                         self.registry.borrow_mut().insert(Some(name), current);
                         DirectiveOutcome::Pass
                     }
-                    None => DirectiveOutcome::Fail("register: no current module to register".to_string()),
+                    // W14: if there's no current module BECAUSE the last
+                    // module directive hit a genuine capability gap
+                    // (build/link failure), that gap should propagate as
+                    // NotYetSupported here too, not get flattened into a
+                    // hard Fail that looks like a real test-script bug.
+                    None => match &self.current_module_status {
+                        Some(reason) => DirectiveOutcome::NotYetSupported(reason.clone()),
+                        None => DirectiveOutcome::Fail("register: no current module to register".to_string()),
+                    },
                 }
             }
 
@@ -430,10 +466,8 @@ impl Executor {
             Action::Invoke { module, name, args } => {
                 let key = module.clone();
                 if key.is_none() {
-                    if let Some(reason) = &self.current_link_failed {
-                        return Err(ActionError::NotYetSupported(format!(
-                            "current module failed to link (real capability gap, not a bug): {reason}"
-                        )));
+                    if let Some(reason) = &self.current_module_status {
+                        return Err(ActionError::NotYetSupported(reason.clone()));
                     }
                 }
                 let instance_rc = self
@@ -461,10 +495,8 @@ impl Executor {
             Action::Get { module, name } => {
                 let key = module.clone();
                 if key.is_none() {
-                    if let Some(reason) = &self.current_link_failed {
-                        return Err(ActionError::NotYetSupported(format!(
-                            "current module failed to link (real capability gap, not a bug): {reason}"
-                        )));
+                    if let Some(reason) = &self.current_module_status {
+                        return Err(ActionError::NotYetSupported(reason.clone()));
                     }
                 }
                 let instance_rc = self
@@ -1001,6 +1033,106 @@ mod tests {
         assert_eq!(results[2], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
     }
 
+    // ── W14: a per-module build failure degrades gracefully ─────────────
+
+    #[test]
+    fn a_module_that_fails_to_build_grades_not_yet_supported_and_does_not_abort_the_script() {
+        // The real motivating case: simd_const.wast's sole i64x2.add usage
+        // (an opcode this repo doesn't implement) previously aborted
+        // wasm_wast_parser::parse_script for the WHOLE file. Now
+        // Directive::Module(Err(_)) is just data -- everything before,
+        // around, and after the broken module still parses and grades for
+        // real. Two independently buildable modules bracket a broken one
+        // here, proving the fix isn't order-dependent.
+        let results = outcomes(
+            r#"
+            (module (func (export "f") (result i32) (i32.const 1)))
+            (assert_return (invoke "f") (i32.const 1))
+            (module (func (export "g") (result i32) (this.is.not.a.real.opcode)))
+            (module (func (export "h") (result i32) (i32.const 2)))
+            (assert_return (invoke "h") (i32.const 2))
+            "#,
+        );
+        assert_eq!(results.len(), 5);
+        assert_eq!(results[0], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+        assert!(matches!(results[2].1, DirectiveOutcome::NotYetSupported(_)), "{:?}", results[2]);
+        assert_eq!(results[3], (DirectiveKind::Module, DirectiveOutcome::Pass));
+        assert_eq!(results[4], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn invoking_the_broken_current_module_grades_not_yet_supported_not_a_stale_pass() {
+        // The registry-clearing fix, isolated: a module that fails to
+        // build must NOT leave the PREVIOUS module silently addressable
+        // as "current" -- a bare `(invoke "f")` right after the broken
+        // module must grade NotYetSupported, never re-run against
+        // $good1's stale instance and produce a misleading Pass.
+        let results = outcomes(
+            r#"
+            (module $good1 (func (export "f") (result i32) (i32.const 1)))
+            (module (func (export "f") (result i32) (this.is.not.a.real.opcode)))
+            (assert_return (invoke "f") (i32.const 1))
+            "#,
+        );
+        assert_eq!(results.len(), 3);
+        assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)));
+        assert!(matches!(results[2].1, DirectiveOutcome::NotYetSupported(_)), "{:?}", results[2]);
+    }
+
+    #[test]
+    fn a_structurally_invalid_module_does_not_leave_a_stale_module_addressable_as_current() {
+        // Distinct from the build-failure case above: a structural-
+        // validation failure (duplicate export name) does NOT set
+        // `current_module_status` (it's graded `Fail`, a real problem,
+        // not a capability gap) -- so this test exercises ONLY the
+        // registry-clearing fix in isolation. Without it, a bare
+        // `(invoke "f")` after the broken module would silently re-run
+        // against the FIRST module's still-registered instance and
+        // produce a misleading Pass instead of a clean "no module
+        // registered" Trap.
+        let results = outcomes(
+            r#"
+            (module (func (export "f") (result i32) (i32.const 1)))
+            (module
+              (func (export "f") (result i32) i32.const 0)
+              (func (export "f") (result i32) i32.const 1))
+            (assert_return (invoke "f") (i32.const 1))
+            "#,
+        );
+        assert_eq!(results.len(), 3);
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)), "{:?}", results[1]);
+        assert!(matches!(results[2].1, DirectiveOutcome::Fail(_)), "{:?}", results[2]);
+    }
+
+    #[test]
+    fn registering_the_broken_current_module_grades_not_yet_supported_not_a_hard_fail() {
+        // A capability gap propagates through `register` too, per the
+        // spec's design: `register` right after a broken module reports
+        // WHY there's no current module (a real gap), not the generic
+        // "register: no current module" Fail reserved for a genuine
+        // test-script-structure problem (e.g. `register` as the very
+        // first directive in a file, with no module ever attempted).
+        let results = outcomes(
+            r#"
+            (module (func (export "f") (result i32) (this.is.not.a.real.opcode)))
+            (register "M")
+            "#,
+        );
+        assert_eq!(results.len(), 2);
+        assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)), "{:?}", results[1]);
+    }
+
+    #[test]
+    fn register_with_genuinely_no_prior_module_still_hard_fails() {
+        // Contrast with the test above: no module was ever attempted at
+        // all, so this really is a test-script-structure problem, not a
+        // capability gap -- the pre-existing hardcoded Fail is preserved
+        // for this case.
+        let results = outcomes(r#"(register "M")"#);
+        assert_eq!(results[0], (DirectiveKind::Register, DirectiveOutcome::Fail("register: no current module to register".to_string())));
+    }
+
     #[test]
     fn get_action_reads_a_global_export() {
         let results = outcomes(
@@ -1018,7 +1150,7 @@ mod tests {
         // this module now genuinely fails to LINK (a real capability
         // gap, `RegistryHost` has no `spectest` support) rather than
         // hitting the old blanket "any import present" rule -- same
-        // outcome (`NotYetSupported`, cascading via `current_link_failed`
+        // outcome (`NotYetSupported`, cascading via `current_module_status`
         // to the following `assert_return`), different, more honest
         // reason underneath.
         let results = outcomes(
