@@ -9,6 +9,28 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C166 — the re-pin patcher lives in a file now, not in the prompt
+
+Two self-inflicted delays in one PR, both from retyping the pin-patching script
+inline instead of reusing it:
+
+1. A copy modified the test lines in memory and **never wrote the file**, so it
+   re-ran the whole suite unchanged until it was killed.
+2. A copy appended its explanatory comment **before** the trailing comma —
+   `totalLessons: 2266 // HL-C166,` — which comments the comma out and makes the
+   file unparseable. A passing *test count* hides this completely; only the exit
+   code catches it. Same bug, second time this week.
+
+The working version is `/tmp/claude-501/repin.py` in-session, and it belongs in
+the repo: `code/learning/human-languages/data/scripts/repin_tests.py`, taking the
+annotation tag as `argv[1]`. It handles the three pin shapes the corpus actually
+uses — a bare `toBe(N)` / `toHaveLength(N)`, an object field, and a
+`{ term: "verb", lessons: N }` row — and it writes the file in **every** branch,
+with the comment after the comma.
+
+Until it is committed, every session re-derives it and re-introduces one of these
+two bugs.
+
 ## HL-C164 — a new generated chapter must declare its script in book-generation.json
 
 Discovered while authoring Sanskrit chapter 16 (2026-08-14). A target entry

@@ -6900,6 +6900,43 @@
       "jsonHash": "fnv1a64:665b7a5a7a058ec8"
     },
     {
+      "language": "sanskrit",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:2620d676e48678f8",
+      "lessonIds": [
+        "SA-C19-six",
+        "SA-C19-seven",
+        "SA-C19-eight",
+        "SA-C19-nine",
+        "SA-C19-ten",
+        "SA-C19-number-family"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch19.txt",
+      "json": "sanskrit/narration/ch19.json",
+      "textHash": "fnv1a64:ab86acd57302e6e4",
+      "jsonHash": "fnv1a64:091d2c33c53f476a"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:370475346b7cdc30",
+      "lessonIds": [
+        "SA-C20-man",
+        "SA-C20-woman",
+        "SA-C20-child",
+        "SA-C20-old-person",
+        "SA-C20-people"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 1,
+      "text": "sanskrit/narration/ch20.txt",
+      "json": "sanskrit/narration/ch20.json",
+      "textHash": "fnv1a64:a162ff48ba68c86f",
+      "jsonHash": "fnv1a64:74652217bc880965"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:7f767862168ad0bf",
