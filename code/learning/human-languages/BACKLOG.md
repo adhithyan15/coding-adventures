@@ -9,6 +9,62 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C186 — THE RAMP RULE: one new word per lesson, unlimited reuse
+
+**Owner, 2026-08-15:** *"One new word per lesson but n number of existing words
+can be re-emphasized and used?"* Adopted as the governing rule for authoring.
+
+This is the precise form of "gentle ramp" the project has been circling:
+**the cap is on what is NEW; reuse is free and encouraged.**
+
+### What it settles
+
+* **The ±35% counting ambiguity dissolves.** After splitting, headword count *is*
+  word count. `teaches_items` (proposed in HL-C185) becomes unnecessary — the rule
+  makes it 1 by construction. **Do not build that field.**
+* **List lessons split.** The months become twelve lessons; colours, numbers and
+  seasons likewise.
+* **R1 gets EASIER, not harder.** The reinforcement ratio that blocked Sanskrit
+  (HL-C167) measures whether an atom is revisited within three lessons. If every
+  lesson reuses prior words by design, those windows fill by construction. The
+  drizzle-versus-R1 tension may simply evaporate under this rule — **re-measure
+  HL-C167 after the first tranche before doing any work on it.**
+
+### Migration cost, measured
+
+| | |
+|---|---:|
+| `type: word` lessons, all tracks | 1,407 |
+| teaching more than one item | **400 (28%)** |
+| extra lessons if every one splits | **+718** |
+
+718 is an **upper bound**: the splitter must not fire on multi-token *single*
+items — `la cabeza` is one noun with its article, `السلام عليكم` is one greeting.
+A comma is a reliable list separator in the Latin-script tracks; the Indic and
+Arabic month lists are space-separated. **No single rule covers both, so the
+split is a reviewed pass per track, not one regex.**
+
+### The scale this implies, stated plainly
+
+At one new word per lesson, a track reaches C2's 16,000-word target in **~16,000
+lessons** — fewer than the earlier ~27,600 estimate, because 1.0/lesson is denser
+than the corpus's current 0.58.
+
+**Across 22 tracks that is ~352,000 lessons, not 50,000.** Per track the budget
+holds comfortably; the full programme is roughly seven times the stated figure.
+That is not an argument against the rule — it is the number the rule implies, and
+it should be seen before it is adopted rather than discovered at track four.
+
+### Order of work under the rule
+
+1. **Write the rule into the spec** (HL08/HL11) so it governs authoring, not just
+   this row.
+2. **Split the 400 multi-item lessons**, per track, reviewed — Spanish first as
+   the reference track.
+3. **Re-measure everything**: vocabulary per track, R1, and the atom budget. The
+   211/300 figure will move, and HL-C167 may resolve itself.
+4. **Then** author against the deficit, one new word at a time.
+
 ## HL-C185 — `word_class` does not exist. It is a schema addition, not a classifier fix.
 
 **Measured 2026-08-15.** HL-C184c assumed the classifier reached ~23% and needed
