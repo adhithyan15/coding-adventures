@@ -173,6 +173,17 @@ pub enum ValueType {
     /// exercised are the WASM testsuite's own `ref.extern N` script literals
     /// (see `code/specs/W08-wasm-funcref-externref.md`).
     Externref,
+
+    /// `v128` — a 128-bit SIMD lane vector (SIMD proposal).
+    ///
+    /// Encoded as a single byte `0x7B`. Unlike the numeric types above, its
+    /// 16 raw bytes don't fit in this engine's shared `virtual-machine::
+    /// Value` typed-stack slot (max 64 bits) — at the value level, a `v128`
+    /// is carried as a handle into a WASM-execution-local heap, the same
+    /// shape `Anyref`/`I31ref` already use for `wasm-execution::WasmValue::
+    /// Ref`'s GC-heap handles. See `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md` for the full design.
+    V128,
 }
 
 impl ValueType {
@@ -198,6 +209,7 @@ impl ValueType {
             ValueType::StructRef(_) => None,
             ValueType::Funcref => Some(0x70),
             ValueType::Externref => Some(0x6F),
+            ValueType::V128 => Some(0x7B),
         }
     }
 
@@ -232,6 +244,7 @@ impl ValueType {
             }
             ValueType::Funcref => vec![0x70],
             ValueType::Externref => vec![0x6F],
+            ValueType::V128 => vec![0x7B],
         }
     }
 }

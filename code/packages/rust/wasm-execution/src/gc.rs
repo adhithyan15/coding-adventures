@@ -284,6 +284,8 @@ mod tests {
             br_table_targets: Vec::new(),
             gc_ops: Vec::new(),
             gc_heap: Vec::new(),
+            v128_heap: vec![[0u8; 16]],
+            simd_consts: Vec::new(),
             struct_field_counts: Vec::new(),
             gc_state: GcState::default(),
             call_depth: 0,
@@ -447,6 +449,7 @@ mod tests {
             return_arity: 0,
             br_table_targets: Vec::new(),
             gc_ops: Vec::new(),
+            simd_consts: Vec::new(),
         });
 
         let marked = mark(&vm, &ctx);

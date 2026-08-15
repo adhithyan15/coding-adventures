@@ -2,6 +2,109 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] - 2026-08-15 (SIMD PR1a — v128 interpreter core, no corpus yet)
+
+### Added
+
+- `WasmValue::V128(u32)` — a handle into a new `WasmExecutionContext::
+  v128_heap: Vec<[u8; 16]>`, mirroring `WasmValue::Ref`'s existing
+  GC-heap-handle shape exactly (tagged `0x7B` on the typed stack, riding
+  the existing `Value::Int` payload — the shared `virtual-machine::Value`
+  enum is untouched, per `code/specs/
+  W13-wasm-simd-v128-first-slice.md`'s design decision). Handle `0` is
+  permanently reserved as the all-zero vector, seeded once per top-level
+  `call_function` call — the value `WasmValue::default_for(ValueType::
+  V128)` returns for an uninitialized `(local $x v128)`.
+- Real `0xFD`-prefix decoding in `decode_function_body`: a genuinely new
+  LEB128-based sub-opcode read, distinct from the existing single-byte
+  `0xFB`/`0xFC`/`0xFE` pattern (SIMD's sub-opcode space runs past 127 —
+  `i32x4.add`'s real value, 174, needs the 2-byte LEB128 continuation
+  encoding, and this decoder is verified to actually take that path via
+  a dedicated regression test, not just the single-byte-safe happy
+  path). `v128.const`'s own 16-byte literal is read as raw (non-LEB128)
+  bytes, per the real spec.
+- New per-function side-table `WasmExecutionContext::simd_consts: Vec<[u8;
+  16]>` for `v128.const` literals — same shape and same SavedFrame-
+  threaded save/restore-across-nested-calls treatment `br_table_targets`/
+  `gc_ops` already have (a `v128.const`'s 16-byte immediate doesn't fit
+  in a plain `Operand::Index(usize)`, so it's spilled into this table at
+  decode time, exactly like `Gc`'s existing shape).
+- 5 opcodes implemented: `v128.const`, `i32x4.splat`, `i32x4.add`,
+  `i32x4.eq` (WASM's boolean-mask convention: all-1s/-1 if equal, all-0s
+  if not — NOT a plain scalar 0/1), and `i32x4.extract_lane` (added
+  beyond the original 4-opcode spec scope — the only way to observe a
+  `v128`'s contents as a plain scalar, genuinely required to make this
+  slice's OWN correctness verifiable via a real test rather than "it
+  compiles and doesn't panic").
+- 6 new hand-built-bytecode regression tests verifying actual COMPUTED
+  values (not just "returns some v128"): per-lane round-trip through all
+  4 lanes, splat broadcast, real lane-wise wrapping addition (including
+  the `i32::MAX + 1` wraparound case specifically), the eq boolean-mask
+  convention (both the equal and not-equal cases), multiple `v128.const`s
+  in one function body staying distinct (a real regression risk given
+  the const pool is a per-function, decode-order-indexed side-table),
+  and an out-of-range lane index trapping cleanly rather than panicking.
+
+### Fixed — 1 finding from this PR's own `/security-review`, before shipping
+
+- **Unbounded `v128_heap` growth (memory-exhaustion DoS).** Every SIMD op
+  that produces a new v128 (`v128.const`/`splat`/`add`/`eq`)
+  unconditionally pushed a new entry with no reclamation. This crate's
+  own threat model treats WASM bytecode as untrusted -- a `loop` with a
+  backward `br` executing e.g. `i32x4.splat` on every iteration needs NO
+  recursion at all (so `MAX_CALL_DEPTH` never engages) and would grow
+  `v128_heap` without bound until the process OOMs -- exactly the
+  failure mode `gc_heap` had before W04 added real mark-sweep collection,
+  which `v128_heap` doesn't get (see its own doc comment for why: v128
+  values are immutable-once-created `Copy` data, no cycles to collect,
+  but still no upper bound without an explicit one). Fixed with a new
+  `MAX_V128_HEAP_LEN` (1,000,000 entries / 16 MiB) checked in a new
+  `push_v128` helper every v128-creating opcode now routes through,
+  mirroring `MAX_CALL_DEPTH`'s existing guard shape. New regression test
+  runs the exact adversarial shape (an infinite `loop` creating a v128
+  every iteration) against the REAL production constant (not a reduced
+  test-only value) and confirms it traps cleanly in ~1.2s rather than
+  hanging or exhausting memory.
+
+### Deferred to a follow-up PR (task #72)
+
+- `wasm-wast-parser` support for `v128.const`'s real text-literal syntax
+  — this slice is only exercisable via hand-built raw bytecode so far,
+  not the `.wast` text format.
+- `wasm-validator` type rules for the 5 new opcodes.
+- `wasm-conformance` real V128 bit-exact comparison in `assert_return`
+  grading, and vendoring any `simd_*.wast` corpus file. (`ctx.v128_heap`
+  does not persist past `call_function` returning — the same limitation
+  `WasmValue::Ref`'s GC-heap handles already have in this codebase — so
+  designing real cross-call v128 value comparison needs its own
+  investigation, not assumed to be a trivial addition.)
+- Splitting this PR further than originally scoped in `code/specs/
+  W13-wasm-simd-v128-first-slice.md`'s own PR-1 plan (which expected the
+  conformance-graded pass in the same PR) was a deliberate, reported
+  judgment call made during implementation, not a silent scope cut — the
+  interpreter core alone already required a genuinely new decoder shape,
+  a new per-function side-table with full `SavedFrame` threading, and a
+  real design gap discovered and fixed (see the "one real gotcha" note
+  below) — substantial enough to ship and verify on its own before
+  taking on the corpus-grading layer's own separate design questions.
+
+### Fixed (implementation-time, before this shipped)
+
+- The first draft of the `simd_consts`/`v128_heap` side-table threading
+  made `ctx` a `&mut WasmExecutionContext` REFERENCE inside the spawned-
+  thread closure (via a raw-pointer deref, following `vm_ptr`'s existing
+  WASM10 pattern) rather than an owned value — every existing `&mut ctx`
+  call site (e.g. `vm.execute_with_context(&code, &mut ctx)`) then
+  silently built a `&mut &mut WasmExecutionContext` (double reference),
+  which type-checked but broke the opcode dispatcher's runtime downcast
+  at runtime ("context must be WasmExecutionContext"). 128 of 213 unit
+  tests caught this immediately when the full suite was run — fixed by
+  relying on Rust's implicit reborrow (passing `ctx` directly, not
+  `&mut ctx`) at the one call site that needed it. A reminder that a
+  clean `cargo build` is necessary but not sufficient — the full test
+  suite is what actually catches a working-as-designed-on-paper change
+  that's subtly wrong.
+
 ## [0.7.0] - 2026-08-15 (WASM10 — dedicated-thread `call_function`, raised `MAX_CALL_DEPTH`)
 
 ### Changed

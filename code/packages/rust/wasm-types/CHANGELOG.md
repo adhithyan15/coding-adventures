@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.3] - 2026-08-15 (SIMD PR1a — `ValueType::V128`)
+
+### Added
+
+- `ValueType::V128` — the SIMD proposal's 128-bit lane vector type,
+  encoded as a single byte `0x7B` (verified against the SIMD proposal's
+  own binary-encoding table). `byte_tag()`/`encode()` both updated.
+  Unlike the numeric types, its 16 raw bytes don't fit in this repo's
+  shared `virtual-machine::Value` typed-stack slot (max 64 bits) — see
+  `wasm-execution` 0.8.0 for how the value level carries it (a heap
+  handle, mirroring `Anyref`/`I31ref`'s own `WasmValue::Ref` handle
+  shape) and `code/specs/W13-wasm-simd-v128-first-slice.md` for the full
+  design.
+
 ## [0.1.2] - 2026-08-15 (WASM18 — `shared` bit on `MemoryType`)
 
 ### Added

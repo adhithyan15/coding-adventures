@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.5] - 2026-08-15 - SIMD first slice: SIMD_OPS table (0xFD prefix)
+
+### Added
+
+- `SIMD_OPS`/`get_simd_op`/`get_simd_op_by_name`/`SimdOpInfo`/`SimdOpKind`:
+  5 SIMD opcodes for this first slice -- `v128.const` (`0x0C`),
+  `i32x4.extract_lane` (`0x1B`), `i32x4.splat` (`0x11`), `i32x4.eq`
+  (`0x37`), `i32x4.add` (`0xAE`) -- verified against the SIMD proposal's
+  own `BinarySIMD.md`, cross-checked against the W3C core spec for 4 of
+  the 5. Structurally different from `ATOMIC_OPS`: SIMD's sub-opcode is a
+  **LEB128-encoded `u32`**, not a raw byte (`i32x4.add`'s real value, 174,
+  doesn't fit in one byte) -- `SimdOpInfo::sub_opcode` is `u32`, not `u8`.
+  `i32x4.extract_lane` is the one opcode beyond the original 4-opcode
+  spec scope, added because it's the only way to observe a `v128`
+  result's contents as a scalar (see `code/specs/
+  W13-wasm-simd-v128-first-slice.md`). 3 new tests, including one pinning
+  `i32x4.add`'s value specifically as the multi-byte-LEB128 case (the
+  other 4 opcodes are all single-byte-safe).
+
 ## [0.2.4] - 2026-08-15 - tail-call opcodes: return_call/return_call_indirect (WASM16)
 
 ### Added
