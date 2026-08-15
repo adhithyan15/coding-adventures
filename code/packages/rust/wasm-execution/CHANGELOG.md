@@ -45,6 +45,27 @@ All notable changes to this package will be documented in this file.
   the const pool is a per-function, decode-order-indexed side-table),
   and an out-of-range lane index trapping cleanly rather than panicking.
 
+### Fixed — 1 finding from this PR's own `/security-review`, before shipping
+
+- **Unbounded `v128_heap` growth (memory-exhaustion DoS).** Every SIMD op
+  that produces a new v128 (`v128.const`/`splat`/`add`/`eq`)
+  unconditionally pushed a new entry with no reclamation. This crate's
+  own threat model treats WASM bytecode as untrusted -- a `loop` with a
+  backward `br` executing e.g. `i32x4.splat` on every iteration needs NO
+  recursion at all (so `MAX_CALL_DEPTH` never engages) and would grow
+  `v128_heap` without bound until the process OOMs -- exactly the
+  failure mode `gc_heap` had before W04 added real mark-sweep collection,
+  which `v128_heap` doesn't get (see its own doc comment for why: v128
+  values are immutable-once-created `Copy` data, no cycles to collect,
+  but still no upper bound without an explicit one). Fixed with a new
+  `MAX_V128_HEAP_LEN` (1,000,000 entries / 16 MiB) checked in a new
+  `push_v128` helper every v128-creating opcode now routes through,
+  mirroring `MAX_CALL_DEPTH`'s existing guard shape. New regression test
+  runs the exact adversarial shape (an infinite `loop` creating a v128
+  every iteration) against the REAL production constant (not a reduced
+  test-only value) and confirms it traps cleanly in ~1.2s rather than
+  hanging or exhausting memory.
+
 ### Deferred to a follow-up PR (task #72)
 
 - `wasm-wast-parser` support for `v128.const`'s real text-literal syntax

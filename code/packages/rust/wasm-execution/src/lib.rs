@@ -1473,6 +1473,20 @@ pub struct WasmExecutionContext {
     /// this is the value `WasmValue::default_for(ValueType::V128)` returns,
     /// letting a `(local $x v128)` default-initialize without needing heap
     /// access from that (context-free) function.
+    ///
+    /// Security review (SIMD PR1a): every SIMD op that produces a new
+    /// v128 (`v128.const`/`splat`/`add`/`eq`) unconditionally pushes a
+    /// new entry here, with no reclamation -- this crate's own threat
+    /// model treats WASM bytecode as untrusted (this exact interpreter
+    /// runs adversarially-crafted modules; see its own `MAX_CALL_DEPTH`
+    /// guard's doc comment), so a `loop` executing e.g. `i32x4.splat` on
+    /// every iteration -- no recursion needed, so `MAX_CALL_DEPTH` never
+    /// engages -- would grow this Vec without bound and exhaust memory.
+    /// `MAX_V128_HEAP_LEN` below caps it, the same shape of guard
+    /// `MAX_CALL_DEPTH` already provides for unbounded recursion. A
+    /// fuller fix (real reclamation, mirroring `gc_heap`'s own W04
+    /// mark-sweep collector) is deferred -- see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`'s follow-up scope.
     pub v128_heap: Vec<[u8; 16]>,
     /// Field counts per struct type index (LANG77 L3b-3a-3b).  `struct.new N`
     /// pops `struct_field_counts[N]` field values.  Supplied by the embedder via
@@ -1601,6 +1615,19 @@ const DEDICATED_STACK_SIZE: usize = 8 * 1024 * 1024;
 /// current stack size) while comfortably covering legitimate multi-
 /// module linking chains.
 const MAX_DEDICATED_THREAD_DEPTH: usize = 64;
+
+/// Caps `WasmExecutionContext::v128_heap`'s growth (SIMD, security
+/// review). `v128_heap` has no reclamation yet (see its own doc comment
+/// for why, and the deferred-to-a-follow-up mark-sweep plan) -- without
+/// SOME bound, a WASM `loop` executing e.g. `i32x4.splat` on every
+/// iteration (no recursion needed, so `MAX_CALL_DEPTH` never engages)
+/// would grow it without limit and exhaust memory, given this
+/// interpreter's own threat model treats WASM bytecode as untrusted.
+/// 1,000,000 entries (16 MiB of v128 data) is comfortably past what any
+/// real `simd_*.wast` conformance case or legitimate program needs
+/// (typically a few hundred SIMD operations at most), while still
+/// bounding worst-case memory to a small, safe amount.
+const MAX_V128_HEAP_LEN: usize = 1_000_000;
 
 thread_local! {
     /// How many WASM10 dedicated threads deep the CURRENT thread is
@@ -3701,6 +3728,21 @@ fn register_atomics(vm: &mut GenericVM) {
 // W13-wasm-simd-v128-first-slice.md for the design, this first slice's
 // exact scope, and where each opcode's sub-opcode value was verified ────
 
+/// Push a new v128 value onto `ctx.v128_heap`, enforcing
+/// `MAX_V128_HEAP_LEN` (security review) -- every SIMD opcode handler
+/// that produces a new v128 must go through this, not `ctx.v128_heap
+/// .push(...)` directly, so the bound is enforced uniformly.
+fn push_v128(ctx: &mut WasmExecutionContext, bytes: [u8; 16]) -> Result<u32, VMError> {
+    if ctx.v128_heap.len() >= MAX_V128_HEAP_LEN {
+        return Err(VMError::GenericError(
+            "v128 heap limit exceeded (too many SIMD values created in one call)".into(),
+        ));
+    }
+    let handle = ctx.v128_heap.len() as u32;
+    ctx.v128_heap.push(bytes);
+    Ok(handle)
+}
+
 fn register_simd(vm: &mut GenericVM) {
     vm.register_context_opcode(0xFD, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
@@ -3715,8 +3757,7 @@ fn register_simd(vm: &mut GenericVM) {
                 .simd_consts
                 .get(aux)
                 .ok_or_else(|| VMError::GenericError("v128.const: const-pool index out of range".into()))?;
-            let handle = ctx.v128_heap.len() as u32;
-            ctx.v128_heap.push(bytes);
+            let handle = push_v128(ctx, bytes)?;
             push_wasm(vm, WasmValue::V128(handle));
             vm.advance_pc();
             return Ok(None);
@@ -3755,8 +3796,7 @@ fn register_simd(vm: &mut GenericVM) {
                 for i in 0..4 {
                     bytes[i * 4..i * 4 + 4].copy_from_slice(&lane);
                 }
-                let handle = ctx.v128_heap.len() as u32;
-                ctx.v128_heap.push(bytes);
+                let handle = push_v128(ctx, bytes)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
             SimdOpKind::Add | SimdOpKind::Eq => {
@@ -3796,8 +3836,7 @@ fn register_simd(vm: &mut GenericVM) {
                     result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
                 }
 
-                let handle = ctx.v128_heap.len() as u32;
-                ctx.v128_heap.push(result);
+                let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
         }
@@ -6229,6 +6268,31 @@ mod tests {
         code.push(0x0B);
         let mut engine = simd_engine(code);
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    /// Security review (SIMD PR1a): `v128_heap` has no reclamation yet
+    /// (see its own doc comment), so a WASM `loop` that creates a new
+    /// v128 on every iteration -- via a backward `br`, needing NO
+    /// recursion at all, so `MAX_CALL_DEPTH` never engages -- must still
+    /// be bounded. This runs the exact adversarial shape
+    /// `MAX_V128_HEAP_LEN` exists to stop: an infinite loop pushing a new
+    /// `i32x4.splat` result every iteration. A clean `Err` (not an OOM
+    /// process abort, and not a hang) proves the guard trips.
+    #[test]
+    fn an_unbounded_loop_creating_v128s_every_iteration_traps_cleanly_instead_of_exhausting_memory() {
+        let code = vec![
+            0x03, 0x40, // loop (blocktype: empty)
+            0x41, 0x01, // i32.const 1
+            0xFD, 0x11, // i32x4.splat -- pushes a NEW v128_heap entry every iteration
+            0x1A, // drop
+            0x0C, 0x00, // br 0 -- back to the top of the loop, unconditionally
+            0x0B, // end (loop)
+            0x0B, // end (function)
+        ];
+        let mut engine = simd_engine(code);
+        let result = engine.call_function(0, &[]);
+        assert!(result.is_err(), "an unbounded v128-creating loop must trap, not hang or exhaust memory");
+        assert!(result.unwrap_err().to_string().contains("v128 heap limit exceeded"));
     }
 
     // ══════════════════════════════════════════════════════════════════════
