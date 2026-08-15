@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2266,
+    "totalLessons": 2267,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -2711,10 +2711,10 @@
       {
         "language": "kannada",
         "status": "mixed",
-        "lessonCount": 124,
+        "lessonCount": 125,
         "versions": {
           "1": 30,
-          "2": 94
+          "2": 95
         }
       },
       {
@@ -3556,9 +3556,9 @@
     }
   },
   "levels": {
-    "totalLessons": 2266,
+    "totalLessons": 2267,
     "byLevel": {
-      "pre-A1": 1123,
+      "pre-A1": 1124,
       "A1": 508,
       "A2": 499,
       "B1": 40,
@@ -3706,9 +3706,9 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 124,
+        "lessonCount": 125,
         "byLevel": {
-          "pre-A1": 72,
+          "pre-A1": 73,
           "A1": 34,
           "A2": 14,
           "B1": 0,
@@ -4454,8 +4454,8 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 124,
-        "measurable": 94,
+        "lessonCount": 125,
+        "measurable": 95,
         "unmeasurable": 30,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -5397,7 +5397,7 @@
           "language": "kannada",
           "script": "kannada",
           "latinScript": false,
-          "lessonCount": 124,
+          "lessonCount": 125,
           "totalGlyphs": 66,
           "lessonViolations": 7,
           "systemViolations": 0,
@@ -18718,10 +18718,22 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-124",
+        "atom": "KA-SCRIPT-RECOG-113",
         "language": "kannada",
-        "introducedBy": "KA-S124-letter-pa",
-        "introducedAt": 71,
+        "introducedBy": "KA-S113-letter-lla",
+        "introducedAt": 44,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-125",
+        "language": "kannada",
+        "introducedBy": "KA-S125-letter-oo",
+        "introducedAt": 97,
         "missed": [
           "R1",
           "R2",
@@ -27343,7 +27355,7 @@
         "atom": "KA-ETYMON-C35-KUTUMBA-02",
         "language": "kannada",
         "introducedBy": "KA-C35-kutumba",
-        "introducedAt": 97,
+        "introducedAt": 98,
         "missed": [
           "R2",
           "R3"
@@ -27354,7 +27366,7 @@
         "atom": "KA-ETYMON-C35-SNEHITA-02",
         "language": "kannada",
         "introducedBy": "KA-C35-snehita",
-        "introducedAt": 98,
+        "introducedAt": 99,
         "missed": [
           "R2",
           "R3"
@@ -27365,7 +27377,7 @@
         "atom": "KA-ETYMON-C36-MAGA-02",
         "language": "kannada",
         "introducedBy": "KA-C36-maga",
-        "introducedAt": 100,
+        "introducedAt": 101,
         "missed": [
           "R2",
           "R3"
@@ -27376,7 +27388,7 @@
         "atom": "KA-ETYMON-C36-MAGALU-03",
         "language": "kannada",
         "introducedBy": "KA-C36-magalu",
-        "introducedAt": 101,
+        "introducedAt": 102,
         "missed": [
           "R2",
           "R3"
@@ -27387,7 +27399,7 @@
         "atom": "KA-ETYMON-C36-MAGU-02",
         "language": "kannada",
         "introducedBy": "KA-C36-magu",
-        "introducedAt": 99,
+        "introducedAt": 100,
         "missed": [
           "R2",
           "R3"
@@ -27398,7 +27410,7 @@
         "atom": "KA-ETYMON-C37-KANNU-02",
         "language": "kannada",
         "introducedBy": "KA-C37-kannu",
-        "introducedAt": 102,
+        "introducedAt": 103,
         "missed": [
           "R2",
           "R3"
@@ -27409,7 +27421,7 @@
         "atom": "KA-ETYMON-C37-KIVI-02",
         "language": "kannada",
         "introducedBy": "KA-C37-kivi",
-        "introducedAt": 103,
+        "introducedAt": 104,
         "missed": [
           "R2",
           "R3"
@@ -27420,7 +27432,7 @@
         "atom": "KA-ETYMON-C40-OOTA-02",
         "language": "kannada",
         "introducedBy": "KA-C40-oota",
-        "introducedAt": 110,
+        "introducedAt": 111,
         "missed": [
           "R1",
           "R2"
@@ -27508,7 +27520,7 @@
         "atom": "KA-GRAMMAR-C36-MAGALU-02",
         "language": "kannada",
         "introducedBy": "KA-C36-magalu",
-        "introducedAt": 101,
+        "introducedAt": 102,
         "missed": [
           "R2",
           "R3"
@@ -27519,7 +27531,7 @@
         "atom": "KA-GRAMMAR-C41-DEIXIS-SYSTEM",
         "language": "kannada",
         "introducedBy": "KA-C41-deixis-system",
-        "introducedAt": 117,
+        "introducedAt": 118,
         "missed": [
           "R1",
           "R2"
@@ -27673,7 +27685,7 @@
         "atom": "KA-LEX-C35-KUTUMBA-01",
         "language": "kannada",
         "introducedBy": "KA-C35-kutumba",
-        "introducedAt": 97,
+        "introducedAt": 98,
         "missed": [
           "R2",
           "R3"
@@ -27684,7 +27696,7 @@
         "atom": "KA-LEX-C35-SNEHITA-01",
         "language": "kannada",
         "introducedBy": "KA-C35-snehita",
-        "introducedAt": 98,
+        "introducedAt": 99,
         "missed": [
           "R2",
           "R3"
@@ -27695,7 +27707,7 @@
         "atom": "KA-LEX-C36-MAGA-01",
         "language": "kannada",
         "introducedBy": "KA-C36-maga",
-        "introducedAt": 100,
+        "introducedAt": 101,
         "missed": [
           "R2",
           "R3"
@@ -27706,7 +27718,7 @@
         "atom": "KA-LEX-C36-MAGALU-01",
         "language": "kannada",
         "introducedBy": "KA-C36-magalu",
-        "introducedAt": 101,
+        "introducedAt": 102,
         "missed": [
           "R2",
           "R3"
@@ -27717,7 +27729,7 @@
         "atom": "KA-LEX-C36-MAGU-01",
         "language": "kannada",
         "introducedBy": "KA-C36-magu",
-        "introducedAt": 99,
+        "introducedAt": 100,
         "missed": [
           "R2",
           "R3"
@@ -27728,7 +27740,7 @@
         "atom": "KA-LEX-C37-KANNU-01",
         "language": "kannada",
         "introducedBy": "KA-C37-kannu",
-        "introducedAt": 102,
+        "introducedAt": 103,
         "missed": [
           "R2",
           "R3"
@@ -27739,7 +27751,7 @@
         "atom": "KA-LEX-C37-KIVI-01",
         "language": "kannada",
         "introducedBy": "KA-C37-kivi",
-        "introducedAt": 103,
+        "introducedAt": 104,
         "missed": [
           "R2",
           "R3"
@@ -27750,7 +27762,7 @@
         "atom": "KA-LEX-C40-OOTA-01",
         "language": "kannada",
         "introducedBy": "KA-C40-oota",
-        "introducedAt": 110,
+        "introducedAt": 111,
         "missed": [
           "R1",
           "R2"
@@ -27868,17 +27880,6 @@
         "revisits": 1
       },
       {
-        "atom": "KA-SCRIPT-RECOG-113",
-        "language": "kannada",
-        "introducedBy": "KA-S113-letter-lla",
-        "introducedAt": 44,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "KA-SCRIPT-RECOG-114",
         "language": "kannada",
         "introducedBy": "KA-S114-vowel-sign-o",
@@ -27985,6 +27986,17 @@
         "missed": [
           "R2",
           "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-124",
+        "language": "kannada",
+        "introducedBy": "KA-S124-letter-pa",
+        "introducedAt": 71,
+        "missed": [
+          "R1",
+          "R2"
         ],
         "revisits": 1
       },
@@ -39352,7 +39364,7 @@
         "atom": "KA-ETYMON-C37-BAAYI-02",
         "language": "kannada",
         "introducedBy": "KA-C37-baayi",
-        "introducedAt": 105,
+        "introducedAt": 106,
         "missed": [
           "R2"
         ],
@@ -39362,7 +39374,7 @@
         "atom": "KA-ETYMON-C37-MOOGU-02",
         "language": "kannada",
         "introducedBy": "KA-C37-moogu",
-        "introducedAt": 104,
+        "introducedAt": 105,
         "missed": [
           "R2"
         ],
@@ -39372,7 +39384,7 @@
         "atom": "KA-ETYMON-C38-HRUDAYA-02",
         "language": "kannada",
         "introducedBy": "KA-C38-hrudaya",
-        "introducedAt": 106,
+        "introducedAt": 107,
         "missed": [
           "R2"
         ],
@@ -39382,7 +39394,7 @@
         "atom": "KA-ETYMON-C39-CHAHA-02",
         "language": "kannada",
         "introducedBy": "KA-C39-chaha",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R2"
         ],
@@ -39392,7 +39404,7 @@
         "atom": "KA-ETYMON-C39-HAALU-02",
         "language": "kannada",
         "introducedBy": "KA-C39-haalu",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R2"
         ],
@@ -39402,7 +39414,7 @@
         "atom": "KA-ETYMON-C39-KAAPI-02",
         "language": "kannada",
         "introducedBy": "KA-C39-kaapi",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R2"
         ],
@@ -39532,7 +39544,7 @@
         "atom": "KA-LEX-C37-BAAYI-01",
         "language": "kannada",
         "introducedBy": "KA-C37-baayi",
-        "introducedAt": 105,
+        "introducedAt": 106,
         "missed": [
           "R2"
         ],
@@ -39542,7 +39554,7 @@
         "atom": "KA-LEX-C37-MOOGU-01",
         "language": "kannada",
         "introducedBy": "KA-C37-moogu",
-        "introducedAt": 104,
+        "introducedAt": 105,
         "missed": [
           "R2"
         ],
@@ -39552,7 +39564,7 @@
         "atom": "KA-LEX-C38-HRUDAYA-01",
         "language": "kannada",
         "introducedBy": "KA-C38-hrudaya",
-        "introducedAt": 106,
+        "introducedAt": 107,
         "missed": [
           "R2"
         ],
@@ -39562,7 +39574,7 @@
         "atom": "KA-LEX-C39-CHAHA-01",
         "language": "kannada",
         "introducedBy": "KA-C39-chaha",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R2"
         ],
@@ -39572,7 +39584,7 @@
         "atom": "KA-LEX-C39-HAALU-01",
         "language": "kannada",
         "introducedBy": "KA-C39-haalu",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R2"
         ],
@@ -39582,7 +39594,7 @@
         "atom": "KA-LEX-C39-KAAPI-01",
         "language": "kannada",
         "introducedBy": "KA-C39-kaapi",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R2"
         ],
@@ -39592,7 +39604,7 @@
         "atom": "KA-LEX-C41-DEIXIS-03",
         "language": "kannada",
         "introducedBy": "KA-C41-here",
-        "introducedAt": 113,
+        "introducedAt": 114,
         "missed": [
           "R2"
         ],
@@ -39602,7 +39614,7 @@
         "atom": "KA-LEX-C41-DEIXIS-04",
         "language": "kannada",
         "introducedBy": "KA-C41-there",
-        "introducedAt": 114,
+        "introducedAt": 115,
         "missed": [
           "R2"
         ],
@@ -39612,7 +39624,7 @@
         "atom": "KA-LEX-C41-DEIXIS-05",
         "language": "kannada",
         "introducedBy": "KA-C41-who",
-        "introducedAt": 115,
+        "introducedAt": 116,
         "missed": [
           "R2"
         ],
@@ -39622,7 +39634,7 @@
         "atom": "KA-LEX-C41-DEIXIS-06",
         "language": "kannada",
         "introducedBy": "KA-C41-where",
-        "introducedAt": 116,
+        "introducedAt": 117,
         "missed": [
           "R2"
         ],
@@ -44909,6 +44921,14 @@
         "lessonsEarly": 25
       },
       {
+        "lessonId": "KA-C32-tinnu",
+        "language": "kannada",
+        "position": 86,
+        "word": "ಊಟ",
+        "taughtBy": "KA-C40-oota",
+        "lessonsEarly": 25
+      },
+      {
         "lessonId": "ML-C32-tinnuka",
         "language": "malayalam",
         "position": 91,
@@ -44946,14 +44966,6 @@
         "position": 257,
         "word": "gato",
         "taughtBy": "ES-C32-gato",
-        "lessonsEarly": 24
-      },
-      {
-        "lessonId": "KA-C32-tinnu",
-        "language": "kannada",
-        "position": 86,
-        "word": "ಊಟ",
-        "taughtBy": "KA-C40-oota",
         "lessonsEarly": 24
       },
       {
@@ -45199,7 +45211,7 @@
       {
         "lessonId": "KA-C35-kutumba",
         "language": "kannada",
-        "position": 97,
+        "position": 98,
         "word": "ಇದು",
         "taughtBy": "KA-C41-this",
         "lessonsEarly": 14
@@ -45367,7 +45379,7 @@
       {
         "lessonId": "KA-C36-magu",
         "language": "kannada",
-        "position": 99,
+        "position": 100,
         "word": "ಇದು",
         "taughtBy": "KA-C41-this",
         "lessonsEarly": 12
@@ -47607,7 +47619,7 @@
       {
         "lessonId": "KA-C41-here",
         "language": "kannada",
-        "position": 113,
+        "position": 114,
         "word": "ಅಲ್ಲಿ",
         "taughtBy": "KA-C41-there",
         "lessonsEarly": 1
@@ -47615,7 +47627,7 @@
       {
         "lessonId": "KA-C41-this",
         "language": "kannada",
-        "position": 111,
+        "position": 112,
         "word": "ಅದು",
         "taughtBy": "KA-C41-that",
         "lessonsEarly": 1
@@ -47623,7 +47635,7 @@
       {
         "lessonId": "KA-C41-who",
         "language": "kannada",
-        "position": 115,
+        "position": 116,
         "word": "ಎಲ್ಲಿ",
         "taughtBy": "KA-C41-where",
         "lessonsEarly": 1
@@ -48146,11 +48158,11 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 124,
+        "lessonCount": 125,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 164,
+        "atomsTaught": 165,
         "atomsNeverRevisited": 6,
         "forwardReferences": 17
       },
@@ -48280,14 +48292,14 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 3383,
+      "atomsTaught": 3384,
       "atomsNeverRevisited": 552,
       "neverRevisitedPercent": 16,
       "missedByWindow": {
-        "R1": 1074,
-        "R2": 2448,
+        "R1": 1075,
+        "R2": 2449,
         "R3": 2096,
-        "R4": 626
+        "R4": 627
       },
       "forwardReferences": 499
     }
@@ -48375,11 +48387,11 @@
       {
         "language": "kannada",
         "script": "kannada",
-        "lessonCount": 124,
-        "scriptLessons": 23,
-        "taughtGlyphs": 50,
+        "lessonCount": 125,
+        "scriptLessons": 24,
+        "taughtGlyphs": 51,
         "shownGlyphs": 66,
-        "neverTaughtGlyphs": 16,
+        "neverTaughtGlyphs": 15,
         "violations": 37,
         "exposureOnly": 14,
         "exposureExemptedGlyphs": 154,
@@ -53881,8 +53893,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "46 atom(s) at or below pre-A1 are revisited fewer than twice (24 etymology hook(s) waived)",
-            "shortfall": 46
+            "detail": "47 atom(s) at or below pre-A1 are revisited fewer than twice (24 etymology hook(s) waived)",
+            "shortfall": 47
           }
         ],
         "vocabulary": 91
@@ -54142,12 +54154,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2266,
+    "totalLessons": 2267,
     "voice": 1495,
     "sight": 570,
-    "pen": 201,
+    "pen": 202,
     "coreVoice": 1931,
-    "lessonsWithWritingSegments": 132,
+    "lessonsWithWritingSegments": 133,
     "drivablePercent": 85,
     "tracks": [
       {
@@ -57048,12 +57060,12 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 124,
+        "lessonCount": 125,
         "voice": 70,
         "sight": 31,
-        "pen": 23,
+        "pen": 24,
         "coreVoice": 94,
-        "drivablePercent": 76,
+        "drivablePercent": 75,
         "drivablePrefixTotal": 90,
         "chapters": [
           {
@@ -57553,16 +57565,18 @@
           {
             "language": "kannada",
             "chapter": 34,
-            "lessonCount": 4,
+            "lessonCount": 5,
             "voice": 4,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 4,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "KA-S125-letter-oo"
           },
           {
             "language": "kannada",
@@ -66225,7 +66239,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2266,
+    "lessons": 2267,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -66235,8 +66249,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 50,
-    "lessonsUsingTerms": 2249,
-    "usesBeforeIntroduction": 9931,
+    "lessonsUsingTerms": 2250,
+    "usesBeforeIntroduction": 9933,
     "technicalUsesBeforeIntroduction": 2917,
     "technicalLessons": 1452,
     "worstTerms": [
