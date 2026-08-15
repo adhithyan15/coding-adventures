@@ -72,6 +72,49 @@ All notable changes to this package will be documented in this file.
   trade-off (per-call OS thread spawn overhead, most visible in
   `wasm-conformance`'s full baseline run) is accepted for this first slice.
 
+### Fixed — 2 findings from this PR's own `/security-review`, before shipping
+
+- **Panic during the dedicated thread skipped the mandatory state
+  write-back.** A panic reached through `Box<dyn HostFunction>::call`
+  (e.g. `wasm-conformance`'s real `CrossModuleFunction` hitting its own
+  documented `RefCell` double-borrow panic on a circular cross-module
+  import) used to `resume_unwind` BEFORE `self.host_functions`/
+  `self.globals` were restored from `ctx` — the exact bug class WASM07's
+  security review already fixed once for TRAPS, reintroduced here for
+  PANICS (`self.host_functions`, emptied via `mem::take` for the
+  panicking call, would stay empty for every LATER, unrelated call on the
+  same engine). Fixed by wrapping the dedicated thread's loop in
+  `std::panic::catch_unwind(AssertUnwindSafe(...))` and restoring engine
+  state UNCONDITIONALLY before ever propagating the caught panic via
+  `resume_unwind`. New regression test
+  (`a_panic_inside_the_dedicated_thread_restores_engine_state_before_propagating`),
+  verified via TEMP-REVERT-CHECK to reproduce the exact bug (a later call
+  to an unrelated, previously-working host-imported function fails with
+  `"no body for function 1"`) when the restore is reordered back to after
+  the panic check.
+- **Unbounded OS-thread nesting via cross-module host calls.** Every
+  top-level `call_function` now spawns a dedicated 8 MiB-stack thread —
+  including calls reached through `HostFunction::call` re-entering a
+  DIFFERENT engine's own `call_function` (exactly `wasm-conformance`'s
+  real cross-module linking, WASM05). `MAX_CALL_DEPTH`/`ctx.call_depth`
+  resets to 0 per top-level call and does not see across this boundary at
+  all, so an ordinary, non-circular chain of N linked module instances
+  would spawn N nested OS threads with no bound — a materially larger,
+  more exhaustible resource than the old unbounded-Rust-stack-recursion
+  version of this same reentrancy pattern. Fixed with a new
+  `MAX_DEDICATED_THREAD_DEPTH` (64) guard, tracked via a `thread_local!`
+  counter explicitly propagated parent-thread → child-thread at each
+  `call_function` invocation (deliberately NOT a single process-global
+  counter, which would incorrectly conflate unrelated, genuinely-
+  concurrent top-level call chains from separate caller threads). New
+  regression tests: a white-box pair in `lib.rs` proving the guard trips
+  exactly at the max and not below it, and a black-box
+  `a_long_but_finite_cross_module_chain_traps_cleanly_before_exhausting_os_threads`
+  integration test (a real 100-engine `Rc<RefCell<..>>` chain), verified
+  via TEMP-REVERT-CHECK to reproduce the unbounded-spawn behavior (the
+  full 100-deep chain completes instead of trapping) with the guard
+  disabled.
+
 ## [0.6.12] - 2026-08-15 (security fix — pre-existing `call_indirect` panic)
 
 ### Fixed
