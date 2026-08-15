@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.3] — 2026-08-15 (WASM05 — real instantiate() link-failure path)
+
+### Changed (breaking behavior, deliberate)
+
+- `instantiate` now returns a real `Err(TrapError)` when any import
+  can't be resolved by the host, or resolves to something whose actual
+  type doesn't satisfy the module's declared import type. Previously it
+  never failed on an import at all: an unresolved function got pushed
+  as `None` (failing later, at *call* time, only if that specific
+  import was ever invoked), and an unresolved memory/table/global
+  silently fabricated a default value from the *declared* type instead
+  of erroring. See `code/specs/W10-wasm-real-linking-and-unlinkable.md`.
+- Function imports are now checked against `HostFunction::func_type()`;
+  memory/table imports are checked via the real spec's limits-
+  compatibility rule (actual min ≥ declared min; if declared has a max,
+  actual must too, and not exceed it) — `Table` doesn't track its
+  declared element type at runtime, so table element-type mismatches
+  aren't caught here (a real, named limitation, not silently ignored;
+  every table this repo can currently construct is funcref anyway, so
+  this doesn't lose real coverage against the vendored corpus).
+- **Verified safe for existing real callers**: confirmed by reading
+  `WasiEnv::resolve_function` directly that it never actually returns
+  `None` for its own module — every unimplemented WASI function falls
+  through to a real `EnosysFunc` stub, not `None`. So
+  `brainfuck-wasm-compiler`/`nib-wasm-compiler`/`twig-to-wasm`/
+  `twig-demo`/`lang-aot`'s existing WASI-based execution paths cannot
+  regress from this change; confirmed empirically too, full workspace +
+  downstream consumer test suite unchanged.
+- 12 new tests covering unresolved/type-mismatched/compatible imports
+  for each of function, memory, table, and global.
+
 ## [0.5.2] — 2026-08-15 (WASM17 — exhaustive-match fix for Funcref/Externref)
 
 ### Fixed

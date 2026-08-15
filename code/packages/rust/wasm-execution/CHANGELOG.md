@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.10] — 2026-08-15 (WASM05 — Table gains Clone, LinearMemory/Table gain limit accessors)
+
+### Added
+
+- `Table` now derives `Clone` (matching `LinearMemory`, which already
+  did) -- `wasm-conformance`'s new registry-backed `HostInterface`
+  (WASM05/W10) needs to hand back an owned `Table`/`LinearMemory` when
+  resolving a cross-module import, since `HostInterface::resolve_table`/
+  `resolve_memory` return owned values, not references.
+- `LinearMemory::max_pages()` and `Table::max_size()` -- both already
+  had `size()`; the declared maximum was tracked internally but had no
+  public getter. `wasm-runtime`'s new link-time limits-compatibility
+  check needs both halves of a `Limits` pair, not just the current size.
+
 ## [0.6.9] — 2026-08-15 (WASM18 — plain atomic memory op handlers, no real concurrency)
 
 ### Added

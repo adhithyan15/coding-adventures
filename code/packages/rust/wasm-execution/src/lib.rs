@@ -588,6 +588,12 @@ impl LinearMemory {
         self.current_pages
     }
 
+    /// Declared maximum size in pages, if any (link-time limits
+    /// compatibility checking needs this in addition to `size()`).
+    pub fn max_pages(&self) -> Option<u32> {
+        self.max_pages
+    }
+
     /// Write raw bytes into memory at offset.
     pub fn write_bytes(&mut self, offset: usize, data: &[u8]) -> Result<(), TrapError> {
         self.bounds_check(offset, data.len())?;
@@ -632,6 +638,7 @@ impl LinearMemory {
 ///
 /// WASM 1.0 tables hold nullable function indices. The `call_indirect`
 /// instruction looks up a function reference by table index, then calls it.
+#[derive(Clone)]
 pub struct Table {
     /// Elements: `Some(func_index)` or `None` (uninitialized).
     elements: Vec<Option<u32>>,
@@ -679,6 +686,12 @@ impl Table {
     /// Current table size.
     pub fn size(&self) -> u32 {
         self.elements.len() as u32
+    }
+
+    /// Declared maximum size, if any (link-time limits compatibility
+    /// checking needs this in addition to `size()`).
+    pub fn max_size(&self) -> Option<u32> {
+        self.max_size
     }
 }
 

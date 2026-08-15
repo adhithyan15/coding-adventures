@@ -35,7 +35,8 @@ use wasm_execution::{
 };
 use wasm_module_parser::WasmModuleParser;
 use wasm_types::{
-    ExternalKind, FuncType, FunctionBody, GlobalType, ImportTypeInfo, ValueType, WasmModule,
+    ExternalKind, FuncType, FunctionBody, GlobalType, Import, ImportTypeInfo, Limits, ValueType,
+    WasmModule,
 };
 use wasm_validator::{validate, ValidatedModule, ValidationError};
 
@@ -1101,6 +1102,29 @@ pub struct WasmInstance {
     pub exports: Vec<(String, ExternalKind, u32)>,
 }
 
+/// Build a link-error `TrapError` for a failed import (WASM05/W10) --
+/// self-authored, capability-gap-shaped text (this crate's existing
+/// convention), naming the exact import that failed.
+fn link_error(reason: &str, imp: &Import) -> TrapError {
+    TrapError::new(format!("{reason}: {}.{}", imp.module_name, imp.name))
+}
+
+/// The real spec's own limits-compatibility rule for a resolved import:
+/// the *actual* min must be at least the *declared* min, and if the
+/// *declared* side has a max, the actual side must too, and it must not
+/// exceed the declared one. This is a subset check, not equality --
+/// `(memory 1 1)` can satisfy an import declared as `(memory 1)` (no
+/// max), but not the reverse.
+fn limits_compatible(actual: &Limits, declared: &Limits) -> bool {
+    if actual.min < declared.min {
+        return false;
+    }
+    match declared.max {
+        None => true,
+        Some(declared_max) => matches!(actual.max, Some(actual_max) if actual_max <= declared_max),
+    }
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // WasmRuntime
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1143,6 +1167,19 @@ impl WasmRuntime {
     }
 
     /// Instantiate a parsed module into a live instance.
+    ///
+    /// Fails with a link error -- distinguishable from a runtime
+    /// `TrapError` only by its message text (this crate's existing
+    /// convention of self-authored, capability-gap-shaped error text
+    /// rather than a new error type every caller would need to match on)
+    /// -- when any import can't be resolved by the host, or resolves to
+    /// something whose actual type doesn't satisfy the module's declared
+    /// import type. Earlier, `instantiate` never failed on an import: an
+    /// unresolved function just got pushed as `None` (failing later, at
+    /// *call* time, only if that specific import was ever invoked), and
+    /// an unresolved memory/table/global silently fabricated a default
+    /// value from the *declared* type instead of erroring. See
+    /// `code/specs/W10-wasm-real-linking-and-unlinkable.md`.
     pub fn instantiate(&self, module: &WasmModule) -> Result<WasmInstance, TrapError> {
         let mut func_types: Vec<FuncType> = Vec::new();
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
@@ -1157,49 +1194,66 @@ impl WasmRuntime {
             match &imp.type_info {
                 ImportTypeInfo::Function(type_idx) => {
                     let ft = module.types[*type_idx as usize].clone();
-                    func_types.push(ft);
-                    func_bodies.push(None);
 
                     let host_func = self
                         .host
                         .as_ref()
-                        .and_then(|h| h.resolve_function(&imp.module_name, &imp.name));
-                    host_functions.push(host_func);
+                        .and_then(|h| h.resolve_function(&imp.module_name, &imp.name))
+                        .ok_or_else(|| link_error("unknown import", imp))?;
+                    if host_func.func_type() != &ft {
+                        return Err(link_error("incompatible import type", imp));
+                    }
+
+                    func_types.push(ft);
+                    func_bodies.push(None);
+                    host_functions.push(Some(host_func));
                 }
                 ImportTypeInfo::Memory(mem_type) => {
                     let imported_mem = self
                         .host
                         .as_ref()
-                        .and_then(|h| h.resolve_memory(&imp.module_name, &imp.name));
-                    if let Some(m) = imported_mem {
-                        memory = Some(m);
-                    } else {
-                        memory = Some(LinearMemory::new(mem_type.limits.min, mem_type.limits.max));
+                        .and_then(|h| h.resolve_memory(&imp.module_name, &imp.name))
+                        .ok_or_else(|| link_error("unknown import", imp))?;
+                    let actual = Limits { min: imported_mem.size(), max: imported_mem.max_pages() };
+                    if !limits_compatible(&actual, &mem_type.limits) {
+                        return Err(link_error("incompatible import type", imp));
                     }
+                    memory = Some(imported_mem);
                 }
                 ImportTypeInfo::Table(table_type) => {
                     let imported_table = self
                         .host
                         .as_ref()
-                        .and_then(|h| h.resolve_table(&imp.module_name, &imp.name));
-                    if let Some(t) = imported_table {
-                        tables.push(t);
-                    } else {
-                        tables.push(Table::new(table_type.limits.min, table_type.limits.max));
+                        .and_then(|h| h.resolve_table(&imp.module_name, &imp.name))
+                        .ok_or_else(|| link_error("unknown import", imp))?;
+                    // `Table` doesn't track its declared element type at
+                    // runtime (WASM 1.0 only ever has funcref tables, and
+                    // this repo's reference-types slice hasn't grown a
+                    // runtime-typed Table yet either) -- only limits are
+                    // checked here. Every table this repo can currently
+                    // construct is funcref, so this doesn't lose real
+                    // coverage against the vendored corpus, but a table
+                    // import mismatched purely on element type (not
+                    // limits) would incorrectly link here rather than
+                    // fail. Named, not silent: revisit if a future PR
+                    // gives `Table` a real element-type field.
+                    let actual = Limits { min: imported_table.size(), max: imported_table.max_size() };
+                    if !limits_compatible(&actual, &table_type.limits) {
+                        return Err(link_error("incompatible import type", imp));
                     }
+                    tables.push(imported_table);
                 }
                 ImportTypeInfo::Global(gt) => {
-                    let imported_global = self
+                    let (gtype, gval) = self
                         .host
                         .as_ref()
-                        .and_then(|h| h.resolve_global(&imp.module_name, &imp.name));
-                    if let Some((gtype, gval)) = imported_global {
-                        global_types.push(gtype);
-                        globals.push(gval);
-                    } else {
-                        global_types.push(gt.clone());
-                        globals.push(WasmValue::default_for(gt.value_type));
+                        .and_then(|h| h.resolve_global(&imp.module_name, &imp.name))
+                        .ok_or_else(|| link_error("unknown import", imp))?;
+                    if &gtype != gt {
+                        return Err(link_error("incompatible import type", imp));
                     }
+                    global_types.push(gtype);
+                    globals.push(gval);
                 }
             }
         }
@@ -2114,6 +2168,243 @@ mod tests {
         let mut instance = runtime.instantiate(&module).unwrap();
         let result = runtime.call(&mut instance, "call_double", &[5]).unwrap();
         assert_eq!(result, vec![10]);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // WASM05/W10: real link-failure path
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// Resolves a memory, table, and global for real (unlike `TestHost`,
+    /// whose `resolve_memory`/`resolve_table`/`resolve_global` always
+    /// return `None`) -- lets these tests exercise the type-compatibility
+    /// checks, not just "unresolved".
+    struct LinkingTestHost;
+
+    impl HostInterface for LinkingTestHost {
+        fn resolve_function(&self, _module_name: &str, _name: &str) -> Option<Box<dyn HostFunction>> {
+            None
+        }
+
+        fn resolve_global(&self, module_name: &str, name: &str) -> Option<(GlobalType, WasmValue)> {
+            if module_name == "env" && name == "g" {
+                Some((GlobalType { value_type: ValueType::I32, mutable: false }, WasmValue::I32(42)))
+            } else {
+                None
+            }
+        }
+
+        fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory> {
+            if module_name == "env" && name == "mem" {
+                Some(LinearMemory::new(1, Some(2)))
+            } else {
+                None
+            }
+        }
+
+        fn resolve_table(&self, module_name: &str, name: &str) -> Option<Table> {
+            if module_name == "env" && name == "tab" {
+                Some(Table::new(1, Some(2)))
+            } else {
+                None
+            }
+        }
+    }
+
+    fn module_importing_function(module_name: &str, name: &str, ft: FuncType) -> WasmModule {
+        WasmModule {
+            types: vec![ft],
+            imports: vec![Import {
+                module_name: module_name.to_string(),
+                name: name.to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_function_import_is_unresolved() {
+        let runtime = WasmRuntime::with_host(Box::new(TestHost));
+        let module = module_importing_function(
+            "env",
+            "no_such_function",
+            FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] },
+        );
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("unknown import"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_function_import_type_mismatches() {
+        let runtime = WasmRuntime::with_host(Box::new(TestHost));
+        // The real "env"."double" host function is (i32) -> i32; declare
+        // it here as (i64) -> i32 instead.
+        let module = module_importing_function(
+            "env",
+            "double",
+            FuncType { params: vec![ValueType::I64], results: vec![ValueType::I32] },
+        );
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_succeeds_when_no_host_is_present_and_the_module_has_no_imports() {
+        // A host-less runtime instantiating an import-free module must
+        // still work -- the link-failure path only fires when there's an
+        // actual import to resolve.
+        let runtime = WasmRuntime::new();
+        let module = WasmModule::default();
+        assert!(runtime.instantiate(&module).is_ok());
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_memory_import_is_unresolved() {
+        let runtime = WasmRuntime::with_host(Box::new(TestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "no_such_memory".to_string(),
+                kind: ExternalKind::Memory,
+                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 1, max: None }, shared: false }),
+            }],
+            ..Default::default()
+        };
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("unknown import"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_memory_import_limits_are_incompatible() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        // The real "env"."mem" host memory is 1 page min, max 2 -- declare
+        // a min of 5, which the actual memory doesn't satisfy.
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "mem".to_string(),
+                kind: ExternalKind::Memory,
+                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 5, max: None }, shared: false }),
+            }],
+            ..Default::default()
+        };
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_succeeds_when_a_memory_import_is_compatible() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "mem".to_string(),
+                kind: ExternalKind::Memory,
+                type_info: ImportTypeInfo::Memory(MemoryType { limits: Limits { min: 1, max: Some(2) }, shared: false }),
+            }],
+            ..Default::default()
+        };
+        let instance = runtime.instantiate(&module).unwrap();
+        assert!(instance.memory.is_some());
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_table_import_is_unresolved() {
+        let runtime = WasmRuntime::with_host(Box::new(TestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "no_such_table".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: None } }),
+            }],
+            ..Default::default()
+        };
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("unknown import"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_table_import_limits_are_incompatible() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 5, max: None } }),
+            }],
+            ..Default::default()
+        };
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_succeeds_when_a_table_import_is_compatible() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tab".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType { element_type: 0x70, limits: Limits { min: 1, max: Some(2) } }),
+            }],
+            ..Default::default()
+        };
+        let instance = runtime.instantiate(&module).unwrap();
+        assert_eq!(instance.tables.len(), 1);
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_global_import_is_unresolved() {
+        let runtime = WasmRuntime::with_host(Box::new(TestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "no_such_global".to_string(),
+                kind: ExternalKind::Global,
+                type_info: ImportTypeInfo::Global(GlobalType { value_type: ValueType::I32, mutable: false }),
+            }],
+            ..Default::default()
+        };
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("unknown import"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_fails_when_a_global_import_type_mismatches() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        // The real "env"."g" host global is an immutable i32; declare it
+        // here as mutable instead.
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "g".to_string(),
+                kind: ExternalKind::Global,
+                type_info: ImportTypeInfo::Global(GlobalType { value_type: ValueType::I32, mutable: true }),
+            }],
+            ..Default::default()
+        };
+        let err = runtime.instantiate(&module).err().unwrap();
+        assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    #[test]
+    fn test_instantiate_succeeds_when_a_global_import_is_compatible() {
+        let runtime = WasmRuntime::with_host(Box::new(LinkingTestHost));
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "g".to_string(),
+                kind: ExternalKind::Global,
+                type_info: ImportTypeInfo::Global(GlobalType { value_type: ValueType::I32, mutable: false }),
+            }],
+            ..Default::default()
+        };
+        let instance = runtime.instantiate(&module).unwrap();
+        assert_eq!(instance.globals, vec![WasmValue::I32(42)]);
     }
 
     #[test]
