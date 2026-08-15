@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 59,
+  "title": "Weather and Ground",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d845d74de385c06b",
+  "lessons": [
+    {
+      "id": "TE-C59-wind",
+      "sequence": 1780,
+      "title": "గాలి (gāli) — wind, air",
+      "headword": "గాలి",
+      "romanization": "gāli",
+      "gloss": "wind, air",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:616b2faabc1494f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did antē mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గాలి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గాలి (gāli) — \"wind, air\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గాలి (gāli) is inherited, and it covers both the wind that blows and the air that is simply there. Telugu does not split them."
+            },
+            {
+              "kind": "speech",
+              "text": "It reaches further than weather. గాలి (gāli) is breath, and it is rumour — గాలి (gāli) వార్త is a story with nothing holding it up, blown in from somewhere. Air, breath and hearsay under one word is a chain a great many languages make, and it usually starts with breathing."
+            },
+            {
+              "kind": "speech",
+              "text": "A గాలి (gāli) getting up in the evening is the ordinary reason given for cutting a visit short."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first reason to start saying goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāli, then veḷḷostānu, and use the one as a reason for the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāli*, then *veḷḷostānu*, and use the one as a reason for the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గాలి (gāli) mean? (\"wind, air\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C59-mist",
+      "sequence": 1790,
+      "title": "మంచు (mañcu) — mist, dew, snow",
+      "headword": "మంచు",
+      "romanization": "mañcu",
+      "gloss": "mist, dew, snow",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0243a4478817da7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gāli mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మంచు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మంచు (mañcu) — \"mist, dew, snow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మంచు (mañcu) is the cold wet thing in the air: mist on a winter morning, dew on the ground, and snow where there is any. One word for all three states, which suits a country that meets the third of them rarely."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth sitting with. A language draws its lines where its speakers need them. Telugu splits its cooking vessels three ways and lumps mist, dew and snow together; a language spoken where snow falls would do the opposite."
+            },
+            {
+              "kind": "speech",
+              "text": "మంచు (mañcu) కురుస్తోంది is \"it is misting\" on the coast and \"it is snowing\" in the hills, with no change to the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: what moves, and what settles."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcu, then gāli, and say which of the two you can see",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcu*, then *gāli*, and say which of the two you can see]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మంచు (mañcu) mean? (\"mist, dew, snow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C59-sand",
+      "sequence": 1800,
+      "title": "ఇసుక (isuka) — sand",
+      "headword": "ఇసుక",
+      "romanization": "isuka",
+      "gloss": "sand",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:746733883bb8fbec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mañcu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇసుక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇసుక (isuka) — \"sand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇసుక (isuka) is inherited and unremarkable, and that is the point: it is the ground beside every నది in the Telugu country."
+            },
+            {
+              "kind": "speech",
+              "text": "The sand of a riverbed is where cattle are watered, where lorries come at night to dig, and where a village argument about who owns the river tends to start. A plain word can carry a lot of local weather."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇసుకలో నీళ్ళు, water in sand, is what you say about effort that soaks away."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isuka, then nadi, and say where you would find one beside the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isuka*, then *nadi*, and say where you would find one beside the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇసుక (isuka) mean? (\"sand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C59-mud",
+      "sequence": 1810,
+      "title": "బురద (burada) — mud",
+      "headword": "బురద",
+      "romanization": "burada",
+      "gloss": "mud",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03cf92397f6255fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did isuka mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బురద",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బురద (burada) — \"mud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బురద (burada) is mud — what ఇసుక (isuka) becomes when the rain has been at it."
+            },
+            {
+              "kind": "speech",
+              "text": "It does the same second job that mud does in English. బురద (burada) చల్లు, to throw mud, is to slander somebody, and the picture is exact enough that you can guess the phrase before you are told it."
+            },
+            {
+              "kind": "speech",
+              "text": "బురద (burada) is also the honest reason a visit ends early in the wet months. The బాట between the గ్రామం and the నది turns to it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "burada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *burada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "burada, then isuka, and say what turns one into the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *burada*, then *isuka*, and say what turns one into the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బురద (burada) mean? (\"mud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C59-fire",
+      "sequence": 1820,
+      "title": "నిప్పు (nippu) — fire, a live coal",
+      "headword": "నిప్పు",
+      "romanization": "nippu",
+      "gloss": "fire, a live coal",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da6566dd60e18ed7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did burada mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిప్పు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిప్పు (nippu) — \"fire, a live coal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిప్పు (nippu) is inherited, and it is the fire you can point at: the live coal, the burning thing in the hearth. అగ్ని, borrowed from Sanskrit, is fire as an idea and as a god, the one that carries offerings."
+            },
+            {
+              "kind": "speech",
+              "text": "So Telugu keeps a working fire and a ceremonial one, in the same way it keeps a పొద్దు and a సూర్యుడు. That split has turned up so often in these chapters that you can start expecting it: the old word does the work, the borrowed one does the ceremony."
+            },
+            {
+              "kind": "speech",
+              "text": "నిప్పు (nippu) is what a house is banked down around at night, and putting it out is the last thing done before sleep. A good place to say వెళ్ళొస్తాను."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: గాలి (gāli), మంచు (mañcu), ఇసుక (isuka), బురద (burada), నిప్పు (nippu). Weather enough to take your leave on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nippu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say gāli ekkuva, and take your leave with veḷḷostānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say *gāli ekkuva*, and take your leave with *veḷḷostānu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిప్పు (nippu) mean? (\"fire, a live coal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

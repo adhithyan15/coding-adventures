@@ -660,6 +660,118 @@
         "TE-EXT-52-WELCOME"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-53-SKY",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TE-C53-sky",
+        "TE-C53-sun",
+        "TE-C53-moon",
+        "TE-C53-star",
+        "TE-C53-cloud"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-53-SKY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-54-TREE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C54-tree",
+        "TE-C54-branch",
+        "TE-C54-root",
+        "TE-C54-seed",
+        "TE-C54-seedling"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-54-TREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-55-ROAD",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C55-river",
+        "TE-C55-tank",
+        "TE-C55-hill",
+        "TE-C55-village",
+        "TE-C55-path"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-55-ROAD"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-56-HOUSE",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TE-C56-mat",
+        "TE-C56-basket",
+        "TE-C56-knife",
+        "TE-C56-vessel",
+        "TE-C56-box"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-56-HOUSE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-57-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C57-neck",
+        "TE-C57-back",
+        "TE-C57-lip",
+        "TE-C57-nail",
+        "TE-C57-bone"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-57-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-58-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TE-C58-a-little",
+        "TE-C58-more",
+        "TE-C58-less",
+        "TE-C58-no-thanks",
+        "TE-C58-thats-all"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-58-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-59-WEATHER",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TE-C59-wind",
+        "TE-C59-mist",
+        "TE-C59-sand",
+        "TE-C59-mud",
+        "TE-C59-fire"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-59-WEATHER"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -667,7 +779,8 @@
       "segments": [
         "TE-PATH-001",
         "TE-PATH-100",
-        "TE-PATH-52-WELCOME"
+        "TE-PATH-52-WELCOME",
+        "TE-PATH-53-SKY"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -680,7 +793,8 @@
       "segments": [
         "TE-PATH-003",
         "TE-PATH-009",
-        "TE-PATH-51-COURTESY"
+        "TE-PATH-51-COURTESY",
+        "TE-PATH-56-HOUSE"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -691,7 +805,8 @@
       "segments": [
         "TE-PATH-002",
         "TE-PATH-004",
-        "TE-PATH-49-REPLY"
+        "TE-PATH-49-REPLY",
+        "TE-PATH-58-REPLY"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -707,7 +822,8 @@
         "TE-PATH-021",
         "TE-PATH-028",
         "TE-PATH-029",
-        "TE-PATH-48-ROLE"
+        "TE-PATH-48-ROLE",
+        "TE-PATH-54-TREE"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -722,7 +838,8 @@
         "TE-PATH-017",
         "TE-PATH-030",
         "TE-PATH-031",
-        "TE-PATH-47-BODY"
+        "TE-PATH-47-BODY",
+        "TE-PATH-57-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -736,7 +853,8 @@
         "TE-PATH-019",
         "TE-PATH-032",
         "TE-PATH-033",
-        "TE-PATH-46-ASK"
+        "TE-PATH-46-ASK",
+        "TE-PATH-55-ROAD"
       ],
       "omits": [],
       "relocates": {}
@@ -744,7 +862,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "TE-PATH-010",
-        "TE-PATH-50-LEAVE"
+        "TE-PATH-50-LEAVE",
+        "TE-PATH-59-WEATHER"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1573,6 +1692,111 @@
         "TE-C52-muggu",
         "TE-C52-flower",
         "TE-C52-garland"
+      ]
+    },
+    {
+      "id": "TE-EXT-53-SKY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things overhead in Telugu, and say which of them Telugu borrowed and which it has always had.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C53-sky",
+        "TE-C53-sun",
+        "TE-C53-moon",
+        "TE-C53-star",
+        "TE-C53-cloud"
+      ]
+    },
+    {
+      "id": "TE-EXT-54-TREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a tree and its parts in Telugu, from the seed it started as to the branch at the top.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C54-tree",
+        "TE-C54-branch",
+        "TE-C54-root",
+        "TE-C54-seed",
+        "TE-C54-seedling"
+      ]
+    },
+    {
+      "id": "TE-EXT-55-ROAD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the water, the ground and the road around a Telugu village, and ask my way with them.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C55-river",
+        "TE-C55-tank",
+        "TE-C55-hill",
+        "TE-C55-village",
+        "TE-C55-path"
+      ]
+    },
+    {
+      "id": "TE-EXT-56-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five ordinary things inside a Telugu house and thank somebody for handing me one.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C56-mat",
+        "TE-C56-basket",
+        "TE-C56-knife",
+        "TE-C56-vessel",
+        "TE-C56-box"
+      ]
+    },
+    {
+      "id": "TE-EXT-57-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Telugu and say which one hurts.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C57-neck",
+        "TE-C57-back",
+        "TE-C57-lip",
+        "TE-C57-nail",
+        "TE-C57-bone"
+      ]
+    },
+    {
+      "id": "TE-EXT-58-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say how much I want, refuse politely, and close a conversation in Telugu.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C58-a-little",
+        "TE-C58-more",
+        "TE-C58-less",
+        "TE-C58-no-thanks",
+        "TE-C58-thats-all"
+      ]
+    },
+    {
+      "id": "TE-EXT-59-WEATHER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the weather and what is underfoot in Telugu, and use it as a reason to go home.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C59-wind",
+        "TE-C59-mist",
+        "TE-C59-sand",
+        "TE-C59-mud",
+        "TE-C59-fire"
       ]
     }
   ]

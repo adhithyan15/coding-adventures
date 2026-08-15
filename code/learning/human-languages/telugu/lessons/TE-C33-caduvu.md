@@ -48,7 +48,7 @@ Telugu does not split reading from studying, and it builds no separate noun
 either: **చదువు** unchanged is "**education, studies**" — what a family means
 when it says a child's *caduvu* is going well.
 
-The sisters scatter here as completely as they did over seeing: Tamil **படి**
+The sisters scatter here as completely as they did over seeing: Tamil **படி**
 (*paḍi*), Kannada **ಓದು** (*ōdu*), Malayalam **വായിക്കുക** (*vāyikkuka*), Telugu
 **చదువు**. Four unrelated everyday verbs for one act.
 

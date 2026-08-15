@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2d798654b223c361",
+  "sourceHash": "fnv1a64:f8ab9a281e43682e",
   "lessons": [
     {
       "id": "TE-C33-anuko",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20ac8b067d2dafd7",
+      "sourceHash": "fnv1a64:6757e4c82de7d30f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sisters scatter here as completely as they did over seeing: Tamil படి (paḍi), Kannada ಓದು (ōdu), Malayalam വായിക്കുക (vāyikkuka), Telugu చదువు (caduvu). Four unrelated everyday verbs for one act."
+              "text": "The sisters scatter here as completely as they did over seeing: Tamil படி (paḍi), Kannada ಓದು (ōdu), Malayalam വായിക്കുക (vāyikkuka), Telugu చదువు (caduvu). Four unrelated everyday verbs for one act."
             }
           ]
         },
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:34579995b467114e",
+      "sourceHash": "fnv1a64:9f9f505382786bc6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -655,7 +655,7 @@
             },
             {
               "kind": "speech",
-              "text": "One honest note: Tamil's everyday write-verb is எழుது (eḻutu), not varai. The sisters share the root without agreeing which word does the daily work — the picture caduvu left you with."
+              "text": "One honest note: Tamil's everyday write-verb is எழுது (eḻutu), not varai. The sisters share the root without agreeing which word does the daily work — the picture caduvu left you with."
             }
           ]
         },

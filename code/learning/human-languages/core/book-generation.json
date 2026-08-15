@@ -4762,22 +4762,19 @@
       "language": "telugu",
       "chapter": 43,
       "output": "telugu/book/chapters/ch43-more-verbs.tex",
-      "unicodeScript": "Telugu",
-      "scriptCommand": "te"
+      "scriptSet": "telugu-comparisons"
     },
     {
       "language": "telugu",
       "chapter": 44,
       "output": "telugu/book/chapters/ch44-see-say.tex",
-      "unicodeScript": "Telugu",
-      "scriptCommand": "te"
+      "scriptSet": "telugu-comparisons"
     },
     {
       "language": "telugu",
       "chapter": 45,
       "output": "telugu/book/chapters/ch45-grandparents.tex",
-      "unicodeScript": "Telugu",
-      "scriptCommand": "te"
+      "scriptSet": "telugu-comparisons"
     },
     {
       "language": "telugu",
@@ -4911,6 +4908,48 @@
       "output": "urdu/book/chapters/ch15-weather.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
+    },
+    {
+      "language": "telugu",
+      "chapter": 53,
+      "output": "telugu/book/chapters/ch53-the-sky.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 54,
+      "output": "telugu/book/chapters/ch54-the-tree.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 55,
+      "output": "telugu/book/chapters/ch55-river-and-road.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 56,
+      "output": "telugu/book/chapters/ch56-in-the-house.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 57,
+      "output": "telugu/book/chapters/ch57-more-of-the-body.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 58,
+      "output": "telugu/book/chapters/ch58-more-short-replies.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 59,
+      "output": "telugu/book/chapters/ch59-weather-and-ground.tex",
+      "scriptSet": "telugu-comparisons"
     }
   ],
   "handwritten": [

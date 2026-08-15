@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 58,
+  "title": "More Short Replies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:37a3ca3eb4f04269",
+  "lessons": [
+    {
+      "id": "TE-C58-a-little",
+      "sequence": 1730,
+      "title": "కొంచెం (koñcem) — a little, a bit",
+      "headword": "కొంచెం",
+      "romanization": "koñcem",
+      "gloss": "a little, a bit",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ab7fa5bc7ea3044",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did emuka mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొంచెం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొంచెం (koñcem) — \"a little, a bit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కొంచెం (koñcem) is \"a little\", and it does far more work in Telugu than its size suggests. It softens whatever comes after it."
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for something plainly and you are demanding; put కొంచెం (koñcem) in front and you are asking. కొంచెం (koñcem) నీళ్ళు is a request for water that leaves the other person room. The word is a quantity in the dictionary and a manner in the mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu shares this habit with a good many languages. English does it with \"just\" and \"a bit\", and both of those have stopped measuring anything too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that makes the next one polite."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koñcem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koñcem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koñcem, then koñcem pālu, and hear how much softer it is than pālu alone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koñcem*, then *koñcem pālu*, and hear how much softer it is than *pālu* alone]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కొంచెం (koñcem) mean? (\"a little, a bit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C58-more",
+      "sequence": 1740,
+      "title": "ఎక్కువ (ekkuva) — more, a great deal",
+      "headword": "ఎక్కువ",
+      "romanization": "ekkuva",
+      "gloss": "more, a great deal",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:813f6231ed5aef02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did koñcem mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎక్కువ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎక్కువ (ekkuva) — \"more, a great deal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎక్కువ (ekkuva) is built on ఎక్కు, \"to climb, to go up\". The quantity is a movement: more is what has gone up."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against కొంచెం (koñcem), which you had a moment ago, and you have the two ends of a plate of food. కొంచెం (koñcem) is what you say when you would like the serving to stop; ఎక్కువ (ekkuva) is what you say when it was too much."
+            },
+            {
+              "kind": "speech",
+              "text": "It doubles as \"too much\" without changing shape, so tone and face carry the difference. ఎక్కువ (ekkuva) మాట్లాడు can be praise or a complaint depending on how it is said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: a little, and a lot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekkuva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekkuva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekkuva, then koñcem, and say them as a pair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekkuva*, then *koñcem*, and say them as a pair]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎక్కువ (ekkuva) mean? (\"more, a great deal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C58-less",
+      "sequence": 1750,
+      "title": "తక్కువ (takkuva) — less, too little",
+      "headword": "తక్కువ",
+      "romanization": "takkuva",
+      "gloss": "less, too little",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29a3de4eeca576c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ekkuva mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తక్కువ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తక్కువ (takkuva) — \"less, too little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తక్కువ (takkuva) is built on తక్కు, \"to fall short\", exactly the way ఎక్కువ (ekkuva) is built on climbing. Two words, one shape of construction, opposite directions."
+            },
+            {
+              "kind": "speech",
+              "text": "A matched pair like this is worth holding on to, because it lets you guess. Once the -కువ ending on both has registered, you can meet a Telugu word for the first time and have some idea what it is doing."
+            },
+            {
+              "kind": "speech",
+              "text": "తక్కువ (takkuva) చేసి మాట్లాడు, to speak somebody less, is to belittle them. The arithmetic goes straight into the manners."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and two of them are a pair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takkuva",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takkuva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takkuva, then ekkuva, and say which one climbs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takkuva*, then *ekkuva*, and say which one climbs]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తక్కువ (takkuva) mean? (\"less, too little\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C58-no-thanks",
+      "sequence": 1760,
+      "title": "వద్దు (vaddu) — no, I don't want it",
+      "headword": "వద్దు",
+      "romanization": "vaddu",
+      "gloss": "no, I don't want it",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe988ea0ae9e37d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did takkuva mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వద్దు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వద్దు (vaddu) — \"no, I don't want it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వద్దు (vaddu) is the refusal of a thing offered. It is not the same as కాదు, which denies that something is so; వద్దు (vaddu) turns down an offer."
+            },
+            {
+              "kind": "speech",
+              "text": "It answers కావాలి, \"I want it\", and the two of them run every meal in a Telugu house. A hand over the plate and వద్దు (vaddu) is a complete sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "It softens the moment you put కొంచెం (koñcem)'s cousin in front of it, or the -అండి ending on the end: వద్దండి is the same refusal with the door left open."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaddu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaddu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaddu, then vaddaṇḍi, and say which one you would use with a stranger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaddu*, then *vaddaṇḍi*, and say which one you would use with a stranger]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వద్దు (vaddu) mean? (\"no, I don't want it\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C58-thats-all",
+      "sequence": 1770,
+      "title": "అంతే (antē) — that's all; that's just it",
+      "headword": "అంతే",
+      "romanization": "antē",
+      "gloss": "that's all; that's just it",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9b8a058c252622a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vaddu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అంతే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అంతే (antē) — \"that's all; that's just it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అంతే (antē) is అంత, \"that much\", with a small -ఏ on the end that means \"just, exactly\". So the word says \"exactly that much\" — and it ends a list, a story or an argument."
+            },
+            {
+              "kind": "speech",
+              "text": "It has a second life as agreement. Somebody explains why a thing went wrong and you say అంతే (antē): that is precisely it, nothing further to add. The same word closes a sale and closes a discussion."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a good word to leave a chapter on. కొంచెం (koñcem), ఎక్కువ (ekkuva), తక్కువ (takkuva), వద్దు (vaddu) — and then అంతే (antē)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: కొంచెం (koñcem), ఎక్కువ (ekkuva), తక్కువ (takkuva), వద్దు (vaddu), అంతే (antē). You can now say how much, and when to stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then refuse a second helping with vaddu, antē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then refuse a second helping with *vaddu*, *antē*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అంతే (antē) mean? (\"that's all; that's just it\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
