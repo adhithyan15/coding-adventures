@@ -9,6 +9,72 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C185 — `word_class` does not exist. It is a schema addition, not a classifier fix.
+
+**Measured 2026-08-15.** HL-C184c assumed the classifier reached ~23% and needed
+improving. Wrong on both counts:
+
+* **No lesson in any track carries a `word_class` field.** Coverage is **0 of
+  1,692** lexical lessons, across all 22 tracks.
+* **The schema has no part-of-speech field at all.** The frontmatter keys in use
+  are `chapter, concept_tag, delivery, duration, est_minutes, etymology_hook,
+  gloss, headword, id, introduces, modes, practises, prerequisites, register,
+  requires, reviews_of, romanization, roots, schema_version, sequence, skills,
+  slots, sounds, spine_node, strands, teaches_cells, type, variety` — and that is
+  the whole list.
+
+The remembered "23%" was a **classifier experiment**, not stored data. So this is
+*add a field and populate 1,692 lessons*, not *improve an inference*. Materially
+different work, and it must be sized as such.
+
+### The good news: 36% is already mechanical
+
+Many `concept_tag`s encode part of speech in their name. Deriving from the tag:
+
+| class | lessons |
+|---|---:|
+| verb | **400** |
+| greeting | 75 |
+| pronoun | 53 |
+| number | 34 |
+| adjective | 32 |
+| noun | 13 |
+| connective | 10 |
+| adverb | 3 |
+| **derivable** | **620 of 1,692 (36%)** |
+
+**Note the verb number against the owner's 500-verb target: 400 is across ALL 22
+tracks.** Spanish alone has ~46. Per track, the target is far off, and the
+census will say so per track once the field exists.
+
+### Why the other 64% is not derivable
+
+The unmatched tags are **topical, not grammatical** — `AR-COLOUR-BLACK-WHITE`,
+`AR-MONTHS`, `AR-SEASONS`, `AR-FOOD-GENERAL`. They say what a word is *about*,
+not what it *is*. Several are also multi-word list headwords (twelve months in
+one lesson), so "the word class of this lesson" is not even well defined for
+them.
+
+### Plan, and what NOT to do
+
+1. **Add `word_class` to the schema** as optional, with a closed vocabulary
+   (`noun, verb, adjective, adverb, pronoun, number, connective, interjection,
+   phrase, other`).
+2. **Populate the 620 mechanically** from the tag prefixes above, in one scripted
+   pass, with the derivation table committed alongside so it is auditable.
+3. **Leave the other 1,072 UNSET and report the coverage.** Do not guess. An
+   inferred class that is wrong is worse than an absent one, because the census
+   would then report a confident wrong number — the exact failure mode of
+   [[feedback_a_number_that_never_moves_is_not_a_measurement]].
+4. **Then** the per-track verb/adjective/adverb census the owner asked for
+   becomes computable, and HL-C184d's "measure what the tranche cost" means
+   something.
+
+Multi-word list lessons (months, seasons, colours) need a separate decision
+before they can be classed at all: either split them into one word per lesson —
+which the 50,000-lesson budget permits and the gentle ramp arguably prefers — or
+give the field a `list` value and exclude them from the census denominator.
+
 ## HL-C184 — THE COMPLETION PLAN: 22 tracks to C2, driven by vocabulary
 
 Measured 2026-08-14, once the report finally printed the right number:
