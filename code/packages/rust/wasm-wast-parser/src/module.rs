@@ -1942,7 +1942,12 @@ fn parse_lane_index(text: &str, pos: usize) -> Result<u8, WastParseError> {
 /// itself plus every lane literal (`1 + lane_count`) -- used by the stream
 /// (bare-atom) caller to advance its cursor; the folded caller already
 /// knows its whole `args` list is exactly this literal, so it ignores it.
-fn parse_v128_const(operands: &[SExpr], pos: usize) -> Result<([u8; 16], usize), WastParseError> {
+///
+/// `pub(crate)`, not private: `script.rs`'s `parse_const_value` reuses this
+/// directly for `assert_return`/`invoke`'s own `(v128.const ...)` argument/
+/// expected-value syntax (SIMD PR1b-3) -- same grammar, no reason to
+/// duplicate the shape/lane-width table there.
+pub(crate) fn parse_v128_const(operands: &[SExpr], pos: usize) -> Result<([u8; 16], usize), WastParseError> {
     let (shape, shape_pos) = literal_text(operands.first(), pos)?;
     let lane_count: usize = match shape.as_str() {
         "i8x16" => 16,

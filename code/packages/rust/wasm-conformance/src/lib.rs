@@ -53,7 +53,7 @@ use report::{DirectiveKind, DirectiveOutcome};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
-use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, WasmValue};
+use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError, V128Bytes, WasmValue};
 use wasm_module_parser::WasmModuleParser;
 use wasm_runtime::{WasmInstance, WasmRuntime};
 use wasm_types::{ExternalKind, FuncType, GlobalType};
@@ -289,7 +289,7 @@ impl Executor {
             },
 
             Directive::AssertReturn { action, expected } => match self.run_action(&action) {
-                Ok(results) => {
+                Ok((results, v128_bytes)) => {
                     if results.len() != expected.len() {
                         DirectiveOutcome::Fail(format!(
                             "expected {} result(s), got {}",
@@ -297,9 +297,14 @@ impl Executor {
                             results.len()
                         ))
                     } else {
-                        match results.iter().zip(expected.iter()).find(|(r, e)| !value_matches_expected(r, e)) {
+                        let mismatch = results
+                            .iter()
+                            .zip(v128_bytes.iter())
+                            .zip(expected.iter())
+                            .find(|((r, vb), e)| !value_matches_expected(r, **vb, e));
+                        match mismatch {
                             None => DirectiveOutcome::Pass,
-                            Some((r, e)) => DirectiveOutcome::Fail(format!("expected {e:?}, got {r:?}")),
+                            Some(((r, _), e)) => DirectiveOutcome::Fail(format!("expected {e:?}, got {r:?}")),
                         }
                     }
                 }
@@ -412,7 +417,15 @@ impl Executor {
         }
     }
 
-    fn run_action(&mut self, action: &Action) -> Result<Vec<WasmValue>, ActionError> {
+    /// Returns each result `WasmValue` alongside its resolved v128 bytes
+    /// (`Some` only for a `WasmValue::V128` result -- see
+    /// `wasm_execution::V128Bytes`'s own doc comment for why a bare
+    /// post-call `V128` handle can't be compared directly: the engine
+    /// that produced it, and the heap the handle indexes into, are both
+    /// gone by the time this function returns). `Action::Get` (a global
+    /// read, not a call) never produces resolved v128 bytes -- see this
+    /// method's own note on that arm.
+    fn run_action(&mut self, action: &Action) -> Result<(Vec<WasmValue>, Vec<Option<V128Bytes>>), ActionError> {
         match action {
             Action::Invoke { module, name, args } => {
                 let key = module.clone();
@@ -430,9 +443,19 @@ impl Executor {
                     .cloned()
                     .ok_or_else(|| ActionError::Trap(format!("no module registered as {key:?}")))?;
                 let mut instance = instance_rc.borrow_mut();
-                let wasm_args: Vec<WasmValue> = args.iter().map(const_value_to_wasm_value).collect();
+                let mut wasm_args = Vec::with_capacity(args.len());
+                for a in args {
+                    wasm_args.push(const_value_to_wasm_value(a).ok_or_else(|| {
+                        ActionError::NotYetSupported(
+                            "a v128 invoke ARGUMENT is not yet supported (real capability gap, not a bug): \
+                             no live wasm-execution heap exists before the call to allocate its handle into, \
+                             see V128Bytes's own doc comment for why only RESULTS can be resolved this way"
+                                .to_string(),
+                        )
+                    })?);
+                }
                 self.runtime
-                    .call_typed(&mut instance, name, &wasm_args)
+                    .call_typed_with_v128(&mut instance, name, &wasm_args)
                     .map_err(|e: TrapError| ActionError::Trap(e.to_string()))
             }
             Action::Get { module, name } => {
@@ -456,7 +479,17 @@ impl Executor {
                     .iter()
                     .find(|(n, kind, _)| n == name && *kind == ExternalKind::Global)
                     .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).copied())
-                    .map(|v| vec![v])
+                    // A global read is not a call -- there's no engine `ctx`/
+                    // `v128_heap` involved at all, so a `WasmValue::V128`
+                    // global's handle can't be resolved here either way.
+                    // No vendored fixture currently reads a v128-typed
+                    // global, so this doesn't silently mis-grade anything
+                    // today; a real v128 global read would need its own
+                    // follow-up (globals persist in `instance.globals`
+                    // across calls, but the `v128_heap` slot a stored handle
+                    // pointed to does NOT survive past the call that wrote
+                    // it -- a separate, deeper gap from this PR's scope).
+                    .map(|v| (vec![v], vec![None]))
                     .ok_or_else(|| ActionError::Trap(format!("no global export named {name:?}")))
             }
         }
@@ -468,16 +501,22 @@ enum ActionError {
     NotYetSupported(String),
 }
 
-fn const_value_to_wasm_value(c: &ConstValue) -> WasmValue {
+/// `None` only for `ConstValue::V128` -- see this function's one caller
+/// (`run_action`'s `Action::Invoke` arm) for why a v128 invoke ARGUMENT
+/// can't be represented as a real `WasmValue::V128` handle at all: no
+/// engine/heap exists yet at the point arguments are being built, before
+/// the call that would own one even starts.
+fn const_value_to_wasm_value(c: &ConstValue) -> Option<WasmValue> {
     match *c {
-        ConstValue::I32(v) => WasmValue::I32(v),
-        ConstValue::I64(v) => WasmValue::I64(v),
-        ConstValue::F32Bits(bits) => WasmValue::F32(f32::from_bits(bits)),
-        ConstValue::F64Bits(bits) => WasmValue::F64(f64::from_bits(bits)),
+        ConstValue::I32(v) => Some(WasmValue::I32(v)),
+        ConstValue::I64(v) => Some(WasmValue::I64(v)),
+        ConstValue::F32Bits(bits) => Some(WasmValue::F32(f32::from_bits(bits))),
+        ConstValue::F64Bits(bits) => Some(WasmValue::F64(f64::from_bits(bits))),
         // WASM17: `(ref.null func/extern)` -> Ref(None); `(ref.extern n)`
         // -> Ref(Some(n)). Falls out for free since `WasmValue::Ref` already
         // wraps the identical `Option<u32>` shape `ConstValue::Ref` does.
-        ConstValue::Ref(v) => WasmValue::Ref(v),
+        ConstValue::Ref(v) => Some(WasmValue::Ref(v)),
+        ConstValue::V128(_) => None,
     }
 }
 
@@ -523,12 +562,24 @@ const F64_CANONICAL_NAN_UNSIGNED: u64 = 0x7FF8_0000_0000_0000;
 const F64_SIGN_BIT: u64 = 0x8000_0000_0000_0000;
 const F64_QUIET_BIT: u64 = 0x0008_0000_0000_0000;
 
-fn value_matches_expected(actual: &WasmValue, expected: &Expected) -> bool {
+fn value_matches_expected(actual: &WasmValue, v128_bytes: Option<V128Bytes>, expected: &Expected) -> bool {
     match expected {
         Expected::Value(ConstValue::I32(v)) => matches!(actual, WasmValue::I32(a) if a == v),
         Expected::Value(ConstValue::I64(v)) => matches!(actual, WasmValue::I64(a) if a == v),
         Expected::Value(ConstValue::F32Bits(bits)) => matches!(actual, WasmValue::F32(a) if a.to_bits() == *bits),
         Expected::Value(ConstValue::F64Bits(bits)) => matches!(actual, WasmValue::F64(a) if a.to_bits() == *bits),
+        // SIMD PR1b-3: byte-exact v128 comparison. `actual` must actually
+        // be a `WasmValue::V128` AND its resolved bytes (threaded through
+        // from `run_action`'s `call_typed_with_v128`) must equal the
+        // expected literal exactly -- both checks matter: `v128_bytes`
+        // alone can't distinguish "this result wasn't a v128 at all" from
+        // "it was, and happened to resolve to bytes that don't match" (the
+        // former should never occur for a real vendored fixture, but a
+        // defensive check here costs nothing and documents the invariant
+        // `call_function_impl`'s resolution logic guarantees).
+        Expected::Value(ConstValue::V128(expected_bytes)) => {
+            matches!(actual, WasmValue::V128(_)) && v128_bytes == Some(V128Bytes(*expected_bytes))
+        }
         // WASM17: exact `(ref.null func/extern)` (None) / `(ref.extern n)`
         // (Some(n)) -- compares the *handle number*, not host-object
         // identity, matching this repo's own script-literal design (no
@@ -659,18 +710,129 @@ mod tests {
         assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
     }
 
+    // ── SIMD PR1b-3: v128 byte-exact assert_return grading ──────────────
+    //
+    // These are hand-written, not vendored -- every real root-level
+    // `simd_*.wast` file (`simd_const.wast`/`simd_splat.wast`/
+    // `simd_i32x4_arith.wast`/`simd_i32x4_cmp.wast`, all checked against
+    // the pinned corpus commit) exercises SIMD opcodes well beyond this
+    // repo's current 5-opcode slice (`v128.const`/`i32x4.splat`/`add`/
+    // `eq`/`extract_lane`) -- e.g. `simd_const.wast`'s sole
+    // `i64x2.add` use (its "i64x2.inc_smin" test) or `simd_splat.wast`'s
+    // `i8x16.add`/`f32x4.min`/`v128.and`/`v128.load`/etc. And because this
+    // crate's `Directive::Module` is built EAGERLY at `parse_script` time
+    // (see this file's own module doc comment on why), even one
+    // unsupported instruction ANYWHERE in a file -- not just in a directive
+    // that would actually run -- aborts parsing the WHOLE FILE, not just
+    // that one test. So no real corpus file can be vendored yet without
+    // either widening opcode coverage first or making per-module build
+    // failures degrade gracefully (a real, separate follow-up either way
+    // -- see the SIMD PR1b-3 CHANGELOG entry and the backlog items logged
+    // alongside it). These tests instead prove the comparison MACHINERY
+    // itself is correct, restricted to opcodes this slice really executes.
+
+    #[test]
+    fn assert_return_v128_const_passes_on_exact_byte_match_and_fails_on_mismatch() {
+        let results = outcomes(
+            r#"
+            (module (func (export "f") (result v128) (v128.const i32x4 1 2 3 4)))
+            (assert_return (invoke "f") (v128.const i32x4 1 2 3 4))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+
+        let results = outcomes(
+            r#"
+            (module (func (export "f") (result v128) (v128.const i32x4 1 2 3 4)))
+            (assert_return (invoke "f") (v128.const i32x4 1 2 3 5))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    #[test]
+    fn assert_return_v128_grades_the_actual_computation_not_just_any_v128() {
+        // If grading only checked "is this a V128 result", a WRONG
+        // computed sum would wrongly pass -- this proves the resolved
+        // BYTES are what's actually compared, mirroring the same
+        // load-bearing check `wasm-execution`'s own SIMD PR1b-1 tests make
+        // one layer down.
+        let results = outcomes(
+            r#"
+            (module (func (export "add") (result v128)
+              (i32x4.add (v128.const i32x4 1 2 3 4) (v128.const i32x4 10 20 30 40))))
+            (assert_return (invoke "add") (v128.const i32x4 11 22 33 44))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+
+        let results = outcomes(
+            r#"
+            (module (func (export "add") (result v128)
+              (i32x4.add (v128.const i32x4 1 2 3 4) (v128.const i32x4 10 20 30 40))))
+            (assert_return (invoke "add") (v128.const i32x4 999 22 33 44))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
+    }
+
+    #[test]
+    fn assert_return_v128_eq_boolean_mask_result_is_itself_a_v128() {
+        // The SIMD comparison convention: `i32x4.eq`'s result is an
+        // all-1s/-1 (equal) or all-0s (not-equal) per-lane MASK, still a
+        // v128 -- not a plain i32 `1`/`0` the way scalar comparisons work.
+        let results = outcomes(
+            r#"
+            (module (func (export "eq") (result v128)
+              (i32x4.eq (v128.const i32x4 5 6 7 8) (v128.const i32x4 5 0 7 0))))
+            (assert_return (invoke "eq") (v128.const i32x4 -1 0 -1 0))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn assert_return_i32x4_splat_and_extract_lane_round_trip() {
+        let results = outcomes(
+            r#"
+            (module (func (export "roundtrip") (param i32) (result i32)
+              (i32x4.extract_lane 2 (i32x4.splat (local.get 0)))))
+            (assert_return (invoke "roundtrip" (i32.const 42)) (i32.const 42))
+            "#,
+        );
+        assert_eq!(results[1], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn invoke_with_a_v128_argument_grades_not_yet_supported_not_a_silent_wrong_pass() {
+        // No live wasm-execution heap exists before a call starts, so a
+        // `(v128.const ...)` invoke ARGUMENT can't be turned into a real
+        // handle (unlike a v128 RESULT, resolved after the call via
+        // `call_typed_with_v128`) -- this must degrade loudly
+        // (`NotYetSupported`), never silently substitute the zero vector
+        // and risk a false pass/fail for the wrong reason.
+        let results = outcomes(
+            r#"
+            (module (func (export "add") (param v128 v128) (result v128) (i32x4.add (local.get 0) (local.get 1))))
+            (assert_return (invoke "add" (v128.const i32x4 1 2 3 4) (v128.const i32x4 10 20 30 40)) (v128.const i32x4 11 22 33 44))
+            "#,
+        );
+        assert!(matches!(results[1].1, DirectiveOutcome::NotYetSupported(_)), "{:?}", results[1]);
+    }
+
     #[test]
     fn assert_return_nan_canonical_accepts_either_sign_exact_payload() {
-        assert!(value_matches_expected(&WasmValue::F32(f32::from_bits(0x7FC0_0000)), &Expected::NanCanonicalF32));
-        assert!(value_matches_expected(&WasmValue::F32(f32::from_bits(0xFFC0_0000)), &Expected::NanCanonicalF32));
-        assert!(!value_matches_expected(&WasmValue::F32(f32::from_bits(0x7FC0_0001)), &Expected::NanCanonicalF32));
+        assert!(value_matches_expected(&WasmValue::F32(f32::from_bits(0x7FC0_0000)), None, &Expected::NanCanonicalF32));
+        assert!(value_matches_expected(&WasmValue::F32(f32::from_bits(0xFFC0_0000)), None, &Expected::NanCanonicalF32));
+        assert!(!value_matches_expected(&WasmValue::F32(f32::from_bits(0x7FC0_0001)), None, &Expected::NanCanonicalF32));
     }
 
     #[test]
     fn assert_return_nan_arithmetic_accepts_any_payload_with_quiet_bit() {
-        assert!(value_matches_expected(&WasmValue::F64(f64::from_bits(0x7FF8_0000_0000_002A)), &Expected::NanArithmeticF64));
+        assert!(value_matches_expected(&WasmValue::F64(f64::from_bits(0x7FF8_0000_0000_002A)), None, &Expected::NanArithmeticF64));
         assert!(!value_matches_expected(
             &WasmValue::F64(f64::from_bits(0x7FF0_0000_0000_002A)), // quiet bit clear
+            None,
             &Expected::NanArithmeticF64
         ));
     }

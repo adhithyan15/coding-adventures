@@ -61,6 +61,12 @@ pub enum ConstValue {
     /// only appear as `assert_return` expectations, never as an exact
     /// argument or result, so they live in [`Expected`] instead.
     Ref(Option<u32>),
+    /// A `v128.const` literal's raw 16 bytes (SIMD PR1b-3), already packed
+    /// by [`crate::module::parse_v128_const`] regardless of which of the 6
+    /// text shapes (`i8x16`/.../`f64x2`) wrote them — grading compares
+    /// these bytes exactly, there's no shape tag to preserve since the
+    /// runtime value itself (`wasm_execution::V128Bytes`) has none either.
+    V128([u8; 16]),
 }
 
 /// One expected result slot in `assert_return` — either an exact value, or
@@ -251,6 +257,15 @@ fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
         "i64.const" => Ok(ConstValue::I64(parse_i64(lit, pos)?)),
         "f32.const" => Ok(ConstValue::F32Bits(parse_f32_bits(lit, pos)?)),
         "f64.const" => Ok(ConstValue::F64Bits(parse_f64_bits(lit, pos)?)),
+        // `(v128.const <shape> <lane0> ... <laneN-1>)` (SIMD PR1b-3) --
+        // reuses `wasm-wast-parser`'s own instruction-syntax literal
+        // parser directly (`items[1..]` is exactly the `<shape> <lanes...>`
+        // operand list `parse_v128_const` expects), so all 6 shapes are
+        // supported here for free, same as in real instruction bodies.
+        "v128.const" => {
+            let (bytes, _consumed) = crate::module::parse_v128_const(&items[1..], pos)?;
+            Ok(ConstValue::V128(bytes))
+        }
         // `(ref.null func)` / `(ref.null extern)` (WASM17) -- an EXACT null
         // literal. The bare, heap-type-less `(ref.null)` wildcard never
         // reaches this function; `parse_expected` intercepts it first (see
@@ -534,6 +549,29 @@ mod tests {
     }
 
     // ── WASM17: ref.null / ref.func / ref.extern script literals ────────────
+
+    #[test]
+    fn v128_const_literal_as_assert_return_expected_value() {
+        // The real corpus's own shape (e.g. simd_splat.wast): `(assert_return
+        // (invoke "i8x16.splat" (i32.const 5)) (v128.const i8x16 5 5 ... 5))`.
+        // Reuses `wasm-wast-parser`'s own instruction-syntax literal parser
+        // (SIMD PR1b-3) -- all 6 shapes work here for free, same as in a
+        // real instruction body.
+        let dirs = parse_script(
+            r#"(assert_return (invoke "f" (i32.const 5)) (v128.const i32x4 5 5 5 5))"#,
+        )
+        .unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                let mut want = [0u8; 16];
+                for lane in 0..4 {
+                    want[lane * 4..lane * 4 + 4].copy_from_slice(&5i32.to_le_bytes());
+                }
+                assert_eq!(*expected, vec![Expected::Value(ConstValue::V128(want))]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
 
     #[test]
     fn ref_extern_literal_as_invoke_arg_and_exact_expected_value() {

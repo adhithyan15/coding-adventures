@@ -1,5 +1,15 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.12 — 2026-08-15 — ConstValue::V128 for assert_return/invoke (SIMD PR1b-3)
+
+### Added
+
+- `script::ConstValue::V128([u8; 16])` and `parse_const_value`'s new
+  `"v128.const"` arm, so `assert_return`/`invoke`'s own `(v128.const
+  ...)` literal syntax parses -- reuses `module::parse_v128_const`
+  directly (now `pub(crate)`, not private) rather than duplicating the
+  shape/lane-width table.
+
 ## 0.1.11 — 2026-08-15 — v128.const + first-slice SIMD opcodes (SIMD PR1b-2)
 
 ### Added
