@@ -2695,7 +2695,7 @@
     "const.wast": "at byte 13634: invalid numeric literal \"nan:0x7f_ffff\"",
     "float_exprs.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
     "float_memory.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
-    "global.wast": "at byte 17077: expected a value type, found \"$g0\"",
+    "global.wast": "at byte 17335: expected an index, found \"funcref\"",
     "id.wast": "at byte 222: duplicate func identifier \"$\"",
     "memory.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
     "memory_grow.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
