@@ -1,8 +1,13 @@
-# HL14 — The vocabulary ramp: one new word per lesson
+# HL14 — The teaching ramp: one new thing per lesson
 
 **Status:** specification, 2026-08-15
 **Rule (owner, 2026-08-15):** *"One new word per lesson but n number of existing
 words can be re-emphasized and used?"*
+**Generalised (owner, same day):** *"You can even generalize it to teach one new
+concept or thing per lesson. For example, every letter in Tamil, Telugu, Kannada,
+Malayalam, Hindi/Sanskrit should be in one lesson. And then in the future, you
+can combine two letters to make a word like 'Aam' in Tamil to indicate yes for
+example. That can be a lesson on its own."*
 **Scale accepted (owner, same day):** *"That is totally fine with me. Again, not
 worried about lesson counts. Just worried about a very gentle ramp."*
 
@@ -10,11 +15,47 @@ worried about lesson counts. Just worried about a very gentle ramp."*
 
 ## 1. The rule
 
-> **A lesson introduces exactly ONE new lexical item.**
-> **It may reuse any number of items already taught, and should.**
+> **A lesson introduces exactly ONE new thing.**
+> **It may reuse any number of things already taught, and should.**
 
 The cap is on what is **new**. Reuse is free, unlimited, and encouraged — it is
 the mechanism by which the ramp stays gentle without the corpus staying small.
+
+**A "thing" is any of these, and each gets its own lesson:**
+
+| kind | example | already true? |
+|---|---|---|
+| a **word** | *quizás* | no — 400 lessons teach several (§4) |
+| a **letter** | Tamil **ஆ** | **yes** — the drizzle already runs one letter per segment |
+| a **composition** | **ஆ + ம் → ஆம்**, "yes" | **NO — this lesson kind does not exist** |
+| a **grammar point** | the `-ción` ending | broadly yes |
+
+### 1.1 The composition lesson, which is missing
+
+Tamil teaches **ஆம்** ("yes") in **chapter 1**, as a sound with a romanization —
+correctly, because the book must be useful from page one and the reader has no
+letters yet (HL11 §1). The letters **ஆ** and **ம்** arrive later, drizzled in one
+per segment.
+
+**Nothing joins them.** No lesson says: *the word you have been saying since
+chapter 1 is written like this, and it is built from the two letters you now
+know.* The `type` vocabulary confirms the gap — `word`, `phrase`, `writing`,
+`grammar`, `etymology`… there is no `composition`.
+
+That join is **the payoff of the entire drizzle**. It is the moment a reader stops
+recognising letters and starts *decoding a word they already own*, and it is
+currently left for them to notice on their own.
+
+So it becomes a first-class lesson kind:
+
+    type: composition
+    headword: "ஆம்"
+    builds_from: [TA-S1xx-letter-aa, TA-S1xx-letter-m]
+    teaches: the word from chapter 1, now readable
+
+**One composition per lesson**, like everything else. A three-letter word is a
+composition lesson that reuses an earlier two-letter one — which is exactly the
+reuse the rule encourages.
 
 Two corollaries follow immediately, and both were previously open questions:
 
@@ -39,6 +80,11 @@ were sized to close a node rather than to carry vocabulary. HL-C183 records that
 failure; this spec is the rule that prevents its recurrence.
 
 ## 3. What the rule settles
+
+**The script ramp and the vocabulary ramp become the same rule.** They were
+designed separately — HL11 drizzles letters, this spec paces words — and under
+the generalisation they are one thing counted the same way. A track's progress is
+the number of *things* it has taught, whether those are letters, words or joins.
 
 **Counting becomes unambiguous.** Before the rule, Spanish's vocabulary was
 211 (headwords), ~285 (lexical items) or 361 (whitespace tokens) — a ±35% band,
@@ -107,17 +153,24 @@ someone can sit a C2 paper is a person sitting one.
 ## 7. Order of work
 
 1. This spec (specs before implementation, per CLAUDE.md §8).
-2. Split the 400 multi-item lessons, per track, reviewed — Spanish first.
-3. **Re-measure everything**: vocabulary per track, R1, the atom budget. The
+2. **Add the `composition` lesson kind** and author the first one per Indic track:
+   the earliest word whose letters are all taught. Tamil's **ஆம்** is the
+   reference case. This is the highest-value item in the list — it converts a
+   drizzle that currently ends in "you know 24 letters" into one that ends in
+   "you can read the word you learned first".
+3. Split the 400 multi-item lessons, per track, reviewed — Spanish first.
+4. **Re-measure everything**: vocabulary per track, R1, the atom budget. The
    211/300 figure will move, and HL-C167 may resolve itself.
-4. Author against the remaining deficit, one new word at a time, alternating
+5. Author against the remaining deficit, one new thing at a time, alternating
    Spanish with the Indic six so no track is left to rot.
 
 ## 8. Provenance
 
 | claim | source |
 |---|---|
-| the rule, and the accepted scale | owner, 2026-08-15, quoted in the header |
+| the rule, its generalisation, and the accepted scale | owner, 2026-08-15, quoted in the header |
+| ஆம் taught at Tamil chapter 1 as sound-only | `tamil/lessons/TA-C01-aam.md` |
+| no `composition` lesson kind exists | `type` census across all 22 tracks, same date |
 | 1,407 / 400 / +718 migration figures | corpus scan, same date, backlog HL-C186 |
 | Spanish 211 words vs a 300-word pre-A1 floor | `report --format text`, backlog HL-C183 |
 | 16,000-word C2 target | `LEVEL_VOCABULARY`, `level-gate.ts:42` |
