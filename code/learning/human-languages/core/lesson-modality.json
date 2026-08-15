@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:515ca64df7a90d52",
+  "sourceHash": "fnv1a64:d5724ce8e2ea9f87",
   "summary": {
-    "totalLessons": 2322,
-    "voice": 1548,
+    "totalLessons": 2330,
+    "voice": 1556,
     "sight": 572,
     "pen": 202,
-    "drivableLessons": 1548,
+    "drivableLessons": 1556,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 799,
-    "drivablePrefixTotal": 1338,
-    "fullyDrivableChapters": 495,
+    "chapterCount": 801,
+    "drivablePrefixTotal": 1346,
+    "fullyDrivableChapters": 497,
     "unstartableChapters": 181,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7117,12 +7117,12 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 118,
-      "voice": 67,
+      "lessonCount": 122,
+      "voice": 71,
       "sight": 37,
       "pen": 14,
-      "drivablePercent": 57,
-      "drivablePrefixTotal": 55,
+      "drivablePercent": 58,
+      "drivablePrefixTotal": 59,
       "modalities": [
         "voice",
         "sight",
@@ -7506,6 +7506,25 @@
             "SA-C21-laugh",
             "SA-C21-stand",
             "SA-C21-remember"
+          ]
+        },
+        {
+          "chapter": 22,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C22-hear",
+            "SA-C22-lead",
+            "SA-C22-play",
+            "SA-C22-burn"
           ]
         }
       ]
@@ -12052,12 +12071,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 169,
-      "voice": 89,
+      "lessonCount": 173,
+      "voice": 93,
       "sight": 32,
       "pen": 48,
-      "drivablePercent": 53,
-      "drivablePrefixTotal": 73,
+      "drivablePercent": 54,
+      "drivablePrefixTotal": 77,
       "modalities": [
         "voice",
         "sight",
@@ -12795,6 +12814,25 @@
             "TA-C41-new",
             "TA-C41-old",
             "TA-C41-adjective-system"
+          ]
+        },
+        {
+          "chapter": 42,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C42-come",
+            "TA-C42-sit",
+            "TA-C42-read",
+            "TA-C42-give"
           ]
         }
       ]
@@ -42656,6 +42694,78 @@
       "sourceHash": "fnv1a64:f37f90e494073567"
     },
     {
+      "id": "SA-C22-hear",
+      "language": "sanskrit",
+      "chapter": 22,
+      "sequence": 1050,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dfed29fa095ab13d"
+    },
+    {
+      "id": "SA-C22-lead",
+      "language": "sanskrit",
+      "chapter": 22,
+      "sequence": 1060,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9f1aeb37b6b70fbc"
+    },
+    {
+      "id": "SA-C22-play",
+      "language": "sanskrit",
+      "chapter": 22,
+      "sequence": 1070,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c1d5364a9d5b56ab"
+    },
+    {
+      "id": "SA-C22-burn",
+      "language": "sanskrit",
+      "chapter": 22,
+      "sequence": 1080,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:81066cdb59c0fca8"
+    },
+    {
       "id": "ES-C01-hola",
       "language": "spanish",
       "chapter": 1,
@@ -54461,6 +54571,78 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:f8ba52ec7ed7337c"
+    },
+    {
+      "id": "TA-C42-come",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bd59009caae535c7"
+    },
+    {
+      "id": "TA-C42-sit",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:07f019b07767cc89"
+    },
+    {
+      "id": "TA-C42-read",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a0c940d4cd8afbc8"
+    },
+    {
+      "id": "TA-C42-give",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:00474ac7e02b6ef0"
     },
     {
       "id": "TE-C01-namaskaram",
