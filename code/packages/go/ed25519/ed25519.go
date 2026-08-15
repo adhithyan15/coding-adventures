@@ -43,7 +43,7 @@ package ed25519
 import (
 	"math/big"
 
-	sha512 "github.com/example/coding-adventures/code/packages/go/sha512"
+	sha512 "github.com/adhithyan15/coding-adventures/code/packages/go/sha512"
 )
 
 // ═══════════════════════════════════════════════════════════════════════════════

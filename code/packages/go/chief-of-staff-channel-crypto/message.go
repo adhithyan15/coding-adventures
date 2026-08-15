@@ -1,4 +1,4 @@
-// Package channelcrypto implements the portable D18F encrypted-message profile.
+// Package channelcrypto implements portable D18F messages and D18Q key grants.
 package channelcrypto
 
 import (

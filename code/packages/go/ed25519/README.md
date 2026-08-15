@@ -22,7 +22,7 @@ ok := ed25519.Verify([]byte("hello"), signature, publicKey)
 
 ## Dependencies
 
-- `github.com/example/coding-adventures/code/packages/go/sha512` — our from-scratch SHA-512
+- `github.com/adhithyan15/coding-adventures/code/packages/go/sha512` — our from-scratch SHA-512
 
 ## How It Fits
 
