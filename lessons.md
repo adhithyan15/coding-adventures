@@ -3970,3 +3970,97 @@ Two things made this an acceptable ship, not a deferred vulnerability:
    future security audit) reading "not fully TOCTOU-proof" alone has to
    re-derive this; reading it inline saves that re-derivation and makes the
    accepted-risk decision auditable instead of just asserted.
+
+**Correction, one CI round later:** point 2's premise — "already validated,
+no absolute paths" — was itself broken on Windows by the SAME `Path.is_absolute()`
+platform-dependence bug documented two lessons up, just in a fourth location
+this time: `_validated_output_relative_path()` used `Path(class_filename).is_absolute()`
+to reject `class_name=".Escape"` → `class_filename="/Escape.class"`. That
+check passes (correctly rejects) on POSIX and silently **passed the file
+through unrejected on Windows** (`PureWindowsPath("/Escape.class").is_absolute()`
+is `False` — no drive/UNC prefix). `class_filename` is always POSIX-separated
+(built via `class_name.replace(".", "/")`, see `JVMClassArtifact.class_filename`),
+so the fix is the same pattern as the Rust cases: check `class_filename.startswith("/")`
+directly instead of asking the platform-native `Path` what it thinks
+"absolute" means. **The generalized lesson from three lessons up undersold its
+own stakes**: this wasn't just "pick the right fix for the code's intent" in
+the abstract — a stale platform-dependent validator can invalidate a security
+argument that was written assuming the validator worked. When accepting a
+residual risk *because* an earlier check already narrows the threat model,
+verify that check cross-platform before relying on it, not just on the
+platform you happen to be testing on.
+
+**Second correction, before push this time (security review, not CI):** the
+`class_filename.startswith("/")` fix above was itself an incomplete swap, not
+a complete one — it closed the reported gap (POSIX-style `/...` under-rejected
+on Windows) but reopened a *different* one the original `Path.is_absolute()`
+had actually caught when the validator happened to run in Windows CI:
+`class_name` is adversarial, unrestricted, attacker-supplied input (the test
+suite constructs it deliberately), so nothing stops it from containing `:`
+or `\` — neither of which `.replace(".", "/")` touches. `startswith("/")`
+alone does not reject `"C:\\evil.class"`, `"C:/evil.class"`, or
+`"\\\\server\\share\\evil.class"` on ANY host platform (not just Windows —
+these were never rejected when the validator ran on POSIX either, since
+POSIX's native `Path.is_absolute()` doesn't recognize Windows drive/UNC
+syntax at all; the original code only caught them by accident, when the
+validator happened to execute on an actual Windows host). **Correct fix:**
+check both conventions explicitly and platform-independently — `PurePosixPath(x).is_absolute()
+or PureWindowsPath(x).is_absolute()` — plus reject any `":"` outright to catch
+drive-relative paths (`"C:evil.class"`, absolute under neither convention,
+also never caught by the original code). `PurePosixPath`/`PureWindowsPath`
+(unlike bare `Path`) are always available and always mean the same thing
+regardless of host OS — exactly the tool this whole bug class was missing.
+**Lesson: when a security check depends on "is this path absolute," check
+it means "absolute under every convention the input could plausibly use,"
+not "absolute under the one convention this function's `Path` happens to
+resolve to on whichever host runs it."** A narrow platform-specific patch for
+a reported failure is exactly the moment to ask what the *general* property
+being checked for is, not just what makes the one failing test pass.
+
+## A quoted `set "VAR=value" && command` in `BUILD_windows` can silently fail to set the variable — and the failure is invisible unless something downstream crashes
+
+`chief-of-staff-smart-home-tools`' `BUILD_windows` used
+`set "RUST_MIN_STACK=33554432" && cargo test -p ... && cargo clippy ...` (the
+form the existing Windows env-var lesson, line 35, recommends for defensive
+quoting). CI still overflowed the stack at the exact same test, with the exact
+same crash, as before the fix was written. Direct evidence the variable was
+never applied: grepping the full job log for the literal string
+`RUST_MIN_STACK` — anywhere in the log, not just this package's section —
+returned zero matches, and cargo doesn't otherwise announce which env vars a
+subprocess inherited.
+
+**Suspected mechanism** (not independently confirmed on a real Windows box,
+but consistent with every observed symptom): the build tool's Go executor
+(`code/programs/go/build-tool/internal/executor/executor.go`) runs
+`exec.Command("cmd", "/C", command)` — the ENTIRE `BUILD_windows` line as one
+argument. Because that line contains spaces, Go's own Windows argument-escaping
+wraps it in an outer pair of `"..."` and backslash-escapes any quotes already
+inside it (standard CRT-argv escaping rules) before handing it to `CreateProcess`.
+`cmd.exe`'s `/C` parsing has its own, different, long-documented quirk: when
+the string after `/C` starts with a `"`, cmd applies special stripping logic
+and does NOT understand `\"` as an escaped quote the way CRT argv parsing
+does. The net effect: the literal backslash-quote sequences Go inserted around
+`"RUST_MIN_STACK=33554432"` can survive into the variable name/value `set`
+actually parses, silently setting a garbage-named variable instead of
+`RUST_MIN_STACK` — no error, no warning, just a `set` that ran and did
+something other than what the line says.
+
+**Fix:** drop the quotes when the value has no spaces or shell metacharacters
+that need protecting — `set RUST_MIN_STACK=33554432 && cargo test ...` — which
+sidesteps the whole Go-escaping/cmd-`/C`-quirk interaction rather than
+depending on it working correctly. The existing "defensive quoting" lesson
+(line 35) is not wrong for values that DO contain `&|()`/`%CD%`/spaces — where
+quoting is genuinely necessary and presumably already proven by the Lua/Perl
+`BUILD_windows` files that use it for such values — but it's an unnecessary
+risk for a value that doesn't need it, and this PR shipped one real,
+CI-confirmed case of the quoted form silently failing.
+
+**Generalized lesson:** an env-var-setting line in `BUILD_windows` that "did
+nothing" fails silently — there's no error, just whatever downstream default
+behavior kicks in. If a fix that sets an env var to work around a platform
+failure doesn't change the failure at all on the next CI run, suspect the
+`set` line itself before re-deriving the original bug's root cause a second
+time. Grep the job log for the variable name as a first, cheap diagnostic —
+its total absence from the log (build tools rarely echo inherited env) doesn't
+prove failure by itself, but combined with an unchanged crash, it's strong
+evidence the assignment never reached the process that needed it.
