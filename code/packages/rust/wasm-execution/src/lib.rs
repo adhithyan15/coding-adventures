@@ -5093,6 +5093,19 @@ impl WasmExecutionEngine {
         // the dedicated thread could fail to produce a normal result.
         self.globals = ctx.globals;
         self.host_functions = ctx.host_functions;
+        // Cloned here (NOT moved), unconditionally alongside globals/
+        // host_functions above -- security review (task #79): a version
+        // of this that only wrote back AFTER the `outcome` trap-check
+        // below (see `final_result_count`) silently lost any `v128.const`
+        // growth from a call that trapped, the exact class of bug
+        // `wasm-runtime::call_engine`'s own doc comment already warns
+        // about for memory/tables ("skip this restoration on any trap ...
+        // masking whatever the test was actually checking"). Cloning
+        // (rather than moving) here is required because the per-result
+        // `V128Bytes` resolution loop below still needs to BORROW
+        // `ctx.v128_heap` after this point -- moving it out now would be
+        // a use-after-move compile error.
+        self.v128_heap = ctx.v128_heap.clone();
         // gc_heap itself is not persisted (see its own doc comment above);
         // the counters are, so a caller can inspect this call's GC activity
         // via gc_live_object_count()/gc_profile() (W04).
@@ -5126,14 +5139,6 @@ impl WasmExecutionEngine {
         }
         results.reverse();
         v128_bytes.reverse();
-
-        // Write back LAST, after every read of `ctx.v128_heap` above (the
-        // per-result V128Bytes resolution) is done with it -- this moves
-        // it out of `ctx`, unlike the borrow those reads use. See
-        // code/specs/W15-wasm-v128-persistent-storage.md: unlike gc_heap,
-        // this DOES need to persist past the call, onto `self` and from
-        // there into `into_state()`/the owning `WasmInstance`.
-        self.v128_heap = ctx.v128_heap;
 
         Ok((results, v128_bytes))
     }
@@ -6960,6 +6965,35 @@ mod tests {
         let (results, v128_bytes) = engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(results.len(), 1);
         assert_eq!(v128_bytes[0], Some(V128Bytes(v128_const_bytes([11, 22, 33, 44]).try_into().unwrap())));
+    }
+
+    /// Security review regression (task #79): `self.v128_heap` must be
+    /// written back from `ctx.v128_heap` UNCONDITIONALLY, not only on a
+    /// successful call -- a call that pushes a new `v128.const` entry and
+    /// then traps must not silently lose that heap growth. Before this
+    /// fix, the write-back sat after the `outcome` trap-check (`?` on a
+    /// `TrapError` returns early, skipping it entirely), the exact class
+    /// of bug `wasm-runtime::call_engine`'s own doc comment already warns
+    /// about for memory/tables. Verified via `into_state()` after a
+    /// trapped call, since `WasmExecutionEngine` doesn't expose
+    /// `v128_heap` any other way.
+    #[test]
+    fn v128_heap_growth_survives_a_call_that_traps() {
+        let mut code = vec![0xFD, 0x0C]; // v128.const -- pushes handle 1
+        code.extend(v128_const_bytes([1, 2, 3, 4]));
+        code.push(0x1A); // drop (discard the v128 -- we only care about heap growth)
+        code.push(0x00); // unreachable -- traps
+        code.push(0x0B); // end (unreachable code, never executed)
+        let mut engine = simd_engine(code);
+        let result = engine.call_function(0, &[]);
+        assert!(result.is_err(), "unreachable must trap");
+        let state = engine.into_state();
+        assert_eq!(
+            state.v128_heap.len(),
+            2,
+            "the v128.const pushed before the trap must still be in the restored heap, not discarded"
+        );
+        assert_eq!(&state.v128_heap[1][..], v128_const_bytes([1, 2, 3, 4]).as_slice());
     }
 
     #[test]

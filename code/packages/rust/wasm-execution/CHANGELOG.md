@@ -28,11 +28,20 @@ All notable changes to this package will be documented in this file.
   companion `wasm-runtime` 0.6.1 release) now round-trips correctly
   instead of the handle going stale the moment one call ends.
 - `WasmEngineState` gains a `v128_heap` field, written back from
-  `WasmExecutionEngine::into_state()` -- AFTER, not alongside, the
-  existing per-result `V128Bytes` resolution loop in
-  `call_function_impl` (that loop still needs a live borrow of
-  `ctx.v128_heap`; moving it out earlier would have been a
-  use-after-move compile error).
+  `WasmExecutionEngine::into_state()`. `call_function_impl` clones
+  `ctx.v128_heap` into `self.v128_heap` UNCONDITIONALLY, alongside
+  `self.globals`/`self.host_functions`, before the trap-check that can
+  return early -- a clone rather than a move because the per-result
+  `V128Bytes` resolution loop later in the same function still needs a
+  live borrow of `ctx.v128_heap`. Security review (round 1) caught an
+  earlier version of this that wrote back only AFTER that resolution
+  loop, which is reachable only on the success path: a call that pushed
+  a new `v128.const` entry and then trapped silently lost that heap
+  growth -- the exact class of bug `wasm-runtime::call_engine`'s own
+  doc comment already warns about for memory/tables. New regression
+  test (`v128_heap_growth_survives_a_call_that_traps`,
+  TEMP-REVERT-CHECK confirmed load-bearing) proves heap growth from
+  before a trap is retained.
 
 See `code/specs/W15-wasm-v128-persistent-storage.md` for the full design
 and motivating corpus evidence.
