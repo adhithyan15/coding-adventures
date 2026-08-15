@@ -144,6 +144,16 @@ def patch_object(path, fields, tag, dry):
     text = open(path, encoding="utf-8").read()
     edits = []
     for key, (old, new) in fields.items():
+        # HL-C196: a field name can appear BOTH in a hand-built unit fixture and
+        # in the corpus pin -- `drivablePercent` does. Rewriting the fixture to the
+        # corpus value breaks the unit test, whose failure then flips the corpus pin
+        # back: 60 rounds, and 57 copies of the annotation on one line before the
+        # MAX_ROUNDS backstop caught it. A line that SAYS it is a fixture is never a
+        # corpus pin, so skip it and let the genuine pin be found elsewhere.
+        if re.search(r'%s: \d+.*(SYNTHETIC|FIXTURE|do not repin)' % re.escape(key),
+                     text, re.I):
+            edits.append('%s SKIPPED (fixture guard)' % key)
+            continue
         pattern = PIN_FIELD.format(key=re.escape(key), old=old)
         # A CALLABLE replacement: a tag containing \1 or \g<1> would otherwise be
         # interpreted as a backreference and splice captured text into the file.

@@ -84,6 +84,19 @@ The four failures also arrive in sequence rather than together, so fixing one an
 re-running looks like progress while three more wait — run `validate`, the suite,
 AND `book-cli` before believing a merge is resolved.
 
+## HL-C192 — family and people words, six Indic tracks (LANDED)
+
+Twenty-four lessons, four per track, one new word each. Two structural findings
+came out of it and are the reason the row is kept:
+
+* **A chapter-number reference is not a repinnable pin.** The gate reports STUCK
+  rather than offering a number, which is correct — HL-C102 says the fix is prose.
+* **Appending a chapter un-exempts the previous last lesson from R1.**
+  `continuity.ts` skips a window the track is too short to contain, so each
+  track's final atom was exempt; adding four lessons would have created six
+  silent new R1 misses. Chaining each new chapter's first lesson to the previous
+  chapter's last closed them, and R1 FELL instead of rising.
+
 ## HL-C191 — cross-script citations must be ROMANISED; each book loads only its own font
 
 A comparative note in a Telugu lesson cited Kannada's ನೋಡು in Kannada script.
