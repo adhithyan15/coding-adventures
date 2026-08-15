@@ -9,6 +9,30 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C188 — copy the SIBLING target's script mechanism; HL-C164 is not a corpus-wide law
+
+HL-C164 says a new generated chapter must declare `unicodeScript` and
+`scriptCommand`. Applied to a new **Hindi** chapter it produced `\dv{आना}` —
+**undefined control sequence, `latexmk exit=12`, and ZERO warnings in the log**,
+which reads identically to a clean build unless the exit code is checked.
+
+Hindi does not use that mechanism. Its sibling entries carry
+
+```json
+{ "language": "hindi", "chapter": 41, "scriptSet": "hindi-main" }
+```
+
+and its macro is `\hi`, not `\dv`. Kannada, Telugu, Malayalam and Sanskrit *do*
+use `unicodeScript`/`scriptCommand`, which is why four of five books built and
+only Hindi broke.
+
+**Rule:** before adding a book target, read the **immediately preceding entry for
+that same language** and match its shape. HL-C164 remains true for the tracks it
+was measured on. A remembered rule is not a substitute for looking at the
+neighbour — and this is the second time in two days that a rule generalised one
+track too far (see also HL-C185, where a remembered "23% classifier" turned out
+to be a field that did not exist).
+
 ## HL-C184 — THE COMPLETION PLAN: 22 tracks to C2, driven by vocabulary
 
 Measured 2026-08-14, once the report finally printed the right number:
