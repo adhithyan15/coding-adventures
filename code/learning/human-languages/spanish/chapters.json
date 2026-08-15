@@ -5287,6 +5287,26 @@
           "ES-SEMANTIC-HUMOR-CONVENTION"
         ]
       }
+    },
+    {
+      "chapter": 275,
+      "title": "Fine Shades --- Four Differences a Translation Loses",
+      "label": "ch:matices",
+      "canDo": "I can hear four Spanish distinctions that English translates identically, and say which of them no rule can teach me.",
+      "spineNodes": [
+        "SPINE-EXPRESS-FINE-SHADES"
+      ],
+      "payoff": {
+        "lesson": "ES-C275-practice",
+        "kind": "task",
+        "summary": "Complete ES-C275-practice: say each pair and what English does with the difference.",
+        "assesses": [
+          "ES-SEMANTIC-MODAL-EPISTEMIC",
+          "ES-SEMANTIC-COLLOCATION",
+          "ES-SEMANTIC-EMPHASIS",
+          "ES-SEMANTIC-CONNOTATION"
+        ]
+      }
     }
   ]
 }

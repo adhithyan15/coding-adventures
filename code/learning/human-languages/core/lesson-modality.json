@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:793c7c9cf1c686d5",
+  "sourceHash": "fnv1a64:e41d5039831a0afb",
   "summary": {
-    "totalLessons": 2289,
-    "voice": 1516,
+    "totalLessons": 2294,
+    "voice": 1521,
     "sight": 571,
     "pen": 202,
-    "drivableLessons": 1516,
+    "drivableLessons": 1521,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 791,
-    "drivablePrefixTotal": 1310,
-    "fullyDrivableChapters": 488,
+    "chapterCount": 792,
+    "drivablePrefixTotal": 1315,
+    "fullyDrivableChapters": 489,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7436,12 +7436,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 450,
-      "voice": 399,
+      "lessonCount": 455,
+      "voice": 404,
       "sight": 44,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 383,
+      "drivablePrefixTotal": 388,
       "modalities": [
         "voice",
         "sight",
@@ -11917,6 +11917,26 @@
             "ES-C274-pasar-a-mejor-vida",
             "ES-C274-tener-gracia",
             "ES-C274-practice"
+          ]
+        },
+        {
+          "chapter": 275,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C275-deber-de",
+            "ES-C275-cometer-un-error",
+            "ES-C275-si-que",
+            "ES-C275-delgado-flaco",
+            "ES-C275-practice"
           ]
         }
       ]
@@ -50346,6 +50366,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:c0d1abf4dd24e3d8"
+    },
+    {
+      "id": "ES-C275-deber-de",
+      "language": "spanish",
+      "chapter": 275,
+      "sequence": 2920,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2c06a778b467957e"
+    },
+    {
+      "id": "ES-C275-cometer-un-error",
+      "language": "spanish",
+      "chapter": 275,
+      "sequence": 2930,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3f440a73b21da936"
+    },
+    {
+      "id": "ES-C275-si-que",
+      "language": "spanish",
+      "chapter": 275,
+      "sequence": 2940,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e10abd492dc25c51"
+    },
+    {
+      "id": "ES-C275-delgado-flaco",
+      "language": "spanish",
+      "chapter": 275,
+      "sequence": 2950,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:40d35042b60a83e5"
+    },
+    {
+      "id": "ES-C275-practice",
+      "language": "spanish",
+      "chapter": 275,
+      "sequence": 2960,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a1577fbf54b4b94a"
     },
     {
       "id": "TA-C01-vanakkam",

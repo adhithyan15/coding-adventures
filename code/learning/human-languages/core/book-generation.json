@@ -3898,6 +3898,11 @@
       "output": "spanish/book/chapters/ch274-peso-cultural.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 275,
+      "output": "spanish/book/chapters/ch275-matices.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
