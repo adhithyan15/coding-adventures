@@ -57,10 +57,31 @@ is consistent; Spanish has 463.
 3. **Plan authoring against the deficit**, cheapest rung first: pre-A1 needs only
    **33 more words**, A1 another 300. The corpus is nearer a *usable* A1 than the
    C2 headline suggests.
-4. **Examine the lesson-to-word ratio.** 463 lessons yielding 267 words means most
-   lessons carry no new vocabulary. That may be correct for a gentle ramp, but it
-   is the lever deciding whether 16,000 is reachable at all, and it has never been
-   looked at.
+4. **The lesson-to-word ratio — and the answer to "is 16,000 even reachable".**
+   463 lessons yield 267 words: **~0.58 new words per lesson.** Holding that
+   density, 16,000 words needs **~27,600 lessons** for Spanish.
+
+   **Owner, 2026-08-14, on being shown the deficit:** *"This is why I kept telling
+   you to ignore the page count and lesson count and focus on teaching with a very
+   gentle ramp. If we end up 50K lessons, that is fine with me. We can split them
+   up later."*
+
+   So the answer is **yes, and without touching the ramp.** 27,600 sits inside the
+   stated budget with room to spare. **The gentle ramp and the vocabulary target
+   were never in tension** — and the sessions that treated them as if they were
+   made a category error worth naming, because it will recur:
+
+   > A gentle ramp means **few new atoms per lesson**. It does NOT mean few
+   > lessons, small chapters, or a compact book. Closing a spine node with a tidy
+   > four-lesson chapter optimises the wrong quantity. The budget that must stay
+   > small is per-lesson load; the quantity that must grow without limit is the
+   > number of lessons.
+
+   Practical consequence: **stop sizing chapters to close nodes.** Size them to
+   carry vocabulary at the density the ramp allows, and let the node close when it
+   closes. See [[feedback_page_count_is_never_a_constraint]] — the instruction was
+   already recorded; what was missing was the arithmetic showing it is the *only*
+   way the target is reachable.
 
 Related: HL-C182 (nothing measures whether a reader could pass anything) — this
 row is the concrete, already-instrumented half of that gap.
