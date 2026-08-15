@@ -111,7 +111,15 @@ pub enum ModuleSource {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Directive {
-    Module(WasmModule),
+    /// `Err(String)` (W14) when this module's own instruction stream fails
+    /// to build -- e.g. an opcode this repo doesn't implement yet. Captured
+    /// here rather than propagated as a whole-`parse_script` `Err`, so one
+    /// unbuildable module doesn't prevent every OTHER directive in the same
+    /// `.wast` file (independently parseable and gradeable) from being
+    /// walked at all. Only a module's own *build* failure is captured this
+    /// way -- a genuine tokenizer/S-expression *syntax* error still fails
+    /// `parse_script` as a whole (see that function's own doc comment).
+    Module(Result<WasmModule, String>),
     Register { name: String, module_name: Option<String> },
     Action(Action),
     AssertReturn { action: Action, expected: Vec<Expected> },
@@ -122,6 +130,15 @@ pub enum Directive {
     AssertUnlinkable { module: ModuleSource, message: String },
 }
 
+/// Parses `src` into a full `Vec<Directive>`. Only fails as a whole for a
+/// genuine tokenizer/S-expression *syntax* error (`parse_source`'s own
+/// `?`) -- a script with a directive boundary that can't be identified at
+/// all. A well-formed `(module ...)` directive whose own instruction
+/// stream fails to BUILD (W14 -- e.g. names an opcode this repo doesn't
+/// implement yet) does NOT abort this function; it's captured as
+/// `Directive::Module(Err(_))` and every other directive in the file is
+/// still parsed and returned normally. See `Directive::Module`'s own doc
+/// comment for the full rationale.
 pub fn parse_script(src: &str) -> Result<Vec<Directive>, WastParseError> {
     let exprs = parse_source(src)?;
     exprs.iter().map(parse_directive).collect()
@@ -139,7 +156,7 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
         expected: "a directive keyword",
     })?;
     match head {
-        "module" => Ok(Directive::Module(build_module_directive(e)?)),
+        "module" => Ok(Directive::Module(build_module_directive(e).map_err(|e| e.to_string()))),
         "register" => {
             let name = expect_str(expect_get(items, 1)?)?;
             let module_name = items.get(2).and_then(|m| m.as_atom()).map(|s| s.to_string());
@@ -465,7 +482,7 @@ mod tests {
         // `assert_return` invokes an export from it.
         let dirs = parse_script(r#"(module quote "(func (export \"f\") (result i32) (i32.const 42))")"#).unwrap();
         match &dirs[0] {
-            Directive::Module(m) => {
+            Directive::Module(Ok(m)) => {
                 assert_eq!(m.functions.len(), 1);
                 assert_eq!(m.exports[0].name, "f");
             }
@@ -482,7 +499,7 @@ mod tests {
         // doesn't recognize a bare "binary" atom as a field).
         let dirs = parse_script(r#"(module binary "\00\61\73\6d\01\00\00\00")"#).unwrap();
         match &dirs[0] {
-            Directive::Module(m) => assert_eq!(m, &wasm_types::WasmModule::default()),
+            Directive::Module(Ok(m)) => assert_eq!(m, &wasm_types::WasmModule::default()),
             other => panic!("unexpected directive: {other:?}"),
         }
     }
@@ -497,6 +514,45 @@ mod tests {
         assert_eq!(dirs.len(), 2);
         assert!(matches!(dirs[0], Directive::Module(_)));
         assert!(matches!(&dirs[1], Directive::AssertReturn { action: Action::Invoke { module: Some(_), .. }, .. }));
+    }
+
+    #[test]
+    fn a_module_using_an_unbuildable_instruction_does_not_abort_parsing_the_rest_of_the_script() {
+        // W14: a module's own instruction stream failing to BUILD (an
+        // unrecognized opcode name) must NOT abort `parse_script` for the
+        // whole file -- the module directly before it, and everything
+        // after the broken one, must still parse and come back as real
+        // `Directive`s. Real motivating case: `simd_const.wast`'s sole
+        // `i64x2.add` usage (an opcode this repo doesn't implement)
+        // previously aborted grading its other ~445 directives.
+        let dirs = parse_script(
+            r#"(module $good1 (func (export "f") (result i32) (i32.const 1)))
+               (module $bad (func (export "g") (result i32) (this.is.not.a.real.opcode)))
+               (module $good2 (func (export "h") (result i32) (i32.const 2)))
+               (assert_return (invoke $good1 "f") (i32.const 1))
+               (assert_return (invoke $good2 "h") (i32.const 2))"#,
+        )
+        .unwrap();
+        assert_eq!(dirs.len(), 5);
+        assert!(matches!(dirs[0], Directive::Module(Ok(_))), "{:?}", dirs[0]);
+        match &dirs[1] {
+            Directive::Module(Err(msg)) => assert!(msg.contains("this.is.not.a.real.opcode"), "{msg}"),
+            other => panic!("expected a captured build error, got {other:?}"),
+        }
+        assert!(matches!(dirs[2], Directive::Module(Ok(_))), "{:?}", dirs[2]);
+        assert!(matches!(dirs[3], Directive::AssertReturn { .. }));
+        assert!(matches!(dirs[4], Directive::AssertReturn { .. }));
+    }
+
+    #[test]
+    fn a_genuine_syntax_error_still_aborts_the_whole_script() {
+        // Unchanged, deliberate contrast with the test above: an
+        // UNBALANCED-PAREN-level syntax error (not a semantic build
+        // failure inside an otherwise well-formed module) still can't be
+        // partially graded -- directive boundaries themselves aren't
+        // reliably identifiable, so `parse_script` still returns a real
+        // `Err` for the whole file, exactly as before this change.
+        parse_script(r#"(module (func (result i32) i32.const 1)"#).unwrap_err();
     }
 
     // ── Security-review regressions: a directive missing a required
