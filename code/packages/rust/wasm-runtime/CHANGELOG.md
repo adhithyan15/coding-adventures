@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.1] — 2026-08-15 (W15, task #79 — v128 persistent storage)
+
+### Fixed (breaking)
+
+- `WasmInstance` gains a `pub v128_heap: Vec<[u8; 16]>` field -- the
+  instance's own persistent v128 (SIMD) value storage, replacing the old
+  per-call-only `wasm_execution::WasmExecutionContext::v128_heap`. A
+  v128-typed global's `WasmValue::V128(handle)` used to go stale the
+  moment one `call`/`call_typed` invocation ended (the heap it indexed
+  into was thrown away and rebuilt fresh every call); it now survives
+  across separate invocations on the same instance, exactly like
+  `globals`/`memory`/`tables` already do. `instantiate()` builds this
+  field up directly (starting from the reserved all-zero entry) as it
+  evaluates global/data/element initializers, so a `v128.const` inside
+  one of those (previously a hard instantiation failure -- see the
+  companion `wasm-execution` 0.9.2 release) now allocates straight into
+  the instance's own long-lived heap.
+- `build_engine`/`call_engine`/`call_engine_with_v128` thread
+  `v128_heap` through the exact clone/restore shape `globals` already
+  uses (`build_engine` calls the new
+  `WasmExecutionEngine::set_v128_heap`; both `call_engine` variants
+  restore `instance.v128_heap = state.v128_heap` after the call,
+  unconditionally, matching the existing regardless-of-trap discipline
+  documented on `call_engine` itself).
+- This is a breaking change to `WasmInstance`'s public field list -- the
+  one hand-built test construction site in this crate's own integration
+  tests was updated in the same PR; per this repo's stated preference
+  (break compatibility freely, no back-compat shims), no deprecated
+  alias or default was added.
+
+See `code/specs/W15-wasm-v128-persistent-storage.md` for the full design
+and motivating corpus evidence.
+
 ## [0.6.0] — 2026-08-15 (SIMD PR1b-1 — call_typed_with_v128, real v128 results end to end)
 
 ### Added

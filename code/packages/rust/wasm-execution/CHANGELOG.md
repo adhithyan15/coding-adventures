@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.2] - 2026-08-15 (W15, task #79 — v128 persistent storage)
+
+### Fixed (breaking)
+
+- `evaluate_const_expr`'s signature grows a third parameter,
+  `v128_heap: &mut Vec<[u8; 16]>`, and gains a `0xFD`/`v128.const` match
+  arm. Previously any `v128.const` inside a constant expression (a
+  global initializer, data-segment offset, or element-segment offset)
+  hit the catch-all `"illegal opcode 0x{opcode:02X} in constant
+  expression"` -- real, spec-legal WAT like
+  `(global (mut v128) (v128.const ...))` failed to instantiate
+  outright. Confirmed against the real, pinned-commit `simd_const.wast`
+  corpus.
+- `WasmExecutionContext::v128_heap` is no longer unconditionally reseeded
+  to `vec![[0u8; 16]]` on every `call_function`/`call_function_with_v128`
+  invocation -- it now clones from a new `WasmExecutionEngine` field
+  (also `v128_heap`, defaulting to the same reserved-zero-entry `Vec`),
+  set via a new optional setter, `set_v128_heap` (same pattern as the
+  existing `set_struct_field_counts`/`set_type_section`, chosen
+  specifically so the ~50 existing `WasmEngineConfig`-construction unit
+  tests that don't care about v128 at all don't need updating). Any v128
+  value a caller wants to persist across separate calls on the same
+  engine (e.g. `wasm-runtime`'s `WasmInstance.v128_heap`, see the
+  companion `wasm-runtime` 0.6.1 release) now round-trips correctly
+  instead of the handle going stale the moment one call ends.
+- `WasmEngineState` gains a `v128_heap` field, written back from
+  `WasmExecutionEngine::into_state()` -- AFTER, not alongside, the
+  existing per-result `V128Bytes` resolution loop in
+  `call_function_impl` (that loop still needs a live borrow of
+  `ctx.v128_heap`; moving it out earlier would have been a
+  use-after-move compile error).
+
+See `code/specs/W15-wasm-v128-persistent-storage.md` for the full design
+and motivating corpus evidence.
+
 ## [0.9.1] - 2026-08-15 (task #81 — v128/funcref/externref single-value blocktypes)
 
 ### Fixed

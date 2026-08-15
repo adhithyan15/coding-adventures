@@ -534,17 +534,25 @@ impl Executor {
                     .iter()
                     .find(|(n, kind, _)| n == name && *kind == ExternalKind::Global)
                     .and_then(|(_, _, idx)| instance.globals.get(*idx as usize).copied())
-                    // A global read is not a call -- there's no engine `ctx`/
-                    // `v128_heap` involved at all, so a `WasmValue::V128`
-                    // global's handle can't be resolved here either way.
-                    // No vendored fixture currently reads a v128-typed
-                    // global, so this doesn't silently mis-grade anything
-                    // today; a real v128 global read would need its own
-                    // follow-up (globals persist in `instance.globals`
-                    // across calls, but the `v128_heap` slot a stored handle
-                    // pointed to does NOT survive past the call that wrote
-                    // it -- a separate, deeper gap from this PR's scope).
-                    .map(|v| (vec![v], vec![None]))
+                    // A global read is not a call -- there's no engine
+                    // `ctx` involved at all -- but UNLIKE at the time this
+                    // comment was first written (SIMD PR1b-3), a
+                    // `WasmValue::V128` global's handle CAN now be
+                    // resolved here: `code/specs/
+                    // W15-wasm-v128-persistent-storage.md` moved
+                    // `v128_heap` onto the persistent `WasmInstance`
+                    // itself, so the same `Vec` a call's `ctx.v128_heap`
+                    // clones from/restores to is directly readable here
+                    // too, no engine required.
+                    .map(|v| {
+                        let bytes = match v {
+                            WasmValue::V128(handle) => {
+                                instance.v128_heap.get(handle as usize).copied().map(V128Bytes)
+                            }
+                            _ => None,
+                        };
+                        (vec![v], vec![bytes])
+                    })
                     .ok_or_else(|| ActionError::Trap(format!("no global export named {name:?}")))
             }
         }
