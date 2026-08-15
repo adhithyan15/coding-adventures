@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 import re
 import struct
+import tempfile
 from contextlib import suppress
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -3772,6 +3773,24 @@ def write_class_file(artifact: JVMClassArtifact, output_dir: str | Path) -> Path
     relative_path = _validated_output_relative_path(artifact.class_filename)
     root.mkdir(parents=True, exist_ok=True)
 
+    if os.open in os.supports_dir_fd and os.mkdir in os.supports_dir_fd:
+        _write_class_file_via_dir_fd(root, relative_path, artifact.class_bytes)
+    else:
+        # No dir_fd support (Windows): os.open() cannot even open a bare
+        # directory there, let alone chain traversal through directory FDs.
+        # Fall back to path-based checks. This is not fully TOCTOU-proof (a
+        # symlink swapped in between the islink() check and the mkdir/open
+        # below would not be caught, unlike the dir_fd path above), but it
+        # rejects the same symlinked-parent-directory case the tests require
+        # and matches what Windows' filesystem APIs make possible.
+        _write_class_file_via_path_checks(root, relative_path, artifact.class_bytes)
+
+    return root / relative_path
+
+
+def _write_class_file_via_dir_fd(
+    root: Path, relative_path: Path, class_bytes: bytes
+) -> None:
     open_directory_flags = os.O_RDONLY
     if hasattr(os, "O_DIRECTORY"):
         open_directory_flags |= os.O_DIRECTORY
@@ -3814,13 +3833,50 @@ def write_class_file(artifact: JVMClassArtifact, output_dir: str | Path) -> Path
                 "class_filename points at a symlinked or invalid output file"
             ) from exc
         with os.fdopen(file_fd, "wb", closefd=True) as handle:
-            handle.write(artifact.class_bytes)
+            handle.write(class_bytes)
     finally:
         for directory_fd in reversed(directory_fds):
             os.close(directory_fd)
 
-    target = root / relative_path
-    return target
+
+def _write_class_file_via_path_checks(
+    root: Path, relative_path: Path, class_bytes: bytes
+) -> None:
+    current = root
+    for component in relative_path.parts[:-1]:
+        current = current / component
+        if current.is_symlink():
+            raise JvmBackendError(
+                "class_filename contains a symlinked or invalid directory "
+                f"component: {component}"
+            )
+        try:
+            current.mkdir(exist_ok=True)
+        except OSError as exc:
+            raise JvmBackendError(
+                "class_filename contains a symlinked or invalid directory "
+                f"component: {component}"
+            ) from exc
+
+    target = current / relative_path.name
+    if target.is_symlink():
+        raise JvmBackendError(
+            "class_filename points at a symlinked or invalid output file"
+        )
+    # Write to a sibling temp file and atomically replace the destination
+    # entry, rather than opening `target` directly: os.replace() (like
+    # POSIX rename(2) and Windows MoveFileEx) replaces the directory entry
+    # itself instead of following a symlink placed there after the
+    # is_symlink() check above, closing that half of the TOCTOU window.
+    tmp_fd, tmp_name = tempfile.mkstemp(dir=current)
+    try:
+        with os.fdopen(tmp_fd, "wb") as handle:
+            handle.write(class_bytes)
+        os.replace(tmp_name, target)
+    except BaseException:
+        with suppress(FileNotFoundError):
+            os.remove(tmp_name)
+        raise
 
 
 def _u2(value: int) -> bytes:
