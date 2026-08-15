@@ -3831,3 +3831,142 @@ needs one, which real Windows CI will do on push). **Lesson:** when a `-D warnin
 lint fires on a `#[cfg(target_os = "windows")]` item, check whether its only caller
 is excluded from Windows before reaching for `allow` — the cfg may be describing a
 gap that was since closed, not a permanent constraint.
+
+**Correction (same PR, next CI round):** this was wrong, and the wrongness was
+only reachable by actually running on Windows — `cargo check --target
+x86_64-pc-windows-gnu` type-checks but never *executes* `bind_windows_sharded`,
+so it happily passed while the runtime path was broken. Real windows-latest CI
+panicked: `"SO_REUSEPORT is not supported by the Windows TCP provider"`. Tracing
+into `tcp_runtime::bind_sharded_runtime_with_state`, the "default" sharding path
+(used by every platform except macOS/BSD) sets `reuse_port = true` for any
+`worker_count > 1` — correct for Linux (where `SO_REUSEPORT` load-balances) but
+fatal for Windows (no `SO_REUSEPORT` at all). macOS/BSD hit the identical
+"`SO_REUSEPORT` exists but doesn't load-balance" problem and already fixed it
+with an explicit accept fan-out (`FanoutAcceptor`) — but that fan-out's
+`spawn`/`run` are `#[cfg(unix)]`-only, so Windows has no route around the
+`reuse_port` panic today. `bind_windows_sharded` is also a **real, currently
+broken for `worker_count > 1`** part of the public API — `web-core`'s
+`ShardedWebServer` and `conduit` both wrap it — but neither is exercised on
+Windows CI yet either, so this was a pre-existing gap this PR's build-plan fix
+merely exposed here first, not something this PR introduced or should silently
+paper over. Reverted the test back to `#[cfg(not(target_os = "windows"))]`, kept
+the Windows-only dispatcher function alive with a `#[allow(dead_code)]` whose
+comment states exactly why (a rare case where the suppression IS the honest
+answer — see next lesson) and what would need to exist (a Windows fan-out
+acceptor in `tcp-runtime`) to remove it.
+
+**Generalized lesson:** "verified with a cross-compile check" only proves the
+code *type-checks* for that target — it does not execute a single line of
+target-specific runtime logic (socket options, syscalls, ABI-dependent
+behavior). Treat a cross-compile check as ruling out compile errors only, never
+as confirmation that a previously-excluded-from-Windows test will actually pass
+there. When you can't run the real target and the round-trip to find out is
+expensive (~80 minutes of CI here), say so plainly in the commit/PR rather than
+implying the cross-compile check was sufficient evidence.
+
+## Sometimes the honest fix after investigation IS the suppression you started with — don't force a "real" fix past what the evidence supports
+
+Follow-on to the `embeddable-http-server` correction above. The instinct from
+"investigate before suppressing" is to keep digging until you find a positive
+fix. But investigation can just as validly conclude "the exclusion was correct,
+the capability really is incomplete, and fixing it properly is out of scope for
+this change" — and forcing a deeper fix at that point (e.g. hand-rolling a
+Windows fan-out acceptor inside a CI-rescue with no way to test it before a
+slow, blind CI round trip) trades a well-understood, honestly-labeled gap for
+an *unverified* one. The deliverable of "investigate, don't just suppress" is
+not always a positive change — sometimes it's a suppression with a comment that
+correctly explains the boundary of what was and wasn't fixed, and a decision
+about scope that a human reading the commit message can evaluate and revisit.
+
+## The SAME "`Path::is_absolute()`/`is_symlink()` is platform-dependent" bug class recurs across unrelated crates — check by INTENT, not by pattern-matching the previous fix
+
+Three different Windows CI failures in one PR rescue all trace back to
+`std::path::Path`'s platform-dependent behavior, but needed **three different
+fixes** because the code's *intent* differed each time:
+
+1. **`sql-parser`** (`grammar_path.read_text()`): platform default *encoding*
+   (cp1252 on Windows) silently misreads UTF-8 bytes. Fix: pin
+   `encoding="utf-8"` explicitly — the file's encoding is a property of the
+   file, never the host platform.
+2. **`chief-of-staff-daemon-service-files`** (`validate_unix_path`): the
+   function validates paths for a launchd/systemd config being rendered for
+   **macOS/Linux, regardless of the host compiling and testing this crate**.
+   `Path::is_absolute()` uses the *build host's* semantics, which is wrong
+   here on principle, not just on Windows — the fix (`value.starts_with('/')`)
+   hardcodes POSIX semantics because the target is always POSIX.
+3. **`chief-of-staff-daemon-config`** (`ConfigPath::resolve`'s `home` param):
+   this validates the **actual runtime host's** home directory — a real
+   Windows deployment legitimately passes a `C:\Users\...` path. Here
+   `Path::is_absolute()` is *correct as written* (there's already a
+   `#[cfg(windows)] fn absolute_home()` test helper proving the crate expects
+   platform-native paths); the bug was three tests hardcoding a POSIX path
+   directly instead of calling that helper, like every other test in the file
+   already did.
+
+**Before reaching for the fix pattern that worked last time on `is_absolute()`
+or `is_symlink()`, ask: is this code validating "a path meaningful on THIS host
+right now" (use platform-native `Path` semantics — case 3) or "a path meaningful
+on some OTHER, possibly-fixed target regardless of build host" (use an explicit,
+target-specific string check — case 2)?** Getting this backwards either breaks
+real Windows deployments (over-hardcoding POSIX) or reintroduces the original
+bug (using native semantics for a fixed-target validator). Grep for an existing
+`#[cfg(windows)]` test helper near the failing assertion before writing a new
+fix — case 3's `absolute_home()` was sitting three functions away and would
+have caught the real bug (a test authoring slip) immediately instead of
+requiring a `Path::is_absolute()` investigation that turned out to be a red
+herring.
+
+## `os.remove()`/`os.replace()` on a file another handle still has open: fine on POSIX, `PermissionError`/`WinError 32` on Windows — check every early-return path, not just the obvious one
+
+`storage-sqlite`'s `Pager._recover()` opened the journal file for reading
+(`with open(self._journal_path, "rb") as j:`) and, on two of its three exit
+paths, called `self._drop_journal()` (an `os.remove()`) from **inside** that
+`with` block — while `j` was still open. POSIX unlinks an open file just fine
+(the inode survives until the last handle closes); Windows refuses
+(`PermissionError: [WinError 32] ... being used by another process`).
+
+The third exit path (successful replay) already called `_drop_journal()`
+**after** the `with` block closed `j`, so it never had this bug — which is
+exactly what made the two early-return call sites easy to miss on a read-through
+that only checks "does this function eventually close its handles," rather than
+"does *every* removal of a path happen after every handle to that path is
+closed." **When auditing a function for this class of bug, don't stop at
+finding one instance that does it correctly — the correct and incorrect
+versions can coexist in the same function, on different branches, and a partial
+read makes the whole function look safe.**
+
+**Fix:** collapse the three early-return branches into one control-flow path
+that always exits the `with` block before removing the file — a `header = None`
+sentinel plus a combined boolean condition, rather than three separate
+`self._drop_journal(); return` call sites. One removal call site, reached after
+every branch, is easier to audit than three copies of the same call scattered
+across early returns — and this class of bug is specifically about a removal
+call's *position relative to a `with` block*, so collapsing to one call site is
+the fix, not just a refactor.
+
+## A documented, non-fully-TOCTOU-proof fallback can still be the right call — say why in the code, not just that it's imperfect
+
+`ir-to-jvm-class-file`'s POSIX symlink defense (`os.open(..., dir_fd=...)`
+chained through every path component) has no Windows equivalent — `os.open()`
+can't even open a bare directory there. The Windows fallback
+(`Path.is_symlink()` checks before `mkdir`/write) has a real TOCTOU gap: a
+symlink swapped in between the check and the use isn't caught, unlike the
+atomic dir_fd chain.
+
+Two things made this an acceptable ship, not a deferred vulnerability:
+
+1. **Close the cheap half of the gap.** The final file write went through a
+   temp file + `os.replace()` instead of opening the checked path directly —
+   `os.replace()`/`rename(2)` replace the directory entry itself rather than
+   following a symlink placed there afterward, so that specific race is fully
+   closed for near-zero extra code. The intermediate-directory `mkdir` race is
+   harder to close without a dir_fd equivalent and was left as documented,
+   accepted risk rather than force-fixed.
+2. **State the actual threat model in the comment, not just "not fully safe."**
+   `class_filename` is compiler-internal input already validated (no absolute
+   paths, no `.`/`..`) before either write path runs, so the residual race
+   requires an attacker who already has write access to the output tree,
+   racing a local build — not a remote/network-facing threat. A reviewer (or a
+   future security audit) reading "not fully TOCTOU-proof" alone has to
+   re-derive this; reading it inline saves that re-derivation and makes the
+   accepted-risk decision auditable instead of just asserted.
