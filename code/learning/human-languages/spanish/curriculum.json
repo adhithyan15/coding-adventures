@@ -3154,6 +3154,49 @@
         "ES-EXT-271-HEDGING"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-272-01",
+      "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
+      "lessons": [
+        "ES-C272-es-que"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-272-02",
+      "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
+      "lessons": [
+        "ES-C272-si-claro"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-272-03",
+      "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
+      "lessons": [
+        "ES-C272-tomar-el-pelo"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-272-04",
+      "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
+      "lessons": [
+        "ES-C272-mira",
+        "ES-C272-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-272-IMPLICIT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3596,13 +3639,13 @@
       "relocates": {}
     },
     "SPINE-INFER-IMPLICIT-MEANING": {
-      "segments": [],
-      "omits": [
-        "IMPLICATURE",
-        "IRONY-MARKER",
-        "IDIOM-COMMON",
-        "TONE-SHIFT"
+      "segments": [
+        "ES-PATH-272-01",
+        "ES-PATH-272-02",
+        "ES-PATH-272-03",
+        "ES-PATH-272-04"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-STRUCTURE-EXTENDED-TEXT": {
@@ -6606,6 +6649,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C271-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-272-IMPLICIT",
+      "stage": "C1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can name the listener strategy each implicit device requires, and say which one a written text cannot show me.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C272-practice"
       ]
     }
   ],

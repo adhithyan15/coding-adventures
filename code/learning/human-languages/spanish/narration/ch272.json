@@ -1,0 +1,751 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 272,
+  "title": "Reading Between the Lines --- Imply, Invert, Look It Up, Re-tune",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8e48bf1a3e011c6e",
+  "lessons": [
+    {
+      "id": "ES-C272-es-que",
+      "sequence": 2770,
+      "title": "es que… — the refusal that never says no",
+      "headword": "es que…",
+      "romanization": "es que…",
+      "gloss": "it's just that…",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96746d24a5ad8b93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything so far has meant what it said. This chapter is about Spanish that means MORE than it says, and this is the commonest case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "supongo que — the hedge that claims an inference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es ke, run together, and usually trailing off rather than finishing. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es que… — literally \"it is that…\", and functionally almost never that."
+            },
+            {
+              "kind": "speech",
+              "text": "Asked to do something you cannot do, a Spanish speaker very often begins es que… and then gives a circumstance rather than an answer. ¿Vienes? — Es que mañana trabajo. Nothing in that sentence is a refusal. Every listener hears one."
+            },
+            {
+              "kind": "speech",
+              "text": "The words supply a reason; the refusal is left for you to work out. That gap between what is said and what is meant has a name in linguistics — an implicature — and Spanish leans on it harder than English does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the first thing in the book you cannot translate word by word and still understand. It is that tomorrow I work is not English, and even repaired to it's just that I work tomorrow it loses the refusal."
+            },
+            {
+              "kind": "speech",
+              "text": "Two consequences worth carrying. When you hear es que, expect the sentence after it to be a reason for a \"no\" that will not be spoken. And when you need to decline something yourself, this is the polite instrument for it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es que… and finish it with a reason",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es que…* and finish it with a reason]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what a listener would understand from it, in one word (no)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what a listener would understand from it, in one word (*no*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bare refusal instead, and notice how much blunter it lands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bare refusal instead, and notice how much blunter it lands]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the gap between what a sentence says and what it means called? (An implicature.) What does es que usually introduce? (A reason standing in for a refusal.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C272-si-claro",
+      "sequence": 2780,
+      "title": "sí, claro — when the words say yes and the speaker means no",
+      "headword": "sí, claro",
+      "romanization": "sí, claro",
+      "gloss": "yeah, right",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5507efdf72e3c554",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Harder than an implicature: a sentence whose meaning is the OPPOSITE of its words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es que… — meaning more than you say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything here is in the delivery. Said briskly and warmly, sí, claro is plain agreement. Said slowly, flatly, with the claro dragged out, it is the opposite. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sí, claro — \"yes, of course\" — or \"yeah, right\", depending entirely on how it is said."
+            },
+            {
+              "kind": "speech",
+              "text": "Claro is Latin clarus, \"bright, clear\" — the same word as English clear and the name Clara. To say claro is to say that is obvious."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is exactly what makes it available for irony. A word meaning \"obviously\" is the perfect thing to say about something you find not obvious at all, and the gap between the word and the tone is where the sarcasm lives."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Irony is not a Spanish trick; English does the same with sure and of course. What is worth knowing is that the marker is carried in the voice, not in the words — so a written sí, claro is genuinely ambiguous, and Spanish readers resolve it from context exactly as you do in English."
+            },
+            {
+              "kind": "speech",
+              "text": "If you are not certain which one you are hearing, you are not failing at Spanish. The sentence is ambiguous by design."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sí, claro meaning it — brisk and warm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sí, claro* meaning it — brisk and warm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sí, claro not meaning it — slow and flat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sí, claro* not meaning it — slow and flat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two a written text cannot tell you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two a written text cannot tell you]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does claro mean literally, and which English word is it? (Bright, clear — clear.) Where is the irony carried? (In the voice, not the words.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C272-tomar-el-pelo",
+      "sequence": 2790,
+      "title": "tomar el pelo — four words you know, meaning something else entirely",
+      "headword": "tomar el pelo",
+      "romanization": "tomar el pelo",
+      "gloss": "to pull someone's leg (lit. to take the hair)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18783ffaa958b342",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know every word in this phrase. That will not help you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tomar — \"to take\", which you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "sí, claro — the irony marker just before this."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "to-MAR el PE-lo. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tomar el pelo — \"to tease someone, to have someone on.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word by word it is to take the hair, and word by word it tells you nothing. Pelo is Latin pilus, \"a hair\" — the same root inside English pile (the raised surface of a fabric) and depilate."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the phrase comes from is genuinely uncertain, and the tidy stories you will find online are folk etymology. What is certain is that its meaning cannot be reached from its parts, and that is the definition of an idiom."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the same to Spanish learners with pull someone's leg, which has no better-attested origin."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An idiom is the limit case of this chapter. An implicature asks you to infer; irony asks you to invert; an idiom asks you to look it up, because there is nothing in the words to work with."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth stating plainly rather than leaving you to discover it: some Spanish cannot be decoded, only learned. Recognising which is which is the skill this chapter is really teaching."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomar el pelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomar el pelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it says word by word (to take the hair)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it says word by word (*to take the hair*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether the origin story you may have heard is reliable (it is not)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether the origin story you may have heard is reliable (it is not)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tomar el pelo mean? (To tease, to have someone on.) Can its meaning be worked out from its words? (No — that is what makes it an idiom.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C272-mira",
+      "sequence": 2800,
+      "title": "mira — a word that changes the temperature of what follows",
+      "headword": "mira",
+      "romanization": "mira",
+      "gloss": "look — and the tone shifts",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f65367a5a9497e04",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last of the four, and the smallest: one word that tells the listener how to take the next sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tomar el pelo — the idiom before this."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MI-ra, stress the first syllable. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mira — \"look.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is the command form of mirar, \"to look\" — Latin mirari, \"to wonder at, to marry at\", which also gave English miracle, admire and mirror."
+            },
+            {
+              "kind": "speech",
+              "text": "But dropped at the start of a sentence it has stopped being a command. Nobody is being asked to look at anything. Mira, no es así — \"look, it isn't like that\" — uses it to mark what follows as a correction, an intimacy, or an impatience, depending on the voice."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish is full of these: oye, venga, bueno, hombre. Every one of them started as a word with a meaning and became a signal about the sentence around it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a discourse marker, and it does not translate — it positions. The literal meaning is spent; what is left is a change in temperature."
+            },
+            {
+              "kind": "speech",
+              "text": "That completes the chapter's four ways a Spanish sentence can mean more than it says: it can imply (es que), it can invert (sí, claro), it can be opaque (tomar el pelo), or it can be re-tuned by a word that carries no content at all (mira)."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mira as a real command — look at something",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mira* as a real command — look at something]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mira as a marker — mira, no es así",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mira* as a marker — *mira, no es así*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two more markers Spanish uses this way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two more markers Spanish uses this way]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is mira literally? (The command \"look\", from mirar.) What does a discourse marker do instead of meaning something? (It positions the sentence — it changes how you are meant to take it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C272-practice",
+      "sequence": 2810,
+      "title": "Four ways to mean more than you say",
+      "headword": "four ways to mean more than you say",
+      "romanization": "four ways to mean more than you say",
+      "gloss": "imply, invert, look it up, re-tune",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b286c291f6b7cbf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four devices, and the useful skill is telling them apart fast enough to keep up with a speaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "For each of the four, say which strategy the listener has to use."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es que mañana trabajo — and then say what the listener must do (infer — supply the refusal that was not spoken)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es que mañana trabajo* — and then say what the listener must do (**infer** — supply the refusal that was not spoken)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sí, claro, flat and slow — and what the listener must do (invert — take the opposite of the words)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sí, claro*, flat and slow — and what the listener must do (**invert** — take the opposite of the words)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me estás tomando el pelo — and what the listener must do (know it already — nothing in the words will help)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me estás tomando el pelo* — and what the listener must do (**know it already** — nothing in the words will help)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mira, no es así — and what the listener must do (re-tune — the marker says how to take what follows, not what it means)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mira, no es así* — and what the listener must do (**re-tune** — the marker says how to take what follows, not what it means)]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four a written text hides from you, and why (sí, claro — the irony is in the voice)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four a written text hides from you, and why (*sí, claro* — the irony is in the voice)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four you could not have guessed without being taught",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four you could not have guessed without being taught]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four strategies a listener uses: infer, invert, look it up, re-tune. Which one is carried in the voice rather than the words? (Irony.) Which one cannot be worked out at all? (The idiom.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
