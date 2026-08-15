@@ -1,0 +1,71 @@
+% ============================================================================
+% farm-animal-maintenance-level — for the farm animal whose SAME cited
+% CFSPH span also names its husbandry difficulty, that maintenance level
+% (adj-facts-stdlib, AGRICULTURE).
+% ============================================================================
+% A sibling to the already-shipped `farm-animals.adj` (`farm_animal_product
+% (animal, product)`) and `farm-animal-secondary-product.adj`
+% (`farm_animal_secondary_product(animal, product)`). Sheep's own span is
+% the SAME sentence `farm-animals.adj` already carries as its provenance
+% envelope's `source` field -- but only the trailing clause ("...they can
+% produce wool, meat, and milk") was ever decoded into rows; the LEADING
+% clause of that same sentence names a husbandry-difficulty fact about the
+% animal itself, never decoded anywhere:
+%
+%   sheep → low_maintenance
+%     "Sheep are low maintenance and versatile – depending on the breed,
+%      they can produce wool, meat, and milk"
+%
+% "Maintenance level" (how much care the ANIMAL needs) is categorically
+% distinct from "product" (what the animal GIVES) -- the two existing
+% tables both decode only the product half of this sentence; the
+% husbandry-difficulty half has never been shipped. (The sentence's other
+% unused word, "versatile," is deliberately NOT decoded into a second row:
+% it is trivially re-derivable from the fact that sheep already carry
+% three rows across the two existing product tables -- wool, meat, milk --
+% so asserting it separately would restate rather than add a fact.)
+%
+% Recall is a binding query:
+%
+%     ? farm_animal_maintenance_level(sheep, $Level)   % low_maintenance
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `farm_animal_maintenance_level(animal, level)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query -- the engine returns
+% the maintenance level WITH its source, on the CPU, with zero model
+% calls, and abstains on every other animal `farm-animals.adj` carries,
+% since none of the other four cited spans (chicken, duck, sheep's OWN
+% product clause is separate from this fact, rabbit, goat) states a
+% husbandry-difficulty descriptor. The query also runs BACKWARD -- bind a
+% level and recall which animal it names:
+%
+%     ? farm_animal_maintenance_level($Animal, low_maintenance)   % sheep
+%
+% Only ONE of `farm-animals.adj`'s five animals has a genuinely distinct
+% maintenance-level fact in the ALREADY-cited spans; this table is
+% deliberately narrow (a single row, the same shape as several other
+% already-shipped single-row siblings in this stdlib, e.g.
+% `agriculture/farm-animal-product-processing.adj`,
+% `anatomy/valve-alternate-name.adj`) rather than inventing a level the
+% source does not state.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sheep sentence already
+% quoted inside `farm-animals.adj`'s own `source` field -- no new
+% WebFetch, only a different schema decoding the husbandry-difficulty half
+% of that already-verified quote. `trust authoritative` -- the same tier
+% `farm-animals.adj` already carries (Iowa State University CFSPH, a
+% primary university educational source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table farm_animal_maintenance_level {
+    columns animal, level
+
+    row (sheep, low_maintenance)   % CFSPH: "Sheep are low maintenance and versatile..."
+
+    source "Sheep are low maintenance and versatile – depending on the breed, they can produce wool, meat, and milk"
+    locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+    trust authoritative
+}
