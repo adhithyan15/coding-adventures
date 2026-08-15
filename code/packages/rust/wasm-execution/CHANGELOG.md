@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.11] - 2026-08-15 (WASM16 — real tail calls, genuinely constant Rust-stack space)
+
+### Added
+
+- Real `return_call`/`return_call_indirect` handlers. The naive
+  implementation ("call the target, then return its result") would
+  still recurse through `call_function`/`call_function_inner` exactly
+  like an ordinary `call` -- defeating the entire point of the
+  instruction, and silently failing its own primary use case (an
+  unbounded tail-recursive loop would still hit `MAX_CALL_DEPTH` and
+  trap on exactly the pattern the instruction exists to make
+  unbounded). The real fix restructures BOTH of this crate's
+  "run a function body" implementations (`call_function_inner`, used
+  for nested calls, and `WasmExecutionEngine::call_function`, the
+  separate top-level entry point with its own independent dispatch
+  loop) with an outer loop: a tail call swaps in the callee's state
+  and continues the SAME Rust stack frame, pushing no new `SavedFrame`
+  and not incrementing `call_depth` -- the mechanical reason an
+  unbounded `return_call` chain runs in genuinely constant Rust-stack
+  space. See `code/specs/W11-wasm-tail-calls.md`.
+- New `WasmExecutionContext::pending_tail_call: Option<(usize,
+  Vec<WasmValue>)>` field -- set by the `return_call`/
+  `return_call_indirect` opcode handlers to signal the enclosing
+  "run a function body" loop, checked once per outer-loop iteration
+  right after the inner instruction-dispatch loop halts.
+- `code/packages/rust/wasm-execution/tests/wasm16_tail_calls.rs`: 5 new
+  integration tests built from real WAT via `wasm-wast-parser`,
+  including the load-bearing proof -- a self-tail-recursive accumulator
+  running 20,000 iterations deep (250x `MAX_CALL_DEPTH`'s value of 80)
+  succeeding cleanly, plus a companion test proving the SAME depth
+  written with plain `call` still correctly traps (this PR doesn't
+  weaken `MAX_CALL_DEPTH`'s existing guard), mutual tail recursion
+  across two distinct functions at the same depth, `return_call_indirect`
+  through a table, and a single non-recursive `return_call`.
+- Full existing test suite (227 tests, spanning both "run a function
+  body" implementations) passes completely unchanged by this
+  restructuring -- strong evidence the refactor preserves every
+  existing non-tail-call code path exactly.
+
+### Investigated, not fixed this release
+
+- The real, pinned-commit `return_call.wast`/`return_call_indirect.wast`
+  each fail to parse (see `wasm-wast-parser` 0.1.10's CHANGELOG for
+  why, and why a minimal fix was investigated and rejected as
+  incorrect, not just skipped). Not vendored this release; the real
+  tail-call machinery is fully verified via the hand-written
+  integration tests above instead.
+
 ## [0.6.10] — 2026-08-15 (WASM05 — Table gains Clone, LinearMemory/Table gain limit accessors)
 
 ### Added

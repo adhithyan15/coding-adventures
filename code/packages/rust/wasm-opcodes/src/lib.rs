@@ -79,6 +79,8 @@
 //! │ 0x0F    │ return               │ control      │ —                      │  0  │  0   │
 //! │ 0x10    │ call                 │ control      │ funcidx                │  0  │  0   │
 //! │ 0x11    │ call_indirect        │ control      │ typeidx, tableidx      │  1  │  0   │
+//! │ 0x12    │ return_call          │ control      │ funcidx                │  0  │  0   │
+//! │ 0x13    │ return_call_indirect │ control      │ typeidx, tableidx      │  1  │  0   │
 //! ├─────────┼──────────────────────┼──────────────┼────────────────────────┼─────┼──────┤
 //! │ Parametric instructions                                                              │
 //! │ 0x1A    │ drop                 │ parametric   │ —                      │  1  │  0   │
@@ -234,6 +236,8 @@ pub static OPCODES: &[OpcodeInfo] = &[
     OpcodeInfo { name: "return",        opcode: 0x0F, category: "control",     immediates: &[],                            stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "call",          opcode: 0x10, category: "control",     immediates: &["funcidx"],                   stack_pop: 0, stack_push: 0 },
     OpcodeInfo { name: "call_indirect", opcode: 0x11, category: "control",     immediates: &["typeidx", "tableidx"],       stack_pop: 1, stack_push: 0 },
+    OpcodeInfo { name: "return_call",          opcode: 0x12, category: "control", immediates: &["funcidx"],             stack_pop: 0, stack_push: 0 },
+    OpcodeInfo { name: "return_call_indirect", opcode: 0x13, category: "control", immediates: &["typeidx", "tableidx"], stack_pop: 1, stack_push: 0 },
 
     // ── Parametric instructions ───────────────────────────────────────────────
     //
@@ -1031,6 +1035,22 @@ mod tests {
 
         assert!(get_opcode(0xD0).is_none(), "ref.null is intentionally not in this table");
         assert!(get_opcode(0xD1).is_none(), "ref.is_null is intentionally not in this table");
+    }
+
+    // ── WASM16: tail calls ────────────────────────────────────────────────
+
+    #[test]
+    fn test_tail_call_opcodes() {
+        let return_call = get_opcode(0x12).expect("0x12 should be return_call");
+        assert_eq!(return_call.name, "return_call");
+        assert_eq!(return_call.immediates, &["funcidx"]);
+
+        let return_call_indirect = get_opcode(0x13).expect("0x13 should be return_call_indirect");
+        assert_eq!(return_call_indirect.name, "return_call_indirect");
+        assert_eq!(return_call_indirect.immediates, &["typeidx", "tableidx"]);
+
+        assert_eq!(get_opcode_by_name("return_call").map(|o| o.opcode), Some(0x12));
+        assert_eq!(get_opcode_by_name("return_call_indirect").map(|o| o.opcode), Some(0x13));
     }
 
     // ── WASM18: atomic memory operations (0xFE prefix) ───────────────────────

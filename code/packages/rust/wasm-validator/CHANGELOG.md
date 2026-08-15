@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.4] - 2026-08-15 (WASM16 — return_call/return_call_indirect type rules)
+
+### Added
+
+- Type rules for `return_call`/`return_call_indirect`: same param-popping
+  shape as `call`/`call_indirect`, plus the tail-call-specific rule the
+  real spec requires -- the callee's declared result types must match
+  the CURRENT FUNCTION's own declared result types exactly (nothing
+  runs after a tail call, so its results become the caller's results
+  directly), and everything textually after the instruction is
+  unreachable/stack-polymorphic, the same handling `return` already has.
+  See `code/specs/W11-wasm-tail-calls.md`.
+- 5 new tests: valid self-contained + indirect cases, out-of-range
+  function index, argument type mismatch, and (the real tail-call-
+  specific check) result-type-mismatches-caller for both the direct and
+  indirect forms.
+
 ## [0.2.3] - 2026-08-15 (WASM18 — atomic memory op type rules)
 
 ### Added

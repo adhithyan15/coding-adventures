@@ -287,6 +287,7 @@ mod tests {
             struct_field_counts: Vec::new(),
             gc_state: GcState::default(),
             call_depth: 0,
+            pending_tail_call: None,
         }
     }
 
