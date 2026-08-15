@@ -291,8 +291,108 @@ function usableAsMatcher(word: string): boolean {
   return [...word].length >= 2 && !/[→?()[\]]/u.test(word);
 }
 
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/**
+ * The character class that may not sit against a matched word.
+ *
+ * ONE regex for the whole corpus, and that is the entire point. The forward-reference
+ * matcher below used to build `(?<![\p{L}\p{M}-])<word>(?![\p{L}\p{M}-])` per taught
+ * word, and a Unicode-property class is not a cheap thing to build: measured on this
+ * corpus, `new RegExp` of that shape costs ~162µs and its first `.test()` another
+ * ~168µs, because `\p{L}` and `\p{M}` expand into large code-point tables. At ~2,700
+ * taught words that is ~0.9s of pure regex setup, which was the single largest line
+ * in the gap report's profile — larger than reading all 2,771 lessons off disk.
+ *
+ * The lookarounds never varied; only the literal between them did. So the literal is
+ * found with `indexOf` — which is a native substring search costing a fraction of a
+ * microsecond — and the two lookarounds are re-expressed as this one shared class,
+ * compiled once and applied to the single code point on each side of the hit.
+ */
+const WORD_ADJACENT = /[\p{L}\p{M}-]/u;
+
+/** Maximal runs of that same class — the only places a match can begin or end. */
+const WORD_RUN = /[\p{L}\p{M}-]+/gu;
+
+/**
+ * Add every candidate that any run of `text` could possibly reach.
+ *
+ * `String.match` with a global pattern, not `matchAll`: this runs over every lesson
+ * body in the corpus, and `matchAll` allocates a match OBJECT — with `index`,
+ * `input` and `groups` — for each of the ~1.4 million runs, where `match` returns
+ * the plain strings. That difference alone was worth ~90ms of the report.
+ */
+function addReachableCandidates(
+  text: string,
+  byLeadingRun: Map<string, number[]>,
+  reachable: Set<number>,
+): void {
+  // `match` resets this shared regex's `lastIndex` on entry and on exit, so the
+  // module-level instance is safe to reuse and costs nothing to recompile.
+  const runs = text.match(WORD_RUN);
+  if (!runs) return;
+  for (const run of runs) {
+    const bucket = byLeadingRun.get(run);
+    if (bucket) for (const position of bucket) reachable.add(position);
+  }
+}
+
+/**
+ * The run a word must land on to occur at all — its leading word-adjacent run.
+ *
+ * `""` when the word opens on something outside the class (`¿qué`, a digit), which
+ * the caller must then treat as un-indexable rather than as matching nothing.
+ */
+function leadingRun(word: string): string {
+  const match = /^[\p{L}\p{M}-]+/u.exec(word);
+  return match ? match[0] : "";
+}
+
+/** Would slicing `text` at `at` cut a surrogate pair in half? */
+function splitsSurrogatePair(text: string, at: number): boolean {
+  if (at <= 0 || at >= text.length) return false;
+  const high = text.charCodeAt(at - 1);
+  const low = text.charCodeAt(at);
+  return high >= 0xd800 && high <= 0xdbff && low >= 0xdc00 && low <= 0xdfff;
+}
+
+/** The code point ending at `end`, or `""` at the start of the string. */
+function codePointBefore(text: string, end: number): string {
+  if (end <= 0) return "";
+  // A lookbehind under the `u` flag steps back by a CODE POINT, not a code unit, so
+  // a surrogate pair has to be taken whole. Devanagari and Arabic stay in the BMP,
+  // but the corpus already carries Japanese, and emoji are one authoring session away.
+  return splitsSurrogatePair(text, end - 1) ? text.slice(end - 2, end) : text[end - 1]!;
+}
+
+/**
+ * Does `needle` occur in `haystack` with neither a letter, a combining mark, nor a
+ * hyphen against either end?
+ *
+ * Exactly the predicate `(?<![\p{L}\p{M}-])<escaped needle>(?![\p{L}\p{M}-])` with the
+ * `u` flag decides, and deliberately so — this replaced that regex for cost, not for
+ * behaviour. Every occurrence is examined, not just the first, because the first may
+ * be glued to a letter while a later one is free.
+ */
+function occursAsWholeWord(haystack: string, needle: string): boolean {
+  if (needle.length === 0) return false;
+  for (let at = haystack.indexOf(needle); at >= 0; at = haystack.indexOf(needle, at + 1)) {
+    // A `u`-flag match runs from one code-point boundary to another, so an
+    // occurrence that begins or ends halfway through a surrogate pair is one the
+    // regex would refuse — `indexOf` finds the high half of `𐀀` when asked for a
+    // lone `\uD800`, and the regex does not. Well-formed text never asks (Node's
+    // UTF-8 reader cannot produce a lone surrogate), so this costs two integer
+    // comparisons to keep the two definitions provably the same rather than the
+    // same in practice.
+    const end = at + needle.length;
+    if (splitsSurrogatePair(haystack, at) || splitsSurrogatePair(haystack, end)) continue;
+    const before = codePointBefore(haystack, at);
+    if (before !== "" && WORD_ADJACENT.test(before)) continue;
+    if (end < haystack.length) {
+      const after = String.fromCodePoint(haystack.codePointAt(end)!);
+      if (WORD_ADJACENT.test(after)) continue;
+    }
+    return true;
+  }
+  return false;
 }
 
 /** Emphasised or code-spanned runs, where the corpus marks target language. */
@@ -486,6 +586,66 @@ export function measureContinuity(lessons: ParsedLesson[]): ContinuityReport {
       }
     });
 
+    // The candidate list, built ONCE per track, and INDEXED by leading run.
+    //
+    // This is the whole module's cost centre, and it used to be written the obvious
+    // way: for every lesson, ask every word the track teaches whether it appears.
+    // That is quadratic in track length — 549 Spanish lessons against ~550 taught
+    // words is 300,000 questions — and the corpus grows by design, so the quadratic
+    // term is exactly what turned this walk into a recurring CI timeout. Each
+    // question was also dear:
+    //
+    //   1. `new RegExp` inside the inner loop rebuilt the same per-word pattern once
+    //      per lesson, and those patterns are expensive — see `WORD_ADJACENT`.
+    //   2. The English-collision guard ran per lesson for a decision that depends
+    //      only on the word, so a collision word was re-rejected 549 times instead
+    //      of being dropped from the list once.
+    //   3. Every surviving question scanned the whole lesson body with a lookbehind
+    //      regex, for a word that is almost never in that lesson at all.
+    //
+    // So the question is turned around. A match must BEGIN a maximal run of
+    // word-adjacent characters and must run to the end of that run — that is what
+    // the two lookarounds say — so a word can only occur in a lesson whose text
+    // contains the word's own leading run as a whole run. `hola` can only be in a
+    // lesson whose runs include `hola`; `buenos días` only in one whose runs
+    // include `buenos`. Indexing candidates by that run turns "every word against
+    // every lesson" into "the handful of words this lesson's vocabulary can even
+    // reach", which is proportional to the lesson, not to the corpus.
+    //
+    // The index only ever ADDS candidates that must then pass the real test below,
+    // so it cannot invent a forward reference; and the runs are drawn with the same
+    // character class the lookarounds use, so it cannot hide one either.
+    //
+    // Order is preserved exactly: candidates keep `earliestTeaching`'s own insertion
+    // order and are visited by ascending position, and the final
+    // `forwardReferences.sort` is NOT a total order (two words taught by the same
+    // lesson tie on both keys), so a stable sort leaves this order observable in the
+    // published report. Reordering here would silently reshuffle the printed list.
+    const candidates: Array<{ word: string; teaching: { by: string; at: number } }> = [];
+    const byLeadingRun = new Map<string, number[]>();
+    // Words that begin on punctuation or a digit — `¿qué`, `3d` — have no leading
+    // run to index by, so they stay in the always-considered list. There are very
+    // few, and silently dropping them would lose real defects.
+    const unindexed: number[] = [];
+    for (const [word, teaching] of earliestTeaching) {
+      // The English-collision guard applies on BOTH paths, and BEFORE any matching is
+      // attempted — otherwise every collision word costs work in every lesson of the
+      // track for a value thrown away on the next line. Applying it only to plain
+      // prose let "**no** glide, no drift" — ordinary emphasised English — report
+      // `no` as a forward reference from 7 different lessons.
+      if (ENGLISH_COLLISIONS.has(word)) continue;
+      const position = candidates.length;
+      candidates.push({ word, teaching });
+      const run = leadingRun(word);
+      if (run === "") {
+        unindexed.push(position);
+        continue;
+      }
+      let bucket = byLeadingRun.get(run);
+      if (!bucket) byLeadingRun.set(run, (bucket = []));
+      bucket.push(position);
+    }
+
     ordered.forEach((lesson, index) => {
       const body = lesson.body.toLowerCase();
       const emphasised = emphasisedRuns(lesson.body);
@@ -498,22 +658,26 @@ export function measureContinuity(lessons: ParsedLesson[]): ContinuityReport {
       const own = new Set([...taughtWords(lesson), ...ownHeadwordTokens(lesson)]);
       const reported = new Set<string>();
 
-      for (const [word, teaching] of earliestTeaching) {
+      // Both haystacks are indexed, not just the body: the emphasis path has no
+      // four-character floor, so a word can be reachable there and nowhere else.
+      const reachable = new Set<number>(unindexed);
+      addReachableCandidates(body, byLeadingRun, reachable);
+      addReachableCandidates(emphasised, byLeadingRun, reachable);
+
+      for (const position of [...reachable].sort((a, b) => a - b)) {
+        const { word, teaching } = candidates[position]!;
         if (teaching.at <= index || own.has(word) || reported.has(word)) continue;
-        // The English-collision guard applies on BOTH paths, and BEFORE the regex is
-        // built — otherwise every collision word costs a construction in every
-        // lesson of the track for a value thrown away on the next line. Applying it
-        // only to plain prose let "**no** glide, no drift" — ordinary emphasised
-        // English — report `no` as a forward reference from 7 different lessons.
-        if (ENGLISH_COLLISIONS.has(word)) continue;
+        // A plain substring test before the boundary walk: a word absent from the
+        // text cannot be present at a word boundary either, and both haystacks and
+        // every candidate word are already lower-cased, so the two agree on case.
+        //
         // A trailing hyphen means a compound like "pan-Hispanic" — English, not a
-        // borrowed headword.
-        const pattern = new RegExp(
-          `(?<![\\p{L}\\p{M}-])${escapeRegExp(word)}(?![\\p{L}\\p{M}-])`,
-          "u",
-        );
-        const inPlain = word.length >= 4 && pattern.test(body);
-        const inEmphasis = pattern.test(emphasised);
+        // borrowed headword — which is why `-` counts as word-adjacent.
+        const inBodyText = body.includes(word);
+        const inEmphasisText = emphasised.includes(word);
+        if (!inBodyText && !inEmphasisText) continue;
+        const inPlain = word.length >= 4 && inBodyText && occursAsWholeWord(body, word);
+        const inEmphasis = inEmphasisText && occursAsWholeWord(emphasised, word);
         if (!inPlain && !inEmphasis) continue;
 
         reported.add(word);

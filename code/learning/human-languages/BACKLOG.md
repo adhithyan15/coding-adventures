@@ -9,6 +9,30 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C205 — the gap report's cost model, and why its test timeout is not a dial
+
+Recorded because three separate sessions raised the same timeout and none of them
+wrote down the growth rate, so each one rediscovered the problem from scratch.
+
+`tests/cli.test.ts` builds the whole curriculum gap report twice. Its budget went
+5s -> 20s (at 1,249 lessons) -> 35s (at 1,878), and at 2,771 it failed CI at 35s.
+The cause was not corpus size as such: `measureContinuity`'s forward-reference walk
+was **quadratic in track length**, asking each of Spanish's 549 lessons about each of
+its ~550 taught words, and building a fresh `(?<![\p{L}\p{M}-])...` regex per pair.
+Measured on this corpus, one such regex costs ~162µs to construct and ~168µs on its
+first `.test()`, because `\p{L}` and `\p{M}` expand into large code-point tables.
+
+Fixed by indexing candidates on their leading word-run, so a lesson is only asked
+about words its own text can reach. `measureContinuity` 2,065ms -> 218ms; the whole
+`--format json` run 3.94s -> 1.79s; both report formats byte-identical.
+
+**What to expect now, and the number to check it against.** The remaining cost is
+linear: ~0.65ms per lesson per build (1.79s / 2,771 lessons, two-thirds of it
+reading, parsing and hashing the files). At that rate 35s covers roughly three times
+today's corpus. So a future slow run on this test is evidence that something has gone
+superlinear AGAIN, not evidence that the budget is stale — profile it before touching
+the number, and never thin the report to fit the clock.
+
 ## HL-C196 — `repin_tests.py` oscillates on a field name shared with a synthetic fixture
 
 Found by the Spanish tranche. `drivablePercent` appears twice in

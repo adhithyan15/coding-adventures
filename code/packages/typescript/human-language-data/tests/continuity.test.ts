@@ -327,6 +327,104 @@ describe("forward references", () => {
     ]);
     expect(report.forwardReferences).toHaveLength(0);
   });
+
+  // ---- the boundary rule, pinned ----
+  //
+  // These eight say what "the word occurs here" MEANS, and they exist because the
+  // matcher stopped being one regex per word. That regex was
+  // `(?<![\p{L}\p{M}-])<word>(?![\p{L}\p{M}-])` and cost ~330µs per word to build
+  // and first run, which at ~2,700 taught words was the largest single line in the
+  // gap report's profile; it is now an `indexOf` walk plus a shared character class,
+  // with the candidates indexed by leading run so a lesson is only asked about words
+  // its own text could reach. Every case below passed under the regex and passes now.
+  // They are the cases where a cheaper matcher would plausibly have drifted.
+
+  it("will not match a word glued to a letter", () => {
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Abro el paraguas." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("finds a free occurrence that follows a glued one", () => {
+    // The reason every occurrence is examined and not just the first: `indexOf`
+    // finds `paraguas` before it finds the real use, and stopping there would have
+    // quietly lost the defect.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Abro el paraguas y bebo agua." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences[0]?.word).toBe("agua");
+  });
+
+  it("treats a hyphen as part of the word, not as a boundary", () => {
+    // "pan-Hispanic" is English wearing a Spanish syllable. `-` is inside the
+    // adjacency class for exactly this reason.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "An agua-adjacent idea." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("treats a following combining mark as part of the word", () => {
+    // U+0301 COMBINING ACUTE ACCENT. `\p{M}` is in the adjacency class because a
+    // base letter plus its mark is one grapheme, and half of one is not a word.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Bebo agua\u0301 aqui." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("matches a word sitting against an astral-plane character", () => {
+    // U+1F600 is a surrogate PAIR in memory, and the character on each side of a
+    // match is read as a code point rather than a code unit. Reading half a pair
+    // here would ask whether an unpaired surrogate is a letter.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Bebo \u{1F600}agua\u{1F600} hoy." }),
+      lesson({ id: "ES-26-agua", chapter: 26, sequence: 20, headword: "el agua" }),
+    ]);
+    expect(report.forwardReferences[0]?.word).toBe("agua");
+  });
+
+  it("keeps a multi-word headword whole and still finds it", () => {
+    // The candidate index is keyed on a word's LEADING run — `buenos` for
+    // `buenos días` — so a phrase is reachable from a lesson containing its first
+    // word. Indexing on the whole phrase, or on every token, would lose it.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Digo **buenos días** hoy." }),
+      lesson({ id: "ES-9", chapter: 9, sequence: 20, headword: "buenos días" }),
+    ]);
+    expect(report.forwardReferences[0]?.word).toBe("buenos días");
+  });
+
+  it("does not match a phrase whose words are merely both present", () => {
+    // The other half of the index's contract: it only ever WIDENS the candidate
+    // list, and the boundary walk still decides. `buenos` and `días` apart are not
+    // an occurrence of `buenos días`.
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, body: "Digo **buenos** y **días**." }),
+      lesson({ id: "ES-9", chapter: 9, sequence: 20, headword: "buenos días" }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("matches a non-Latin word at its own boundaries", () => {
+    // Devanagari carries its vowels as combining marks, so the adjacency class does
+    // most of its work outside Latin script. `घरमें` is not a use of `घर`.
+    const free = measureContinuity([
+      lesson({ id: "HI-1", chapter: 1, sequence: 10, body: "यह **घर** है।" }),
+      lesson({ id: "HI-9", chapter: 9, sequence: 20, headword: "घर" }),
+    ]);
+    expect(free.forwardReferences[0]?.word).toBe("घर");
+    const glued = measureContinuity([
+      lesson({ id: "HI-1", chapter: 1, sequence: 10, body: "यह **घरमें** है।" }),
+      lesson({ id: "HI-9", chapter: 9, sequence: 20, headword: "घर" }),
+    ]);
+    expect(glued.forwardReferences).toHaveLength(0);
+  });
 });
 
 describe("the real corpus", () => {
