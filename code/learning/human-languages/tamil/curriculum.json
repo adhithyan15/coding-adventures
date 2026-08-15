@@ -585,6 +585,21 @@
         "TA-EXT-201-ADJ"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-42-VERBS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "TA-C42-come",
+        "TA-C42-sit",
+        "TA-C42-read",
+        "TA-C42-give"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-42-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -717,7 +732,8 @@
       "segments": [
         "TA-PATH-028",
         "TA-PATH-029",
-        "TA-PATH-030"
+        "TA-PATH-030",
+        "TA-PATH-42-VERBS"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1457,6 +1473,20 @@
         "TA-C41-new",
         "TA-C41-old",
         "TA-C41-adjective-system"
+      ]
+    },
+    {
+      "id": "TA-EXT-42-VERBS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more everyday actions and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C42-come",
+        "TA-C42-sit",
+        "TA-C42-read",
+        "TA-C42-give"
       ]
     }
   ]

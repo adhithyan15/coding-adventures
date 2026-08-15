@@ -385,6 +385,21 @@
         "SA-EXT-21-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-22-VERBS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "SA-C22-hear",
+        "SA-C22-lead",
+        "SA-C22-play",
+        "SA-C22-burn"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-22-VERBS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -514,7 +529,8 @@
         "SA-PATH-010",
         "SA-PATH-011",
         "SA-PATH-012",
-        "SA-PATH-21-VERBS"
+        "SA-PATH-21-VERBS",
+        "SA-PATH-22-VERBS"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -1010,6 +1026,20 @@
         "SA-C21-laugh",
         "SA-C21-stand",
         "SA-C21-remember"
+      ]
+    },
+    {
+      "id": "SA-EXT-22-VERBS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name four more everyday actions and say them in order.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C22-hear",
+        "SA-C22-lead",
+        "SA-C22-play",
+        "SA-C22-burn"
       ]
     }
   ]
