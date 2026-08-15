@@ -1,6 +1,39 @@
 # Changelog — `twig-aot`
 
 
+
+## 0.54.0 - 2026-08-15 - chmod binds to the file, not to its path
+
+Both post-link `chmod 0755` sites did `std::fs::metadata(path)` then
+`std::fs::set_permissions(path, ..)` — **two** path resolutions, both following
+symlinks. In an attacker-writable output directory that is a
+replace-with-symlink race: swap the path between the two calls and an unrelated
+file gets mode 0755 (CWE-367). A reviewer reproduced it: the victim went to
+0755 under the old code.
+
+Both now go through one `set_executable` helper. Three properties make it safe,
+and security review caught each of the first two attempts getting one wrong:
+
+* **`File::set_permissions` is `fchmod`** on the open descriptor (std's
+  `sys/fs/unix.rs`), so a swap AFTER the open cannot redirect it.
+* **`O_NOFOLLOW` closes the window BEFORE the open too**, via
+  `OpenOptionsExt::custom_flags` — which is in std. An earlier version of this
+  entry claimed closing that window "needs a `libc` dependency this crate
+  deliberately does not have". **That was simply wrong**, and it was being used
+  to justify leaving a live race unfixed. A planted symlink now fails `ELOOP`.
+* **The file is opened READ-only.** `fchmod` needs no write access, and
+  `chmod(2)` requires ownership while `open(O_WRONLY)` requires the write BIT —
+  independent things. Under a `umask` that clears owner-write (e.g. `0222`) the
+  linker succeeds and leaves the output `0555`; the first fix then returned
+  `EACCES` on a file the old code chmod'd fine, turning a working link into a
+  hard failure.
+
+Plus an explicit regular-file check: `O_NOFOLLOW` blocks symlinks but not
+directories, and on Linux `O_RDONLY` on a directory succeeds.
+
+Surfaced by the security review on PR #11264 and deferred there on purpose,
+since it changes the linker path and did not belong in a BUILD-file fix.
+
 ## 0.53.0 - 2026-08-14 - source_map moves with the instructions
 
 `source_map` is a POSITIONAL side table — `source_map[i]` describes
