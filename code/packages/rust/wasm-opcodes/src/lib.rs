@@ -760,6 +760,107 @@ pub fn get_atomic_op_by_name(name: &str) -> Option<&'static AtomicOpInfo> {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// SIMD (v128) operations (0xFD prefix -- see code/specs/
+// W13-wasm-simd-v128-first-slice.md)
+// ──────────────────────────────────────────────────────────────────────────────
+//
+// Like `0xFB`/`0xFC`/`0xFE`, `0xFD` is a two-byte-PREFIX encoding
+// (`0xFD <sub-opcode> ...`) that doesn't fit this crate's single-byte
+// `OPCODES` table. It DOESN'T fit the `AtomicOpInfo`/`ATOMIC_OPS` shape
+// either, though: SIMD's sub-opcode is a **LEB128-encoded `u32`**, not a
+// raw byte -- confirmed against the SIMD proposal's own binary-encoding
+// table (`BinarySIMD.md`) and the W3C core spec's "Vector Instructions"
+// section, both independently. `i32x4.add`'s real sub-opcode is `174`
+// (`0xAE`), which needs the two-byte LEB128 continuation encoding
+// (`[0xAE, 0x01]`) -- a `u8` field, as `AtomicOpInfo::sub_opcode` uses,
+// cannot represent it at all.
+
+/// What this first-slice `SimdOpInfo` entry does at execution time. This
+/// intentionally covers only the 5 opcodes this slice implements; expect
+/// this to grow real shape (lane width, arithmetic op, comparison
+/// predicate, etc.) as later PRs add more of the ~230-opcode family --
+/// see `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SimdOpKind {
+    /// `v128.const` -- push a 16-byte immediate constant.
+    Const,
+    /// `i32x4.splat` -- broadcast one `i32` into all 4 lanes.
+    Splat,
+    /// `i32x4.add` -- lane-wise wrapping addition.
+    Add,
+    /// `i32x4.eq` -- lane-wise equality; each lane becomes all-1s (`-1`)
+    /// if equal, all-0s (`0`) otherwise (WASM's boolean-mask convention
+    /// for SIMD comparisons).
+    Eq,
+    /// `i32x4.extract_lane` -- read one `i32` lane back out of a `v128`,
+    /// selected by a lane-index immediate (0-3). Not in the spec's
+    /// original 4-opcode minimal slice, but genuinely required to make
+    /// this first slice's OWN correctness verifiable at all: without
+    /// some way to observe a `v128`'s contents as a plain scalar, no
+    /// integration test (or, more importantly, no `wasm-conformance`
+    /// `assert_return` grading) could distinguish a correct SIMD
+    /// computation from a subtly wrong one.
+    ExtractLane,
+}
+
+/// One entry in the SIMD opcode table: everything a consumer needs to
+/// decode and execute one `0xFD`-prefixed instruction in this first slice.
+#[derive(Debug, Clone, Copy)]
+pub struct SimdOpInfo {
+    /// The canonical text name, e.g. `"i32x4.add"`.
+    pub name: &'static str,
+    /// The LEB128-encoded sub-opcode value (the integer immediately after
+    /// the `0xFD` prefix byte) -- `u32`, NOT `u8` (see this section's own
+    /// doc comment for why).
+    pub sub_opcode: u32,
+    pub kind: SimdOpKind,
+}
+
+/// The 5 SIMD opcodes this first slice implements, verified against
+/// authoritative sources (the SIMD proposal's `BinarySIMD.md`, cross-
+/// checked against the W3C core spec for the first 4) -- not guessed or
+/// reconstructed from memory. `i32x4.extract_lane` is the one addition
+/// beyond the original 4-opcode spec scope, added because it's the only
+/// way to observe a `v128` result as a plain scalar -- see
+/// `SimdOpKind::ExtractLane`'s own doc comment.
+pub static SIMD_OPS: &[SimdOpInfo] = &[
+    SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
+    SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
+    SimdOpInfo { name: "i32x4.splat", sub_opcode: 0x11, kind: SimdOpKind::Splat },
+    SimdOpInfo { name: "i32x4.eq", sub_opcode: 0x37, kind: SimdOpKind::Eq },
+    SimdOpInfo { name: "i32x4.add", sub_opcode: 0xAE, kind: SimdOpKind::Add },
+];
+
+/// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
+/// integer after the `0xFD` prefix byte).
+///
+/// # Example
+///
+/// ```
+/// use wasm_opcodes::get_simd_op;
+///
+/// let info = get_simd_op(0x0C).unwrap();
+/// assert_eq!(info.name, "v128.const");
+/// ```
+pub fn get_simd_op(sub_opcode: u32) -> Option<&'static SimdOpInfo> {
+    SIMD_OPS.iter().find(|op| op.sub_opcode == sub_opcode)
+}
+
+/// Look up a SIMD opcode by its canonical text name, e.g. `"i32x4.add"`.
+///
+/// # Example
+///
+/// ```
+/// use wasm_opcodes::get_simd_op_by_name;
+///
+/// let info = get_simd_op_by_name("i32x4.add").unwrap();
+/// assert_eq!(info.sub_opcode, 0xAE);
+/// ```
+pub fn get_simd_op_by_name(name: &str) -> Option<&'static SimdOpInfo> {
+    SIMD_OPS.iter().find(|op| op.name == name)
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Public lookup API
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -1141,5 +1242,58 @@ mod tests {
         assert_eq!(wait64.value_type, Some(wasm_types::ValueType::I64));
 
         assert_eq!(get_atomic_op_by_name("memory.atomic.notify").map(|o| o.sub_opcode), Some(0x00));
+    }
+
+    // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
+
+    #[test]
+    fn simd_ops_table_has_the_expected_5_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 5);
+
+        let mut seen_sub_opcodes = std::collections::HashSet::new();
+        let mut seen_names = std::collections::HashSet::new();
+        for op in SIMD_OPS {
+            assert!(seen_sub_opcodes.insert(op.sub_opcode), "duplicate sub-opcode {:#04x} ({})", op.sub_opcode, op.name);
+            assert!(seen_names.insert(op.name), "duplicate name {}", op.name);
+        }
+    }
+
+    #[test]
+    fn simd_ops_have_the_real_verified_sub_opcode_values() {
+        // Verified against the SIMD proposal's own BinarySIMD.md AND the
+        // W3C core spec's "Vector Instructions" section independently --
+        // see code/specs/W13-wasm-simd-v128-first-slice.md.
+        let v128_const = get_simd_op(0x0C).expect("0x0C should be v128.const");
+        assert_eq!(v128_const.name, "v128.const");
+        assert_eq!(v128_const.kind, SimdOpKind::Const);
+
+        let splat = get_simd_op(0x11).expect("0x11 should be i32x4.splat");
+        assert_eq!(splat.name, "i32x4.splat");
+        assert_eq!(splat.kind, SimdOpKind::Splat);
+
+        let eq = get_simd_op(0x37).expect("0x37 should be i32x4.eq");
+        assert_eq!(eq.name, "i32x4.eq");
+        assert_eq!(eq.kind, SimdOpKind::Eq);
+
+        let extract_lane = get_simd_op(0x1B).expect("0x1B should be i32x4.extract_lane");
+        assert_eq!(extract_lane.name, "i32x4.extract_lane");
+        assert_eq!(extract_lane.kind, SimdOpKind::ExtractLane);
+
+        // i32x4.add's real sub-opcode is 174 (0xAE) -- deliberately >= 128,
+        // the one entry in this first slice that genuinely exercises the
+        // multi-byte LEB128 decode path, not just its single-byte-safe
+        // happy path (v128.const/splat/eq are all < 128).
+        let add = get_simd_op(174).expect("174 (0xAE) should be i32x4.add");
+        assert_eq!(add.name, "i32x4.add");
+        assert_eq!(add.kind, SimdOpKind::Add);
+        assert_eq!(add.sub_opcode, 0xAE);
+
+        assert_eq!(get_simd_op_by_name("i32x4.add").map(|o| o.sub_opcode), Some(174));
+    }
+
+    #[test]
+    fn simd_op_unknown_sub_opcode_returns_none() {
+        assert!(get_simd_op(0xFFFF).is_none());
+        assert!(get_simd_op_by_name("i8x16.shuffle").is_none(), "not yet implemented in this first slice");
     }
 }

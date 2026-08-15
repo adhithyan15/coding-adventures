@@ -1367,6 +1367,13 @@ impl WasmRuntime {
                 | ValueType::StructRef(_)
                 | ValueType::Funcref
                 | ValueType::Externref => WasmValue::I32(arg as i32),
+                // v128 (SIMD): same lossy-legacy-path placeholder as the
+                // reference types above -- `call()`'s i64 round-trip
+                // cannot represent a 128-bit value at all; use `call_typed()`
+                // for real v128 arguments. Passing handle 0 (the reserved
+                // all-zero vector) is a deterministic, non-panicking choice,
+                // not a real conversion.
+                ValueType::V128 => WasmValue::V128(0),
             })
             .collect();
 
@@ -1389,6 +1396,11 @@ impl WasmRuntime {
                 // reference-return handling lands with the cons e2e (L3b-3a-3c).
                 WasmValue::Ref(None) => 0,
                 WasmValue::Ref(Some(h)) => *h as i64,
+                // v128 (SIMD): same lossy-legacy-path placeholder as `Ref`
+                // above -- surface the raw v128_heap handle as an i64,
+                // deterministic and non-panicking, not a real conversion.
+                // Use `call_typed()` for a real `WasmValue::V128` result.
+                WasmValue::V128(h) => *h as i64,
             })
             .collect())
     }

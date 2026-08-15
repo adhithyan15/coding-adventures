@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.4] — 2026-08-15 (SIMD PR1a — V128 arm in the legacy i64 call() path)
+
+### Added
+
+- `call()`'s existing lossy i64-round-trip conversions (both directions)
+  gained a `ValueType::V128`/`WasmValue::V128` arm, matching the
+  established pattern for reference types: a deterministic, non-panicking
+  placeholder (handle `0`, the reserved all-zero v128), not a real
+  conversion — `call()`'s own `i64`-only signature cannot represent a
+  128-bit value at all. `call_typed()` should be used for real v128
+  arguments/results, same guidance the existing `Ref` comment already
+  gives.
+
 ## [0.5.3] — 2026-08-15 (WASM05 — real instantiate() link-failure path)
 
 ### Changed (breaking behavior, deliberate)

@@ -109,6 +109,15 @@ pub enum WasmValue {
     /// `Some(handle)` is a non-null reference into the engine's GC object heap
     /// (`gc_heap[handle]`). Used for `$LispyPair` cons cells (L3b-3a-3b).
     Ref(Option<u32>),
+    /// A 128-bit SIMD lane vector (see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`). The 16 raw bytes don't fit in
+    /// `TypedVMValue`'s shared 64-bit `Value` slot, so -- mirroring `Ref`'s
+    /// own GC-heap-handle shape exactly -- this carries a handle into
+    /// `WasmExecutionContext::v128_heap[handle]`, never the bytes directly.
+    /// Handle `0` is a permanently-reserved all-zero vector (see
+    /// `v128_heap`'s own doc comment), so `V128` needs no `Option` wrapper
+    /// the way `Ref` does for its null case.
+    V128(u32),
 }
 
 /// The typed-stack tag we use for [`WasmValue::Ref`] when round-tripping through
@@ -122,6 +131,12 @@ const REF_TAG: u8 = 0x6E;
 /// stack.  A real heap handle is a `u32` (always `>= 0` when widened to `i64`),
 /// so `-1` is an unambiguous "this is `ref.null`" marker.
 const REF_NULL_SENTINEL: i64 = -1;
+
+/// The typed-stack tag for [`WasmValue::V128`] -- `0x7B`, WASM's real binary
+/// type byte for `v128` (verified against the SIMD proposal's own encoding
+/// table, see `code/specs/W13-wasm-simd-v128-first-slice.md`). Same shape as
+/// `REF_TAG`: the handle into `v128_heap` rides the `Value::Int` payload.
+const V128_TAG: u8 = 0x7B;
 
 impl WasmValue {
     /// Convert to a [`TypedVMValue`] for the GenericVM's typed stack.
@@ -173,6 +188,12 @@ impl WasmValue {
                     None => REF_NULL_SENTINEL,
                 }),
             },
+            // A v128 handle: tag as v128 (0x7B), carry the v128_heap index
+            // in the integer payload, exactly like `Ref` above.
+            WasmValue::V128(handle) => TypedVMValue {
+                value_type: V128_TAG,
+                value: Value::Int(handle as i64),
+            },
         }
     }
 
@@ -204,6 +225,10 @@ impl WasmValue {
                 Value::Int(v) => Ok(WasmValue::Ref(Some(*v as u32))),
                 _ => Err(TrapError::new("type mismatch: expected anyref")),
             },
+            V128_TAG => match &tv.value { // v128 -- handle into v128_heap
+                Value::Int(v) => Ok(WasmValue::V128(*v as u32)),
+                _ => Err(TrapError::new("type mismatch: expected v128")),
+            },
             other => Err(TrapError::new(format!(
                 "unknown value type: 0x{:02X}",
                 other
@@ -232,6 +257,11 @@ impl WasmValue {
             | ValueType::StructRef(_)
             | ValueType::Funcref
             | ValueType::Externref => WasmValue::Ref(None),
+            // Handle 0 is the permanently-reserved all-zero v128 (see
+            // `v128_heap`'s own doc comment) -- no allocation needed here,
+            // unlike a GC struct's default, since `default_for` has no
+            // `WasmExecutionContext` to allocate into.
+            ValueType::V128 => WasmValue::V128(0),
         }
     }
 
@@ -274,6 +304,17 @@ impl WasmValue {
             WasmValue::F64(v) => Ok(*v),
             _ => Err(TrapError::new(format!(
                 "type mismatch: expected f64, got {:?}",
+                self
+            ))),
+        }
+    }
+
+    /// Extract as a v128 heap handle, trapping on type mismatch.
+    pub fn as_v128_handle(&self) -> Result<u32, TrapError> {
+        match self {
+            WasmValue::V128(handle) => Ok(*handle),
+            _ => Err(TrapError::new(format!(
+                "type mismatch: expected v128, got {:?}",
                 self
             ))),
         }
@@ -911,6 +952,14 @@ pub enum DecodedOperand {
         sub: u8,
         offset: u32,
     },
+    /// `v128.const`'s 16-byte literal immediate (SIMD), decoded from the
+    /// bytecode's raw bytes.
+    V128Const([u8; 16]),
+    /// Any other `0xFD`-prefixed SIMD instruction in this first slice
+    /// (`i32x4.splat`/`.add`/`.eq`/`.extract_lane`) -- the LEB128 sub-
+    /// opcode, plus `aux`: the single-byte lane-index immediate for
+    /// `extract_lane` (0-3), unused (`0`) for every other op here.
+    Simd { sub_opcode: u32, aux: u32 },
 }
 
 /// Decode all instructions in a function body.
@@ -1046,6 +1095,53 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 opcode: 0xFE,
                 operand: DecodedOperand::Atomic { sub, offset: decoded_offset },
             });
+            continue;
+        }
+
+        // ── `0xFD`-prefixed SIMD (v128) instructions -- see code/specs/
+        // W13-wasm-simd-v128-first-slice.md ─────────────────────────────
+        //
+        // Structurally DIFFERENT from `0xFB`/`0xFC`/`0xFE` above: those
+        // three read their sub-opcode as a single raw byte (safe only
+        // because every value they use happens to be < 128). The real
+        // SIMD encoding's sub-opcode is a LEB128-encoded `u32` --
+        // verified against two independent sources (the SIMD proposal's
+        // own `BinarySIMD.md` and the W3C core spec), and genuinely
+        // needed: `i32x4.add`'s real sub-opcode is 174 (`0xAE`), which
+        // does not fit in a single LEB128 byte.
+        if opcode_byte == 0xFD {
+            let (sub_opcode, sz) = decode_leb_u32(code, offset);
+            offset += sz;
+            if sub_opcode == 0x0C {
+                // v128.const: a 16-byte raw (not LEB128) immediate --
+                // the literal lane bytes themselves.
+                let mut bytes = [0u8; 16];
+                let available = (code.len().saturating_sub(offset)).min(16);
+                bytes[..available].copy_from_slice(&code[offset..offset + available]);
+                offset += 16;
+                instructions.push(DecodedInstruction {
+                    opcode: 0xFD,
+                    operand: DecodedOperand::V128Const(bytes),
+                });
+            } else if sub_opcode == 0x1B {
+                // i32x4.extract_lane: a single raw byte lane-index
+                // immediate (0-3), NOT LEB128 -- verified against the
+                // SIMD proposal's own BinarySIMD.md ("These immediate
+                // operands are encoded as individual bytes").
+                let lane_idx = if offset < code.len() { code[offset] } else { 0 };
+                offset += 1;
+                instructions.push(DecodedInstruction {
+                    opcode: 0xFD,
+                    operand: DecodedOperand::Simd { sub_opcode, aux: lane_idx as u32 },
+                });
+            } else {
+                // Every other SIMD op in this first slice (splat/eq/add)
+                // carries no immediate beyond the sub-opcode itself.
+                instructions.push(DecodedInstruction {
+                    opcode: 0xFD,
+                    operand: DecodedOperand::Simd { sub_opcode, aux: 0 },
+                });
+            }
             continue;
         }
 
@@ -1292,6 +1388,9 @@ pub struct SavedFrame {
     /// The caller's WasmGC operand table, saved so the callee can overwrite
     /// `ctx.gc_ops` and restore it on return (LANG77 L3b-3a-3b).
     pub gc_ops: Vec<GcOp>,
+    /// The caller's `v128.const` literal table, saved so the callee can
+    /// overwrite `ctx.simd_consts` and restore it on return (SIMD).
+    pub simd_consts: Vec<[u8; 16]>,
 }
 
 /// A heap-allocated WasmGC struct object — the engine's representation of one
@@ -1345,6 +1444,15 @@ pub struct WasmExecutionContext {
     /// holds the decoded `(sub, type_idx, field_idx)`.  Like `br_table_targets`
     /// this is per-function and saved/restored across calls.
     pub gc_ops: Vec<GcOp>,
+    /// Per-function `v128.const` literal table (SIMD, see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`). Each `v128.const` instruction
+    /// stores an index into this Vec as its operand (the 16-byte literal
+    /// doesn't fit in `Operand::Index(usize)` directly). Exactly like
+    /// `br_table_targets`/`gc_ops`, this is per-function and saved/
+    /// restored across nested calls -- NOT the same thing as `v128_heap`
+    /// below, which holds live runtime *values*, not decoded bytecode
+    /// literals.
+    pub simd_consts: Vec<[u8; 16]>,
     /// The WasmGC object heap (LANG77 L3b-3a-3b) — a real, collected
     /// mark-sweep arena (W04): `Some` is a live object, `None` is a
     /// tombstoned/reclaimed slot available for reuse (see the
@@ -1353,6 +1461,19 @@ pub struct WasmExecutionContext {
     /// (a cons built in a callee and returned stays live), so it is *not*
     /// saved/restored per call.
     pub gc_heap: Vec<Option<GcStruct>>,
+    /// The v128 lane-vector heap (SIMD, see `code/specs/
+    /// W13-wasm-simd-v128-first-slice.md`). A `WasmValue::V128(h)` indexes
+    /// into this Vec. Unlike `gc_heap`, v128 values need no mark-sweep
+    /// collection -- they're plain, immutable-once-created `Copy` 16-byte
+    /// arrays, so this simply grows for the duration of one top-level
+    /// `call_function` invocation (reset fresh per top-level call, exactly
+    /// like `gc_heap`, but persisting across the NESTED calls within one
+    /// such invocation). **Index `0` is permanently reserved as the
+    /// all-zero vector** (`[0u8; 16]`), seeded once at `ctx` construction --
+    /// this is the value `WasmValue::default_for(ValueType::V128)` returns,
+    /// letting a `(local $x v128)` default-initialize without needing heap
+    /// access from that (context-free) function.
+    pub v128_heap: Vec<[u8; 16]>,
     /// Field counts per struct type index (LANG77 L3b-3a-3b).  `struct.new N`
     /// pops `struct_field_counts[N]` field values.  Supplied by the embedder via
     /// [`WasmExecutionEngine::set_struct_field_counts`] (the parser does not yet
@@ -1571,6 +1692,7 @@ fn convert_operand(
     operand: &DecodedOperand,
     br_table_targets: &mut Vec<Vec<u32>>,
     gc_ops: &mut Vec<GcOp>,
+    simd_consts: &mut Vec<[u8; 16]>,
 ) -> Option<Operand> {
     match operand {
         DecodedOperand::None => None,
@@ -1596,7 +1718,30 @@ fn convert_operand(
             Some(Operand::Index(idx))
         }
         DecodedOperand::Atomic { sub, offset } => Some(Operand::Index(((*sub as usize) << 32) | (*offset as usize))),
+        // Packed exactly like `Atomic` above: sub-opcode in the high 32
+        // bits, an auxiliary index/value in the low 32 -- see
+        // `unpack_simd_operand`. `v128.const`'s sub-opcode (0x0C) is
+        // packed alongside the const-pool index it was just given; every
+        // other SIMD op packs its sub-opcode with a `0` aux (unused).
+        DecodedOperand::V128Const(bytes) => {
+            let idx = simd_consts.len();
+            simd_consts.push(*bytes);
+            Some(Operand::Index((0x0Cusize << 32) | idx))
+        }
+        DecodedOperand::Simd { sub_opcode, aux } => Some(Operand::Index(((*sub_opcode as usize) << 32) | (*aux as usize))),
     }
+}
+
+/// Unpack a `0xFD` SIMD instruction's `(sub_opcode, aux)` from the packed
+/// `Operand::Index` `convert_operand` built above. `aux` is the
+/// `simd_consts` index for `v128.const` (sub-opcode `0x0C`), unused (`0`)
+/// for every other SIMD op in this first slice.
+fn unpack_simd_operand(instr: &Instruction) -> (u32, usize) {
+    let packed = match &instr.operand {
+        Some(Operand::Index(i)) => *i,
+        _ => 0,
+    };
+    ((packed >> 32) as u32, packed & 0xFFFF_FFFF)
 }
 
 /// Unpack a `0xFE` atomic instruction's `(sub_opcode, offset)` from the
@@ -1810,6 +1955,7 @@ pub fn register_all_handlers(vm: &mut GenericVM) {
     register_parametric(vm);
     register_memory(vm);
     register_atomics(vm);
+    register_simd(vm);
     register_control(vm);
 }
 
@@ -3551,6 +3697,116 @@ fn register_atomics(vm: &mut GenericVM) {
     });
 }
 
+// ── SIMD (v128) instructions, 0xFD prefix -- see code/specs/
+// W13-wasm-simd-v128-first-slice.md for the design, this first slice's
+// exact scope, and where each opcode's sub-opcode value was verified ────
+
+fn register_simd(vm: &mut GenericVM) {
+    vm.register_context_opcode(0xFD, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let (sub_opcode, aux) = unpack_simd_operand(instr);
+
+        if sub_opcode == 0x0C {
+            // v128.const: push the const-pool literal as a brand-new
+            // v128_heap entry. (Not deduplicated against an identical
+            // earlier literal -- a cheap future optimization, not a
+            // correctness requirement for this first slice.)
+            let bytes = *ctx
+                .simd_consts
+                .get(aux)
+                .ok_or_else(|| VMError::GenericError("v128.const: const-pool index out of range".into()))?;
+            let handle = ctx.v128_heap.len() as u32;
+            ctx.v128_heap.push(bytes);
+            push_wasm(vm, WasmValue::V128(handle));
+            vm.advance_pc();
+            return Ok(None);
+        }
+
+        let op = wasm_opcodes::get_simd_op(sub_opcode)
+            .ok_or_else(|| VMError::GenericError(format!("unknown SIMD sub-opcode {sub_opcode:#x}")))?;
+
+        use wasm_opcodes::SimdOpKind;
+        match op.kind {
+            SimdOpKind::Const => unreachable!("v128.const handled above, before this lookup"),
+            SimdOpKind::ExtractLane => {
+                // i32x4.extract_lane: pop a v128, read the `aux`-selected
+                // lane back out as a plain i32 -- the only opcode in this
+                // slice that produces a scalar, not another v128.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 4 {
+                    return Err(VMError::GenericError(format!(
+                        "i32x4.extract_lane: lane index {lane_idx} out of range (must be 0-3)"
+                    )));
+                }
+                let value = i32::from_le_bytes(bytes[lane_idx * 4..lane_idx * 4 + 4].try_into().unwrap());
+                push_wasm(vm, WasmValue::I32(value));
+            }
+            SimdOpKind::Splat => {
+                // i32x4.splat: pop one i32, broadcast its 4 little-endian
+                // bytes into all 4 lanes of a new v128.
+                let scalar = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let lane = scalar.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..4 {
+                    bytes[i * 4..i * 4 + 4].copy_from_slice(&lane);
+                }
+                let handle = ctx.v128_heap.len() as u32;
+                ctx.v128_heap.push(bytes);
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Add | SimdOpKind::Eq => {
+                // Both are lane-wise binary ops over 4 i32 lanes, popped
+                // in WASM's usual (lhs pushed first, rhs second) order --
+                // rhs is on top of the stack.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let l = i32::from_le_bytes(lhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let r = i32::from_le_bytes(rhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::Add => l.wrapping_add(r),
+                        // WASM SIMD comparisons produce a boolean MASK
+                        // per lane: all-1s (-1) if true, all-0s (0) if
+                        // false -- not a plain 0/1 i32 the way scalar
+                        // i32.eq does.
+                        SimdOpKind::Eq => {
+                            if l == r {
+                                -1
+                            } else {
+                                0
+                            }
+                        }
+                        _ => unreachable!("only Add/Eq reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = ctx.v128_heap.len() as u32;
+                ctx.v128_heap.push(result);
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+        }
+
+        vm.advance_pc();
+        Ok(None)
+    });
+}
+
 // ── Control flow instructions ────────────────────────────────────────────
 
 fn register_control(vm: &mut GenericVM) {
@@ -3982,6 +4238,7 @@ fn call_function_inner(
                 return_arity: func_type.results.len(),
                 br_table_targets: std::mem::take(&mut ctx.br_table_targets),
                 gc_ops: std::mem::take(&mut ctx.gc_ops),
+                simd_consts: std::mem::take(&mut ctx.simd_consts),
             });
             frame_pushed = true;
         }
@@ -4004,10 +4261,11 @@ fn call_function_inner(
         // instruction stores its index into the relevant Vec as its Operand::Index.
         let mut callee_br_table_targets: Vec<Vec<u32>> = Vec::new();
         let mut callee_gc_ops: Vec<GcOp> = Vec::new();
+        let mut callee_simd_consts: Vec<[u8; 16]> = Vec::new();
         let mut vm_instructions: Vec<Instruction> = Vec::new();
         for d in &decoded {
             let operand =
-                convert_operand(&d.operand, &mut callee_br_table_targets, &mut callee_gc_ops);
+                convert_operand(&d.operand, &mut callee_br_table_targets, &mut callee_gc_ops, &mut callee_simd_consts);
             vm_instructions.push(Instruction {
                 opcode: d.opcode,
                 operand,
@@ -4017,6 +4275,7 @@ fn call_function_inner(
         // *heap* and struct field counts are module-global, so they are left alone.
         ctx.br_table_targets = callee_br_table_targets;
         ctx.gc_ops = callee_gc_ops;
+        ctx.simd_consts = callee_simd_consts;
 
         // A WASM function body is itself an implicit outer `block` whose label is
         // the function's own end (spec: "execution of an instruction sequence
@@ -4101,6 +4360,7 @@ fn call_function_inner(
             ctx.control_flow_map = frame.control_flow_map;
             ctx.br_table_targets = frame.br_table_targets;
             ctx.gc_ops = frame.gc_ops;
+            ctx.simd_consts = frame.simd_consts;
 
             // Truncate stack to caller's height.
             while vm.typed_stack.len() > frame.stack_height {
@@ -4350,12 +4610,16 @@ impl WasmExecutionEngine {
             returned: false,
             br_table_targets: Vec::new(),
             gc_ops: Vec::new(),
+            simd_consts: Vec::new(),
             // The GC heap starts empty and grows as `struct.new` allocates; it
             // lives for the whole call so a cons built in a callee survives.
             // Real mark-sweep collection now runs against it (W04) at loop
             // back-edges and calls, so a long call no longer grows it
             // without bound.
             gc_heap: Vec::new(),
+            // Index 0 reserved as the all-zero vector -- see `v128_heap`'s
+            // own doc comment.
+            v128_heap: vec![[0u8; 16]],
             struct_field_counts: self.struct_field_counts.clone(),
             gc_state: gc::GcState::default(),
             call_depth: 0,
@@ -4521,9 +4785,10 @@ impl WasmExecutionEngine {
                                 // call frame is being pushed.
                                 let mut br_table_targets: Vec<Vec<u32>> = Vec::new();
                                 let mut gc_ops: Vec<GcOp> = Vec::new();
+                                let mut simd_consts: Vec<[u8; 16]> = Vec::new();
                                 let mut vm_instructions: Vec<Instruction> = Vec::new();
                                 for d in &decoded {
-                                    let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops);
+                                    let operand = convert_operand(&d.operand, &mut br_table_targets, &mut gc_ops, &mut simd_consts);
                                     vm_instructions.push(Instruction {
                                         opcode: d.opcode,
                                         operand,
@@ -4531,6 +4796,7 @@ impl WasmExecutionEngine {
                                 }
                                 ctx.br_table_targets = br_table_targets;
                                 ctx.gc_ops = gc_ops;
+                                ctx.simd_consts = simd_consts;
 
                                 // Initialize locals.
                                 let mut typed_locals: Vec<WasmValue> = current_args;
@@ -5829,6 +6095,140 @@ mod tests {
             host_functions: vec![None],
         });
         assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(42)]);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // SIMD (v128) first slice -- see code/specs/
+    // W13-wasm-simd-v128-first-slice.md
+    // ══════════════════════════════════════════════════════════════════════
+
+    fn simd_engine(code: Vec<u8>) -> WasmExecutionEngine {
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        })
+    }
+
+    fn v128_const_bytes(lanes: [i32; 4]) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(16);
+        for lane in lanes {
+            bytes.extend_from_slice(&lane.to_le_bytes());
+        }
+        bytes
+    }
+
+    /// `v128.const` + `i32x4.extract_lane` round-trip: proves the const
+    /// pool (`ctx.simd_consts`) and the v128 heap handle mechanism both
+    /// work end to end, not just that the code compiles.
+    #[test]
+    fn v128_const_then_extract_lane_round_trips_every_lane() {
+        for (lane_idx, expected) in [(0, 10), (1, 20), (2, 30), (3, 40)] {
+            let mut code = vec![0xFD, 0x0C]; // v128.const
+            code.extend(v128_const_bytes([10, 20, 30, 40]));
+            code.extend([0xFD, 0x1B, lane_idx]); // i32x4.extract_lane <lane_idx>
+            code.push(0x0B); // end
+            let mut engine = simd_engine(code);
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(expected)],
+                "lane {lane_idx}"
+            );
+        }
+    }
+
+    /// `i32x4.splat`: one scalar broadcast into all 4 lanes.
+    #[test]
+    fn i32x4_splat_broadcasts_into_every_lane() {
+        let code = vec![
+            0x41, 0x07, // i32.const 7
+            0xFD, 0x11, // i32x4.splat
+            0xFD, 0x1B, 0x02, // i32x4.extract_lane 2 (any lane should be 7)
+            0x0B,
+        ];
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7)]);
+    }
+
+    /// `i32x4.add`: real lane-wise addition, not just "returns some v128" --
+    /// verifies each lane's SPECIFIC computed value via `extract_lane`,
+    /// including wrapping overflow (the same semantics scalar `i32.add`
+    /// already has).
+    #[test]
+    fn i32x4_add_computes_real_lane_wise_wrapping_sums() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([1, 2, 3, i32::MAX]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes([10, 20, 30, 1]));
+        code.extend([0xFD, 0xAE, 0x01]); // i32x4.add (LEB128: [0xAE, 0x01] for sub-opcode 174)
+        code.extend([0xFD, 0x1B, 0x03]); // extract_lane 3 -- checks the wrapping case specifically
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(i32::MAX.wrapping_add(1))],
+            "lane 3 must wrap exactly like scalar i32.add does"
+        );
+    }
+
+    /// `i32x4.eq`: WASM's boolean-mask convention (-1 for equal, 0 for
+    /// not), not a plain 0/1 the way scalar `i32.eq` works.
+    #[test]
+    fn i32x4_eq_produces_the_all_ones_all_zeros_mask_convention() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([5, 6, 7, 8]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes([5, 0, 7, 0]));
+        code.extend([0xFD, 0x37]); // i32x4.eq
+        code.extend([0xFD, 0x1B, 0x00]); // extract_lane 0 -- equal
+        code.push(0x0B);
+        let mut engine = simd_engine(code.clone());
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "equal lane must be all-1s (-1)");
+
+        let mut code2 = vec![0xFD, 0x0C];
+        code2.extend(v128_const_bytes([5, 6, 7, 8]));
+        code2.extend([0xFD, 0x0C]);
+        code2.extend(v128_const_bytes([5, 0, 7, 0]));
+        code2.extend([0xFD, 0x37]);
+        code2.extend([0xFD, 0x1B, 0x01]); // extract_lane 1 -- not equal
+        code2.push(0x0B);
+        let mut engine2 = simd_engine(code2);
+        assert_eq!(engine2.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "unequal lane must be all-0s (0)");
+    }
+
+    /// Multiple `v128.const`s inside ONE function body must each resolve
+    /// to their OWN distinct literal, not accidentally alias -- a real
+    /// regression risk given the const pool is a per-function side-table
+    /// (`ctx.simd_consts`) indexed by decode-order position.
+    #[test]
+    fn multiple_v128_consts_in_one_function_stay_distinct() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([100, 200, 300, 400]));
+        code.extend([0xFD, 0x1B, 0x02]); // first const, lane 2 -> 300
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(300)]);
+    }
+
+    /// Extracting a lane out of range must trap cleanly, not panic --
+    /// this can only be reached with a hand-crafted/adversarial module,
+    /// since `wasm-wast-parser`'s own literal syntax and `wasm-validator`
+    /// (once it type-checks this op) would reject an out-of-range lane
+    /// index at a different layer.
+    #[test]
+    fn extract_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([1, 2, 3, 4]));
+        code.extend([0xFD, 0x1B, 0x09]); // lane index 9 -- out of the valid 0-3 range
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert!(engine.call_function(0, &[]).is_err());
     }
 
     // ══════════════════════════════════════════════════════════════════════
