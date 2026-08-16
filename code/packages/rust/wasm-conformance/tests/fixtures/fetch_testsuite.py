@@ -133,6 +133,20 @@ TESTSUITE_FILES = [
     # only vendorable once both of those land too.
     "memory_copy.wast",
     "memory_fill.wast",
+    # memory.init/data.drop (task #95) -- were entirely unimplemented
+    # (no opcode decoding, no interpreter handler, no wast-parser text-
+    # form support, no validator type-check rule) before this pass;
+    # needed real new interpreter state (`WasmExecutionContext::
+    # data_segments`/`dropped_data_segments`, persistent across calls
+    # like `v128_heap`) and real PASSIVE data segment support (`(data $d
+    # "bytes")`, no offset expression -- `wasm-module-parser`'s binary
+    # decoder only ever handled segment-mode flag 0x00 before this, not
+    # the real 3-mode encoding the bulk-memory proposal defines). Only
+    # uses single-memory numeric segment indices (no `spectest` import,
+    # no table/elem instructions), so it's vendorable standalone --
+    # unlike its sibling `bulk.wast` (task #97 still pending) and
+    # `memory-multi.wast` (task #92, explicit multi-memory indices).
+    "memory_init.wast",
     # Real cross-module linking (WASM05, task #93) -- the original W05
     # scope note excluded this as needing "heavier module-linking
     # semantics" than existed at the time; `RegistryHost` (real

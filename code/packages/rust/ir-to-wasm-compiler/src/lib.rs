@@ -145,6 +145,7 @@ impl IrToWasmCompiler {
                     memory_index: 0,
                     offset_expr: const_expr(data_offsets[&decl.label] as i64),
                     data: vec![decl.init; decl.size],
+                    is_passive: false,
                 });
             }
         }

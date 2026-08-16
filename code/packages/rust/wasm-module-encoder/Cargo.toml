@@ -1,6 +1,6 @@
 [package]
 name = "wasm-module-encoder"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 description = "Encode WebAssembly 1.0 modules into raw .wasm bytes"
 

@@ -1,5 +1,13 @@
 # Changelog
 
+- 0.2.2 (task #95): `encode_data_segment` now writes the real segment-
+  mode flag (`1` for a passive segment, `0` + the offset expression for
+  active) instead of unconditionally writing `memory_index` then an
+  offset expression -- the encoder-side counterpart to
+  `wasm-module-parser`'s decode fix. A passive segment round-tripped
+  through this encoder before this fix would have silently become a
+  bogus active segment with an empty offset expression.
+
 - 0.2.1 (WASM18): Fix `encode_memory_type` -- it only ever called
   `encode_limits`, which has no way to express flags-byte bit 1
   ("shared", threads proposal). Any `MemoryType { shared: true, .. }`

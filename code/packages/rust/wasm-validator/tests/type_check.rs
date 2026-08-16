@@ -111,6 +111,15 @@ fn valid_bulk_memory_copy_and_fill() {
 }
 
 #[test]
+fn valid_memory_init_and_data_drop() {
+    assert_valid(
+        r#"(module (memory 1) (data $d "hi")
+             (func (memory.init $d (i32.const 0) (i32.const 0) (i32.const 2)))
+             (func (data.drop $d)))"#,
+    );
+}
+
+#[test]
 fn valid_conversion_family_including_sign_extension_and_trunc_sat() {
     assert_valid(
         "(module
@@ -455,6 +464,29 @@ fn invalid_global_index_out_of_bounds() {
 #[test]
 fn invalid_ref_func_index_out_of_bounds() {
     assert_invalid("(module (func (result funcref) (ref.func 99)))");
+}
+
+#[test]
+fn invalid_memory_init_out_of_bounds_data_segment_index() {
+    // Only 1 data segment declared (index 0); referencing 5 is a real
+    // validation error, not deferred to a runtime trap.
+    assert_invalid(
+        r#"(module (memory 1) (data "hi")
+             (func (memory.init 5 (i32.const 0) (i32.const 0) (i32.const 2))))"#,
+    );
+}
+
+#[test]
+fn invalid_data_drop_out_of_bounds_data_segment_index() {
+    assert_invalid(r#"(module (data "hi") (func (data.drop 5)))"#);
+}
+
+#[test]
+fn invalid_memory_init_requires_a_declared_memory() {
+    assert_invalid(
+        r#"(module (data "hi")
+             (func (memory.init 0 (i32.const 0) (i32.const 0) (i32.const 0))))"#,
+    );
 }
 
 #[test]

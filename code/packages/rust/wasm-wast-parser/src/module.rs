@@ -164,6 +164,10 @@ struct ModuleCtx {
     table_names: HashMap<String, u32>,
     memory_names: HashMap<String, u32>,
     global_names: HashMap<String, u32>,
+    /// A data segment's own `$id` -> its index in `module.data` (task #95).
+    /// `memory.init`/`data.drop` reference a data segment by this same
+    /// name/index space, mirroring every other `*_names` map here.
+    data_names: HashMap<String, u32>,
 }
 
 fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) -> Result<u32, WastParseError> {
@@ -382,6 +386,11 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
     let num_import_tables = import_table_i;
     let num_import_memories = import_memory_i;
     let num_import_globals = import_global_i;
+    // Data segments (task #95) have no import counterpart, so their index
+    // space is just textual declaration order -- this counter tracks the
+    // same index `build_data`'s later `ctx.module.data.push(...)` will
+    // assign, since both loops walk `fields` in the same order.
+    let mut data_i = 0u32;
     for f in fields {
         if f.is_keyword_list("func") {
             let items = f.as_list().unwrap();
@@ -423,6 +432,19 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 global_type: GlobalType { value_type: ValueType::I32, mutable: false },
                 init_expr: vec![0x0B],
             });
+        } else if f.is_keyword_list("data") {
+            // No placeholder pushed here (unlike func/table/memory/global
+            // above): `build_data` (pass 2) is the only thing that appends
+            // to `ctx.module.data`, so this just registers `$id -> data_i`
+            // ahead of time -- `data_i` alone tracks the index, not
+            // `ctx.module.data.len()` (which stays 0 through all of pass 1).
+            let items = f.as_list().unwrap();
+            if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
+                if name.starts_with('$') {
+                    insert_unique(&mut ctx.data_names, name, data_i, f.pos(), "data")?;
+                }
+            }
+            data_i += 1;
         }
     }
 
@@ -1108,28 +1130,50 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
 
 fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let mut i = 0;
-    let memory_index = if fields.first().is_some_and(|e| e.is_keyword_list("memory")) {
-        let memory_form = fields[0].as_list().unwrap();
+    // Optional leading `$id` (task #95): same leading position as every
+    // other named module field -- already registered into `ctx.data_names`
+    // by `collect_symbols`'s pass-1 pre-pass, so this is a skip only.
+    if fields.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
+        i += 1;
+    }
+    let has_memory_clause = fields.get(i).is_some_and(|e| e.is_keyword_list("memory"));
+    let memory_index = if has_memory_clause {
+        let memory_form = fields[i].as_list().unwrap();
         let idx = resolve_idx(&ctx.memory_names, expect_get(memory_form, 1)?, "memory")?;
         i += 1;
         idx
     } else {
         0
     };
-    let offset_expr_form = expect_get(fields, i)?;
-    let offset_expr = if offset_expr_form.is_keyword_list("offset") {
-        let items = offset_expr_form.as_list().unwrap();
-        let mut code = Vec::new();
-        encode_instr_list(&items[1..], &mut InstrCtx::empty(ctx), &mut code)?;
-        code.push(0x0B);
-        i += 1;
-        code
+    // Passive segment (bulk-memory proposal, task #95): declared with no
+    // offset expression at all -- `(data $d "bytes")` vs. an active
+    // segment's `(data (i32.const 0) "bytes")`/`(data (memory $m) (offset
+    // ...) "bytes")`. A `(memory ...)` clause is only ever legal on an
+    // active segment (a passive segment has no target memory to name at
+    // declaration time -- `memory.init` supplies one per-call instead), so
+    // its presence alone already proves this segment is active; otherwise,
+    // the next field being the data payload directly (a string literal, or
+    // nothing at all) rather than an offset expression is what marks it
+    // passive.
+    let is_passive = !has_memory_clause && matches!(fields.get(i), Some(SExpr::Str(..)) | None);
+    let offset_expr = if is_passive {
+        Vec::new()
     } else {
-        let mut code = Vec::new();
-        encode_instr_list(std::slice::from_ref(offset_expr_form), &mut InstrCtx::empty(ctx), &mut code)?;
-        code.push(0x0B);
+        let offset_expr_form = expect_get(fields, i)?;
+        let offset_expr = if offset_expr_form.is_keyword_list("offset") {
+            let items = offset_expr_form.as_list().unwrap();
+            let mut code = Vec::new();
+            encode_instr_list(&items[1..], &mut InstrCtx::empty(ctx), &mut code)?;
+            code.push(0x0B);
+            code
+        } else {
+            let mut code = Vec::new();
+            encode_instr_list(std::slice::from_ref(offset_expr_form), &mut InstrCtx::empty(ctx), &mut code)?;
+            code.push(0x0B);
+            code
+        };
         i += 1;
-        code
+        offset_expr
     };
     let mut data = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
@@ -1137,7 +1181,7 @@ fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
             data.extend_from_slice(b);
         }
     }
-    ctx.module.data.push(DataSegment { memory_index, offset_expr, data });
+    ctx.module.data.push(DataSegment { memory_index, offset_expr, data, is_passive });
     Ok(())
 }
 
@@ -1368,6 +1412,30 @@ fn encode_stream_instr(
         out.push(0x0B);
         out.push(0x00); // memory index
         return Ok(0);
+    }
+    // `memory.init`/`data.drop` (bulk-memory proposal, task #95): same
+    // 0xFC-prefixed shape, intercepted here too. Unlike memory.copy/fill
+    // above, these DO take a real immediate -- a data-segment index,
+    // resolved through `icx.module.data_names` exactly like `global.get`'s
+    // `global_names` lookup above -- so, like `local.get`/`global.get`,
+    // this consumes ONE following token. `memory.init` also carries a
+    // trailing memory-index byte (same single-memory-only deferral as
+    // memory.copy/fill: always `0x00`, no explicit-memory-index lookup
+    // yet); `data.drop` has no memory concept at all, so no such byte.
+    if name == "memory.init" {
+        let idx = resolve_idx(&icx.module.data_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "data")?;
+        out.push(0xFC);
+        out.push(0x08);
+        out.extend(wasm_leb128::encode_unsigned(idx as u64));
+        out.push(0x00); // memory index
+        return Ok(1);
+    }
+    if name == "data.drop" {
+        let idx = resolve_idx(&icx.module.data_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "data")?;
+        out.push(0xFC);
+        out.push(0x09);
+        out.extend(wasm_leb128::encode_unsigned(idx as u64));
+        return Ok(1);
     }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
     // WASM17): neither is registered in `wasm_opcodes::OPCODES` (see
@@ -1713,6 +1781,29 @@ fn encode_flat_instr(
         out.push(0xFC);
         out.push(0x0B);
         out.push(0x00); // memory index
+        return Ok(());
+    }
+    // `memory.init`/`data.drop` (task #95): see the matching comment in
+    // `encode_stream_instr`. Unlike memory.copy/fill, the data-segment
+    // index is a real immediate -- `(memory.init $d (dest)(src)(len))` --
+    // and, matching `"call" | "return_call"`'s own folded shape above, it
+    // LEADS the operand list rather than trailing it.
+    if name == "memory.init" {
+        let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+        encode_instr_list(&args[1..], icx, out)?;
+        let idx = resolve_idx(&icx.module.data_names, idx_expr, "data")?;
+        out.push(0xFC);
+        out.push(0x08);
+        out.extend(wasm_leb128::encode_unsigned(idx as u64));
+        out.push(0x00); // memory index
+        return Ok(());
+    }
+    if name == "data.drop" {
+        let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+        let idx = resolve_idx(&icx.module.data_names, idx_expr, "data")?;
+        out.push(0xFC);
+        out.push(0x09);
+        out.extend(wasm_leb128::encode_unsigned(idx as u64));
         return Ok(());
     }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
@@ -2652,6 +2743,39 @@ mod tests {
     }
 
     #[test]
+    fn memory_init_and_data_drop_encode_as_the_0xfc_prefixed_form_with_a_real_dataidx(
+    ) {
+        // Task #95: unlike memory.copy/fill, the data-segment index here is
+        // a REAL immediate resolved via `data_names`, not a hardcoded byte
+        // -- flat form places it as the following token (`local.get`/
+        // `global.get`'s own shape), folded form as the leading arg
+        // (`call`'s own shape).
+        let flat = parse_module(
+            r#"(module (memory 1) (data $d "hi") (func i32.const 0 i32.const 0 i32.const 2 memory.init $d))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&flat, 0),
+            &[0x41, 0x00, 0x41, 0x00, 0x41, 0x02, 0xFC, 0x08, 0x00, 0x00, 0x0B]
+        );
+
+        let folded = parse_module(
+            r#"(module (memory 1) (data $d "hi") (func (memory.init $d (i32.const 0) (i32.const 0) (i32.const 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&folded, 0),
+            &[0x41, 0x00, 0x41, 0x00, 0x41, 0x02, 0xFC, 0x08, 0x00, 0x00, 0x0B]
+        );
+
+        let flat_drop = parse_module(r#"(module (data $d "hi") (func data.drop $d))"#).unwrap();
+        assert_eq!(code_of(&flat_drop, 0), &[0xFC, 0x09, 0x00, 0x0B]);
+
+        let folded_drop = parse_module(r#"(module (data $d "hi") (func (data.drop $d)))"#).unwrap();
+        assert_eq!(code_of(&folded_drop, 0), &[0xFC, 0x09, 0x00, 0x0B]);
+    }
+
+    #[test]
     fn all_eight_trunc_sat_names_map_to_the_spec_assigned_sub_opcode() {
         let expected = [
             ("i32.trunc_sat_f32_s", 0x00u8),
@@ -2906,6 +3030,37 @@ mod tests {
         assert_eq!(m.data.len(), 1);
         assert_eq!(m.data[0].data, b"hi");
         assert_eq!(m.data[0].offset_expr, vec![0x41, 0x00, 0x0B]);
+        assert!(!m.data[0].is_passive);
+    }
+
+    /// Task #95: a passive segment has no offset expression at all --
+    /// `(data $d "bytes")`, not `(data (i32.const 0) "bytes")`. Also
+    /// exercises `$id` resolution: `data.drop`/`memory.init` need to look
+    /// this segment up by name via `ctx.data_names`.
+    #[test]
+    fn passive_data_segment_has_no_offset_and_registers_its_id() {
+        let m = parse_module(r#"(module (data $d "hello passive"))"#).unwrap();
+        assert_eq!(m.data.len(), 1);
+        assert!(m.data[0].is_passive);
+        assert!(m.data[0].offset_expr.is_empty());
+        assert_eq!(m.data[0].data, b"hello passive");
+    }
+
+    /// An unnamed active segment declared AFTER a named passive one must
+    /// still get the right index -- proves `data_i`'s pass-1 counter (used
+    /// to register `$id`s) and pass-2's real `ctx.module.data.push` stay in
+    /// lockstep even when only some segments are named.
+    #[test]
+    fn mixed_passive_and_active_data_segments_keep_consistent_indices() {
+        let m = parse_module(
+            r#"(module (memory 1) (data $passive "one") (data (i32.const 0) "two"))"#,
+        )
+        .unwrap();
+        assert_eq!(m.data.len(), 2);
+        assert!(m.data[0].is_passive);
+        assert_eq!(m.data[0].data, b"one");
+        assert!(!m.data[1].is_passive);
+        assert_eq!(m.data[1].data, b"two");
     }
 
     #[test]
@@ -3043,9 +3198,25 @@ mod tests {
     }
 
     #[test]
-    fn empty_elem_and_data_segments_error_cleanly_not_panic() {
+    fn empty_elem_segment_errors_cleanly_not_panic() {
+        // `elem` has no passive-segment support yet (task #97), so `(elem)`
+        // alone is still unconditionally an error, not a valid empty
+        // passive segment.
         assert!(matches!(parse_module("(module (elem))"), Err(WastParseError::UnexpectedEof)));
-        assert!(matches!(parse_module("(module (data))"), Err(WastParseError::UnexpectedEof)));
+    }
+
+    /// Task #95: `(data)` alone -- no `$id`, no `(memory ...)` clause, no
+    /// offset expression, no string literal -- used to be a parse error
+    /// (there was no such thing as a passive segment, so "no offset" was
+    /// always malformed). Per the real WAT grammar, this is now a
+    /// perfectly legal, empty PASSIVE segment (`datasegment ::= '(' 'data'
+    /// id? datastring* ')'` -- zero `datastring`s is fine), not an error.
+    #[test]
+    fn empty_data_segment_is_a_valid_empty_passive_segment() {
+        let module = parse_module("(module (data))").unwrap();
+        assert_eq!(module.data.len(), 1);
+        assert!(module.data[0].is_passive);
+        assert!(module.data[0].data.is_empty());
     }
 
     #[test]

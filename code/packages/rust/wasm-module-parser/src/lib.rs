@@ -900,23 +900,56 @@ fn parse_code_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Was
 ///
 /// ```text
 /// count: u32leb
-/// entry: mem_idx:u32leb  offset_expr  byte_count:u32leb  data:u8 × byte_count
+/// entry: flags:u32leb  (mode-dependent fields)  byte_count:u32leb  data:u8 × byte_count
 /// ```
 ///
-/// At instantiation, `data[0..byte_count]` is copied into memory at the byte
-/// offset computed by `offset_expr`. This is how compiled programs load string
-/// literals, lookup tables, and initialised globals into linear memory.
+/// The real encoding has three segment-mode variants (bulk-memory
+/// proposal, task #95), distinguished by the leading `flags` LEB128:
+///
+/// | `flags` | Mode                    | Fields between `flags` and `byte_count`   |
+/// |---------|--------------------------|--------------------------------------------|
+/// | `0x00`  | active, implicit mem 0  | `offset_expr` only                        |
+/// | `0x01`  | passive                 | (none)                                    |
+/// | `0x02`  | active, explicit memory | `mem_idx:u32leb` then `offset_expr`       |
+///
+/// Mode 0 happens to be byte-identical to reading a bare `memory_index:
+/// u32leb` of `0` followed by an offset expression -- which is exactly
+/// what an earlier version of this function did unconditionally, so it
+/// "worked" only because every real-world module used mode 0. It could
+/// not have decoded mode 1 (no offset expr present at all -- the
+/// following data bytes would have been misread as one) or mode 2
+/// (`flags` isn't the memory index; a real explicit index follows it)
+/// correctly. Any `flags` value other than 0/1/2 is a real WASM spec
+/// violation (`InvalidDataSegment`), not silently accepted.
+///
+/// A **passive** segment (`is_passive: true`) is never applied
+/// automatically at instantiation -- it stays resident so `memory.init`
+/// can copy from it (any number of times, into any memory) until
+/// `data.drop` frees it. An **active** segment is applied once, at
+/// instantiation time, to the memory `memory_index` names at the byte
+/// offset `offset_expr` computes.
 fn parse_data_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), WasmParseError> {
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
-        let memory_index = p.read_u32leb()?;
-        let offset_expr = p.read_expr()?;
+        let flags = p.read_u32leb()?;
+        let (memory_index, offset_expr, is_passive) = match flags {
+            0 => (0, p.read_expr()?, false),
+            1 => (0, Vec::new(), true),
+            2 => {
+                let memory_index = p.read_u32leb()?;
+                (memory_index, p.read_expr()?, false)
+            }
+            other => {
+                return Err(p.error(format!("unsupported data segment mode flags {other}")));
+            }
+        };
         let byte_count = p.read_u32leb()? as usize;
         let bytes = p.read_bytes(byte_count)?.to_vec();
         module.data.push(DataSegment {
             memory_index,
             offset_expr,
             data: bytes,
+            is_passive,
         });
     }
     Ok(())

@@ -709,12 +709,27 @@ pub struct Element {
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct DataSegment {
-    /// Index of the memory to write into (always 0 in WASM 1.0).
+    /// Index of the memory to write into (always 0 in WASM 1.0). Meaningless
+    /// when `is_passive` is `true` -- kept `0`/unset by convention rather
+    /// than wrapped in an `Option`, matching this struct's existing
+    /// flat-fields style.
     pub memory_index: u32,
     /// Constant expression that computes the byte offset into memory.
+    /// Empty when `is_passive` is `true` (a passive segment has no offset
+    /// at all -- it is never applied at instantiation time, only copied on
+    /// demand by an explicit `memory.init`, task #95).
     pub offset_expr: Vec<u8>,
     /// The raw bytes to copy into memory.
     pub data: Vec<u8>,
+    /// `true` for a passive segment (bulk-memory proposal, task #95):
+    /// declared with no offset expression (`(data $d "bytes")`, or binary
+    /// segment-mode flag `0x01`), so `wasm-runtime::instantiate()` never
+    /// applies it automatically -- it stays resident until an explicit
+    /// `memory.init` copies from it (any number of times) or `data.drop`
+    /// frees its backing bytes. `false` for an ordinary WASM 1.0 active
+    /// segment, applied once at instantiation via `offset_expr`/
+    /// `memory_index` above.
+    pub is_passive: bool,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1131,6 +1146,7 @@ mod tests {
             memory_index: 0,
             offset_expr: vec![0x41, 0x80, 0x08, 0x0B], // i32.const 1024; end
             data: b"hello".to_vec(),
+            is_passive: false,
         };
         assert_eq!(seg.memory_index, 0);
         assert_eq!(seg.data, b"hello");

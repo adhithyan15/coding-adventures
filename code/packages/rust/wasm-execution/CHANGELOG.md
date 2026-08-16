@@ -2,6 +2,64 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.7] - 2026-08-16 (task #95 — memory.init/data.drop, passive data segments)
+
+### Security
+
+- `memory.init`'s handler now hard-errors on an out-of-range `data_idx`
+  instead of silently degrading it to an empty segment. The first pass
+  of this fix (caught by `/security-review` round 1) removed a direct
+  `ctx.data_segments[idx]` panic by resolving `segment_bytes` once via
+  `.get(idx).unwrap_or(&[])` -- correct for the panic, but it also
+  collapsed "index out of range" and "segment was dropped" into the
+  same fallback. That let a zero-length `memory.init` with an
+  out-of-range `data_idx` return `Ok(())` (silently "succeed") instead
+  of trapping, which the interpreter's own defensive posture doesn't
+  allow elsewhere -- `data.drop`'s handler, just below, has always
+  hard-errored on an out-of-range index unconditionally. Fixed by
+  checking `idx` against both `Vec` lengths FIRST, returning
+  `VMError::GenericError` immediately if out of range, before ever
+  touching `dropped_data_segments`/`data_segments`; only a genuinely
+  in-range index is allowed to soft-degrade via `dropped`. New test
+  `memory_init_with_an_out_of_range_data_idx_traps_cleanly_even_at_zero_length`
+  pins both the zero-length and nonzero-length out-of-range shapes.
+  Confirmed load-bearing by TEMP-REVERT-CHECK (reverting to the
+  `.get(idx).unwrap_or(true/&[])` fallback reproduces the exact
+  predicted regression: the new test fails with "out-of-range data_idx
+  must trap, not silently succeed: Ok([])").
+
+### Added
+
+- `memory.init`/`data.drop` (`0xFC 0x08`/`0x09`) interpreter handlers --
+  entirely unimplemented before this pass. `memory.init` copies from a
+  data segment (bounds-checked against the segment's own length, same
+  zero-length-still-checked discipline task #94 established for
+  `copy`/`fill`) into memory (bounds-checked the normal way via
+  `LinearMemory::write_bytes`); `data.drop` permanently marks a segment
+  dropped. A dropped segment behaves as length-0 for `memory.init`'s
+  bounds check -- a zero-length `memory.init` on it still succeeds, but
+  any nonzero-length one traps, matching the real spec's "a dropped
+  segment can never be initialized from again" rule.
+- `WasmExecutionContext::data_segments: Vec<Vec<u8>>` (immutable
+  content, one entry per data segment) and `dropped_data_segments:
+  Vec<bool>` (mutable, persistent across calls within one instance's
+  lifetime -- same shape as `v128_heap`, NOT reset per call, since
+  `data.drop`'s effect must survive into later calls). Set via new
+  `WasmExecutionEngine::set_data_segments`/`set_dropped_data_segments`,
+  same optional-setter pattern as `set_struct_field_counts`/
+  `set_v128_heap`; `dropped_data_segments` round-trips through the new
+  `WasmEngineState::dropped_data_segments` field the same way
+  `v128_heap` does.
+- `DecodedOperand::BulkMemory { sub: u8, data_idx: u32 }` -- replaces the
+  bare `Int(sub)` operand every `0xFC` sub-opcode previously used.
+  `memory.init`'s `data_idx` needed a REAL immediate carried through
+  decoding (unlike `memory.copy`/`memory.fill`'s discarded memory-index
+  bytes, which sub-opcode is being executed was the only thing that
+  mattered), so every `0xFC` sub-opcode now packs `(sub, data_idx)`
+  uniformly into one `Operand::Index`, mirroring the existing `Atomic`/
+  `Simd` packed-operand shapes (`data_idx` is simply `0`, unused, for
+  the sub-opcodes that don't need it).
+
 ## [0.9.6] - 2026-08-16 (task #94 — bulk memory: memory.fill + a real bounds-check bug)
 
 ### Added

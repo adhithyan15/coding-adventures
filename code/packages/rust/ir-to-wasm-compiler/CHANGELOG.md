@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.1] — 2026-08-16 (task #95)
+
+### Changed
+
+- `wasm_types::DataSegment` gained an `is_passive` field (see
+  `wasm-types`'s own CHANGELOG); this crate's one data-segment
+  construction site sets it `false` (every segment this compiler emits
+  is an ordinary active one) -- no behavior change.
+
 ## [0.3.0] — 2026-05-11
 
 ### Added — Bitwise OR, XOR, NOT opcodes
