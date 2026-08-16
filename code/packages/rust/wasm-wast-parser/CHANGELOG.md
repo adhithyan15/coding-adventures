@@ -1,5 +1,24 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.16 — 2026-08-15 — capture a module directive's own $id (task #93, linking.wast)
+
+### Fixed (breaking)
+
+- `Directive::Module` now carries the module's own `$id` --
+  `(module $Mf ...)` -- as a new `id: Option<String>` field, instead of
+  silently discarding it during parsing. Real WAT scripts address a
+  SPECIFIC earlier module by this id (`(invoke $Mf "f" ...)`, `(register
+  "name" $Mf)`), not just "the current module" -- discarding it meant
+  every such reference was permanently unresolvable. `Directive::Module`'s
+  shape changes from a tuple variant `Module(Result<WasmModule, String>)`
+  to a struct variant `Module { id: Option<String>, result:
+  Box<Result<WasmModule, String>> }` (boxed per clippy's `large_enum_
+  variant` -- `WasmModule` is large relative to every other `Directive`
+  variant, and this enum lives in `Vec<Directive>` for a whole script).
+
+See `wasm-conformance`'s own changelog for how this is actually used
+(the module registry now resolves these ids too).
+
 ## 0.1.15 — 2026-08-15 — multi-memory: named memory index on memory.size/memory.grow (W16, task #85)
 
 ### Fixed

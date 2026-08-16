@@ -106,6 +106,16 @@ TESTSUITE_FILES = [
     "traps.wast",
     "float_memory.wast",
     "memory_redundancy.wast",
+    # Real cross-module linking (WASM05, task #93) -- the original W05
+    # scope note excluded this as needing "heavier module-linking
+    # semantics" than existed at the time; `RegistryHost` (real
+    # HostInterface link-failure path, WASM05/W10) now provides exactly
+    # that. Of its 71 modules, only 2 import from `spectest` (this crate
+    # has no spectest host, by design -- see `RegistryHost`'s own doc
+    # comment); every other module/directive exercises real, already-
+    # supported cross-module function/table/memory/global import/export/
+    # register machinery.
+    "linking.wast",
     # Parser self-test
     "select.wast",
     "comments.wast",

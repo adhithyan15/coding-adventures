@@ -78,7 +78,7 @@ pub fn run_wast_source(source: &str) -> Result<Vec<(DirectiveKind, DirectiveOutc
 
 fn directive_kind(d: &Directive) -> DirectiveKind {
     match d {
-        Directive::Module(_) => DirectiveKind::Module,
+        Directive::Module { .. } => DirectiveKind::Module,
         Directive::Register { .. } => DirectiveKind::Register,
         Directive::Action(_) => DirectiveKind::Action,
         Directive::AssertReturn { .. } => DirectiveKind::AssertReturn,
@@ -255,7 +255,7 @@ impl Executor {
 
     fn execute(&mut self, directive: Directive) -> DirectiveOutcome {
         match directive {
-            Directive::Module(module_result) => {
+            Directive::Module { id, result: module_result } => {
                 // W14: clear BOTH the status flag and the registry's
                 // "current module" slot unconditionally, before looking at
                 // which of this directive's 4 possible outcomes actually
@@ -267,7 +267,7 @@ impl Executor {
                 // whatever instance came before it).
                 self.current_module_status = None;
                 self.registry.borrow_mut().remove(&None);
-                let module = match module_result {
+                let module = match *module_result {
                     Err(e) => {
                         let reason =
                             format!("module failed to parse/build (real capability gap, not a bug): {e}");
@@ -282,7 +282,19 @@ impl Executor {
                         let host = RegistryHost { registry: Rc::clone(&self.registry) };
                         match WasmRuntime::with_host(Box::new(host)).instantiate(&validated.module) {
                             Ok(instance) => {
-                                self.registry.borrow_mut().insert(None, Rc::new(RefCell::new(instance)));
+                                let instance = Rc::new(RefCell::new(instance));
+                                self.registry.borrow_mut().insert(None, Rc::clone(&instance));
+                                // Task #93 (linking.wast): also register
+                                // under the module's own `$id`, if it has
+                                // one -- the SAME live instance (`Rc::clone`,
+                                // not a copy), so a LATER `(invoke $id ...)`/
+                                // `(register "M" $id)` can resolve back to
+                                // this specific module even after other
+                                // `(module ...)` directives have since
+                                // become "the current module".
+                                if let Some(id) = id {
+                                    self.registry.borrow_mut().insert(Some(id), instance);
+                                }
                                 DirectiveOutcome::Pass
                             }
                             Err(e) if is_link_error(&e) => {
@@ -297,19 +309,19 @@ impl Executor {
                 }
             }
 
-            Directive::Register { name, .. } => {
-                // `module_name` (a `$id` referencing an earlier `(module
-                // $id ...)`) can't be resolved here: `wasm-wast-parser`
-                // deliberately discards a module directive's own `$id`
-                // during parsing (it doesn't affect encoding), so by the
-                // time a script reaches this executor there is no id to
-                // look up. Only "register the CURRENT module" is
-                // supported -- the only form any of this phase's vendored
-                // files actually use.
-                let current = self.registry.borrow().get(&None).cloned();
-                match current {
-                    Some(current) => {
-                        self.registry.borrow_mut().insert(Some(name), current);
+            Directive::Register { name, module_name } => {
+                // `module_name` (task #93/linking.wast): a `$id` referencing
+                // an earlier `(module $id ...)`, now resolvable since that
+                // id is captured at parse time and registered in
+                // `Directive::Module`'s own arm above. Falls back to "the
+                // current module" (`None`) when `module_name` is absent --
+                // the plain `(register "name")` form real WAT scripts also
+                // use.
+                let key = module_name;
+                let target = self.registry.borrow().get(&key).cloned();
+                match target {
+                    Some(target) => {
+                        self.registry.borrow_mut().insert(Some(name), target);
                         DirectiveOutcome::Pass
                     }
                     // W14: if there's no current module BECAUSE the last
@@ -317,10 +329,14 @@ impl Executor {
                     // (build/link failure), that gap should propagate as
                     // NotYetSupported here too, not get flattened into a
                     // hard Fail that looks like a real test-script bug.
-                    None => match &self.current_module_status {
+                    // Only applies to the "current module" (`None`) case --
+                    // an explicit `$id` that's simply never been defined is
+                    // a real script-level bug, not a capability gap.
+                    None if key.is_none() => match &self.current_module_status {
                         Some(reason) => DirectiveOutcome::NotYetSupported(reason.clone()),
                         None => DirectiveOutcome::Fail("register: no current module to register".to_string()),
                     },
+                    None => DirectiveOutcome::Fail(format!("register: no module registered as {key:?}")),
                 }
             }
 
@@ -1117,6 +1133,49 @@ mod tests {
         );
         assert_eq!(results[1], (DirectiveKind::Register, DirectiveOutcome::Pass));
         assert_eq!(results[2], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    /// Task #93 (linking.wast): real WAT scripts address a SPECIFIC
+    /// earlier module by its own `$id` -- `(invoke $Mf "f" ...)` -- not
+    /// just "the current module." Before this fix, `(module $id ...)`'s
+    /// own name was discarded during parsing, so `$id` never resolved to
+    /// anything: this is the single root cause behind ALL 65 `assert_
+    /// return` failures the real, vendored `linking.wast` corpus file had
+    /// before this fix (confirmed via a direct diagnostic run -- every one
+    /// of them failed with the identical "no module registered as
+    /// Some($id)" message).
+    #[test]
+    fn invoke_addresses_a_specific_earlier_module_by_its_own_id_not_just_the_current_one() {
+        let results = outcomes(
+            r#"
+            (module $Mf (func (export "get") (result i32) i32.const 1))
+            (module $Mg (func (export "get") (result i32) i32.const 2))
+            (assert_return (invoke $Mf "get") (i32.const 1))
+            (assert_return (invoke $Mg "get") (i32.const 2))
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+        assert_eq!(results[3], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
+    }
+
+    /// `(register "name" $id)` -- the explicit-target form, as opposed to
+    /// the "register the current module" form already covered above --
+    /// needs the identical `$id` resolution.
+    #[test]
+    fn register_with_an_explicit_module_id_targets_that_module_not_the_current_one() {
+        let results = outcomes(
+            r#"
+            (module $Earlier (func (export "answer") (result i32) i32.const 42))
+            (module (func (export "unrelated") (result i32) i32.const 0))
+            (register "E" $Earlier)
+            (module
+              (import "E" "answer" (func $answer (result i32))))
+            (assert_return (invoke $Earlier "answer") (i32.const 42))
+            "#,
+        );
+        assert_eq!(results[2], (DirectiveKind::Register, DirectiveOutcome::Pass));
+        assert_eq!(results[3], (DirectiveKind::Module, DirectiveOutcome::Pass), "import against the EARLIER module must link");
+        assert_eq!(results[4], (DirectiveKind::AssertReturn, DirectiveOutcome::Pass));
     }
 
     // ── W14: a per-module build failure degrades gracefully ─────────────
