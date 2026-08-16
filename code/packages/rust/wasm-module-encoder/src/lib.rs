@@ -319,8 +319,18 @@ fn encode_element(element: &Element) -> Vec<u8> {
 }
 
 fn encode_data_segment(segment: &DataSegment) -> Vec<u8> {
-    let mut bytes = encode_u32(segment.memory_index);
-    bytes.extend_from_slice(&segment.offset_expr);
+    // Segment-mode flag (task #95): mode 1 (passive) has no memory index or
+    // offset expression at all; mode 0 (active, implicit memory 0) is the
+    // only active shape this encoder produces (this repo's own segments are
+    // never emitted with a nonzero `memory_index`, so mode 2 -- active with
+    // an explicit index -- is never needed here).
+    let mut bytes = if segment.is_passive {
+        encode_u32(1)
+    } else {
+        let mut b = encode_u32(0);
+        b.extend_from_slice(&segment.offset_expr);
+        b
+    };
     bytes.extend(encode_u32(segment.data.len() as u32));
     bytes.extend_from_slice(&segment.data);
     bytes
@@ -788,6 +798,7 @@ mod tests {
                 memory_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 data: b"Nib".to_vec(),
+                is_passive: false,
             }],
             ..Default::default()
         };

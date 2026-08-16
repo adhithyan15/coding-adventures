@@ -1042,6 +1042,15 @@ pub enum DecodedOperand {
     /// opcode, plus `aux`: the single-byte lane-index immediate for
     /// `extract_lane` (0-3), unused (`0`) for every other op here.
     Simd { sub_opcode: u32, aux: u32 },
+    /// A `0xFC`-prefixed bulk-memory/non-trapping-conversion instruction's
+    /// decoded immediates (task #95): the sub-opcode, plus `data_idx` --
+    /// the real data-segment index for `memory.init`/`data.drop` (0x08/
+    /// 0x09), unused (`0`) for every other 0xFC sub-opcode (trunc_sat,
+    /// memory.copy, memory.fill), packed uniformly the same way `Atomic`/
+    /// `Simd` above pack their own sub-opcode + one aux value, so the
+    /// single `0xFC` handler can dispatch *and* read `data_idx` from one
+    /// place.
+    BulkMemory { sub: u8, data_idx: u32 },
 }
 
 /// Decode all instructions in a function body.
@@ -1113,20 +1122,27 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         // ── `0xFC`-prefixed two-byte opcodes: `0xFC <sub-opcode> [immediates]` ─
         //
         // The MVP `get_opcode` table doesn't know the `0xFC` prefix byte (used
-        // by two unrelated proposals sharing the same prefix), so we decode it
-        // explicitly. We carry the sub-opcode in a plain `Int` operand; the
-        // `0xFC` handler dispatches on it.
+        // by three unrelated proposals sharing the same prefix), so we decode
+        // it explicitly, carrying `(sub, data_idx)` in a `BulkMemory` operand
+        // (see its own doc comment); the `0xFC` handler unpacks and dispatches
+        // on `sub`.
         //
         //   sub          instruction         immediates
         //   0x00-0x07    *.trunc_sat_*_s/u   (none -- WASM03)
+        //   0x08         memory.init         <data_idx:u32leb> <mem idx> (task #95)
+        //   0x09         data.drop           <data_idx:u32leb> (task #95)
         //   0x0A         memory.copy         <dst mem idx> <src mem idx> (both 0 in our modules)
         //   0x0B         memory.fill         <mem idx>
         //
         // `trunc_sat`'s 8 sub-opcodes need no extra immediate bytes consumed
-        // here (the default `_ => {}` arm already handles that correctly).
-        // Only `memory.copy` is emitted today (runtime `str_concat`); `memory.fill`
-        // is decoded (its one immediate consumed) so a future user round-trips, but
-        // the handler traps on any sub-opcode it doesn't implement.
+        // here (the default `_ => (0, 0)` arm already handles that correctly).
+        // The memory-index byte(s) memory.copy/fill/init carry are decoded
+        // but discarded (this repo's single-memory-only scope for bulk
+        // memory ops, matching WASM17's own precedent); `memory.init`/
+        // `data.drop`'s `data_idx` is the one immediate actually used at
+        // runtime -- unlike `memory.copy`/`memory.fill`, WHICH data segment
+        // to read from can't be hardcoded to "the only one," so this must be
+        // a real decoded value, not a discarded placeholder.
         if opcode_byte == 0xFC {
             let sub = if offset < code.len() {
                 let s = code[offset];
@@ -1135,14 +1151,30 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             } else {
                 0
             };
-            match sub {
-                0x0A => offset += 2, // memory.copy: dst + src memory-index bytes
-                0x0B => offset += 1, // memory.fill: one memory-index byte
-                _ => {}
-            }
+            let data_idx = match sub {
+                0x08 => {
+                    let (idx, sz) = decode_leb_u32(code, offset);
+                    offset += sz + 1; // + the trailing single-byte memory index
+                    idx
+                }
+                0x09 => {
+                    let (idx, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    idx
+                }
+                0x0A => {
+                    offset += 2; // memory.copy: dst + src memory-index bytes
+                    0
+                }
+                0x0B => {
+                    offset += 1; // memory.fill: one memory-index byte
+                    0
+                }
+                _ => 0,
+            };
             instructions.push(DecodedInstruction {
                 opcode: 0xFC,
-                operand: DecodedOperand::Int(sub as i64),
+                operand: DecodedOperand::BulkMemory { sub, data_idx },
             });
             continue;
         }
@@ -1624,6 +1656,28 @@ pub struct WasmExecutionContext {
     /// inner instruction-dispatch loop halts; `None` in every other case
     /// (an ordinary `return`, or falling off the end of the function).
     pub pending_tail_call: Option<(usize, Vec<WasmValue>)>,
+    /// The module's data segments' raw bytes, indexed by data-segment index
+    /// (task #95) -- `memory.init`'s source. Populated once from the parsed
+    /// module (immutable content; unlike `dropped_data_segments` below,
+    /// nothing ever mutates a segment's own bytes), via
+    /// [`WasmExecutionEngine::set_data_segments`], same optional-setter
+    /// pattern as `struct_field_counts`. Active segments' bytes are ALSO
+    /// applied directly to memory at instantiation time
+    /// (`wasm-runtime::instantiate()`) -- this Vec exists so `memory.init`
+    /// can copy from ANY segment (active or passive) on demand, any number
+    /// of times, independent of that one-time instantiation-time copy.
+    pub data_segments: Vec<Vec<u8>>,
+    /// Per-data-segment "has `data.drop` already run" flag (task #95),
+    /// same index space as `data_segments` above. `data.drop` sets an
+    /// entry `true`; `memory.init` on a dropped segment traps ("out of
+    /// bounds memory access", the spec's own wording -- deliberately NOT
+    /// a distinct error, since a real WASM program can't tell the
+    /// difference between "this data segment never had these bytes" and
+    /// "it did, but they're gone now"). Module-global and persistent
+    /// across calls (like `gc_heap`'s live-object bookkeeping, `v128_heap`
+    /// -- NOT reset per call): once dropped, a segment stays dropped for
+    /// the rest of the instance's lifetime.
+    pub dropped_data_segments: Vec<bool>,
 }
 
 /// `call_function`'s own call-stack recursion ceiling. WASM's `call`/
@@ -1921,6 +1975,7 @@ fn convert_operand(
             Some(Operand::Index((0x0Cusize << 32) | idx))
         }
         DecodedOperand::Simd { sub_opcode, aux } => Some(Operand::Index(((*sub_opcode as usize) << 32) | (*aux as usize))),
+        DecodedOperand::BulkMemory { sub, data_idx } => Some(Operand::Index(((*sub as usize) << 32) | (*data_idx as usize))),
     }
 }
 
@@ -1939,6 +1994,17 @@ fn unpack_simd_operand(instr: &Instruction) -> (u32, usize) {
 /// Unpack a `0xFE` atomic instruction's `(sub_opcode, offset)` from the
 /// packed `Operand::Index` `convert_operand` built above.
 fn unpack_atomic_operand(instr: &Instruction) -> (u8, u32) {
+    let packed = match &instr.operand {
+        Some(Operand::Index(i)) => *i,
+        _ => 0,
+    };
+    ((packed >> 32) as u8, (packed & 0xFFFF_FFFF) as u32)
+}
+
+/// Unpack a `0xFC` bulk-memory/conversion instruction's `(sub, data_idx)`
+/// from the packed `Operand::Index` `convert_operand` built above -- same
+/// shape as `unpack_atomic_operand`.
+fn unpack_bulk_memory_operand(instr: &Instruction) -> (u8, u32) {
     let packed = match &instr.operand {
         Some(Operand::Index(i)) => *i,
         _ => 0,
@@ -2485,7 +2551,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     // overflow because THEY must trap, not saturate).
     vm.register_context_opcode(0xFC, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let sub = operand_int(instr);
+        let (sub, data_idx) = unpack_bulk_memory_operand(instr);
         match sub {
             0x00 => {
                 let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
@@ -2518,6 +2584,51 @@ fn register_numeric_i64(vm: &mut GenericVM) {
             0x07 => {
                 let a = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
                 push_wasm(vm, WasmValue::I64(a as u64 as i64));
+            }
+            0x08 => {
+                // `memory.init` (task #95): stack (bottom -> top) is
+                // `[dest, src, size]`, same pop order as memory.copy --
+                // but here `src`/`size` index into the DATA SEGMENT named
+                // by `data_idx` (this instruction's own decoded
+                // immediate, not a stack operand), while `dest`/`size`
+                // still index into memory. A dropped segment (`data.drop`
+                // already ran) behaves as length-0 for bounds-checking:
+                // `memory.init` with `size=0` still succeeds (any offset
+                // `<= 0` does), but any `size>0` traps -- matching the
+                // real spec's "a dropped segment can never be initialized
+                // from again" rule, not a distinct error path.
+                let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let idx = data_idx as usize;
+                let dropped = ctx.dropped_data_segments.get(idx).copied().unwrap_or(true);
+                let segment_len = if dropped { 0 } else { ctx.data_segments.get(idx).map(Vec::len).unwrap_or(0) };
+                match src.checked_add(n) {
+                    Some(src_end) if src_end <= segment_len => {
+                        let bytes = ctx.data_segments[idx][src..src_end].to_vec();
+                        get_memory(ctx)?.write_bytes(dest, &bytes).map_err(VMError::from)?;
+                    }
+                    _ => {
+                        return Err(VMError::from(TrapError::new(format!(
+                            "out of bounds memory access: memory.init data_idx={idx}, src={src}, len={n}, segment_size={segment_len}"
+                        ))));
+                    }
+                }
+            }
+            0x09 => {
+                // `data.drop` (task #95): no stack operands at all -- just
+                // marks the segment permanently dropped. Bounds-checking
+                // `data_idx` here is defensive only (a validated module's
+                // own `wasm-validator` check already guarantees it's in
+                // range); this is the same "never trust the raw index at
+                // runtime regardless of what validation should have
+                // caught" posture every other indexed operand in this
+                // interpreter takes.
+                let idx = data_idx as usize;
+                if idx >= ctx.dropped_data_segments.len() {
+                    return Err(VMError::GenericError(format!("data.drop: data segment index {idx} out of bounds")));
+                }
+                ctx.dropped_data_segments[idx] = true;
             }
             0x0A => {
                 // `as u32 as usize` (never a bare `as usize`): a negative i32 must
@@ -4676,6 +4787,12 @@ pub struct WasmEngineState {
     /// all need updating), written back here so the caller can restore it
     /// onto the owning `WasmInstance`.
     pub v128_heap: Vec<[u8; 16]>,
+    /// Each data segment's "already dropped" state after this call (task
+    /// #95) -- set via [`WasmExecutionEngine::set_dropped_data_segments`]
+    /// before the call, written back here so the caller can restore it
+    /// onto the owning `WasmInstance`, same round-trip shape as
+    /// `v128_heap` above.
+    pub dropped_data_segments: Vec<bool>,
 }
 
 /// The WASM execution engine — interprets validated WASM modules.
@@ -4725,6 +4842,16 @@ pub struct WasmExecutionEngine {
     /// `type_section`) when the embedder has a persistent instance to
     /// thread it from.
     v128_heap: Vec<[u8; 16]>,
+    /// The module's data segments' raw bytes (task #95) -- see
+    /// `WasmExecutionContext::data_segments`'s own doc comment. Immutable
+    /// content, so unlike `dropped_data_segments` below there is no
+    /// writeback after a call; set once via [`Self::set_data_segments`].
+    data_segments: Vec<Vec<u8>>,
+    /// Per-data-segment dropped flags (task #95) -- see
+    /// `WasmExecutionContext::dropped_data_segments`'s own doc comment.
+    /// Persistent across calls, same `set`-before/writeback-after pattern
+    /// as `v128_heap`.
+    dropped_data_segments: Vec<bool>,
 }
 
 impl WasmExecutionEngine {
@@ -4747,6 +4874,8 @@ impl WasmExecutionEngine {
             type_section: Vec::new(),
             last_gc_state: gc::GcState::default(),
             v128_heap: vec![[0u8; 16]],
+            data_segments: Vec::new(),
+            dropped_data_segments: Vec::new(),
         }
     }
 
@@ -4792,6 +4921,30 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Register the module's data segments' raw bytes, indexed by data-
+    /// segment index (task #95) -- `memory.init`'s source. Same optional-
+    /// setter pattern as `set_struct_field_counts`/`set_type_section`:
+    /// left unset, `memory.init`/`data.drop` see an empty `data_segments`,
+    /// so any real data-segment index is cleanly out-of-bounds (a trap,
+    /// not a panic) rather than a false "here are some bytes that don't
+    /// belong to any real segment."
+    pub fn set_data_segments(&mut self, segments: Vec<Vec<u8>>) -> &mut Self {
+        self.data_segments = segments;
+        self
+    }
+
+    /// Register each data segment's "already dropped" state (task #95),
+    /// same index space as `set_data_segments` above. Same optional-setter
+    /// pattern as [`Self::set_v128_heap`]: an embedder with a persistent
+    /// `WasmInstance` threads this in before a call and reads the (now
+    /// possibly further-dropped) result back out after, via
+    /// [`WasmEngineState::dropped_data_segments`], so `data.drop`'s effect
+    /// from one call is still visible in a later one.
+    pub fn set_dropped_data_segments(&mut self, dropped: Vec<bool>) -> &mut Self {
+        self.dropped_data_segments = dropped;
+        self
+    }
+
     /// Live `gc_heap` object count as of the most recently completed
     /// [`Self::call_function`] (W04). `gc_heap` itself resets every call, so
     /// this reflects only that one call's allocation/collection activity,
@@ -4816,6 +4969,7 @@ impl WasmExecutionEngine {
             globals: self.globals,
             host_functions: self.host_functions,
             v128_heap: self.v128_heap,
+            dropped_data_segments: self.dropped_data_segments,
         }
     }
 
@@ -4944,6 +5098,8 @@ impl WasmExecutionEngine {
             gc_state: gc::GcState::default(),
             call_depth: 0,
             pending_tail_call: None,
+            data_segments: self.data_segments.clone(),
+            dropped_data_segments: self.dropped_data_segments.clone(),
         };
 
         // Reset and execute.
@@ -5240,6 +5396,11 @@ impl WasmExecutionEngine {
         // `ctx.v128_heap` after this point -- moving it out now would be
         // a use-after-move compile error.
         self.v128_heap = ctx.v128_heap.clone();
+        // Same unconditional-writeback reasoning as `v128_heap` just above
+        // (task #95): a `data.drop` from a call that later traps must
+        // still stick -- the drop already happened before the trap, and a
+        // real WASM engine can't un-happen it.
+        self.dropped_data_segments = ctx.dropped_data_segments.clone();
         // gc_heap itself is not persisted (see its own doc comment above);
         // the counters are, so a caller can inspect this call's GC activity
         // via gc_live_object_count()/gc_profile() (W04).
@@ -9107,7 +9268,7 @@ mod tests {
         assert_eq!(instrs.len(), 2, "memory.copy (4 bytes) + end → 2 instrs: {instrs:?}");
         assert_eq!(instrs[0].opcode, 0xFC);
         assert!(
-            matches!(instrs[0].operand, DecodedOperand::Int(0x0A)),
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x0A, data_idx: 0 }),
             "sub-opcode 0x0A must be carried in the operand: {:?}",
             instrs[0].operand
         );
@@ -9149,7 +9310,7 @@ mod tests {
         assert_eq!(instrs.len(), 2, "memory.fill (3 bytes) + end → 2 instrs: {instrs:?}");
         assert_eq!(instrs[0].opcode, 0xFC);
         assert!(
-            matches!(instrs[0].operand, DecodedOperand::Int(0x0B)),
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x0B, data_idx: 0 }),
             "sub-opcode 0x0B must be carried in the operand: {:?}",
             instrs[0].operand
         );
@@ -9172,5 +9333,108 @@ mod tests {
         // not wrap `offset + width` past the bounds check.
         assert!(mem.fill(u32::MAX as usize, 0, 1).is_err());
         assert!(mem.fill(0, 0, u32::MAX as usize).is_err());
+    }
+
+    #[test]
+    fn memory_init_decodes_and_carries_a_real_data_idx() {
+        // `memory.init` = 0xFC 0x08 <data_idx:u32leb> <mem_idx:u8>, task
+        // #95. data_idx=2 here (not 0) specifically to prove the decoder
+        // reads a REAL immediate, not a hardcoded placeholder like memory.
+        // copy/fill's discarded memory-index bytes.
+        let body = FunctionBody { locals: vec![], code: vec![0xFC, 0x08, 0x02, 0x00, 0x0B] };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 2, "memory.init (4 bytes) + end -> 2 instrs: {instrs:?}");
+        assert_eq!(instrs[0].opcode, 0xFC);
+        assert!(
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x08, data_idx: 2 }),
+            "sub-opcode 0x08 and data_idx=2 must be carried in the operand: {:?}",
+            instrs[0].operand
+        );
+    }
+
+    #[test]
+    fn data_drop_decodes_and_carries_a_real_data_idx() {
+        // `data.drop` = 0xFC 0x09 <data_idx:u32leb>, task #95 -- no
+        // trailing memory-index byte at all (unlike memory.init), since
+        // data.drop has no memory concept.
+        let body = FunctionBody { locals: vec![], code: vec![0xFC, 0x09, 0x01, 0x0B] };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 2, "data.drop (3 bytes) + end -> 2 instrs: {instrs:?}");
+        assert_eq!(instrs[0].opcode, 0xFC);
+        assert!(
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x09, data_idx: 1 }),
+            "sub-opcode 0x09 and data_idx=1 must be carried in the operand: {:?}",
+            instrs[0].operand
+        );
+    }
+
+    #[test]
+    fn memory_init_copies_bytes_from_the_data_segment_into_memory() {
+        let func_type = FuncType {
+            params: vec![ValueType::I32, ValueType::I32, ValueType::I32],
+            results: vec![],
+        };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x20, 0x00, // local.get 0 (dest)
+                0x20, 0x01, // local.get 1 (src)
+                0x20, 0x02, // local.get 2 (len)
+                0xFC, 0x08, 0x00, 0x00, // memory.init 0 (memidx 0)
+                0x0B, // end
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_data_segments(vec![vec![0xAA, 0xBB, 0xCC, 0xDD]]);
+        engine.set_dropped_data_segments(vec![false]);
+
+        engine
+            .call_function(0, &[WasmValue::I32(10), WasmValue::I32(1), WasmValue::I32(2)])
+            .unwrap();
+        let state = engine.into_state();
+        assert_eq!(&state.memories[0].data[10..12], &[0xBB, 0xCC]);
+    }
+
+    #[test]
+    fn data_drop_makes_a_later_nonzero_memory_init_trap_but_zero_length_still_succeeds() {
+        let func_type = FuncType {
+            params: vec![ValueType::I32, ValueType::I32, ValueType::I32],
+            results: vec![],
+        };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0xFC, 0x08, 0x00, 0x00, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_data_segments(vec![vec![0xAA, 0xBB]]);
+        // Already dropped -- behaves as if the segment had length 0.
+        engine.set_dropped_data_segments(vec![true]);
+
+        // Zero-length init on a dropped segment still succeeds (src=0,
+        // len=0 is within the dropped segment's effective 0-length
+        // bounds).
+        assert!(engine
+            .call_function(0, &[WasmValue::I32(0), WasmValue::I32(0), WasmValue::I32(0)])
+            .is_ok());
+        // Any nonzero-length init on a dropped segment traps.
+        assert!(engine
+            .call_function(0, &[WasmValue::I32(0), WasmValue::I32(0), WasmValue::I32(1)])
+            .is_err());
     }
 }

@@ -850,6 +850,7 @@ mod tests {
                 memory_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 data: vec![0x01],
+                is_passive: false,
             }],
             ..Default::default()
         };
@@ -868,6 +869,7 @@ mod tests {
                 memory_index: 1, // only index 0 is valid
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 data: vec![0x01],
+                is_passive: false,
             }],
             ..Default::default()
         };
@@ -886,6 +888,7 @@ mod tests {
                 memory_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
                 data: vec![0x01, 0x02],
+                is_passive: false,
             }],
             ..Default::default()
         };

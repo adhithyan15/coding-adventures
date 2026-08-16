@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.5] — 2026-08-16 — decode all 3 real data-segment modes, not just mode 0 (task #95)
+
+### Fixed
+
+- `parse_data_section` used to read a leading LEB128 unconditionally as
+  `memory_index` and always read an offset expression next -- decoding
+  only mode 0 (active, implicit memory 0) correctly. It happened to
+  "work" for every module this repo ever produced only because mode 0's
+  flag byte (`0x00`) is bit-identical to `memory_index = 0` encoded as a
+  LEB128. It could not have decoded a real mode 1 (passive -- no offset
+  expression present at all, so the following data bytes would have
+  been misread as one) or mode 2 (active with an explicit nonzero
+  memory index -- the flag isn't the memory index at all) segment
+  correctly. Now decodes the real segment-mode flag and branches on all
+  3 real encodings; any other flag value is a clean `WasmParseError`
+  (a real spec violation), not silently misparsed.
+
 ## [0.2.4] — 2026-08-15 — reject malformed mutability bytes + data count cross-check (tasks #82, #84)
 
 ### Fixed

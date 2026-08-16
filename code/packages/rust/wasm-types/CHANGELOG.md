@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.5] - 2026-08-16 (task #95 — passive data segments)
+
+### Added
+
+- `DataSegment.is_passive: bool` -- `true` for a passive segment (bulk-
+  memory proposal): declared with no offset expression at all
+  (`(data $d "bytes")`, or binary segment-mode flag `0x01`), so
+  `wasm-runtime::instantiate()` never applies it automatically -- it
+  stays resident until an explicit `memory.init` copies from it or
+  `data.drop` frees it. `false` for an ordinary WASM 1.0 active segment,
+  unchanged. Additive field on an existing struct -- every existing
+  construction site across the workspace needed `is_passive: false`
+  added, but no other field's meaning changed.
+
 ## [0.1.4] - 2026-08-16 (task #96 — multi-table, `EXTERNREF` constant)
 
 ### Added

@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.10] - 2026-08-16 (task #95 — memory.init/data.drop type-checking)
+
+### Added
+
+- New `0xFC` sub-opcode type-check arms for `memory.init` (`0x08`) and
+  `data.drop` (`0x09`) -- previously unhandled, falling into the generic
+  "unsupported 0xFC sub-opcode" rejection. `memory.init` requires a
+  declared memory (same as `memory.copy`/`memory.fill`) and pops the
+  same `[dest, src, length]` i32 triple; `data.drop` has no stack effect
+  and no memory requirement at all (a module with zero memories can
+  still declare and drop a passive data segment it never gets to
+  `memory.init` from). Both bounds-check their data-segment-index
+  immediate against `ctx.module.data.len()` -- a real validation error
+  for an out-of-bounds index, not deferred to a runtime trap, matching
+  every other indexed immediate this type-checker validates.
+
 ## [0.2.9] - 2026-08-16 (task #100 — ValidatedModule.module made private)
 
 ### Changed (breaking)

@@ -5913,6 +5913,7 @@ pub fn lower_iir_to_wasm(
             memory_index: 0,
             offset_expr: vec![0x41u8, 0x00u8, 0x0Bu8], // i32.const 0; end
             data: string_data,
+            is_passive: false,
         }]
     };
 

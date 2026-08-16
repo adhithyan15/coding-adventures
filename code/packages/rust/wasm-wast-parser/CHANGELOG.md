@@ -1,5 +1,34 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.19 — 2026-08-16 — memory.init/data.drop + passive data segments (task #95)
+
+### Added
+
+- `memory.init`/`data.drop` text-form parsing (both flat and folded
+  instruction syntax) -- entirely unimplemented before this pass. Unlike
+  `memory.copy`/`memory.fill`'s discarded memory-index bytes, these take
+  a REAL data-segment index immediate, resolved through a new
+  `ModuleCtx::data_names: HashMap<String, u32>` (mirroring `memory_names`/
+  `table_names`/etc.), populated by a new pre-pass in `collect_symbols`
+  since data segments previously had no name/index-space tracking at all
+  (nothing referenced them by index before this task).
+- Passive data segment parsing: `(data $d "bytes")`, with no offset
+  expression at all -- `build_data` previously required an offset
+  expression unconditionally, so `(data)`/`(data $d "bytes")` with no
+  memory/offset clause was always a parse error. Disambiguates active
+  vs. passive by checking for a leading `(memory ...)` clause (always
+  active) or whether the next field is a string literal / nothing at all
+  (passive) vs. an offset expression (active).
+
+### Changed (breaking)
+
+- `(data)` alone -- no `$id`, no `(memory ...)`, no offset expression, no
+  string literal -- used to be a parse error (`UnexpectedEof`); it is now
+  a valid, empty PASSIVE segment, matching the real WAT grammar
+  (`datasegment ::= '(' 'data' id? datastring* ')'` allows zero
+  `datastring`s). `(elem)` is unaffected -- `elem` has no passive-segment
+  support yet (task #97).
+
 ## 0.1.18 — 2026-08-16 — memory.copy/memory.fill text-form parsing (task #94)
 
 ### Added

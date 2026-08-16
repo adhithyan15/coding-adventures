@@ -1113,6 +1113,15 @@ pub struct WasmInstance {
     /// convention. `build_engine`/`call_engine`/`call_engine_with_v128`
     /// clone/restore it exactly like `globals`.
     pub v128_heap: Vec<[u8; 16]>,
+    /// Per-data-segment "already dropped" flags for this instance's whole
+    /// lifetime (task #95) -- same index space as `module.data`, same
+    /// persistent-across-calls shape as `v128_heap` above (`data.drop`'s
+    /// effect from one call must still be visible in a later one).
+    /// Initialized all-`false`, one entry per `module.data`, at
+    /// instantiation time (see `instantiate()` below); `call_engine`
+    /// threads it into/out of `wasm_execution::WasmExecutionEngine`
+    /// exactly like `v128_heap` is.
+    pub dropped_data_segments: Vec<bool>,
 }
 
 /// Build a link-error `TrapError` for a failed import (WASM05/W10) --
@@ -1328,8 +1337,19 @@ impl WasmRuntime {
         // NOT change"); `wasm-validator` already bounds-checks
         // `seg.memory_index` against the real memory count, so this is a
         // real scope boundary, not a missed check.
+        //
+        // A PASSIVE segment (`is_passive`, task #95) is deliberately
+        // skipped here -- applying it automatically would defeat the
+        // entire point of `memory.init`/`data.drop`: a passive segment's
+        // bytes stay resident, untouched, until an explicit `memory.init`
+        // copies from it (any number of times, on demand), which is a
+        // completely separate code path from this one-time instantiation-
+        // time copy.
         if let Some(mem) = memories.first_mut() {
             for seg in &module.data {
+                if seg.is_passive {
+                    continue;
+                }
                 let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
                 let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize;
                 mem.write_bytes(offset_num, &seg.data)?;
@@ -1354,6 +1374,11 @@ impl WasmRuntime {
             .map(|e| (e.name.clone(), e.kind, e.index))
             .collect();
 
+        // One dropped-flag per data segment, all initially false (task
+        // #95) -- `data.drop` flips one to true; nothing in this
+        // instantiation path drops anything itself.
+        let dropped_data_segments = vec![false; module.data.len()];
+
         let instance = WasmInstance {
             module: module.clone(),
             memories,
@@ -1365,6 +1390,7 @@ impl WasmRuntime {
             host_functions,
             exports,
             v128_heap,
+            dropped_data_segments,
         };
 
         Ok(instance)
@@ -1558,6 +1584,15 @@ impl WasmRuntime {
         // throwaway per-call heap.
         engine.set_v128_heap(instance.v128_heap.clone());
 
+        // Thread the module's data segments' raw bytes -- `memory.init`'s
+        // source (task #95) -- plus this instance's per-segment dropped
+        // state, same optional-setter pattern as `set_v128_heap` just
+        // above (content immutable, so no restore needed for the bytes
+        // themselves; the dropped flags DO need restoring, same as
+        // `v128_heap`, in `call_engine`/`call_engine_with_v128` below).
+        engine.set_data_segments(instance.module.data.iter().map(|seg| seg.data.clone()).collect());
+        engine.set_dropped_data_segments(instance.dropped_data_segments.clone());
+
         // Register the module's WasmGC struct field counts (LANG77 / McCarthy
         // L3b-3a-3c-2) so the engine knows how many fields each `struct.new`
         // allocates — without this, a `struct.new` traps with "no field count
@@ -1636,6 +1671,7 @@ impl WasmRuntime {
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
+        instance.dropped_data_segments = state.dropped_data_segments;
 
         result
     }
@@ -1660,6 +1696,7 @@ impl WasmRuntime {
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
+        instance.dropped_data_segments = state.dropped_data_segments;
 
         result
     }
@@ -2203,6 +2240,7 @@ mod tests {
                 memory_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
                 data: vec![0x2A, 0x00, 0x00, 0x00],  // 42 in little-endian
+                is_passive: false,
             }],
             exports: vec![Export {
                 name: "read".to_string(),

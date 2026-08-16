@@ -14,7 +14,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                pinned commit, no re-pin),
                extended 2026-08-16 (task #94 -- memory_copy.wast/
                memory_fill.wast, first vendored bulk-memory-proposal
-               files, same pinned commit, no re-pin)
+               files, same pinned commit, no re-pin),
+               extended 2026-08-16 (task #95 -- memory_init.wast, real
+               passive data segments + memory.init/data.drop, same
+               pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -69,6 +72,21 @@ before -- see that crate's own CHANGELOG). Deliberately excludes their
 sibling `bulk.wast`: it mixes memory.copy/memory.fill with
 memory.init/data.drop (task #95) and table.init/elem.drop/table.copy
 (task #97) in the same file, all still unimplemented.
+
+`memory_init.wast` (task #95) needed real new interpreter state --
+`memory.init`/`data.drop` (0xFC 0x08/0x09) were entirely unimplemented
+before this pass (no opcode decoding, no interpreter handler, no
+wast-parser text-form support, no validator type-check rule), and
+neither can work without real PASSIVE data segments (`(data $d
+"bytes")`, no offset expression): `wasm-module-parser`'s binary decoder
+only ever handled segment-mode flag `0x00` (active, implicit memory 0)
+before this, not the real 3-mode encoding the bulk-memory proposal
+defines. 100% pass, every directive kind, on the first baseline regen
+after implementation. Only uses single-memory numeric segment indices
+(no `spectest` import, no table/elem instructions), so it's vendorable
+standalone -- unlike its sibling `bulk.wast` (task #97 still pending)
+and `memory-multi.wast` (task #92, explicit multi-memory indices, now
+unblocked and vendorable as a near-zero-cost follow-up).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

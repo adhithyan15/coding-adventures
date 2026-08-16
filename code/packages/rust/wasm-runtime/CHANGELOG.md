@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.4] — 2026-08-16 (task #95 — memory.init/data.drop instance-state threading)
+
+### Added
+
+- `WasmInstance.dropped_data_segments: Vec<bool>` -- persists for the
+  instance's whole lifetime, same shape as `v128_heap`. Initialized
+  all-`false` (one entry per `module.data`) at instantiation time;
+  `data.drop`'s effect from one `call()` is visible in a LATER, separate
+  `call()` on the same instance, not just within the call that ran it
+  (`build_engine`/`call_engine`/`call_engine_with_v128` thread it into/
+  out of `wasm_execution::WasmExecutionEngine` exactly like `v128_heap`
+  is).
+
+### Changed
+
+- `instantiate()`'s data-segment application loop now skips PASSIVE
+  segments (`seg.is_passive`) -- applying one automatically at
+  instantiation time would defeat the entire point of `memory.init`
+  (the whole reason a segment is passive is that it stays resident,
+  untouched, until an explicit `memory.init` copies from it, possibly
+  more than once). A passive segment's bytes are instead threaded into
+  the execution engine via the new `set_data_segments` call in
+  `build_engine`.
+
 ## [0.6.3] — 2026-08-16 (task #100 — instantiate() requires a validated module)
 
 ### Changed (breaking)

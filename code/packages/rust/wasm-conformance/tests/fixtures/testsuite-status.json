@@ -2632,6 +2632,62 @@
         "not_yet_supported": 0
       }
     },
+    "memory_init.wast": {
+      "action": {
+        "pass": 12,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 67,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 126,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 16,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 29,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "memory_redundancy.wast": {
       "action": {
         "pass": 3,
@@ -3699,7 +3755,7 @@
   },
   "aggregate": {
     "action": {
-      "pass": 93,
+      "pass": 105,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 25
@@ -3711,7 +3767,7 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 1212,
+      "pass": 1279,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 78
@@ -3723,13 +3779,13 @@
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 19967,
+      "pass": 20093,
       "fail": 17,
       "trap": 0,
       "not_yet_supported": 459
     },
     "assert_trap": {
-      "pass": 532,
+      "pass": 548,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 21
@@ -3741,7 +3797,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 998,
+      "pass": 1027,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 35

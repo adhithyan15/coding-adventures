@@ -1,6 +1,6 @@
 [package]
 name = "wasm-module-parser"
-version = "0.2.4"
+version = "0.2.5"
 edition = "2021"
 description = "WASM binary module parser: decodes .wasm files into structured WasmModule data. v0.2.1: the element section's per-entry func_count now caps pre-allocation at MAX_PREALLOC, matching the type section's params/results guard -- a crafted func_count (e.g. u32::MAX) previously reserved capacity for it directly, a multi-gigabyte allocation from four attacker-controlled bytes before the (failing) per-index reads ever ran."
 

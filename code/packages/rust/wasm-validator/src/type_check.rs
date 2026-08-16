@@ -586,6 +586,45 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), input)?;
                         push_val(&mut stack, output);
                     }
+                    0x08 => {
+                        // `memory.init` (task #95): pops the same [dest,
+                        // src, length] shape as memory.copy, but its
+                        // `data_idx` immediate must reference a REAL data
+                        // segment (unlike memory.copy/fill's discarded
+                        // memory-index bytes) -- an out-of-bounds index is
+                        // a real validation error, not deferred to a
+                        // runtime trap, matching every other indexed
+                        // immediate this type-checker validates (func/
+                        // table/global/local indices).
+                        if !ctx.has_memory {
+                            err!("memory.init requires a declared memory");
+                        }
+                        let (data_idx, data_size) = decode_idx(code, offset)?;
+                        let (memory, mem_size) = decode_idx(code, offset + data_size)?;
+                        offset += data_size + mem_size;
+                        if memory != 0 {
+                            err!("memory.init references unsupported nonzero memory index");
+                        }
+                        if data_idx as usize >= ctx.module.data.len() {
+                            err!("memory.init references out-of-bounds data segment index {data_idx}");
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                    }
+                    0x09 => {
+                        // `data.drop` (task #95): no stack operands, no
+                        // memory requirement at all (a module with zero
+                        // memories can still declare and drop a passive
+                        // data segment it never gets to `memory.init`
+                        // from) -- just the same out-of-bounds data-
+                        // segment-index check as `memory.init` above.
+                        let (data_idx, data_size) = decode_idx(code, offset)?;
+                        offset += data_size;
+                        if data_idx as usize >= ctx.module.data.len() {
+                            err!("data.drop references out-of-bounds data segment index {data_idx}");
+                        }
+                    }
                     0x0A => {
                         if !ctx.has_memory {
                             err!("memory.copy requires a declared memory");

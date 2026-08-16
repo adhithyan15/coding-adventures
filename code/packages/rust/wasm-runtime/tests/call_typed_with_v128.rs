@@ -36,6 +36,7 @@ fn instance_with_v128_const(lanes: [i32; 4]) -> wasm_runtime::WasmInstance {
         host_functions,
         exports: vec![("make_v128".to_string(), ExternalKind::Function, 0)],
         v128_heap: vec![[0u8; 16]],
+        dropped_data_segments: vec![],
     }
 }
 

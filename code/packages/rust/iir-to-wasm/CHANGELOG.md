@@ -1,5 +1,12 @@
 # Changelog — iir-to-wasm
 
+## [0.48.4] — 2026-08-16 (task #95)
+
+`wasm_types::DataSegment` gained an `is_passive` field (see
+`wasm-types`'s own CHANGELOG); this crate's one data-segment
+construction site (E4-dyn's runtime string concat data) sets it
+`false` (an ordinary active segment) -- no behavior change.
+
 ## [0.48.3] — 2026-08-14 (a local's declared type must match what is stored into it)
 
 `wasm-validator` gained an instruction-level type checker (WASM06 / W02 Phase
