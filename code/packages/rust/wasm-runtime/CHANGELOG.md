@@ -35,6 +35,15 @@ All notable changes to this package will be documented in this file.
   check) were bypassable by any embedder calling `instantiate()`
   directly. Closed by making `ValidatedModule` the only way to reach
   `instantiate()` at all.
+- A second `/security-review` round on this same diff found that
+  `instantiate(&ValidatedModule)` alone wasn't the compile-time
+  guarantee it claimed to be: `ValidatedModule.module` was still a
+  public field in `wasm-validator`, so any crate could construct one
+  directly with a struct literal, skipping `validate()` entirely. See
+  `wasm-validator`'s own CHANGELOG (0.2.9) for that companion fix --
+  this crate's `instantiate()` needed no further change, since it
+  already only reads through the (now-private) field via `wasm_
+  validator`'s public accessor.
 
 ## [0.6.2] — 2026-08-15 (W16, task #85 — multi-memory first slice)
 

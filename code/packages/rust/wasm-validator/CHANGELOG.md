@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.9] - 2026-08-16 (task #100 — ValidatedModule.module made private)
+
+### Changed (breaking)
+
+- `ValidatedModule.module` is no longer a public field -- access it via
+  the new `ValidatedModule::module()` accessor instead.
+
+### Security
+
+- Found via `/security-review` on `wasm-runtime`'s task #100 fix (making
+  `instantiate()` require `&ValidatedModule` instead of `&WasmModule`,
+  so its validation checks can't be skipped): that fix offered no real
+  protection while `ValidatedModule.module` was a public field, since
+  any crate depending on `wasm-validator` could construct
+  `ValidatedModule { module: attacker_controlled }` directly with a
+  struct literal, skipping `validate()` (and its memory/table allocation
+  caps) entirely. Privatizing the field makes `validate()` succeeding
+  the only way to obtain a `ValidatedModule` at all.
+
 ## [0.2.8] - 2026-08-16 (task #96 — multi-table)
 
 ### Changed (breaking)

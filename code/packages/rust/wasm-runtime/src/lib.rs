@@ -1208,7 +1208,7 @@ impl WasmRuntime {
     /// convention: call `WasmRuntime::validate()` first, matching the
     /// pattern `wasm-conformance`'s harness already used.
     pub fn instantiate(&self, validated: &ValidatedModule) -> Result<WasmInstance, TrapError> {
-        let module = &validated.module;
+        let module = validated.module();
         let mut func_types: Vec<FuncType> = Vec::new();
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
         let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
