@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.6] - 2026-08-16 (task #94 — bulk memory: memory.fill + a real bounds-check bug)
+
+### Added
+
+- `LinearMemory::fill(dest, value, len)` -- the `memory.fill` bulk-memory
+  primitive. Wired into the `0xFC 0x0B` interpreter handler (`memory.copy`,
+  `0xFC 0x0A`, already existed for E4-dyn's runtime string concat).
+
+### Fixed
+
+- **Real bug, found vendoring `memory_copy.wast`**: `LinearMemory::copy()`
+  (and the new `fill()`, written the same way before this fix) special-
+  cased `len == 0` to always return `Ok(())` BEFORE the bounds check ran
+  at all -- so a zero-length copy/fill with a wildly out-of-range `dest`/
+  `src` (e.g. `memory.copy $dest=0x10001 $src=0 $len=0` on a 1-page/
+  0x10000-byte memory) silently succeeded instead of trapping. The real
+  spec only exempts a zero-length op from bounds failure when `dest`/
+  `src` sits at EXACTLY `data.len()` (one-past-the-end, the same
+  convention as a Rust slice's exclusive upper bound) -- anything past
+  that must still trap, zero-length or not. Removed the special case
+  entirely: the existing `checked_add`/`<=` bounds check already handles
+  `len == 0` correctly on its own (`x.checked_add(0) == Some(x)`, and
+  `data[x..x]` is a valid empty slice for any `x <= data.len()`), so no
+  separate branch was ever needed. TEMP-REVERT-CHECK confirmed the fix is
+  load-bearing (reverting reproduces `memory_copy.wast`'s exact 3 failing
+  `assert_trap` directives + `memory_fill.wast`'s 1).
+
 ## [0.9.5] - 2026-08-16 (task #96 — multi-table)
 
 ### Added

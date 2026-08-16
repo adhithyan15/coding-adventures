@@ -11,7 +11,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                module linking, same pinned commit, no re-pin),
                extended 2026-08-16 (task #96 -- table_get.wast/
                table_set.wast, real multi-table type-checking, same
-               pinned commit, no re-pin)
+               pinned commit, no re-pin),
+               extended 2026-08-16 (task #94 -- memory_copy.wast/
+               memory_fill.wast, first vendored bulk-memory-proposal
+               files, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -56,6 +59,16 @@ their sibling `table.wast` (a hex-literal table limit + a real `spectest`
 import, task #99) and `table_size.wast`/`table_grow.wast`/`table_fill.wast`
 (need `table.size`/`table.grow`/`table.fill`, entirely unimplemented
 opcodes, task #98).
+
+`memory_copy.wast`/`memory_fill.wast` (task #94) are the first vendored
+files from the bulk-memory proposal. `memory.copy` already had a real
+interpreter handler (E4-dyn's runtime string concat needed it); this
+vendoring pass added `memory.fill`'s handler and text-form parsing
+support for BOTH instructions (neither had any `wast-parser` support
+before -- see that crate's own CHANGELOG). Deliberately excludes their
+sibling `bulk.wast`: it mixes memory.copy/memory.fill with
+memory.init/data.drop (task #95) and table.init/elem.drop/table.copy
+(task #97) in the same file, all still unimplemented.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

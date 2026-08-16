@@ -1346,6 +1346,29 @@ fn encode_stream_instr(
         out.push(sub);
         return Ok(0);
     }
+    // `memory.copy` / `memory.fill` (bulk-memory proposal, task #94): same
+    // 0xFC-prefixed shape as trunc_sat, so intercepted here too, before the
+    // `get_opcode_by_name` lookup. Neither takes an immediate beyond its
+    // memory-index byte(s) -- their three i32 operands are ordinary stack
+    // values, not immediates, so this mirrors the default (no-immediate)
+    // arm below except for the extra index byte(s). No vendored corpus
+    // file uses an explicit non-default memory index for either (bulk-
+    // memory predates multi-memory), so -- same deferral as the
+    // `"memory.size" | "memory.grow"` arm below -- this always emits
+    // index 0x00, not a real lookup.
+    if name == "memory.copy" {
+        out.push(0xFC);
+        out.push(0x0A);
+        out.push(0x00); // destination memory index
+        out.push(0x00); // source memory index
+        return Ok(0);
+    }
+    if name == "memory.fill" {
+        out.push(0xFC);
+        out.push(0x0B);
+        out.push(0x00); // memory index
+        return Ok(0);
+    }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
     // WASM17): neither is registered in `wasm_opcodes::OPCODES` (see
     // `code/specs/W08-wasm-funcref-externref.md` -- both already have real
@@ -1669,6 +1692,27 @@ fn encode_flat_instr(
         encode_instr_list(args, icx, out)?;
         out.push(0xFC);
         out.push(sub);
+        return Ok(());
+    }
+    // `memory.copy` / `memory.fill` (task #94): see the matching comment in
+    // `encode_stream_instr`. Both take their full operand list folded --
+    // `(memory.copy (dest) (src) (size))` / `(memory.fill (dest) (value)
+    // (size))` -- recursed in written order via `encode_instr_list`, same
+    // as the default (no-immediate) arm below, before the memory-index
+    // byte(s).
+    if name == "memory.copy" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFC);
+        out.push(0x0A);
+        out.push(0x00); // destination memory index
+        out.push(0x00); // source memory index
+        return Ok(());
+    }
+    if name == "memory.fill" {
+        encode_instr_list(args, icx, out)?;
+        out.push(0xFC);
+        out.push(0x0B);
+        out.push(0x00); // memory index
         return Ok(());
     }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
@@ -2562,6 +2606,49 @@ mod tests {
 
         let folded = parse_module("(module (func (param f64) (result i64) (i64.trunc_sat_f64_u (local.get 0))))").unwrap();
         assert_eq!(code_of(&folded, 0), &[0x20, 0x00, 0xFC, 0x07, 0x0B]);
+    }
+
+    #[test]
+    fn memory_copy_and_memory_fill_encode_as_the_0xfc_prefixed_form_with_memidx_bytes(
+    ) {
+        // Task #94: same "0xFC isn't in wasm_opcodes' table" shape as
+        // trunc_sat, but with a trailing memory-index byte (memory.copy:
+        // two -- dest then source; memory.fill: one) after the sub-opcode.
+        let flat = parse_module(
+            "(module (memory 1) (func i32.const 0 i32.const 1 i32.const 2 memory.copy))",
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&flat, 0),
+            &[0x41, 0x00, 0x41, 0x01, 0x41, 0x02, 0xFC, 0x0A, 0x00, 0x00, 0x0B]
+        );
+
+        let folded = parse_module(
+            "(module (memory 1) (func (memory.copy (i32.const 0) (i32.const 1) (i32.const 2))))",
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&folded, 0),
+            &[0x41, 0x00, 0x41, 0x01, 0x41, 0x02, 0xFC, 0x0A, 0x00, 0x00, 0x0B]
+        );
+
+        let flat_fill = parse_module(
+            "(module (memory 1) (func i32.const 0 i32.const 0xAA i32.const 5 memory.fill))",
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&flat_fill, 0),
+            &[0x41, 0x00, 0x41, 0xAA, 0x01, 0x41, 0x05, 0xFC, 0x0B, 0x00, 0x0B]
+        );
+
+        let folded_fill = parse_module(
+            "(module (memory 1) (func (memory.fill (i32.const 0) (i32.const 0xAA) (i32.const 5))))",
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&folded_fill, 0),
+            &[0x41, 0x00, 0x41, 0xAA, 0x01, 0x41, 0x05, 0xFC, 0x0B, 0x00, 0x0B]
+        );
     }
 
     #[test]
