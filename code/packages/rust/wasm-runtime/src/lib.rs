@@ -1193,7 +1193,22 @@ impl WasmRuntime {
     /// an unresolved memory/table/global silently fabricated a default
     /// value from the *declared* type instead of erroring. See
     /// `code/specs/W10-wasm-real-linking-and-unlinkable.md`.
-    pub fn instantiate(&self, module: &WasmModule) -> Result<WasmInstance, TrapError> {
+    ///
+    /// Takes a [`ValidatedModule`], not a raw [`WasmModule`] (task #100,
+    /// security review follow-up to task #96): this crate's own
+    /// `ValidatedModule` doc comment always documented the INTENT that
+    /// "downstream code (the runtime) can accept `ValidatedModule` instead
+    /// of `WasmModule` to ensure validation is never accidentally
+    /// skipped", but `instantiate` never actually enforced it -- it took a
+    /// plain `&WasmModule` and never called `validate()` itself, so every
+    /// `validate()` check (including the memory/table allocation caps
+    /// added for task #96) was silently bypassable by any caller who
+    /// called `instantiate()` directly. Requiring `&ValidatedModule` here
+    /// makes that guarantee a compile-time fact instead of a caller
+    /// convention: call `WasmRuntime::validate()` first, matching the
+    /// pattern `wasm-conformance`'s harness already used.
+    pub fn instantiate(&self, validated: &ValidatedModule) -> Result<WasmInstance, TrapError> {
+        let module = &validated.module;
         let mut func_types: Vec<FuncType> = Vec::new();
         let mut func_bodies: Vec<Option<FunctionBody>> = Vec::new();
         let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
@@ -1657,8 +1672,8 @@ impl WasmRuntime {
         args: &[i64],
     ) -> Result<Vec<i64>, String> {
         let module = self.load(wasm_bytes)?;
-        self.validate(&module).map_err(|e| format!("{}", e))?;
-        let mut instance = self.instantiate(&module).map_err(|e| format!("{}", e))?;
+        let validated = self.validate(&module).map_err(|e| format!("{}", e))?;
+        let mut instance = self.instantiate(&validated).map_err(|e| format!("{}", e))?;
         self.call(&mut instance, entry, args)
             .map_err(|e| format!("{}", e))
     }
@@ -1906,7 +1921,8 @@ mod tests {
         // arity wiring touches).
         let module = runtime.load(&wasm).expect("cons module must parse");
         assert_eq!(module.struct_types.len(), 1, "the $LispyPair struct is parsed");
-        let mut instance = runtime.instantiate(&module).expect("must instantiate");
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).expect("must instantiate");
         let result = runtime
             .call(&mut instance, "main", &[])
             .expect("cons module must run");
@@ -1957,7 +1973,8 @@ mod tests {
 
         let module = runtime.load(&wasm).unwrap();
         let _validated = runtime.validate(&module).unwrap();
-        let mut instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).unwrap();
         let result = runtime.call(&mut instance, "square", &[7]).unwrap();
         assert_eq!(result, vec![49]);
     }
@@ -2025,7 +2042,8 @@ mod tests {
         let wasm = build_square_wasm();
         let runtime = WasmRuntime::new();
         let module = runtime.load(&wasm).unwrap();
-        let instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
 
         // Check that exports were populated
         assert!(!instance.exports.is_empty());
@@ -2154,7 +2172,8 @@ mod tests {
         };
 
         let runtime = WasmRuntime::new();
-        let mut instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).unwrap();
         let result = runtime.call(&mut instance, "get_global", &[]).unwrap();
         assert_eq!(result, vec![100]);
     }
@@ -2194,7 +2213,8 @@ mod tests {
         };
 
         let runtime = WasmRuntime::new();
-        let mut instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).unwrap();
         let result = runtime.call(&mut instance, "read", &[]).unwrap();
         assert_eq!(result, vec![42]);
     }
@@ -2290,7 +2310,8 @@ mod tests {
             ..Default::default()
         };
 
-        let mut instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let mut instance = runtime.instantiate(&validated).unwrap();
         let result = runtime.call(&mut instance, "call_double", &[5]).unwrap();
         assert_eq!(result, vec![10]);
     }
@@ -2356,7 +2377,8 @@ mod tests {
             "no_such_function",
             FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] },
         );
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("unknown import"), "{err}");
     }
 
@@ -2370,8 +2392,34 @@ mod tests {
             "double",
             FuncType { params: vec![ValueType::I64], results: vec![ValueType::I32] },
         );
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("incompatible import type"), "{err}");
+    }
+
+    /// Task #100 (security review follow-up to task #96): `instantiate()`
+    /// used to take a bare `&WasmModule`, so a caller who skipped
+    /// `validate()` could reach `Table::new`'s eager allocation with an
+    /// unvalidated, over-cap table size -- silently bypassing every
+    /// `validate()` check, including the memory/table allocation caps.
+    /// Now `instantiate()` requires a `&ValidatedModule`, so this is a
+    /// compile-time fact, not a caller convention: the only way to get a
+    /// `ValidatedModule` for this module is through `validate()`, and
+    /// `validate()` itself rejects it before `instantiate()` ever runs.
+    #[test]
+    fn instantiate_is_unreachable_for_a_module_that_fails_validation() {
+        let runtime = WasmRuntime::new();
+        let module = WasmModule {
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS + 1, max: None },
+            }],
+            ..Default::default()
+        };
+        let err = runtime.validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+        // There is no `ValidatedModule` to hand `instantiate()` here --
+        // that absence, not a runtime check, is what protects it.
     }
 
     #[test]
@@ -2381,7 +2429,8 @@ mod tests {
         // actual import to resolve.
         let runtime = WasmRuntime::new();
         let module = WasmModule::default();
-        assert!(runtime.instantiate(&module).is_ok());
+        let validated = runtime.validate(&module).unwrap();
+        assert!(runtime.instantiate(&validated).is_ok());
     }
 
     #[test]
@@ -2396,7 +2445,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("unknown import"), "{err}");
     }
 
@@ -2414,7 +2464,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("incompatible import type"), "{err}");
     }
 
@@ -2430,7 +2481,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
         assert!(!instance.memories.is_empty());
     }
 
@@ -2446,7 +2498,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("unknown import"), "{err}");
     }
 
@@ -2462,7 +2515,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("incompatible import type"), "{err}");
     }
 
@@ -2478,7 +2532,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
         assert_eq!(instance.tables.len(), 1);
     }
 
@@ -2494,7 +2549,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("unknown import"), "{err}");
     }
 
@@ -2512,7 +2568,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let err = runtime.instantiate(&module).err().unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let err = runtime.instantiate(&validated).err().unwrap();
         assert!(err.to_string().contains("incompatible import type"), "{err}");
     }
 
@@ -2528,7 +2585,8 @@ mod tests {
             }],
             ..Default::default()
         };
-        let instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
         assert_eq!(instance.globals, vec![WasmValue::I32(42)]);
     }
 
@@ -2537,7 +2595,8 @@ mod tests {
         let wasm = build_square_wasm();
         let runtime = WasmRuntime::new();
         let module = runtime.load(&wasm).unwrap();
-        let instance = runtime.instantiate(&module).unwrap();
+        let validated = runtime.validate(&module).unwrap();
+        let instance = runtime.instantiate(&validated).unwrap();
 
         // No memory in square module
         assert!(instance.memories.is_empty());

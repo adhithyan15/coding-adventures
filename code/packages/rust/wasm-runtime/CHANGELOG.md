@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.3] — 2026-08-16 (task #100 — instantiate() requires a validated module)
+
+### Changed (breaking)
+
+- `WasmRuntime::instantiate()` now takes `&ValidatedModule` instead of
+  `&WasmModule`. This crate's own `ValidatedModule` doc comment always
+  documented the intent that "downstream code (the runtime) can accept
+  `ValidatedModule` instead of `WasmModule` to ensure validation is
+  never accidentally skipped", but `instantiate()` never actually
+  enforced it: it took a plain `&WasmModule` and never called
+  `validate()` itself, so every `validate()` check -- including the
+  memory/table allocation caps added for task #96's security review --
+  was silently bypassable by any caller who called `instantiate()`
+  directly instead of going through `WasmRuntime::validate()` first.
+  Callers now call `validate()` (or `load_and_run()`, fixed to actually
+  thread its own `validate()` result through instead of discarding it
+  and re-passing the raw module) and pass the resulting
+  `ValidatedModule` -- the guarantee is now a compile-time fact instead
+  of a caller convention.
+- Confined blast radius: outside this crate's own test suite, only
+  `wasm-conformance`'s harness calls `instantiate()`, and it already
+  called `validate()` first (it just threw away the `ValidatedModule`
+  and re-passed `&validated.module` -- trivially updated to pass
+  `&validated` instead). No other crate in the workspace calls
+  `instantiate()` directly.
+
+### Security
+
+- Found via `/security-review` as a follow-up to task #96's memory/
+  table allocation caps: those caps (and every other `validate()`
+  check) were bypassable by any embedder calling `instantiate()`
+  directly. Closed by making `ValidatedModule` the only way to reach
+  `instantiate()` at all.
+
 ## [0.6.2] — 2026-08-15 (W16, task #85 — multi-memory first slice)
 
 ### Changed (breaking)

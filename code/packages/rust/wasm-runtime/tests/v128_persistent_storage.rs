@@ -58,7 +58,8 @@ fn v128_global_initialized_via_v128_const_instantiates_and_reads_back_exact_byte
     };
 
     let runtime = WasmRuntime::new();
-    let mut instance = runtime.instantiate(&module).expect("module with v128.const global initializer must instantiate");
+    let validated = runtime.validate(&module).unwrap();
+    let mut instance = runtime.instantiate(&validated).expect("module with v128.const global initializer must instantiate");
 
     let (results, v128_bytes) = runtime
         .call_typed_with_v128(&mut instance, "get_g", &[])
@@ -133,7 +134,8 @@ fn v128_value_allocated_in_one_call_is_visible_in_a_later_separate_call() {
     };
 
     let runtime = WasmRuntime::new();
-    let mut instance = runtime.instantiate(&module).unwrap();
+    let validated = runtime.validate(&module).unwrap();
+    let mut instance = runtime.instantiate(&validated).unwrap();
 
     let expected: [u8; 16] = v128_const_bytes(new_lanes).try_into().unwrap();
 
