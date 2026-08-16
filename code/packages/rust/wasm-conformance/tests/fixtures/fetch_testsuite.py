@@ -120,6 +120,19 @@ TESTSUITE_FILES = [
     "traps.wast",
     "float_memory.wast",
     "memory_redundancy.wast",
+    # Bulk-memory proposal (task #94): memory.copy already existed
+    # (E4-dyn's runtime string concat needed it); memory.fill was added
+    # alongside this vendoring pass, and this crate's wast-parser never
+    # had text-form support for EITHER instruction (both are 0xFC-
+    # prefixed, so -- like trunc_sat/atomics/SIMD -- they need their own
+    # interception before `wasm_opcodes::get_opcode_by_name`'s lookup,
+    # which only this vendoring pass added). Deliberately excludes their
+    # sibling `bulk.wast`: it mixes memory.copy/memory.fill with
+    # memory.init/data.drop (task #95) and table.init/elem.drop/
+    # table.copy (task #97) in the SAME file, all still unimplemented --
+    # only vendorable once both of those land too.
+    "memory_copy.wast",
+    "memory_fill.wast",
     # Real cross-module linking (WASM05, task #93) -- the original W05
     # scope note excluded this as needing "heavier module-linking
     # semantics" than existed at the time; `RegistryHost` (real

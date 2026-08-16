@@ -1,5 +1,23 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.18 — 2026-08-16 — memory.copy/memory.fill text-form parsing (task #94)
+
+### Added
+
+- `memory.copy`/`memory.fill` (bulk-memory proposal) text-form parsing,
+  in both flat and folded instruction syntax -- neither had ANY support
+  before this (both are 0xFC-prefixed, so -- like trunc_sat/atomics/SIMD
+  before them -- they need their own interception in `encode_stream_
+  instr`/`encode_flat_instr` before the `get_opcode_by_name` lookup,
+  which only this pass added). `memory.copy` already had a real
+  `wasm-execution` interpreter handler (E4-dyn's runtime string concat
+  needed it) but no way to reach it from `.wast` source text; `memory.
+  fill`'s interpreter handler is new this same task (see `wasm-execution`'s
+  own CHANGELOG). No vendored corpus file uses an explicit non-default
+  memory index for either instruction (bulk-memory predates multi-
+  memory), so -- same deferral as `memory.size`/`memory.grow`'s existing
+  scope note -- both always emit index byte(s) `0x00`, not a real lookup.
+
 ## 0.1.17 — 2026-08-16 — read a table's real funcref/externref reftype; table.get/table.set default index (task #96)
 
 ### Fixed
