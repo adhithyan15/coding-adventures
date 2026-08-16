@@ -1747,6 +1747,27 @@ pub const MAX_MEMORIES: usize = 64;
 /// cap needs no companion storage-layer work, just this bound.
 pub const MAX_TABLES: usize = 64;
 
+/// Caps a SINGLE table's declared minimum element count (task #96,
+/// security review). Unlike `MAX_TABLES`/`MAX_MEMORIES` (a count of
+/// tables/memories), and unlike memory's own real spec-mandated 65536-
+/// page ceiling (`grow()`'s existing check, above), WASM's real spec
+/// allows a table's `min` up to `2^32 - 1` -- so this is NOT a spec
+/// requirement, it's this interpreter's own implementation-defined
+/// resource limit: `Table::new` allocates `min` elements EAGERLY
+/// (`vec![None; initial_size]`), so an unvalidated, attacker-controlled
+/// `min` near `u32::MAX` would attempt an ~34GB allocation on a single
+/// `(table 4294967295 funcref)` declaration -- and combined with raising
+/// `MAX_TABLES` from 1 to 64 (task #96), a small `.wat` file could now
+/// request up to 64x that in one `instantiate()` call. 10,000,000
+/// elements (`Table::elements: Vec<Option<u32>>`, ~80MB worst case) is
+/// comfortably past any real corpus file's actual usage while still
+/// bounding worst-case memory to a sane amount -- matching the same
+/// "generous but bounded" reasoning as `MAX_V128_HEAP_LEN`. Enforced at
+/// VALIDATION time (`wasm-validator`), not silently at allocation time,
+/// so an over-cap module fails loudly and predictably rather than OOMing
+/// the process.
+pub const MAX_TABLE_ELEMENTS: u32 = 10_000_000;
+
 thread_local! {
     /// How many WASM10 dedicated threads deep the CURRENT thread is
     /// nested, relative to the original (non-WASM-spawned) caller — see

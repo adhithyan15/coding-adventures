@@ -13,6 +13,14 @@ All notable changes to this package will be documented in this file.
   tables`/`WasmExecutionContext.tables`) has been a `Vec` all along, and
   `table.get`/`table.set` plus element-segment application already
   indexed by a real, decoded table index rather than assuming table 0.
+- New `pub const MAX_TABLE_ELEMENTS: u32 = 10_000_000` (security review):
+  a single table's declared `min` was never bounds-checked before this
+  interpreter's own eager `Table::new` allocation, and raising
+  `MAX_TABLES` from 1 to 64 in this same change amplified that gap's
+  blast radius 64x. Unlike memory's real spec-mandated 65536-page
+  ceiling, this is an implementation-defined resource limit (real WASM
+  allows a table `min` up to `2^32 - 1`), enforced by `wasm-validator` at
+  validation time.
 
 ## [0.9.4] - 2026-08-15 (W16, task #85 — multi-memory first slice)
 

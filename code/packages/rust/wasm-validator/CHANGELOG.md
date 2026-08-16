@@ -25,6 +25,23 @@ All notable changes to this package will be documented in this file.
   freely mix both, and each `table.get $t`/`table.set $t` must type-check
   against `$t`'s own type, not a blanket assumption.
 
+### Security
+
+- **New Check 1b**: a memory's `min`/`max` must not exceed 2^16 pages --
+  a real WASM spec structural-validation rule (not a heuristic), the
+  identical bound `LinearMemory::grow()` already enforced at runtime, but
+  previously never checked before an eager, unvalidated allocation at
+  instantiation time. Found via `/security-review` while widening
+  `MAX_TABLES`. Bonus: closes 6 previously-`NotYetSupported`
+  `assert_invalid` cases in the vendored `memory.wast` for free.
+- **New Check 2b**: a table's `min` must not exceed the new
+  `wasm_execution::MAX_TABLE_ELEMENTS` (10,000,000) -- unlike Check 1b,
+  this is an implementation-defined resource limit, not a spec
+  requirement (real WASM allows a table `min` up to `2^32 - 1`), since
+  `Table::new` allocates eagerly and raising `MAX_TABLES` from 1 to 64
+  in this same release amplified an unvalidated `min`'s DoS blast radius
+  64x.
+
 ## [0.2.7] - 2026-08-15 (W16, task #85 — multi-memory first slice)
 
 ### Changed (breaking)
