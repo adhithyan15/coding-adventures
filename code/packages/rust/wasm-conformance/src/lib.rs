@@ -280,7 +280,7 @@ impl Executor {
                     Err(e) => DirectiveOutcome::Fail(format!("module failed structural validation: {e}")),
                     Ok(validated) => {
                         let host = RegistryHost { registry: Rc::clone(&self.registry) };
-                        match WasmRuntime::with_host(Box::new(host)).instantiate(&validated.module) {
+                        match WasmRuntime::with_host(Box::new(host)).instantiate(&validated) {
                             Ok(instance) => {
                                 let instance = Rc::new(RefCell::new(instance));
                                 self.registry.borrow_mut().insert(None, Rc::clone(&instance));
@@ -489,7 +489,7 @@ impl Executor {
                 Err(_) => DirectiveOutcome::Pass,
                 Ok(validated) => {
                     let host = RegistryHost { registry: Rc::clone(&self.registry) };
-                    match WasmRuntime::with_host(Box::new(host)).instantiate(&validated.module) {
+                    match WasmRuntime::with_host(Box::new(host)).instantiate(&validated) {
                         Ok(_) => DirectiveOutcome::Fail("module linked successfully; expected unlinkable".to_string()),
                         Err(_) => DirectiveOutcome::Pass,
                     }

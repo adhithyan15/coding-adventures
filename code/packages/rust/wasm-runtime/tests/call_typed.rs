@@ -16,7 +16,8 @@ fn instantiate(wat: &str) -> (WasmRuntime, wasm_runtime::WasmInstance) {
     let module = wasm_wast_parser::parse_module(wat).expect("module should parse");
     let runtime = WasmRuntime::new();
     runtime.validate(&module).expect("module should validate");
-    let instance = runtime.instantiate(&module).expect("module should instantiate");
+    let validated = runtime.validate(&module).unwrap();
+    let instance = runtime.instantiate(&validated).expect("module should instantiate");
     (runtime, instance)
 }
 

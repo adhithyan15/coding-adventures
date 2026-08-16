@@ -102,10 +102,37 @@ impl std::error::Error for ValidationError {}
 /// type system guarantees that `validate()` was called and succeeded.
 /// Downstream code (the runtime) can accept `ValidatedModule` instead of
 /// `WasmModule` to ensure validation is never accidentally skipped.
+///
+/// The wrapped module is deliberately private (task #100, security
+/// review): an earlier version exposed it as `pub module: WasmModule`,
+/// which meant any crate depending on `wasm-validator` could construct
+/// `ValidatedModule { module: attacker_controlled }` directly with a
+/// struct literal, skipping `validate()` entirely and defeating the very
+/// guarantee this type exists to provide (e.g. `wasm-runtime::
+/// instantiate()` requiring `&ValidatedModule` -- see its own doc
+/// comment -- offered no real protection while this field was public).
+/// [`ValidatedModule::module`] is the only way to reach the wrapped
+/// value now; the only way to construct a `ValidatedModule` at all is
+/// [`validate`] succeeding. This is enforced by the compiler, not a
+/// convention -- the struct literal that used to be the bypass is now a
+/// compile error:
+///
+/// ```compile_fail
+/// use wasm_types::WasmModule;
+/// use wasm_validator::ValidatedModule;
+///
+/// let bypass = ValidatedModule { module: WasmModule::default() };
+/// ```
 #[derive(Debug, Clone)]
 pub struct ValidatedModule {
-    /// The underlying parsed module.
-    pub module: WasmModule,
+    module: WasmModule,
+}
+
+impl ValidatedModule {
+    /// The underlying parsed module, proven to have passed [`validate`].
+    pub fn module(&self) -> &WasmModule {
+        &self.module
+    }
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
