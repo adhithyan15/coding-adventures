@@ -121,6 +121,40 @@ literals in transit. It rebuilt the harness and only then trusted the result. Th
 is the procedure working exactly as intended, and it is why the self-test is not
 optional: the detector looked correct in every case, and was wrong in all four.
 
+## HL-C206 — the HL11 ductus/filmstrip work is UNSTARTED, and was only in a session task list
+
+Four items sat in an in-session task list rather than here, and were closed out
+when that list was cleared. The design is specified in
+`code/specs/HL11-drizzled-script-ramp.md` and the corpus mentions ductus/stroke
+order in ~95 places, but **nothing recorded that these four remain undone**, so
+this row exists to say so plainly:
+
+1. **`letter-ductus` figure kind** -- one letter to one filmstrip: n panels, panel k
+   showing strokes 1..k, finished outline behind in grey, travelled path in ink, a
+   dot at the pen, one caption per panel. Goes in
+   `human-language-data/src/figure.ts` beside `etymology-route`, rasterised through
+   `image-codec-png`, byte-gated by `core/generated-figure-hashes.json`.
+2. **Wire those figures into the book pipeline** -- declare them in
+   `core/figure-generation.json` and prove it on Tamil's 11 already-verified letters
+   BEFORE any new research lands.
+3. **Cited ductus research for five scripts**, in letter-ledger order. Tamil extends
+   from 11; Telugu, Kannada, Malayalam and Devanagari start at zero. Per letter: a
+   cited `strokeOrderSource`, a font-verified pen path, and `penLifts` (which the
+   schema already refuses without a source). **No citation means no pen path and no
+   figure** -- the letter ships prose-only and the gap is recorded as debt.
+4. **Rebuild the six tracks in lockstep** -- redistribute the clustered writing
+   lessons into one-letter segments across the first ~50 sequences.
+
+**Sourcing risk, stated plainly and unchanged:** Tamil's source is solid and Telugu
+has a plausible academic candidate. Kannada, Malayalam and Devanagari are unproven,
+and recorded project memory says Indic stroke GEOMETRY is not transferable between
+scripts -- only order and count are reliably citable. Expect some letters to land
+prose-only. That is the designed outcome, not a failure.
+
+**Do not let a missing citation become an invented pen path.** The whole point of
+the `strokeOrderSource` gate is that a hand-drawn guess looks exactly like a
+researched one on the page.
+
 ## HL-C202 — a COVERED script can still split a word across two fonts
 
 Found while auditing the Telugu round-2 tranche. Four committed strings carried a
