@@ -2601,16 +2601,38 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let idx = data_idx as usize;
-                let dropped = ctx.dropped_data_segments.get(idx).copied().unwrap_or(true);
-                let segment_len = if dropped { 0 } else { ctx.data_segments.get(idx).map(Vec::len).unwrap_or(0) };
+                // Security review (task #95): an out-of-range `idx` is
+                // ALWAYS a hard error, checked and rejected BEFORE any
+                // indexing at all -- shouldn't happen in a validated
+                // module (`wasm-validator` bounds-checks `data_idx`
+                // against `module.data.len()`), but this interpreter
+                // never trusts a decoded index at runtime regardless of
+                // what validation should have caught, matching `data.
+                // drop`'s own defensive check just below. Kept separate
+                // from "segment is dropped" (below), which is a real,
+                // spec-defined, IN-range state that degrades to a
+                // length-0 segment rather than erroring outright. A
+                // prior version conflated the two by defaulting an
+                // out-of-range `idx` to `segment_len = 0` via `.get(idx)
+                // .unwrap_or(0)`, which a zero-length `memory.init`
+                // trivially satisfied (`0 <= 0`) and then indexed
+                // `ctx.data_segments[idx]` directly in the copy step --
+                // panicking on the very index the bounds check had just
+                // "passed," instead of hitting this check at all.
+                if idx >= ctx.data_segments.len() || idx >= ctx.dropped_data_segments.len() {
+                    return Err(VMError::GenericError(format!("memory.init: data segment index {idx} out of bounds")));
+                }
+                let dropped = ctx.dropped_data_segments[idx];
+                let segment_bytes: &[u8] = if dropped { &[] } else { ctx.data_segments[idx].as_slice() };
                 match src.checked_add(n) {
-                    Some(src_end) if src_end <= segment_len => {
-                        let bytes = ctx.data_segments[idx][src..src_end].to_vec();
+                    Some(src_end) if src_end <= segment_bytes.len() => {
+                        let bytes = segment_bytes[src..src_end].to_vec();
                         get_memory(ctx)?.write_bytes(dest, &bytes).map_err(VMError::from)?;
                     }
                     _ => {
                         return Err(VMError::from(TrapError::new(format!(
-                            "out of bounds memory access: memory.init data_idx={idx}, src={src}, len={n}, segment_size={segment_len}"
+                            "out of bounds memory access: memory.init data_idx={idx}, src={src}, len={n}, segment_size={}",
+                            segment_bytes.len()
                         ))));
                     }
                 }
@@ -9436,5 +9458,53 @@ mod tests {
         assert!(engine
             .call_function(0, &[WasmValue::I32(0), WasmValue::I32(0), WasmValue::I32(1)])
             .is_err());
+    }
+
+    /// Security review (task #95): a `memory.init` whose `data_idx` is
+    /// out of range for `data_segments`/`dropped_data_segments` (never
+    /// happens through the real, intended pipeline -- `wasm-validator`
+    /// bounds-checks it and `wasm-runtime` always keeps both `Vec`s
+    /// sized to `module.data.len()` -- but this crate's own public
+    /// `WasmExecutionEngine` API is legitimately usable standalone, and
+    /// never trusts a decoded index at runtime regardless of what
+    /// validation SHOULD have caught) must still trap cleanly, not
+    /// panic. A zero-length init (`src=0, len=0`) is the exact case that
+    /// slipped through: the old bounds-check computed `segment_len = 0`
+    /// via `.get(idx).unwrap_or(0)`, which a zero-length op trivially
+    /// satisfies (`0 <= 0`), then indexed `ctx.data_segments[idx]`
+    /// directly in the copy step -- panicking on the very index the
+    /// bounds check had just "passed."
+    #[test]
+    fn memory_init_with_an_out_of_range_data_idx_traps_cleanly_even_at_zero_length() {
+        let func_type = FuncType {
+            params: vec![ValueType::I32, ValueType::I32, ValueType::I32],
+            results: vec![],
+        };
+        // data_idx = 5, but no data segments registered at all.
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x20, 0x00, 0x20, 0x01, 0x20, 0x02, 0xFC, 0x08, 0x05, 0x00, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        // Deliberately empty -- `data_idx=5` is out of range for both.
+        engine.set_data_segments(vec![]);
+        engine.set_dropped_data_segments(vec![]);
+
+        // Zero-length: this is the case that previously panicked instead
+        // of returning a clean Err.
+        let result = engine.call_function(0, &[WasmValue::I32(0), WasmValue::I32(0), WasmValue::I32(0)]);
+        assert!(result.is_err(), "out-of-range data_idx must trap, not silently succeed: {result:?}");
+        // Nonzero-length: was already correctly trapping before this fix,
+        // included here so both shapes are pinned by the same test.
+        let result = engine.call_function(0, &[WasmValue::I32(0), WasmValue::I32(0), WasmValue::I32(1)]);
+        assert!(result.is_err());
     }
 }

@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 
 ## [0.9.7] - 2026-08-16 (task #95 — memory.init/data.drop, passive data segments)
 
+### Security
+
+- `memory.init`'s handler now hard-errors on an out-of-range `data_idx`
+  instead of silently degrading it to an empty segment. The first pass
+  of this fix (caught by `/security-review` round 1) removed a direct
+  `ctx.data_segments[idx]` panic by resolving `segment_bytes` once via
+  `.get(idx).unwrap_or(&[])` -- correct for the panic, but it also
+  collapsed "index out of range" and "segment was dropped" into the
+  same fallback. That let a zero-length `memory.init` with an
+  out-of-range `data_idx` return `Ok(())` (silently "succeed") instead
+  of trapping, which the interpreter's own defensive posture doesn't
+  allow elsewhere -- `data.drop`'s handler, just below, has always
+  hard-errored on an out-of-range index unconditionally. Fixed by
+  checking `idx` against both `Vec` lengths FIRST, returning
+  `VMError::GenericError` immediately if out of range, before ever
+  touching `dropped_data_segments`/`data_segments`; only a genuinely
+  in-range index is allowed to soft-degrade via `dropped`. New test
+  `memory_init_with_an_out_of_range_data_idx_traps_cleanly_even_at_zero_length`
+  pins both the zero-length and nonzero-length out-of-range shapes.
+  Confirmed load-bearing by TEMP-REVERT-CHECK (reverting to the
+  `.get(idx).unwrap_or(true/&[])` fallback reproduces the exact
+  predicted regression: the new test fails with "out-of-range data_idx
+  must trap, not silently succeed: Ok([])").
+
 ### Added
 
 - `memory.init`/`data.drop` (`0xFC 0x08`/`0x09`) interpreter handlers --
