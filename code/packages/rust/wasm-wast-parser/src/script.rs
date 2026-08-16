@@ -119,7 +119,21 @@ pub enum Directive {
     /// walked at all. Only a module's own *build* failure is captured this
     /// way -- a genuine tokenizer/S-expression *syntax* error still fails
     /// `parse_script` as a whole (see that function's own doc comment).
-    Module(Result<WasmModule, String>),
+    ///
+    /// `id`: the module's own `$name` -- `(module $Mf ...)` -- if given
+    /// (real WASM: task #93/linking.wast). Previously discarded entirely
+    /// during parsing ("doesn't affect encoding"), which meant a script's
+    /// executor had no way to resolve a LATER `(invoke $Mf "f" ...)` or
+    /// `(register "M" $Mf)` back to this specific module -- both actions
+    /// already carry a `$name` reference (`Action::Invoke.module`,
+    /// `Directive::Register.module_name`), they just had nothing to
+    /// resolve it against.
+    /// `Box`ed (clippy `large_enum_variant`): `WasmModule` is a large flat
+    /// struct (many `Vec` fields), and every OTHER `Directive` variant is
+    /// much smaller -- without boxing, a `Vec<Directive>` for a whole
+    /// script (hundreds of directives in a real corpus file) would pad
+    /// EVERY entry to this one variant's size.
+    Module { id: Option<String>, result: Box<Result<WasmModule, String>> },
     Register { name: String, module_name: Option<String> },
     Action(Action),
     AssertReturn { action: Action, expected: Vec<Expected> },
@@ -156,7 +170,10 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
         expected: "a directive keyword",
     })?;
     match head {
-        "module" => Ok(Directive::Module(build_module_directive(e).map_err(|e| e.to_string()))),
+        "module" => Ok(Directive::Module {
+            id: extract_module_id(e),
+            result: Box::new(build_module_directive(e).map_err(|e| e.to_string())),
+        }),
         "register" => {
             let name = expect_str(expect_get(items, 1)?)?;
             let module_name = items.get(2).and_then(|m| m.as_atom()).map(|s| s.to_string());
@@ -343,6 +360,19 @@ fn build_module_directive(e: &SExpr) -> Result<WasmModule, WastParseError> {
     }
 }
 
+/// A `(module $name ...)` directive's own `$name`, if given -- the same
+/// leading-`$`-atom-right-after-the-keyword position `parse_module_source`
+/// below skips over, extracted here (task #93/linking.wast) so
+/// `Directive::Module` can carry it for the executor to resolve later
+/// `(invoke $name ...)`/`(register "..." $name)` references against.
+fn extract_module_id(e: &SExpr) -> Option<String> {
+    let items = e.as_list()?;
+    match items.get(1) {
+        Some(SExpr::Atom(s, _)) if s.starts_with('$') => Some(s.clone()),
+        _ => None,
+    }
+}
+
 fn parse_module_source(e: &SExpr) -> Result<ModuleSource, WastParseError> {
     let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "a module form" })?;
     // Skip `module`, an optional `$name`, then look for a `binary`/`quote`
@@ -390,7 +420,17 @@ mod tests {
     fn parses_bare_module_directive() {
         let dirs = parse_script("(module (func (result i32) (i32.const 42)))").unwrap();
         assert_eq!(dirs.len(), 1);
-        assert!(matches!(dirs[0], Directive::Module(_)));
+        assert!(matches!(dirs[0], Directive::Module { id: None, .. }));
+    }
+
+    /// Task #93 (linking.wast): a module's own `(module $Mf ...)` name must
+    /// be captured, not discarded -- it's how a LATER `(invoke $Mf "f" ...)`
+    /// or `(register "M" $Mf)` resolves back to this specific module.
+    #[test]
+    fn module_directive_captures_its_own_name() {
+        let dirs = parse_script("(module $Mf (func (result i32) (i32.const 42)))").unwrap();
+        assert_eq!(dirs.len(), 1);
+        assert!(matches!(&dirs[0], Directive::Module { id: Some(id), .. } if id == "$Mf"));
     }
 
     #[test]
@@ -482,10 +522,13 @@ mod tests {
         // `assert_return` invokes an export from it.
         let dirs = parse_script(r#"(module quote "(func (export \"f\") (result i32) (i32.const 42))")"#).unwrap();
         match &dirs[0] {
-            Directive::Module(Ok(m)) => {
-                assert_eq!(m.functions.len(), 1);
-                assert_eq!(m.exports[0].name, "f");
-            }
+            Directive::Module { result, .. } => match result.as_ref() {
+                Ok(m) => {
+                    assert_eq!(m.functions.len(), 1);
+                    assert_eq!(m.exports[0].name, "f");
+                }
+                Err(e) => panic!("unexpected build failure: {e}"),
+            },
             other => panic!("unexpected directive: {other:?}"),
         }
     }
@@ -499,7 +542,9 @@ mod tests {
         // doesn't recognize a bare "binary" atom as a field).
         let dirs = parse_script(r#"(module binary "\00\61\73\6d\01\00\00\00")"#).unwrap();
         match &dirs[0] {
-            Directive::Module(Ok(m)) => assert_eq!(m, &wasm_types::WasmModule::default()),
+            Directive::Module { result, .. } => {
+                assert_eq!(result.as_ref(), &Ok(wasm_types::WasmModule::default()))
+            }
             other => panic!("unexpected directive: {other:?}"),
         }
     }
@@ -512,7 +557,7 @@ mod tests {
         )
         .unwrap();
         assert_eq!(dirs.len(), 2);
-        assert!(matches!(dirs[0], Directive::Module(_)));
+        assert!(matches!(dirs[0], Directive::Module { .. }));
         assert!(matches!(&dirs[1], Directive::AssertReturn { action: Action::Invoke { module: Some(_), .. }, .. }));
     }
 
@@ -534,12 +579,15 @@ mod tests {
         )
         .unwrap();
         assert_eq!(dirs.len(), 5);
-        assert!(matches!(dirs[0], Directive::Module(Ok(_))), "{:?}", dirs[0]);
+        assert!(matches!(&dirs[0], Directive::Module { result, .. } if result.is_ok()), "{:?}", dirs[0]);
         match &dirs[1] {
-            Directive::Module(Err(msg)) => assert!(msg.contains("this.is.not.a.real.opcode"), "{msg}"),
+            Directive::Module { result, .. } => match result.as_ref() {
+                Err(msg) => assert!(msg.contains("this.is.not.a.real.opcode"), "{msg}"),
+                Ok(_) => panic!("expected a captured build error, got a built module"),
+            },
             other => panic!("expected a captured build error, got {other:?}"),
         }
-        assert!(matches!(dirs[2], Directive::Module(Ok(_))), "{:?}", dirs[2]);
+        assert!(matches!(&dirs[2], Directive::Module { result, .. } if result.is_ok()), "{:?}", dirs[2]);
         assert!(matches!(dirs[3], Directive::AssertReturn { .. }));
         assert!(matches!(dirs[4], Directive::AssertReturn { .. }));
     }

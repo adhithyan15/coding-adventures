@@ -2072,6 +2072,62 @@
         "not_yet_supported": 0
       }
     },
+    "linking.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 48,
+        "fail": 17,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 18,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 49,
+        "fail": 1,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 16,
+        "fail": 1,
+        "trap": 0,
+        "not_yet_supported": 4
+      },
+      "register": {
+        "pass": 6,
+        "fail": 2,
+        "trap": 0,
+        "not_yet_supported": 1
+      }
+    },
     "load.wast": {
       "action": {
         "pass": 0,
@@ -3443,34 +3499,34 @@
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 15570,
-      "fail": 0,
+      "pass": 15618,
+      "fail": 17,
       "trap": 0,
       "not_yet_supported": 459
     },
     "assert_trap": {
-      "pass": 478,
+      "pass": 496,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 21
     },
     "assert_unlinkable": {
-      "pass": 0,
-      "fail": 0,
+      "pass": 49,
+      "fail": 1,
       "trap": 0,
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 936,
-      "fail": 0,
+      "pass": 952,
+      "fail": 1,
       "trap": 0,
-      "not_yet_supported": 30
+      "not_yet_supported": 34
     },
     "register": {
-      "pass": 2,
-      "fail": 0,
+      "pass": 8,
+      "fail": 2,
       "trap": 0,
-      "not_yet_supported": 0
+      "not_yet_supported": 1
     }
   },
   "parse_failures": {}
