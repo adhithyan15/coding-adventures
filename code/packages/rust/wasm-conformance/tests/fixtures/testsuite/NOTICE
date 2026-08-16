@@ -8,7 +8,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-15 (WASM18 -- proposals/threads/atomic.wast,
                vendored flat as atomic.wast, same pinned commit, no re-pin),
                extended 2026-08-15 (task #93 -- linking.wast, real cross-
-               module linking, same pinned commit, no re-pin)
+               module linking, same pinned commit, no re-pin),
+               extended 2026-08-16 (task #96 -- table_get.wast/
+               table_set.wast, real multi-table type-checking, same
+               pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -44,6 +47,15 @@ its 71 modules, exactly 2 import from `spectest` (this crate still has no
 `spectest` host, by design) -- those two modules and whatever directives
 depend on them grade `NotYetSupported`/collateral-fail; every other
 directive exercises real, already-supported linking machinery.
+
+`table_get.wast`/`table_set.wast` (task #96) surfaced (and this repo now
+fixes) a real bug: table declarations never actually read their own
+`funcref`/`externref` reftype keyword, silently defaulting every table's
+element_type to funcref regardless of the source. Deliberately excludes
+their sibling `table.wast` (a hex-literal table limit + a real `spectest`
+import, task #99) and `table_size.wast`/`table_grow.wast`/`table_fill.wast`
+(need `table.size`/`table.grow`/`table.fill`, entirely unimplemented
+opcodes, task #98).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

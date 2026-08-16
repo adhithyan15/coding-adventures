@@ -498,6 +498,10 @@ pub struct MemoryType {
 /// later proposal.)
 pub const FUNCREF: u8 = 0x70;
 
+/// The `externref` element type (reference-types proposal, task #96) —
+/// an opaque host reference, distinct from `funcref`. Byte value 0x6F.
+pub const EXTERNREF: u8 = 0x6F;
+
 /// The type of a WASM table: an array of references with size limits.
 ///
 /// Tables in WASM 1.0 hold function references (`funcref`). They are used

@@ -1,5 +1,26 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.17 — 2026-08-16 — read a table's real funcref/externref reftype; table.get/table.set default index (task #96)
+
+### Fixed
+
+- Both declared-table and imported-table parsing previously discarded a
+  table's declared reftype keyword (`funcref`/`externref`) entirely --
+  `parse_limits`'s digit-only scan correctly stopped before it, but
+  nothing ever read it afterward, leaving every table's `element_type`
+  silently hardcoded to `FUNCREF` regardless of the source. An imported
+  table's real LIMITS were also discarded, in favor of an unconditional
+  `{min: 0, max: None}` placeholder that (unlike function imports) was
+  never fixed up in a documented "pass 2". Found while vendoring
+  `table_get.wast`, a real corpus file mixing funcref and externref
+  tables in one module.
+- `table.get`/`table.set`'s table-index immediate is OPTIONAL, defaulting
+  to table 0 when omitted -- `(table.get (local.get $i))` is just as
+  legal as `(table.get $t2 (local.get $i))`. Same disambiguation shape as
+  W16's `memory.size`/`memory.grow`: an explicit index is always a bare
+  `Atom`, while every operand is always a nested, parenthesized
+  instruction (`SExpr::List`) in folded form.
+
 ## 0.1.16 — 2026-08-15 — capture a module directive's own $id (task #93, linking.wast)
 
 ### Fixed (breaking)

@@ -8,7 +8,9 @@
 //! - Type indices are in bounds (function type references, block types).
 //! - Function indices are in bounds (calls, element segments, exports).
 //! - Export names are unique.
-//! - Memory and table counts do not exceed 1 (WASM 1.0 restriction).
+//! - Memory and table counts do not exceed their bounded caps
+//!   (`wasm_execution::MAX_MEMORIES`/`MAX_TABLES` -- W16/task #96 raised
+//!   these from WASM 1.0's original hardcoded "at most 1").
 //! - Data segment memory indices are valid.
 //! - Element segment table indices are valid.
 //! - Every function body is instruction-level well-typed (WASM06/W02 Phase
@@ -46,8 +48,8 @@ mod type_check;
 /// | FuncIndexOutOfBounds  | Export references function 10, but only 7    |
 /// |                       | functions exist (imports + module-defined).   |
 /// | DuplicateExport       | Two exports share the name "memory".         |
-/// | TooManyMemories       | Module declares 2 memories (max is 1).       |
-/// | TooManyTables         | Module declares 2 tables (max is 1).         |
+/// | TooManyMemories       | Module exceeds MAX_MEMORIES.                 |
+/// | TooManyTables         | Module exceeds MAX_TABLES.                   |
 /// | InvalidDataSegment    | Data segment references memory index 1.      |
 /// | InvalidElement | Element segment references table index 1.    |
 /// | Other                 | Catch-all for additional validation errors.  |
@@ -59,9 +61,9 @@ pub enum ValidationError {
     FuncIndexOutOfBounds(String),
     /// Two or more exports share the same name.
     DuplicateExport(String),
-    /// The module declares more than one memory (not allowed in WASM 1.0).
+    /// The module's total memory count exceeds `wasm_execution::MAX_MEMORIES`.
     TooManyMemories(String),
-    /// The module declares more than one table (not allowed in WASM 1.0).
+    /// The module's total table count exceeds `wasm_execution::MAX_TABLES`.
     TooManyTables(String),
     /// A data segment references an invalid memory index.
     InvalidDataSegment(String),
@@ -117,8 +119,12 @@ pub struct ValidatedModule {
 ///
 /// # Checks performed
 ///
-/// 1. **Memory count** -- WASM 1.0 allows at most 1 memory (imports + module).
-/// 2. **Table count** -- WASM 1.0 allows at most 1 table (imports + module).
+/// 1. **Memory count** -- at most `wasm_execution::MAX_MEMORIES`
+///    (imports + module); each memory's `min`/`max` also capped at the
+///    real spec's 65536-page ceiling.
+/// 2. **Table count** -- at most `wasm_execution::MAX_TABLES`
+///    (imports + module); each table's `min` also capped at this
+///    interpreter's own `MAX_TABLE_ELEMENTS` resource limit.
 /// 3. **Function type indices** -- Every entry in the function section must
 ///    reference a valid index in the type section.
 /// 4. **Import type indices** -- Function imports must reference valid types.
@@ -126,8 +132,11 @@ pub struct ValidatedModule {
 ///    many entries as the function section.
 /// 6. **Export uniqueness** -- No two exports may share the same name.
 /// 7. **Export indices** -- Every export must reference a valid entity.
-/// 8. **Data segment validity** -- Memory indices must be 0 (only one memory).
-/// 9. **Element segment validity** -- Table indices must be 0 (only one table).
+/// 8. **Data segment validity** -- Memory index must be 0 (data-segment
+///    application still only ever targets memory 0, W16).
+/// 9. **Element segment validity** -- Table index must be a real,
+///    in-bounds table (task #96 -- element-segment application already
+///    indexes by the real table, so this generalized beyond "must be 0").
 /// 10. **Start function** -- If present, must be a valid function index.
 /// 11. **Instruction-level type checking** -- Every function body's
 ///     instruction sequence is well-typed (WASM06/W02 Phase 2): no stack
@@ -184,14 +193,115 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         )));
     }
 
-    // ── Check 2: Table count ≤ 1 ───────────────────────────────────────
+    // ── Check 1b: Memory limits ≤ the real spec's 65536-page ceiling ────
+    //
+    // Security review (task #96): a REAL WASM spec structural-validation
+    // rule (not implementation-defined, unlike Check 2b below) -- a
+    // memory's `min`/`max` may never exceed 2^16 pages (the entire 32-bit
+    // address space at 64KiB/page), the identical bound `LinearMemory::
+    // grow()` already enforces at runtime. Previously unchecked at
+    // validation time: a module declaring an over-cap `min` would reach
+    // `LinearMemory::new`'s eager `vec![0u8; min * PAGE_SIZE]` allocation
+    // unvalidated -- e.g. a single `(memory 100000)` attempts a ~6.4GB
+    // allocation before ever running a single instruction.
+    //
+    // A per-memory cap alone isn't enough once `MAX_MEMORIES` (64) is
+    // multiplied in: 64 memories each at the spec's own 65536-page max
+    // would still total ~256GB of eager allocation from one small module,
+    // all through the fully-intended `validate()` path -- no bypass
+    // needed (2nd round finding). So this also tracks a running total
+    // across every memory (imported + declared) and caps the SUM at the
+    // same 65536-page bound: still permits any single spec-valid memory
+    // at its true max, just prevents many of them from being max-size
+    // simultaneously.
+    let mut total_memory_pages: u64 = 0;
+    for (i, mt) in module.memories.iter().enumerate() {
+        if mt.limits.min > 65536 || mt.limits.max.is_some_and(|m| m > 65536) {
+            return Err(ValidationError::Other(format!(
+                "memory #{i}: limits (min={}, max={:?}) exceed the spec maximum of 65536 pages",
+                mt.limits.min, mt.limits.max
+            )));
+        }
+        total_memory_pages += mt.limits.min as u64;
+    }
+    for imp in &module.imports {
+        if let ImportTypeInfo::Memory(mt) = &imp.type_info {
+            if mt.limits.min > 65536 || mt.limits.max.is_some_and(|m| m > 65536) {
+                return Err(ValidationError::Other(format!(
+                    "imported memory {}.{}: limits (min={}, max={:?}) exceed the spec maximum of 65536 pages",
+                    imp.module_name, imp.name, mt.limits.min, mt.limits.max
+                )));
+            }
+            total_memory_pages += mt.limits.min as u64;
+        }
+    }
+    if total_memory_pages > 65536 {
+        return Err(ValidationError::Other(format!(
+            "total declared memory across all memories is {total_memory_pages} pages, exceeding the aggregate cap of 65536 pages"
+        )));
+    }
+
+    // ── Check 2: Table count ≤ MAX_TABLES ───────────────────────────────
+    //
+    // Multi-table (task #96): WASM 1.0's own hardcoded "at most 1" cap is
+    // gone; `wasm_execution::MAX_TABLES` is a real, bounded cap instead --
+    // see its own doc comment for why this needs no companion storage-
+    // layer work (unlike W16's multi-memory, table storage was already a
+    // `Vec` and already index-aware end to end).
     let total_tables = imported_tables + module.tables.len();
-    if total_tables > 1 {
+    if total_tables > wasm_execution::MAX_TABLES {
         return Err(ValidationError::TooManyTables(format!(
-            "WASM 1.0 allows at most 1 table, found {} ({} imported + {} declared)",
+            "at most {} tables allowed, found {} ({} imported + {} declared)",
+            wasm_execution::MAX_TABLES,
             total_tables,
             imported_tables,
             module.tables.len()
+        )));
+    }
+
+    // ── Check 2b: Table limits ≤ MAX_TABLE_ELEMENTS ─────────────────────
+    //
+    // Security review (task #96): unlike Check 1b above, this is NOT a
+    // real spec requirement -- WASM's own spec allows a table `min` up to
+    // `2^32 - 1` -- it's this interpreter's own implementation-defined
+    // resource limit, matching `Table::new`'s eager `vec![None; min]`
+    // allocation cost. See `MAX_TABLE_ELEMENTS`'s own doc comment for the
+    // full reasoning, including why raising `MAX_TABLES` from 1 to 64
+    // (this same task) made an unvalidated `min` a real amplified DoS
+    // vector worth closing now rather than leaving as a pre-existing gap.
+    //
+    // Same aggregate-vs-per-item gap as Check 1b above (2nd round
+    // finding): 64 tables each at `MAX_TABLE_ELEMENTS` would still total
+    // ~5.1GB from one small module. Tracks a running total across every
+    // table (imported + declared) and caps the SUM at the same
+    // `MAX_TABLE_ELEMENTS` bound too -- still permits any single table at
+    // its full implementation-defined max, just not many of them at once.
+    let mut total_table_elements: u64 = 0;
+    for (i, tt) in module.tables.iter().enumerate() {
+        if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS {
+            return Err(ValidationError::Other(format!(
+                "table #{i}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
+                tt.limits.min,
+                wasm_execution::MAX_TABLE_ELEMENTS
+            )));
+        }
+        total_table_elements += tt.limits.min as u64;
+    }
+    for imp in &module.imports {
+        if let ImportTypeInfo::Table(tt) = &imp.type_info {
+            if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS {
+                return Err(ValidationError::Other(format!(
+                    "imported table {}.{}: declared minimum {} elements exceeds this interpreter's resource limit of {}",
+                    imp.module_name, imp.name, tt.limits.min, wasm_execution::MAX_TABLE_ELEMENTS
+                )));
+            }
+            total_table_elements += tt.limits.min as u64;
+        }
+    }
+    if total_table_elements > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
+        return Err(ValidationError::Other(format!(
+            "total declared elements across all tables is {total_table_elements}, exceeding the aggregate cap of {}",
+            wasm_execution::MAX_TABLE_ELEMENTS
         )));
     }
 
@@ -314,6 +424,14 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     }
 
     // ── Check 9: Element segments ───────────────────────────────────────
+    //
+    // Multi-table (task #96): generalized to a real bounds check against
+    // `total_tables`, unlike W16's data-segment check (which deliberately
+    // stayed "must be 0") -- safe here because `wasm-runtime::
+    // instantiate()`'s element-segment application already indexes by the
+    // real `elem.table_index` (`tables.get_mut(elem.table_index as
+    // usize)`), so there is no silent-misapplication risk to guard
+    // against.
     for (i, elem) in module.elements.iter().enumerate() {
         if total_tables == 0 {
             return Err(ValidationError::InvalidElement(format!(
@@ -321,10 +439,10 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                 i
             )));
         }
-        if elem.table_index != 0 {
+        if elem.table_index as usize >= total_tables {
             return Err(ValidationError::InvalidElement(format!(
-                "element segment #{} references table index {}, but only index 0 is valid",
-                i, elem.table_index
+                "element segment #{} references table index {}, but only {} tables exist",
+                i, elem.table_index, total_tables
             )));
         }
         // Validate function indices within element segments.
@@ -475,6 +593,50 @@ mod tests {
         assert!(validate(&module).is_ok());
     }
 
+    /// Security review (task #96): a real WASM spec rule, not an
+    /// implementation-defined heuristic -- a memory's `min` may never
+    /// exceed 2^16 pages. Previously unchecked at validation time, so an
+    /// over-cap `min` reached `LinearMemory::new`'s eager allocation
+    /// unvalidated.
+    #[test]
+    fn rejects_a_memory_declaring_more_than_65536_pages() {
+        let module = WasmModule {
+            memories: vec![MemoryType { limits: Limits { min: 65537, max: None }, shared: false }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn accepts_a_memory_declaring_exactly_65536_pages() {
+        let module = WasmModule {
+            memories: vec![MemoryType { limits: Limits { min: 65536, max: None }, shared: false }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    /// Security review, 2nd round (task #96): a per-memory cap alone
+    /// isn't enough once `MAX_MEMORIES` (64) is multiplied in -- 64
+    /// memories each individually under the per-memory 65536-page cap
+    /// can still sum to far more aggregate allocation than any single
+    /// spec-valid memory would ever need. Two memories each at the full
+    /// 65536-page cap sum to 131072, over the aggregate cap, even though
+    /// neither one alone would be rejected by Check 1b's per-item check.
+    #[test]
+    fn rejects_memories_whose_combined_pages_exceed_the_aggregate_cap() {
+        let module = WasmModule {
+            memories: vec![
+                MemoryType { limits: Limits { min: 65536, max: None }, shared: false },
+                MemoryType { limits: Limits { min: 1, max: None }, shared: false },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
     #[test]
     fn rejects_bad_export_func_index() {
         let module = WasmModule {
@@ -542,22 +704,85 @@ mod tests {
     }
 
     #[test]
+    /// Multi-table (task #96) raised the cap from 1 to
+    /// `wasm_execution::MAX_TABLES`, so a module needs MORE than that
+    /// many tables to still be rejected -- proving the cap MOVED, not
+    /// disappeared.
     fn rejects_too_many_tables() {
         let module = WasmModule {
-            tables: vec![
-                TableType {
-                    element_type: 0x70,
-                    limits: Limits { min: 1, max: None },
-                },
-                TableType {
-                    element_type: 0x70,
-                    limits: Limits { min: 1, max: None },
-                },
-            ],
+            tables: (0..=wasm_execution::MAX_TABLES)
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .collect(),
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::TooManyTables(_)));
+    }
+
+    /// A module with exactly `MAX_TABLES` (previously rejected under the
+    /// old hardcoded "at most 1" WASM-1.0 cap) now validates
+    /// successfully.
+    #[test]
+    fn accepts_up_to_max_tables() {
+        let module = WasmModule {
+            tables: (0..wasm_execution::MAX_TABLES)
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .collect(),
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    /// Security review (task #96): raising `MAX_TABLES` from 1 to 64
+    /// amplified a pre-existing gap -- a table's declared `min` was never
+    /// bounds-checked before reaching `Table::new`'s eager
+    /// `vec![None; min]` allocation. Unlike memory's real spec-mandated
+    /// 65536-page ceiling, this is an implementation-defined resource
+    /// limit (real WASM allows a table `min` up to `2^32 - 1`).
+    #[test]
+    fn rejects_a_table_declaring_more_than_max_table_elements() {
+        let module = WasmModule {
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS + 1, max: None },
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
+    #[test]
+    fn accepts_a_table_declaring_exactly_max_table_elements() {
+        let module = WasmModule {
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS, max: None },
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    /// Security review, 2nd round (task #96): same aggregate-vs-per-item
+    /// gap as memory's Check 1b above -- two tables each under the
+    /// per-table `MAX_TABLE_ELEMENTS` cap can still sum past it, even
+    /// though neither is rejected individually by Check 2b's per-item
+    /// check.
+    #[test]
+    fn rejects_tables_whose_combined_elements_exceed_the_aggregate_cap() {
+        let module = WasmModule {
+            tables: vec![
+                TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS, max: None },
+                },
+                TableType { element_type: 0x70, limits: Limits { min: 1, max: None } },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
     }
 
     #[test]
@@ -850,6 +1075,9 @@ mod tests {
 
     #[test]
     fn imported_table_counts_toward_limit() {
+        // 1 imported + MAX_TABLES declared = MAX_TABLES + 1, over the cap
+        // -- proves the imported one counts toward the SAME limit as
+        // declared tables, not a separate budget.
         let module = WasmModule {
             imports: vec![Import {
                 module_name: "env".to_string(),
@@ -860,10 +1088,9 @@ mod tests {
                     limits: Limits { min: 1, max: None },
                 }),
             }],
-            tables: vec![TableType {
-                element_type: 0x70,
-                limits: Limits { min: 1, max: None },
-            }],
+            tables: (0..wasm_execution::MAX_TABLES)
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .collect(),
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
