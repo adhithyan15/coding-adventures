@@ -1735,6 +1735,18 @@ pub const MAX_V128_HEAP_LEN: usize = 1_000_000;
 /// `MAX_V128_HEAP_LEN` already established.
 pub const MAX_MEMORIES: usize = 64;
 
+/// Caps how many tables a single module may declare + import (task #96).
+/// Same reasoning as `MAX_MEMORIES` -- WASM 1.0's own hardcoded "at most
+/// 1" is a real historical MVP restriction, not a load-bearing invariant
+/// this interpreter's execution layer actually needs: `Table` storage
+/// (`WasmInstance.tables`/`WasmExecutionContext.tables`) has been a `Vec`
+/// all along (unlike memory, which needed W16 to become one), and both
+/// `table.get`/`table.set` (wasm-execution) and element-segment
+/// application (`wasm-runtime::instantiate()`) already index by a real,
+/// decoded table index rather than assuming table 0 -- so relaxing this
+/// cap needs no companion storage-layer work, just this bound.
+pub const MAX_TABLES: usize = 64;
+
 thread_local! {
     /// How many WASM10 dedicated threads deep the CURRENT thread is
     /// nested, relative to the original (non-WASM-spawned) caller — see

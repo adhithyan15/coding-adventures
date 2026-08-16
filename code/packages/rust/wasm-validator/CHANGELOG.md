@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.8] - 2026-08-16 (task #96 — multi-table)
+
+### Changed (breaking)
+
+- The table-count check ("Check 2") no longer rejects a module with more
+  than 1 table outright -- the cap is now `wasm_execution::MAX_TABLES`
+  (64), replacing WASM 1.0's hardcoded "at most 1".
+- The element-segment table-index check ("Check 9") is now a real bounds
+  check against the total table count, instead of hardcoding "must be
+  0". Unlike W16's data-segment check (deliberately left at "must be 0"
+  to avoid a silent-misapplication risk), this is safe to generalize:
+  `wasm-runtime::instantiate()`'s element-segment application already
+  indexes by the real `elem.table_index`.
+
+### Fixed
+
+- `table.get`/`table.set`'s instruction-level type check unconditionally
+  assumed every table was `funcref` (a real, previously-deliberate WASM
+  1.0-only limitation). Now looks up the REFERENCED table's own declared
+  element type (funcref or externref) instead -- a multi-table module can
+  freely mix both, and each `table.get $t`/`table.set $t` must type-check
+  against `$t`'s own type, not a blanket assumption.
+
 ## [0.2.7] - 2026-08-15 (W16, task #85 — multi-memory first slice)
 
 ### Changed (breaking)

@@ -93,6 +93,20 @@ TESTSUITE_FILES = [
     "local_set.wast",
     "local_tee.wast",
     "global.wast",
+    # Tables (task #96) -- WASM17's table.get/table.set already existed,
+    # but vendoring these surfaced (and this PR fixes) a real bug: table
+    # declarations never actually read their `funcref`/`externref` reftype
+    # keyword, silently defaulting every table's element_type to funcref
+    # regardless of the source (`(table $t2 2 externref)` still parsed as
+    # funcref). Deliberately excludes: table.wast (has its own separate
+    # remaining gaps -- hex-literal table limits, a real `spectest`
+    # import), table_size.wast/table_grow.wast/table_fill.wast (need
+    # table.size/table.grow/table.fill, entirely unimplemented opcodes --
+    # own future task), and table_init.wast/table_copy.wast (task #97 --
+    # need table.init/table.copy/elem.drop, same shape as memory.init/
+    # data.drop's gap).
+    "table_get.wast",
+    "table_set.wast",
     # Memory
     "memory.wast",
     "address.wast",

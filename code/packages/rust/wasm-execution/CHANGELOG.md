@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.5] - 2026-08-16 (task #96 — multi-table)
+
+### Added
+
+- New `pub const MAX_TABLES: usize = 64` -- the real, bounded cap on
+  total table count (imported + declared), replacing WASM 1.0's
+  hardcoded "at most 1". Unlike W16's multi-memory work, this needed no
+  companion storage-layer changes: `Table` storage (`WasmInstance.
+  tables`/`WasmExecutionContext.tables`) has been a `Vec` all along, and
+  `table.get`/`table.set` plus element-segment application already
+  indexed by a real, decoded table index rather than assuming table 0.
+
 ## [0.9.4] - 2026-08-15 (W16, task #85 — multi-memory first slice)
 
 ### Changed (breaking)

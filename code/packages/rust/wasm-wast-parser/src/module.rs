@@ -454,7 +454,31 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
     };
     let type_info = match kind {
         "func" => ImportTypeInfo::Function(0), // fixed in pass 2 once the type is known
-        "table" => ImportTypeInfo::Table(TableType { element_type: FUNCREF, limits: Limits { min: 0, max: None } }),
+        "table" => {
+            // `desc` is `(table $name? limits reftype)` -- was previously
+            // discarded entirely (a `FUNCREF`/zero-limits placeholder,
+            // never fixed up afterward), same class of bug as the
+            // declared-table case above (task #96): an imported table's
+            // REAL limits and element type must come from the source, not
+            // a stub.
+            let limits_start = if desc.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
+            let rest = &desc[limits_start..];
+            let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()))).count();
+            let limits = parse_limits(&rest[..digit_count])?;
+            let reftype = expect_get(rest, digit_count)?;
+            let element_type = match reftype.as_atom() {
+                Some("funcref") => wasm_types::FUNCREF,
+                Some("externref") => wasm_types::EXTERNREF,
+                _ => {
+                    return Err(WastParseError::UnexpectedToken {
+                        pos: reftype.pos(),
+                        found: reftype.as_atom().unwrap_or("list").to_string(),
+                        expected: "funcref or externref",
+                    })
+                }
+            };
+            ImportTypeInfo::Table(TableType { element_type, limits })
+        }
         "memory" => {
             // `desc` is `(memory $name? limits... shared?)` -- same
             // optional-`$name`-at-index-1 shape `global`'s arm below
@@ -983,7 +1007,29 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: 
 fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()));
     if starts_with_limit_number {
-        ctx.module.tables[storage_idx as usize].limits = parse_limits(rest)?;
+        // Task #96: `(table $t 2 externref)` -- `parse_limits`'s own
+        // digit-scanning `take_while` only consumes the leading numeric
+        // limit(s), leaving the REQUIRED trailing reftype keyword
+        // (`funcref`/`externref`) unconsumed right after them. Previously
+        // this reftype was silently discarded entirely, leaving every
+        // table's `element_type` at its `TableType::default()`-style
+        // FUNCREF placeholder regardless of what the source actually
+        // declared -- real (not just multi-table) corpus files with an
+        // `externref` table hit this.
+        let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()))).count();
+        ctx.module.tables[storage_idx as usize].limits = parse_limits(&rest[..digit_count])?;
+        let reftype = expect_get(rest, digit_count)?;
+        ctx.module.tables[storage_idx as usize].element_type = match reftype.as_atom() {
+            Some("funcref") => wasm_types::FUNCREF,
+            Some("externref") => wasm_types::EXTERNREF,
+            _ => {
+                return Err(WastParseError::UnexpectedToken {
+                    pos: reftype.pos(),
+                    found: reftype.as_atom().unwrap_or("list").to_string(),
+                    expected: "funcref or externref",
+                })
+            }
+        };
         return Ok(());
     }
 
@@ -1043,6 +1089,15 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         i += 1;
         code
     };
+    // Reference-types proposal (task #96): an ACTIVE elem segment's
+    // function-index list may be preceded by a bare `func` keyword atom
+    // -- `(elem (table $t3) (i32.const 1) func $dummy)` -- a marker that
+    // doesn't affect encoding (this repo only supports funcref elem
+    // segments; there's no other kind to disambiguate FROM here), so it's
+    // simply skipped rather than resolved as an index.
+    if fields.get(i).is_some_and(|f| matches!(f, SExpr::Atom(s, _) if s == "func")) {
+        i += 1;
+    }
     let mut function_indices = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
         function_indices.push(resolve_idx(&ctx.func_names, f, "func")?);
@@ -1719,10 +1774,20 @@ fn encode_flat_instr(
             Ok(())
         }
         "table.get" | "table.set" => {
-            let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
-            encode_instr_list(&args[1..], icx, out)?;
+            // Task #96: the table-index immediate is OPTIONAL, defaulting
+            // to table 0 when omitted -- `(table.get (local.get $i))` is
+            // just as legal as `(table.get $t2 (local.get $i))`. Same
+            // disambiguation as W16's `memory.size`/`memory.grow`: an
+            // explicit index is always a bare `Atom` here, while every
+            // operand (the index-to-look-up for `table.get`, or the
+            // index+value pair for `table.set`) is always a nested,
+            // parenthesized instruction (`SExpr::List`) in folded form.
+            let (idx, operands) = match args.first() {
+                Some(expr @ SExpr::Atom(..)) => (resolve_idx(&icx.module.table_names, expr, "table")?, &args[1..]),
+                _ => (0, args),
+            };
+            encode_instr_list(operands, icx, out)?;
             out.push(info.opcode);
-            let idx = resolve_idx(&icx.module.table_names, idx_expr, "table")?;
             out.extend(wasm_leb128::encode_unsigned(idx as u64));
             Ok(())
         }
@@ -2305,6 +2370,36 @@ mod tests {
         let m = parse_module("(module (func (result i32) (i32.add (i32.const 1) (i32.const 2))))").unwrap();
         // i32.const 1; i32.const 2; i32.add; end
         assert_eq!(code_of(&m, 0), &[0x41, 0x01, 0x41, 0x02, 0x6A, 0x0B]);
+    }
+
+    // ── Multi-table (task #96) ──────────────────────────────────────────
+
+    /// Real bug found vendoring table_get.wast: a declared table's own
+    /// `funcref`/`externref` reftype keyword was silently discarded
+    /// entirely -- `parse_limits`'s digit-only scan correctly stops
+    /// before it, but nothing ever read it afterward, leaving every
+    /// table's `element_type` at its hardcoded FUNCREF construction-time
+    /// default regardless of what the source actually declared.
+    #[test]
+    fn declared_table_reads_its_own_reftype_not_a_hardcoded_funcref_default() {
+        let m = parse_module("(module (table $t2 2 externref) (table $t3 3 funcref))").unwrap();
+        assert_eq!(m.tables[0].element_type, wasm_types::EXTERNREF);
+        assert_eq!(m.tables[1].element_type, wasm_types::FUNCREF);
+    }
+
+    /// Same class of bug, for an imported table: `(import "m" "n" (table
+    /// N reftype))`'s real limits/reftype were discarded in favor of an
+    /// unconditional `{element_type: FUNCREF, limits: {min: 0, max: None}}`
+    /// placeholder that was never fixed up afterward (unlike function
+    /// imports, which ARE fixed up in a documented "pass 2").
+    #[test]
+    fn imported_table_reads_its_own_limits_and_reftype_not_a_zero_funcref_placeholder() {
+        let m = parse_module(r#"(module (import "m" "t" (table 3 10 externref)))"#).unwrap();
+        let ImportTypeInfo::Table(tt) = &m.imports[0].type_info else {
+            panic!("expected a table import, got {:?}", m.imports[0].type_info);
+        };
+        assert_eq!(tt.element_type, wasm_types::EXTERNREF);
+        assert_eq!(tt.limits, Limits { min: 3, max: Some(10) });
     }
 
     // ── Multi-memory (W16, task #85) ──────────────────────────────────────

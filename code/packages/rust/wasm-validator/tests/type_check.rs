@@ -271,6 +271,38 @@ fn valid_table_get_set_round_trip() {
     );
 }
 
+/// Multi-table (task #96): `table.get`/`table.set` must type-check
+/// against the SPECIFIC table they target, not unconditionally assume
+/// funcref -- a module can freely mix funcref and externref tables.
+#[test]
+fn valid_table_get_set_type_checks_against_each_tables_own_element_type() {
+    assert_valid(
+        r#"(module
+             (table $tf 1 funcref)
+             (table $te 1 externref)
+             (func (param $f funcref) (param $e externref)
+               (table.set $tf (i32.const 0) (local.get $f))
+               (table.set $te (i32.const 0) (local.get $e))
+               (drop (table.get $tf (i32.const 0)))
+               (drop (table.get $te (i32.const 0)))))"#,
+    );
+}
+
+/// The negative counterpart: setting an externref table with a funcref
+/// value (or vice versa) must still be rejected -- confirming the fix
+/// checks the RIGHT table's type, not that it stopped checking types at
+/// all.
+#[test]
+fn invalid_table_set_rejects_the_wrong_reftype_for_a_multi_table_module() {
+    assert_invalid(
+        r#"(module
+             (table $tf 1 funcref)
+             (table $te 1 externref)
+             (func (param $e externref)
+               (table.set $tf (i32.const 0) (local.get $e))))"#,
+    );
+}
+
 // ── WASM18: atomic load/store/RMW/cmpxchg/fence, shared memory guard ────
 
 #[test]

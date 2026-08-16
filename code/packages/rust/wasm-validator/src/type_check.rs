@@ -430,6 +430,14 @@ struct ModuleContext<'a> {
     /// bounds-checked against the actual table count, not just "is there
     /// at least one".
     table_count: u32,
+    /// Each table's raw element-type byte (`0x70` funcref / `0x6F`
+    /// externref), same index-space/ordering convention as `table_count`
+    /// (task #96): `table.get $t3 ...`/`table.set $t3 ...` must type-check
+    /// against table `$t3`'s OWN declared element type, not unconditionally
+    /// assume funcref -- WASM 1.0's single implicit table is always
+    /// funcref, but a module with more than one table (multi-table) can
+    /// mix funcref and externref tables freely.
+    table_element_types: Vec<u8>,
 }
 
 fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, ValidationError> {
@@ -462,8 +470,16 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     }
 
     let has_memory = !module.memories.is_empty() || module.imports.iter().any(|i| matches!(i.type_info, ImportTypeInfo::Memory(_)));
-    let imported_table_count = module.imports.iter().filter(|i| matches!(i.type_info, ImportTypeInfo::Table(_))).count() as u32;
-    let table_count = imported_table_count + module.tables.len() as u32;
+    let mut table_element_types: Vec<u8> = module
+        .imports
+        .iter()
+        .filter_map(|i| match &i.type_info {
+            ImportTypeInfo::Table(tt) => Some(tt.element_type),
+            _ => None,
+        })
+        .collect();
+    table_element_types.extend(module.tables.iter().map(|t| t.element_type));
+    let table_count = table_element_types.len() as u32;
 
     Ok(ModuleContext {
         module,
@@ -471,6 +487,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
         global_types,
         has_memory,
         table_count,
+        table_element_types,
     })
 }
 
@@ -983,31 +1000,40 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 pop_expect(&mut stack, frame!(), gt.value_type)?;
             }
             0x25 => {
-                // table.get <tableidx> (WASM17): pops an i32 index, pushes
-                // a funcref -- WASM 1.0's single table is always funcref
-                // (see `code/specs/W08-wasm-funcref-externref.md`'s
-                // "explicitly out of scope" section for why non-funcref
-                // tables aren't modeled here). Unlike `has_memory` (a plain
-                // bool, since memory ops hardcode index 0), this decodes a
-                // REAL tableidx that must be bounds-checked, same pattern
-                // as `call`'s funcidx check above.
+                // table.get <tableidx> (WASM17, generalized task #96):
+                // pops an i32 index, pushes the REFERENCED table's OWN
+                // element type -- funcref or externref, whichever `$t`
+                // was actually declared as (multi-table lets a module mix
+                // both). Unlike `has_memory` (a plain bool, since memory
+                // ops hardcode index 0), this decodes a REAL tableidx that
+                // must be bounds-checked, same pattern as `call`'s funcidx
+                // check above.
                 let (table_idx, size) = decode_idx(code, offset)?;
                 offset += size;
                 if table_idx >= ctx.table_count {
                     err!("table.get references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
+                let elem_type = match ctx.table_element_types[table_idx as usize] {
+                    0x6F => ValueType::Externref,
+                    _ => ValueType::Funcref,
+                };
                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
-                push_val(&mut stack, ValueType::Funcref);
+                push_val(&mut stack, elem_type);
             }
             0x26 => {
-                // table.set <tableidx> (WASM17): pops a funcref and an i32
-                // index, no push.
+                // table.set <tableidx> (WASM17, generalized task #96):
+                // pops a value of the REFERENCED table's own element type
+                // and an i32 index, no push.
                 let (table_idx, size) = decode_idx(code, offset)?;
                 offset += size;
                 if table_idx >= ctx.table_count {
                     err!("table.set references table index {table_idx}, but only {} tables exist", ctx.table_count);
                 }
-                pop_expect(&mut stack, frame!(), ValueType::Funcref)?;
+                let elem_type = match ctx.table_element_types[table_idx as usize] {
+                    0x6F => ValueType::Externref,
+                    _ => ValueType::Funcref,
+                };
+                pop_expect(&mut stack, frame!(), elem_type)?;
                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
             }
 

@@ -184,11 +184,18 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
         )));
     }
 
-    // ── Check 2: Table count ≤ 1 ───────────────────────────────────────
+    // ── Check 2: Table count ≤ MAX_TABLES ───────────────────────────────
+    //
+    // Multi-table (task #96): WASM 1.0's own hardcoded "at most 1" cap is
+    // gone; `wasm_execution::MAX_TABLES` is a real, bounded cap instead --
+    // see its own doc comment for why this needs no companion storage-
+    // layer work (unlike W16's multi-memory, table storage was already a
+    // `Vec` and already index-aware end to end).
     let total_tables = imported_tables + module.tables.len();
-    if total_tables > 1 {
+    if total_tables > wasm_execution::MAX_TABLES {
         return Err(ValidationError::TooManyTables(format!(
-            "WASM 1.0 allows at most 1 table, found {} ({} imported + {} declared)",
+            "at most {} tables allowed, found {} ({} imported + {} declared)",
+            wasm_execution::MAX_TABLES,
             total_tables,
             imported_tables,
             module.tables.len()
@@ -314,6 +321,14 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     }
 
     // ── Check 9: Element segments ───────────────────────────────────────
+    //
+    // Multi-table (task #96): generalized to a real bounds check against
+    // `total_tables`, unlike W16's data-segment check (which deliberately
+    // stayed "must be 0") -- safe here because `wasm-runtime::
+    // instantiate()`'s element-segment application already indexes by the
+    // real `elem.table_index` (`tables.get_mut(elem.table_index as
+    // usize)`), so there is no silent-misapplication risk to guard
+    // against.
     for (i, elem) in module.elements.iter().enumerate() {
         if total_tables == 0 {
             return Err(ValidationError::InvalidElement(format!(
@@ -321,10 +336,10 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                 i
             )));
         }
-        if elem.table_index != 0 {
+        if elem.table_index as usize >= total_tables {
             return Err(ValidationError::InvalidElement(format!(
-                "element segment #{} references table index {}, but only index 0 is valid",
-                i, elem.table_index
+                "element segment #{} references table index {}, but only {} tables exist",
+                i, elem.table_index, total_tables
             )));
         }
         // Validate function indices within element segments.
@@ -542,22 +557,33 @@ mod tests {
     }
 
     #[test]
+    /// Multi-table (task #96) raised the cap from 1 to
+    /// `wasm_execution::MAX_TABLES`, so a module needs MORE than that
+    /// many tables to still be rejected -- proving the cap MOVED, not
+    /// disappeared.
     fn rejects_too_many_tables() {
         let module = WasmModule {
-            tables: vec![
-                TableType {
-                    element_type: 0x70,
-                    limits: Limits { min: 1, max: None },
-                },
-                TableType {
-                    element_type: 0x70,
-                    limits: Limits { min: 1, max: None },
-                },
-            ],
+            tables: (0..=wasm_execution::MAX_TABLES)
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .collect(),
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::TooManyTables(_)));
+    }
+
+    /// A module with exactly `MAX_TABLES` (previously rejected under the
+    /// old hardcoded "at most 1" WASM-1.0 cap) now validates
+    /// successfully.
+    #[test]
+    fn accepts_up_to_max_tables() {
+        let module = WasmModule {
+            tables: (0..wasm_execution::MAX_TABLES)
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .collect(),
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
     }
 
     #[test]
@@ -850,6 +876,9 @@ mod tests {
 
     #[test]
     fn imported_table_counts_toward_limit() {
+        // 1 imported + MAX_TABLES declared = MAX_TABLES + 1, over the cap
+        // -- proves the imported one counts toward the SAME limit as
+        // declared tables, not a separate budget.
         let module = WasmModule {
             imports: vec![Import {
                 module_name: "env".to_string(),
@@ -860,10 +889,9 @@ mod tests {
                     limits: Limits { min: 1, max: None },
                 }),
             }],
-            tables: vec![TableType {
-                element_type: 0x70,
-                limits: Limits { min: 1, max: None },
-            }],
+            tables: (0..wasm_execution::MAX_TABLES)
+                .map(|_| TableType { element_type: 0x70, limits: Limits { min: 1, max: None } })
+                .collect(),
             ..Default::default()
         };
         let err = validate(&module).unwrap_err();

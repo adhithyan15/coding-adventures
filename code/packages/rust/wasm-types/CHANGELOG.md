@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.4] - 2026-08-16 (task #96 — multi-table, `EXTERNREF` constant)
+
+### Added
+
+- `pub const EXTERNREF: u8 = 0x6F`, alongside the existing `FUNCREF`. Used
+  by `wasm-wast-parser` to fix a real bug where a table's declared
+  `externref` reftype was silently discarded during parsing in favor of
+  a hardcoded `FUNCREF` default.
+
 ## [0.1.3] - 2026-08-15 (SIMD PR1a — `ValueType::V128`)
 
 ### Added
