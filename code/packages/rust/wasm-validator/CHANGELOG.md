@@ -41,6 +41,17 @@ All notable changes to this package will be documented in this file.
   `Table::new` allocates eagerly and raising `MAX_TABLES` from 1 to 64
   in this same release amplified an unvalidated `min`'s DoS blast radius
   64x.
+- **Check 1b/2b, round 2**: a per-item cap alone doesn't bound the
+  aggregate -- 64 memories (or tables) each individually under their
+  per-item cap can still multiply out to ~256GB (memory) / ~5.1GB
+  (table) of eager allocation from one small module, through the fully-
+  intended `validate()` path, no bypass needed. Found via a second
+  `/security-review` pass on this same diff. Both checks now also track
+  a running total across every memory/table (imported + declared) and
+  cap the SUM at the same per-item bound -- still permits any single
+  memory/table at its full max, just not many of them simultaneously.
+  Verified zero conformance-corpus impact (full baseline regen, byte-
+  identical to before this fix).
 
 ## [0.2.7] - 2026-08-15 (W16, task #85 — multi-memory first slice)
 

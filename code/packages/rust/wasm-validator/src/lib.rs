@@ -204,6 +204,17 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // `LinearMemory::new`'s eager `vec![0u8; min * PAGE_SIZE]` allocation
     // unvalidated -- e.g. a single `(memory 100000)` attempts a ~6.4GB
     // allocation before ever running a single instruction.
+    //
+    // A per-memory cap alone isn't enough once `MAX_MEMORIES` (64) is
+    // multiplied in: 64 memories each at the spec's own 65536-page max
+    // would still total ~256GB of eager allocation from one small module,
+    // all through the fully-intended `validate()` path -- no bypass
+    // needed (2nd round finding). So this also tracks a running total
+    // across every memory (imported + declared) and caps the SUM at the
+    // same 65536-page bound: still permits any single spec-valid memory
+    // at its true max, just prevents many of them from being max-size
+    // simultaneously.
+    let mut total_memory_pages: u64 = 0;
     for (i, mt) in module.memories.iter().enumerate() {
         if mt.limits.min > 65536 || mt.limits.max.is_some_and(|m| m > 65536) {
             return Err(ValidationError::Other(format!(
@@ -211,6 +222,7 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                 mt.limits.min, mt.limits.max
             )));
         }
+        total_memory_pages += mt.limits.min as u64;
     }
     for imp in &module.imports {
         if let ImportTypeInfo::Memory(mt) = &imp.type_info {
@@ -220,7 +232,13 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                     imp.module_name, imp.name, mt.limits.min, mt.limits.max
                 )));
             }
+            total_memory_pages += mt.limits.min as u64;
         }
+    }
+    if total_memory_pages > 65536 {
+        return Err(ValidationError::Other(format!(
+            "total declared memory across all memories is {total_memory_pages} pages, exceeding the aggregate cap of 65536 pages"
+        )));
     }
 
     // ── Check 2: Table count ≤ MAX_TABLES ───────────────────────────────
@@ -251,6 +269,14 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // full reasoning, including why raising `MAX_TABLES` from 1 to 64
     // (this same task) made an unvalidated `min` a real amplified DoS
     // vector worth closing now rather than leaving as a pre-existing gap.
+    //
+    // Same aggregate-vs-per-item gap as Check 1b above (2nd round
+    // finding): 64 tables each at `MAX_TABLE_ELEMENTS` would still total
+    // ~5.1GB from one small module. Tracks a running total across every
+    // table (imported + declared) and caps the SUM at the same
+    // `MAX_TABLE_ELEMENTS` bound too -- still permits any single table at
+    // its full implementation-defined max, just not many of them at once.
+    let mut total_table_elements: u64 = 0;
     for (i, tt) in module.tables.iter().enumerate() {
         if tt.limits.min > wasm_execution::MAX_TABLE_ELEMENTS {
             return Err(ValidationError::Other(format!(
@@ -259,6 +285,7 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                 wasm_execution::MAX_TABLE_ELEMENTS
             )));
         }
+        total_table_elements += tt.limits.min as u64;
     }
     for imp in &module.imports {
         if let ImportTypeInfo::Table(tt) = &imp.type_info {
@@ -268,7 +295,14 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
                     imp.module_name, imp.name, tt.limits.min, wasm_execution::MAX_TABLE_ELEMENTS
                 )));
             }
+            total_table_elements += tt.limits.min as u64;
         }
+    }
+    if total_table_elements > wasm_execution::MAX_TABLE_ELEMENTS as u64 {
+        return Err(ValidationError::Other(format!(
+            "total declared elements across all tables is {total_table_elements}, exceeding the aggregate cap of {}",
+            wasm_execution::MAX_TABLE_ELEMENTS
+        )));
     }
 
     // ── Check 3: Import type indices ────────────────────────────────────
@@ -583,6 +617,26 @@ mod tests {
         assert!(validate(&module).is_ok());
     }
 
+    /// Security review, 2nd round (task #96): a per-memory cap alone
+    /// isn't enough once `MAX_MEMORIES` (64) is multiplied in -- 64
+    /// memories each individually under the per-memory 65536-page cap
+    /// can still sum to far more aggregate allocation than any single
+    /// spec-valid memory would ever need. Two memories each at the full
+    /// 65536-page cap sum to 131072, over the aggregate cap, even though
+    /// neither one alone would be rejected by Check 1b's per-item check.
+    #[test]
+    fn rejects_memories_whose_combined_pages_exceed_the_aggregate_cap() {
+        let module = WasmModule {
+            memories: vec![
+                MemoryType { limits: Limits { min: 65536, max: None }, shared: false },
+                MemoryType { limits: Limits { min: 1, max: None }, shared: false },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
+    }
+
     #[test]
     fn rejects_bad_export_func_index() {
         let module = WasmModule {
@@ -708,6 +762,27 @@ mod tests {
             ..Default::default()
         };
         assert!(validate(&module).is_ok());
+    }
+
+    /// Security review, 2nd round (task #96): same aggregate-vs-per-item
+    /// gap as memory's Check 1b above -- two tables each under the
+    /// per-table `MAX_TABLE_ELEMENTS` cap can still sum past it, even
+    /// though neither is rejected individually by Check 2b's per-item
+    /// check.
+    #[test]
+    fn rejects_tables_whose_combined_elements_exceed_the_aggregate_cap() {
+        let module = WasmModule {
+            tables: vec![
+                TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: wasm_execution::MAX_TABLE_ELEMENTS, max: None },
+                },
+                TableType { element_type: 0x70, limits: Limits { min: 1, max: None } },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)), "{err:?}");
     }
 
     #[test]
