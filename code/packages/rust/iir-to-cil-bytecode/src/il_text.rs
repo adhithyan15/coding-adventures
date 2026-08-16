@@ -481,30 +481,46 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // rather than printing it a second time. (The entry's CIL return type is always
     // `int32`, so the `call`/`pop` are well-typed either way.)
     // A program "prints" (writes its own stdout as a side effect) if it calls
-    // `print_i64` (Dartmouth BASIC's `PRINT`) **or** `putchar` (Brainfuck's `.`).
-    // For such a program the launcher discards `MccarthyEntry`'s result instead of
-    // `Console.WriteLine`-ing it — otherwise a Brainfuck program would print both its
-    // own output and its (meaningless) `int32` exit value (a double-print).
-    let prints = module.functions.iter().any(|f| {
-        f.instructions.iter().any(|i| {
-            i.op == "print_str"
-                || (i.op == "call_builtin"
-                    && matches!(i.srcs.first(),
-                        Some(Operand::Var(n)) if n == "print_i64" || n == "putchar"))
-        })
-    });
+    // The entry's `int32` result goes to **stderr**, bracketed by sentinels,
+    // and never to stdout.
+    //
+    // The old rule wrote it to stdout, but only when the module did NOT print —
+    // otherwise a Brainfuck program would emit both its own output and a
+    // meaningless int. That avoided the double-print at the cost of making one
+    // program shape INEXPRESSIBLE: an ALGOL program that both prints and has a
+    // meaningful result got its result silently discarded, so the matrix could
+    // assert its stdout or its exit value but never both.
+    //
+    // Separate channels fix it without a conditional. stdout is exclusively the
+    // program's own output; stderr carries the result; and the process exit
+    // status stays free to mean what it always meant — a crash — which is what
+    // the runner's trap detection keys on. `Environment.ExitCode` would have
+    // collided with exactly that.
+    //
+    // The sentinels matter because stderr is not guaranteed to be ours alone:
+    // the .NET host can write diagnostics there. Bracketing lets the runner
+    // extract the value instead of parsing whatever happens to be present.
+    //
+    // The writer is fetched before each `Write` so no local slot is needed, and
+    // the entry call sits between the opening and closing markers.
     let _ = writeln!(il, "  .method public static void Run() cil managed {{");
     let _ = writeln!(il, "    .entrypoint");
-    let _ = writeln!(il, "    .maxstack 1");
+    let _ = writeln!(il, "    .maxstack 2");
+    let err = "call class [System.Runtime]System.IO.TextWriter \
+[System.Console]System.Console::get_Error()";
+    let write_str =
+        "callvirt instance void [System.Runtime]System.IO.TextWriter::Write(string)";
+    let write_int =
+        "callvirt instance void [System.Runtime]System.IO.TextWriter::Write(int32)";
+    let _ = writeln!(il, "    {err}");
+    let _ = writeln!(il, "    ldstr \"<<EXIT>>\"");
+    let _ = writeln!(il, "    {write_str}");
+    let _ = writeln!(il, "    {err}");
     let _ = writeln!(il, "    call int32 {asm}Program::MccarthyEntry()");
-    if prints {
-        let _ = writeln!(il, "    pop");
-    } else {
-        let _ = writeln!(
-            il,
-            "    call void [System.Console]System.Console::WriteLine(int32)"
-        );
-    }
+    let _ = writeln!(il, "    {write_int}");
+    let _ = writeln!(il, "    {err}");
+    let _ = writeln!(il, "    ldstr \"<</EXIT>>\"");
+    let _ = writeln!(il, "    {write_str}");
     let _ = writeln!(il, "    ret");
     let _ = writeln!(il, "  }}");
     let _ = writeln!(il, "}}");
@@ -1814,7 +1830,14 @@ mod tests {
         assert!(il.contains(".entrypoint"), "must declare a process entry point");
         assert!(il.contains("int32 MccarthyEntry()"), "entry method returns int32");
         assert!(il.contains("ldc.i4 42"), "loads the literal 42; got:\n{il}");
-        assert!(il.contains("System.Console]System.Console::WriteLine(int32)"));
+        // The entry's result now leaves on STDERR between sentinels, never on
+        // stdout — see the `Run()` launcher. Pinning `WriteLine(int32)` here
+        // would re-assert the old contract that made "prints AND returns a
+        // value" inexpressible.
+        assert!(il.contains("<<EXIT>>") && il.contains("<</EXIT>>"),
+            "launcher must bracket the entry result with sentinels; got:\n{il}");
+        assert!(il.contains("System.Console::get_Error()"),
+            "the result must go to stderr, not stdout; got:\n{il}");
     }
 
     // ── LANG-FULL E5 — array opcode lowering ────────────────────────────────
@@ -2146,7 +2169,14 @@ mod tests {
             "a printing program prints exactly once (no double-print); got:\n{il}"
         );
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
-        assert!(launcher.contains("pop"), "launcher discards the entry result; got:\n{il}");
+        // The launcher no longer discards anything. A printing program used to
+        // have its result `pop`ped to avoid a double-print on stdout; the result
+        // now goes to stderr instead, so both channels carry their own thing and
+        // no program shape is lost.
+        assert!(!launcher.contains("pop"),
+            "launcher must not discard the entry result any more; got:\n{il}");
+        assert!(launcher.contains("<<EXIT>>"),
+            "launcher must emit the result to stderr; got:\n{il}");
     }
 
     #[test]
@@ -2176,7 +2206,10 @@ mod tests {
             "print_str must call Console.Write(string); got:\n{il}"
         );
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
-        assert!(launcher.contains("pop"), "string-printing program discards result; got:\n{il}");
+        assert!(!launcher.contains("pop"),
+            "a string-printing program keeps its result too, on stderr; got:\n{il}");
+        assert!(launcher.contains("<<EXIT>>"),
+            "launcher must emit the result to stderr; got:\n{il}");
         assert!(
             !launcher.contains("WriteLine"),
             "launcher must not print the entry result for print_str programs; got:\n{il}"
@@ -2877,7 +2910,12 @@ mod tests {
         );
         // A putchar program "prints" → the launcher discards the entry result.
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
-        assert!(launcher.contains("pop"), "launcher discards the entry result; got:\n{il}");
+        // A putchar program keeps its result too now — it goes to stderr, so it
+        // cannot double-print onto the stdout the program itself is writing.
+        assert!(!launcher.contains("pop"),
+            "launcher must not discard the entry result any more; got:\n{il}");
+        assert!(launcher.contains("<<EXIT>>"),
+            "launcher must emit the result to stderr; got:\n{il}");
         assert!(
             !launcher.contains("WriteLine"),
             "a printing (putchar) program must not re-print the exit value; got:\n{il}"
