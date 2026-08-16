@@ -75,6 +75,26 @@ const PFX: u8 = 0xFE; // 0xFE prefix for ceq/cgt/clt
 // validate_iir_for_clr — error cases
 // ===========================================================================
 
+/// Extract the entry's `int32` result from a real-CLR run.
+///
+/// The launcher writes it to **stderr** bracketed by `<<EXIT>>…<</EXIT>>`, not
+/// to stdout — stdout belongs exclusively to the program's own output, so a
+/// program can now both print and return a value. The sentinels matter because
+/// the .NET host writes its own diagnostics to stderr too.
+fn clr_entry_result(out: &std::process::Output) -> String {
+    let err = String::from_utf8_lossy(&out.stderr);
+    err.split_once("<<EXIT>>")
+        .and_then(|(_, rest)| rest.split_once("<</EXIT>>"))
+        .map(|(v, _)| v.trim().to_string())
+        .unwrap_or_else(|| {
+            panic!(
+                "no <<EXIT>>…<</EXIT>> marker on stderr.\nstdout: {:?}\nstderr: {:?}",
+                String::from_utf8_lossy(&out.stdout),
+                err
+            )
+        })
+}
+
 #[test]
 fn validate_empty_module_is_rejected() {
     let module = IIRModule {
@@ -1703,7 +1723,7 @@ fn e6_global_runs_on_real_clr() {
         r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
         .expect("write runtimeconfig");
     let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
-    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let stdout = clr_entry_result(&out);
     let _ = std::fs::remove_dir_all(&dir);
     assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }
@@ -1799,7 +1819,7 @@ fn e8_conversions_round_trip_runs_on_real_clr() {
         r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
         .expect("write runtimeconfig");
     let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
-    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let stdout = clr_entry_result(&out);
     let _ = std::fs::remove_dir_all(&dir);
     assert_eq!(stdout, "42", "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }

@@ -6458,13 +6458,35 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
             ),
         );
     }
-    // Whatever the program wrote to `Console`: for an expression language that's the
-    // launcher's `Console.WriteLine` of the entry's `int` result (parsed as the value,
-    // matching the exit-code convention); for an I/O language (Dartmouth BASIC) it's
-    // the `PRINT` output captured directly. Return both — `assert_cell` picks the one
-    // the program's `Expect` cares about.
+    // Two channels, so a program can have BOTH an exit value and output.
+    //
+    // stdout is exclusively the program's own output (`PRINT`, `putchar`,
+    // `print`). The entry's `int32` result comes back on stderr bracketed by
+    // `<<EXIT>>…<</EXIT>>`, which the launcher always emits — see
+    // `iir-to-cil-bytecode`'s `Run()`. Previously BOTH came from stdout and the
+    // launcher suppressed the int whenever the program printed, which made
+    // "prints and returns a value" inexpressible on this column: an ALGOL
+    // program doing exactly that could be asserted on its stdout or its exit
+    // value, never both.
+    //
+    // The sentinels are load-bearing: the .NET host writes its own diagnostics
+    // to stderr, so the value has to be extracted rather than parsed out of
+    // whatever is there.
     let printed = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some(RunResult::Completed { code: printed.parse::<i32>().ok(), stdout: printed })
+    let err = String::from_utf8_lossy(&out.stderr);
+    let code = err
+        .split_once("<<EXIT>>")
+        .and_then(|(_, rest)| rest.split_once("<</EXIT>>"))
+        .and_then(|(v, _)| v.trim().parse::<i32>().ok());
+    if code.is_none() {
+        cell_failed(
+            "Clr",
+            p,
+            "`dotnet` run produced no <<EXIT>>…<</EXIT>> result marker on stderr",
+            format!("stdout {printed:?}\nstderr {}", err.trim()),
+        );
+    }
+    Some(RunResult::Completed { code, stdout: printed })
 }
 
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**

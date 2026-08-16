@@ -1,5 +1,33 @@
 # Changelog — iir-to-cil-bytecode
 
+
+## 0.44.0 - 2026-08-15 - the entry result leaves on stderr, so a program can print AND return
+
+The launcher wrote the entry's `int32` to stdout, but ONLY when the module did
+not print — otherwise a Brainfuck program would emit its own output and a
+meaningless int (a double-print). That conditional avoided the double-print at
+the cost of making one program shape **inexpressible**: an ALGOL program that
+both prints and computes a result had its result silently discarded, so the
+matrix could assert its stdout or its exit value, never both.
+
+`Run()` now always writes the result to **stderr**, bracketed
+`<<EXIT>>…<</EXIT>>`, and never to stdout. Three channels, three meanings:
+
+* **stdout** — exclusively the program's own output
+* **stderr** — the entry's result, sentinel-delimited
+* **process status** — a crash, which is what trap detection keys on
+
+`Environment.ExitCode` was the obvious alternative and is wrong here: it would
+collide with that third meaning, since the runner treats a non-zero status as a
+failure.
+
+The sentinels are load-bearing — the .NET host writes its own diagnostics to
+stderr, so the value must be extracted rather than parsed out of the stream.
+
+Four tests pinned the old shape (`pop` / `WriteLine(int32)`). They were
+REWRITTEN to the new contract, not deleted — a pinning test whose behaviour
+deliberately changes should still pin something.
+
 ## 0.43.0 - 2026-08-13 - quote every CIL identifier
 
 `checked_cil_ident` left any purely-alphanumeric name bare, which is most of

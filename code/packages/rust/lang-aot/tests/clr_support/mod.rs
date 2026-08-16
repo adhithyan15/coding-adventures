@@ -107,5 +107,17 @@ pub fn run_on_real_clr(src: &str, tag: &str) -> Option<i64> {
         "dotnet failed for {src:?}: {}",
         String::from_utf8_lossy(&out.stderr),
     );
-    String::from_utf8_lossy(&out.stdout).trim().parse::<i64>().ok()
+    // The entry's `int32` result comes back on STDERR between `<<EXIT>>` and
+    // `<</EXIT>>`, not on stdout. The launcher used to write it to stdout, but
+    // only for programs that did NOT print — which made "prints AND returns a
+    // value" inexpressible. Separate channels remove that conditional: stdout is
+    // exclusively the program's own output now.
+    //
+    // The sentinels are load-bearing; the .NET host writes diagnostics to stderr
+    // too, so the value has to be extracted rather than parsed from the whole
+    // stream.
+    let err = String::from_utf8_lossy(&out.stderr);
+    err.split_once("<<EXIT>>")
+        .and_then(|(_, rest)| rest.split_once("<</EXIT>>"))
+        .and_then(|(v, _)| v.trim().parse::<i64>().ok())
 }
