@@ -268,7 +268,7 @@ mod tests {
     /// the full raw-bytecode harness `lib.rs`'s own tests use.
     fn empty_ctx() -> WasmExecutionContext {
         WasmExecutionContext {
-            memory: None,
+            memories: Vec::new(),
             tables: Vec::new(),
             globals: Vec::new(),
             global_types: Vec::new(),

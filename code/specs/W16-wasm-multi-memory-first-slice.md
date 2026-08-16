@@ -232,25 +232,46 @@ if total_memories > wasm_execution::MAX_MEMORIES {
 worded — "too many", not "more than 1" — so this reads correctly regardless
 of where the cap is set.)
 
-The data-segment check (lib.rs:282-296) changes from "must equal 0" to
-"must be `< total_memories`" — the identical bounds-check shape already
-used for every other index-space validation in this file (function
-indices, table indices, global indices), not a new pattern.
+**Implementation note (diverges from this spec's original design):** the
+data-segment check (lib.rs:282-296) stays exactly "must equal 0", NOT
+widened to "must be `< total_memories`" as originally planned above.
+Reason, found while implementing: `wasm-runtime::instantiate()`'s data-
+segment application (see "What does NOT change" below) only ever writes
+to memory 0 regardless of `seg.memory_index` — widening the validator
+alone would let a module with a non-zero-memory-index data segment PASS
+validation and then have that segment SILENTLY applied to the wrong
+memory at instantiation time, a real correctness bug the original
+"must be < total_memories" design would have introduced. Keeping this
+check at "must be 0" means such a module is rejected loudly at
+validation instead, consistent with the "fail loud, not silent" standard
+this validator already applies everywhere else. Revisit together with
+data-segment application once a later slice makes `instantiate()` itself
+memory-index-aware.
 
 ### `wasm-wast-parser`: resolve a leading memory-index token for `memory.size`/`memory.grow`
 
-Both arms (module.rs:1455-1459 and :1791-1797) change from an
-unconditional `out.push(0x00)` to resolving an optional leading `$name`/
-numeric-literal token via the existing `ctx.memory_names`/`resolve_idx`
-machinery already used by `(data (memory $name) ...)`, defaulting to index
-0 when no token is present (preserving every existing single-memory
-`.wast`/`.wat` fixture's encoding byte-for-byte). The folded form's
-`split_operands_and_immediates(args, 0)` call becomes `split_operands_and_
-immediates(args, 1)` so a leading memory-index token is correctly
-classified as an immediate rather than recursed into as an operand,
-matching the exact shape `"call" | "return_call"` already uses for their
-own leading `func`-index immediate (module.rs:1722-1728) — not a new
-pattern, the fourth instance of an existing one.
+**Implementation note (narrower than this spec's original design):** only
+the FOLDED-form arm (module.rs:1791-1797, `encode_instr`'s match) is
+widened to resolve a leading `$name`/numeric-literal token via the
+existing `ctx.memory_names`/`resolve_idx` machinery already used by
+`(data (memory $name) ...)` — matching the exact "leading immediate, then
+operands" shape `"call" | "return_call"` already uses for their own
+leading `func`-index immediate (module.rs:1722-1728), not a new pattern.
+Disambiguating an explicit memidx from `memory.grow`'s value operand is
+unambiguous here because folded-form operands are always a parenthesized
+nested instruction (`SExpr::List`), so a leading `SExpr::Atom` can only be
+an index token.
+
+The STREAM-form arm (module.rs:1455-1459, `encode_stream_instr`'s match)
+is **deliberately left unchanged** (still hardcoded to `0x00`), found
+while implementing: in flat/stream form there is no such disambiguator --
+the token right after `memory.grow` is a plain, unparenthesized `Atom`
+whether it's an explicit memidx OR the start of the NEXT instruction's own
+keyword, and resolving that needs a real instruction-keyword lookahead
+this crate doesn't have. No vendored corpus file exercises a non-default
+memory index through this flat form (confirmed: `memory_grow.wast` only
+uses the folded form), so this is left as a named, deferred scope
+boundary rather than adding lookahead machinery nothing currently needs.
 
 ### `wasm-execution`: memory becomes a `Vec`, and `memory.size`/`memory.grow` read their already-decoded index
 

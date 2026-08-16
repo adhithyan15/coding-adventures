@@ -141,7 +141,7 @@ impl HostInterface for RegistryHost {
     }
 
     fn resolve_memory(&self, module_name: &str, name: &str) -> Option<LinearMemory> {
-        let (instance_rc, _) = self.find_export(module_name, name, ExternalKind::Memory)?;
+        let (instance_rc, index) = self.find_export(module_name, name, ExternalKind::Memory)?;
         // A real clone, not a shared live view: `HostInterface::
         // resolve_memory` returns an OWNED `LinearMemory`, not a
         // reference, so a genuinely SHARED-and-mutated-across-instances
@@ -153,7 +153,13 @@ impl HostInterface for RegistryHost {
         // probe link-time acceptance/rejection, never post-link shared
         // mutation), so this is a real, named limitation, not a silently
         // wrong answer -- revisit if a future vendored file needs it.
-        let memory = instance_rc.borrow().memory.clone();
+        //
+        // `index` (multi-memory, W16, task #85) selects WHICH of the
+        // exporting instance's memories this export refers to -- before
+        // W16, an instance had at most one memory, so discarding it was
+        // harmless; now it must be used, same as `resolve_global` already
+        // does with its own export index.
+        let memory = instance_rc.borrow().memories.get(index as usize).cloned();
         memory
     }
 

@@ -47,7 +47,7 @@ fn engine_from_wat(wat: &str) -> (WasmExecutionEngine, WasmModule) {
     }
 
     let engine = WasmExecutionEngine::new(WasmEngineConfig {
-        memory: None,
+        memories: Vec::new(),
         tables,
         globals: vec![],
         global_types: vec![],

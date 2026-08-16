@@ -1,6 +1,6 @@
 [package]
 name = "wasm-validator"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-validator"
 
@@ -9,6 +9,7 @@ wasm-leb128 = { path = "../wasm-leb128" }
 wasm-types = { path = "../wasm-types" }
 wasm-opcodes = { path = "../wasm-opcodes" }
 wasm-module-parser = { path = "../wasm-module-parser" }
+wasm-execution = { path = "../wasm-execution" }
 virtual-machine = { path = "../virtual-machine" }
 
 [dev-dependencies]

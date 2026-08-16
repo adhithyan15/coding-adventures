@@ -1084,8 +1084,11 @@ impl HostFunction for SchedYieldFunc {
 pub struct WasmInstance {
     /// The original parsed module.
     pub module: WasmModule,
-    /// Allocated linear memory.
-    pub memory: Option<LinearMemory>,
+    /// Every allocated/imported linear memory, in index order
+    /// (multi-memory proposal, W16, task #85). Index 0 is "the" default
+    /// memory every pre-existing load/store/bulk-memory instruction and
+    /// data-segment application still implicitly targets.
+    pub memories: Vec<LinearMemory>,
     /// Allocated tables.
     pub tables: Vec<Table>,
     /// Global variable values.
@@ -1196,7 +1199,7 @@ impl WasmRuntime {
         let mut host_functions: Vec<Option<Box<dyn HostFunction>>> = Vec::new();
         let mut global_types: Vec<GlobalType> = Vec::new();
         let mut globals: Vec<WasmValue> = Vec::new();
-        let mut memory: Option<LinearMemory> = None;
+        let mut memories: Vec<LinearMemory> = Vec::new();
         let mut tables: Vec<Table> = Vec::new();
 
         // Resolve imports.
@@ -1228,7 +1231,7 @@ impl WasmRuntime {
                     if !limits_compatible(&actual, &mem_type.limits) {
                         return Err(link_error("incompatible import type", imp));
                     }
-                    memory = Some(imported_mem);
+                    memories.push(imported_mem);
                 }
                 ImportTypeInfo::Table(table_type) => {
                     let imported_table = self
@@ -1275,10 +1278,12 @@ impl WasmRuntime {
             host_functions.push(None);
         }
 
-        // Allocate memory.
-        if memory.is_none() && !module.memories.is_empty() {
-            let mem_type = &module.memories[0];
-            memory = Some(LinearMemory::new(mem_type.limits.min, mem_type.limits.max));
+        // Allocate every locally-declared memory (multi-memory, W16, task
+        // #85) -- imported memories (pushed above) occupy the low
+        // indices, matching every other index space's import-then-declared
+        // ordering in this same function.
+        for mem_type in &module.memories {
+            memories.push(LinearMemory::new(mem_type.limits.min, mem_type.limits.max));
         }
 
         // Allocate tables.
@@ -1302,8 +1307,13 @@ impl WasmRuntime {
             globals.push(value);
         }
 
-        // Apply data segments.
-        if let Some(ref mut mem) = memory {
+        // Apply data segments. Stays targeting memory 0 regardless of
+        // `seg.memory_index` (W16 scopes multi-memory support to
+        // `memory.size`/`memory.grow` only -- see the spec's "What does
+        // NOT change"); `wasm-validator` already bounds-checks
+        // `seg.memory_index` against the real memory count, so this is a
+        // real scope boundary, not a missed check.
+        if let Some(mem) = memories.first_mut() {
             for seg in &module.data {
                 let offset = evaluate_const_expr(&seg.offset_expr, &globals, &mut v128_heap)?;
                 let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as usize;
@@ -1331,7 +1341,7 @@ impl WasmRuntime {
 
         let instance = WasmInstance {
             module: module.clone(),
-            memory,
+            memories,
             tables,
             globals,
             global_types,
@@ -1505,12 +1515,12 @@ impl WasmRuntime {
     /// matters.
     fn build_engine(&self, instance: &mut WasmInstance) -> WasmExecutionEngine {
         // Build engine config, transferring ownership temporarily.
-        let memory = instance.memory.take();
+        let memories = std::mem::take(&mut instance.memories);
         let tables = std::mem::take(&mut instance.tables);
         let host_functions = std::mem::take(&mut instance.host_functions);
 
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
-            memory,
+            memories,
             tables,
             globals: instance.globals.clone(),
             global_types: instance.global_types.clone(),
@@ -1595,18 +1605,18 @@ impl WasmRuntime {
         // Run the call, but restore `instance`'s memory/tables/host-functions
         // from the engine's post-call state REGARDLESS of whether it trapped
         // (`call_function` takes `&mut self`, so `engine` — and everything
-        // `instance.memory.take()`/`mem::take` moved into it above — is still
-        // fully intact even on `Err`). Using `?` directly on `call_function`
-        // here used to skip this restoration on any trap, silently and
-        // permanently leaving `instance.memory`/`instance.tables` empty
-        // (`None`/`vec![]`) for the rest of that instance's lifetime: the
+        // `mem::take` moved into it above — is still fully intact even on
+        // `Err`). Using `?` directly on `call_function` here used to skip
+        // this restoration on any trap, silently and permanently leaving
+        // `instance.memories`/`instance.tables` empty (`vec![]`) for the
+        // rest of that instance's lifetime: the
         // FIRST call that trapped for any reason (an intentionally-trapping
         // test, or a real bug) would make every subsequent call on the same
         // instance fail with a spurious "no memory available"/"undefined
         // table", masking whatever the test was actually checking.
         let result = engine.call_function(func_index, wasm_args);
         let state = engine.into_state();
-        instance.memory = state.memory;
+        instance.memories = state.memories;
         instance.tables = state.tables;
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
@@ -1630,7 +1640,7 @@ impl WasmRuntime {
 
         let result = engine.call_function_with_v128(func_index, wasm_args);
         let state = engine.into_state();
-        instance.memory = state.memory;
+        instance.memories = state.memories;
         instance.tables = state.tables;
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
@@ -2421,7 +2431,7 @@ mod tests {
             ..Default::default()
         };
         let instance = runtime.instantiate(&module).unwrap();
-        assert!(instance.memory.is_some());
+        assert!(!instance.memories.is_empty());
     }
 
     #[test]
@@ -2530,7 +2540,7 @@ mod tests {
         let instance = runtime.instantiate(&module).unwrap();
 
         // No memory in square module
-        assert!(instance.memory.is_none());
+        assert!(instance.memories.is_empty());
         // No tables
         assert!(instance.tables.is_empty());
         // No globals
