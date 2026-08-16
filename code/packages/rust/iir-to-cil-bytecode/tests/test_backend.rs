@@ -1741,13 +1741,17 @@ fn e6_global_runs_on_real_clr() {
 // ===========================================================================
 
 /// `int_to_real` over an integer source emits `conv.r8` (widen to float64);
-/// `real_to_int_trunc` emits the overflow-checked `conv.ovf.i4` (truncate
-/// toward zero + trap on NaN/±∞/out-of-range). This backend's scalar integer
-/// model is uniformly 32-bit (`i64` and `i32` both collapse to `int32`), so the
-/// narrowing target is always `conv.ovf.i4` regardless of the IR's int width.
+/// `real_to_int_trunc` emits the overflow-checked `conv.ovf.*` (truncate toward
+/// zero + trap on NaN/±∞/out-of-range).
+///
+/// CLR-int64: the narrowing target now follows the **destination's** width —
+/// `conv.ovf.i8` for an `i64` result, `conv.ovf.i4` for an `i32` one. Both trap,
+/// so an `i64` destination genuinely accepts the wider range instead of trapping
+/// on values a 32-bit slot could never have held. (`conv.r8` is width-agnostic:
+/// it converts whatever numeric is on the stack.)
 #[test]
 fn e8_int_to_real_emits_conv_r8_and_trunc_emits_conv_ovf() {
-    for ty in ["i64", "i32"] {
+    for (ty, expect_ovf) in [("i64", "conv.ovf.i8"), ("i32", "conv.ovf.i4")] {
         let mut m = IIRModule::new("Main", "Main");
         m.entry_point = Some("compute".into());
         m.add_or_replace(IIRFunction::new("compute", vec![], ty, vec![
@@ -1758,9 +1762,175 @@ fn e8_int_to_real_emits_conv_r8_and_trunc_emits_conv_ovf() {
         ]));
         let il = emit_il(&m, &default_cfg()).unwrap_or_else(|e| panic!("emit_il {ty}: {e:?}"));
         assert!(il.contains("conv.r8"), "int_to_real ({ty}) must widen with conv.r8:\n{il}");
-        assert!(il.contains("conv.ovf.i4"),
-            "real_to_int_trunc ({ty}) must use the trapping conv.ovf.i4:\n{il}");
+        assert!(il.contains(expect_ovf),
+            "real_to_int_trunc ({ty}) must use the trapping {expect_ovf}:\n{il}");
     }
+}
+
+/// End-to-end on real `ilasm` + `dotnet` — the **behavioural** pin behind the
+/// CLR-int64 model, and the run-verified twin of
+/// `il_text::tests::e2_u8_op_over_i64_operands_collapses_to_int32_via_conv`.
+///
+/// `200u8 + 100u8 = 44` (LANG-FULL E2 wrap) with both operands materialised as
+/// `i64` — the shape Nib emits. The unit test pins the *instructions*: real
+/// `int64` locals and `ldc.i8` for the operands, an explicit `conv.i4` on each
+/// before the add, and an `int32` `ldc.i4 0xFF; and` mask. This one pins the
+/// *answer*, which is the thing that must never change however the widths move.
+/// Skipped if the CLR toolchain is unavailable.
+#[test]
+fn e2_u8_over_i64_operands_still_wraps_to_44_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let mut m = IIRModule::new("Main", "nib");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+        IIRInstr::new("add", Some("x".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    let dir = std::env::temp_dir().join(format!("e2u8_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = clr_entry_result(&out);
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "44",
+        "200u8 + 100u8 must still wrap to 44 over i64 operands, got {stdout:?}; stderr: {:?}",
+        String::from_utf8_lossy(&out.stderr));
+}
+
+/// End-to-end on real `ilasm` + `dotnet` — the value CLR-int64 exists for.
+///
+/// COBOL's `COMPUTE R = A / B + C` carries the division at a fixed **scale-12**
+/// intermediate, so `10^12` is inherent to the arithmetic. Under the old
+/// uniformly-`int32` model the backend could only (correctly) refuse the
+/// literal; here the whole chain — `ldc.i8 10^12`, `mul`, `div` — runs on real
+/// `int64` and the final narrowing to the `int32` entry result is explicit.
+/// `10 * 10^12 / 3 / 10^10 = 333`. Skipped if the CLR toolchain is unavailable.
+#[test]
+fn scale12_intermediate_runs_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let mut m = IIRModule::new("Main", "cobol60");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new("const", Some("scale".into()),
+            vec![Operand::Int(1_000_000_000_000)], "i64"),
+        IIRInstr::new("mul", Some("scaled".into()),
+            vec![Operand::Var("a".into()), Operand::Var("scale".into())], "i64"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("div", Some("q".into()),
+            vec![Operand::Var("scaled".into()), Operand::Var("b".into())], "i64"),
+        IIRInstr::new("const", Some("down".into()), vec![Operand::Int(10_000_000_000)], "i64"),
+        IIRInstr::new("div", Some("r".into()),
+            vec![Operand::Var("q".into()), Operand::Var("down".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    let dir = std::env::temp_dir().join(format!("scale12_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = clr_entry_result(&out);
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "333",
+        "the scale-12 intermediate must survive as int64, got {stdout:?}; stderr: {:?}",
+        String::from_utf8_lossy(&out.stderr));
+}
+
+/// An `array<i64>` is a real `int64[]` — `newarr System.Int64` with
+/// `stelem.i8`/`ldelem.i8` — so an element stores without a `conv.i4`.
+///
+/// This is the deliberate counterpart of the scalar decision. Had the array
+/// stayed `int32[]` while scalars became `int64`, every `array_set` would have
+/// carried an unannounced truncation of the top 32 bits. Run end-to-end so the
+/// claim is about the value, not the mnemonic: `10^12 + 44` round-trips through
+/// the array intact (its low 32 bits alone would read back as `3567587372`).
+/// Skipped if the CLR toolchain is unavailable.
+#[test]
+fn i64_array_round_trips_a_wide_element_on_real_clr() {
+    use std::process::Command;
+    let Some(ilasm) = find_ilasm() else { eprintln!("no ilasm — skipping"); return; };
+    if Command::new("dotnet").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("no dotnet — skipping"); return;
+    }
+    let wide: i64 = 1_000_000_000_044;
+    let mut m = IIRModule::new("Main", "algol60");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i32"),
+        IIRInstr::new("alloc_array", Some("arr".into()),
+            vec![Operand::Var("n".into())], "array<i64>"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(wide)], "i64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("arr".into()), Operand::Var("i0".into()), Operand::Var("v".into())],
+            "i64"),
+        IIRInstr::new("array_get", Some("back".into()),
+            vec![Operand::Var("arr".into()), Operand::Var("i0".into())], "i64"),
+        // Bring it back into int32 range by the same scale it went up, so the
+        // int32 entry result is a faithful witness of the stored 64-bit value.
+        IIRInstr::new("const", Some("down".into()), vec![Operand::Int(1_000_000_000)], "i64"),
+        IIRInstr::new("div", Some("r".into()),
+            vec![Operand::Var("back".into()), Operand::Var("down".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]));
+    let il = emit_il(&m, &default_cfg()).expect("emit_il");
+    assert!(il.contains("newarr [System.Runtime]System.Int64"), "must be an int64[]:\n{il}");
+    assert!(il.contains("stelem.i8") && il.contains("ldelem.i8"),
+        "int64 elements use the i8 element ops:\n{il}");
+    let dir = std::env::temp_dir().join(format!("i64arr_clr_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let il_path = dir.join("Main.il");
+    let dll = dir.join("Main.dll");
+    std::fs::write(&il_path, &il).expect("write .il");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false").arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path).output().expect("run ilasm");
+    assert!(asm.status.success() && dll.exists(),
+        "ilasm failed:\n{}\n--- .il ---\n{il}", String::from_utf8_lossy(&asm.stdout));
+    std::fs::write(dir.join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#)
+        .expect("write runtimeconfig");
+    let out = Command::new("dotnet").arg(&dll).output().expect("run dotnet");
+    let stdout = clr_entry_result(&out);
+    let _ = std::fs::remove_dir_all(&dir);
+    assert_eq!(stdout, "1000",
+        "a wide element must survive the array intact, got {stdout:?}; stderr: {:?}",
+        String::from_utf8_lossy(&out.stderr));
 }
 
 /// `real_to_int_floor` calls `System.Math::Floor(float64)` (round toward −∞)

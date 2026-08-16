@@ -893,13 +893,30 @@ pub fn compile_source_to_jvm_class(
         .map_err(|e| LangAotError::JvmBackendError(format!("{e:?}")))
 }
 
-/// Retype a **scalar** module's `any`/`polymorphic`/`i64` values to CLR `i32`,
+/// Retype a **scalar** module's dynamic values to a concrete CLR integer type,
 /// for the CLR run-foundation (LANG77 / McCarthy W6a). The CLR twin of
-/// `concretize_scalar_any_for_jvm`: the in-repo `clr-simulator` (used to verify)
-/// is a 32-bit integer machine and `iir-to-cil-bytecode`'s entry returns
-/// `int32`, so a scalar program's result is an `int`. Heap/reference functions
-/// (cons/symbols/lambda — W6b+) are left for the uniform-`object` value model.
-fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
+/// `concretize_scalar_any_for_jvm`. Heap/reference functions (cons/symbols/
+/// lambda — W6b+) are left for the uniform-`object` value model.
+///
+/// `narrow_i64` is the difference between the CLR's **two** back ends, and it is
+/// a property of the *machine*, not of the program:
+///
+/// * **`true` — the binary artifact path.** `lower_iir_to_cil` produces raw
+///   method bodies for the in-repo `clr-simulator`, which is a 32-bit integer
+///   machine. A genuine `i64` has nowhere to live there, so it is narrowed to
+///   `i32` before lowering.
+/// * **`false` — the textual `.il` path.** `emit_il` produces `.il` that real
+///   `ilasm` assembles and real CoreCLR runs, and CoreCLR has a native `int64`
+///   stack type. Narrowing there would be throwing away a width the target
+///   actually has — and it made a whole class of program *inexpressible*:
+///   COBOL's `COMPUTE R = A / B + C` over `PIC 9(4)V99` carries the division at
+///   a fixed scale-12 intermediate, so `10^12` is inherent to the arithmetic.
+///   Narrowed to `i32`, the backend could only (correctly) refuse the literal.
+///
+/// Bare `any`/`polymorphic`/`ref<any>` narrow to `i32` on **both** paths: an
+/// unresolved dynamic value carries no evidence that it needs 64 bits, and the
+/// CIL entry method returns `int32` regardless.
+fn concretize_scalar_any_for_cil(module: &mut IIRModule, narrow_i64: bool) {
     // `box`/`unbox` are heap-model evidence too. The old code caught them
     // incidentally, because a `ref<any>` instruction hint counted as evidence;
     // now that it does not, a module whose ONLY tagged-model signal is a
@@ -938,7 +955,7 @@ fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
         if module_uses_lisp {
             continue; // uniform-object value model — CLR W6b+.
         }
-        let to_i32 = |t: &str| is_narrowable_dynamic(t) || t == "i64";
+        let to_i32 = |t: &str| is_narrowable_dynamic(t) || (narrow_i64 && t == "i64");
         if to_i32(&func.return_type) {
             func.return_type = "i32".to_string();
         }
@@ -1001,7 +1018,8 @@ pub fn compile_source_to_cil_artifact(
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
-    concretize_scalar_any_for_cil(&mut module);
+    // `narrow_i64: true` — this path targets the in-repo 32-bit `clr-simulator`.
+    concretize_scalar_any_for_cil(&mut module, true);
     // Stack backends address every value operand through a slot, so an inline
     // literal (COBOL's `ADD 7 TO R` → `add _acc0, 7`) is a shape they cannot
     // lower even though the IIR contract allows it. Materialize those literals
@@ -1042,7 +1060,9 @@ pub fn compile_source_to_cil_text(
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
-    concretize_scalar_any_for_cil(&mut module);
+    // `narrow_i64: false` — real CoreCLR has a native `int64`, and `emit_il` now
+    // gives it a real int64 register model, so an `i64` keeps its width.
+    concretize_scalar_any_for_cil(&mut module, false);
     // Stack backends address every value operand through a slot, so an inline
     // literal (COBOL's `ADD 7 TO R` → `add _acc0, 7`) is a shape they cannot
     // lower even though the IIR contract allows it. Materialize those literals
@@ -1871,6 +1891,46 @@ fn is_narrow_int_hint(hint: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// CLR-int64: the two CLR back ends concretize differently, and the
+    /// difference is a property of the machine, not the program. The binary
+    /// artifact path narrows `i64` for the 32-bit in-repo `clr-simulator`; the
+    /// textual `.il` path keeps it, because real CoreCLR has a native `int64`.
+    /// Bare `any` narrows to `i32` on both.
+    ///
+    /// This is what makes COBOL's inherent scale-12 intermediate (`10^12`)
+    /// expressible on the real-CoreCLR column: narrowed to `i32` the backend
+    /// could only — correctly — refuse the literal.
+    #[test]
+    fn cil_concretization_narrows_i64_only_for_the_simulator_path() {
+        let scalar = || {
+            let mut m = IIRModule::new("Main", "cobol60");
+            m.entry_point = Some("main".into());
+            m.functions.push(interpreter_ir::IIRFunction::new("main", vec![], "i64", vec![
+                interpreter_ir::IIRInstr::new("const", Some("p".into()),
+                    vec![interpreter_ir::Operand::Int(1_000_000_000_000)], "i64"),
+                interpreter_ir::IIRInstr::new("const", Some("d".into()),
+                    vec![interpreter_ir::Operand::Int(0)], "any"),
+                interpreter_ir::IIRInstr::new("ret", None,
+                    vec![interpreter_ir::Operand::Var("p".into())], "i64"),
+            ]));
+            m
+        };
+
+        let mut narrowed = scalar();
+        concretize_scalar_any_for_cil(&mut narrowed, true);
+        let hints: Vec<&str> =
+            narrowed.functions[0].instructions.iter().map(|i| i.type_hint.as_str()).collect();
+        assert_eq!(hints, ["i32", "i32", "i32"], "the simulator path narrows i64 → i32");
+
+        let mut kept = scalar();
+        concretize_scalar_any_for_cil(&mut kept, false);
+        let hints: Vec<&str> =
+            kept.functions[0].instructions.iter().map(|i| i.type_hint.as_str()).collect();
+        assert_eq!(hints, ["i64", "i32", "i64"],
+            "the real-CoreCLR path keeps i64 and still narrows bare `any`");
+        assert_eq!(kept.functions[0].return_type, "i64", "the return type keeps its width too");
+    }
 
     #[test]
     fn parse_language_aliases() {
