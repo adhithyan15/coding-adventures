@@ -98,3 +98,4 @@ info dump (report-only): 121 of 2885 lessons -- 30 rule statements, 95 paradigm 
 
 metalanguage: 52 of 54 grammar terms appear in 2830 lessons; 11172 uses come before introduction, of which 3110 are technical terms across 1598 lessons
   most-used-before-introduction: verb (1005 lessons), noun (526 lessons), tense (157 lessons), regular (150 lessons), adjective (144 lessons), pronoun (141 lessons)
+literal markup: none in 2885 lessons or any generated book

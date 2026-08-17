@@ -77480,5 +77480,10 @@
         "lessons": 141
       }
     ]
+  },
+  "literalMarkup": {
+    "lessonsScanned": 2885,
+    "sourceFindings": 0,
+    "renderedFindings": 0
   }
 }
