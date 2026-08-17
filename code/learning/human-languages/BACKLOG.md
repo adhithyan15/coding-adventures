@@ -13,6 +13,103 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C220 — three Russian words were written with Latin letters, and the ъ ones are NOT the same class
+
+Surfaced by the security review of HL-C219 as an informational note, then swept
+across the whole track. Thirty mixed-script tokens; **they are two completely
+different things and only one is a defect.**
+
+**Genuine defects — three words, fixed here.** A Latin letter standing in for the
+identical-looking Cyrillic one:
+
+```
+привet   -> привет     Latin e, t   (RU-C01-privet)
+спасибo  -> спасибо    Latin o      (RU-C01-spasibo)
+Kофе     -> Кофе       Latin K      (RU-C06-kofe)
+```
+
+These render across **two fonts** at exit 0, which is the HL-C202/HL-C203 defect
+class exactly. Nothing catches them: the glyphs are all covered, the LaTeX is
+valid, and the words look right on screen.
+
+**NOT defects — the ъ transliterations, 20 occurrences, deliberately left.**
+`azъ`, `govorъ`, `glazъ`, `rъtъ` are Latin romanisations of Old East Slavic that
+keep the Cyrillic **hard sign** — the standard scholarly convention, and the whole
+point of the etymology sections that use them. A homoglyph gate will flag all
+twenty, and **it must not "fix" them.**
+
+**And one that is neither:** `оs` in a narration file is English pluralising a
+Cyrillic letter name — *"the two оs behave the way спасибо taught you"*. Unavoidable
+if you pluralise a letter in English prose.
+
+### What this means for the gate
+
+A corpus-wide mixed-script detector is worth building — this is the third track to
+turn one up — but **a bare "mixed script = defect" rule would be wrong on 21 of
+these 30**. It needs at least:
+
+- an allowlist for **transliteration conventions** (Latin + ъ/ь is the Slavic one;
+  the Indic tracks will have their own), and
+- an exemption for a **script name or letter name inflected in the surrounding
+  language**.
+
+A gate that cries wolf on legitimate scholarship gets suppressed, and then it
+catches nothing. Recorded with the real numbers so whoever builds it starts from a
+classified sample rather than from the raw count.
+
+## HL-C219 — Cyrillic needs a different organising idea, and it is about the READER not the script
+
+Sixth script tranche, and the first non-abugida. `neverTaughtGlyphs` 37 → 25.
+
+Five tracks were taught as *inherent vowel → mātrā → position → (fourth idea)*.
+**None of that exists in Cyrillic.** It is an alphabet: one letter, one sound, no
+inherent vowel, no mātrās, no conjuncts.
+
+What replaces it is not a fact about the script at all — it is a fact about **the
+reader's Latin habits**:
+
+- **true friends** — look Latin, sound Latin;
+- **false friends** — look Latin, sound different;
+- **new shapes** — no Latin relative at all.
+
+Every Cyrillic letter sorts into one of those three, and sorting them is most of
+what learning the alphabet is. Each lesson closes by asking which kind it was.
+
+**Generalisation for the remaining non-Latin tracks:** the organising idea is
+chosen from the **distance between the script and what the reader already reads**,
+not from the script's own typology. Greek would want the same three kinds. Arabic
+and Perso-Arabic want something else again — position-dependent letterforms, where
+the same letter has four shapes — and Hebrew wants the abjad idea that vowels are
+mostly absent. Do not reach for the abugida template outside the Indic tracks.
+
+**Letters were chosen by how many lessons each unblocks**, computed from the
+closure report rather than by alphabet order: у was blocking 41 lessons, з 27,
+ы 25. That is the HL-C211 rule ("order by what it unlocks") made mechanical, and
+it is worth doing for every remaining tranche — the report already has the data.
+
+### The `delivery: script` adoption rule, which the manifest enforces and nothing documents
+
+Adding marked lessons to Russian broke a test that had been green: **once a track
+marks ANY writing lesson `delivery: script`, every `type: writing` lesson in that
+track must be marked.** `RU-W01`–`RU-W05` predate the marker and were silently
+exempt while the track had no marked lesson at all.
+
+That is a good rule — a half-marked track would report script coverage it does not
+have — but it means **the first marked lesson in a track is a bigger change than it
+looks**, and it is worth knowing before the next track with legacy writing lessons.
+Marking the five is also why `taughtGlyphs` jumped 18 → 30 rather than 18 → 29.
+
+### I reintroduced the `&nbsp;` defect one PR after fixing it
+
+HL-C217 removed literal `&nbsp;` from eight lessons across four tracks. **Two of
+the eleven lessons in this tranche had it again**, because the generator template
+I was working from still contained it and nothing checks.
+
+Caught by hand, before push, only because I went looking. **This is the argument
+for the literal-markup gate in HL-C217 being worth building rather than logged:**
+a defect that survives its own fix by one PR is not going to be fixed by
+remembering harder.
+
 ## HL-C218 — the four ideas are not a fixed list; the fourth one is whatever the track's first words need
 
 Fifth script tranche. `neverTaughtGlyphs` 45 → 36; `tracksTeachingNothing` reaches

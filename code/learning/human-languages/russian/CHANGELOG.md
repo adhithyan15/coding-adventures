@@ -508,6 +508,40 @@ Ch. 2 plan the roadmap already set out.
 
 ## [Unreleased]
 
+### Added — Chapter 14, eleven letters sorted into three kinds (HL-C219)
+
+`scriptLessons` 5 → 16, `taughtGlyphs` 18 → 30, `neverTaughtGlyphs` **37 → 25**.
+
+**Cyrillic is an alphabet, so the abugida shape does not apply.** The five tracks
+before this one were taught as *inherent vowel → mātrā → …*; none of that exists
+here. The organising idea Cyrillic needs is different, and it is about the
+reader's Latin habits rather than about the script:
+
+- **true friends** — look Latin, sound Latin (к, м, о, с, т);
+- **false friends** — look Latin, sound different (у, в, р, с, н);
+- **new shapes** — no Latin relative at all (з, ж, ч, ш, л).
+
+Every letter sorts into one of the three, and sorting them is most of what
+learning this alphabet is. Each lesson ends by asking which kind it was.
+
+**The eleven were chosen by how many words each unblocks**, not by alphabet order:
+у alone was blocking 41 lessons, з 27, ы 25.
+
+**Two lessons carry ideas rather than shapes.** *ь*, the soft sign, is **a letter
+that makes no sound at all** — it softens the consonant before it, and a letter
+that is a modifier rather than a sound is the one genuinely alien object in this
+script for an English reader. And *я* is **a whole syllable in one letter**, plus
+the backwards-R resemblance that means nothing and appears on every parody of
+Russian ever printed.
+
+### Also: the five older writing lessons now declare `delivery: script`
+
+The manifest's rule is that once a track marks any writing lesson, **every**
+writing lesson in that track must. `RU-W01`–`RU-W05` predate the marker. Marking
+them is why `taughtGlyphs` jumps 18 → 30 rather than 18 → 29: their letters now
+count for closure as well as being taught.
+
+
 ### Added — Chapter 1 (Greetings & courtesy)
 - Track scaffold: `README.md`, `roadmap.md`, `session-map.md`,
   `pronunciation-reference.md`, and `track.json` declaring the **Cyrillic**

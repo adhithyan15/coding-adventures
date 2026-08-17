@@ -1,6 +1,7 @@
 ---
 id: RU-W03-new-shapes-b-d
 chapter: 1
+delivery: script
 type: writing
 headword: "б, д"
 gloss: writing two genuinely new shapes — б (b) and д (d)

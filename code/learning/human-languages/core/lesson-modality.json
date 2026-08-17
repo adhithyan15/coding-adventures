@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ad759a5c05001d5f",
+  "sourceHash": "fnv1a64:1174c97ccb5ce8e8",
   "summary": {
-    "totalLessons": 2874,
+    "totalLessons": 2885,
     "voice": 2042,
     "sight": 582,
-    "pen": 250,
+    "pen": 261,
     "drivableLessons": 2042,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 908,
+    "chapterCount": 909,
     "drivablePrefixTotal": 1818,
     "fullyDrivableChapters": 590,
-    "unstartableChapters": 187,
+    "unstartableChapters": 188,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7833,11 +7833,11 @@
     },
     {
       "language": "russian",
-      "lessonCount": 64,
+      "lessonCount": 75,
       "voice": 46,
       "sight": 13,
-      "pen": 5,
-      "drivablePercent": 72,
+      "pen": 16,
+      "drivablePercent": 61,
       "drivablePrefixTotal": 36,
       "modalities": [
         "voice",
@@ -8079,6 +8079,21 @@
           "drivableLessonIds": [
             "RU-C13-moloko"
           ]
+        },
+        {
+          "chapter": 14,
+          "lessonCount": 11,
+          "voice": 0,
+          "sight": 0,
+          "pen": 11,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "RU-W06-u",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -46419,7 +46434,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8258d0d87859c9ea",
+      "sourceHash": "fnv1a64:a7b65079625fcbc6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46440,7 +46455,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:007b0e31e887f8eb",
+      "sourceHash": "fnv1a64:4b0643a84e1f4bcb",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46482,7 +46497,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e5923f38dea06429"
+      "sourceHash": "fnv1a64:c1ce748ed4860e6c",
+      "delivery": "script"
     },
     {
       "id": "RU-W02-false-friends-s-n",
@@ -46502,7 +46518,8 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e7b121151af172cc"
+      "sourceHash": "fnv1a64:1c40a3b05e3872b3",
+      "delivery": "script"
     },
     {
       "id": "RU-W03-new-shapes-b-d",
@@ -46520,7 +46537,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5d4c98bf9e21742d"
+      "sourceHash": "fnv1a64:42fb11f174a24ce8",
+      "delivery": "script"
     },
     {
       "id": "RU-W04-privet-letters-p-i",
@@ -46538,7 +46556,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:db26ef3c1f7cfb10"
+      "sourceHash": "fnv1a64:68c6daf9d2cb5607",
+      "delivery": "script"
     },
     {
       "id": "RU-W05-privet-letters-e-t",
@@ -46556,7 +46575,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ae0552066fff71d5"
+      "sourceHash": "fnv1a64:7e891f4076ef4524",
+      "delivery": "script"
     },
     {
       "id": "RU-C02-ya",
@@ -47027,7 +47047,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:15016e61fda9cda8",
+      "sourceHash": "fnv1a64:87a38f5a0daf9d98",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47505,6 +47525,259 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:7f57478fc076953b"
+    },
+    {
+      "id": "RU-W06-u",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 600,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:543c07ba5efa5b12",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-z",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b91a4db634e21266",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-k",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 620,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ca5fadd06f0e0649",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-l",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 630,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f41cfb297d3f6f50",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-m",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 640,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:421f899b41e0512c",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-y",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 650,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:227dcb60c3fedbee",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-zh",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 660,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c284fdc8e95f31b3",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-ch",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 670,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7f68ff45ce84e411",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-sh",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 680,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7be77c4304379cc7",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-soft-sign",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 690,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6cfb64b082851a44",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W06-ya",
+      "language": "russian",
+      "chapter": 14,
+      "sequence": 700,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c347391877845f70",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
     },
     {
       "id": "SA-C01-namaste",

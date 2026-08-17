@@ -1,0 +1,298 @@
+Russian, chapter 14: Eleven Letters, Sorted Into Three Kinds.
+11 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 11.
+у (u) — the letter that looks like Latin y and says 'oo'.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You have met the false friends and the first new shapes. This chapter takes the eleven letters that block the most words you cannot yet read.
+
+Script.
+у (u).
+It looks like a Latin y. It is not one. It says oo, the vowel of English boot.
+This is the single most expensive letter to get wrong, because it is common: it blocks more words in this book than any other letter you have left. Every time an English eye reads it as y, a word comes apart.
+The shape is close to Latin y — a small bowl on top, a tail below the line — but the tail is usually straighter and the bowl smaller.
+Say it round and short, with the lips pushed forward. Not the y of yes. Not the u of cup. The oo of boot.
+
+Guided Practice.
+[once you have stopped driving — write: у (u)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does у sound like? (oo, as in boot.) What does an English eye want it to be? (A y — and that is the trap.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 2 of 11.
+з (z) — a letter shaped like the digit 3.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+з (z).
+z, the z of English zoo. And the shape is exactly what it looks like: the digit 3.
+That is not a coincidence to memorise around — it is simply a convenient hook, and a rare piece of luck in this alphabet. Nothing in Latin looks like this, so nothing can mislead you.
+Write it as you would write a 3, and read it as z.
+
+Guided Practice.
+[once you have stopped driving — write: з (z)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does з sound like? (z.) And what does it look like? (The digit 3.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 3 of 11.
+к (k) — a true friend.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+к (k).
+k, the k of English skip. It looks like a Latin k and it is one.
+Cyrillic letters come in three kinds for an English reader, and it is worth having the three named:
+true friends — look Latin, sound Latin. This one, and the letters romanised a, o, m, t.
+false friends — look Latin, sound different. у you just met, and the ones you met earlier as v, r, s and n.
+new shapes — look like nothing Latin at all. з (z) from a moment ago, and the two you learned as b and d.
+There is no fourth kind. Sorting every new letter into one of those three is most of what learning this alphabet is.
+
+Guided Practice.
+[once you have stopped driving — write: к (k)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three kinds of Cyrillic letter for an English reader? (True friends, false friends, new shapes.) Which is к? (A true friend.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 4 of 11.
+л (l) — a new shape.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+л (l).
+l, the l of English love. A new shape: nothing in Latin looks like it.
+Two strokes meeting at a peak, with the left leg kicking out. Written quickly it leans, and in some fonts it is nearly a triangle with an open base.
+Careful with one thing. In handwriting л and м are close relatives, and you are about to meet м. The difference is the top: л comes to a point, м has a dip in the middle.
+
+Guided Practice.
+[once you have stopped driving — write: л (l)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is л a true friend, a false friend, or a new shape? (A new shape.) How do you tell it from the letter coming next? (л peaks; the other dips.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 5 of 11.
+м (m) — a true friend, and its capital.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+м (m) М.
+m, the m of English met — a true friend in both cases.
+And here is a fact about this alphabet worth having early: most Cyrillic capitals are simply the lowercase letter drawn large. Latin makes you learn two shapes for a, b, d, e, g; Cyrillic mostly does not.
+This letter is one of them, and so are the ones romanised k, o, s and t: same shape, two sizes.
+Not all of them — the letters for b, d and a do have distinct capitals — but the default is that a capital costs you nothing new, which is a genuine saving over the Latin alphabet and the opposite of what a beginner expects.
+
+Guided Practice.
+[once you have stopped driving — write: м (m)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What sound is м? (m.) And what is true of most Cyrillic capitals? (They are the lowercase drawn large — no new shape to learn.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 6 of 11.
+ы (y) — the vowel English has no name for.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+ы (y).
+Now a letter with no English equivalent at all — not a shape problem, a sound problem.
+ы is a vowel made with the tongue pulled back and high, roughly where you hold it for oo, but with the lips unrounded and spread as for ee. English has no such vowel and no letter for it. Books usually transliterate it y, which helps nobody.
+The reliable way in: say ee. Hold it. Now, without moving your lips, pull your tongue back towards your throat. What comes out is close.
+The shape is two pieces — a hard sign body and a vertical — and it is never capitalised at the start of a word, because no Russian word begins with it.
+
+Guided Practice.
+[once you have stopped driving — write: ы (y)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is ы a shape problem or a sound problem? (A sound problem.) How do you find it? (Say ee, then pull the tongue back without moving the lips.) And can a word begin with it? (No.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 7 of 11.
+ж (zh) — the beetle.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+ж (zh).
+zh, the sound in the middle of English measure or vision. A new shape, and the most recognisable one in Cyrillic: three strokes radiating from a central spine, symmetrical, often called the beetle.
+The sound is worth isolating. English has it — measure, treasure, azure, genre — but spells it with no letter of its own, and no ordinary English word opens with it. Russian gives it a letter and opens words with it freely.
+Symmetrical, so there is no wrong way round. Draw the spine, then the four legs.
+
+Guided Practice.
+[once you have stopped driving — write: ж (zh)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What sound is ж (zh)? (The middle of measure.) Does English have that sound? (Yes — but no letter for it.) And what is the shape called? (The beetle.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 8 of 11.
+ч (ch) — one letter for a sound English spells with two.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+ч (ch).
+ch, the ch of English cheese. A new shape — roughly a Latin h rotated, or a wine glass.
+Notice what the alphabet is doing. English needs two letters, c and h, to write this sound, and that pair is ambiguous — compare church, chorus, machine. Cyrillic spends one letter on it and the letter means one thing.
+This is a genuine advantage of the script and it is worth naming: Russian spelling is far more regular than English spelling. A letter usually says one thing.
+
+Guided Practice.
+[once you have stopped driving — write: ч (ch)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many letters does English use for this sound? (Two — and ambiguously.) How many does Russian? (One.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 9 of 11.
+ш (sh) — the comb.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+ш (sh).
+sh, the sh of English shoe. A new shape: three vertical teeth on a base, like a comb.
+Same point as the last letter, and it is a pattern rather than a coincidence: English writes this with two letters, Russian with one.
+Keep it apart from the beetle by counting: ж (zh) radiates from a centre, ш (sh) stands on a flat base with three uprights.
+
+Guided Practice.
+[once you have stopped driving — write: ш (sh)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What sound is ш? (sh.) How do you tell it from the beetle? (ш has three uprights on a flat base; the beetle radiates from a centre.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 10 of 11.
+ь ((soft sign)) — a letter that makes no sound of its own.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+Now the idea this alphabet has and Latin does not.
+ь ((soft sign)).
+This is the soft sign, and it is not a sound. You cannot pronounce it. It has no name you say aloud in a word. What it does is change the letter before it: it softens that consonant, which means the tongue moves towards the roof of the mouth, as if a faint y were sliding in after it.
+English does this by accident. Compare the n in canyon with the n in can — the first is softer, because a y follows. Russian treats that difference as meaningful and gives it a letter.
+A letter that is a modifier rather than a sound is the one genuinely alien thing in this script for an English reader. Everything else is a shape to learn or a sound to hear; this is a different kind of object entirely.
+It is also common — it blocks a great many words in this book — and it never begins a word, so you will only ever meet it after a consonant.
+
+Guided Practice.
+[once you have stopped driving — write: ь ((soft sign))]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Can you pronounce ь ((soft sign))? (No — it makes no sound of its own.) What does it do? (Softens the consonant before it.) And where in a word can it never appear? (At the start.)
+Source: Unicode Cyrillic chart.
+
+
+Lesson 11 of 11.
+Я (ya) — one letter that is a whole syllable.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the letter from the previous lesson, and say which of the three kinds it is.
+
+Script.
+Я (ya) я.
+Last, and it carries two lessons at once.
+It looks like a backwards Latin R. It is not an R and has nothing to do with one. That resemblance is the reason this letter appears on every parody of Russian ever printed in English, and it means nothing.
+And it is not one sound but two. я says ya — a whole syllable, a y glide plus an a, in a single letter. Cyrillic has several of these, and they are why a Russian word can look shorter than its pronunciation.
+On its own, я is also the Russian word for I. A single letter, a whole word — like English a and I, and for the same reason: the commonest words wear down to the shortest forms.
+That is your eleventh piece. Sort each one into the three kinds as you go, and the rest of the alphabet is more of the same.
+
+Guided Practice.
+[once you have stopped driving — write: Я (ya)]
+[your turn — sort: true friend, false friend, or new shape?]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does я sound like? (ya — two sounds, one letter.) Is it related to Latin R? (No — the resemblance is meaningless.) And what word is it on its own? (I.)
+Source: Unicode Cyrillic chart.

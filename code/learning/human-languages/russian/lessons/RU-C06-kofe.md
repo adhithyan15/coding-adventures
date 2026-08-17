@@ -79,7 +79,7 @@ You already own the verb for how you feel about it:
 
 > **Я люблю кофе.** — *ya lyublyú kófe* — **I love coffee.**
 
-*(Kофе is inanimate and masculine, so it takes exactly the same shape here as
+*(Кофе is inanimate and masculine, so it takes exactly the same shape here as
 it does standing alone — nothing to adjust.)*
 
 ## Guided Practice
