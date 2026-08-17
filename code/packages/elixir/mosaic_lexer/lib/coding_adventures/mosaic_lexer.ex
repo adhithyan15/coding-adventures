@@ -6,7 +6,8 @@ defmodule CodingAdventures.MosaicLexer do
   structure with named typed slots. A `.mosaic` file compiles to native code
   per target platform (Web Components, React, SwiftUI, Compose, Rust/paint-vm).
 
-  This module reads `mosaic.tokens` from the shared grammars directory and
+  This module uses the pre-compiled `CodingAdventures.MosaicLexer.Grammar`
+  (generated from `mosaic.tokens` via `grammar-tools compile-tokens`) and
   delegates to `GrammarLexer.tokenize/2` to tokenize Mosaic source code.
 
   ## Usage
@@ -54,9 +55,9 @@ defmodule CodingAdventures.MosaicLexer do
 
   ## How It Works
 
-  1. On first call, `create_lexer/0` parses `mosaic.tokens` into a
-     `TokenGrammar` struct. This is cached in a persistent term for
-     fast repeated access.
+  1. On first call, `create_lexer/0` fetches the pre-compiled `TokenGrammar`
+     struct from `CodingAdventures.MosaicLexer.Grammar`. This is cached in a
+     persistent term for fast repeated access.
 
   2. `tokenize/1` passes the source and grammar to `GrammarLexer.tokenize/2`,
      which does all the real work.
@@ -67,17 +68,7 @@ defmodule CodingAdventures.MosaicLexer do
 
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  # The shared grammars directory lives five levels above __DIR__:
-  #   __DIR__ = .../code/packages/elixir/mosaic_lexer/lib/coding_adventures/
-  #   ..       = .../code/packages/elixir/mosaic_lexer/lib/
-  #   ../..    = .../code/packages/elixir/mosaic_lexer/
-  #   ../../.. = .../code/packages/elixir/
-  #   ../../../.. = .../code/packages/
-  #   ../../../../.. = .../code/
-  #   + /grammars = .../code/grammars/
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.MosaicLexer.Grammar
 
   @doc """
   Tokenize Mosaic source code.
@@ -105,7 +96,7 @@ defmodule CodingAdventures.MosaicLexer do
   end
 
   @doc """
-  Parse the `mosaic.tokens` grammar file and return the `TokenGrammar`.
+  Return the pre-compiled Mosaic `TokenGrammar`.
 
   This is useful if you want to inspect the grammar — for example, to check
   which token names and keywords are defined — or to reuse it directly with
@@ -128,9 +119,7 @@ defmodule CodingAdventures.MosaicLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "mosaic", "mosaic.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Grammar.token_grammar()
   end
 
   # ---------------------------------------------------------------------------

@@ -3,8 +3,9 @@ defmodule CodingAdventures.MosaicParser do
   Mosaic Parser — Thin wrapper around the grammar-driven parser engine.
 
   This module combines `MosaicLexer.tokenize/1` with `GrammarParser.parse/2`
-  to parse Mosaic source code into an AST. It reads `mosaic.grammar` from
-  the shared grammars directory.
+  to parse Mosaic source code into an AST. It uses the pre-compiled
+  `CodingAdventures.MosaicParser.Grammar` (generated from `mosaic.grammar`
+  via `grammar-tools compile-grammar`).
 
   Mosaic is a Component Description Language (CDL) for declaring UI component
   structure with named typed slots. A `.mosaic` file has this shape:
@@ -66,14 +67,8 @@ defmodule CodingAdventures.MosaicParser do
 
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.MosaicLexer
+  alias CodingAdventures.MosaicParser.Grammar
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
-
-  # The shared grammars directory lives five levels above __DIR__:
-  #   __DIR__ = .../code/packages/elixir/mosaic_parser/lib/coding_adventures/
-  #   five ".." levels reach .../code/
-  #   + /grammars = .../code/grammars/
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @doc """
   Parse Mosaic source code into an AST.
@@ -101,10 +96,10 @@ defmodule CodingAdventures.MosaicParser do
   end
 
   @doc """
-  Parse `mosaic.grammar` and return the `ParserGrammar`.
+  Return the pre-compiled `ParserGrammar` for `mosaic.grammar`.
 
-  Useful for inspecting which rules are defined, or for testing that the
-  grammar file is well-formed. The result is NOT cached.
+  Useful for inspecting which rules are defined, or for reusing the grammar
+  directly. The result is NOT cached; call `parse/1` for cached operation.
 
   ## Example
 
@@ -114,9 +109,8 @@ defmodule CodingAdventures.MosaicParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join([@grammars_dir, "mosaic", "mosaic.grammar"])
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    fix_grammar_for_packrat(grammar)
+    Grammar.parser_grammar()
+    |> fix_grammar_for_packrat()
   end
 
   # ---------------------------------------------------------------------------
