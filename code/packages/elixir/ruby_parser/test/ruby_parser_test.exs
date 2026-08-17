@@ -47,4 +47,57 @@ defmodule CodingAdventures.RubyParserTest do
     assert {:error, message} = RubyParser.parse("x = (1 + 2")
     assert message =~ "Expected"
   end
+
+  describe "statement rule regression coverage (post grammar recompilation)" do
+    # Regression test: ensure def/class/if/while/case/begin statement rules
+    # are present after grammar recompilation. A stale compiled grammar was
+    # previously found in the Ruby and TypeScript ports of this same package
+    # (compiled from an old copy of `ruby.grammar` that predated later
+    # extensions) silently missing dozens of statement rules, including all
+    # six exercised here. This package now compiles its grammar fresh from
+    # `code/grammars/ruby/ruby.grammar` via `grammar-tools compile-grammar`,
+    # so these constructs must parse and produce the expected rule nodes.
+
+    test "parses def statements" do
+      {:ok, ast} = RubyParser.parse("def foo\n  x = 1\nend")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "def_statement")) == 1
+    end
+
+    test "parses class statements" do
+      {:ok, ast} = RubyParser.parse("class Foo\n  x = 1\nend")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "class_statement")) == 1
+    end
+
+    test "parses if statements" do
+      {:ok, ast} = RubyParser.parse("if x then y end")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "if_statement")) == 1
+    end
+
+    test "parses if statements without then" do
+      {:ok, ast} = RubyParser.parse("if x\n  y\nend")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "if_statement")) == 1
+    end
+
+    test "parses while statements" do
+      {:ok, ast} = RubyParser.parse("while x do y end")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "while_statement")) == 1
+    end
+
+    test "parses case statements" do
+      {:ok, ast} = RubyParser.parse("case x when 1 then y end")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "case_statement")) == 1
+    end
+
+    test "parses begin/rescue statements" do
+      {:ok, ast} = RubyParser.parse("begin x rescue y end")
+      assert ast.rule_name == "program"
+      assert length(find_nodes(ast, "begin_statement")) == 1
+    end
+  end
 end
