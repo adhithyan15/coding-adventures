@@ -365,6 +365,47 @@ defmodule CodingAdventures.ChiefOfStaffChannelCrypto.KeyGrantProfile do
 
   def seal_channel_key_with_material(_, _, _, _, _, _), do: fail!("invalid_field")
 
+  @doc """
+  Check every public `D18G` binding and the originator's Ed25519 signature
+  without needing the receiver's private key.
+
+  Opening a grant answers "may I, the receiver, unwrap this CMK?" and needs a
+  receiver secret, because unwrapping performs an X25519 agreement. Some callers
+  need a strictly weaker answer: "is this grant authentic?" D18T is the
+  motivating case — before a rotation candidate may be offered to key custody it
+  must verify the originator signature on *every* receiver's grant, and the
+  originator holds no receiver private keys, so it cannot open any of them.
+
+  A successful return proves the originator named by `originator_public_key`
+  signed this exact `{originator, receiver, channel, epoch, ephemeral key,
+  nonce, wrapped CMK}` tuple. It proves nothing about whether the wrapped CMK
+  decrypts — only unwrapping can establish that. A caller verifying grants it
+  cannot open must not treat `:ok` as proof the receiver will be able to use the
+  grant.
+
+  Shares one verification path with `open_channel_key_grant/6`, so the two can
+  never drift on binding order or stable error codes.
+  """
+  def verify_grant_signature(
+        %PortableKeyGrant{} = grant,
+        expected_originator_id,
+        expected_receiver_id,
+        expected_channel_id,
+        originator_public_key
+      ) do
+    verify_grant_bindings!(
+      grant,
+      expected_originator_id,
+      expected_receiver_id,
+      expected_channel_id,
+      originator_public_key
+    )
+
+    :ok
+  end
+
+  def verify_grant_signature(_, _, _, _, _), do: fail!("invalid_field")
+
   def open_channel_key_grant(
         %PortableKeyGrant{} = grant,
         expected_originator_id,
@@ -373,31 +414,13 @@ defmodule CodingAdventures.ChiefOfStaffChannelCrypto.KeyGrantProfile do
         %ReceiverKeyPair{} = receiver_key_pair,
         originator_public_key
       ) do
-    validate_grant!(grant)
-    expected_originator = require_binary!(expected_originator_id)
-    expected_receiver = require_binary!(expected_receiver_id)
-    expected_channel = fixed_binary!(expected_channel_id, 16)
-    public_key = fixed_binary!(originator_public_key, 32)
-
-    unless constant_time_equal(grant.originator_id, expected_originator),
-      do: fail!("unexpected_originator")
-
-    unless constant_time_equal(grant.receiver_id, expected_receiver),
-      do: fail!("unexpected_receiver")
-
-    unless constant_time_equal(grant.channel_id, expected_channel),
-      do: fail!("unexpected_channel")
-
-    signature_input = key_grant_signature_input(grant)
-
-    signature_valid =
-      try do
-        Ed25519.verify(signature_input, grant.originator_signature, public_key)
-      rescue
-        _ -> false
-      end
-
-    unless signature_valid, do: fail!("invalid_signature")
+    verify_grant_bindings!(
+      grant,
+      expected_originator_id,
+      expected_receiver_id,
+      expected_channel_id,
+      originator_public_key
+    )
 
     shared_secret = receiver_agree(receiver_key_pair, grant.ephemeral_public_key)
 
@@ -679,6 +702,47 @@ defmodule CodingAdventures.ChiefOfStaffChannelCrypto.KeyGrantProfile do
     require_channel_id!(fields.channel_id)
     require_u64!(fields.key_epoch)
     fields
+  end
+
+  # Shared authenticity path for `verify_grant_signature/5` and
+  # `open_channel_key_grant/6`. Raises `ProfileError` with the first mismatched
+  # binding's stable code, in D18Q's normative order.
+  defp verify_grant_bindings!(
+         %PortableKeyGrant{} = grant,
+         expected_originator_id,
+         expected_receiver_id,
+         expected_channel_id,
+         originator_public_key
+       ) do
+    validate_grant!(grant)
+    expected_originator = require_binary!(expected_originator_id)
+    expected_receiver = require_binary!(expected_receiver_id)
+    expected_channel = fixed_binary!(expected_channel_id, 16)
+    public_key = fixed_binary!(originator_public_key, 32)
+
+    unless constant_time_equal(grant.originator_id, expected_originator),
+      do: fail!("unexpected_originator")
+
+    unless constant_time_equal(grant.receiver_id, expected_receiver),
+      do: fail!("unexpected_receiver")
+
+    unless constant_time_equal(grant.channel_id, expected_channel),
+      do: fail!("unexpected_channel")
+
+    signature_input = key_grant_signature_input(grant)
+
+    # A raise from verify is treated exactly like a false return: the caller
+    # learns only that the signature did not check out.
+    signature_valid =
+      try do
+        Ed25519.verify(signature_input, grant.originator_signature, public_key)
+      rescue
+        _ -> false
+      end
+
+    unless signature_valid, do: fail!("invalid_signature")
+
+    :ok
   end
 
   defp validate_grant!(%PortableKeyGrant{} = grant) do
