@@ -13,6 +13,38 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C218 — the four ideas are not a fixed list; the fourth one is whatever the track's first words need
+
+Fifth script tranche. `neverTaughtGlyphs` 45 → 36; `tracksTeachingNothing` reaches
+**3**, from 8 where these tranches started.
+
+HL-C216 concluded the abugida shape "transferred without modification". Punjabi
+shows the limit of that, and it is worth recording before Bengali, Hindi and
+Sanskrit are done from the same template.
+
+**Gujarati and Marathi taught inherent vowel → mātrā → virama → conjunct.** That
+order worked because both greetings *contain* a conjunct — નમસ્તે and नमस्कार
+each have one, so the virama lesson had somewhere to land.
+
+**Punjabi's greeting has none.** ਨਮਸਤੇ is four plain consonants in a row. Teaching
+the virama there would have introduced machinery with nothing to spend it on,
+which is precisely the info-dump the whole curriculum is built to avoid.
+
+What Gurmukhi's first words need instead is the **bindi**, the nasalisation dot —
+both *yes* (ਹਾਂ) and *no* (ਨਹੀਂ) are unreadable without it. So the fourth slot took
+that, and the chapter closes by **naming the conjunct as still to come** rather
+than claiming the system is complete.
+
+**The rule, restated:** three ideas are universal to the abugida — inherent vowel,
+mātrā, and the fact that mātrā position is part of a character's identity. The
+**fourth is chosen per track, from whatever its first three words actually
+require.** Pick it by reading the target words, not by copying the previous track.
+
+**Bengali, Hindi and Sanskrit:** check the greeting before writing the chapter.
+Hindi's नमस्ते and Sanskrit's नमस्ते both carry a conjunct, so those two follow
+Marathi. Bengali's নমস্কার does too. Punjabi is the exception, and knowing that
+in advance is worth more than the tranche itself.
+
 ## HL-C217 — `&nbsp;` reaches the reader as literal text, and it shipped in three merged tranches
 
 Found by the security review of HL-C216, filed by it as a **non-security note** —

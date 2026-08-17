@@ -4077,6 +4077,24 @@
       "tex": "punjabi/book/chapters/ch13-heart-and-head.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:4c20fbf2e7cd6812",
+      "lessonIds": [
+        "PA-W01-ha",
+        "PA-W01-aa-matra",
+        "PA-W01-bindi",
+        "PA-W01-na",
+        "PA-W01-ii-matra",
+        "PA-W01-ma",
+        "PA-W01-sa",
+        "PA-W01-ta",
+        "PA-W01-e-matra",
+        "PA-W01-namaste-read"
+      ],
+      "tex": "punjabi/book/chapters/ch14-script-first.tex"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "sourceHash": "fnv1a64:6a03e1748b9526c7",

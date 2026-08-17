@@ -92,7 +92,9 @@
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "canDo": "I can count from one to five in Gurmukhi, tell the addak apart from the tippi, and show that ਪੰਜ is inherited from Sanskrit rather than borrowed from the Persian panj in Punjab.",
-      "spineNodes": ["SPINE-COUNT-ONE-TO-FIVE"],
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
       "payoff": {
         "lesson": "PA-C06-panj-convergence",
         "kind": "task",
@@ -114,7 +116,9 @@
       "title": "Six Verbs at the Core",
       "label": "ch:pa-core-verbs",
       "canDo": "I can name six everyday Punjabi verbs by the -ਣਾ/-ਨਾ ending, strip that ending to reach the stem, trace each one to its Sanskrit and Indo-European root, and explain how the lost breathy consonants left Punjabi with a tone no other major Indo-Aryan language has.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "PA-C07-janna",
         "kind": "production",
@@ -139,7 +143,9 @@
       "title": "The Mind, the Page, and the Falling Tone",
       "label": "ch:pa-mind-and-tone",
       "canDo": "I can say that I think, understand, read and write in Punjabi, hear and produce the falling tone that ਸਮਝਣਾ and ਪੜ੍ਹਨਾ carry where a breathy consonant used to be, read a subjoined ਹ tucked under its neighbour, and name what each of the four roots meant before it named an act of the mind — burning, waking, reciting aloud and scratching.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "PA-C08-likhna",
         "kind": "production",
@@ -163,7 +169,9 @@
       "title": "Taking, Asking, Helping, and What Pleases You",
       "label": "ch:pa-taking-and-liking",
       "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, tell an inherited word from a borrowed one by its line of descent rather than by how it looks, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "PA-C09-pasand",
         "kind": "production",
@@ -187,7 +195,9 @@
       "title": "Water, Tea, Milk, and Bread",
       "label": "ch:pa-request-food-drink",
       "canDo": "I can politely ask for water, tea, milk, or bread in Punjabi, name which of the four is a loanword and which is inherited with an unknown root, and hear the difference between a tone that stays level and one that never formed at all.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "PA-C10-roti",
         "kind": "production",
@@ -210,7 +220,9 @@
       "title": "Friend, Family, Brother, and Sister",
       "label": "ch:pa-friend-and-family",
       "canDo": "I can name a friend, a family, a brother, and a sister in Punjabi, split ਪਰਿਵਾਰ into its two Sanskrit pieces, and hear the same low tone open both ਭਰਾ and ਭੈਣ even though only one of the two is truly a cousin of its English counterpart.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "PA-C11-bhain",
         "kind": "production",
@@ -233,7 +245,9 @@
       "title": "Eye, Ear, Mouth, and Nose",
       "label": "ch:pa-face-parts",
       "canDo": "I can name the eye, ear, mouth, and nose in Punjabi, tell a doubled consonant that survived from one that vanished into tone, and clear up the false friend ਕੰਨ shares in spelling, but not in root, with ਕਰਨਾ.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "PA-C12-nakk",
         "kind": "production",
@@ -256,7 +270,9 @@
       "title": "Heart and Head",
       "label": "ch:pa-heart-and-head",
       "canDo": "I can name the heart and the head in Punjabi, tell that ਦਿਲ is Punjabi's one borrowed body word against four inherited ones, and trace ਸਿਰ to the same root as English horn rather than English head.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "PA-C13-sir",
         "kind": "production",
@@ -270,6 +286,28 @@
           "PA-LEX-AKKH",
           "PA-LEX-KANN",
           "PA-LEX-MUNH"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "From the Mouth of the Guru, One Piece at a Time",
+      "label": "ch:pa-script-first",
+      "canDo": "I can write nine Gurmukhi pieces from memory — four consonants, three vowel signs and the nasal bindi — and read the words for yes, no and the greeting by assembling them from those pieces.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "PA-W01-namaste-read",
+        "kind": "reading",
+        "summary": "The greeting assembled from five pieces the reader can each write from memory, introducing nothing new, and naming plainly the one piece of machinery still to come.",
+        "assesses": [
+          "PA-SCRIPT-NAMASTE-READ-01",
+          "PA-SCRIPT-NA-01",
+          "PA-SCRIPT-MA-01",
+          "PA-SCRIPT-SA-01",
+          "PA-SCRIPT-TA-01",
+          "PA-SCRIPT-E-MATRA-01"
         ]
       }
     }

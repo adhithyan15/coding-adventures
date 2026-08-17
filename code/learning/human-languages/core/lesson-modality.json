@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c6a505cfa3275d1c",
+  "sourceHash": "fnv1a64:ad759a5c05001d5f",
   "summary": {
-    "totalLessons": 2864,
+    "totalLessons": 2874,
     "voice": 2042,
     "sight": 582,
-    "pen": 240,
+    "pen": 250,
     "drivableLessons": 2042,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 907,
+    "chapterCount": 908,
     "drivablePrefixTotal": 1818,
     "fullyDrivableChapters": 590,
-    "unstartableChapters": 186,
+    "unstartableChapters": 187,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7604,15 +7604,16 @@
     },
     {
       "language": "punjabi",
-      "lessonCount": 61,
+      "lessonCount": 71,
       "voice": 18,
       "sight": 43,
-      "pen": 0,
-      "drivablePercent": 30,
+      "pen": 10,
+      "drivablePercent": 25,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -7810,6 +7811,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "PA-C13-dil",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 14,
+          "lessonCount": 10,
+          "voice": 0,
+          "sight": 0,
+          "pen": 10,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "PA-W01-ha",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -46074,6 +46090,237 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "PA-W01-ha",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 800,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2273230e4f9500b6",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-aa-matra",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 810,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f69e9451bed0eafd",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-bindi",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 820,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3343efb9936f895c",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-na",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 830,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:425fff0822b2ddb6",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-ii-matra",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 840,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a7371059a8bb4421",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-ma",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 850,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e0133bf731a1b255",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-sa",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 860,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:447800b30688dd70",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-ta",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 870,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d406593dd3166706",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-e-matra",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 880,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a59475f6637af613",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "PA-W01-namaste-read",
+      "language": "punjabi",
+      "chapter": 14,
+      "sequence": 890,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a25243511a7eaa71",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
     },
     {
       "id": "RU-C01-da",

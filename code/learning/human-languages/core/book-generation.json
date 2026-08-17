@@ -2571,6 +2571,13 @@
       "scriptCommand": "pa"
     },
     {
+      "language": "punjabi",
+      "chapter": 14,
+      "output": "punjabi/book/chapters/ch14-script-first.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
       "language": "russian",
       "chapter": 3,
       "output": "russian/book/chapters/ch03-first-verbs.tex",
