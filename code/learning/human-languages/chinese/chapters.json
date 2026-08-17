@@ -48,6 +48,34 @@
           "ZH-SCRIPT-NI-BUILD-01"
         ]
       }
+    },
+    {
+      "chapter": 3,
+      "title": "One to Five — Where the Character Is the Count",
+      "label": "ch:zh-numbers",
+      "canDo": "I can count from one to five in Mandarin and read all five characters cold and out of order, and I know which of them I could have worked out and which I simply had to learn.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ZH-C03-practice",
+        "kind": "dialogue",
+        "summary": "The five numerals read out of sequence, then off a lift panel with the fourth floor missing — and the reader knows why it is missing.",
+        "assesses": [
+          "ZH-LEX-NUM-YI",
+          "ZH-LEX-NUM-ER",
+          "ZH-LEX-NUM-SAN",
+          "ZH-LEX-NUM-SI",
+          "ZH-LEX-NUM-WU",
+          "ZH-SCRIPT-NUM-YI",
+          "ZH-SCRIPT-NUM-ER",
+          "ZH-SCRIPT-NUM-SAN",
+          "ZH-SCRIPT-NUM-SI",
+          "ZH-SCRIPT-NUM-WU",
+          "ZH-METHOD-STROKE-COUNT",
+          "ZH-DIALOGUE-COUNT"
+        ]
+      }
     }
   ]
 }
