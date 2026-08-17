@@ -2,6 +2,21 @@
 
 ## 0.1.21 — 2026-08-17 — table.init/table.copy/elem.drop + passive/exprs-list elem parsing (task #97)
 
+### Fixed
+
+- `/security-review` finding: `build_elem` used to accept an ACTIVE
+  element segment using the exprs-list form (binary modes 4/6 -- e.g.
+  `(elem (table $t) (i32.const 0) funcref (ref.func 0) (ref.null
+  func))`), silently allowing a `None` (`ref.null`) entry into a
+  segment marked `is_passive: false`. `wasm-module-encoder::
+  encode_element`'s active-segment branch does `func_index.unwrap_or
+  (0)`, which would turn that `ref.null` into a real reference to
+  function 0 on re-encode -- wrong table contents with no error.
+  `parse_element_section` (the binary decoder) already structurally
+  can't produce this shape (only mode flags 0/1/2/5 are handled); the
+  text parser now enforces the same restriction, rejecting the
+  combination at parse time instead.
+
 ### Added
 
 - `ModuleCtx.elem_names: HashMap<String, u32>` -- an element segment's

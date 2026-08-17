@@ -1172,6 +1172,27 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         }
         false
     };
+    // `/security-review` finding: an ACTIVE segment using the exprs-list
+    // form (binary modes 4/6) is out of scope -- the real spec's own
+    // W17-wasm-bulk-table-ops.md census found no vendored corpus file
+    // needs it, and `parse_element_section`'s binary decoder already
+    // structurally can't produce this combination (its `match flags`
+    // only has arms for 0/1/2/5, with everything else, including 4/6,
+    // falling into a hard reject). Without this check, `Element.is_
+    // passive: false` combined with a `None` (`ref.null`) entry would
+    // silently reach `wasm-module-encoder::encode_element`, whose active-
+    // segment branch does `func_index.unwrap_or(0)` -- turning a real
+    // `ref.null` into a real reference to function 0 on re-encode, wrong
+    // table contents with no error. Reject at parse time instead, same
+    // "loud, not silent" discipline as every other out-of-scope shape
+    // this parser rejects.
+    if !is_passive && use_exprs {
+        return Err(WastParseError::UnexpectedToken {
+            pos: fields.first().map(|f| f.pos()).unwrap_or(0),
+            found: "an active element segment using the exprs-list (funcref/externref) form".to_string(),
+            expected: "an active segment to use a plain function-index list instead (exprs-list is only supported for passive segments)",
+        });
+    }
     let mut function_indices = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
         if use_exprs {
@@ -3106,6 +3127,26 @@ mod tests {
         assert!(m.elements[0].is_passive);
         assert!(m.elements[0].offset_expr.is_empty());
         assert_eq!(m.elements[0].function_indices, vec![Some(0), None, Some(2)]);
+    }
+
+    /// `/security-review` finding: an ACTIVE segment using the exprs-list
+    /// form (binary modes 4/6) must be rejected at parse time, not
+    /// silently accepted -- `wasm-module-encoder::encode_element`'s
+    /// active-segment branch does `func_index.unwrap_or(0)`, which would
+    /// silently turn a `ref.null` entry into a real reference to function
+    /// 0 on re-encode if this combination ever reached it. The binary
+    /// decoder (`parse_element_section`) already structurally can't
+    /// produce this shape (only mode flags 0/1/2/5 are handled); this
+    /// test confirms the text parser enforces the same restriction.
+    #[test]
+    fn active_element_segment_using_exprs_list_form_is_rejected() {
+        let err = parse_module(
+            r#"(module
+                 (func) (table $t 30 30 funcref)
+                 (elem (table $t) (i32.const 0) funcref (ref.func 0) (ref.null func)))"#,
+        )
+        .unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }), "{err:?}");
     }
 
     /// Task #97: `table.init`/`table.copy`/`elem.drop`'s folded-form
