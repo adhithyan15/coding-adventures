@@ -423,11 +423,21 @@ console.log(prose, nested);
         # of the package. Tests are compiler input, so the classification is
         # correct and `@types/node` is owned directly rather than inherited.
         # +1: chief-of-staff-channel-store reads the shared fixture in tests.
-        self.assertEqual(summary.node_api_projects, 95)
+        # -31: the runtime-grammar-loading fix removed every readFileSync +
+        # fileURLToPath/dirname/join(fs/path/url) disk-path lookup from 31
+        # lexer/parser packages (algol, brainfuck, csharp, css-parser,
+        # dartmouth-basic, dot-parser, haskell, java, javascript, json,
+        # lisp, nib, python, ruby, starlark, toml-lexer, typescript, xml).
+        # They now import a pre-compiled `_grammar.ts` module instead, so
+        # they no longer touch any Node builtin API at all.
+        self.assertEqual(summary.node_api_projects, 64)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
-        self.assertEqual(summary.node_provider_projects, 95)
+        # -31: see node_api_projects -- a project can only be a node
+        # provider if it's a node API project, so the same 31 packages drop
+        # out of both counts together.
+        self.assertEqual(summary.node_provider_projects, 64)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -437,7 +447,11 @@ console.log(prose, nested);
         # +1: chief-of-staff-channel-crypto locks its standalone compiler.
         # +1: chief-of-staff-channel-store locks its standalone compiler.
         # +1: chief-of-staff-channel-epoch-activation locks its compiler.
-        self.assertEqual(summary.locked_compilers, 455)
+        # +3: json-serializer, json-value, and starlark-ast-to-bytecode-
+        # compiler (downstream consumers exercised while verifying the
+        # runtime-grammar-loading fix) had no package-lock.json committed
+        # before; running `npm install` to test them produced one.
+        self.assertEqual(summary.locked_compilers, 458)
 
 
 if __name__ == "__main__":
