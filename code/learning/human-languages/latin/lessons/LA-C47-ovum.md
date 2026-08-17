@@ -46,7 +46,7 @@ much sound change can hide.
 The loans are transparent: something **oval** is egg-shaped, an **ovary** is where
 eggs are made, **ovulation** is their release.
 
-The inherited word had a rougher time. Old English had *ǣg*, and it was losing
+The inherited word had a rougher time. Old English had *æg*, and it was losing
 ground when Norse settlers brought their own form, *egg*. For a while both were
 in use — Caxton complained in 1490 that a merchant asking for *eggys* in Kent was
 not understood, because there they said *eyren*. The Norse form won, and the
@@ -66,5 +66,5 @@ the learned words came from Latin. English is full of this.
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C47-TABLE-01, LA-LEX-C47-TABLE-02, LA-LEX-C47-TABLE-03, LA-LEX-C47-TABLE-04] -->
 
 [PAUSE 3s] Are *ōvum* and *egg* related? (**Yes** — cousins, heavily disguised.) What
-was the native English word? (***Ǣg***, plural *eyren*.) And why do we say *egg*?
+was the native English word? (***Æg***, plural *eyren*.) And why do we say *egg*?
 (It is the **Norse** form, and it won.)

@@ -13,6 +13,48 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C214 — nothing local opens a font, so glyph coverage is only ever found in CI
+
+HL-C212 passed 744 local tests and a clean security review, then failed CI eleven
+minutes later on one line: `latin missing_character rose to 2 against a baseline
+of 0`. The cause was **ǣ** (U+01E3) and **Ǣ** (U+01E2) in an Old English citation.
+Latin Modern does not have them.
+
+**Every local gate reads the corpus. None of them opens a font.** That is the gap,
+and it will catch every future tranche that reaches for an unusual character —
+which an etymology-driven curriculum does constantly, by design.
+
+**Two instruments were wrong on the way to the answer, both caught by testing
+them against a known case:**
+
+1. **The guess.** `ǵ` in *\*ǵʰórtos* looks far more exotic than `ǣ` and was the
+   obvious suspect. Querying the actual `.otf` cmap shows **`ǵ` is present**.
+   Rewriting that lesson would have left the failure in place.
+2. **The wrong artifact.** Scanning the lesson SOURCES flagged four more
+   characters — `ʰ`, `₁`, `₂`, `ḗ` — every one a false positive, because the
+   generator turns them into `\textsuperscript{}` / `\textsubscript{}` and they
+   never reach the `.tex`. **Check the generated `.tex`; it is what XeLaTeX
+   reads.**
+
+### The work item
+
+A `check:glyphs` gate that, per track, resolves the fonts that track's book
+actually loads and asserts every non-ASCII character in its generated `.tex` is in
+one of them. Report-only first, per the HL05 precedent.
+
+**It is not free, and that is why this is a row rather than a commit.** Font
+resolution differs per track: the Indic, Arabic and CJK books load vendored Noto
+faces from `_fonts/`, which the repo owns and can read directly, while the
+Latin-script books load **Latin Modern from the TeX Live installation** — a path
+that exists on CI and on a developer machine with TeX Live, and nowhere else. The
+gate has to degrade honestly when a font cannot be resolved (report "unmeasured",
+never "clean"), which is the same distinction `script-closure.ts` already draws
+for an unknown script.
+
+**Until it exists:** any tranche introducing a character outside plain ASCII plus
+macrons should run the fontTools cmap check by hand, self-tested in both
+directions. Recorded in `lessons.md` with the snippet.
+
 ## HL-C213 — a late vocabulary lesson RETROACTIVELY creates forward references, and the fix is placement
 
 Found by the Latin tranche, and it will recur on every track that adds basic

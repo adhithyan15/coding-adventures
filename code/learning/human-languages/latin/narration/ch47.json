@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Salt, Honey, Milk, Egg, Fish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66dd692ecd5ed78c",
+  "sourceHash": "fnv1a64:db74b8bc2bef4201",
   "lessons": [
     {
       "id": "LA-C47-sal",
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ac235bb9bf2bee7",
+      "sourceHash": "fnv1a64:75abfbfa387832b5",
       "notice": null,
       "blocks": [
         {
@@ -384,7 +384,7 @@
             },
             {
               "kind": "speech",
-              "text": "The inherited word had a rougher time. Old English had ǣg, and it was losing ground when Norse settlers brought their own form, egg. For a while both were in use — Caxton complained in 1490 that a merchant asking for eggys in Kent was not understood, because there they said eyren. The Norse form won, and the native English one vanished."
+              "text": "The inherited word had a rougher time. Old English had æg, and it was losing ground when Norse settlers brought their own form, egg. For a while both were in use — Caxton complained in 1490 that a merchant asking for eggys in Kent was not understood, because there they said eyren. The Norse form won, and the native English one vanished."
             },
             {
               "kind": "speech",
@@ -436,7 +436,7 @@
             },
             {
               "kind": "speech",
-              "text": "Are ōvum and egg related? (Yes — cousins, heavily disguised.) What was the native English word? (Ǣg, plural eyren.) And why do we say egg? (It is the Norse form, and it won.)"
+              "text": "Are ōvum and egg related? (Yes — cousins, heavily disguised.) What was the native English word? (Æg, plural eyren.) And why do we say egg? (It is the Norse form, and it won.)"
             }
           ]
         }

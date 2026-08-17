@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:70292bca742d2541",
+  "sourceHash": "fnv1a64:3af3ade7cdfcfaac",
   "summary": {
     "totalLessons": 2843,
     "voice": 2042,
@@ -36822,7 +36822,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7ac235bb9bf2bee7"
+      "sourceHash": "fnv1a64:75abfbfa387832b5"
     },
     {
       "id": "LA-C47-piscis",
