@@ -616,6 +616,18 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "/": (...a) => a.length === 1
       ? (isFloat(a[0]) ? mkFloat(1 / numOf(a[0])) : 1 / numOf(a[0]))
       : numFold(a.slice(1), a[0], (x, y) => x / y),
+    // SIR21 T3b-2: `div_floor` is a bare alias for `divide` (Ruby's `/`
+    // already floors ints / true-divides floats — see `divide`'s own doc
+    // comment above). `div_trunc`/`udiv_trunc`/`div_true` route to the
+    // three genuinely-new functions just above this table. Unlike the
+    // legacy `"/"` entry above (a variadic fold with no zero-check, kept
+    // as-is for backward compat), all four of these route through the
+    // zero-checking helpers directly — there is no pre-existing lenient
+    // behavior to preserve for brand-new names.
+    "div_floor": (a, b) => divide(a, b),
+    "div_trunc": (a, b) => truncDiv(a, b),
+    "udiv_trunc": (a, b) => utruncDiv(a, b),
+    "div_true": (a, b) => trueDiv(a, b),
     "=": (x, y) => eq(x, y),
     // `==` is a synonym for `=`; `!=` its negation.  Present in this table (not
     // only the emitter's infix map) so a first-class `:==`/`:!=` symbol
@@ -967,6 +979,51 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // so floor — matching the SIR21 §E3 oracle `DivOp::Floor` on every sign
     // combination.  (A boxed Float is unwrapped via `numOf` for the math.)
     return (isFloat(a) || isFloat(b)) ? mkFloat(an / bn) : Math.floor(an / bn);
+  }
+
+  // ── SIR21 T3b-2: `div_trunc`/`udiv_trunc`/`div_true` ────────────
+  //
+  // `divide` above IS `div_floor` — no separate function needed for that
+  // name (the emitter aliases it directly, see `emit.rs`). The three
+  // below are genuinely new: SIR21 §E3 splits the old overloaded `/`
+  // into four named ops so a non-Ruby-sourced frontend can pick its own
+  // rounding mode instead of silently inheriting Ruby's. All three raise
+  // the same typed `ZeroDivisionError` `divide` does — never let a bare
+  // `/` leak native JS `Infinity`/`NaN` through.
+
+  // Signed truncating division (rounds toward zero) — matches C's
+  // integer `/`. `Math.trunc` (not `Math.floor`) is the entire
+  // difference from `divide`'s int path above.
+  function truncDiv(a, b) {
+    const an = numOf(a), bn = numOf(b);
+    if (bn === 0) {
+      raiseError("ZeroDivisionError", "divided by 0");
+    }
+    return Math.trunc(an / bn);
+  }
+
+  // Unsigned truncating division — the twin of `truncDiv` for values a
+  // frontend intends as unsigned. On the fixed-width C/Go/Rust backends
+  // this needs bit reinterpretation (a tagged `i64`/`int64` ≥ 2^63
+  // misreads as negative otherwise); JS numbers are IEEE-754 doubles with
+  // no fixed width and no separate signed/unsigned representation, so
+  // this backend's `udiv_trunc` computes identically to `truncDiv` —
+  // documented, not a bug. Kept as a distinct function purely so every
+  // sibling backend's four names are all present here too.
+  function utruncDiv(a, b) {
+    return truncDiv(a, b);
+  }
+
+  // Always true-divides — coerces to float and divides, even when both
+  // operands are Ruby Integers (`trueDiv(6, 3)` boxes `2.0`, not `2`).
+  // Models Python's `/`. Genuinely new: no prior op in this runtime
+  // unconditionally floats an all-integer division.
+  function trueDiv(a, b) {
+    const an = numOf(a), bn = numOf(b);
+    if (bn === 0) {
+      raiseError("ZeroDivisionError", "divided by 0");
+    }
+    return mkFloat(an / bn);
   }
 
   // ── method dispatch (`__method__`) ─────────────────────────────
@@ -6507,6 +6564,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, matlabTruthy, format, write,
     plus, times, divide, shiftLeft,
+    // SIR21 T3b-2: `div_trunc`/`udiv_trunc`/`div_true` — the three
+    // genuinely-new division ops (`div_floor` is `divide` above, exported
+    // under its existing name).
+    truncDiv, utruncDiv, trueDiv,
     // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
     // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through
     // the re-tagging helpers. `mkFloat` is the sole factory.
