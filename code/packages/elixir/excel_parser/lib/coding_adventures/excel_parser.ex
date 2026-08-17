@@ -2,10 +2,8 @@ defmodule CodingAdventures.ExcelParser do
   @moduledoc "Excel formula parser built on the shared grammar-driven parser."
 
   alias CodingAdventures.ExcelLexer
-  alias CodingAdventures.GrammarTools.ParserGrammar
+  alias CodingAdventures.ExcelParser.Grammar, as: GrammarSource
   alias CodingAdventures.Parser.{ASTNode, GrammarParser}
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"]) |> Path.expand()
 
   def normalize_excel_reference_tokens(tokens) do
     Enum.with_index(tokens)
@@ -71,9 +69,7 @@ defmodule CodingAdventures.ExcelParser do
   end
 
   def create_parser do
-    grammar_path = Path.join([@grammars_dir, "excel", "excel.grammar"])
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    grammar
+    GrammarSource.parser_grammar()
   end
 
   defp get_grammar do

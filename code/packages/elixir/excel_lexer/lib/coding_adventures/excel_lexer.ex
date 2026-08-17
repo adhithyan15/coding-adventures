@@ -1,10 +1,8 @@
 defmodule CodingAdventures.ExcelLexer do
   @moduledoc "Excel formula lexer built on the shared grammar-driven lexer."
 
-  alias CodingAdventures.GrammarTools.TokenGrammar
+  alias CodingAdventures.ExcelLexer.Grammar, as: GrammarSource
   alias CodingAdventures.Lexer.GrammarLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"]) |> Path.expand()
 
   defp next_non_space_char_from_source(source, token) do
     start_index = source_index_after_token(source, token)
@@ -74,8 +72,7 @@ defmodule CodingAdventures.ExcelLexer do
   end
 
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "excel", "excel.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
+    grammar = GrammarSource.token_grammar()
 
     definitions =
       Enum.map(grammar.definitions, fn definition ->
