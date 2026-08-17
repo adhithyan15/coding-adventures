@@ -22,7 +22,7 @@ use coding_adventures_vault_pm_domain::{
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
 use coding_adventures_vault_records::{AnyRecord, ApiKey, Card, Login, SecureNote};
-use coding_adventures_zeroize::Zeroizing;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -718,7 +718,7 @@ fn parse_api_key_scope_line(line: &str) -> Result<Vec<String>, ApplicationError>
         return Ok(Vec::new());
     }
     let mut seen = BTreeSet::new();
-    let mut scopes = Vec::new();
+    let mut scopes: Vec<String> = Vec::new();
     for scope in line.split(',') {
         if scopes.len() == MAX_API_KEY_SCOPES
             || scope.is_empty()
@@ -726,6 +726,11 @@ fn parse_api_key_scope_line(line: &str) -> Result<Vec<String>, ApplicationError>
             || scope.len() > MAX_API_KEY_SCOPE_BYTES
             || !seen.insert(scope)
         {
+            // A rejected line is still authored user data. The components
+            // accepted before the rejection are owned plaintext copies, and on
+            // this path they never reach the zeroizing record that would wipe
+            // them, so wipe them here rather than freeing them intact.
+            scopes.iter_mut().for_each(Zeroize::zeroize);
             return Err(ApplicationError::InvalidInput);
         }
         scopes.push(scope.to_owned());
@@ -762,8 +767,9 @@ fn replacement_api_key_document(
         return Err(ApplicationError::InternalInvariant);
     };
     let expires_at = parse_api_key_expiry_line(&input.expiry)?;
-    // Parsed last so the only owned plaintext scope copies are handed straight
-    // to the zeroizing record with no fallible step in between.
+    // Parsed last so that on the success path the owned plaintext scope copies
+    // are handed straight to the zeroizing record with no fallible step in
+    // between; the parser wipes them itself when it rejects the line.
     let scopes = parse_api_key_scope_line(&input.scopes)?;
     ItemDocument::new(
         current.id(),
