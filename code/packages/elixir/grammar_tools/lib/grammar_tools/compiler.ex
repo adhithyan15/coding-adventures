@@ -94,14 +94,14 @@ defmodule CodingAdventures.GrammarTools.Compiler do
     def token_grammar do
       %TokenGrammar{
         definitions: #{defs_src},
-        keywords: #{inspect(grammar.keywords)},
+        keywords: #{inspect(grammar.keywords, limit: :infinity)},
         mode: #{inspect(grammar.mode)},
         escape_mode: #{inspect(grammar.escape_mode)},
         skip_definitions: #{skip_src},
-        reserved_keywords: #{inspect(grammar.reserved_keywords)},
+        reserved_keywords: #{inspect(grammar.reserved_keywords, limit: :infinity)},
         error_definitions: #{err_src},
         groups: #{groups_src},
-        layout_keywords: #{inspect(grammar.layout_keywords)},
+        layout_keywords: #{inspect(grammar.layout_keywords, limit: :infinity)},
         case_sensitive: #{grammar.case_sensitive},
         version: #{grammar.version},
         case_insensitive: #{grammar.case_insensitive},
@@ -219,7 +219,7 @@ defmodule CodingAdventures.GrammarTools.Compiler do
     actions_src = "[#{Enum.map_join(rule.actions, ", ", &transition_action_src/1)}]"
 
     "#{indent}%{\n" <>
-      "#{i}on_tokens: #{inspect(rule.on_tokens)},\n" <>
+      "#{i}on_tokens: #{inspect(rule.on_tokens, limit: :infinity)},\n" <>
       "#{i}on_value: #{inspect(rule.on_value)},\n" <>
       "#{i}in_mode: #{inspect(rule.in_mode)},\n" <>
       "#{i}actions: #{actions_src},\n" <>
