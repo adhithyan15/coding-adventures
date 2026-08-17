@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1174c97ccb5ce8e8",
+  "sourceHash": "fnv1a64:597e8d753435a324",
   "summary": {
-    "totalLessons": 2885,
+    "totalLessons": 2895,
     "voice": 2042,
     "sight": 582,
-    "pen": 261,
+    "pen": 271,
     "drivableLessons": 2042,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 909,
+    "chapterCount": 910,
     "drivablePrefixTotal": 1818,
     "fullyDrivableChapters": 590,
-    "unstartableChapters": 188,
+    "unstartableChapters": 189,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -612,15 +612,16 @@
     },
     {
       "language": "bengali",
-      "lessonCount": 70,
+      "lessonCount": 80,
       "voice": 14,
       "sight": 56,
-      "pen": 0,
-      "drivablePercent": 20,
+      "pen": 10,
+      "drivablePercent": 18,
       "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -844,6 +845,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "BN-C15-kapor",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 16,
+          "lessonCount": 10,
+          "voice": 0,
+          "sight": 0,
+          "pen": 10,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "BN-W01-na",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -19333,6 +19349,237 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "BN-W01-na",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1600,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:19b92e33663dd0ec",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-aa-matra",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d22210c70f4f2adb",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-aa",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1620,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c90a1b9dc66e8228",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-ha",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1630,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:399f4c9d7701c8fd",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-ma",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1640,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e13ca2724a1ea3b8",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-sa",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1650,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:451438593f4181c5",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-ka",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1660,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:077dff4ebdb1825b",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-hasanta",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1670,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:97fce7e840710a85",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-ra",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1680,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:eddd39c126f6e93b",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "BN-W01-nomoshkar-read",
+      "language": "bengali",
+      "chapter": 16,
+      "sequence": 1690,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:01a54994c9f77361",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ZH-C01-tones",

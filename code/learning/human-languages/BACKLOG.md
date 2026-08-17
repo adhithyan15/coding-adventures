@@ -13,6 +13,39 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C222 — Bengali: same four ideas, different DEFAULT, and a letter that lies about its sound
+
+Seventh script tranche. `neverTaughtGlyphs` 48 → 39; `tracksTeachingNothing` down
+to **2**, from 8 where these tranches started.
+
+HL-C218 established that the fourth idea is chosen per track. Bengali confirms the
+prediction made there — its greeting carries a conjunct, so it takes Marathi's
+order unchanged — and adds a dimension neither Gujarati nor Marathi needed.
+
+**The inherent vowel is not the same in every abugida.** Devanagari's bare
+consonant says *ka*; Bengali's says *kɔ*, the vowel of English *awe*. Same script
+family, same four ideas, **different default** — and it is most of why Bengali does
+not sound like Hindi read aloud. It has to be taught on the FIRST shape, because
+every letter after it inherits the difference.
+
+**And one letter is written *s* but said *sh*.** স descends from the Sanskrit *s*,
+every transliteration writes it that way, and Bengali says *sh*. Worth teaching
+early and plainly rather than letting a reader discover that the transliteration
+they were given does not predict the sound.
+
+### What to check before the next Indic tranche
+
+The template now has three per-track questions, not one:
+
+1. **Which fourth idea?** — read the track's first three words (HL-C218).
+2. **What is the inherent vowel?** — do not assume *a* (this row).
+3. **Which letters lie about their sound in transliteration?** — teach those early.
+
+Hindi and Sanskrit remain, and both are Devanagari, so (1) and (2) are already
+answered for them by HL-C216. (3) is not: Hindi drops the inherent vowel at the end
+of a word — *nām* not *nāma* — which is the same class of defect between spelling
+and sound and belongs in Hindi's first script chapter.
+
 ## HL-C221 — the literal-markup gate is BUILT, and what it cost to justify
 
 HL-C217 specified it and logged it. HL-C219 then reintroduced the defect **one PR

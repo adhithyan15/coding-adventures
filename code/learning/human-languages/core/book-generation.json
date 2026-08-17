@@ -819,6 +819,13 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 16,
+      "output": "bengali/book/chapters/ch16-script-first.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "output": "chinese/book/chapters/ch01-nihao.tex",

@@ -1,5 +1,31 @@
 # Changelog
 
+## [Unreleased]
+
+### Added — Chapter 16, the first nine pieces of the script (HL-C222)
+
+Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles
+the greeting from pieces the reader can already write.
+
+`scriptLessons` 0 → 10, `taughtGlyphs` 0 → 9, `neverTaughtGlyphs` **48 → 39**.
+
+**The inherent vowel is not *a*.** It is **ɔ**, the vowel of English *awe*. A bare
+Bengali consonant says *kɔ* where a bare Devanagari one says *ka*, and that single
+default is most of why Bengali does not sound like Hindi read aloud. It is taught
+on the very first shape, because every letter after it inherits the difference.
+
+**One letter is written *s* and said *sh*.** স descends from the Sanskrit *s* and
+every transliteration writes it that way; Bengali normally pronounces it *sh*. The
+spelling records the ancestry, the sound records what Bengali did afterwards, and
+both are true — the same way English keeps *knight* and *through*.
+
+The four abugida ideas are Marathi's, in Marathi's order, because the greeting
+carries a conjunct and the virama lesson therefore has somewhere to land. Bengali
+calls that mark the **hasanta**, and its conjuncts fuse more thoroughly than
+Devanagari's — the principle is unchanged, the shapes take a moment longer to take
+apart.
+
+
 ## Chapters 13–15 — the second pre-A1 noun tranche — 2026-08-12
 
 - Authored **thirteen** schema-v2 lessons in **three** chapters, continuing
