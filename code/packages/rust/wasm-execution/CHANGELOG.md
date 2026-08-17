@@ -30,6 +30,21 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed
 
+- **`/security-review` finding (HIGH)**: `Table::copy_between`
+  originally took `dst_table: &mut Table, src_table: &Table` -- when
+  `table.copy`'s two table operands name the SAME table (`table.copy
+  $t $t ...`, a legal, attacker-reachable self-copy), the caller's two
+  independently-resolved raw pointers into that one `Table` were both
+  dereferenced into a `&mut` and a `&` bound as function parameters,
+  live for the whole call -- an aliasing violation under Rust's memory
+  model regardless of whether any actual read/write hazard existed.
+  Rewritten to take raw pointers (`*mut Table`/`*const Table`)
+  throughout instead, with every access scoped to a short-lived,
+  explicit (not autoref'd -- `dangerous_implicit_autorefs` catches the
+  autoref'd form even through a raw-pointer deref) reference that ends
+  before the next one is formed, so no `&mut`/`&` pair is ever
+  simultaneously live over the same `Table`, self-copy or not.
+
 - **Real, load-bearing bug caught by `wasm-runtime`'s own persistence
   test, not this crate's unit tests**: the shared `call_function`/
   `call_function_with_v128` post-call state-restore block wrote

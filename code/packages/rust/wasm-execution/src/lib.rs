@@ -835,40 +835,57 @@ impl Table {
     }
 
     /// Copies `len` entries from `src_table[src..]` into `dst_table[dest..]`
-    /// -- the `table.copy` bulk-table primitive (task #97). Takes the
-    /// destination and source as two SEPARATE `Table` references rather
-    /// than a `&mut self` method (unlike `LinearMemory::copy`, which
-    /// copies within one buffer) because `table.copy`'s two table
-    /// operands can name either the SAME table or two DIFFERENT ones;
-    /// the caller resolves both to raw pointers first (mirroring how
-    /// `ctx.tables: Vec<*mut Table>` is dereferenced elsewhere in this
-    /// crate) so a same-table self-copy is possible without violating
-    /// Rust's aliasing rules. Correct even when `dst_table`/`src_table`
-    /// alias the SAME table (a self-copy with potentially overlapping
-    /// ranges): the source range is read into a temporary `Vec` BEFORE
-    /// any destination write happens, so it never observes a partially-
-    /// overwritten source -- the same overlap-safe (memmove) semantics
-    /// `LinearMemory::copy`'s `copy_within` gives for the single-buffer
-    /// case. Same zero-length-still-bounds-checked discipline task #94
-    /// established (`dest`/`src` must be `<= size()` even when `len ==
-    /// 0`), checking BOTH tables' bounds before any write, so a trap
-    /// leaves both tables completely untouched.
-    pub fn copy_between(dst_table: &mut Table, src_table: &Table, dest: u32, src: u32, len: u32) -> Result<(), TrapError> {
+    /// -- the `table.copy` bulk-table primitive (task #97). Takes RAW
+    /// POINTERS, not `&mut Table`/`&Table` references, because
+    /// `table.copy`'s two table operands can name either the SAME table
+    /// or two DIFFERENT ones: `table.copy $t $t ...` is a legal,
+    /// attacker-reachable self-copy, and forming a `&mut Table` and a
+    /// `&Table` that both alias the same `Table` object -- even briefly,
+    /// even with no observable read/write hazard -- is undefined behavior
+    /// under Rust's aliasing model regardless of what the two references
+    /// actually do with it (a `/security-review` finding: an earlier
+    /// version of this function took `&mut`/`&` and relied on the caller
+    /// dereferencing two raw pointers into the arguments, which still
+    /// aliases at the reference level the instant both parameters are
+    /// live). Every access below goes through the raw pointers directly,
+    /// inside `unsafe`, so no aliased reference is ever constructed, self-
+    /// copy or not.
+    ///
+    /// # Safety
+    /// `dst_table`/`src_table` must each be valid, live, properly aligned
+    /// pointers to a `Table` for the whole call (satisfied by every call
+    /// site, which resolves them from `ctx.tables: Vec<*mut Table>` --
+    /// pointers into a `Vec` that outlives the call). Correct even when
+    /// they point at the SAME `Table` (a self-copy with potentially
+    /// overlapping ranges): the source range is read into a temporary
+    /// `Vec` BEFORE any destination write happens, so it never observes a
+    /// partially-overwritten source -- the same overlap-safe (memmove)
+    /// semantics `LinearMemory::copy`'s `copy_within` gives for the
+    /// single-buffer case. Same zero-length-still-bounds-checked
+    /// discipline task #94 established (`dest`/`src` must be `<= size()`
+    /// even when `len == 0`), checking BOTH tables' bounds before any
+    /// write, so a trap leaves both tables completely untouched.
+    pub unsafe fn copy_between(dst_table: *mut Table, src_table: *const Table, dest: u32, src: u32, len: u32) -> Result<(), TrapError> {
         let dest = dest as usize;
         let src = src as usize;
         let len = len as usize;
         let src_end = src.checked_add(len);
         let dest_end = dest.checked_add(len);
+        // Explicit (not autoref'd) `&`/`&mut` -- each scoped to the
+        // narrowest block that needs it, so the two never overlap even
+        // when `dst_table`/`src_table` point at the SAME `Table` (a
+        // self-copy): the shared borrow that reads `entries` ends before
+        // the mutable borrow that writes it is ever formed.
+        let src_len = unsafe { (*src_table).elements.len() };
+        let dst_len = unsafe { (*dst_table).elements.len() };
         match (src_end, dest_end) {
-            (Some(se), Some(de)) if se <= src_table.elements.len() && de <= dst_table.elements.len() => {
-                let entries = src_table.elements[src..se].to_vec();
-                dst_table.elements[dest..de].clone_from_slice(&entries);
+            (Some(se), Some(de)) if se <= src_len && de <= dst_len => {
+                let entries: Vec<Option<u32>> = unsafe { (&(*src_table).elements)[src..se].to_vec() };
+                unsafe { (&mut (*dst_table).elements)[dest..de].clone_from_slice(&entries) };
                 Ok(())
             }
             _ => Err(TrapError::new(format!(
-                "out of bounds table.copy: dest={dest}, src={src}, len={len}, dst_table_size={}, src_table_size={}",
-                dst_table.elements.len(),
-                src_table.elements.len()
+                "out of bounds table.copy: dest={dest}, src={src}, len={len}, dst_table_size={dst_len}, src_table_size={src_len}"
             ))),
         }
     }
@@ -2961,17 +2978,18 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     return Err(VMError::GenericError(format!("table.copy: source table index {src_table_idx} out of bounds")));
                 }
                 let dst_ptr = ctx.tables[dst_table_idx];
-                let src_ptr = ctx.tables[src_table_idx];
-                // SAFETY: both pointers were bounds-checked above, and
-                // `Table::copy_between` reads the whole source range into
-                // a temporary `Vec` before writing any destination slot,
-                // so this is sound even when `dst_table_idx ==
-                // src_table_idx` (two independently obtained raw
-                // pointers into the exact same `Table`) -- same aliasing
-                // reasoning the `table.grow` aggregate-cap loop (task
-                // #98) already relies on elsewhere in this file.
+                let src_ptr: *const Table = ctx.tables[src_table_idx];
+                // SAFETY: both pointers were bounds-checked above and come
+                // from `ctx.tables`, which outlives this call.
+                // `Table::copy_between` takes raw pointers (not `&mut`/`&`
+                // references -- see its own doc comment for why: forming
+                // both over the same `Table` when `dst_table_idx ==
+                // src_table_idx` would be aliasing UB even though no
+                // actual read/write hazard exists) and reads the whole
+                // source range into a temporary `Vec` before writing any
+                // destination slot, so a same-table self-copy is sound.
                 unsafe {
-                    Table::copy_between(&mut *dst_ptr, &*src_ptr, dest, src, len).map_err(VMError::from)?;
+                    Table::copy_between(dst_ptr, src_ptr, dest, src, len).map_err(VMError::from)?;
                 }
             }
             0x0F => {
