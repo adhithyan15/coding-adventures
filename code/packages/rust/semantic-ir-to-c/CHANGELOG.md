@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.38.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive only — no frontend emits these names yet, bare `"/"`/`"tdiv"`/
+`"utdiv"` keep working unchanged. All three dispatch sites (`variadic_helper`,
+the binary-arity table, and the value-referenced-builtin `_sir_builtin_dispatch`
+in `runtime.rs`) gained entries for the four new canonical division op names,
+per `code/specs/SIR21-type-system-and-integer-semantics.md` §E3:
+
+- `div_floor` → `_sir_divide` (the SAME helper `/` already uses — a rename,
+  zero new logic; floors ints toward −∞, true-divides floats).
+- `div_trunc`/`udiv_trunc` → `_sir_itdiv`/`_sir_utdiv` (the SAME helpers
+  `tdiv`/`utdiv` already use — also a rename; `tdiv`/`utdiv` themselves stay
+  working for now, removed in a later cleanup slice once every frontend
+  emitting them has migrated).
+- `div_true` → new `_sir_true_div(SirValue a, SirValue b)`: always coerces
+  both operands to `double` and divides, regardless of operand tag (models
+  Python's `/`). Fails loudly (`fprintf` + `exit(1)`) on a zero divisor,
+  matching every other division builtin in this file — deliberately NOT
+  matching the older `_sir_divide_v`'s float path, which silently produces
+  IEEE `inf`/`nan` on `x / 0.0`, since Python's `ZeroDivisionError` fires
+  unconditionally, not just on the integer path.
+
+New `tests/compile_and_run_division_ops.rs`: real `cc`/`clang`/`gcc`
+compile-and-execute proof for all four ops (mirrors
+`compile_and_run_floats.rs`'s pattern) — §E3's own worked example, the
+floor-vs-truncate divergence on negative operands, `div_floor`/`div_trunc`
+emitting the byte-identical helper call `/`/`tdiv`/`utdiv` already did, and
+`div_true`'s zero-divisor failure specifically (no existing test covered
+this path at all before this PR).
+
 ## 0.37.0 — SIR28 §7: remove dead bare `print`/`puts` handling
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
