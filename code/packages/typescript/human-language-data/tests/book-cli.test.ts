@@ -767,3 +767,44 @@ describe("the manifest covers the corpus", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+describe("chapter label validation", () => {
+  // `label` is interpolated RAW into \label{...} by the generator -- the only
+  // author-controlled field in chapters.json that had no guard. A security review
+  // demonstrated that a label closing its own brace emits a live control sequence
+  // into a generated .tex. These pin the guard AND its own falsifiability: the
+  // second case proves the check can still fail, so a clean first case means
+  // something.
+  const hostile = "ch:x}\\immediate\\write18{id}{";
+
+  function withLabel(label: string): string {
+    const root = fixture();
+    const path = join(root, "test", "chapters.json");
+    const parsed = JSON.parse(readFileSync(path, "utf8")) as {
+      chapters: { label: string }[];
+    };
+    parsed.chapters[0]!.label = label;
+    writeFileSync(path, `${JSON.stringify(parsed)}\n`);
+    return root;
+  }
+
+  it("refuses a label that can break out of \\label{...}", () => {
+    expect(() => loadTrackChapters(withLabel(hostile))).toThrow(/label must match/);
+  });
+
+  it("refuses a label carrying a backslash, a brace, or whitespace", () => {
+    for (const label of ["ch:a\\input{x}", "ch:a}", "ch:a{", "ch a", "ch:a\n", ""]) {
+      expect(() => loadTrackChapters(withLabel(label))).toThrow(/label must match/);
+    }
+  });
+
+  it("still accepts every label convention the corpus actually uses", () => {
+    for (const label of ["ch:hello", "ch:fa-alefbe", "ch:persian-greetings", "ch:zh-components", "ch:a_b", "ch:1"]) {
+      expect(() => loadTrackChapters(withLabel(label))).not.toThrow();
+    }
+  });
+
+  it("accepts the committed corpus unchanged", () => {
+    expect(() => loadTrackChapters(defaultCurriculumRoot())).not.toThrow();
+  });
+});

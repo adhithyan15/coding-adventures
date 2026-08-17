@@ -5,9 +5,23 @@ the shared human-language spine. Every lesson is written for a fresh learner,
 takes under five minutes, and introduces only the characters the expression on the
 page actually needs.
 
-Chapter 1 is authored: seven lessons that build **你好** *nǐ hǎo* from its two
-characters, teach what each character is made of, establish that pitch is part of
-a Mandarin word, and end with a two-line meeting the reader can use today.
+Two chapters are authored.
+
+**Chapter 1** is the spoken greeting: seven lessons that build **你好** *nǐ hǎo*
+from its two characters, teach what each character is made of, establish that
+pitch is part of a Mandarin word, and end with a two-line meeting the reader can
+use today. It is drivable end to end — none of it needs eyes.
+
+**Chapter 2** is the pen: seven lessons, **one glyph each**, that take the
+greeting apart into the pieces it is built from and then put it back together.
+Five teach a component; two teach nothing new at all and instead show what happens
+when two known pieces share a square. A reader who finishes it can *decode* 你好
+rather than recall its shape, and the same two pieces recur in hundreds of other
+characters.
+
+The split is deliberate. A chapter that taught the sounds and the strokes at once
+would carry eighteen new items against a budget of twelve, which is a cliff with
+a gentle label on it.
 
 ## Why this track exists
 
