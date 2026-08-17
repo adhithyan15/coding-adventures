@@ -504,9 +504,15 @@ export function loadExamInventory(
     if (point.category === "__proto__" || point.category === "constructor" || point.category === "prototype") {
       throw new Error(`exam inventory: point '${point.id}' uses a reserved category name`);
     }
-    if (Array.isArray(point.probe) && point.probe.length === 0) {
+    // `covered` is `probe !== null && ...`. A MISSING key is `undefined`, which is
+    // not `null`, so the point scores COVERED while demonstrating nothing -- and
+    // an inventory with every probe deleted reports 100% and silently suppresses
+    // its own work item. The empty-array case was already refused for exactly
+    // this reason; `undefined` and a non-array are the same fault in a different
+    // shape, so all three are refused together.
+    if (!(point.probe === null || (Array.isArray(point.probe) && point.probe.length > 0))) {
       throw new Error(
-        `exam inventory: point '${point.id}' has an empty probe; use null to mean "nothing in the corpus covers this"`,
+        `exam inventory: point '${point.id}' has no usable probe; use null to mean "nothing in the corpus covers this"`,
       );
     }
   }

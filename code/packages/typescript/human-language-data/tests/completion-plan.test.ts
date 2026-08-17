@@ -217,3 +217,70 @@ describe("completion plan", () => {
     expect(text).toContain("Projection to the ceiling");
   });
 });
+
+describe("exam points outrank vocabulary (HL-C226)", () => {
+  const gateWith = (vocabShort: number) =>
+    gate([{ language: "french", inProgressAt: "pre-A1", blockers: vocabularyBlocker(vocabShort) }]);
+
+  it("puts the exam gap first when an inventory exists", () => {
+    // The measurement this reordering was made against: French sits at pre-A1
+    // with a 254-headword deficit, and 54 of its 74 A1 exam points have no
+    // corresponding atom at all. Ranking vocabulary first recommended work that
+    // cannot move the number the reader is graded on.
+    const built = plan({
+      levelGate: gateWith(254),
+      inventories: [{ language: "french", level: "A1" }],
+      examCoverage: [{ language: "french", level: "A1", enumerated: 74, covered: 20 }],
+    });
+    expect(built.head[0]).toMatchObject({ kind: "exam-point", language: "french", outstanding: 54 });
+    expect(built.head.map((item) => item.kind)).toContain("vocabulary");
+  });
+
+  it("leaves vocabulary first for a track with NO inventory", () => {
+    // Without an external list the headword count is the only measurement there
+    // is, so the old ordering is still the right one.
+    const built = plan({ levelGate: gateWith(254) });
+    expect(built.head[0]!.kind).toBe("vocabulary");
+  });
+
+  it("emits nothing for an inventory that is fully covered", () => {
+    const built = plan({
+      levelGate: gateWith(254),
+      inventories: [{ language: "french", level: "A1" }],
+      examCoverage: [{ language: "french", level: "A1", enumerated: 74, covered: 74 }],
+    });
+    expect(built.head.filter((item) => item.kind === "exam-point")).toHaveLength(0);
+  });
+
+  it("ranks the exam gap at the track's IN-PROGRESS level, not the inventory's", () => {
+    // Otherwise it sorts behind every pre-A1 item and the reordering does
+    // nothing — an A1 inventory on a pre-A1 track is exactly the live case.
+    const built = plan({
+      levelGate: gateWith(254),
+      inventories: [{ language: "french", level: "A1" }],
+      examCoverage: [{ language: "french", level: "A1", enumerated: 74, covered: 20 }],
+    });
+    expect(built.head[0]!.level).toBe("pre-A1");
+  });
+
+  it("projects only over inventories that exist, and says so", () => {
+    const built = plan({
+      levelGate: gate([
+        { language: "french", inProgressAt: "pre-A1" },
+        { language: "tamil", inProgressAt: "pre-A1" },
+      ]),
+      inventories: [{ language: "french", level: "A1" }],
+      examCoverage: [{ language: "french", level: "A1", enumerated: 74, covered: 20 }],
+    });
+    const projection = built.projection.find((entry) => entry.kind === "exam-point")!;
+    expect(projection.items).toBe(Math.ceil(54 / 5));
+    // The denominator is the honest part: guessing how many points the unwritten
+    // inventories hold would be inventing a number.
+    expect(projection.detail).toContain("1 track(s) cannot be measured");
+  });
+
+  it("still reports not-projectable when no inventory has been written", () => {
+    const built = plan({ levelGate: gateWith(254) });
+    expect(built.projection.find((entry) => entry.kind === "exam-point")!.items).toBeNull();
+  });
+});
