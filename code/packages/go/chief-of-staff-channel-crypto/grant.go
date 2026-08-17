@@ -531,31 +531,79 @@ func SealChannelKeyWithMaterial(fields KeyGrantFields, cmk *ChannelMasterKey, re
 	return newPortableKeyGrant(fields.originatorID, fields.receiverID, fields.channelID[:], fields.keyEpoch, ephemeralPublic[:], nonce[:], wrapped, signature)
 }
 
-// OpenChannelKeyGrant verifies bindings in normative order before unwrapping a CMK.
-func OpenChannelKeyGrant(grant PortableKeyGrant, expectedOriginatorID, expectedReceiverID, expectedChannelID []byte, receiverKeyPair *ReceiverKeyPair, originatorPublicKey []byte) (*ChannelMasterKey, error) {
+// VerifyGrantSignature checks every public D18G binding and the originator's
+// Ed25519 signature without needing the receiver's private key.
+//
+// # Why this exists separately from OpenChannelKeyGrant
+//
+// Opening a grant answers "may I, the receiver, unwrap this CMK?" — it needs a
+// receiver secret because unwrapping performs an X25519 agreement. But some
+// callers need a strictly weaker answer: "is this grant authentic?" The D18T
+// durable epoch-activation profile is the motivating case. Before a rotation
+// candidate may be offered to key custody, D18T must verify the originator
+// signature on *every* receiver's grant — and the originator holds no receiver
+// private keys, so it cannot open any of them.
+//
+//	OpenChannelKeyGrant       authenticity + unwrap    needs receiver secret
+//	VerifyGrantSignature      authenticity only        needs only public keys
+//
+// Both share one verification path, so the two can never drift: the checks
+// below are exactly the checks OpenChannelKeyGrant performs before it reaches
+// for the receiver key pair.
+//
+// # What "verified" does and does not mean
+//
+// A successful return proves the originator named by originatorPublicKey signed
+// this exact (originator, receiver, channel, epoch, ephemeral key, nonce,
+// wrapped CMK) tuple. It says nothing about whether the wrapped CMK decrypts to
+// anything sensible — that is the receiver's business, and only unwrapping can
+// establish it. Callers verifying grants they cannot open MUST NOT treat this
+// as proof that the receiver will be able to use the grant.
+//
+// Bindings are compared in constant time and in the order D18Q fixes, so a
+// caller can rely on the returned code identifying the *first* mismatched
+// field rather than an arbitrary one.
+func VerifyGrantSignature(grant PortableKeyGrant, expectedOriginatorID, expectedReceiverID, expectedChannelID, originatorPublicKey []byte) error {
+	_, err := verifyGrantBindings(grant, expectedOriginatorID, expectedReceiverID, expectedChannelID, originatorPublicKey)
+	return err
+}
+
+// verifyGrantBindings is the shared authenticity path. It returns the validated
+// 32-byte originator public key so that OpenChannelKeyGrant does not have to
+// re-derive it before unwrapping.
+func verifyGrantBindings(grant PortableKeyGrant, expectedOriginatorID, expectedReceiverID, expectedChannelID, originatorPublicKey []byte) ([32]byte, error) {
+	var empty [32]byte
 	if err := validatePortableKeyGrant(grant); err != nil {
-		return nil, err
+		return empty, err
 	}
 	channel, err := grantArray16(expectedChannelID)
 	if err != nil {
-		return nil, err
+		return empty, err
 	}
 	publicKey, err := grantArray32(originatorPublicKey)
 	if err != nil {
-		return nil, err
+		return empty, err
 	}
 	if !constantTimeEqual(grant.originatorID, expectedOriginatorID) {
-		return nil, grantFail(KeyGrantErrUnexpectedOriginator)
+		return empty, grantFail(KeyGrantErrUnexpectedOriginator)
 	}
 	if !constantTimeEqual(grant.receiverID, expectedReceiverID) {
-		return nil, grantFail(KeyGrantErrUnexpectedReceiver)
+		return empty, grantFail(KeyGrantErrUnexpectedReceiver)
 	}
 	if subtle.ConstantTimeCompare(grant.channelID[:], channel[:]) != 1 {
-		return nil, grantFail(KeyGrantErrUnexpectedChannel)
+		return empty, grantFail(KeyGrantErrUnexpectedChannel)
 	}
 	signatureInput := grantSignatureInput(grant.originatorID, grant.receiverID, grant.channelID[:], grant.keyEpoch, grant.ephemeralPublicKey[:], grant.wrappingNonce[:], grant.wrappedCMK[:])
 	if !ed25519.Verify(signatureInput, grant.originatorSignature, publicKey) {
-		return nil, grantFail(KeyGrantErrInvalidSignature)
+		return empty, grantFail(KeyGrantErrInvalidSignature)
+	}
+	return publicKey, nil
+}
+
+// OpenChannelKeyGrant verifies bindings in normative order before unwrapping a CMK.
+func OpenChannelKeyGrant(grant PortableKeyGrant, expectedOriginatorID, expectedReceiverID, expectedChannelID []byte, receiverKeyPair *ReceiverKeyPair, originatorPublicKey []byte) (*ChannelMasterKey, error) {
+	if _, err := verifyGrantBindings(grant, expectedOriginatorID, expectedReceiverID, expectedChannelID, originatorPublicKey); err != nil {
+		return nil, err
 	}
 	shared, err := receiverKeyPair.agree(grant.ephemeralPublicKey[:])
 	if err != nil {
