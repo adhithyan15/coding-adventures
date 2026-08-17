@@ -2,6 +2,12 @@
 
 All notable changes to the JavaScript Parser (TypeScript) package will be documented in this file.
 
+## [0.2.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `parseJavascript`/`createJavascriptParser` now import a pre-compiled `_grammar[_es<version>].ts` per ECMAScript edition instead of `readFileSync`-ing the `.grammar` file from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published npm package does not ship, so `npm install` + first use would throw `ENOENT`.
+- Compiled `es2018.grammar` through `es2025.grammar` (8 files) with the new `--force` flag (see csharp-parser's changelog): each has a pre-existing `async_generator_expression`-unreachable validation warning (unlike its sibling `async_generator_declaration`, it's never wired into `primary_expression`) that otherwise blocks compilation.
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

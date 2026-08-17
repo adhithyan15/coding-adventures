@@ -678,6 +678,23 @@
       "tex": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
     },
     {
+      "language": "french",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:161058a80338ec76",
+      "lessonIds": [
+        "FR-C32-intonation",
+        "FR-C32-est-ce-que",
+        "FR-C32-ou",
+        "FR-C32-quand",
+        "FR-C32-comment",
+        "FR-C32-combien",
+        "FR-C32-pourquoi",
+        "FR-C32-inversion",
+        "FR-C32-quel"
+      ],
+      "tex": "french/book/chapters/ch32-questions.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "sourceHash": "fnv1a64:ddeac1fb72ea589d",

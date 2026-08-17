@@ -90,7 +90,8 @@ describe("the plan CLI", () => {
       join(root, "core", "exam-inventory-fr-a1.json"),
     );
     const { out } = run(root);
-    expect(out).toMatch(/103 uncovered point\(s\) across 3 written/);
+    // 103 -> 98: the French questions chapter covered five of them (HL-C229).
+    expect(out).toMatch(/98 uncovered point\(s\) across 3 written/);
     expect(out).toMatch(/the other 19 track\(s\)/);
   }, 120_000);
 

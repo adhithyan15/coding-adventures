@@ -82,46 +82,20 @@
  *   | NEWLINE            | \\n                 | Line break (significant in TOML)         |
  *   | EOF                |                     | End of input (always the last token)     |
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `toml.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts -> toml-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The token grammar is compiled ahead of time from `toml.tokens` (in
+ * `code/grammars/toml/`) into `./_grammar.ts`, a native TypeScript object
+ * literal. This avoids reading and parsing a grammar file from disk at
+ * runtime -- which would break once this package is published, since a
+ * published npm package never ships the monorepo's `code/grammars/` tree.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist -- we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/tokenizer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname = .../toml-lexer/src/
- *   ..         = .../toml-lexer/
- *   ../..      = .../typescript/
- *   ../../..   = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const TOML_TOKENS_PATH = join(GRAMMARS_DIR, "toml", "toml.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 /**
  * Tokenize TOML text and return an array of tokens.
@@ -169,29 +143,10 @@ const TOML_TOKENS_PATH = join(GRAMMARS_DIR, "toml", "toml.tokens");
  */
 export function tokenizeTOML(source: string): Token[] {
   /**
-   * Read the grammar file from disk. In a production system, you would
-   * cache this -- but for an educational codebase, reading on every call
-   * keeps the code simple and makes the data flow obvious.
-   */
-  const grammarText = readFileSync(TOML_TOKENS_PATH, "utf-8");
-
-  /**
-   * Parse the grammar text into a structured TokenGrammar object.
-   * This extracts:
-   *   - Token patterns (regex and literal, ordered for first-match-wins)
-   *   - Skip patterns (whitespace and comments)
-   *   - Escape mode ("none" -- strip quotes, skip escape processing)
-   *
-   * TOML has no keywords or reserved words (unlike programming languages).
-   * Booleans (true/false) are literal tokens, not keyword-reclassified
-   * identifiers. Bare keys have their own token type (BARE_KEY).
-   */
-  const grammar = parseTokenGrammar(grammarText);
-
-  /**
-   * Run the generic grammar-driven tokenizer. This is the same engine
-   * used for JSON, Starlark, Python, and other languages -- the only thing
-   * that changes between languages is the grammar file.
+   * Run the generic grammar-driven tokenizer against the pre-compiled
+   * TOKEN_GRAMMAR constant. This is the same engine used for JSON,
+   * Starlark, Python, and other languages -- the only thing that changes
+   * between languages is the grammar.
    *
    * For TOML, the engine will:
    *   1. Skip whitespace (spaces and tabs only -- not newlines)
@@ -201,5 +156,5 @@ export function tokenizeTOML(source: string): Token[] {
    *      before single-quoted, dates before bare keys, etc.)
    *   5. Strip quotes from string tokens without processing escapes
    */
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }

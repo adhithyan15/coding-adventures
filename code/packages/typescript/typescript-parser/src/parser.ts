@@ -2,8 +2,8 @@
  * TypeScript Parser — parses TypeScript source code into ASTs using the grammar-driven approach.
  *
  * This module is a **thin wrapper** around the generic `GrammarParser` from the
- * `@coding-adventures/parser` package. It loads a TypeScript `.grammar` file and
- * delegates all parsing work to the generic engine.
+ * `@coding-adventures/parser` package. It selects a precompiled TypeScript
+ * `ParserGrammar` and delegates all parsing work to the generic engine.
  *
  * The TypeScript grammar extends the JavaScript grammar with:
  * - Type annotations (`: number`, `: string`, `: boolean`)
@@ -16,17 +16,17 @@
  *
  * This parser accepts the same version strings as `@coding-adventures/typescript-lexer`:
  *
- * | Version string  | Lexer tokens file                                  |
- * |-----------------|----------------------------------------------------|
- * | `"ts1.0"`       | `src/tokens/typescript/ts1.0.tokens`               |
- * | `"ts2.0"`       | `src/tokens/typescript/ts2.0.tokens`               |
- * | `"ts3.0"`       | `src/tokens/typescript/ts3.0.tokens`               |
- * | `"ts4.0"`       | `src/tokens/typescript/ts4.0.tokens`               |
- * | `"ts5.0"`       | `src/tokens/typescript/ts5.0.tokens`               |
- * | `"ts5.8"`       | `src/tokens/typescript/ts5.8.tokens`               |
- * | `undefined`/`""`| `src/tokens/typescript.tokens` (generic)           |
+ * | Version string  | Lexer version used |
+ * |------------------|---------------------|
+ * | `"ts1.0"`        | `ts1.0`             |
+ * | `"ts2.0"`        | `ts2.0`             |
+ * | `"ts3.0"`        | `ts3.0`             |
+ * | `"ts4.0"`        | `ts4.0`             |
+ * | `"ts5.0"`        | `ts5.0`             |
+ * | `"ts5.8"`        | `ts5.8`             |
+ * | `undefined`/`""` | generic             |
  *
- * The parser grammar is always the generic `typescript.grammar`, which uses
+ * The parser grammar is always the generic compiled `ParserGrammar`, which uses
  * simple rules (`var_declaration`, `expression`, etc.) regardless of TypeScript
  * version. The version parameter only selects the lexer's token set — different
  * TypeScript versions have different keyword sets, but the parser AST shape
@@ -35,39 +35,32 @@
  * When no version is supplied the generic grammar is used, which is backwards-
  * compatible with v0.1.x.
  *
- * Locating the Grammar File
- * -------------------------
+ * Locating the Grammar
+ * ---------------------
  *
- * The `typescript.grammar` file lives in `code/grammars/` at the repository root.
- *
- *     src/ -> typescript-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * Grammars are no longer read from disk at runtime. Each `.grammar` source
+ * file under `code/grammars/` is compiled ahead of time into a sibling
+ * `_grammar*.ts` module (via `code/scripts/_ts_grammar_compile.ts`) that
+ * embeds the `ParserGrammar` as a native TypeScript object literal. This
+ * keeps the package self-contained — a published npm package never needs to
+ * reach outside its own directory — and avoids repeated file I/O and
+ * re-parsing on every call.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeTypescript } from "@coding-adventures/typescript-lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> typescript-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-
-/**
- * The generic TypeScript parser grammar path.
+ * The generic TypeScript parser grammar.
  *
- * The parser always uses this single grammar file. Version strings only
+ * The parser always uses this single compiled grammar. Version strings only
  * affect which *lexer* token set is loaded (via `tokenizeTypescript`), keeping
  * the AST shape consistent across TypeScript versions.
  */
-const TS_GRAMMAR_PATH = join(GRAMMARS_DIR, "typescript", "typescript.grammar");
+const TS_GRAMMAR = PARSER_GRAMMAR;
 
 /**
  * Parse TypeScript source code and return an AST.
@@ -76,7 +69,7 @@ const TS_GRAMMAR_PATH = join(GRAMMARS_DIR, "typescript", "typescript.grammar");
  * @param version - Optional TypeScript version (e.g. `"ts5.8"`). When omitted
  *   (or the empty string) the generic token set is used — backwards-compatible
  *   with v0.1.x. The version affects which *lexer* grammar is loaded; the parser
- *   grammar is always the generic `typescript.grammar`.
+ *   grammar is always the generic compiled `ParserGrammar`.
  * @returns An ASTNode representing the parse tree, with `ruleName` of `"program"`.
  *
  * @example
@@ -89,8 +82,6 @@ const TS_GRAMMAR_PATH = join(GRAMMARS_DIR, "typescript", "typescript.grammar");
  */
 export function parseTypescript(source: string, version?: string): ASTNode {
   const tokens = tokenizeTypescript(source, version);
-  const grammarText = readFileSync(TS_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, TS_GRAMMAR);
   return parser.parse();
 }

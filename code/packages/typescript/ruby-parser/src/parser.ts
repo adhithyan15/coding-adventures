@@ -8,26 +8,21 @@
  * The Ruby grammar supports method calls (like `puts("hello")`) in addition
  * to the standard assignment and expression patterns shared with Python.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `ruby.grammar` file lives in `code/grammars/` at the repository root.
- *
- *     src/ -> ruby-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The parser grammar is compiled ahead of time from `ruby.grammar` (in
+ * `code/grammars/ruby/`) into `./_grammar.ts`, a native TypeScript object
+ * literal. This avoids reading and parsing a grammar file from disk at
+ * runtime -- which would break once this package is published, since a
+ * published npm package never ships the monorepo's `code/grammars/` tree.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeRuby } from "@coding-adventures/ruby-lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const RUBY_GRAMMAR_PATH = join(GRAMMARS_DIR, "ruby", "ruby.grammar");
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 /**
  * Parse Ruby source code and return an AST.
@@ -41,8 +36,6 @@ const RUBY_GRAMMAR_PATH = join(GRAMMARS_DIR, "ruby", "ruby.grammar");
  */
 export function parseRuby(source: string): ASTNode {
   const tokens = tokenizeRuby(source);
-  const grammarText = readFileSync(RUBY_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   return parser.parse();
 }

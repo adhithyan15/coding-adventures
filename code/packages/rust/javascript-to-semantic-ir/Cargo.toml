@@ -1,6 +1,6 @@
 [package]
 name = "javascript-to-semantic-ir"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
 description = "JavaScript (GrammarASTNode CST) → narrow-waist Semantic IR. SIR19 frontend, milestone M5 (collections) + default parameters + member-method dispatch (C3) + the OOP declaration surface (SIR25 §2)."
 

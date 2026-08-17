@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:fa84b39ef3ce0974",
+  "sourceHash": "fnv1a64:371bdfcfd9419848",
   "summary": {
-    "totalLessons": 2941,
-    "voice": 2077,
+    "totalLessons": 2950,
+    "voice": 2086,
     "sight": 582,
     "pen": 282,
-    "drivableLessons": 2077,
+    "drivableLessons": 2086,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 918,
-    "drivablePrefixTotal": 1853,
-    "fullyDrivableChapters": 597,
+    "chapterCount": 919,
+    "drivablePrefixTotal": 1862,
+    "fullyDrivableChapters": 598,
     "unstartableChapters": 190,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -915,12 +915,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 105,
-      "voice": 90,
+      "lessonCount": 114,
+      "voice": 99,
       "sight": 12,
       "pen": 3,
-      "drivablePercent": 86,
-      "drivablePrefixTotal": 74,
+      "drivablePercent": 87,
+      "drivablePrefixTotal": 83,
       "modalities": [
         "voice",
         "sight",
@@ -1468,6 +1468,30 @@
             "FR-C31-nez",
             "FR-C31-bouche",
             "FR-C31-ventre"
+          ]
+        },
+        {
+          "chapter": 32,
+          "lessonCount": 9,
+          "voice": 9,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 9,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C32-intonation",
+            "FR-C32-est-ce-que",
+            "FR-C32-ou",
+            "FR-C32-quand",
+            "FR-C32-comment",
+            "FR-C32-combien",
+            "FR-C32-pourquoi",
+            "FR-C32-inversion",
+            "FR-C32-quel"
           ]
         }
       ]
@@ -21931,6 +21955,168 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:6aa672499b6665b1"
+    },
+    {
+      "id": "FR-C32-intonation",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a82af154ffac3702"
+    },
+    {
+      "id": "FR-C32-est-ce-que",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1110,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8620164e8fd21c91"
+    },
+    {
+      "id": "FR-C32-ou",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1120,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:98573530b8f35d73"
+    },
+    {
+      "id": "FR-C32-quand",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1130,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ce49b92a4b3918a3"
+    },
+    {
+      "id": "FR-C32-comment",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b95caff59f6b83a7"
+    },
+    {
+      "id": "FR-C32-combien",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0ad2dffa091a7aae"
+    },
+    {
+      "id": "FR-C32-pourquoi",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7440bb9c2ba05611"
+    },
+    {
+      "id": "FR-C32-inversion",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c750a4832d50c361"
+    },
+    {
+      "id": "FR-C32-quel",
+      "language": "french",
+      "chapter": 32,
+      "sequence": 1180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5b200dedd4a60ccf"
     },
     {
       "id": "GE-C01-abend",

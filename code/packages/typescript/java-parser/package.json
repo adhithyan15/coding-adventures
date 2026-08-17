@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/java-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parses Java source code into ASTs using the grammar-driven parser — a thin wrapper that loads java{version}.grammar",
   "type": "module",
   "main": "src/index.ts",

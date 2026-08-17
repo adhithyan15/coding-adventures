@@ -1,0 +1,15 @@
+[package]
+name = "mos6502-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust MOS 6502 instruction encoder.  Re-exports the canonical encode_lda_imm/encode_brk helpers from mos6502-simulator (the in-tree source of truth for MOS 6502 encoding) and adds the HALT_BYTE constant the LANG VM mos6502-backend uses to lower CIR to MOS 6502 machine code bytes.  No IR knowledge.  Fifth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "mos6502_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for MOS 6502 bit-level encoding.  We re-export rather
+# than duplicate so any future opcode-table fix in the simulator
+# propagates to encoder consumers automatically.
+mos6502-simulator = { path = "../mos6502-simulator" }

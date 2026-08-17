@@ -1,4 +1,4 @@
-// AUTO-GENERATED FILE — DO NOT EDIT
+// AUTO-GENERATED FILE - DO NOT EDIT
 // Source: javascript.tokens
 // Regenerate with: grammar-tools compile-tokens javascript.tokens
 //
@@ -191,4 +191,5 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
   contextKeywords: [],
   errorDefinitions: [],
   groups: {},
+  softKeywords: [],
 };

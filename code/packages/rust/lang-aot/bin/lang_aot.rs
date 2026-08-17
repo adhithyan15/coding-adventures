@@ -48,6 +48,7 @@ fn main() -> ExitCode {
     //   * Armv7Bin     → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Intel4004Bin → .bin (foo.bf → foo.bin), shares the `.bin` convention
     //   * Arm1Bin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * Mos6502Bin    → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
@@ -58,6 +59,7 @@ fn main() -> ExitCode {
         EmitMode::Ge225Bin => input.with_extension("bin"),
         EmitMode::Ibm704Bin => input.with_extension("bin"),
         EmitMode::Arm1Bin => input.with_extension("bin"),
+        EmitMode::Mos6502Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -135,6 +137,14 @@ enum EmitMode {
     /// commercially successful RISC chip and architectural ancestor
     /// of the already-migrated ARMv7 lane.
     Arm1Bin,
+    /// Flat `.bin` of MOS 6502 opcode bytes via `mos6502-backend`.
+    /// Cross-platform.  Downstream consumers: the in-tree
+    /// `mos6502-simulator` or any external MOS 6502/NMOS emulator.  The
+    /// MOS 6502 (1975) is Chuck Peddle's $25 chip that powered the Apple
+    /// II, Commodore 64, Atari 8-bit line, BBC Micro, and (via the Ricoh
+    /// 2A03 variant) the NES/Famicom — a byte-oriented ISA, unlike every
+    /// other target above (no word endianness to flatten).
+    Mos6502Bin,
 }
 
 struct CliArgs {
@@ -216,9 +226,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "ge225" | "ge-225" | "225" => Ok(EmitMode::Ge225Bin),
         "ibm704" | "ibm-704" | "704" => Ok(EmitMode::Ibm704Bin),
         "arm1" | "armv1" | "arm-1" => Ok(EmitMode::Arm1Bin),
+        "mos6502" | "6502" | "mos-6502" => Ok(EmitMode::Mos6502Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502"
         )),
     }
 }
@@ -301,6 +312,15 @@ Options:
                                                 and Steve Furber's original Acorn
                                                 RISC Machine, 1985 — architectural
                                                 ancestor of the ARMv7 lane above)
+                             mos6502 | 6502 | mos-6502
+                                              → flat .bin of MOS 6502 opcode bytes
+                                                via mos6502-backend; cross-platform;
+                                                load into mos6502-simulator or an
+                                                external MOS 6502/NMOS emulator
+                                                (Chuck Peddle's $25 chip, 1975 —
+                                                Apple II, Commodore 64, Atari 8-bit,
+                                                BBC Micro, and — via the Ricoh 2A03
+                                                variant — the NES/Famicom)
   -h, --help               Show this help.\
 ");
 }
@@ -380,6 +400,16 @@ fn dispatch(
     // emulator.
     if emit == EmitMode::Arm1Bin {
         return lang_aot::compile_file_to_arm1_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // MOS 6502 .bin emission is also cross-platform — the 6502 is
+    // byte-oriented with no word endianness, so mos6502-backend's bytes
+    // are written straight to disk (no flattening step at all, unlike
+    // every 32-bit-word target above).  No linker, no host gating (no
+    // modern dev host is 6502 silicon); downstream is always
+    // mos6502-simulator or an external MOS 6502/NMOS emulator.
+    if emit == EmitMode::Mos6502Bin {
+        return lang_aot::compile_file_to_mos6502_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

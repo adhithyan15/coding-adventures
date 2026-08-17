@@ -5799,7 +5799,12 @@ impl Lowerer {
                 "+=" => ("+", EffectSet::PURE),
                 "-=" => ("-", EffectSet::PURE),
                 "*=" => ("*", EffectSet::PURE),
-                "/=" => ("/", EffectSet::PURE),
+                // SIR21 T3b-2: `/=` desugars to `x = x.div_floor(rhs)`, not
+                // bare `/` — Ruby's `/=` uses `Integer#/`'s floor semantics,
+                // which is exactly what `div_floor` names explicitly (see
+                // the general binary-op site's own note below, and
+                // `token_lexeme_for_op`'s `TokenType::Slash` arm).
+                "/=" => ("div_floor", EffectSet::PURE),
                 "%=" => ("%", EffectSet::PURE),
                 "**=" => ("**", EffectSet::PURE),
                 "<<=" => ("<<", EffectSet::PURE),
@@ -10105,7 +10110,14 @@ fn token_lexeme_for_op(t: TokenType) -> &'static str {
         TokenType::Plus => "+",
         TokenType::Minus => "-",
         TokenType::Star => "*",
-        TokenType::Slash => "/",
+        // SIR21 T3b-2: `/` lowers to the `div_floor` builtin, not bare
+        // `/` — Ruby's `/` is polymorphic (`Integer#/` floors,
+        // `Float#/` true-divides), and `div_floor` names exactly that
+        // combined behavior (SIR21 §E3). Despite this function's name,
+        // the return value here is a BuiltinCall NAME, not a literal
+        // source lexeme — the other three arms happen to coincide with
+        // their own lexeme, `/` no longer does.
+        TokenType::Slash => "div_floor",
         _ => "?",
     }
 }

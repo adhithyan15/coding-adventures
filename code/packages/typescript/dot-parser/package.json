@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/dot-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parser for a focused Graphviz DOT subset that lowers into the shared diagram IR",
   "type": "module",
   "main": "src/index.ts",

@@ -1,4 +1,4 @@
-// AUTO-GENERATED FILE — DO NOT EDIT
+// AUTO-GENERATED FILE - DO NOT EDIT
 // Source: starlark.grammar
 // Regenerate with: grammar-tools compile-grammar starlark.grammar
 //

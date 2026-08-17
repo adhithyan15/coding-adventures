@@ -13,6 +13,61 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C229 — the loop closed end to end for the first time
+
+The plan named the gap, the inventory named the five points, nine lessons taught
+them, and the probes now resolve against real atoms. **L'interrogation 0/5 → 5/5;
+French A1 27% → 34%.**
+
+That sequence is the thing worth recording, not the chapter. Every earlier tranche
+in this session moved a number the repository invented for itself — headwords
+against 300, glyphs against a script inventory. This is the first one that moved a
+number taken from an awarding body's syllabus, and **it moved because the corpus
+changed, not because the target was edited.**
+
+**The chapter also realizes `SPINE-ASK-LOCATION`**, an A1 node French had declared
+*omitted*. A track can carry 105 lessons and 31 chapters and still have "cannot ask
+a question" written into its own ledger as a deliberate choice.
+
+### Three ledger corrections the validator forced, and it was right every time
+
+1. **`QUESTION-HOW` was already realized** by `FR-C02-comment`. A canonical concept
+   may be realized once per track, so the new lesson takes a local tag. Worth
+   knowing before the next grammar chapter: the obvious canonical tag is often
+   already spent.
+2. **`SPINE-ASK-LOCATION` declared `QUESTION-WHERE` omitted.** Realizing it means
+   deleting that declaration — an omission ledger that is stale in the flattering
+   direction says the track chose not to teach something it now teaches.
+3. **`QUESTION-POLAR` was a stretch and the validator caught it.** The intonation
+   lesson does teach polar questions, but that concept belongs to
+   `SPINE-NEGATE-AND-ASK`, an **A2** node about negating *and* asking. Claiming it
+   from an A1 chapter forced a relocation ledger that did not describe what the
+   lesson is. Reverted to a local tag; `VERB-NEGATE` is genuinely still absent, so
+   the node stays honestly unrealized.
+
+**The pattern in all three:** the spine ledger is a set of claims about what a
+track does and does not do, and a new chapter makes some of them false. Two of
+these were mine to fix and one was mine to withdraw.
+
+### Forward references, and the same placement finding as Latin
+
+`forwardReferences` 508 → 511, and **all three are the HL-C213 class**: pre-existing
+uses of *où* that became measurable only because `FR-C32-ou` is the first lesson to
+OWN the word. `FR-W01-accents` has been teaching the *ou* / *où* accent contrast
+since chapter 1. Each was read in its own file and confirmed unmodified by
+`git diff HEAD` rather than trusted from the report.
+
+That they are used **69–75 lessons before being taught** argues the question words
+belong far earlier than chapter 32 — the same placement conclusion HL-C213 reached
+for Latin, now from a second track.
+
+### And the drivability trade reverses
+
+`drivablePercent` 70 → 71. Four script tranches in a row pushed it down; nine
+voice-first grammar lessons pushed a point back. Grammar chapters are drivable in a
+way script chapters can never be, which is worth knowing when scheduling the two
+against each other.
+
 ## HL-C228 — exam points now outrank vocabulary, and the family had never been generated
 
 HL-C226 recorded the evidence; this acts on it. Two things changed, and the second

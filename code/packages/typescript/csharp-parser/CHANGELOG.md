@@ -2,6 +2,12 @@
 
 All notable changes to the C# Parser (TypeScript) package will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `parseCSharp`/`createCSharpParser` now import a pre-compiled `_grammar[_<version>].ts` per C# version instead of `readFileSync`-ing the `.grammar` file from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published npm package does not ship, so `npm install` + first use would throw `ENOENT`.
+- Added a `--force`/`-f` flag to the TypeScript `grammar-tools` CLI's `compile-tokens`/`compile-grammar` commands (mirroring the flag the Ruby/Go/Rust ports already had), needed here because every `csharp*.grammar` file has a pre-existing `pointer_type`-unreachable validation warning that otherwise blocks compilation.
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

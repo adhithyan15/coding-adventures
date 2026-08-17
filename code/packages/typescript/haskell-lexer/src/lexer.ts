@@ -42,29 +42,46 @@
  * When no version is supplied, Haskell 21 (the latest LTS) is used as the
  * default — this is the recommended grammar for most use cases.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `haskell*.tokens` files live in `code/grammars/haskell/` at the repository root.
- *
- *     src/ -> haskell-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `haskell*.tokens` files under `code/grammars/haskell/` at the
+ * repository root are compiled ahead of time into `./_grammar.ts` (the
+ * default) and one `./_grammar_<version>.ts` per supported edition (see
+ * `code/scripts/_ts_grammar_compile.ts`). This module statically imports
+ * all of them and looks up the right one at call time — it never reads
+ * the monorepo's `code/grammars/` tree at runtime, so a published npm
+ * package works standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize, GrammarLexer } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { TOKEN_GRAMMAR as DEFAULT_GRAMMAR } from "./_grammar.js";
+import { TOKEN_GRAMMAR as V1_0 } from "./_grammar_1_0.js";
+import { TOKEN_GRAMMAR as V1_1 } from "./_grammar_1_1.js";
+import { TOKEN_GRAMMAR as V1_2 } from "./_grammar_1_2.js";
+import { TOKEN_GRAMMAR as V1_3 } from "./_grammar_1_3.js";
+import { TOKEN_GRAMMAR as V1_4 } from "./_grammar_1_4.js";
+import { TOKEN_GRAMMAR as V98 } from "./_grammar_98.js";
+import { TOKEN_GRAMMAR as V2010 } from "./_grammar_2010.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> haskell-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * Every supported Haskell edition's token grammar, pre-compiled at build
+ * time from the `.tokens` files in `code/grammars/haskell/`. ESM static
+ * imports can't be conditional on a runtime string, so every version is
+ * imported up front and looked up by key in `resolveTokenGrammar`.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+const VERSIONED_GRAMMARS: Record<string, TokenGrammar> = {
+  "1.0": V1_0,
+  "1.1": V1_1,
+  "1.2": V1_2,
+  "1.3": V1_3,
+  "1.4": V1_4,
+  "98": V98,
+  "2010": V2010,
+};
 
 /**
  * Valid Haskell version strings accepted by this module.
@@ -90,33 +107,35 @@ const VALID_HASKELL_VERSIONS = new Set([
 const DEFAULT_HASKELL_VERSION = "2010";
 
 /**
- * Resolve the path to the Haskell token grammar for the given version.
+ * Resolve the compiled Haskell token grammar for the given version.
  *
- * @param version - An optional Haskell version string (e.g. `"21"`, `"8"`,
- *   `"1.4"`). Pass `undefined` or `""` to use the default (Haskell 21).
- * @returns Absolute path to the `.tokens` grammar file.
+ * @param version - An optional Haskell version string (e.g. `"2010"`,
+ *   `"98"`, `"1.4"`). Pass `undefined` or `""` to use the default
+ *   (Haskell 2010).
+ * @returns The pre-compiled `TokenGrammar` for that version.
  * @throws Error if `version` is a non-empty string that is not a recognised
  *   Haskell version identifier.
  *
  * @example
- *   resolveTokensPath("8")
- *   // => ".../code/grammars/haskell/haskell8.tokens"
+ *   resolveTokenGrammar("98")
+ *   // => TOKEN_GRAMMAR compiled from haskell98.tokens
  *
- *   resolveTokensPath()
- *   // => ".../code/grammars/haskell/haskell21.tokens"
+ *   resolveTokenGrammar()
+ *   // => TOKEN_GRAMMAR compiled from haskell2010.tokens (the default)
  */
-function resolveTokensPath(version?: string): string {
-  // Default to Haskell 21 when no version is specified.
-  const effectiveVersion = version || DEFAULT_HASKELL_VERSION;
+function resolveTokenGrammar(version?: string): TokenGrammar {
+  if (!version) {
+    return DEFAULT_GRAMMAR;
+  }
 
-  if (!VALID_HASKELL_VERSIONS.has(effectiveVersion)) {
+  if (!VALID_HASKELL_VERSIONS.has(version)) {
     throw new Error(
-      `Unknown Haskell version "${effectiveVersion}". ` +
+      `Unknown Haskell version "${version}". ` +
         `Valid values: ${[...VALID_HASKELL_VERSIONS].join(", ")}`
     );
   }
 
-  return join(GRAMMARS_DIR, "haskell", `haskell${effectiveVersion}.tokens`);
+  return VERSIONED_GRAMMARS[version];
 }
 
 /**
@@ -138,9 +157,7 @@ function resolveTokensPath(version?: string): string {
  *     const tokens = tokenizeHaskell("var x = 1;", "10");
  */
 export function tokenizeHaskell(source: string, version?: string): Token[] {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return grammarTokenize(source, grammar);
 }
 
@@ -166,8 +183,6 @@ export function createHaskellLexer(
   source: string,
   version?: string
 ): GrammarLexer {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return new GrammarLexer(source, grammar);
 }

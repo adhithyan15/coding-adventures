@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/dartmouth-basic-lexer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tokenizer for the 1964 Dartmouth BASIC language",
   "type": "module",
   "main": "src/index.ts",

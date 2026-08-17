@@ -41,27 +41,46 @@
  * Locating the Grammar File
  * -------------------------
  *
- * The `java*.grammar` files live in `code/grammars/java/` at the repository root.
- *
- *     src/ -> java-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `java*.grammar` files live in `code/grammars/java/` at the repository root,
+ * but a published npm package would never ship that monorepo directory. Instead,
+ * every version's grammar is pre-compiled to a native TypeScript module
+ * (`_grammar_<version>.ts`) at build time and statically imported below, so no
+ * filesystem access happens at runtime.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
+import type { ParserGrammar } from "@coding-adventures/grammar-tools";
 import { tokenizeJava } from "@coding-adventures/java-lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { PARSER_GRAMMAR as GRAMMAR_1_0 } from "./_grammar_1_0.js";
+import { PARSER_GRAMMAR as GRAMMAR_1_1 } from "./_grammar_1_1.js";
+import { PARSER_GRAMMAR as GRAMMAR_1_4 } from "./_grammar_1_4.js";
+import { PARSER_GRAMMAR as GRAMMAR_5 } from "./_grammar_5.js";
+import { PARSER_GRAMMAR as GRAMMAR_7 } from "./_grammar_7.js";
+import { PARSER_GRAMMAR as GRAMMAR_8 } from "./_grammar_8.js";
+import { PARSER_GRAMMAR as GRAMMAR_10 } from "./_grammar_10.js";
+import { PARSER_GRAMMAR as GRAMMAR_14 } from "./_grammar_14.js";
+import { PARSER_GRAMMAR as GRAMMAR_17 } from "./_grammar_17.js";
+import { PARSER_GRAMMAR as GRAMMAR_21 } from "./_grammar_21.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> java-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * All Java version grammars, keyed by version string. Populated via static
+ * imports above so every version ships inside the published package with no
+ * runtime filesystem access.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+const VERSIONED_GRAMMARS: Record<string, ParserGrammar> = {
+  "1.0": GRAMMAR_1_0,
+  "1.1": GRAMMAR_1_1,
+  "1.4": GRAMMAR_1_4,
+  "5": GRAMMAR_5,
+  "7": GRAMMAR_7,
+  "8": GRAMMAR_8,
+  "10": GRAMMAR_10,
+  "14": GRAMMAR_14,
+  "17": GRAMMAR_17,
+  "21": GRAMMAR_21,
+};
 
 /**
  * Valid Java version strings accepted by this module.
@@ -86,14 +105,14 @@ const VALID_JAVA_VERSIONS = new Set([
 const DEFAULT_JAVA_VERSION = "21";
 
 /**
- * Resolve the path to the Java parser grammar for the given version.
+ * Resolve the Java parser grammar for the given version.
  *
  * @param version - An optional Java version string. Pass `undefined` or `""`
  *   to use the default (Java 21).
- * @returns Absolute path to the `.grammar` file.
+ * @returns The statically-imported `ParserGrammar` for that version.
  * @throws Error if `version` is not a recognised Java version.
  */
-function resolveGrammarPath(version?: string): string {
+function resolveParserGrammar(version?: string): ParserGrammar {
   const effectiveVersion = version || DEFAULT_JAVA_VERSION;
 
   if (!VALID_JAVA_VERSIONS.has(effectiveVersion)) {
@@ -103,7 +122,7 @@ function resolveGrammarPath(version?: string): string {
     );
   }
 
-  return join(GRAMMARS_DIR, "java", `java${effectiveVersion}.grammar`);
+  return VERSIONED_GRAMMARS[effectiveVersion];
 }
 
 /**
@@ -127,9 +146,7 @@ export function createJavaParser(
   version?: string
 ): GrammarParser {
   const tokens = tokenizeJava(source, version);
-  const grammarPath = resolveGrammarPath(version);
-  const grammarText = readFileSync(grammarPath, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
+  const grammar = resolveParserGrammar(version);
   return new GrammarParser(tokens, grammar);
 }
 

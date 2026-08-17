@@ -129,59 +129,20 @@
  * Solution: walk the token list; once a KEYWORD("REM") is seen, suppress
  * all subsequent tokens until the next NEWLINE.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `dartmouth_basic.tokens` grammar lives in `code/grammars/` at the
- * repository root. We navigate from this module's compiled location up to
- * that directory:
- *
- *     src/tokenizer.ts
- *         -> dartmouth-basic-lexer/   (one ..)
- *         -> typescript/              (two ..)
- *         -> packages/                (three ..)
- *         -> code/                    (four ..)
- *         + grammars/                 = code/grammars/
+ * The `dartmouth_basic.tokens` file under `code/grammars/dartmouth_basic/`
+ * at the repository root is compiled ahead of time into `./_grammar.ts`
+ * (see `code/scripts/_ts_grammar_compile.ts`). This module statically
+ * imports it rather than reading the monorepo's `code/grammars/` tree at
+ * runtime, so a published npm package works standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarLexer } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS (Node.js pre-ESM), `__dirname` is a built-in global that gives
- * the directory of the current file. In ESM (which TypeScript compiles to),
- * `__dirname` does not exist — only `import.meta.url` is available.
- *
- * `import.meta.url` is a full file URL, e.g.:
- *   "file:///Users/alice/code/packages/typescript/dartmouth-basic-lexer/src/tokenizer.ts"
- *
- * We convert it to a filesystem path with `fileURLToPath`, then take the
- * directory with `dirname`. The result is equivalent to the old `__dirname`.
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-/**
- * Navigate from `src/` four levels up to `code/`, then into `grammars/`.
- *
- * Directory structure relative to this file:
- *
- *     __dirname  = .../dartmouth-basic-lexer/src/
- *     ..         = .../dartmouth-basic-lexer/
- *     ../..      = .../typescript/
- *     ../../..   = .../packages/
- *     ../../../.. = .../code/
- *     + grammars = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const TOKENS_PATH = join(GRAMMARS_DIR, "dartmouth_basic", "dartmouth_basic.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 // ---------------------------------------------------------------------------
 // Post-Tokenize Hook 0: normalizeCase
@@ -443,24 +404,11 @@ function suppressRemContent(tokens: Token[]): Token[] {
  */
 export function createDartmouthBasicLexer(source: string): GrammarLexer {
   /**
-   * Read the grammar file from disk.
+   * Use the pre-compiled `TokenGrammar` object.
    *
-   * The grammar file is read on each call here. In a production system,
-   * you would cache the parsed grammar — but for an educational codebase,
-   * reading it every time keeps the data flow explicit and easy to follow.
-   *
-   * The `readFileSync` call is synchronous and blocks the event loop while
-   * the file is read. For tokenizing BASIC programs (which are small),
-   * this is fine. A production system might use async I/O or a preloaded
-   * grammar passed in as a parameter.
-   */
-  const grammarText = readFileSync(TOKENS_PATH, "utf-8");
-
-  /**
-   * Parse the grammar text into a structured `TokenGrammar` object.
-   *
-   * `parseTokenGrammar` (from `@coding-adventures/grammar-tools`) reads
-   * the `.tokens` file format and extracts:
+   * `TOKEN_GRAMMAR` (from `./_grammar.js`, compiled ahead of time from
+   * `dartmouth_basic.tokens` — see `code/scripts/_ts_grammar_compile.ts`)
+   * already contains:
    *
    *   - Token patterns (both regex and literal string patterns)
    *   - The `keywords:` list (identifiers to reclassify as KEYWORD)
@@ -473,7 +421,6 @@ export function createDartmouthBasicLexer(source: string): GrammarLexer {
    * all match the regex `/print/`. The `normalizeCase` hook then restores
    * token values to uppercase for the public API.
    */
-  const grammar = parseTokenGrammar(grammarText);
 
   /**
    * Create the grammar-driven lexer with the Dartmouth BASIC grammar.
@@ -482,7 +429,7 @@ export function createDartmouthBasicLexer(source: string): GrammarLexer {
    * engine. It compiles the grammar patterns into an efficient matching
    * structure and provides the hook system we use here.
    */
-  const lexer = new GrammarLexer(source, grammar);
+  const lexer = new GrammarLexer(source, TOKEN_GRAMMAR);
 
   /**
    * Register Hook 0: Case normalisation — upcase identifier values.

@@ -97,59 +97,21 @@
  *   - print_list, print_item, print_sep — PRINT argument structure
  *   - dim_decl  — array dimension declaration
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `dartmouth_basic.grammar` file lives in `code/grammars/` at the
- * repository root. The path from this module's `src/` directory:
- *
- *     src/ -> dartmouth-basic-parser/ -> typescript/ -> packages/
- *          -> code/ -> grammars/ -> dartmouth_basic.grammar
+ * The `dartmouth_basic.grammar` file under `code/grammars/dartmouth_basic/`
+ * at the repository root is compiled ahead of time into `./_grammar.ts`
+ * (see `code/scripts/_ts_grammar_compile.ts`). This module statically
+ * imports it rather than reading the monorepo's `code/grammars/` tree at
+ * runtime, so a published npm package works standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeDartmouthBasic } from "@coding-adventures/dartmouth-basic-lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, `__dirname` is a built-in variable. In ESM (ES modules),
- * it doesn't exist — we must derive it from `import.meta.url`.
- *
- * `import.meta.url` is a `file://` URL like:
- *   file:///home/user/code/packages/typescript/dartmouth-basic-parser/src/parser.ts
- *
- * `fileURLToPath` strips the `file://` prefix and decodes percent-encoding.
- * `dirname` takes the directory portion (removes the filename).
- *
- * Result: an absolute path like:
- *   /home/user/code/packages/typescript/dartmouth-basic-parser/src
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * Path traversal from __dirname (which is .../dartmouth-basic-parser/src/):
- *
- *   __dirname       = .../dartmouth-basic-parser/src/
- *   ..              = .../dartmouth-basic-parser/
- *   ../..           = .../typescript/
- *   ../../..        = .../packages/
- *   ../../../..     = .../code/
- *   + grammars      = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const DARTMOUTH_BASIC_GRAMMAR_PATH = join(
-  GRAMMARS_DIR,
-  "dartmouth_basic", "dartmouth_basic.grammar"
-);
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 /**
  * Parse Dartmouth BASIC source text and return an AST.
@@ -194,20 +156,17 @@ export function parseDartmouthBasic(source: string): ASTNode {
   const tokens = tokenizeDartmouthBasic(source);
 
   /**
-   * Step 2: Load the grammar.
+   * Step 2: Use the pre-compiled grammar.
    *
-   * The grammar file defines ~25 rules in EBNF-like notation. The rules
-   * encode the full syntax of 1964 Dartmouth BASIC, including:
+   * `PARSER_GRAMMAR` (compiled ahead of time from dartmouth_basic.grammar)
+   * defines ~25 rules in EBNF-like notation. The rules encode the full
+   * syntax of 1964 Dartmouth BASIC, including:
    *   - All 17 statement types
    *   - Expression precedence (expr > term > power > unary > primary)
    *   - Right-associativity of ^ via self-reference in the `power` rule
    *   - Operator alternations (PLUS | MINUS for addition/subtraction, etc.)
-   *
-   * parseParserGrammar converts the text into a structured object that
-   * the GrammarParser can use for recursive descent.
    */
-  const grammarText = readFileSync(DARTMOUTH_BASIC_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
+  const grammar = PARSER_GRAMMAR;
 
   /**
    * Step 3: Parse.

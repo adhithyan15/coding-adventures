@@ -2,6 +2,36 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.6] - 2026-08-17 (task #97 — passive/exprs-list element segments)
+
+### Changed
+
+- `Element.function_indices` widened from `Vec<u32>` to
+  `Vec<Option<u32>>` -- `None` represents a `ref.null` entry in a
+  passive exprs-list segment (`(elem funcref (ref.func $f) (ref.null
+  func))`), `Some(idx)` a real function reference, reusing the same
+  `Option<u32>` shape `Table::elements`/`WasmValue::Ref` already use
+  rather than inventing a new one.
+- `Element.is_passive: bool` added, mirroring `DataSegment.is_passive`
+  (task #95) exactly: `true` for a segment declared with no table index
+  or offset expression at all, so `wasm-runtime::instantiate()` never
+  applies it automatically -- it stays resident until an explicit
+  `table.init` copies from it or `elem.drop` frees it.
+- Binary encoding scope (see `code/specs/W17-wasm-bulk-table-ops.md`
+  for the real-corpus census that justified this): only 4 of the
+  spec's 8 element-segment modes are represented (0/1/2/5 -- active-
+  implicit funcidx-list, passive funcidx-list, active-explicit
+  funcidx-list, passive exprs-list restricted to `ref.func`/`ref.null`).
+  Modes 3/7 (declarative) and 4/6 (active+exprs) are non-goals; no
+  vendored corpus file this repo uses needs them.
+
+### Migration
+
+- Every existing construction site (`Element { function_indices: vec![1,
+  2], .. }`) now needs `vec![Some(1), Some(2)]`; every read site
+  (`for func_idx in &elem.function_indices`) now receives
+  `Option<u32>` instead of a bare `u32`.
+
 ## [0.1.5] - 2026-08-16 (task #95 — passive data segments)
 
 ### Added

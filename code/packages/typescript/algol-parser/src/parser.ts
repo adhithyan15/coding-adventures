@@ -108,49 +108,37 @@
  *   for_stmt     = for IDENT := for_list do statement
  *   expression   = arith_expr | bool_expr
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `algol.grammar` file lives in `code/grammars/` at the repository root.
- *
- *     src/ -> algol-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `algol60.grammar` file under `code/grammars/algol/` at the repository
+ * root is compiled ahead of time into `./_grammar.ts` and
+ * `./_grammar_algol60.ts` (see `code/scripts/_ts_grammar_compile.ts`).
+ * This module statically imports them rather than reading the monorepo's
+ * `code/grammars/` tree at runtime, so a published npm package works
+ * standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
+import type { ParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeAlgol } from "@coding-adventures/algol-lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- * See the algol-lexer tokenizer.ts for a detailed explanation.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { PARSER_GRAMMAR as DEFAULT_GRAMMAR } from "./_grammar.js";
+import { PARSER_GRAMMAR as ALGOL60_GRAMMAR } from "./_grammar_algol60.js";
 
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname    = .../algol-parser/src/
- *   ..           = .../algol-parser/
- *   ../..        = .../typescript/
- *   ../../..     = .../packages/
- *   ../../../..  = .../code/
- *   + grammars   = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
 const VALID_VERSIONS = new Set(["algol60"]);
 
-function resolveGrammarPath(version = "algol60"): string {
+const VERSIONED_GRAMMARS: Record<string, ParserGrammar> = {
+  algol60: ALGOL60_GRAMMAR,
+};
+
+function resolveParserGrammar(version = "algol60"): ParserGrammar {
   if (!VALID_VERSIONS.has(version)) {
     const valid = Array.from(VALID_VERSIONS).sort().join(", ");
     throw new Error(`Unknown ALGOL version ${JSON.stringify(version)}. Valid versions: ${valid}`);
   }
-  return join(GRAMMARS_DIR, "algol", `${version}.grammar`);
+  return version === "algol60" ? DEFAULT_GRAMMAR : VERSIONED_GRAMMARS[version];
 }
 
 /**
@@ -199,13 +187,11 @@ export function parseAlgol(source: string, version = "algol60"): ASTNode {
   const tokens = tokenizeAlgol(source, version);
 
   /**
-   * Step 2: Load the grammar.
-   * The grammar file defines the syntax rules in EBNF-like notation.
-   * parseParserGrammar converts the text into a structured object that
-   * the GrammarParser can use for recursive descent.
+   * Step 2: Resolve the grammar.
+   * The pre-compiled ParserGrammar defines the syntax rules in EBNF-like
+   * notation, ready for the GrammarParser to use for recursive descent.
    */
-  const grammarText = readFileSync(resolveGrammarPath(version), "utf-8");
-  const grammar = parseParserGrammar(grammarText);
+  const grammar = resolveParserGrammar(version);
 
   /**
    * Step 3: Parse.

@@ -33,46 +33,20 @@
  * `while`, `try`, etc. are not just unrecognized — they cause a lexer error.
  * This gives users immediate, clear feedback instead of a confusing parse error.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `starlark.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts -> starlark-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The token grammar is compiled ahead of time from `starlark.tokens` (in
+ * `code/grammars/starlark/`) into `./_grammar.ts`, a native TypeScript
+ * object literal. This avoids reading and parsing a grammar file from disk
+ * at runtime -- which would break once this package is published, since a
+ * published npm package never ships the monorepo's `code/grammars/` tree.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist — we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/tokenizer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname = .../starlark-lexer/src/
- *   ..         = .../starlark-lexer/
- *   ../..      = .../typescript/
- *   ../../..   = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const STARLARK_TOKENS_PATH = join(GRAMMARS_DIR, "starlark", "starlark.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 /**
  * Tokenize Starlark source code and return an array of tokens.
@@ -111,27 +85,10 @@ const STARLARK_TOKENS_PATH = join(GRAMMARS_DIR, "starlark", "starlark.tokens");
  */
 export function tokenizeStarlark(source: string): Token[] {
   /**
-   * Read the grammar file from disk. In a production system, you would
-   * cache this — but for an educational codebase, reading on every call
-   * keeps the code simple and makes the data flow obvious.
+   * Run the generic grammar-driven tokenizer against the pre-compiled
+   * TOKEN_GRAMMAR constant. This is the same engine used for Python,
+   * Ruby, JavaScript, and TypeScript — the only thing that changes
+   * between languages is the grammar.
    */
-  const grammarText = readFileSync(STARLARK_TOKENS_PATH, "utf-8");
-
-  /**
-   * Parse the grammar text into a structured TokenGrammar object.
-   * This extracts:
-   *   - Token patterns (regex and literal)
-   *   - Keywords list (and, break, continue, def, elif, else, for, ...)
-   *   - Reserved words list (class, import, while, try, ...)
-   *   - Skip patterns (comments, whitespace)
-   *   - Mode flags (indentation: true)
-   */
-  const grammar = parseTokenGrammar(grammarText);
-
-  /**
-   * Run the generic grammar-driven tokenizer. This is the same engine
-   * used for Python, Ruby, JavaScript, and TypeScript — the only thing
-   * that changes between languages is the grammar file.
-   */
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/algol-lexer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tokenizes ALGOL 60 source text using the grammar-driven lexer — a thin wrapper that loads algol.tokens",
   "type": "module",
   "main": "src/index.ts",

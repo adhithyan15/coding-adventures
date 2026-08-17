@@ -377,6 +377,26 @@
         "FR-EXT-028-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "FR-PATH-030",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "FR-C32-intonation",
+        "FR-C32-est-ce-que",
+        "FR-C32-ou",
+        "FR-C32-quand",
+        "FR-C32-comment",
+        "FR-C32-combien",
+        "FR-C32-pourquoi",
+        "FR-C32-inversion",
+        "FR-C32-quel"
+      ],
+      "before": [],
+      "inline": [
+        "FR-EXT-029-ASKING"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -471,10 +491,10 @@
       "relocates": {}
     },
     "SPINE-ASK-LOCATION": {
-      "segments": [],
-      "omits": [
-        "QUESTION-WHERE"
+      "segments": [
+        "FR-PATH-030"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-DEFINITE-REFERENCE": {
@@ -884,6 +904,25 @@
         "FR-C31-nez",
         "FR-C31-bouche",
         "FR-C31-ventre"
+      ]
+    },
+    {
+      "id": "FR-EXT-029-ASKING",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can ask a question three ways -- by voice, with est-ce que, and by inversion -- choose between them by register, and use the five question words plus the one that agrees with its noun.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-C32-intonation",
+        "FR-C32-est-ce-que",
+        "FR-C32-ou",
+        "FR-C32-quand",
+        "FR-C32-comment",
+        "FR-C32-combien",
+        "FR-C32-pourquoi",
+        "FR-C32-inversion",
+        "FR-C32-quel"
       ]
     }
   ]

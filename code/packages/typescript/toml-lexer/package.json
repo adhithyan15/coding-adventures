@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/toml-lexer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tokenizes TOML text using the grammar-driven lexer — a thin wrapper that loads toml.tokens",
   "type": "module",
   "main": "src/index.ts",

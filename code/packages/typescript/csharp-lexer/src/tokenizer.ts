@@ -51,30 +51,57 @@
  * When no version is supplied, C# 12.0 (the latest stable release as of
  * 2023, shipping with .NET 8.0 LTS) is used as the default.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `csharp*.tokens` files live in `code/grammars/csharp/` at the
- * repository root.
- *
- *     src/ -> csharp-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `csharp*.tokens` files under `code/grammars/csharp/` at the
+ * repository root are compiled ahead of time into `./_grammar.ts` (the
+ * default, C# 12.0) and one `./_grammar_<version>.ts` per supported
+ * edition (see `code/scripts/_ts_grammar_compile.ts`). This module
+ * statically imports all of them and looks up the right one at call time
+ * — it never reads the monorepo's `code/grammars/` tree at runtime, so a
+ * published npm package works standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize, GrammarLexer } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { TOKEN_GRAMMAR as DEFAULT_GRAMMAR } from "./_grammar.js";
+import { TOKEN_GRAMMAR as V1_0 } from "./_grammar_1_0.js";
+import { TOKEN_GRAMMAR as V2_0 } from "./_grammar_2_0.js";
+import { TOKEN_GRAMMAR as V3_0 } from "./_grammar_3_0.js";
+import { TOKEN_GRAMMAR as V4_0 } from "./_grammar_4_0.js";
+import { TOKEN_GRAMMAR as V5_0 } from "./_grammar_5_0.js";
+import { TOKEN_GRAMMAR as V6_0 } from "./_grammar_6_0.js";
+import { TOKEN_GRAMMAR as V7_0 } from "./_grammar_7_0.js";
+import { TOKEN_GRAMMAR as V8_0 } from "./_grammar_8_0.js";
+import { TOKEN_GRAMMAR as V9_0 } from "./_grammar_9_0.js";
+import { TOKEN_GRAMMAR as V10_0 } from "./_grammar_10_0.js";
+import { TOKEN_GRAMMAR as V11_0 } from "./_grammar_11_0.js";
+import { TOKEN_GRAMMAR as V12_0 } from "./_grammar_12_0.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> csharp-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * Every supported C# edition's token grammar, pre-compiled at build time
+ * from the `.tokens` files in `code/grammars/csharp/` (see
+ * `code/scripts/_ts_grammar_compile.ts`). ESM static imports can't be
+ * conditional on a runtime string, so every version is imported up front
+ * and looked up by key in `resolveTokenGrammar`.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+const VERSIONED_GRAMMARS: Record<string, TokenGrammar> = {
+  "1.0": V1_0,
+  "2.0": V2_0,
+  "3.0": V3_0,
+  "4.0": V4_0,
+  "5.0": V5_0,
+  "6.0": V6_0,
+  "7.0": V7_0,
+  "8.0": V8_0,
+  "9.0": V9_0,
+  "10.0": V10_0,
+  "11.0": V11_0,
+  "12.0": V12_0,
+};
 
 /**
  * Valid C# version strings accepted by this module.
@@ -116,33 +143,34 @@ const VALID_CSHARP_VERSIONS = new Set([
 const DEFAULT_CSHARP_VERSION = "12.0";
 
 /**
- * Resolve the path to the C# token grammar for the given version.
+ * Resolve the compiled C# token grammar for the given version.
  *
  * @param version - An optional C# version string (e.g. `"12.0"`, `"8.0"`,
  *   `"3.0"`). Pass `undefined` or `""` to use the default (C# 12.0).
- * @returns Absolute path to the `.tokens` grammar file.
+ * @returns The pre-compiled `TokenGrammar` for that version.
  * @throws Error if `version` is a non-empty string that is not a recognised
  *   C# version identifier.
  *
  * @example
- *   resolveTokensPath("8.0")
- *   // => ".../code/grammars/csharp/csharp8.0.tokens"
+ *   resolveTokenGrammar("8.0")
+ *   // => TOKEN_GRAMMAR compiled from csharp8.0.tokens
  *
- *   resolveTokensPath()
- *   // => ".../code/grammars/csharp/csharp12.0.tokens"
+ *   resolveTokenGrammar()
+ *   // => TOKEN_GRAMMAR compiled from csharp12.0.tokens (the default)
  */
-function resolveTokensPath(version?: string): string {
-  // Default to C# 12.0 when no version is specified.
-  const effectiveVersion = version || DEFAULT_CSHARP_VERSION;
+function resolveTokenGrammar(version?: string): TokenGrammar {
+  if (!version) {
+    return DEFAULT_GRAMMAR;
+  }
 
-  if (!VALID_CSHARP_VERSIONS.has(effectiveVersion)) {
+  if (!VALID_CSHARP_VERSIONS.has(version)) {
     throw new Error(
-      `Unknown C# version "${effectiveVersion}". ` +
+      `Unknown C# version "${version}". ` +
         `Valid values: ${[...VALID_CSHARP_VERSIONS].join(", ")}`
     );
   }
 
-  return join(GRAMMARS_DIR, "csharp", `csharp${effectiveVersion}.tokens`);
+  return VERSIONED_GRAMMARS[version];
 }
 
 /**
@@ -165,9 +193,7 @@ function resolveTokensPath(version?: string): string {
  *     const tokens = tokenizeCSharp("async Task M() { await Task.Delay(0); }", "5.0");
  */
 export function tokenizeCSharp(source: string, version?: string): Token[] {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return grammarTokenize(source, grammar);
 }
 
@@ -194,8 +220,6 @@ export function createCSharpLexer(
   source: string,
   version?: string
 ): GrammarLexer {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return new GrammarLexer(source, grammar);
 }

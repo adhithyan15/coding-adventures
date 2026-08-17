@@ -1,4 +1,4 @@
-// AUTO-GENERATED FILE — DO NOT EDIT
+// AUTO-GENERATED FILE - DO NOT EDIT
 // Source: toml.tokens
 // Regenerate with: grammar-tools compile-tokens toml.tokens
 //
@@ -241,4 +241,5 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
   contextKeywords: [],
   errorDefinitions: [],
   groups: {},
+  softKeywords: [],
 };
