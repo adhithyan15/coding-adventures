@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.5] — 2026-08-17 (task #97 — table.init/table.copy/elem.drop instance-state threading)
+
+### Added
+
+- `WasmInstance.dropped_elements: Vec<bool>` -- persists for the
+  instance's whole lifetime, same shape/reasoning as
+  `dropped_data_segments` (task #95). Initialized all-`false`, one
+  entry per `module.elements`, at `instantiate()` time; `build_engine`/
+  `call_engine`/`call_engine_with_v128` thread it into/out of
+  `wasm_execution::WasmExecutionEngine` via the new
+  `set_elements`/`set_dropped_elements` setters, exactly like
+  `dropped_data_segments` already is.
+- New end-to-end test `table_init_copy_elem_drop.rs`: confirms
+  `table.init`/`table.copy`/`elem.drop` survive THIS crate's own
+  instance-state threading, not just a single `call_function` at the
+  bare `wasm-execution` layer -- caught a real bug (see
+  `wasm-execution`'s own CHANGELOG entry for this version): the
+  interpreter's post-call state restore never wrote `dropped_elements`
+  back, so an `elem.drop` from one `call()` silently reverted the
+  moment that call returned, invisible to a later, separate `call()`
+  on the same instance.
+
 ## [0.6.4] — 2026-08-16 (task #95 — memory.init/data.drop instance-state threading)
 
 ### Added

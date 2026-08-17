@@ -1122,6 +1122,15 @@ pub struct WasmInstance {
     /// threads it into/out of `wasm_execution::WasmExecutionEngine`
     /// exactly like `v128_heap` is.
     pub dropped_data_segments: Vec<bool>,
+    /// Per-element-segment "already dropped" flags for this instance's
+    /// whole lifetime (task #97) -- same index space as `module.elements`,
+    /// same persistent-across-calls shape and reasoning as
+    /// `dropped_data_segments` above (`elem.drop`'s effect from one call
+    /// must still be visible in a later one). Initialized all-`false`, one
+    /// entry per `module.elements`, at instantiation time; `call_engine`
+    /// threads it into/out of `wasm_execution::WasmExecutionEngine` exactly
+    /// like `dropped_data_segments` is.
+    pub dropped_elements: Vec<bool>,
 }
 
 /// Build a link-error `TrapError` for a failed import (WASM05/W10) --
@@ -1356,13 +1365,20 @@ impl WasmRuntime {
             }
         }
 
-        // Apply element segments.
+        // Apply element segments. A passive segment (task #97) is never
+        // applied automatically -- same "applying one automatically would
+        // defeat the entire point" reasoning task #95 established for
+        // `memory.init`'s passive data segments -- it stays resident for
+        // an explicit `table.init` to copy from later.
         for elem in &module.elements {
+            if elem.is_passive {
+                continue;
+            }
             if let Some(table) = tables.get_mut(elem.table_index as usize) {
                 let offset = evaluate_const_expr(&elem.offset_expr, &globals, &mut v128_heap)?;
                 let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32;
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
-                    table.set(offset_num + j as u32, Some(func_idx))?;
+                    table.set(offset_num + j as u32, func_idx)?;
                 }
             }
         }
@@ -1379,6 +1395,11 @@ impl WasmRuntime {
         // instantiation path drops anything itself.
         let dropped_data_segments = vec![false; module.data.len()];
 
+        // One dropped-flag per element segment, all initially false (task
+        // #97) -- `elem.drop` flips one to true; nothing in this
+        // instantiation path drops anything itself.
+        let dropped_elements = vec![false; module.elements.len()];
+
         let instance = WasmInstance {
             module: module.clone(),
             memories,
@@ -1391,6 +1412,7 @@ impl WasmRuntime {
             exports,
             v128_heap,
             dropped_data_segments,
+            dropped_elements,
         };
 
         Ok(instance)
@@ -1593,6 +1615,13 @@ impl WasmRuntime {
         engine.set_data_segments(instance.module.data.iter().map(|seg| seg.data.clone()).collect());
         engine.set_dropped_data_segments(instance.dropped_data_segments.clone());
 
+        // Thread the module's element segments' function-index lists --
+        // `table.init`'s source (task #97) -- plus this instance's
+        // per-segment dropped state, same shape/reasoning as the data-
+        // segment threading just above.
+        engine.set_elements(instance.module.elements.iter().map(|elem| elem.function_indices.clone()).collect());
+        engine.set_dropped_elements(instance.dropped_elements.clone());
+
         // Register the module's WasmGC struct field counts (LANG77 / McCarthy
         // L3b-3a-3c-2) so the engine knows how many fields each `struct.new`
         // allocates — without this, a `struct.new` traps with "no field count
@@ -1672,6 +1701,7 @@ impl WasmRuntime {
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
         instance.dropped_data_segments = state.dropped_data_segments;
+        instance.dropped_elements = state.dropped_elements;
 
         result
     }
@@ -1697,6 +1727,7 @@ impl WasmRuntime {
         instance.host_functions = state.host_functions;
         instance.v128_heap = state.v128_heap;
         instance.dropped_data_segments = state.dropped_data_segments;
+        instance.dropped_elements = state.dropped_elements;
 
         result
     }

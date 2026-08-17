@@ -308,14 +308,72 @@ fn encode_global(global: &Global) -> Vec<u8> {
     bytes
 }
 
+/// Encodes one of the four binary element-segment modes this repo
+/// supports (task #97, `code/specs/W17-wasm-bulk-table-ops.md`): 0
+/// (active, implicit table 0, funcidx-list), 1 (passive, funcidx-list),
+/// 2 (active, explicit table, funcidx-list), 5 (passive, exprs-list --
+/// the only exprs mode this repo produces, and only ever `funcref`).
+/// Modes 3/4/6/7 (declarative, or an ACTIVE segment carrying exprs) are
+/// never encoded here: `function_indices` can only contain a real `None`
+/// (a `ref.null` entry, requiring an exprs-list mode) for a PASSIVE
+/// segment -- both real producers of `Element` (`wasm-wast-parser`'s own
+/// corpus census and `wasm-module-parser`'s scoped binary decode) never
+/// construct an ACTIVE segment with a `None` entry, so that combination
+/// is unreachable in practice; `unwrap_or(0)` rather than a panic is
+/// still used below as defense-in-depth, same non-panicking-on-a-
+/// structurally-impossible-case discipline this repo applies throughout
+/// (a wrong-but-non-crashing encoding here would only ever be reachable
+/// by a bug in this repo's OWN code, never by attacker-controlled input
+/// -- `encode_element`'s only callers construct `Element` from Rust,
+/// never from parsed external bytes).
 fn encode_element(element: &Element) -> Vec<u8> {
-    let mut bytes = encode_u32(element.table_index);
-    bytes.extend_from_slice(&element.offset_expr);
-    bytes.extend(encode_u32(element.function_indices.len() as u32));
-    for func_index in &element.function_indices {
-        bytes.extend(encode_u32(*func_index));
+    if element.is_passive {
+        let has_null_entry = element.function_indices.iter().any(|f| f.is_none());
+        if !has_null_entry {
+            // Mode 1: passive, funcidx-list.
+            let mut bytes = encode_u32(1);
+            bytes.push(0x00); // elemkind: funcref
+            bytes.extend(encode_u32(element.function_indices.len() as u32));
+            for func_index in &element.function_indices {
+                bytes.extend(encode_u32(func_index.unwrap_or(0)));
+            }
+            bytes
+        } else {
+            // Mode 5: passive, exprs-list (funcref only).
+            let mut bytes = encode_u32(5);
+            bytes.push(0x70); // reftype: funcref
+            bytes.extend(encode_u32(element.function_indices.len() as u32));
+            for func_index in &element.function_indices {
+                match func_index {
+                    Some(idx) => {
+                        bytes.push(0xD2); // ref.func
+                        bytes.extend(encode_u32(*idx));
+                        bytes.push(0x0B); // end
+                    }
+                    None => {
+                        bytes.push(0xD0); // ref.null
+                        bytes.push(0x70); // heaptype: func
+                        bytes.push(0x0B); // end
+                    }
+                }
+            }
+            bytes
+        }
+    } else {
+        let mut bytes = if element.table_index == 0 {
+            encode_u32(0) // Mode 0: active, implicit table 0.
+        } else {
+            let mut b = encode_u32(2); // Mode 2: active, explicit table.
+            b.extend(encode_u32(element.table_index));
+            b
+        };
+        bytes.extend_from_slice(&element.offset_expr);
+        bytes.extend(encode_u32(element.function_indices.len() as u32));
+        for func_index in &element.function_indices {
+            bytes.extend(encode_u32(func_index.unwrap_or(0)));
+        }
+        bytes
     }
-    bytes
 }
 
 fn encode_data_segment(segment: &DataSegment) -> Vec<u8> {

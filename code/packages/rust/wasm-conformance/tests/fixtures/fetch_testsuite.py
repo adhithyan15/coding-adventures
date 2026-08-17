@@ -98,11 +98,8 @@ TESTSUITE_FILES = [
     # declarations never actually read their `funcref`/`externref` reftype
     # keyword, silently defaulting every table's element_type to funcref
     # regardless of the source (`(table $t2 2 externref)` still parsed as
-    # funcref). Deliberately excludes: table.wast (has its own separate
-    # remaining gaps -- hex-literal table limits, a real `spectest`
-    # import), and table_init.wast/table_copy.wast (task #97 -- need
-    # table.init/table.copy/elem.drop, same shape as memory.init/
-    # data.drop's gap).
+    # funcref). Deliberately excludes table.wast: has its own separate
+    # remaining gaps -- hex-literal table limits, a real `spectest` import.
     "table_get.wast",
     "table_set.wast",
     # table.size/table.grow/table.fill (task #98) -- entirely unimplemented
@@ -111,13 +108,26 @@ TESTSUITE_FILES = [
     # Deliberately excludes table_grow.wast: its own corpus uses `(elem
     # declare func $f)` -- declarative element segments, a third element-
     # segment mode this crate has no concept of yet (only active/passive
-    # data segments exist, task #95's `is_passive`; elements have neither)
-    # -- and cross-module `register`/import table-growth propagation tests
-    # that are a fine follow-on once `elem declare` lands, most naturally
-    # alongside task #97's own Element/is_passive rework. table_size.wast
-    # and table_fill.wast use neither and are fully vendorable now.
+    # data segments exist, task #95's `is_passive`, and now also passive-
+    # exprs-list for elements, task #97's own widening) -- and cross-module
+    # `register`/import table-growth propagation tests that are a fine
+    # follow-on once `elem declare` lands. table_size.wast and
+    # table_fill.wast use neither and are fully vendorable now.
     "table_size.wast",
     "table_fill.wast",
+    # table.init/table.copy/elem.drop (task #97) -- were entirely
+    # unimplemented (no opcode decoding, no interpreter handler, no
+    # wast-parser text-form support, no validator type-check rule, and
+    # `Element` had no passive/exprs-list representation at all) before
+    # this pass. See `code/specs/W17-wasm-bulk-table-ops.md` for the real-
+    # corpus census that scoped the binary encoding to exactly 4 of the 8
+    # spec-defined element-segment modes (0/1/2/5) -- these two files use
+    # only those. Deliberately excludes their sibling `bulk.wast` (mixes
+    # in memory.copy/memory.fill/memory.init/data.drop too, already
+    # covered individually above) and `elem.wast` (uses `(elem declare
+    # ...)`, the same declarative-segment gap table_grow.wast has).
+    "table_init.wast",
+    "table_copy.wast",
     # Memory
     "memory.wast",
     "address.wast",

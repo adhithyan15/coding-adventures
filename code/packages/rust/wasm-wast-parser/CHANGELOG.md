@@ -1,5 +1,53 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.21 — 2026-08-17 — table.init/table.copy/elem.drop + passive/exprs-list elem parsing (task #97)
+
+### Fixed
+
+- `/security-review` finding: `build_elem` used to accept an ACTIVE
+  element segment using the exprs-list form (binary modes 4/6 -- e.g.
+  `(elem (table $t) (i32.const 0) funcref (ref.func 0) (ref.null
+  func))`), silently allowing a `None` (`ref.null`) entry into a
+  segment marked `is_passive: false`. `wasm-module-encoder::
+  encode_element`'s active-segment branch does `func_index.unwrap_or
+  (0)`, which would turn that `ref.null` into a real reference to
+  function 0 on re-encode -- wrong table contents with no error.
+  `parse_element_section` (the binary decoder) already structurally
+  can't produce this shape (only mode flags 0/1/2/5 are handled); the
+  text parser now enforces the same restriction, rejecting the
+  combination at parse time instead.
+
+### Added
+
+- `ModuleCtx.elem_names: HashMap<String, u32>` -- an element segment's
+  own `$id` -> its index in `module.elements`, mirroring `data_names`
+  exactly, registered by a new `collect_symbols` pre-pass branch.
+- `build_elem` rewritten to detect passive segments (a leading `func`/
+  `funcref`/`externref` keyword with no `(table ...)` clause) and parse
+  BOTH funcidx-list (`(elem $e func $a $b)`) and exprs-list (`(elem $e
+  funcref (ref.func $a) (ref.null func))`) forms, via a new
+  `resolve_elem_expr_entry` helper.
+- `table.init`/`table.copy`/`elem.drop` text-form parsing, both flat
+  and folded instruction syntax -- entirely unimplemented before this
+  pass. `table.init`'s TEXT operand order (`$table $elem`) is the
+  OPPOSITE of its BINARY encoding order (`elemidx` first, `tableidx`
+  second) -- confirmed against the real testsuite corpus, not guessed;
+  `table.copy`'s text and binary orders match (dst-then-src both
+  times). The flat/stream form defers all table/elem indices to 0,
+  same documented scope boundary this crate's other bulk-op flat forms
+  already use (no vendored corpus file exercises non-default indices
+  through flat syntax).
+
+### Fixed
+
+- The three new folded-form encoders (`encode_table_init_flat`/
+  `_table_copy_flat`/`_elem_drop_flat`) were proactively extracted into
+  their own `#[inline(never)]` functions rather than inlined directly
+  into `encode_flat_instr`, applying task #98's own fix up front
+  instead of waiting to hit the identical debug-build stack-frame-size
+  regression again (`deeply_nested_folded_arithmetic_errors_cleanly_
+  not_stack_overflow` stayed green throughout).
+
 ## 0.1.20 — 2026-08-16 — table.grow/table.size/table.fill text-form parsing (task #98)
 
 ### Added

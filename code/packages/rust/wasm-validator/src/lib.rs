@@ -459,26 +459,41 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // real `elem.table_index` (`tables.get_mut(elem.table_index as
     // usize)`), so there is no silent-misapplication risk to guard
     // against.
+    //
+    // Passive segments (task #97): `elem.table_index` is meaningless
+    // (unset, `0` by convention) for a passive segment -- it names no
+    // real target table at declaration time, `table.init` supplies one
+    // per-call instead -- so a module can declare a passive element
+    // segment (and later `table.init`/`elem.drop` it) with ZERO tables
+    // declared at all, same "a module with zero memories can still
+    // declare a passive data segment" allowance task #95 established for
+    // `memory.init`/`data.drop`. The table-existence/bounds checks below
+    // apply only to ACTIVE segments, which really do target a real table
+    // at instantiation time.
     for (i, elem) in module.elements.iter().enumerate() {
-        if total_tables == 0 {
-            return Err(ValidationError::InvalidElement(format!(
-                "element segment #{} references a table, but no table is declared",
-                i
-            )));
+        if !elem.is_passive {
+            if total_tables == 0 {
+                return Err(ValidationError::InvalidElement(format!(
+                    "element segment #{} references a table, but no table is declared",
+                    i
+                )));
+            }
+            if elem.table_index as usize >= total_tables {
+                return Err(ValidationError::InvalidElement(format!(
+                    "element segment #{} references table index {}, but only {} tables exist",
+                    i, elem.table_index, total_tables
+                )));
+            }
         }
-        if elem.table_index as usize >= total_tables {
-            return Err(ValidationError::InvalidElement(format!(
-                "element segment #{} references table index {}, but only {} tables exist",
-                i, elem.table_index, total_tables
-            )));
-        }
-        // Validate function indices within element segments.
-        for &func_idx in &elem.function_indices {
-            if (func_idx as usize) >= total_functions {
+        // Validate function indices within element segments. A `None`
+        // entry (`ref.null`, task #97) names no function at all, so
+        // there is nothing to bounds-check for it.
+        for idx in elem.function_indices.iter().flatten() {
+            if (*idx as usize) >= total_functions {
                 return Err(ValidationError::FuncIndexOutOfBounds(format!(
                     "element segment #{} references function index {}, \
                      but only {} functions exist",
-                    i, func_idx, total_functions
+                    i, idx, total_functions
                 )));
             }
         }
@@ -904,7 +919,8 @@ mod tests {
             elements: vec![Element {
                 table_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
-                function_indices: vec![0],
+                function_indices: vec![Some(0)],
+                is_passive: false,
             }],
             ..Default::default()
         };
@@ -925,7 +941,8 @@ mod tests {
             elements: vec![Element {
                 table_index: 1, // only 0 is valid
                 offset_expr: vec![0x41, 0x00, 0x0B],
-                function_indices: vec![0],
+                function_indices: vec![Some(0)],
+                is_passive: false,
             }],
             ..Default::default()
         };
@@ -946,7 +963,8 @@ mod tests {
             elements: vec![Element {
                 table_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
-                function_indices: vec![99], // out of bounds
+                function_indices: vec![Some(99)], // out of bounds
+                is_passive: false,
             }],
             ..Default::default()
         };
@@ -967,7 +985,8 @@ mod tests {
             elements: vec![Element {
                 table_index: 0,
                 offset_expr: vec![0x41, 0x00, 0x0B],
-                function_indices: vec![0],
+                function_indices: vec![Some(0)],
+                is_passive: false,
             }],
             ..Default::default()
         };

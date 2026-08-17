@@ -833,6 +833,62 @@ impl Table {
             ))),
         }
     }
+
+    /// Copies `len` entries from `src_table[src..]` into `dst_table[dest..]`
+    /// -- the `table.copy` bulk-table primitive (task #97). Takes RAW
+    /// POINTERS, not `&mut Table`/`&Table` references, because
+    /// `table.copy`'s two table operands can name either the SAME table
+    /// or two DIFFERENT ones: `table.copy $t $t ...` is a legal,
+    /// attacker-reachable self-copy, and forming a `&mut Table` and a
+    /// `&Table` that both alias the same `Table` object -- even briefly,
+    /// even with no observable read/write hazard -- is undefined behavior
+    /// under Rust's aliasing model regardless of what the two references
+    /// actually do with it (a `/security-review` finding: an earlier
+    /// version of this function took `&mut`/`&` and relied on the caller
+    /// dereferencing two raw pointers into the arguments, which still
+    /// aliases at the reference level the instant both parameters are
+    /// live). Every access below goes through the raw pointers directly,
+    /// inside `unsafe`, so no aliased reference is ever constructed, self-
+    /// copy or not.
+    ///
+    /// # Safety
+    /// `dst_table`/`src_table` must each be valid, live, properly aligned
+    /// pointers to a `Table` for the whole call (satisfied by every call
+    /// site, which resolves them from `ctx.tables: Vec<*mut Table>` --
+    /// pointers into a `Vec` that outlives the call). Correct even when
+    /// they point at the SAME `Table` (a self-copy with potentially
+    /// overlapping ranges): the source range is read into a temporary
+    /// `Vec` BEFORE any destination write happens, so it never observes a
+    /// partially-overwritten source -- the same overlap-safe (memmove)
+    /// semantics `LinearMemory::copy`'s `copy_within` gives for the
+    /// single-buffer case. Same zero-length-still-bounds-checked
+    /// discipline task #94 established (`dest`/`src` must be `<= size()`
+    /// even when `len == 0`), checking BOTH tables' bounds before any
+    /// write, so a trap leaves both tables completely untouched.
+    pub unsafe fn copy_between(dst_table: *mut Table, src_table: *const Table, dest: u32, src: u32, len: u32) -> Result<(), TrapError> {
+        let dest = dest as usize;
+        let src = src as usize;
+        let len = len as usize;
+        let src_end = src.checked_add(len);
+        let dest_end = dest.checked_add(len);
+        // Explicit (not autoref'd) `&`/`&mut` -- each scoped to the
+        // narrowest block that needs it, so the two never overlap even
+        // when `dst_table`/`src_table` point at the SAME `Table` (a
+        // self-copy): the shared borrow that reads `entries` ends before
+        // the mutable borrow that writes it is ever formed.
+        let src_len = unsafe { (*src_table).elements.len() };
+        let dst_len = unsafe { (*dst_table).elements.len() };
+        match (src_end, dest_end) {
+            (Some(se), Some(de)) if se <= src_len && de <= dst_len => {
+                let entries: Vec<Option<u32>> = unsafe { (&(*src_table).elements)[src..se].to_vec() };
+                unsafe { (&mut (*dst_table).elements)[dest..de].clone_from_slice(&entries) };
+                Ok(())
+            }
+            _ => Err(TrapError::new(format!(
+                "out of bounds table.copy: dest={dest}, src={src}, len={len}, dst_table_size={dst_len}, src_table_size={src_len}"
+            ))),
+        }
+    }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1102,18 +1158,26 @@ pub enum DecodedOperand {
     /// `extract_lane` (0-3), unused (`0`) for every other op here.
     Simd { sub_opcode: u32, aux: u32 },
     /// A `0xFC`-prefixed bulk-memory/bulk-table/non-trapping-conversion
-    /// instruction's decoded immediates: the sub-opcode, plus `data_idx` --
-    /// a single generic index slot reused across sub-opcodes for whichever
-    /// index space that sub-opcode actually indexes (never more than one
-    /// at a time, since `sub` alone picks the meaning): the real
+    /// instruction's decoded immediates: the sub-opcode, plus `data_idx`
+    /// -- a generic index slot reused across sub-opcodes for whichever
+    /// index space that sub-opcode actually indexes: the real
     /// data-segment index for `memory.init`/`data.drop` (0x08/0x09, task
-    /// #95), the real table index for `table.grow`/`table.size`/
-    /// `table.fill` (0x0F/0x10/0x11, task #98), unused (`0`) for every
-    /// other 0xFC sub-opcode (trunc_sat, memory.copy, memory.fill). Packed
-    /// uniformly the same way `Atomic`/`Simd` above pack their own
-    /// sub-opcode + one aux value, so the single `0xFC` handler can
-    /// dispatch *and* read `data_idx` from one place.
-    BulkMemory { sub: u8, data_idx: u32 },
+    /// #95); the real table index for `table.grow`/`table.size`/
+    /// `table.fill` (0x0F/0x10/0x11, task #98); the real elem-segment
+    /// index for `elem.drop` (0x0D, task #97) and (paired with `aux`
+    /// below) `table.init` (0x0C, task #97); the destination table index
+    /// for `table.copy` (0x0E, task #97, paired with `aux` as the source
+    /// table index); unused (`0`) for every other 0xFC sub-opcode
+    /// (trunc_sat, memory.copy, memory.fill). `aux` is a SECOND index
+    /// slot, needed only by the two sub-opcodes that carry two real
+    /// indices at once (`table.init`'s elem-then-table pair, `table.
+    /// copy`'s dst-then-src table pair) -- `MAX_TABLES` (64) means a
+    /// table index always fits in a `u8`, so this stays a single extra
+    /// byte in the packed representation rather than widening `data_idx`
+    /// itself. Packed uniformly the same way `Atomic`/`Simd` above pack
+    /// their own sub-opcode + aux value(s), so the single `0xFC` handler
+    /// can dispatch *and* read both indices from one place.
+    BulkMemory { sub: u8, data_idx: u32, aux: u8 },
 }
 
 /// Decode all instructions in a function body.
@@ -1196,6 +1260,9 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //   0x09         data.drop           <data_idx:u32leb> (task #95)
         //   0x0A         memory.copy         <dst mem idx> <src mem idx> (both 0 in our modules)
         //   0x0B         memory.fill         <mem idx>
+        //   0x0C         table.init          <elem_idx:u32leb> <table_idx:u32leb> (task #97)
+        //   0x0D         elem.drop           <elem_idx:u32leb> (task #97)
+        //   0x0E         table.copy          <dst_table_idx:u32leb> <src_table_idx:u32leb> (task #97)
         //   0x0F         table.grow          <table_idx:u32leb> (task #98)
         //   0x10         table.size          <table_idx:u32leb> (task #98)
         //   0x11         table.fill          <table_idx:u32leb> (task #98)
@@ -1213,6 +1280,8 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         // a real table index instead (see `BulkMemory`'s own doc comment) --
         // this repo supports up to `MAX_TABLES` (64) real tables, so a
         // table.get/table.set-style hardcoded-to-0 shortcut would be wrong.
+        // `table.init`/`table.copy` carry TWO real indices each (unlike
+        // every sub-opcode above, which needs at most one), hence `aux`.
         if opcode_byte == 0xFC {
             let sub = if offset < code.len() {
                 let s = code[offset];
@@ -1221,35 +1290,52 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             } else {
                 0
             };
-            let data_idx = match sub {
+            let (data_idx, aux) = match sub {
                 0x08 => {
                     let (idx, sz) = decode_leb_u32(code, offset);
                     offset += sz + 1; // + the trailing single-byte memory index
-                    idx
+                    (idx, 0)
                 }
                 0x09 => {
                     let (idx, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    idx
+                    (idx, 0)
                 }
                 0x0A => {
                     offset += 2; // memory.copy: dst + src memory-index bytes
-                    0
+                    (0, 0)
                 }
                 0x0B => {
                     offset += 1; // memory.fill: one memory-index byte
-                    0
+                    (0, 0)
+                }
+                0x0C => {
+                    let (elem_idx, sz1) = decode_leb_u32(code, offset);
+                    let (table_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (elem_idx, table_idx as u8)
+                }
+                0x0D => {
+                    let (elem_idx, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (elem_idx, 0)
+                }
+                0x0E => {
+                    let (dst_table_idx, sz1) = decode_leb_u32(code, offset);
+                    let (src_table_idx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (dst_table_idx, src_table_idx as u8)
                 }
                 0x0F..=0x11 => {
                     let (idx, sz) = decode_leb_u32(code, offset);
                     offset += sz;
-                    idx
+                    (idx, 0)
                 }
-                _ => 0,
+                _ => (0, 0),
             };
             instructions.push(DecodedInstruction {
                 opcode: 0xFC,
-                operand: DecodedOperand::BulkMemory { sub, data_idx },
+                operand: DecodedOperand::BulkMemory { sub, data_idx, aux },
             });
             continue;
         }
@@ -1753,6 +1839,24 @@ pub struct WasmExecutionContext {
     /// -- NOT reset per call): once dropped, a segment stays dropped for
     /// the rest of the instance's lifetime.
     pub dropped_data_segments: Vec<bool>,
+    /// The module's element segments' entries, indexed by elem-segment
+    /// index (task #97) -- `table.init`'s source. Same shape as
+    /// `data_segments` above, `Vec<Option<u32>>` per segment (`Some(idx)`
+    /// for a real funcref index, `None` for a `ref.null` entry, matching
+    /// `Table::elements`'s own representation). Populated once via
+    /// [`WasmExecutionEngine::set_elements`]. Active segments' entries are
+    /// ALSO applied directly to their table at instantiation time
+    /// (`wasm-runtime::instantiate()`) -- this Vec exists so `table.init`
+    /// can copy from ANY segment (active or passive) on demand, any
+    /// number of times, independent of that one-time instantiation-time
+    /// copy.
+    pub elements: Vec<Vec<Option<u32>>>,
+    /// Per-elem-segment "has `elem.drop` already run" flag (task #97),
+    /// same index space as `elements` above and same semantics as
+    /// `dropped_data_segments`: `elem.drop` sets an entry `true`;
+    /// `table.init` on a dropped segment traps. Module-global and
+    /// persistent across calls, never reset per call.
+    pub dropped_elements: Vec<bool>,
 }
 
 /// `call_function`'s own call-stack recursion ceiling. WASM's `call`/
@@ -2066,7 +2170,9 @@ fn convert_operand(
             Some(Operand::Index((0x0Cusize << 32) | idx))
         }
         DecodedOperand::Simd { sub_opcode, aux } => Some(Operand::Index(((*sub_opcode as usize) << 32) | (*aux as usize))),
-        DecodedOperand::BulkMemory { sub, data_idx } => Some(Operand::Index(((*sub as usize) << 32) | (*data_idx as usize))),
+        DecodedOperand::BulkMemory { sub, data_idx, aux } => {
+            Some(Operand::Index(((*sub as usize) << 32) | ((*aux as usize) << 40) | (*data_idx as usize)))
+        }
     }
 }
 
@@ -2092,15 +2198,16 @@ fn unpack_atomic_operand(instr: &Instruction) -> (u8, u32) {
     ((packed >> 32) as u8, (packed & 0xFFFF_FFFF) as u32)
 }
 
-/// Unpack a `0xFC` bulk-memory/conversion instruction's `(sub, data_idx)`
-/// from the packed `Operand::Index` `convert_operand` built above -- same
-/// shape as `unpack_atomic_operand`.
-fn unpack_bulk_memory_operand(instr: &Instruction) -> (u8, u32) {
+/// Unpack a `0xFC` bulk-memory/conversion instruction's `(sub, data_idx,
+/// aux)` from the packed `Operand::Index` `convert_operand` built above --
+/// same shape as `unpack_atomic_operand`, plus the extra `aux` byte
+/// `table.init`/`table.copy` need for their second index (task #97).
+fn unpack_bulk_memory_operand(instr: &Instruction) -> (u8, u32, u8) {
     let packed = match &instr.operand {
         Some(Operand::Index(i)) => *i,
         _ => 0,
     };
-    ((packed >> 32) as u8, (packed & 0xFFFF_FFFF) as u32)
+    ((packed >> 32) as u8, (packed & 0xFFFF_FFFF) as u32, (packed >> 40) as u8)
 }
 
 // ── Helper: pop a WasmValue from the VM's typed stack ─────────────────────
@@ -2662,7 +2769,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     // overflow because THEY must trap, not saturate).
     vm.register_context_opcode(0xFC, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let (sub, data_idx) = unpack_bulk_memory_operand(instr);
+        let (sub, data_idx, aux) = unpack_bulk_memory_operand(instr);
         match sub {
             0x00 => {
                 let a = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
@@ -2785,6 +2892,105 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as u8;
                 let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 get_memory(ctx)?.fill(dest, value, n).map_err(VMError::from)?;
+            }
+            0x0C => {
+                // `table.init` (task #97): stack (bottom -> top) is
+                // `[dest, src, len]`, same pop order as `memory.init`
+                // (task #95). `dest` indexes into the TARGET table
+                // (named by `aux`, this instruction's own decoded
+                // table-index immediate); `src`/`len` index into the
+                // ELEMENT SEGMENT named by `data_idx` (the elem-segment
+                // index immediate). A dropped segment behaves as
+                // length-0 for bounds-checking -- `table.init` with
+                // `len=0` still succeeds, but any `len>0` traps --
+                // matching `memory.init`'s own "a dropped segment can
+                // never be initialized from again" rule exactly.
+                let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
+                let elem_idx = data_idx as usize;
+                // Security review pattern (task #95/#97): an out-of-range
+                // `elem_idx` is ALWAYS a hard error, checked before any
+                // indexing at all -- kept separate from "segment is
+                // dropped" (below), which is a real, spec-defined,
+                // IN-range state that degrades to a length-0 segment
+                // rather than erroring outright.
+                if elem_idx >= ctx.elements.len() || elem_idx >= ctx.dropped_elements.len() {
+                    return Err(VMError::GenericError(format!("table.init: elem segment index {elem_idx} out of bounds")));
+                }
+                let dropped = ctx.dropped_elements[elem_idx];
+                // Cloned to an owned `Vec` (not borrowed as `&[Option<u32>]`
+                // from `ctx.elements`) so this doesn't hold an immutable
+                // borrow of `ctx` across the `get_table(ctx, ..)` call just
+                // below, which needs `ctx` mutably.
+                let segment: Vec<Option<u32>> = if dropped { Vec::new() } else { ctx.elements[elem_idx].clone() };
+                // Both bounds are checked BEFORE any write happens, so a
+                // trap (either side out of range) leaves the table
+                // completely untouched -- same atomicity discipline
+                // `Table::copy_between` below uses.
+                let src_end = src.checked_add(len);
+                let table = get_table(ctx, aux as usize)?;
+                let dest_end = dest.checked_add(len);
+                match (src_end, dest_end) {
+                    (Some(se), Some(de)) if se <= segment.len() && de <= table.size() as usize => {
+                        for i in 0..len {
+                            table.set((dest + i) as u32, segment[src + i]).map_err(VMError::from)?;
+                        }
+                    }
+                    _ => {
+                        return Err(VMError::from(TrapError::new(format!(
+                            "out of bounds table access: table.init elem_idx={elem_idx}, dest={dest}, src={src}, len={len}, segment_size={}",
+                            segment.len()
+                        ))));
+                    }
+                }
+            }
+            0x0D => {
+                // `elem.drop` (task #97): no stack operands at all --
+                // just marks the segment permanently dropped, same shape
+                // `data.drop`'s own handler uses (task #95).
+                let elem_idx = data_idx as usize;
+                if elem_idx >= ctx.dropped_elements.len() {
+                    return Err(VMError::GenericError(format!("elem.drop: elem segment index {elem_idx} out of bounds")));
+                }
+                ctx.dropped_elements[elem_idx] = true;
+            }
+            0x0E => {
+                // `table.copy` (task #97): stack (bottom -> top) is
+                // `[dest, src, len]`, same pop order as `memory.copy`/
+                // `table.fill`. `dest` indexes into the DESTINATION
+                // table (`data_idx`, the dst table-index immediate);
+                // `src` indexes into the SOURCE table (`aux`, the src
+                // table-index immediate) -- unlike `memory.copy`'s own
+                // discarded-to-0 memory operands (W16 deferred scope),
+                // this repo already supports `MAX_TABLES` real tables,
+                // so both operands are real decoded indices, never
+                // hardcoded to 0.
+                let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                let dst_table_idx = data_idx as usize;
+                let src_table_idx = aux as usize;
+                if dst_table_idx >= ctx.tables.len() {
+                    return Err(VMError::GenericError(format!("table.copy: destination table index {dst_table_idx} out of bounds")));
+                }
+                if src_table_idx >= ctx.tables.len() {
+                    return Err(VMError::GenericError(format!("table.copy: source table index {src_table_idx} out of bounds")));
+                }
+                let dst_ptr = ctx.tables[dst_table_idx];
+                let src_ptr: *const Table = ctx.tables[src_table_idx];
+                // SAFETY: both pointers were bounds-checked above and come
+                // from `ctx.tables`, which outlives this call.
+                // `Table::copy_between` takes raw pointers (not `&mut`/`&`
+                // references -- see its own doc comment for why: forming
+                // both over the same `Table` when `dst_table_idx ==
+                // src_table_idx` would be aliasing UB even though no
+                // actual read/write hazard exists) and reads the whole
+                // source range into a temporary `Vec` before writing any
+                // destination slot, so a same-table self-copy is sound.
+                unsafe {
+                    Table::copy_between(dst_ptr, src_ptr, dest, src, len).map_err(VMError::from)?;
+                }
             }
             0x0F => {
                 // `table.grow` (task #98): stack (bottom -> top) is
@@ -5011,6 +5217,10 @@ pub struct WasmEngineState {
     /// onto the owning `WasmInstance`, same round-trip shape as
     /// `v128_heap` above.
     pub dropped_data_segments: Vec<bool>,
+    /// Each element segment's "already dropped" state after this call
+    /// (task #97) -- same round-trip shape as `dropped_data_segments`
+    /// above, set via [`WasmExecutionEngine::set_dropped_elements`].
+    pub dropped_elements: Vec<bool>,
 }
 
 /// The WASM execution engine — interprets validated WASM modules.
@@ -5070,6 +5280,16 @@ pub struct WasmExecutionEngine {
     /// Persistent across calls, same `set`-before/writeback-after pattern
     /// as `v128_heap`.
     dropped_data_segments: Vec<bool>,
+    /// The module's element segments' entries (task #97) -- see
+    /// `WasmExecutionContext::elements`'s own doc comment. Immutable
+    /// content, same "no writeback needed" reasoning as `data_segments`
+    /// above; set once via [`Self::set_elements`].
+    elements: Vec<Vec<Option<u32>>>,
+    /// Per-elem-segment dropped flags (task #97) -- see
+    /// `WasmExecutionContext::dropped_elements`'s own doc comment.
+    /// Persistent across calls, same `set`-before/writeback-after pattern
+    /// as `dropped_data_segments`.
+    dropped_elements: Vec<bool>,
 }
 
 impl WasmExecutionEngine {
@@ -5094,6 +5314,8 @@ impl WasmExecutionEngine {
             v128_heap: vec![[0u8; 16]],
             data_segments: Vec::new(),
             dropped_data_segments: Vec::new(),
+            elements: Vec::new(),
+            dropped_elements: Vec::new(),
         }
     }
 
@@ -5163,6 +5385,25 @@ impl WasmExecutionEngine {
         self
     }
 
+    /// Register the module's element segments' entries, indexed by
+    /// elem-segment index (task #97) -- `table.init`'s source. Same
+    /// optional-setter pattern as [`Self::set_data_segments`]: left
+    /// unset, `table.init`/`elem.drop` see an empty `elements`, so any
+    /// real elem-segment index is cleanly out-of-bounds (a trap, not a
+    /// panic).
+    pub fn set_elements(&mut self, elements: Vec<Vec<Option<u32>>>) -> &mut Self {
+        self.elements = elements;
+        self
+    }
+
+    /// Register each element segment's "already dropped" state (task
+    /// #97), same index space as [`Self::set_elements`] above. Same
+    /// optional-setter pattern as [`Self::set_dropped_data_segments`].
+    pub fn set_dropped_elements(&mut self, dropped: Vec<bool>) -> &mut Self {
+        self.dropped_elements = dropped;
+        self
+    }
+
     /// Live `gc_heap` object count as of the most recently completed
     /// [`Self::call_function`] (W04). `gc_heap` itself resets every call, so
     /// this reflects only that one call's allocation/collection activity,
@@ -5188,6 +5429,7 @@ impl WasmExecutionEngine {
             host_functions: self.host_functions,
             v128_heap: self.v128_heap,
             dropped_data_segments: self.dropped_data_segments,
+            dropped_elements: self.dropped_elements,
         }
     }
 
@@ -5318,6 +5560,8 @@ impl WasmExecutionEngine {
             pending_tail_call: None,
             data_segments: self.data_segments.clone(),
             dropped_data_segments: self.dropped_data_segments.clone(),
+            elements: self.elements.clone(),
+            dropped_elements: self.dropped_elements.clone(),
         };
 
         // Reset and execute.
@@ -5619,6 +5863,10 @@ impl WasmExecutionEngine {
         // still stick -- the drop already happened before the trap, and a
         // real WASM engine can't un-happen it.
         self.dropped_data_segments = ctx.dropped_data_segments.clone();
+        // Same unconditional-writeback reasoning as `dropped_data_segments`
+        // just above (task #97): an `elem.drop` from a call that later
+        // traps must still stick.
+        self.dropped_elements = ctx.dropped_elements.clone();
         // gc_heap itself is not persisted (see its own doc comment above);
         // the counters are, so a caller can inspect this call's GC activity
         // via gc_live_object_count()/gc_profile() (W04).
@@ -9641,7 +9889,7 @@ mod tests {
         assert_eq!(instrs.len(), 2, "memory.copy (4 bytes) + end → 2 instrs: {instrs:?}");
         assert_eq!(instrs[0].opcode, 0xFC);
         assert!(
-            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x0A, data_idx: 0 }),
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x0A, data_idx: 0, .. }),
             "sub-opcode 0x0A must be carried in the operand: {:?}",
             instrs[0].operand
         );
@@ -9683,7 +9931,7 @@ mod tests {
         assert_eq!(instrs.len(), 2, "memory.fill (3 bytes) + end → 2 instrs: {instrs:?}");
         assert_eq!(instrs[0].opcode, 0xFC);
         assert!(
-            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x0B, data_idx: 0 }),
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x0B, data_idx: 0, .. }),
             "sub-opcode 0x0B must be carried in the operand: {:?}",
             instrs[0].operand
         );
@@ -9719,7 +9967,7 @@ mod tests {
         assert_eq!(instrs.len(), 2, "memory.init (4 bytes) + end -> 2 instrs: {instrs:?}");
         assert_eq!(instrs[0].opcode, 0xFC);
         assert!(
-            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x08, data_idx: 2 }),
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x08, data_idx: 2, .. }),
             "sub-opcode 0x08 and data_idx=2 must be carried in the operand: {:?}",
             instrs[0].operand
         );
@@ -9735,7 +9983,7 @@ mod tests {
         assert_eq!(instrs.len(), 2, "data.drop (3 bytes) + end -> 2 instrs: {instrs:?}");
         assert_eq!(instrs[0].opcode, 0xFC);
         assert!(
-            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x09, data_idx: 1 }),
+            matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: 0x09, data_idx: 1, .. }),
             "sub-opcode 0x09 and data_idx=1 must be carried in the operand: {:?}",
             instrs[0].operand
         );
@@ -9755,7 +10003,7 @@ mod tests {
             assert_eq!(instrs.len(), 2, "{opcode_name} (3 bytes) + end -> 2 instrs: {instrs:?}");
             assert_eq!(instrs[0].opcode, 0xFC);
             assert!(
-                matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: s, data_idx: 1 } if s == sub),
+                matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: s, data_idx: 1, .. } if s == sub),
                 "{opcode_name}: sub-opcode {sub:#x} and table_idx=1 must be carried in the operand: {:?}",
                 instrs[0].operand
             );
@@ -9950,6 +10198,130 @@ mod tests {
             .unwrap();
         let state = engine.into_state();
         assert_eq!(&state.memories[0].data[10..12], &[0xBB, 0xCC]);
+    }
+
+    /// Smoke test for task #97's `table.init`/`table.copy`/`elem.drop`:
+    /// copy a passive elem segment (mixing a real funcref index and a
+    /// `ref.null` entry) into table 0, then `table.copy` that range into
+    /// table 1, then `elem.drop` the segment and confirm a later
+    /// nonzero-length `table.init` traps while a zero-length one still
+    /// succeeds -- mirroring `data_drop_makes_a_later_nonzero_memory_
+    /// init_trap_but_zero_length_still_succeeds` below for tables.
+    #[test]
+    fn table_init_copy_elem_drop_end_to_end() {
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x00, // i32.const 0 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x03, // i32.const 3 (len)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elem_idx=0 table_idx=0
+                0x41, 0x00, // i32.const 0 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x03, // i32.const 3 (len)
+                0xFC, 0x0E, 0x01, 0x00, // table.copy dst_table=1 src_table=0
+                0xFC, 0x0D, 0x00, // elem.drop 0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None), Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_elements(vec![vec![Some(7), None, Some(9)]]);
+        engine.set_dropped_elements(vec![false]);
+
+        engine.call_function(0, &[]).unwrap();
+        let state = engine.into_state();
+        assert_eq!(state.tables[0].get(0).unwrap(), Some(7), "table.init must copy the real funcref entry");
+        assert_eq!(state.tables[0].get(1).unwrap(), None, "table.init must copy the ref.null entry as None");
+        assert_eq!(state.tables[0].get(2).unwrap(), Some(9));
+        assert_eq!(state.tables[1].get(0).unwrap(), Some(7), "table.copy must have copied table 0 into table 1");
+        assert_eq!(state.tables[1].get(1).unwrap(), None);
+        assert_eq!(state.tables[1].get(2).unwrap(), Some(9));
+    }
+
+    #[test]
+    fn table_init_after_elem_drop_traps_on_nonzero_length_but_succeeds_at_zero_length() {
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body_nonzero = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x00, 0x41, 0x00, 0x41, 0x01, // dest=0 src=0 len=1
+                0xFC, 0x0C, 0x00, 0x00, // table.init elem_idx=0 table_idx=0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type.clone()],
+            func_bodies: vec![Some(body_nonzero)],
+            host_functions: vec![None],
+        });
+        engine.set_elements(vec![vec![Some(1)]]);
+        engine.set_dropped_elements(vec![true]); // already dropped
+        assert!(engine.call_function(0, &[]).is_err(), "nonzero-length table.init on a dropped segment must trap");
+
+        let body_zero = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x00, 0x41, 0x00, 0x41, 0x00, // dest=0 src=0 len=0
+                0xFC, 0x0C, 0x00, 0x00,
+                0x0B,
+            ],
+        };
+        let mut engine2 = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body_zero)],
+            host_functions: vec![None],
+        });
+        engine2.set_elements(vec![vec![Some(1)]]);
+        engine2.set_dropped_elements(vec![true]);
+        assert!(engine2.call_function(0, &[]).is_ok(), "zero-length table.init on a dropped segment must still succeed");
+    }
+
+    /// Security review pattern (task #97, mirroring task #95's own
+    /// `memory_init_with_an_out_of_range_data_idx...` test): an
+    /// out-of-range `elem_idx` must trap cleanly, even at zero length --
+    /// never silently succeed.
+    #[test]
+    fn table_init_with_an_out_of_range_elem_idx_traps_cleanly_even_at_zero_length() {
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x00, 0x41, 0x00, 0x41, 0x00, // dest=0 src=0 len=0
+                0xFC, 0x0C, 0x05, 0x00, // table.init elem_idx=5 (out of range) table_idx=0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        // Deliberately empty -- elem_idx=5 is out of range for both.
+        engine.set_elements(vec![]);
+        engine.set_dropped_elements(vec![]);
+        let result = engine.call_function(0, &[]);
+        assert!(result.is_err(), "out-of-range elem_idx must trap, not silently succeed: {result:?}");
     }
 
     #[test]
