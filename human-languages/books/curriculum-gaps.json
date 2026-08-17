@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2915,
+    "totalLessons": 2950,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -37,7 +37,7 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2487,
+    "drivableLessons": 2522,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 84,
     "unexplainedModalityOverrides": 0
@@ -2429,7 +2429,14 @@
           49,
           50,
           51,
-          52
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59
         ],
         "bookChapters": [
           1,
@@ -2483,7 +2490,14 @@
           49,
           50,
           51,
-          52
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3091,10 +3105,10 @@
       {
         "language": "malayalam",
         "status": "mixed",
-        "lessonCount": 177,
+        "lessonCount": 212,
         "versions": {
           "1": 31,
-          "2": 146
+          "2": 181
         }
       },
       {
@@ -3824,8 +3838,8 @@
       },
       {
         "language": "malayalam",
-        "bookChapters": 52,
-        "declaredChapters": 52,
+        "bookChapters": 59,
+        "declaredChapters": 59,
         "missingCapability": 0,
         "findings": 7,
         "clean": false
@@ -3912,8 +3926,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 912,
-      "declaredChapters": 912,
+      "bookChapters": 919,
+      "declaredChapters": 919,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3925,9 +3939,9 @@
     }
   },
   "levels": {
-    "totalLessons": 2915,
+    "totalLessons": 2950,
     "byLevel": {
-      "pre-A1": 1644,
+      "pre-A1": 1679,
       "A1": 557,
       "A2": 543,
       "B1": 40,
@@ -4105,9 +4119,9 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 177,
+        "lessonCount": 212,
         "byLevel": {
-          "pre-A1": 109,
+          "pre-A1": 144,
           "A1": 42,
           "A2": 22,
           "B1": 0,
@@ -4839,8 +4853,8 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 177,
-        "measurable": 146,
+        "lessonCount": 212,
+        "measurable": 181,
         "unmeasurable": 31,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -5786,7 +5800,7 @@
           "language": "malayalam",
           "script": "malayalam",
           "latinScript": false,
-          "lessonCount": 177,
+          "lessonCount": 212,
           "totalGlyphs": 67,
           "lessonViolations": 6,
           "systemViolations": 0,
@@ -14758,6 +14772,110 @@
         "language": "malayalam",
         "introducedBy": "ML-C31-shubha-madhyaahnam",
         "introducedAt": 86,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-CONCEPT-C34-ISHTAM-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C34-ishtam",
+        "introducedAt": 101,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-CONCEPT-C34-ISHTAM-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C34-ishtam",
+        "introducedAt": 101,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-CONCEPT-C34-ISHTAM-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C34-ishtam",
+        "introducedAt": 101,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-CONCEPT-C40-OON-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C40-oon",
+        "introducedAt": 116,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-CONCEPT-C40-OON-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C40-oon",
+        "introducedAt": 116,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-CONCEPT-C40-OON-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C40-oon",
+        "introducedAt": 116,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-GRAMMAR-C41-DEIXIS-SYSTEM",
+        "language": "malayalam",
+        "introducedBy": "ML-C41-deixis-system",
+        "introducedAt": 123,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-GRAMMAR-C42-ADJ-SYSTEM",
+        "language": "malayalam",
+        "introducedBy": "ML-C42-adjective-system",
+        "introducedAt": 129,
         "missed": [
           "R1",
           "R2",
@@ -25871,6 +25989,30 @@
         "revisits": 4
       },
       {
+        "atom": "ML-CONCEPT-C33-EZHUTUKA-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C33-ezhutuka",
+        "introducedAt": 97,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C33-EZHUTUKA-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C33-ezhutuka",
+        "introducedAt": 97,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ML-CONCEPT-C33-MANASSILAAKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C33-manassilaakkuka",
@@ -25895,100 +26037,496 @@
         "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C34-ISHTAM-01",
+        "atom": "ML-CONCEPT-C34-CODIKKUKA-01",
         "language": "malayalam",
-        "introducedBy": "ML-C34-ishtam",
-        "introducedAt": 101,
+        "introducedBy": "ML-C34-codikkuka",
+        "introducedAt": 99,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C34-ISHTAM-02",
+        "atom": "ML-CONCEPT-C34-CODIKKUKA-02",
         "language": "malayalam",
-        "introducedBy": "ML-C34-ishtam",
-        "introducedAt": 101,
+        "introducedBy": "ML-C34-codikkuka",
+        "introducedAt": 99,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C34-ISHTAM-03",
+        "atom": "ML-CONCEPT-C34-EDUKKUKA-01",
         "language": "malayalam",
-        "introducedBy": "ML-C34-ishtam",
-        "introducedAt": 101,
+        "introducedBy": "ML-C34-edukkuka",
+        "introducedAt": 98,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 3
       },
       {
-        "atom": "ML-CONCEPT-C40-OON-01",
+        "atom": "ML-CONCEPT-C34-EDUKKUKA-02",
         "language": "malayalam",
-        "introducedBy": "ML-C40-oon",
-        "introducedAt": 116,
+        "introducedBy": "ML-C34-edukkuka",
+        "introducedAt": 98,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C40-OON-02",
+        "atom": "ML-CONCEPT-C34-SAHAAYIKKUKA-01",
         "language": "malayalam",
-        "introducedBy": "ML-C40-oon",
-        "introducedAt": 116,
+        "introducedBy": "ML-C34-sahaayikkuka",
+        "introducedAt": 100,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "ML-CONCEPT-C40-OON-03",
+        "atom": "ML-CONCEPT-C34-SAHAAYIKKUKA-02",
         "language": "malayalam",
-        "introducedBy": "ML-C40-oon",
-        "introducedAt": 116,
+        "introducedBy": "ML-C34-sahaayikkuka",
+        "introducedAt": 100,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
-        "atom": "ML-GRAMMAR-C41-DEIXIS-SYSTEM",
+        "atom": "ML-CONCEPT-C35-KUDUMBAM-01",
         "language": "malayalam",
-        "introducedBy": "ML-C41-deixis-system",
-        "introducedAt": 123,
+        "introducedBy": "ML-C35-kudumbam",
+        "introducedAt": 102,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
-        "atom": "ML-GRAMMAR-C42-ADJ-SYSTEM",
+        "atom": "ML-CONCEPT-C35-KUDUMBAM-02",
         "language": "malayalam",
-        "introducedBy": "ML-C42-adjective-system",
-        "introducedAt": 129,
+        "introducedBy": "ML-C35-kudumbam",
+        "introducedAt": 102,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C35-SUHRUTHU-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C35-suhruthu",
+        "introducedAt": 103,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C36-KUTTI-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C36-kutti",
+        "introducedAt": 104,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C36-KUTTI-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C36-kutti",
+        "introducedAt": 104,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C36-MAKAL-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C36-makal",
+        "introducedAt": 106,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C36-MAKAL-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C36-makal",
+        "introducedAt": 106,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C36-MAKAN-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C36-makan",
+        "introducedAt": 105,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C36-MAKAN-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C36-makan",
+        "introducedAt": 105,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-CONCEPT-C37-CHEVI-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-chevi",
+        "introducedAt": 108,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C37-CHEVI-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-chevi",
+        "introducedAt": 108,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C37-KANNU-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-kannu",
+        "introducedAt": 107,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-CONCEPT-C37-KANNU-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-kannu",
+        "introducedAt": 107,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C37-MOOKKU-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-mookku",
+        "introducedAt": 109,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C37-MOOKKU-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-mookku",
+        "introducedAt": 109,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C37-VAAY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-vaay",
+        "introducedAt": 110,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C37-VAAY-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C37-vaay",
+        "introducedAt": 110,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C38-HRUDAYAM-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C38-hrudayam",
+        "introducedAt": 111,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C38-HRUDAYAM-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C38-hrudayam",
+        "introducedAt": 111,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C38-NENCHU-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C38-nenchu",
+        "introducedAt": 112,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C38-NENCHU-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C38-nenchu",
+        "introducedAt": 112,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C39-CHAAYA-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C39-chaaya",
+        "introducedAt": 113,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C39-CHAAYA-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C39-chaaya",
+        "introducedAt": 113,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C39-KAAPI-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C39-kaapi",
+        "introducedAt": 114,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C39-KAAPI-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C39-kaapi",
+        "introducedAt": 114,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C39-PAAL-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C39-paal",
+        "introducedAt": 115,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-CONCEPT-C39-PAAL-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C39-paal",
+        "introducedAt": 115,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-LEX-C41-DEIXIS-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C41-here",
+        "introducedAt": 119,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C41-DEIXIS-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C41-there",
+        "introducedAt": 120,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C41-DEIXIS-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C41-who",
+        "introducedAt": 121,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C41-DEIXIS-06",
+        "language": "malayalam",
+        "introducedBy": "ML-C41-where",
+        "introducedAt": 122,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-LEX-C42-ADJ-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C42-small",
+        "introducedAt": 125,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C42-ADJ-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C42-good",
+        "introducedAt": 126,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C42-ADJ-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C42-new",
+        "introducedAt": 127,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C42-ADJ-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C42-old",
+        "introducedAt": 128,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ML-LEX-GIVE",
@@ -26001,6 +26539,30 @@
           "R3"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "ML-LEX-RUN",
+        "language": "malayalam",
+        "introducedBy": "ML-C43-run",
+        "introducedAt": 130,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-LEX-SLEEP",
+        "language": "malayalam",
+        "introducedBy": "ML-C43-sleep",
+        "introducedAt": 131,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ML-SCRIPT-RECOG-02",
@@ -38639,28 +39201,6 @@
         "revisits": 3
       },
       {
-        "atom": "ML-CONCEPT-C33-EZHUTUKA-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C33-ezhutuka",
-        "introducedAt": 97,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C33-EZHUTUKA-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C33-ezhutuka",
-        "introducedAt": 97,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ML-CONCEPT-C33-MANASSILAAKKUKA-03",
         "language": "malayalam",
         "introducedBy": "ML-C33-manassilaakkuka",
@@ -38694,455 +39234,48 @@
         "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C34-CODIKKUKA-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C34-codikkuka",
-        "introducedAt": 99,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C34-CODIKKUKA-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C34-codikkuka",
-        "introducedAt": 99,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C34-EDUKKUKA-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C34-edukkuka",
-        "introducedAt": 98,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-CONCEPT-C34-EDUKKUKA-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C34-edukkuka",
-        "introducedAt": 98,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C34-SAHAAYIKKUKA-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C34-sahaayikkuka",
-        "introducedAt": 100,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-CONCEPT-C34-SAHAAYIKKUKA-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C34-sahaayikkuka",
-        "introducedAt": 100,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-CONCEPT-C35-KUDUMBAM-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C35-kudumbam",
-        "introducedAt": 102,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C35-KUDUMBAM-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C35-kudumbam",
-        "introducedAt": 102,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C35-SUHRUTHU-01",
+        "atom": "ML-CONCEPT-C35-SUHRUTHU-02",
         "language": "malayalam",
         "introducedBy": "ML-C35-suhruthu",
         "introducedAt": 103,
         "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C36-KUTTI-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C36-kutti",
-        "introducedAt": 104,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C36-KUTTI-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C36-kutti",
-        "introducedAt": 104,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C36-MAKAL-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C36-makal",
-        "introducedAt": 106,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C36-MAKAL-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C36-makal",
-        "introducedAt": 106,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C36-MAKAN-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C36-makan",
-        "introducedAt": 105,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C36-MAKAN-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C36-makan",
-        "introducedAt": 105,
-        "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "ML-CONCEPT-C37-CHEVI-01",
+        "atom": "ML-LEX-C41-DEIXIS-01",
         "language": "malayalam",
-        "introducedBy": "ML-C37-chevi",
-        "introducedAt": 108,
+        "introducedBy": "ML-C41-this",
+        "introducedAt": 117,
         "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C37-CHEVI-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C37-chevi",
-        "introducedAt": 108,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C37-KANNU-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C37-kannu",
-        "introducedAt": 107,
-        "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "ML-CONCEPT-C37-KANNU-02",
+        "atom": "ML-LEX-C41-DEIXIS-02",
         "language": "malayalam",
-        "introducedBy": "ML-C37-kannu",
-        "introducedAt": 107,
+        "introducedBy": "ML-C41-that",
+        "introducedAt": 118,
         "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C37-MOOKKU-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C37-mookku",
-        "introducedAt": 109,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C37-MOOKKU-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C37-mookku",
-        "introducedAt": 109,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C37-VAAY-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C37-vaay",
-        "introducedAt": 110,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C37-VAAY-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C37-vaay",
-        "introducedAt": 110,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C38-HRUDAYAM-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C38-hrudayam",
-        "introducedAt": 111,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C38-HRUDAYAM-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C38-hrudayam",
-        "introducedAt": 111,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C38-NENCHU-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C38-nenchu",
-        "introducedAt": 112,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C38-NENCHU-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C38-nenchu",
-        "introducedAt": 112,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C39-CHAAYA-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C39-chaaya",
-        "introducedAt": 113,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C39-CHAAYA-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C39-chaaya",
-        "introducedAt": 113,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C39-KAAPI-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C39-kaapi",
-        "introducedAt": 114,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C39-KAAPI-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C39-kaapi",
-        "introducedAt": 114,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-CONCEPT-C39-PAAL-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C39-paal",
-        "introducedAt": 115,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-CONCEPT-C39-PAAL-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C39-paal",
-        "introducedAt": 115,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-LEX-C41-DEIXIS-03",
-        "language": "malayalam",
-        "introducedBy": "ML-C41-here",
-        "introducedAt": 119,
-        "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C41-DEIXIS-04",
+        "atom": "ML-LEX-C42-ADJ-01",
         "language": "malayalam",
-        "introducedBy": "ML-C41-there",
-        "introducedAt": 120,
+        "introducedBy": "ML-C42-big",
+        "introducedAt": 124,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C41-DEIXIS-05",
-        "language": "malayalam",
-        "introducedBy": "ML-C41-who",
-        "introducedAt": 121,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-LEX-C41-DEIXIS-06",
-        "language": "malayalam",
-        "introducedBy": "ML-C41-where",
-        "introducedAt": 122,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-LEX-C42-ADJ-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C42-small",
-        "introducedAt": 125,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C42-ADJ-03",
-        "language": "malayalam",
-        "introducedBy": "ML-C42-good",
-        "introducedAt": 126,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C42-ADJ-04",
-        "language": "malayalam",
-        "introducedBy": "ML-C42-new",
-        "introducedAt": 127,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-LEX-C42-ADJ-05",
-        "language": "malayalam",
-        "introducedBy": "ML-C42-old",
-        "introducedAt": 128,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ML-LEX-C46-ASK-01",
@@ -39310,6 +39443,391 @@
         "revisits": 2
       },
       {
+        "atom": "ML-LEX-C49-REPLY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C49-true",
+        "introducedAt": 157,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C49-REPLY-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C49-enough",
+        "introducedAt": 158,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C49-REPLY-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C49-certainly",
+        "introducedAt": 159,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C49-REPLY-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C49-perhaps",
+        "introducedAt": 160,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C49-REPLY-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C49-just-so",
+        "introducedAt": 161,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C50-LEAVE-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C50-now",
+        "introducedAt": 162,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C50-LEAVE-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C50-day-after",
+        "introducedAt": 163,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C50-LEAVE-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C50-journey",
+        "introducedAt": 164,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C50-LEAVE-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C50-set-out",
+        "introducedAt": 165,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C50-LEAVE-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C50-farewell",
+        "introducedAt": 166,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C51-COURTESY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C51-gratitude",
+        "introducedAt": 167,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C51-COURTESY-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C51-favour",
+        "introducedAt": 168,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C51-COURTESY-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C51-respect",
+        "introducedAt": 169,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C51-COURTESY-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C51-blessing",
+        "introducedAt": 170,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C51-COURTESY-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C51-salutation",
+        "introducedAt": 171,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C52-WELCOME-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C52-door",
+        "introducedAt": 172,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C52-WELCOME-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C52-chair",
+        "introducedAt": 173,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C52-WELCOME-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C52-kolam",
+        "introducedAt": 174,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C52-WELCOME-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C52-flower",
+        "introducedAt": 175,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C52-WELCOME-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C52-garland",
+        "introducedAt": 176,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C53-SKY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C53-sky",
+        "introducedAt": 177,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C53-SKY-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C53-sun",
+        "introducedAt": 178,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C53-SKY-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C53-moon",
+        "introducedAt": 179,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C53-SKY-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C53-star",
+        "introducedAt": 180,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C53-SKY-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C53-sunshine",
+        "introducedAt": 181,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C54-TREE-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C54-tree",
+        "introducedAt": 182,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C54-TREE-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C54-branch",
+        "introducedAt": 183,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C54-TREE-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C54-trunk",
+        "introducedAt": 184,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C54-TREE-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C54-root",
+        "introducedAt": 185,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C54-TREE-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C54-seed",
+        "introducedAt": 186,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C55-GROUND-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C55-river",
+        "introducedAt": 187,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C55-GROUND-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C55-rock",
+        "introducedAt": 188,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C55-GROUND-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C55-homeland",
+        "introducedAt": 189,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C55-GROUND-04",
+        "language": "malayalam",
+        "introducedBy": "ML-C55-path",
+        "introducedAt": 190,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C55-GROUND-05",
+        "language": "malayalam",
+        "introducedBy": "ML-C55-field",
+        "introducedAt": 191,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ML-LEX-GRANDFATHER",
         "language": "malayalam",
         "introducedBy": "ML-C45-grandfather",
@@ -39358,28 +39876,6 @@
         "language": "malayalam",
         "introducedBy": "ML-C44-look",
         "introducedAt": 134,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-LEX-RUN",
-        "language": "malayalam",
-        "introducedBy": "ML-C43-run",
-        "introducedAt": 130,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-LEX-SLEEP",
-        "language": "malayalam",
-        "introducedBy": "ML-C43-sleep",
-        "introducedAt": 131,
         "missed": [
           "R2",
           "R3"
@@ -50142,190 +50638,150 @@
         "revisits": 3
       },
       {
-        "atom": "ML-CONCEPT-C35-SUHRUTHU-02",
+        "atom": "ML-LEX-C56-HOUSE-01",
         "language": "malayalam",
-        "introducedBy": "ML-C35-suhruthu",
-        "introducedAt": 103,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C41-DEIXIS-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C41-this",
-        "introducedAt": 117,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C41-DEIXIS-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C41-that",
-        "introducedAt": 118,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C42-ADJ-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C42-big",
-        "introducedAt": 124,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C49-REPLY-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C49-true",
-        "introducedAt": 157,
+        "introducedBy": "ML-C56-mat",
+        "introducedAt": 192,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "ML-LEX-C49-REPLY-02",
+        "atom": "ML-LEX-C56-HOUSE-02",
         "language": "malayalam",
-        "introducedBy": "ML-C49-enough",
-        "introducedAt": 158,
+        "introducedBy": "ML-C56-basket",
+        "introducedAt": 193,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C49-REPLY-03",
+        "atom": "ML-LEX-C56-HOUSE-03",
         "language": "malayalam",
-        "introducedBy": "ML-C49-certainly",
-        "introducedAt": 159,
+        "introducedBy": "ML-C56-knife",
+        "introducedAt": 194,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C49-REPLY-04",
+        "atom": "ML-LEX-C56-HOUSE-04",
         "language": "malayalam",
-        "introducedBy": "ML-C49-perhaps",
-        "introducedAt": 160,
+        "introducedBy": "ML-C56-vessel",
+        "introducedAt": 195,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C49-REPLY-05",
+        "atom": "ML-LEX-C56-HOUSE-05",
         "language": "malayalam",
-        "introducedBy": "ML-C49-just-so",
-        "introducedAt": 161,
+        "introducedBy": "ML-C56-box",
+        "introducedAt": 196,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C50-LEAVE-01",
+        "atom": "ML-LEX-C57-FRAME-01",
         "language": "malayalam",
-        "introducedBy": "ML-C50-now",
-        "introducedAt": 162,
+        "introducedBy": "ML-C57-neck",
+        "introducedAt": 197,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "ML-LEX-C50-LEAVE-02",
+        "atom": "ML-LEX-C57-FRAME-02",
         "language": "malayalam",
-        "introducedBy": "ML-C50-day-after",
-        "introducedAt": 163,
+        "introducedBy": "ML-C57-back",
+        "introducedAt": 198,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C50-LEAVE-03",
+        "atom": "ML-LEX-C57-FRAME-03",
         "language": "malayalam",
-        "introducedBy": "ML-C50-journey",
-        "introducedAt": 164,
+        "introducedBy": "ML-C57-lip",
+        "introducedAt": 199,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C50-LEAVE-04",
+        "atom": "ML-LEX-C57-FRAME-04",
         "language": "malayalam",
-        "introducedBy": "ML-C50-set-out",
-        "introducedAt": 165,
+        "introducedBy": "ML-C57-nail",
+        "introducedAt": 200,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C50-LEAVE-05",
+        "atom": "ML-LEX-C57-FRAME-05",
         "language": "malayalam",
-        "introducedBy": "ML-C50-farewell",
-        "introducedAt": 166,
+        "introducedBy": "ML-C57-bone",
+        "introducedAt": 201,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C51-COURTESY-01",
+        "atom": "ML-LEX-C58-ANSWER-01",
         "language": "malayalam",
-        "introducedBy": "ML-C51-gratitude",
-        "introducedAt": 167,
+        "introducedBy": "ML-C58-more",
+        "introducedAt": 202,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "ML-LEX-C51-COURTESY-02",
+        "atom": "ML-LEX-C58-ANSWER-02",
         "language": "malayalam",
-        "introducedBy": "ML-C51-favour",
-        "introducedAt": 168,
+        "introducedBy": "ML-C58-less",
+        "introducedAt": 203,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C51-COURTESY-03",
+        "atom": "ML-LEX-C58-ANSWER-03",
         "language": "malayalam",
-        "introducedBy": "ML-C51-respect",
-        "introducedAt": 169,
+        "introducedBy": "ML-C58-a-little",
+        "introducedAt": 204,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C51-COURTESY-04",
+        "atom": "ML-LEX-C58-ANSWER-04",
         "language": "malayalam",
-        "introducedBy": "ML-C51-blessing",
-        "introducedAt": 170,
+        "introducedBy": "ML-C58-no-need",
+        "introducedAt": 205,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ML-LEX-C51-COURTESY-05",
+        "atom": "ML-LEX-C58-ANSWER-05",
         "language": "malayalam",
-        "introducedBy": "ML-C51-salutation",
-        "introducedAt": 171,
+        "introducedBy": "ML-C58-that-will-do",
+        "introducedAt": 206,
         "missed": [
           "R2"
         ],
@@ -57795,11 +58251,11 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 177,
+        "lessonCount": 212,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 211,
+        "atomsTaught": 246,
         "atomsNeverRevisited": 51,
         "forwardReferences": 20
       },
@@ -57909,14 +58365,14 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4069,
+      "atomsTaught": 4104,
       "atomsNeverRevisited": 586,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
         "R1": 1127,
-        "R2": 3144,
-        "R3": 2914,
-        "R4": 1572
+        "R2": 3179,
+        "R3": 2949,
+        "R4": 1629
       },
       "forwardReferences": 511
     }
@@ -58017,7 +58473,7 @@
       {
         "language": "malayalam",
         "script": "malayalam",
-        "lessonCount": 177,
+        "lessonCount": 212,
         "scriptLessons": 24,
         "taughtGlyphs": 49,
         "shownGlyphs": 67,
@@ -63700,8 +64156,8 @@
         "blockers": [
           {
             "criterion": "vocabulary",
-            "detail": "teaches 84 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 216
+            "detail": "teaches 119 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 181
           },
           {
             "criterion": "atom-budget",
@@ -63714,7 +64170,7 @@
             "shortfall": 29
           }
         ],
-        "vocabulary": 142
+        "vocabulary": 177
       },
       {
         "language": "marathi",
@@ -63943,11 +64399,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2915,
-    "voice": 2051,
+    "totalLessons": 2950,
+    "voice": 2086,
     "sight": 582,
     "pen": 282,
-    "coreVoice": 2487,
+    "coreVoice": 2522,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 85,
     "tracks": [
@@ -68724,13 +69180,13 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 177,
-        "voice": 112,
+        "lessonCount": 212,
+        "voice": 147,
         "sight": 41,
         "pen": 24,
-        "coreVoice": 145,
-        "drivablePercent": 82,
-        "drivablePrefixTotal": 142,
+        "coreVoice": 180,
+        "drivablePercent": 85,
+        "drivablePrefixTotal": 177,
         "chapters": [
           {
             "language": "malayalam",
@@ -69495,6 +69951,104 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": "ML-C52-chair"
+          },
+          {
+            "language": "malayalam",
+            "chapter": 53,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 54,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 55,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 56,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 57,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 58,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 59,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -77811,7 +78365,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2915,
+    "lessons": 2950,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -77821,10 +78375,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 2858,
-    "usesBeforeIntroduction": 11238,
-    "technicalUsesBeforeIntroduction": 3122,
-    "technicalLessons": 1605,
+    "lessonsUsingTerms": 2893,
+    "usesBeforeIntroduction": 11297,
+    "technicalUsesBeforeIntroduction": 3123,
+    "technicalLessons": 1606,
     "worstTerms": [
       {
         "term": "verb",
@@ -77853,12 +78407,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 2915,
+    "lessonsScanned": 2950,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1044,
+    "filesScanned": 1051,
     "mainCharacters": 125,
     "scriptCharacters": 663,
     "gaps": 0
