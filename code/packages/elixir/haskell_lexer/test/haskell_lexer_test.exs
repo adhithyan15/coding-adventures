@@ -45,4 +45,14 @@ defmodule CodingAdventures.HaskellLexerTest do
       HaskellLexer.create_lexer("99")
     end
   end
+
+  test "every supported version compiles and tokenizes" do
+    for version <- HaskellLexer.supported_versions() do
+      grammar = HaskellLexer.create_lexer(version)
+      assert is_map(grammar), "#{version} grammar should be a map"
+
+      {:ok, tokens} = HaskellLexer.tokenize("x", version)
+      assert hd(tokens).type == "NAME", "#{version} should tokenize a bare name"
+    end
+  end
 end
