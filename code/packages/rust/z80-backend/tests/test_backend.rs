@@ -202,3 +202,23 @@ fn const_value_equal_to_halt_opcode_byte_is_not_misread() {
     assert_eq!(result.steps, 2);
     assert_eq!(sim.regs.a, 0x76);
 }
+
+/// CIR ending in `const_*` with NO following `ret_*` must still be
+/// terminated. A `bytes.is_empty()`-based check (the bug found in an
+/// earlier draft of this same lowering, copied from `intel8080-backend`
+/// before its own fix) is fooled here: `bytes` is non-empty as soon as
+/// `LD A,n` is emitted, so it would wrongly conclude the program is
+/// already terminated and skip appending `HALT`, leaving the compiled
+/// program to fall into whatever follows in memory instead of halting.
+#[test]
+fn dangling_const_with_no_ret_still_gets_a_real_terminator() {
+    let cir = vec![ci("const_i64", Some("v"), vec![CIROperand::Int(7)], "i64")];
+    let bytes = compile(&ctx("dangling_const", &[], "i64"), &cir).expect("lowering");
+    assert_eq!(bytes, vec![0x3E, 0x07, 0x76]);
+
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes);
+    let result = sim.run_loaded_with_limit(1000);
+    assert!(result.halted, "program should halt, not run out the step budget");
+    assert!(result.steps < 1000, "should halt well before the step limit");
+}
