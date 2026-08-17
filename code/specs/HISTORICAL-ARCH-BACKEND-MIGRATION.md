@@ -113,6 +113,39 @@ spec files are kept as a historical record of the original
 Each phase = 1 PR + babysitter cron + auto-merge + next-phase
 kickoff.  Same cadence as the A5 cascade.
 
+## New architectures — the 9-architecture expansion
+
+With the five-arch migration complete, later lanes add **brand-new**
+`{arch}-encoder` + `{arch}-backend` pairs for architectures that
+never had an `iir-to-{arch}` predecessor to migrate away from — they
+start at the correct `Backend`-trait-over-CIR layer from day one,
+following exactly the pattern this document established.
+
+**ARM1 (ARMv1)** — `arm1-encoder` + `arm1-backend`, minimal viable
+(`const_*`/`ret_*` only, single-register `R0` allocator, same
+trivial-ROM scope as `armv7-backend`).  Unlike a from-scratch lane,
+ARM1's behavioral simulator (`arm1-simulator`, 2270 lines) already
+existed complete in-tree, so this lane only needed the
+encoder/backend split on top of it — no new simulator work.  One
+architecture-specific design decision: ARM1/ARMv1 (1985) predates
+the `BX`/link-register-return convention `armv7-backend` (its direct
+architectural descendant, ARMv7-A) uses, so `ret_*`/`ret_void` lower
+to `arm1-simulator`'s existing pseudo-halt instruction
+(`SWI #0x123456`, intercepted by `execute_swi` to set
+`halted() == true`) rather than a return-from-subroutine instruction
+— see `code/specs/arm1-backend.md` for the full rationale.  Byte-for-
+byte parity for the canonical `MOV R0, #42; SWI #0x123456` sequence
+(`[0x2A, 0x00, 0xA0, 0xE3, 0x56, 0x34, 0x12, 0xEF]`, little-endian)
+is verified both as a hand-derived byte array and by actually
+executing the emitted bytes in `arm1-simulator` and asserting
+`R0 == 42`.
+
+Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
+in parallel PRs and are not enumerated here to avoid merge
+conflicts with concurrently-landing work — see each lane's own
+`code/specs/{arch}-encoder.md` / `code/specs/{arch}-backend.md` for
+its specifics.
+
 ## What about `Backend::run` — and JIT in general?
 
 For the real native backends (`aarch64`, `x86_64`), `Backend::run`

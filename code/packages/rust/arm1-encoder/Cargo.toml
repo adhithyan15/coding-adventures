@@ -1,0 +1,15 @@
+[package]
+name = "arm1-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust ARM1 (ARMv1) instruction encoder.  Re-exports the canonical encode_mov_imm/encode_halt helpers (plus the COND_AL condition constant) from arm1-simulator (which is the in-tree source of truth for ARM1 encoding) and adds the register-role constant and canonical HALT_WORD (SWI #0x123456, AL) the LANG VM arm1-backend uses to lower CIR to little-endian 32-bit ARM1 instruction words.  No IR knowledge.  Second lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "arm1_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for ARM1 bit-level encoding.  We re-export rather
+# than duplicate so any future opcode/condition-field fix in the
+# simulator propagates to encoder consumers automatically.
+arm1-simulator = { path = "../arm1-simulator" }
