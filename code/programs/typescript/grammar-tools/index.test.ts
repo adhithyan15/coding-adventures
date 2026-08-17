@@ -148,6 +148,18 @@ describe("dispatch", () => {
     if (!exists("json.grammar")) return;
     expect(dispatch("compile-grammar", [grammarPath("json.grammar")])).toBe(0);
   });
+
+  it("compile-grammar without --force fails on a grammar with validation errors", () => {
+    if (!exists("csharp12.0.grammar")) return;
+    expect(dispatch("compile-grammar", [grammarPath("csharp12.0.grammar")])).toBe(1);
+  });
+
+  it("compile-grammar with force=true succeeds on the same grammar", () => {
+    if (!exists("csharp12.0.grammar")) return;
+    expect(
+      dispatch("compile-grammar", [grammarPath("csharp12.0.grammar")], undefined, true)
+    ).toBe(0);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -201,5 +213,24 @@ describe("compileGrammarCommand", () => {
   it("returns 0 for valid file with no output path (stdout)", () => {
     if (!exists("json.grammar")) return;
     expect(compileGrammarCommand(grammarPath("json.grammar"), undefined)).toBe(0);
+  });
+
+  it("returns 1 without --force when the grammar has a validation error", () => {
+    // csharp*.grammar has a known pre-existing "pointer_type is defined but
+    // never referenced (unreachable)" validation error.
+    if (!exists("csharp12.0.grammar")) return;
+    expect(compileGrammarCommand(grammarPath("csharp12.0.grammar"), undefined)).toBe(1);
+  });
+
+  it("returns 0 with --force despite the same validation error, and writes valid output", () => {
+    if (!exists("csharp12.0.grammar")) return;
+    const outDir = join(tmpdir(), "grammar-tools-ts-test");
+    mkdirSync(outDir, { recursive: true });
+    const outPath = join(outDir, "csharp-grammar-forced.ts");
+    const result = compileGrammarCommand(grammarPath("csharp12.0.grammar"), outPath, true);
+    expect(result).toBe(0);
+    const content = readFileSync(outPath, "utf-8");
+    expect(content).toContain("PARSER_GRAMMAR");
+    expect(content).toContain("DO NOT EDIT");
   });
 });

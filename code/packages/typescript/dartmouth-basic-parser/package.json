@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/dartmouth-basic-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parses 1964 Dartmouth BASIC source text into ASTs using the grammar-driven parser — a thin wrapper that loads dartmouth_basic.grammar",
   "type": "module",
   "main": "src/index.ts",

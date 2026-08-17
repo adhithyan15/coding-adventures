@@ -2,6 +2,12 @@
 
 All notable changes to the TypeScript Parser (TypeScript) package will be documented in this file.
 
+## [0.2.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `parseTypeScript`/`createTypeScriptParser` now import a pre-compiled `_grammar[_ts<version>].ts` per TypeScript edition instead of `readFileSync`-ing the `.grammar` file from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published npm package does not ship, so `npm install` + first use would throw `ENOENT`.
+- Compiled every versioned `.grammar` file with the new `--force` flag (see csharp-parser's changelog): all 6 have pre-existing `type_annotation`/`type_predicate`-unreachable validation warnings, ts3.0+ additionally has `async_generator_expression`-unreachable, and ts5.0/ts5.8 additionally have `formal_parameter`/`formal_parameters` **undefined rule reference** errors — a dangling reference to a rule name that doesn't exist anywhere in the grammar. These are pre-existing content bugs in the grammar spec files (worth a follow-up fix), not something introduced by this change: the runtime path never validated before either, so behavior is unchanged, just no longer re-parsed from disk on every call.
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

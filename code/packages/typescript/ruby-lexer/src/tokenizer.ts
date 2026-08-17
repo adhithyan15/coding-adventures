@@ -9,26 +9,20 @@
  * and `!=`. The grammar-driven approach handles all of these without any new
  * tokenization code: they are simply declared in the `.tokens` file.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `ruby.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts -> ruby-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The token grammar is compiled ahead of time from `ruby.tokens` (in
+ * `code/grammars/ruby/`) into `./_grammar.ts`, a native TypeScript object
+ * literal. This avoids reading and parsing a grammar file from disk at
+ * runtime -- which would break once this package is published, since a
+ * published npm package never ships the monorepo's `code/grammars/` tree.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const RUBY_TOKENS_PATH = join(GRAMMARS_DIR, "ruby", "ruby.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 /**
  * Tokenize Ruby source code and return an array of tokens.
@@ -42,7 +36,5 @@ const RUBY_TOKENS_PATH = join(GRAMMARS_DIR, "ruby", "ruby.tokens");
  *     //  Token(PLUS, "+"), Token(NUMBER, "2"), Token(EOF, "")]
  */
 export function tokenizeRuby(source: string): Token[] {
-  const grammarText = readFileSync(RUBY_TOKENS_PATH, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }

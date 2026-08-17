@@ -65,8 +65,11 @@ function printUsage(): void {
   process.stderr.write("  validate <file.tokens> <file.grammar>        Validate a token/grammar pair\n");
   process.stderr.write("  validate-tokens <file.tokens>                 Validate just a .tokens file\n");
   process.stderr.write("  validate-grammar <file.grammar>               Validate just a .grammar file\n");
-  process.stderr.write("  compile-tokens <file.tokens> [-o out.ts]     Compile tokens to TypeScript\n");
-  process.stderr.write("  compile-grammar <file.grammar> [-o out.ts]   Compile grammar to TypeScript\n");
+  process.stderr.write("  compile-tokens <file.tokens> [-o out.ts] [-f]     Compile tokens to TypeScript\n");
+  process.stderr.write("  compile-grammar <file.grammar> [-o out.ts] [-f]   Compile grammar to TypeScript\n");
+  process.stderr.write("\n");
+  process.stderr.write("  -f, --force   Skip grammar validation and compile anyway (used when patterns\n");
+  process.stderr.write("                are known to be handled at runtime by the consuming package)\n");
   process.stderr.write("\n");
   process.stderr.write("Run 'grammar-tools --help' for full help text.\n");
 }
@@ -278,7 +281,8 @@ export function validateGrammarOnly(grammarPath: string): number {
 
 export function compileTokensCommand(
   tokensPath: string,
-  outputPath: string | undefined
+  outputPath: string | undefined,
+  force = false
 ): number {
   if (!existsSync(tokensPath)) {
     process.stderr.write(`Error: File not found: ${tokensPath}\n`);
@@ -300,12 +304,17 @@ export function compileTokensCommand(
 
   const issues = validateTokenGrammar(tokenGrammar);
   const errors = issues.filter((i) => !i.startsWith("Warning:")).length;
-  if (errors > 0) {
+  if (errors > 0 && !force) {
     process.stderr.write(`${errors} error(s)\n`);
     for (const issue of issues) {
       process.stderr.write(`  ${issue}\n`);
     }
     return 1;
+  } else if (errors > 0) {
+    process.stderr.write(`${errors} error(s) (forced)\n`);
+    for (const issue of issues) {
+      process.stderr.write(`  ${issue}\n`);
+    }
   }
 
   const code = compileTokenGrammar(tokenGrammar, basename(tokensPath));
@@ -326,7 +335,8 @@ export function compileTokensCommand(
 
 export function compileGrammarCommand(
   grammarPath: string,
-  outputPath: string | undefined
+  outputPath: string | undefined,
+  force = false
 ): number {
   if (!existsSync(grammarPath)) {
     process.stderr.write(`Error: File not found: ${grammarPath}\n`);
@@ -348,12 +358,17 @@ export function compileGrammarCommand(
 
   const issues = validateParserGrammar(parserGrammar, undefined);
   const errors = issues.filter((i) => !i.startsWith("Warning:")).length;
-  if (errors > 0) {
+  if (errors > 0 && !force) {
     process.stderr.write(`${errors} error(s)\n`);
     for (const issue of issues) {
       process.stderr.write(`  ${issue}\n`);
     }
     return 1;
+  } else if (errors > 0) {
+    process.stderr.write(`${errors} error(s) (forced)\n`);
+    for (const issue of issues) {
+      process.stderr.write(`  ${issue}\n`);
+    }
   }
 
   const code = compileParserGrammar(parserGrammar, basename(grammarPath));
@@ -375,7 +390,8 @@ export function compileGrammarCommand(
 export function dispatch(
   command: string,
   files: string[],
-  outputPath?: string
+  outputPath?: string,
+  force = false
 ): number {
   switch (command) {
     case "validate":
@@ -412,7 +428,7 @@ export function dispatch(
         printUsage();
         return 2;
       }
-      return compileTokensCommand(files[0], outputPath);
+      return compileTokensCommand(files[0], outputPath, force);
 
     case "compile-grammar":
       if (files.length !== 1) {
@@ -421,7 +437,7 @@ export function dispatch(
         printUsage();
         return 2;
       }
-      return compileGrammarCommand(files[0], outputPath);
+      return compileGrammarCommand(files[0], outputPath, force);
 
     default:
       process.stderr.write(`Error: Unknown command '${command}'\n`);
@@ -474,8 +490,9 @@ if (
     }
     const outputPath =
       typeof r.flags["output"] === "string" ? r.flags["output"] : undefined;
+    const force = Boolean(r.flags["force"]);
 
-    process.exit(dispatch(command, files, outputPath));
+    process.exit(dispatch(command, files, outputPath, force));
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     process.stderr.write(`error: ${message}\n`);

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/csharp-lexer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tokenizes C# source code using the grammar-driven lexer — a thin wrapper that loads csharp{version}.tokens",
   "type": "module",
   "main": "src/index.ts",

@@ -45,26 +45,45 @@
  * Locating the Grammar File
  * -------------------------
  *
- * The `java*.tokens` files live in `code/grammars/java/` at the repository root.
- *
- *     src/ -> java-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `java*.tokens` files live in `code/grammars/java/` at the repository root,
+ * but a published npm package would never ship that monorepo directory. Instead,
+ * every version's grammar is pre-compiled to a native TypeScript module
+ * (`_grammar_<version>.ts`) at build time and statically imported below, so no
+ * filesystem access happens at runtime.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize, GrammarLexer } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { TOKEN_GRAMMAR as GRAMMAR_1_0 } from "./_grammar_1_0.js";
+import { TOKEN_GRAMMAR as GRAMMAR_1_1 } from "./_grammar_1_1.js";
+import { TOKEN_GRAMMAR as GRAMMAR_1_4 } from "./_grammar_1_4.js";
+import { TOKEN_GRAMMAR as GRAMMAR_5 } from "./_grammar_5.js";
+import { TOKEN_GRAMMAR as GRAMMAR_7 } from "./_grammar_7.js";
+import { TOKEN_GRAMMAR as GRAMMAR_8 } from "./_grammar_8.js";
+import { TOKEN_GRAMMAR as GRAMMAR_10 } from "./_grammar_10.js";
+import { TOKEN_GRAMMAR as GRAMMAR_14 } from "./_grammar_14.js";
+import { TOKEN_GRAMMAR as GRAMMAR_17 } from "./_grammar_17.js";
+import { TOKEN_GRAMMAR as GRAMMAR_21 } from "./_grammar_21.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> java-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * All Java version grammars, keyed by version string. Populated via static
+ * imports above so every version ships inside the published package with no
+ * runtime filesystem access.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+const VERSIONED_GRAMMARS: Record<string, TokenGrammar> = {
+  "1.0": GRAMMAR_1_0,
+  "1.1": GRAMMAR_1_1,
+  "1.4": GRAMMAR_1_4,
+  "5": GRAMMAR_5,
+  "7": GRAMMAR_7,
+  "8": GRAMMAR_8,
+  "10": GRAMMAR_10,
+  "14": GRAMMAR_14,
+  "17": GRAMMAR_17,
+  "21": GRAMMAR_21,
+};
 
 /**
  * Valid Java version strings accepted by this module.
@@ -93,22 +112,22 @@ const VALID_JAVA_VERSIONS = new Set([
 const DEFAULT_JAVA_VERSION = "21";
 
 /**
- * Resolve the path to the Java token grammar for the given version.
+ * Resolve the Java token grammar for the given version.
  *
  * @param version - An optional Java version string (e.g. `"21"`, `"8"`,
  *   `"1.4"`). Pass `undefined` or `""` to use the default (Java 21).
- * @returns Absolute path to the `.tokens` grammar file.
+ * @returns The statically-imported `TokenGrammar` for that version.
  * @throws Error if `version` is a non-empty string that is not a recognised
  *   Java version identifier.
  *
  * @example
- *   resolveTokensPath("8")
- *   // => ".../code/grammars/java/java8.tokens"
+ *   resolveTokenGrammar("8")
+ *   // => TokenGrammar compiled from java8.tokens
  *
- *   resolveTokensPath()
- *   // => ".../code/grammars/java/java21.tokens"
+ *   resolveTokenGrammar()
+ *   // => TokenGrammar compiled from java21.tokens
  */
-function resolveTokensPath(version?: string): string {
+function resolveTokenGrammar(version?: string): TokenGrammar {
   // Default to Java 21 when no version is specified.
   const effectiveVersion = version || DEFAULT_JAVA_VERSION;
 
@@ -119,7 +138,7 @@ function resolveTokensPath(version?: string): string {
     );
   }
 
-  return join(GRAMMARS_DIR, "java", `java${effectiveVersion}.tokens`);
+  return VERSIONED_GRAMMARS[effectiveVersion];
 }
 
 /**
@@ -141,9 +160,7 @@ function resolveTokensPath(version?: string): string {
  *     const tokens = tokenizeJava("var x = 1;", "10");
  */
 export function tokenizeJava(source: string, version?: string): Token[] {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return grammarTokenize(source, grammar);
 }
 
@@ -169,8 +186,6 @@ export function createJavaLexer(
   source: string,
   version?: string
 ): GrammarLexer {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return new GrammarLexer(source, grammar);
 }

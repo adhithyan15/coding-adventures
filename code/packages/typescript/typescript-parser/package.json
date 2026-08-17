@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/typescript-parser",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Parses TypeScript source code into ASTs using the grammar-driven parser — a thin wrapper that loads typescript.grammar",
   "type": "module",
   "main": "src/index.ts",

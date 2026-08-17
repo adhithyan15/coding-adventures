@@ -47,31 +47,58 @@
  * When no version is supplied, C# 12.0 (shipping with .NET 8.0 LTS) is
  * used as the default.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `csharp*.grammar` files live in `code/grammars/csharp/` at the
- * repository root.
- *
- *     src/ -> csharp-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `csharp*.grammar` files under `code/grammars/csharp/` at the
+ * repository root are compiled ahead of time into `./_grammar.ts` (the
+ * default, C# 12.0) and one `./_grammar_<version>.ts` per supported
+ * edition (see `code/scripts/_ts_grammar_compile.ts`). This module
+ * statically imports all of them and looks up the right one at call time
+ * — it never reads the monorepo's `code/grammars/` tree at runtime, so a
+ * published npm package works standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
+import type { ParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeCSharp } from "@coding-adventures/csharp-lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { PARSER_GRAMMAR as DEFAULT_GRAMMAR } from "./_grammar.js";
+import { PARSER_GRAMMAR as V1_0 } from "./_grammar_1_0.js";
+import { PARSER_GRAMMAR as V2_0 } from "./_grammar_2_0.js";
+import { PARSER_GRAMMAR as V3_0 } from "./_grammar_3_0.js";
+import { PARSER_GRAMMAR as V4_0 } from "./_grammar_4_0.js";
+import { PARSER_GRAMMAR as V5_0 } from "./_grammar_5_0.js";
+import { PARSER_GRAMMAR as V6_0 } from "./_grammar_6_0.js";
+import { PARSER_GRAMMAR as V7_0 } from "./_grammar_7_0.js";
+import { PARSER_GRAMMAR as V8_0 } from "./_grammar_8_0.js";
+import { PARSER_GRAMMAR as V9_0 } from "./_grammar_9_0.js";
+import { PARSER_GRAMMAR as V10_0 } from "./_grammar_10_0.js";
+import { PARSER_GRAMMAR as V11_0 } from "./_grammar_11_0.js";
+import { PARSER_GRAMMAR as V12_0 } from "./_grammar_12_0.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> csharp-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * Every supported C# edition's parser grammar, pre-compiled at build time
+ * from the `.grammar` files in `code/grammars/csharp/` (see
+ * `code/scripts/_ts_grammar_compile.ts`). ESM static imports can't be
+ * conditional on a runtime string, so every version is imported up front
+ * and looked up by key in `resolveParserGrammar`.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+const VERSIONED_GRAMMARS: Record<string, ParserGrammar> = {
+  "1.0": V1_0,
+  "2.0": V2_0,
+  "3.0": V3_0,
+  "4.0": V4_0,
+  "5.0": V5_0,
+  "6.0": V6_0,
+  "7.0": V7_0,
+  "8.0": V8_0,
+  "9.0": V9_0,
+  "10.0": V10_0,
+  "11.0": V11_0,
+  "12.0": V12_0,
+};
 
 /**
  * Valid C# version strings accepted by this module.
@@ -98,14 +125,14 @@ const VALID_CSHARP_VERSIONS = new Set([
 const DEFAULT_CSHARP_VERSION = "12.0";
 
 /**
- * Resolve the path to the C# parser grammar for the given version.
+ * Resolve the compiled C# parser grammar for the given version.
  *
  * @param version - An optional C# version string. Pass `undefined` or `""`
  *   to use the default (C# 12.0).
- * @returns Absolute path to the `.grammar` file.
+ * @returns The pre-compiled `ParserGrammar` for that version.
  * @throws Error if `version` is not a recognised C# version.
  */
-function resolveGrammarPath(version?: string): string {
+function resolveParserGrammar(version?: string): ParserGrammar {
   const effectiveVersion = version || DEFAULT_CSHARP_VERSION;
 
   if (!VALID_CSHARP_VERSIONS.has(effectiveVersion)) {
@@ -115,7 +142,9 @@ function resolveGrammarPath(version?: string): string {
     );
   }
 
-  return join(GRAMMARS_DIR, "csharp", `csharp${effectiveVersion}.grammar`);
+  return effectiveVersion === DEFAULT_CSHARP_VERSION
+    ? DEFAULT_GRAMMAR
+    : VERSIONED_GRAMMARS[effectiveVersion];
 }
 
 /**
@@ -140,9 +169,7 @@ export function createCSharpParser(
   version?: string
 ): GrammarParser {
   const tokens = tokenizeCSharp(source, version);
-  const grammarPath = resolveGrammarPath(version);
-  const grammarText = readFileSync(grammarPath, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
+  const grammar = resolveParserGrammar(version);
   return new GrammarParser(tokens, grammar);
 }
 

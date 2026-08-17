@@ -81,53 +81,36 @@
  *   procedure, own, array, label, value, integer, real, boolean, string,
  *   true, false, not, and, or, impl, eqv, div, mod, comment
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `algol.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts -> algol-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `algol60.tokens` file under `code/grammars/algol/` at the repository
+ * root is compiled ahead of time into `./_grammar.ts` and
+ * `./_grammar_algol60.ts` (see `code/scripts/_ts_grammar_compile.ts`).
+ * This module statically imports them rather than reading the monorepo's
+ * `code/grammars/` tree at runtime, so a published npm package works
+ * standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist — we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/tokenizer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { TOKEN_GRAMMAR as DEFAULT_GRAMMAR } from "./_grammar.js";
+import { TOKEN_GRAMMAR as ALGOL60_GRAMMAR } from "./_grammar_algol60.js";
 
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname    = .../algol-lexer/src/
- *   ..           = .../algol-lexer/
- *   ../..        = .../typescript/
- *   ../../..     = .../packages/
- *   ../../../..  = .../code/
- *   + grammars   = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
 const VALID_VERSIONS = new Set(["algol60"]);
 
-function resolveTokensPath(version = "algol60"): string {
+const VERSIONED_GRAMMARS: Record<string, TokenGrammar> = {
+  algol60: ALGOL60_GRAMMAR,
+};
+
+function resolveTokenGrammar(version = "algol60"): TokenGrammar {
   if (!VALID_VERSIONS.has(version)) {
     const valid = Array.from(VALID_VERSIONS).sort().join(", ");
     throw new Error(`Unknown ALGOL version ${JSON.stringify(version)}. Valid versions: ${valid}`);
   }
-  return join(GRAMMARS_DIR, "algol", `${version}.tokens`);
+  return version === "algol60" ? DEFAULT_GRAMMAR : VERSIONED_GRAMMARS[version];
 }
 
 /**
@@ -175,15 +158,7 @@ function resolveTokensPath(version = "algol60"): string {
  */
 export function tokenizeAlgol(source: string, version = "algol60"): Token[] {
   /**
-   * Read the grammar file from disk. In a production system, you would
-   * cache this — but for an educational codebase, reading on every call
-   * keeps the code simple and makes the data flow obvious.
-   */
-  const grammarText = readFileSync(resolveTokensPath(version), "utf-8");
-
-  /**
-   * Parse the grammar text into a structured TokenGrammar object.
-   * This extracts:
+   * Resolve the pre-compiled TokenGrammar for this version. This extracts:
    *   - Token patterns (regex and literal)
    *   - Keywords (for reclassification of IDENT tokens)
    *   - Skip patterns (whitespace, comments)
@@ -191,7 +166,7 @@ export function tokenizeAlgol(source: string, version = "algol60"): Token[] {
    * Unlike JSON, ALGOL has keywords, boolean word-operators, and comment syntax.
    * All of these are specified in algol.tokens; the generic engine handles them.
    */
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
 
   /**
    * Run the generic grammar-driven tokenizer. The ALGOL grammar is richer than
