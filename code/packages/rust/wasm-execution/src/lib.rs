@@ -774,14 +774,26 @@ impl Table {
 
     /// Grow the table by `delta` entries, filling new slots with `init`.
     /// Returns the OLD size on success, `-1` on failure -- same contract
-    /// as `LinearMemory::grow` (task #98). Failure cases: growing past
-    /// the table's own declared `max_size` (if any), or past what fits
-    /// in `table.size`'s own `i32` result type (real engines cap table
-    /// size well under `u32::MAX` for exactly this reason -- a table
-    /// that grew past `i32::MAX` couldn't report its own size back
-    /// through `table.size` without the result looking negative).
+    /// as `LinearMemory::grow` (task #98). Failure cases, checked in this
+    /// order: growing past the table's own declared `max_size` (if any);
+    /// growing past `MAX_TABLE_ELEMENTS` -- a HARD, implementation-defined
+    /// ceiling independent of any module-declared max, the same two-tier
+    /// shape `LinearMemory::grow`'s own 65536-page cap already gives
+    /// memory (that check exists precisely because the *spec's* memory
+    /// max is real and enforced; a table's declared `max_size` is
+    /// optional, so without this second tier a module with NO declared
+    /// max could `table.grow` this `Vec<Option<u32>>` (8 bytes/entry) all
+    /// the way to just under `i32::MAX` entries -- ~17GB in one call, a
+    /// real memory-exhaustion DoS this crate's own `MAX_TABLE_ELEMENTS`
+    /// already exists to prevent for a table's DECLARED `min` (task #96,
+    /// security review) but this runtime growth path never applied to
+    /// growth itself until this check was added (task #98, security
+    /// review round 1); or growing past what fits in `table.size`'s own
+    /// `i32` result type (moot in practice now that `MAX_TABLE_ELEMENTS`
+    /// is far below `i32::MAX`, kept as an explicit, self-documenting
+    /// invariant rather than relying on the constant never changing).
     /// `u64` arithmetic throughout so a huge `delta` can't wrap `usize`/
-    /// `u32` addition and slip past either check.
+    /// `u32` addition and slip past any of the three checks.
     pub fn grow(&mut self, delta: u32, init: Option<u32>) -> i32 {
         let old_size = self.elements.len() as u32;
         let new_size = old_size as u64 + delta as u64;
@@ -789,6 +801,9 @@ impl Table {
             if new_size > max as u64 {
                 return -1;
             }
+        }
+        if new_size > MAX_TABLE_ELEMENTS as u64 {
+            return -1;
         }
         if new_size > i32::MAX as u64 {
             return -1;
@@ -5726,6 +5741,29 @@ mod tests {
         let mut table = Table::new(16, None);
         assert_eq!(table.grow(0xFFFF_FFF0, None), -1);
         assert_eq!(table.size(), 16); // unchanged on failure
+    }
+
+    /// Security review (task #98): a table with NO declared `max_size`
+    /// (entirely legal WASM) must still reject growth well before
+    /// `i32::MAX` entries -- without this, `Table::elements` (`Vec<
+    /// Option<u32>>`, 8 bytes/entry with no niche optimization for
+    /// `u32`) could be resized to ~17GB in a single `table.grow` call
+    /// driven by nothing more than one attacker-controlled `.wasm`
+    /// module. `MAX_TABLE_ELEMENTS` already exists (task #96, security
+    /// review) to bound a table's DECLARED `min` for exactly this
+    /// resource-exhaustion reason; this test pins that the same ceiling
+    /// also applies to RUNTIME growth, not just declaration.
+    #[test]
+    fn test_table_grow_rejects_growth_past_max_table_elements_even_with_no_declared_max() {
+        let mut table = Table::new(1, None);
+        assert_eq!(table.grow(MAX_TABLE_ELEMENTS, None), -1);
+        assert_eq!(table.size(), 1); // unchanged on failure
+
+        // One past the cap, from a starting size that's already AT the cap:
+        // proves the check compares the NEW total, not just `delta` in isolation.
+        let mut at_cap = Table::new(MAX_TABLE_ELEMENTS, None);
+        assert_eq!(at_cap.grow(1, None), -1);
+        assert_eq!(at_cap.size(), MAX_TABLE_ELEMENTS);
     }
 
     #[test]

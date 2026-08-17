@@ -4,6 +4,27 @@ All notable changes to this package will be documented in this file.
 
 ## [0.9.8] - 2026-08-16 (task #98 — table.grow/table.size/table.fill)
 
+### Security
+
+- `Table::grow` now rejects growth past `MAX_TABLE_ELEMENTS`
+  (10,000,000), independent of whether the module declared its own
+  `max_size`. Caught by `/security-review` round 1: with no declared
+  max (entirely legal WASM), the only prior ceiling was `i32::MAX`
+  entries -- since `Table::elements` is `Vec<Option<u32>>` (8 bytes/
+  entry, no niche optimization for `u32`), a single `table.grow` call
+  from one attacker-controlled `.wasm` module could resize to ~17GB,
+  and Rust's default allocation-failure handler aborts the whole
+  process, not just the offending instance. `MAX_TABLE_ELEMENTS`
+  already existed (task #96, security review) to bound a table's
+  DECLARED `min` for this exact resource-exhaustion reason, but that
+  check never applied to runtime growth -- mirrors `LinearMemory::
+  grow`'s own two-tier shape (module-declared max, THEN a hard
+  implementation ceiling independent of it). New tests pin both the
+  zero-cap-declared and grown-to-cap-then-grow-again shapes; confirmed
+  load-bearing by TEMP-REVERT-CHECK (reverting the check reproduces
+  the exact predicted failure: `assertion left == right failed, left:
+  1, right: -1`).
+
 ### Added
 
 - `table.grow`/`table.size`/`table.fill` (`0xFC 0x0F`/`0x10`/`0x11`)
