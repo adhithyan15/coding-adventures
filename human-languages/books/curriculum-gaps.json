@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2874,
+    "totalLessons": 2885,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -32,14 +32,14 @@
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 582,
+    "atomsNeverRevisited": 583,
     "forwardReferences": 508,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
     "drivableLessons": 2478,
     "drivablePercent": 86,
-    "chaptersWithoutDrivablePrefix": 81,
+    "chaptersWithoutDrivablePrefix": 82,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -2781,7 +2781,8 @@
           10,
           11,
           12,
-          13
+          13,
+          14
         ],
         "bookChapters": [
           1,
@@ -2796,7 +2797,8 @@
           10,
           11,
           12,
-          13
+          13,
+          14
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3146,10 +3148,10 @@
       {
         "language": "russian",
         "status": "mixed",
-        "lessonCount": 64,
+        "lessonCount": 75,
         "versions": {
           "1": 15,
-          "2": 49
+          "2": 60
         }
       },
       {
@@ -3856,8 +3858,8 @@
       },
       {
         "language": "russian",
-        "bookChapters": 13,
-        "declaredChapters": 13,
+        "bookChapters": 14,
+        "declaredChapters": 14,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -3904,8 +3906,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 908,
-      "declaredChapters": 908,
+      "bookChapters": 909,
+      "declaredChapters": 909,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3917,9 +3919,9 @@
     }
   },
   "levels": {
-    "totalLessons": 2874,
+    "totalLessons": 2885,
     "byLevel": {
-      "pre-A1": 1612,
+      "pre-A1": 1623,
       "A1": 548,
       "A2": 543,
       "B1": 40,
@@ -4172,9 +4174,9 @@
       },
       {
         "language": "russian",
-        "lessonCount": 64,
+        "lessonCount": 75,
         "byLevel": {
-          "pre-A1": 42,
+          "pre-A1": 53,
           "A1": 0,
           "A2": 14,
           "B1": 0,
@@ -4871,8 +4873,8 @@
       },
       {
         "language": "russian",
-        "lessonCount": 64,
-        "measurable": 48,
+        "lessonCount": 75,
+        "measurable": 59,
         "unmeasurable": 16,
         "lessonViolations": 1,
         "chapterViolations": 3
@@ -5828,7 +5830,7 @@
           "language": "russian",
           "script": "cyrillic",
           "latinScript": false,
-          "lessonCount": 64,
+          "lessonCount": 75,
           "totalGlyphs": 55,
           "lessonViolations": 4,
           "systemViolations": 0,
@@ -26282,6 +26284,30 @@
         "revisits": 1
       },
       {
+        "atom": "RU-ETYMON-SVIDANIYA-VIDET",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-svidaniya",
+        "introducedAt": 50,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-ETYMON-VSTRECHA-NO-COUSIN",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-vstrechi",
+        "introducedAt": 54,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "RU-ETYMON-YA-EGO",
         "language": "russian",
         "introducedBy": "RU-C02-ya",
@@ -26292,6 +26318,18 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "RU-ETYMON-ZAVTRA-DAWN",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-zavtra",
+        "introducedAt": 53,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
       },
       {
         "atom": "RU-GRAMMAR-L-EPENTHESIS",
@@ -40923,6 +40961,17 @@
         "revisits": 2
       },
       {
+        "atom": "RU-ETYMON-GLAZ-BALL",
+        "language": "russian",
+        "introducedBy": "RU-C09-glaz",
+        "introducedAt": 48,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "RU-ETYMON-GOVORIT-NOT-GOVERN",
         "language": "russian",
         "introducedBy": "RU-C03-govorit",
@@ -40978,6 +41027,39 @@
         "revisits": 0
       },
       {
+        "atom": "RU-ETYMON-NOS-NOSE",
+        "language": "russian",
+        "introducedBy": "RU-C09-nos",
+        "introducedAt": 46,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-ETYMON-OTETS-ATTA",
+        "language": "russian",
+        "introducedBy": "RU-C12-otets",
+        "introducedAt": 59,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-ETYMON-POKA-KAKOI",
+        "language": "russian",
+        "introducedBy": "RU-C11-poka",
+        "introducedAt": 51,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "RU-ETYMON-POKOY-QUIET",
         "language": "russian",
         "introducedBy": "RU-C11-spokoynoy-nochi",
@@ -41011,6 +41093,28 @@
         "revisits": 2
       },
       {
+        "atom": "RU-ETYMON-ROT-DIG",
+        "language": "russian",
+        "introducedBy": "RU-C09-rot",
+        "introducedAt": 47,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "RU-ETYMON-SERDTSE-HEART",
+        "language": "russian",
+        "introducedBy": "RU-C10-serdtse",
+        "introducedAt": 49,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "RU-ETYMON-SESTRA-SISTER",
         "language": "russian",
         "introducedBy": "RU-C07-sestra",
@@ -41020,6 +41124,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "RU-ETYMON-SKORYI-HURRY",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-skorogo",
+        "introducedAt": 52,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "RU-ETYMON-SPRASHIVAT-PRAY",
@@ -41033,10 +41148,10 @@
         "revisits": 2
       },
       {
-        "atom": "RU-ETYMON-SVIDANIYA-VIDET",
+        "atom": "RU-ETYMON-SUP-FRENCH-LOAN",
         "language": "russian",
-        "introducedBy": "RU-C11-do-svidaniya",
-        "introducedAt": 50,
+        "introducedBy": "RU-C13-sup",
+        "introducedAt": 63,
         "missed": [
           "R1",
           "R2"
@@ -41055,26 +41170,15 @@
         "revisits": 2
       },
       {
-        "atom": "RU-ETYMON-VSTRECHA-NO-COUSIN",
+        "atom": "RU-ETYMON-UKHO-EAR",
         "language": "russian",
-        "introducedBy": "RU-C11-do-vstrechi",
-        "introducedAt": 54,
+        "introducedBy": "RU-C09-ukho",
+        "introducedAt": 45,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "RU-ETYMON-ZAVTRA-DAWN",
-        "language": "russian",
-        "introducedBy": "RU-C11-do-zavtra",
-        "introducedAt": 53,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "RU-ETYMON-ZNAT-KNOW",
@@ -41086,6 +41190,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "RU-GRAMMAR-DO-GENITIVE",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-svidaniya",
+        "introducedAt": 50,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
       },
       {
         "atom": "RU-GRAMMAR-FEMININE-SUFFIX-A",
@@ -41198,6 +41313,39 @@
         "revisits": 2
       },
       {
+        "atom": "RU-LEX-DO-SKOROGO",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-skorogo",
+        "introducedAt": 52,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-DO-VSTRECHI",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-vstrechi",
+        "introducedAt": 54,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-DO-ZAVTRA",
+        "language": "russian",
+        "introducedBy": "RU-C11-do-zavtra",
+        "introducedAt": 53,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "RU-LEX-DRUG",
         "language": "russian",
         "introducedBy": "RU-C07-drug",
@@ -41231,6 +41379,17 @@
         "revisits": 2
       },
       {
+        "atom": "RU-LEX-NOS",
+        "language": "russian",
+        "introducedBy": "RU-C09-nos",
+        "introducedAt": 46,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "RU-LEX-PISAT",
         "language": "russian",
         "introducedBy": "RU-C04-pisat",
@@ -41246,6 +41405,17 @@
         "language": "russian",
         "introducedBy": "RU-C07-podruga",
         "introducedAt": 41,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-POKA",
+        "language": "russian",
+        "introducedBy": "RU-C11-poka",
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -41275,6 +41445,28 @@
         "revisits": 3
       },
       {
+        "atom": "RU-LEX-ROT",
+        "language": "russian",
+        "introducedBy": "RU-C09-rot",
+        "introducedAt": 47,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-SERDTSE",
+        "language": "russian",
+        "introducedBy": "RU-C10-serdtse",
+        "introducedAt": 49,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "RU-LEX-SESTRA",
         "language": "russian",
         "introducedBy": "RU-C07-sestra",
@@ -41295,6 +41487,28 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-SUP",
+        "language": "russian",
+        "introducedBy": "RU-C13-sup",
+        "introducedAt": 63,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-LEX-UKHO",
+        "language": "russian",
+        "introducedBy": "RU-C09-ukho",
+        "introducedAt": 45,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "RU-PRAGMATICS-VY-POLITENESS",
@@ -41339,6 +41553,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "RU-SCRIPT-TSE",
+        "language": "russian",
+        "introducedBy": "RU-C10-serdtse",
+        "introducedAt": 49,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "RU-SCRIPT-YA-NOT-R",
@@ -51124,16 +51349,6 @@
         "revisits": 2
       },
       {
-        "atom": "RU-ETYMON-GLAZ-BALL",
-        "language": "russian",
-        "introducedBy": "RU-C09-glaz",
-        "introducedAt": 48,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "RU-ETYMON-LYUBIT-LOVE",
         "language": "russian",
         "introducedBy": "RU-C05-lyubit",
@@ -51164,74 +51379,44 @@
         "revisits": 1
       },
       {
-        "atom": "RU-ETYMON-NOS-NOSE",
+        "atom": "RU-ETYMON-MOLOKO-MILK",
         "language": "russian",
-        "introducedBy": "RU-C09-nos",
-        "introducedAt": 46,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "RU-ETYMON-OTETS-ATTA",
-        "language": "russian",
-        "introducedBy": "RU-C12-otets",
-        "introducedAt": 59,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "RU-ETYMON-POKA-KAKOI",
-        "language": "russian",
-        "introducedBy": "RU-C11-poka",
-        "introducedAt": 51,
+        "introducedBy": "RU-C13-moloko",
+        "introducedAt": 60,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "RU-ETYMON-ROT-DIG",
+        "atom": "RU-ETYMON-SEMYA-HOME",
         "language": "russian",
-        "introducedBy": "RU-C09-rot",
-        "introducedAt": 47,
+        "introducedBy": "RU-C08-semya",
+        "introducedAt": 44,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-ETYMON-SOK-NO-COUSIN",
+        "language": "russian",
+        "introducedBy": "RU-C13-sok",
+        "introducedAt": 62,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "RU-ETYMON-SERDTSE-HEART",
+        "atom": "RU-ETYMON-SYR-SOUR",
         "language": "russian",
-        "introducedBy": "RU-C10-serdtse",
-        "introducedAt": 49,
+        "introducedBy": "RU-C13-syr",
+        "introducedAt": 61,
         "missed": [
           "R2"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "RU-ETYMON-SKORYI-HURRY",
-        "language": "russian",
-        "introducedBy": "RU-C11-do-skorogo",
-        "introducedAt": 52,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "RU-ETYMON-UKHO-EAR",
-        "language": "russian",
-        "introducedBy": "RU-C09-ukho",
-        "introducedAt": 45,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "RU-ETYMON-VIDET-WIT",
@@ -51282,16 +51467,6 @@
           "R1"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "RU-GRAMMAR-DO-GENITIVE",
-        "language": "russian",
-        "introducedBy": "RU-C11-do-svidaniya",
-        "introducedAt": 50,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 4
       },
       {
         "atom": "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL",
@@ -51384,34 +51559,14 @@
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-DO-SKOROGO",
+        "atom": "RU-LEX-DO-SVIDANIYA",
         "language": "russian",
-        "introducedBy": "RU-C11-do-skorogo",
-        "introducedAt": 52,
+        "introducedBy": "RU-C11-do-svidaniya",
+        "introducedAt": 50,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-DO-VSTRECHI",
-        "language": "russian",
-        "introducedBy": "RU-C11-do-vstrechi",
-        "introducedAt": 54,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "RU-LEX-DO-ZAVTRA",
-        "language": "russian",
-        "introducedBy": "RU-C11-do-zavtra",
-        "introducedAt": 53,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "RU-LEX-DUMAT",
@@ -51422,6 +51577,16 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-GLAZ",
+        "language": "russian",
+        "introducedBy": "RU-C09-glaz",
+        "introducedAt": 48,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "RU-LEX-GOVORIT",
@@ -51494,14 +51659,24 @@
         "revisits": 2
       },
       {
-        "atom": "RU-LEX-NOS",
+        "atom": "RU-LEX-MOLOKO",
         "language": "russian",
-        "introducedBy": "RU-C09-nos",
-        "introducedAt": 46,
+        "introducedBy": "RU-C13-moloko",
+        "introducedAt": 60,
         "missed": [
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-OTETS",
+        "language": "russian",
+        "introducedBy": "RU-C12-otets",
+        "introducedAt": 59,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "RU-LEX-PAPA",
@@ -51514,34 +51689,24 @@
         "revisits": 2
       },
       {
-        "atom": "RU-LEX-POKA",
+        "atom": "RU-LEX-SEMYA",
         "language": "russian",
-        "introducedBy": "RU-C11-poka",
-        "introducedAt": 51,
+        "introducedBy": "RU-C08-semya",
+        "introducedAt": 44,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-ROT",
+        "atom": "RU-LEX-SOK",
         "language": "russian",
-        "introducedBy": "RU-C09-rot",
-        "introducedAt": 47,
+        "introducedBy": "RU-C13-sok",
+        "introducedAt": 62,
         "missed": [
           "R2"
         ],
-        "revisits": 2
-      },
-      {
-        "atom": "RU-LEX-SERDTSE",
-        "language": "russian",
-        "introducedBy": "RU-C10-serdtse",
-        "introducedAt": 49,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
+        "revisits": 1
       },
       {
         "atom": "RU-LEX-SPOKOYNOY-NOCHI",
@@ -51554,14 +51719,14 @@
         "revisits": 2
       },
       {
-        "atom": "RU-LEX-UKHO",
+        "atom": "RU-LEX-SYR",
         "language": "russian",
-        "introducedBy": "RU-C09-ukho",
-        "introducedAt": 45,
+        "introducedBy": "RU-C13-syr",
+        "introducedAt": 61,
         "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 2
       },
       {
         "atom": "RU-LEX-VODA",
@@ -51600,16 +51765,6 @@
         "introducedAt": 25,
         "missed": [
           "R1"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "RU-SCRIPT-TSE",
-        "language": "russian",
-        "introducedBy": "RU-C10-serdtse",
-        "introducedAt": 49,
-        "missed": [
-          "R2"
         ],
         "revisits": 2
       },
@@ -57373,12 +57528,12 @@
       },
       {
         "language": "russian",
-        "lessonCount": 64,
+        "lessonCount": 75,
         "lessonsWithoutSequence": 15,
         "forwardPrerequisites": 6,
         "forwardReviews": 9,
-        "atomsTaught": 118,
-        "atomsNeverRevisited": 8,
+        "atomsTaught": 129,
+        "atomsNeverRevisited": 9,
         "forwardReferences": 15
       },
       {
@@ -57437,13 +57592,13 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4028,
-      "atomsNeverRevisited": 582,
+      "atomsTaught": 4039,
+      "atomsNeverRevisited": 583,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1121,
-        "R2": 3114,
-        "R3": 2845,
+        "R1": 1123,
+        "R2": 3124,
+        "R3": 2869,
         "R4": 1561
       },
       "forwardReferences": 508
@@ -57597,11 +57752,11 @@
       {
         "language": "russian",
         "script": "cyrillic",
-        "lessonCount": 64,
-        "scriptLessons": 5,
-        "taughtGlyphs": 18,
+        "lessonCount": 75,
+        "scriptLessons": 16,
+        "taughtGlyphs": 30,
         "shownGlyphs": 55,
-        "neverTaughtGlyphs": 37,
+        "neverTaughtGlyphs": 25,
         "violations": 59,
         "exposureOnly": 0,
         "exposureExemptedGlyphs": 98,
@@ -63325,6 +63480,11 @@
             "criterion": "vocabulary",
             "detail": "teaches 39 distinct headwords at or below pre-A1, against 300",
             "shortfall": 261
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "3 atom(s) at or below pre-A1 are revisited fewer than twice (29 etymology hook(s) waived)",
+            "shortfall": 3
           }
         ],
         "vocabulary": 53
@@ -63456,10 +63616,10 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2874,
+    "totalLessons": 2885,
     "voice": 2042,
     "sight": 582,
-    "pen": 250,
+    "pen": 261,
     "coreVoice": 2478,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 86,
@@ -69987,12 +70147,12 @@
       },
       {
         "language": "russian",
-        "lessonCount": 64,
+        "lessonCount": 75,
         "voice": 46,
         "sight": 13,
-        "pen": 5,
+        "pen": 16,
         "coreVoice": 56,
-        "drivablePercent": 88,
+        "drivablePercent": 75,
         "drivablePrefixTotal": 48,
         "chapters": [
           {
@@ -70183,6 +70343,21 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": "RU-C13-syr"
+          },
+          {
+            "language": "russian",
+            "chapter": 14,
+            "lessonCount": 11,
+            "voice": 0,
+            "sight": 0,
+            "pen": 11,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "RU-W06-u"
           }
         ]
       },
@@ -77265,7 +77440,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2874,
+    "lessons": 2885,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -77275,10 +77450,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 2819,
-    "usesBeforeIntroduction": 11143,
-    "technicalUsesBeforeIntroduction": 3108,
-    "technicalLessons": 1596,
+    "lessonsUsingTerms": 2830,
+    "usesBeforeIntroduction": 11172,
+    "technicalUsesBeforeIntroduction": 3110,
+    "technicalLessons": 1598,
     "worstTerms": [
       {
         "term": "verb",
@@ -77294,7 +77469,7 @@
       },
       {
         "term": "regular",
-        "lessons": 149
+        "lessons": 150
       },
       {
         "term": "adjective",
