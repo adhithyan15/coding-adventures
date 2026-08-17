@@ -52,6 +52,7 @@ fn main() -> ExitCode {
     //   * M68kBin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Intel8080Bin → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Z80Bin        → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * Intel8086Bin  → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
@@ -68,6 +69,7 @@ fn main() -> ExitCode {
         EmitMode::MipsR2000Bin => input.with_extension("bin"),
         EmitMode::Z80Bin => input.with_extension("bin"),
         EmitMode::Intel8051Bin => input.with_extension("bin"),
+        EmitMode::Intel8086Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -200,6 +202,15 @@ enum EmitMode {
     /// units, still fabricated today (Atmel/Microchip AT89, NXP
     /// 80C51, and others).
     Intel8051Bin,
+    /// Flat `.bin` of Intel 8086 machine code bytes via
+    /// `intel8086-backend`.  Cross-platform.  Downstream consumers: the
+    /// in-tree `intel8086-simulator` or any external 8086/8088
+    /// emulator.  The Intel 8086 (1978) is the direct architectural
+    /// ancestor of every x86 CPU made today — its cheaper sibling the
+    /// 8088 shipped in the original IBM PC (1981), founding the
+    /// "PC-compatible" industry.  Ninth and final lane of the
+    /// 9-architecture expansion.
+    Intel8086Bin,
 }
 
 struct CliArgs {
@@ -287,9 +298,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "mips-r2000" | "mips" | "r2000" => Ok(EmitMode::MipsR2000Bin),
         "z80" | "zilog-z80" => Ok(EmitMode::Z80Bin),
         "intel8051" | "i8051" | "8051" | "mcs51" => Ok(EmitMode::Intel8051Bin),
+        "intel8086" | "i8086" | "8086" => Ok(EmitMode::Intel8086Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80 | intel8051"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80 | intel8051 | intel8086"
         )),
     }
 }
@@ -427,6 +439,16 @@ Options:
                                                 to a real 8051-family part (the
                                                 most-manufactured CPU architecture
                                                 in history — 20+ billion units)
+                             intel8086 | i8086 | 8086
+                                              → flat .bin of Intel 8086 machine code
+                                                bytes via intel8086-backend; cross-
+                                                platform; load into intel8086-simulator
+                                                or an external 8086/8088 emulator (the
+                                                direct architectural ancestor of every
+                                                x86 CPU made today, 1978 — its cheaper
+                                                sibling the 8088 shipped in the original
+                                                IBM PC, 1981, founding the
+                                                PC-compatible industry)
   -h, --help               Show this help.\
 ");
 }
@@ -573,6 +595,18 @@ fn dispatch(
     // 8051-family part.
     if emit == EmitMode::Intel8051Bin {
         return lang_aot::compile_file_to_intel8051_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 8086 .bin emission is also cross-platform — like the 6502,
+    // intel8086-backend's own encoded bytes are the wire format (multi-
+    // byte immediates are already little-endian within each
+    // instruction; there's no fixed instruction-word width to flatten).
+    // No linker, no host gating (no modern dev host is 8086/8088
+    // silicon); downstream is always intel8086-simulator or an external
+    // 8086/8088 emulator.  Ninth and final lane of the 9-architecture
+    // expansion.
+    if emit == EmitMode::Intel8086Bin {
+        return lang_aot::compile_file_to_intel8086_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

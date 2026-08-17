@@ -1,0 +1,17 @@
+[package]
+name = "intel8086-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8086 backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into Intel 8086 machine code via intel8086-encoder.  Emit-only -- bytes go to intel8086-simulator.  Minimal viable: const_*/ret_* only, trivial single-register (AX) allocator; ret_* lowers to HLT (0xF4), a genuine hardware halt instruction, not a pseudo-halt convention.  Tracks an explicit terminated:bool for its 'already halted?' check rather than a trailing-byte-value comparison (a real bug class fixed in four prior lanes of this campaign: Intel 8051, Intel 8080, MOS 6502, Zilog Z80).  Ninth and final lane of the 9-architecture expansion."
+
+[lib]
+name = "intel8086_backend"
+path = "src/lib.rs"
+
+[dependencies]
+intel8086-encoder = { path = "../intel8086-encoder" }
+jit-core           = { path = "../jit-core" }
+vm-core            = { path = "../vm-core" }
+
+[dev-dependencies]
+intel8086-simulator = { path = "../intel8086-simulator" }

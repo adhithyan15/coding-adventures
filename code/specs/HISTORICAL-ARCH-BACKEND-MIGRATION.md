@@ -297,6 +297,46 @@ and by actually executing the emitted bytes in `intel8051-simulator`
 and asserting `acc() == 42` — plus a converse test proving a raw
 `SJMP $` self-loop does *not* halt within the same step budget, so the
 positive halt assertion is meaningful.
+**Intel 8086** — `intel8086-encoder` + `intel8086-backend`, minimal
+viable (`const_*`/`ret_*` only, single-register `AX` allocator — the
+8086's primary 16-bit accumulator/return-value register — same trivial-
+ROM scope as `arm1-backend`/`mos6502-backend`). Ninth and **final**
+lane of the 9-architecture expansion. The 8086's most distinctive
+structural feature is segmented memory (`physical = segment×16 +
+offset`), which — unlike almost every other scoping decision in this
+lane — is **not deferrable**: even the trivial `MOV AX,#42; HLT`
+program has its first opcode byte fetched via `CS:IP` segmented
+addressing, so `intel8086-simulator` (a brand-new Rust port of
+`code/packages/python/intel-8086-simulator`, curating a core subset of
+data-transfer and arithmetic ops rather than porting the full ~1670-
+line reference) carries `phys_addr(segment, offset) = (segment<<4 +
+offset) & 0xFFFFF` as a first-class primitive that every instruction
+fetch routes through, rather than the flat program-counter-as-address
+shape every other simulator in this repo uses. One halt-convention
+decision, resolved with the least invention of any lane in this
+campaign: unlike ARM1 (no real halt instruction — `arm1-backend`
+invented a pseudo-halt `SWI`) or MOS 6502 (`BRK` is technically a
+software-interrupt opcode this repo's simulator stack *treats* as HALT
+by convention), the Intel 8086 has a genuine, single-byte, no-operand
+hardware halt instruction, `HLT` (`0xF4`), ported directly from the
+Python reference's `if op == 0xF4: self._halted = True` — `ret_*`/
+`ret_void` lower to it with no invention needed at all. This lane also
+carries the fix for a real bug class found across four prior lanes
+(Intel 8051, Intel 8080, MOS 6502, Zilog Z80): a defensive "is the
+program already terminated?" check written as a trailing-byte-value
+comparison can be fooled when a legitimate `const_*` immediate's
+encoded bytes happen to numerically collide with the halt opcode
+(`MOV AX,#0xF400` encodes with `0xF4` as its own trailing byte, byte-
+identical to `HALT_BYTE`, despite never executing a real halt) —
+`intel8086-backend` instead tracks an explicit `terminated: bool`,
+proven by a dedicated regression test. Byte-for-byte parity for the
+canonical `MOV AX,#42; HLT` sequence (`[0xB8, 0x2A, 0x00, 0xF4]`) is
+verified both as a hand-derived byte array and by actually executing
+the emitted bytes in `intel8086-simulator` (through non-zero-`CS`
+segmented addressing) and asserting `AX == 42` and `halted == true` —
+see `code/specs/intel8086-backend.md` and
+`code/specs/intel8086-encoder.md` for the full rationale. This closes
+out all nine lanes of the originally-planned 9-architecture expansion.
 
 Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
 in parallel PRs and are not enumerated here to avoid merge
