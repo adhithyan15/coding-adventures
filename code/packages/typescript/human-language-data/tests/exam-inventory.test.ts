@@ -444,6 +444,15 @@ describe("the committed German A1 inventory", () => {
     }
   });
 
+  it("refuses an empty probe, which would score as covered", () => {
+    // Symmetry with the French block. `loadExamInventory` throws on `probe: []`
+    // regardless, but the assertion belongs beside every inventory so a future
+    // one cannot be added without it.
+    for (const point of inventory.points) {
+      expect(Array.isArray(point.probe) ? point.probe.length : 1).toBeGreaterThan(0);
+    }
+  });
+
   it("probes only atoms that exist in the corpus", () => {
     const { lessons } = loadEverything();
     const taught = trackIntroducedAtoms(lessons, "german");
