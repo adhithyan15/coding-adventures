@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.2] - 2026-08-17
+
+### Fixed
+- `_grammar.rb` had drifted far behind `ruby.grammar`: `def`/`class`/`module`/`if`/`unless`/`while`/`until`/`case`/`begin`/`return`/`break`/`next`/`redo`/`retry`/`yield`/`alias`/`undef`/multi-assignment/modifier/rightward-assignment/index-assignment statement rules were all missing from the compiled `statement` alternation, so real Ruby source using any of them silently fell through to `expression_stmt` or failed to parse. Discovered by a new CI drift check that regenerates `_grammar.rb` from the current `.tokens`/`.grammar` source and fails if it no longer matches what's committed. Regenerated from current `ruby.grammar`, and added regression tests (`test_def_statement`, `test_class_statement`, `test_if_statement`, `test_while_statement`, `test_case_statement`, `test_begin_statement`) that fail against the old compiled grammar and pass against the fix.
+
 ## [0.1.1] - 2026-03-31
 
 ### Fixed

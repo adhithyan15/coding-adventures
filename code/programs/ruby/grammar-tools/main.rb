@@ -81,7 +81,8 @@ def print_usage
   $stderr.puts "  validate-grammar <file.grammar>               Validate just a .grammar file"
   $stderr.puts "  compile-tokens <file.tokens> [-o out.rb]     Compile tokens to Ruby"
   $stderr.puts "  compile-grammar <file.grammar> [-o out.rb]   Compile grammar to Ruby"
-  $stderr.puts "  generate-compiled-grammars                    Generate all downstream _grammar files"
+  $stderr.puts "  generate-compiled-grammars [--lane ruby]      Generate downstream _grammar files"
+  $stderr.puts "                                                 (--lane ruby: Ruby only, no Go/Rust/Python/Node needed)"
   $stderr.puts
   $stderr.puts "Run 'grammar-tools --help' for full help text."
 end
@@ -349,11 +350,20 @@ end
 # dispatch
 # ---------------------------------------------------------------------------
 
-def generate_compiled_grammars_command
-  GrammarToolsProgram::CompiledGrammarGenerator.new(ROOT).run
+def generate_compiled_grammars_command(lane)
+  generator = GrammarToolsProgram::CompiledGrammarGenerator.new(ROOT)
+  case lane
+  when nil, ""
+    generator.run
+  when "ruby"
+    generator.run_ruby_only
+  else
+    $stderr.puts "Error: Unknown --lane #{lane.inspect}. Supported: ruby (omit --lane to regenerate every language)."
+    2
+  end
 end
 
-def dispatch(command, files, output_path = nil, force = false)
+def dispatch(command, files, output_path = nil, force = false, lane = nil)
   case command
   when "validate"
     if files.length != 2
@@ -407,7 +417,7 @@ def dispatch(command, files, output_path = nil, force = false)
       print_usage
       return 2
     end
-    generate_compiled_grammars_command
+    generate_compiled_grammars_command(lane)
 
   else
     $stderr.puts "Error: Unknown command '#{command}'"
@@ -451,8 +461,9 @@ def main
   files       = Array(args["files"])
   output_path = flags&.dig("output")
   force       = !!flags&.dig("force")
+  lane        = flags&.dig("lane")
 
-  exit dispatch(command, files, output_path, force)
+  exit dispatch(command, files, output_path, force, lane)
 end
 
 main if __FILE__ == $0

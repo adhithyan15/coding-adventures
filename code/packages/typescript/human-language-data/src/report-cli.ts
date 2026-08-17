@@ -3,7 +3,9 @@ import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot as defaultRoot,
   loadChapterPolicy,
+  loadBookFonts,
   loadEverything,
+  loadMainFontCharset,
   loadGrammarSlots,
   loadMetalanguage,
   loadTrackChapters,
@@ -17,6 +19,7 @@ import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
 import { measureInfoDump, renderInfoDump } from "./info-dump.js";
 import { measureMetalanguage, renderMetalanguage } from "./metalanguage.js";
 import { measureLiteralMarkup, renderLiteralMarkup } from "./literal-markup.js";
+import { measureGlyphCoverage, renderGlyphCoverage } from "./glyph-coverage.js";
 
 interface ReportOptions {
   root?: string;
@@ -104,8 +107,13 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
   // generator's output in hand and does not need the report to rebuild it.
   const literalMarkup = measureLiteralMarkup(lessons);
 
+  // HL-C214/HL-C223. Will every character actually render? Twice a tranche has
+  // been merged-ready and failed CI on a character absent from the book's font,
+  // because every other gate reads the corpus and none of them opens a font.
+  const glyphs = measureGlyphCoverage(loadBookFonts(options.root), loadMainFontCharset(options.root));
+
   const json = `${JSON.stringify(
-    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary, literalMarkup: literalMarkup.summary },
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary, literalMarkup: literalMarkup.summary, glyphCoverage: glyphs.summary },
     null,
     2,
   )}\n`;
@@ -121,6 +129,7 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     "",
     renderMetalanguage(metalanguage).join("\n"),
     renderLiteralMarkup(literalMarkup).join("\n"),
+    renderGlyphCoverage(glyphs).join("\n"),
     "",
   ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);

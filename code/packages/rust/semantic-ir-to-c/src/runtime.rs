@@ -449,6 +449,22 @@ SirValue _sir_utmod(SirValue a, SirValue b) {
     return _sir_int((int64_t)((uint64_t)a.as.i % (uint64_t)b.as.i));
 }
 
+/* SIR21 T3b-2: true (float) division -- always coerces both operands to
+ * double and divides, regardless of operand tag (unlike `_sir_divide_v`,
+ * which floors when both operands happen to be Int -- that's `div_floor`'s
+ * job, this is `div_true`'s). Fails loudly on a zero divisor, matching
+ * every other division builtin in this file (`_sir_ifloordiv`/`_sir_itdiv`/
+ * `_sir_utdiv`) rather than the OLDER `_sir_divide_v`'s float path, which
+ * silently produces IEEE inf/nan on `x / 0.0` -- `div_true` models
+ * Python's `/`, and Python's `ZeroDivisionError` fires unconditionally,
+ * not just when both operands happen to be integers, so IEEE inf/nan is
+ * never a silently-produced result here. */
+SirValue _sir_true_div(SirValue a, SirValue b) {
+    double bn = _sir_as_num(b);
+    if (bn == 0.0) { fprintf(stderr, "sir: divided by 0\n"); exit(1); }
+    return _sir_float(_sir_as_num(a) / bn);
+}
+
 SirValue _sir_divide_v(SirValue *xs, int n) {
     int i;
     if (n <= 0) return _sir_int(1);
@@ -3896,6 +3912,15 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "tmod") == 0)     return _sir_itmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "utdiv") == 0)    return _sir_utdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "utmod") == 0)    return _sir_utmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    /* SIR21 T3b-2: div_floor is `_sir_divide_v` under a new name (identical
+       floor-int/true-divide-float dispatch, zero new logic). div_trunc/
+       udiv_trunc are `tdiv`/`utdiv` under new names -- see this file's own
+       CHANGELOG for why T3b-2 folds the two synonym families into one.
+       div_true is genuinely new (see `_sir_true_div`'s own doc comment). */
+    if (strcmp(name, "div_floor") == 0)  return _sir_divide_v(args, argc);
+    if (strcmp(name, "div_trunc") == 0)  return _sir_itdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "udiv_trunc") == 0) return _sir_utdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "div_true") == 0)   return _sir_true_div(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "cons") == 0)     return _sir_cons(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "car") == 0)      return _sir_car(_sir_arg(args, argc, 0));
     if (strcmp(name, "cdr") == 0)      return _sir_cdr(_sir_arg(args, argc, 0));

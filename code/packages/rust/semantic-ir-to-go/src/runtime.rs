@@ -603,6 +603,61 @@ func _sir_divide(args []Value) Value {
 	return acc
 }
 
+// SIR21 T3b-2: truncating division (`div_trunc`) — Go's native int64 `/`
+// already truncates toward zero, so this is a thin wrapper (the same
+// "no adjustment needed on this backend" observation `semantic-ir-to-c`'s
+// `_sir_itdiv` makes for C's own native `/`). Raises `ZeroDivisionError`,
+// matching `_sir_divide`'s own convention.
+func _sir_trunc_div(args []Value) Value {
+	if len(args) < 2 {
+		return int64(0)
+	}
+	a := _sir_as_int(args[0])
+	b := _sir_as_int(args[1])
+	if b == 0 {
+		panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+	}
+	return a / b
+}
+
+// SIR21 T3b-2: unsigned truncating division (`udiv_trunc`) — `div_trunc`'s
+// unsigned twin. Values are stored as `int64`, so a `uint64` ≥ 2^63 misreads
+// as negative unless reinterpreted before dividing — mirrors
+// `semantic-ir-to-c`'s existing `_sir_utdiv`, the first backend to need this
+// split (this backend has no typed-unsigned frontend reaching it yet, but
+// the helper is implemented faithfully rather than left as a stub, matching
+// `div_trunc`'s sibling treatment).
+func _sir_utrunc_div(args []Value) Value {
+	if len(args) < 2 {
+		return int64(0)
+	}
+	a := uint64(_sir_as_int(args[0]))
+	b := uint64(_sir_as_int(args[1]))
+	if b == 0 {
+		panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+	}
+	return int64(a / b)
+}
+
+// SIR21 T3b-2: true (float) division (`div_true`) — always coerces both
+// operands to float64 and divides, regardless of operand tag (unlike
+// `_sir_divide`, which floors when both operands happen to be int64 —
+// that's `div_floor`'s job, this is `div_true`'s). Raises
+// `ZeroDivisionError` unconditionally, matching `_sir_divide`'s own
+// float-path convention (models Python's `/`) — IEEE `+Inf` is never a
+// silently-produced result here.
+func _sir_true_div(args []Value) Value {
+	if len(args) < 2 {
+		return float64(0)
+	}
+	a := _sir_as_float(args[0])
+	b := _sir_as_float(args[1])
+	if b == 0 {
+		panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+	}
+	return a / b
+}
+
 func _sir_eq(args []Value) Value {
 	if len(args) < 2 {
 		return true
@@ -1344,6 +1399,14 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_times(args)
 	case "/":
 		return _sir_divide(args)
+	case "div_floor":
+		return _sir_divide(args)
+	case "div_trunc":
+		return _sir_trunc_div(args)
+	case "udiv_trunc":
+		return _sir_utrunc_div(args)
+	case "div_true":
+		return _sir_true_div(args)
 	case "neg":
 		return _sir_neg(args)
 	case "=", "==":

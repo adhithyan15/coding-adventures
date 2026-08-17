@@ -304,6 +304,15 @@ export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { runCompletionPlan } from "./plan-cli.js";
 export {
+  measureGlyphCoverage,
+  renderGlyphCoverage,
+  scriptWrappers,
+  mappedCharacters,
+  type BookFonts,
+  type GlyphGap,
+  type GlyphCoverageReport,
+} from "./glyph-coverage.js";
+export {
   measureLiteralMarkup,
   renderLiteralMarkup,
   type LiteralMarkupFinding,
