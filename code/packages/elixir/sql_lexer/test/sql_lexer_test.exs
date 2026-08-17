@@ -4,14 +4,14 @@ defmodule CodingAdventures.SqlLexerTest do
   alias CodingAdventures.SqlLexer
 
   # ---------------------------------------------------------------------------
-  # create_sql_lexer/1
+  # create_sql_lexer/0
   # ---------------------------------------------------------------------------
   #
-  # The function parses sql.tokens and returns a TokenGrammar.  We verify that
+  # The function returns the compiled sql.tokens grammar.  We verify that
   # the grammar contains the token definitions we depend on and that the
   # case_insensitive flag is set.
 
-  describe "create_sql_lexer/1" do
+  describe "create_sql_lexer/0" do
     test "returns {:ok, grammar} for the default grammar" do
       {:ok, grammar} = SqlLexer.create_sql_lexer()
       assert grammar != nil
@@ -67,9 +67,6 @@ defmodule CodingAdventures.SqlLexerTest do
       assert "FALSE" in grammar.keywords
     end
 
-    test "returns {:error, _} for a non-existent grammar path" do
-      {:error, _msg} = SqlLexer.create_sql_lexer("/tmp/does_not_exist_xyz/")
-    end
   end
 
   # ---------------------------------------------------------------------------
