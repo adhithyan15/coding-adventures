@@ -53,6 +53,35 @@ the scale-12 chain and a wide `int64[]` element round-trip.
 Run-verified: the `COMPUTE R = A / B + C` matrix cell goes green on Clr.
 
 
+### Security review follow-ups
+
+Two regressions this change introduced, both found by assembling with real
+`ilasm` and running on CoreCLR 9 rather than by reading the diff:
+
+* **Array element-width confusion → out-of-bounds heap write (HIGH).**
+  `array_get`/`array_set` took the element opcode from the ACCESS instruction's
+  hint while the handle's local type came from the PRODUCING instruction's hint,
+  and nothing reconciled them. Harmless while every element collapsed to
+  `int32[]`/`.i4`; with a real int64 model, `stelem.i8` against an `int32[]`
+  makes the JIT scale the address by 8 while bounds-checking against the element
+  COUNT. Writing index 1023 of an `int32[1024]` stored eight bytes ~4 KB past the
+  end, into a different live array, and the process exited 0 with no exception.
+  `checked_array_access` now ENFORCES the agreement the doc comment previously
+  only asserted. No frontend produced the mismatch — all three ALGOL
+  `integer array` programs are width-consistent — but a hostile or inconsistent
+  `IIRModule` is the same input class `checked_cil_ident` already guards.
+* **`u32`/`i32` stopped wrapping on an int64 slot (MEDIUM).**
+  `emit_narrow_width_mask` returned early for those widths on the premise that
+  "the 32-bit op already wrapped". This change falsified it: the arithmetic arm
+  takes its width from the destination's home, so a `u32` op into an `int64`
+  local computed at 64 bits unmasked. `0x7FFFFFFF + 0x7FFFFFFF` gave
+  `4294967294` where 32-bit wrap gives `-2`.
+
+A third finding (`cmp_operand_width` claiming to reconcile a float/int pair while
+`emit_width_conv` emits nothing, so `1.5 < 2` returns 0) is PRE-EXISTING and left
+tracked rather than fixed here — but the doc no longer claims a guarantee it does
+not provide.
+
 ## 0.44.0 - 2026-08-15 - the entry result leaves on stderr, so a program can print AND return
 
 The launcher wrote the entry's `int32` to stdout, but ONLY when the module did

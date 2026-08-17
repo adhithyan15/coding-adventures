@@ -260,11 +260,19 @@ fn cil_local_type(type_hint: &str) -> &'static str {
 /// `int32[]`. The alternative — keeping `int32[]` while scalars became `int64` —
 /// would need a `conv.i4` on every `array_set`, i.e. an unannounced truncation of
 /// the top 32 bits of an `i64` element on the way into the array. Loud is fine;
-/// silently dropping half a value is not. Because both the array *handle* type
-/// and the element ops come from this one function, `alloc_array`, `array_get`,
-/// `array_set` and an `array<T>` **parameter** all agree by construction as long
-/// as the frontend spells the element type consistently — which the JVM backend
-/// already requires of every frontend that reaches it.
+/// silently dropping half a value is not.
+///
+/// The array *handle*'s local type and the element ops both come from this one
+/// function, so they agree **whenever the frontend spells the element type
+/// consistently**. That is a precondition, not a guarantee, and the difference
+/// is memory safety: `array_get`/`array_set` take the element op from the
+/// *access* instruction's `type_hint`, while the handle's local type comes from
+/// the *producing* instruction's hint. If those disagree, CoreCLR's JIT scales
+/// the element address by the opcode's width (8 for `stelem.i8`) while
+/// bounds-checking against the array's element count — an 8× address scale
+/// behind a 1× bounds check, i.e. an out-of-bounds heap write that raises no
+/// exception. So [`checked_array_access`] **enforces** the agreement rather than
+/// assuming it.
 ///
 /// `f64`/`f32` map to `float64[]`/`float32[]`. Returns `None` for an element type
 /// that can't be a primitive CIL array element here (`object`/nested arrays — a
@@ -284,6 +292,56 @@ fn cil_array_elem(elem: &str) -> Option<(&'static str, &'static str, &'static st
         "string" => Some(("string[]", "ldelem.ref", "stelem.ref", "[System.Runtime]System.String")),
         _ => None,
     }
+}
+
+/// Resolve the element ops for an `array_get`/`array_set`, **cross-checking**
+/// the access instruction's element `type_hint` against the array handle
+/// register's own declared type.
+///
+/// ## Why this check is not optional
+///
+/// The two facts come from different instructions and nothing else reconciles
+/// them: the handle's local type is fixed by whatever *produced* the handle
+/// (`alloc_array`'s `array<T>` hint, or an `array<T>` parameter), while the
+/// element opcode here comes from the *access*'s hint. `validate_iir_for_clr`
+/// does not compare them either.
+///
+/// While every element collapsed to `int32[]`/`.i4` a disagreement was
+/// invisible. It is not any more. `stelem.i8` against an `int32[]` makes the
+/// CoreCLR JIT scale the address by 8 while the bounds check still uses the
+/// array's element count — so writing index 1023 of an `int32[1024]` stores
+/// eight bytes about 4 KB past the end, into whatever object follows on the
+/// heap, and the process exits 0 with no exception. The reverse (`ldelem.i4` on
+/// an `int64[]`) quietly returns half an element.
+///
+/// A frontend that spells its types consistently never sees this. A frontend
+/// that does not — or a hostile `IIRModule`, the same input class
+/// [`checked_cil_ident`] already hardens against — now gets a refusal at emit
+/// time instead of a silent out-of-bounds write at run time.
+fn checked_array_access(
+    f: &IIRFunction,
+    regs: &FnRegs,
+    handle: &str,
+    elem_hint: &str,
+    op: &str,
+) -> Result<(&'static str, &'static str, &'static str, &'static str), IIRClrError> {
+    let pieces = cil_array_elem(elem_hint).ok_or_else(|| IIRClrError::InvalidOperand {
+        function: f.name.clone(),
+        detail: format!("{op} element type {elem_hint:?} is not a supported CIL array element"),
+    })?;
+    let handle_ty = regs.home(handle)?.ty;
+    if handle_ty != pieces.0 {
+        return Err(IIRClrError::InvalidOperand {
+            function: f.name.clone(),
+            detail: format!(
+                "{op} element type {elem_hint:?} implies a {} handle, but {handle:?} is declared \
+                 {handle_ty} — element-width disagreement would emit a bounds-check/address-scale \
+                 mismatch (an out-of-bounds heap access), so it is refused",
+                pieces.0
+            ),
+        });
+    }
+    Ok(pieces)
 }
 
 /// Is `op` one of the six IIR comparison ops? Their result is always a 0/1
@@ -489,12 +547,24 @@ fn store_var_from(
     store_var(il, regs, name)
 }
 
-/// The CIL width two comparison operands must **both** be brought to.
+/// The CIL width two comparison operands are both brought to.
 ///
 /// A comparison's `type_hint` is the *operand* width, but its result is always a
 /// 0/1 `int32`, so the destination's type cannot pick the width — the operands
 /// do. Widen rather than narrow: comparing `1i64 << 40` against `0` must not
 /// first throw away the bits that make the answer true.
+///
+/// **Known gap — a mixed float/integer comparison is not actually reconciled.**
+/// This returns `float64` for a `(float64, int64)` pair, but [`emit_width_conv`]
+/// only converts between the two *integer* widths, so the integer side reaches
+/// `clt`/`cgt`/`ceq` unconverted and the comparison is wrong (`1.5 < 2` returns
+/// `0`). That is **pre-existing** — before the CLR-int64 work this arm emitted no
+/// conversions at all, so every mixed-width comparison, float or not, was equally
+/// unreconciled — and it is deliberately left alone here: emitting `conv.r8` for
+/// the integer side would be adopting a numeric-promotion rule for the whole IIR,
+/// which is a language-semantics decision, not a register-width one. Recorded
+/// rather than quietly implied: no frontend currently emits the shape, and the
+/// honest statement is that this function reconciles integer widths only.
 fn cmp_operand_width(a: &'static str, b: &'static str) -> &'static str {
     match (a, b) {
         ("float64", _) | (_, "float64") => "float64",
@@ -515,35 +585,70 @@ fn cmp_operand_width(a: &'static str, b: &'static str) -> &'static str {
 ///
 /// | type_hint | emits                | wraps                         |
 /// |-----------|----------------------|-------------------------------|
-/// | `u4`      | `ldc.i4 0xF; and`    | `15u4 + 1u4` → `0`            |
-/// | `u8`      | `ldc.i4 0xFF; and`   | `200u8 + 100u8` → `44`        |
-/// | `u16`     | `ldc.i4 0xFFFF; and` | `~0u16` → `65535`            |
-/// | `u32`,`i32`,`i64`,… | *(nothing)* | the 32-bit op already wraps   |
-///
 /// A positive mask + `and` (not `conv.u1`, which would sign-extend) keeps the
 /// unsigned widths unsigned — identical semantics to the JVM `iand` and wasm
 /// `i32.and` masks.
 ///
-/// `stack_ty` is the width the result currently occupies, because `and` is
-/// stack-type-overloaded like every other CIL arithmetic op: masking an `int64`
-/// with an `ldc.i4` constant is an illegal `int64 & int32` transition. A narrow
-/// op almost always computes on `int32` (the destination of a `u8` op is an
-/// `int32` local), so the `int64` arm only fires when the destination is itself
-/// declared `i64` — e.g. a `u8`-hinted op writing an `i64` parameter.
+/// ## `stack_ty` — which widths are free depends on the slot
+///
+/// `stack_ty` is the width the result currently occupies. It matters twice.
+///
+/// First, `and` is stack-type-overloaded like every other CIL arithmetic op:
+/// masking an `int64` with an `ldc.i4` constant is an illegal `int64 & int32`
+/// transition, so the constant must be `ldc.i8`.
+///
+/// Second — and this is the part that is easy to get wrong — **which widths need
+/// no mask at all is a property of the slot, not of the type.** On a 32-bit slot
+/// `u32`/`i32` wrap for free, because the 32-bit opcode already discards
+/// everything above bit 31. On a 64-bit slot nothing above bit 31 is discarded,
+/// so `u32`/`i32` need a mask of their own; leaving them out let
+/// `0x7FFFFFFF + 0x7FFFFFFF` hinted `u32` land as `4294967294` instead of
+/// wrapping. Only `i64`/`u64` are genuinely free there.
+///
+/// | type_hint | on an `int32` slot   | on an `int64` slot          |
+/// |-----------|----------------------|-----------------------------|
+/// | `u4`      | `ldc.i4 0xF; and`    | `ldc.i8 15; and`            |
+/// | `u8`      | `ldc.i4 0xFF; and`   | `ldc.i8 255; and`           |
+/// | `u16`     | `ldc.i4 0xFFFF; and` | `ldc.i8 65535; and`         |
+/// | `u32`     | *(free — 32-bit op)* | `ldc.i8 4294967295; and`    |
+/// | `i32`     | *(free — 32-bit op)* | `conv.i4; conv.i8` (signed) |
+/// | `i64`,`u64` | *(nothing)*        | *(nothing)*                 |
+///
+/// `i32` takes `conv.i4; conv.i8` rather than a mask because it is **signed**:
+/// truncating to 32 bits and sign-extending back reproduces two's-complement
+/// wrap (`0x7FFFFFFF + 1` → `-2147483648`), where an `and` would leave a large
+/// positive value.
 fn emit_narrow_width_mask(il: &mut String, type_hint: &str, stack_ty: &str) {
+    if stack_ty != "int64" {
+        // 32-bit slot: the opcode itself already wrapped mod-2³², so only the
+        // sub-32-bit widths need anything.
+        let mask: i64 = match type_hint {
+            "u4" => 0xF,
+            "u8" => 0xFF,
+            "u16" => 0xFFFF,
+            _ => return, // u32/i32 wrap via the 32-bit op; wider/signed unchanged
+        };
+        let _ = writeln!(il, "    ldc.i4 0x{mask:X}");
+        let _ = writeln!(il, "    and");
+        return;
+    }
+    // 64-bit slot: nothing narrower than 64 bits is free any more.
+    // Decimal, not hex: `ldc.i8` must push an int64 constant, and a plain
+    // decimal literal is the spelling ILAsm reads unambiguously as one.
     let mask: i64 = match type_hint {
         "u4" => 0xF,
         "u8" => 0xFF,
         "u16" => 0xFFFF,
-        _ => return, // u32/i32 wrap via the 32-bit op; wider/signed unchanged
+        "u32" => 0xFFFF_FFFF,
+        "i32" => {
+            // Signed 32-bit wrap: truncate, then sign-extend back to the slot.
+            let _ = writeln!(il, "    conv.i4");
+            let _ = writeln!(il, "    conv.i8");
+            return;
+        }
+        _ => return, // i64/u64 (and anything wider) genuinely need nothing
     };
-    if stack_ty == "int64" {
-        // Decimal, not hex: `ldc.i8` must push an int64 constant, and a plain
-        // decimal literal is the spelling ILAsm reads unambiguously as one.
-        let _ = writeln!(il, "    ldc.i8 {mask}");
-    } else {
-        let _ = writeln!(il, "    ldc.i4 0x{mask:X}");
-    }
+    let _ = writeln!(il, "    ldc.i8 {mask}");
     let _ = writeln!(il, "    and");
 }
 
@@ -1334,10 +1439,8 @@ fn emit_method(
                 })?;
                 let handle = var_src(f, instr, 0, "array_get")?;
                 let idx = var_src(f, instr, 1, "array_get")?;
-                let (_, ldelem, _, _) = cil_array_elem(&instr.type_hint).ok_or_else(|| IIRClrError::InvalidOperand {
-                    function: f.name.clone(),
-                    detail: format!("array_get element type {:?} is not a supported CIL array element", instr.type_hint),
-                })?;
+                let (_, ldelem, _, _) =
+                    checked_array_access(f, &regs, handle, &instr.type_hint, "array_get")?;
                 load_var(il, &regs, handle)?;
                 load_var_as(il, &regs, idx, "int32")?;
                 let _ = writeln!(il, "    {ldelem}");
@@ -1360,10 +1463,8 @@ fn emit_method(
                 let handle = var_src(f, instr, 0, "array_set")?;
                 let idx = var_src(f, instr, 1, "array_set")?;
                 let val = var_src(f, instr, 2, "array_set")?;
-                let (_, _, stelem, _) = cil_array_elem(&instr.type_hint).ok_or_else(|| IIRClrError::InvalidOperand {
-                    function: f.name.clone(),
-                    detail: format!("array_set element type {:?} is not a supported CIL array element", instr.type_hint),
-                })?;
+                let (_, _, stelem, _) =
+                    checked_array_access(f, &regs, handle, &instr.type_hint, "array_set")?;
                 load_var(il, &regs, handle)?;
                 load_var_as(il, &regs, idx, "int32")?;
                 // The value must arrive at the *element's* width: `stelem.i8`
@@ -2414,12 +2515,146 @@ mod tests {
         let mut il32 = String::new();
         emit_narrow_width_mask(&mut il32, "u8", "int32");
         assert_eq!(il32, "    ldc.i4 0xFF\n    and\n", "int32 mask keeps ldc.i4");
-        // Wide widths are still never masked, at either width.
+        // Only the genuinely 64-bit widths are free, and at either slot width.
         for stack in ["int32", "int64"] {
-            let mut none = String::new();
-            emit_narrow_width_mask(&mut none, "i64", stack);
-            assert!(none.is_empty(), "i64 must not be masked at {stack}");
+            for wide in ["i64", "u64"] {
+                let mut none = String::new();
+                emit_narrow_width_mask(&mut none, wide, stack);
+                assert!(none.is_empty(), "{wide} must not be masked at {stack}");
+            }
         }
+    }
+
+    /// Regression: **which widths need no mask is a property of the slot, not of
+    /// the type.** On a 32-bit slot `u32`/`i32` wrap for free because the 32-bit
+    /// opcode discards everything above bit 31. On a 64-bit slot nothing is
+    /// discarded, so they need masks of their own.
+    ///
+    /// Introducing `int64` locals silently broke this: the arithmetic arm
+    /// computes at the destination's width, so a `u32`-hinted op writing an
+    /// `i64` home suddenly ran at 64 bits while `emit_narrow_width_mask` still
+    /// returned early for `u32`/`i32` — `0x7FFFFFFF + 0x7FFFFFFF` gave
+    /// `4294967294` where 32-bit wrap requires `-2`. That is precisely the
+    /// silent-divergence class the CLR-int64 work exists to remove, so it is
+    /// pinned at both slot widths.
+    #[test]
+    fn e2_u32_and_i32_wrap_on_an_int64_slot_too() {
+        // Free on a 32-bit slot — the opcode already wrapped.
+        for hint in ["u32", "i32"] {
+            let mut il = String::new();
+            emit_narrow_width_mask(&mut il, hint, "int32");
+            assert!(il.is_empty(), "{hint} needs no mask on an int32 slot; got {il:?}");
+        }
+        // NOT free on a 64-bit slot.
+        let mut u32_il = String::new();
+        emit_narrow_width_mask(&mut u32_il, "u32", "int64");
+        assert_eq!(u32_il, "    ldc.i8 4294967295\n    and\n",
+            "u32 must zero-extend-mask to 32 bits on an int64 slot");
+        // `i32` is signed, so truncate-and-sign-extend, not an `and` (which
+        // would leave 0x7FFFFFFF+1 as a large positive instead of -2147483648).
+        let mut i32_il = String::new();
+        emit_narrow_width_mask(&mut i32_il, "i32", "int64");
+        assert_eq!(i32_il, "    conv.i4\n    conv.i8\n",
+            "i32 must wrap via truncate + sign-extend on an int64 slot");
+    }
+
+    /// Regression (memory safety): an `array_get`/`array_set` whose element
+    /// `type_hint` disagrees with the array handle's declared type must be
+    /// **refused**, not emitted.
+    ///
+    /// The element opcode comes from the access instruction; the handle's local
+    /// type comes from whatever produced the handle. Nothing else reconciles
+    /// them — `validate_iir_for_clr` does not compare them either. While every
+    /// element collapsed to `int32[]`/`.i4` a disagreement was invisible; with
+    /// real `int64[]` it is not. `stelem.i8` against an `int32[]` makes the
+    /// CoreCLR JIT scale the address by 8 while bounds-checking against the
+    /// element count, so index 1023 of an `int32[1024]` writes eight bytes ~4 KB
+    /// past the end — into another live object, with no exception and exit 0.
+    #[test]
+    fn array_access_refuses_an_element_width_the_handle_disagrees_with() {
+        // `alloc_array : array<i32>` (an int32[] handle) + `array_set : i64`.
+        let mismatched = |access: &str| {
+            let mut instrs = vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()),
+                    vec![Operand::Var("n".into())], "array<i32>"),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            ];
+            if access == "array_set" {
+                instrs.push(IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i".into()),
+                         Operand::Var("v".into())], "i64"));
+            } else {
+                instrs.push(IIRInstr::new("array_get", Some("g".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("i".into())], "i64"));
+            }
+            instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("i".into())], "i32"));
+            let mut m = IIRModule::new("Main", "test");
+            m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+            m.entry_point = Some("main".into());
+            m
+        };
+        for access in ["array_set", "array_get"] {
+            let err = emit_il(&mismatched(access), &IIRClrConfig::new("Main"))
+                .expect_err("{access} over a mismatched handle must be refused");
+            let msg = format!("{err:?}");
+            assert!(msg.contains("int64[]") && msg.contains("int32[]"),
+                "the refusal must name both widths; got {msg}");
+        }
+        // …and the consistent spelling still lowers, at BOTH widths.
+        for (arr, elem, stelem) in
+            [("array<i32>", "i32", "stelem.i4"), ("array<i64>", "i64", "stelem.i8")]
+        {
+            let instrs = vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()),
+                    vec![Operand::Var("n".into())], arr),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], elem),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i".into()),
+                         Operand::Var("v".into())], elem),
+                IIRInstr::new("ret", None, vec![Operand::Var("i".into())], "i32"),
+            ];
+            let mut m = IIRModule::new("Main", "test");
+            m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+            m.entry_point = Some("main".into());
+            let il = emit_il(&m, &IIRClrConfig::new("Main"))
+                .unwrap_or_else(|e| panic!("consistent {arr} must lower: {e:?}"));
+            assert!(il.contains(stelem), "{arr} must use {stelem}; got:\n{il}");
+        }
+    }
+
+    /// The same check protects an `array<T>` **parameter**, whose handle type
+    /// comes from the signature rather than from an `alloc_array` — the ALGOL
+    /// array-procedure shape.
+    #[test]
+    fn array_access_checks_a_parameter_handle_too() {
+        let helper = |param_ty: &str, elem: &str| {
+            let f = IIRFunction::new(
+                "touch",
+                vec![("a".into(), param_ty.into()), ("i".into(), "i32".into())],
+                "i32",
+                vec![
+                    IIRInstr::new("array_get", Some("g".into()),
+                        vec![Operand::Var("a".into()), Operand::Var("i".into())], elem),
+                    IIRInstr::new("ret", None, vec![Operand::Var("i".into())], "i32"),
+                ],
+            );
+            let mut m = IIRModule::new("Main", "algol60");
+            m.functions.push(f);
+            m.functions.push(IIRFunction::new("main", vec![], "i32", vec![
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+            ]));
+            m.entry_point = Some("main".into());
+            m
+        };
+        assert!(emit_il(&helper("array<i64>", "i64"), &IIRClrConfig::new("Main")).is_ok(),
+            "a consistent array<i64> parameter must lower");
+        assert!(emit_il(&helper("array<i32>", "i64"), &IIRClrConfig::new("Main")).is_err(),
+            "an array<i32> parameter read with an i64 element must be refused");
     }
 
     /// CLR-int64 core: `i64`/`u64` are a genuine `int64` local, everything
@@ -3485,4 +3720,51 @@ mod tests {
             "string equality must use System.String::Equals:\n{il}"
         );
     }
+
+    /// An `array_set` whose element hint disagrees with the array handle's own
+    /// declared type must be REFUSED, not emitted.
+    ///
+    /// This is memory safety, not tidiness. `stelem.i8` against an `int32[]`
+    /// makes the CoreCLR JIT scale the element address by 8 while the bounds
+    /// check still uses the array's element COUNT — an 8x address scale behind a
+    /// 1x bounds check. Writing index 1023 of an `int32[1024]` stores eight
+    /// bytes ~4 KB past the end, into whatever object follows on the heap, and
+    /// the process exits 0 with no exception. While every element collapsed to
+    /// `int32[]`/`.i4` the disagreement was invisible; giving the backend a real
+    /// int64 model is what made it reachable.
+    #[test]
+    fn array_access_refuses_a_narrower_element_than_the_handle() {
+        // The sibling test above covers the widening direction (`int32[]` handle
+        // + `.i8` access, the out-of-bounds write). This is the narrowing one:
+        // `ldelem.i4`/`stelem.i4` on an `int64[]` quietly reads or writes half an
+        // element — no fault, just a wrong value.
+        let (alloc_hint, access_hint) = ("array<i64>", "i32");
+        {
+            let f = IIRFunction::new("main", vec![], "i32", vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i32"),
+                IIRInstr::new("alloc_array", Some("a".into()),
+                    vec![Operand::Var("n".into())], alloc_hint),
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], access_hint),
+                IIRInstr::new("array_set", None,
+                    vec![Operand::Var("a".into()), Operand::Var("i".into()), Operand::Var("v".into())],
+                    access_hint),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+            ]);
+            let mut m = IIRModule::new("Main", "test");
+            m.functions.push(f);
+            m.entry_point = Some("main".into());
+
+            let err = emit_il(&m, &IIRClrConfig::new("Main")).expect_err(
+                "an element/handle type disagreement must be refused, not emitted                  ({alloc_hint} handle vs {access_hint} access)",
+            );
+            let text = format!("{err:?}");
+            assert!(
+                text.contains("array_set") || text.contains("element"),
+                "the refusal must name the offending access; got {text}"
+            );
+        }
+    }
+
 }
