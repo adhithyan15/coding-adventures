@@ -78,12 +78,19 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
 
     let mut bytes = Vec::new();
     let mut last_const_var: Option<String> = None;
+    // Tracks whether a REAL HLT was emitted -- NOT whether `bytes` is
+    // non-empty. CIR that ends in `const_*` with no following `ret_*`
+    // would otherwise fall through with `bytes` non-empty (the MVI A,n
+    // bytes) but no terminator, leaving the compiled program to run
+    // into whatever follows in memory instead of halting.
+    let mut terminated = false;
 
     for instr in cir {
         let op = instr.op.as_str();
 
         if op == "ret_void" {
             bytes.push(HLT);
+            terminated = true;
             continue;
         }
 
@@ -96,6 +103,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                 )));
             }
             bytes.push(HLT);
+            terminated = true;
             continue;
         }
 
@@ -104,13 +112,14 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             let imm8 = encode_immediate_8(instr.srcs.first())?;
             bytes.extend_from_slice(&encode_mvi_a(imm8));
             last_const_var = Some(dest.to_string());
+            terminated = false;
             continue;
         }
 
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
-    if bytes.is_empty() {
+    if !terminated {
         bytes.push(HLT);
     }
     Ok(bytes)

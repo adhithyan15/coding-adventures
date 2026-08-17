@@ -145,3 +145,22 @@ fn backend_trait_compile_matches_free_function() {
     let via_free_fn = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("free-fn compile");
     assert_eq!(via_trait, via_free_fn);
 }
+
+/// CIR ending in `const_*` with NO following `ret_*` must still be
+/// terminated: `bytes.is_empty()` is false after emitting `MVI A,n`
+/// (2 bytes), so an `is_empty`-based check would wrongly conclude the
+/// program is already terminated and skip appending `HLT`, leaving
+/// the compiled program to fall into whatever follows in memory (0x00
+/// decodes as NOP on the 8080) instead of halting.
+#[test]
+fn dangling_const_with_no_ret_still_gets_a_real_terminator() {
+    let cir = vec![ci("const_i64", Some("v"), vec![CIROperand::Int(7)], "i64")];
+    let bytes = compile(&ctx("dangling_const", &[], "i64"), &cir).expect("lowering");
+    assert_eq!(bytes, vec![0x3E, 0x07, 0x76]);
+
+    let mut sim = Intel8080Simulator::new(64);
+    sim.load_program(&bytes);
+    let result = sim.run_loaded_with_limit(1000);
+    assert!(result.halted, "program should halt, not run out the step budget");
+    assert!(result.steps < 1000, "should halt well before the step limit");
+}
