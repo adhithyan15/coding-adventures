@@ -2842,6 +2842,58 @@
       "tex": "latin/book/chapters/ch43-answering-meeting-buying.tex"
     },
     {
+      "language": "latin",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:a930e57d43010ed8",
+      "lessonIds": [
+        "LA-C44-domus",
+        "LA-C44-porta",
+        "LA-C44-murus",
+        "LA-C44-hortus",
+        "LA-C44-focus"
+      ],
+      "tex": "latin/book/chapters/ch44-domus.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:f5b7c55e9b4b9971",
+      "lessonIds": [
+        "LA-C45-terra",
+        "LA-C45-ignis",
+        "LA-C45-ventus",
+        "LA-C45-caelum",
+        "LA-C45-mare"
+      ],
+      "tex": "latin/book/chapters/ch45-mundus.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:42f78ca781b13965",
+      "lessonIds": [
+        "LA-C46-lux",
+        "LA-C46-umbra",
+        "LA-C46-stella",
+        "LA-C46-luna",
+        "LA-C46-somnus"
+      ],
+      "tex": "latin/book/chapters/ch46-lux.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:e357e50208605641",
+      "lessonIds": [
+        "LA-C47-sal",
+        "LA-C47-mel",
+        "LA-C47-lac",
+        "LA-C47-ovum",
+        "LA-C47-piscis"
+      ],
+      "tex": "latin/book/chapters/ch47-mensa.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "sourceHash": "fnv1a64:a5c7993a76ca67ef",

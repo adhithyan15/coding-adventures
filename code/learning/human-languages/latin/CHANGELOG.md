@@ -1,5 +1,36 @@
 # Changelog
 
+## [Unreleased]
+
+### Added — twenty pre-A1 nouns, four themed chapters (HL-C212)
+
+Chapters 44–47, five words each, one word per lesson:
+
+    44  domus, porta, mūrus, hortus, focus       the house
+    45  terra, ignis, ventus, caelum, mare       earth, fire, wind, sky, sea
+    46  lūx, umbra, stēlla, lūna, somnus         light, shadow, and sleep
+    47  sāl, mel, lac, ōvum, piscis              the table
+
+Latin pre-A1 vocabulary **23 → 43** against a target of 300.
+
+**Chosen for what they prove, not for frequency.** The track exists to show
+English readers where their own words come from, so each chapter carries at least
+one *cousin* (inherited, not borrowed) beside its loans: *hortus* against **yard**
+and **garden**, *ventus* against **wind**, *stēlla* against **star**, *ōvum*
+against **egg**, and — the cleanest case in the book — *piscis* against **fish**,
+which is where Grimm's Law finally gets named after three chapters of showing its
+results.
+
+**Two claims are hedged rather than rounded off.** The *salārium* → salt story is
+given as Pliny's account, not as fact, because no document records soldiers being
+paid in salt. The *caelum* → **ceiling** derivation is given as probable, because
+it is.
+
+**One forward reference was fixed in content rather than absorbed.** `LA-C45-terra`
+originally built *mare mediterrāneum* by name, four lessons before *mare* is
+taught; it now describes the name in English and defers the Latin.
+
+
 ## The last seven verbs — Chapters 42 and 43
 
 - Adds the **fourth and final verb tranche**, one canonical concept per lesson,

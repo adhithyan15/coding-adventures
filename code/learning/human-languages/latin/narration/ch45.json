@@ -1,0 +1,565 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 45,
+  "title": "Earth, Fire, Wind, Sky, Sea",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c85cdf80ed10d7e1",
+  "lessons": [
+    {
+      "id": "LA-C45-terra",
+      "sequence": 1000,
+      "title": "terra — dry land as opposed to sea, and the root under terrain, terrace and Mediterranean",
+      "headword": "terra, terrae",
+      "romanization": "terra, terrae",
+      "gloss": "the earth — dry land as opposed to sea, and the root under terrain, terrace and Mediterranean",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8d61fa9874c457e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new group of five words begins here. Nothing is assumed but the alphabet you already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terra — \"the earth,\" and specifically dry land."
+            },
+            {
+              "kind": "speech",
+              "text": "That contrast is built into the word. Terra is what is not sea — and the Romans named the Mediterranean on exactly that pattern, as the sea in the middle of the land. You will have the second half of that name shortly, and when you do the whole thing stops being a proper noun and becomes a description you can read."
+            },
+            {
+              "kind": "speech",
+              "text": "English took terra freely: terrain, terrestrial, subterranean, a terrace (a raised bank of earth), and a terrier — a dog that goes to ground after its quarry. Even inter, to bury, is in plus terra: to put into the earth."
+            },
+            {
+              "kind": "speech",
+              "text": "And terra firma, \"solid ground,\" is still said in Latin because no English phrase does the job as briefly."
+            },
+            {
+              "kind": "speech",
+              "text": "English earth is Germanic and unrelated. Another coincidence worth naming rather than assuming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terra, terrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terra, terrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does terra contrast with? (The sea.) So what does Mediterranean literally say? (In the middle of the land.) And what does it mean to inter someone? (To put them into the earth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C45-ignis",
+      "sequence": 1010,
+      "title": "ignis — the classical word, which the Romance languages abandoned and English kept",
+      "headword": "ignis, ignis",
+      "romanization": "ignis, ignis",
+      "gloss": "fire itself — the classical word, which the Romance languages abandoned and English kept",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:073e7b593d9f2027",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ignis — \"fire.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This is Latin's own word, and it has a long pedigree: it is a genuine cousin of Sanskrit agni, the fire the Vedic hymns address, and of Russian ogon'. Two of this book's tracks meet here, which is the point of having a Sanskrit track at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the strange part, and it is worth pausing on."
+            },
+            {
+              "kind": "speech",
+              "text": "No Romance language kept it. French, Spanish, Italian and Portuguese all threw ignis away and built their word for fire on focus, the hearth. The classical word for the commonest thing in the house simply lost."
+            },
+            {
+              "kind": "speech",
+              "text": "But English kept it — as a loan from books. To ignite is to set on fire; igneous rock is rock that was once molten. So an English speaker saying ignite is using Caesar's word for fire, while a Spanish speaker saying fuego is not."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a good corrective to a natural assumption. The daughter languages are not always the better guide to the parent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ignis, ignis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ignis, ignis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word did the Romance languages keep for fire — ignis or focus? (Focus.) Which one did English borrow? (Ignis — ignite, igneous.) And which Sanskrit word is its cousin? (Agni.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C45-ventus",
+      "sequence": 1020,
+      "title": "ventus — and a true Germanic cousin, with the sound change that proves it",
+      "headword": "ventus, ventī",
+      "romanization": "ventus, ventī",
+      "gloss": "the wind — and a true Germanic cousin, with the sound change that proves it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f37dfe5ca2837348",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ventus — \"the wind.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Another cousin. Proto-Indo-European h₂weh₁-nto- gave Latin ventus and Germanic windaz, which is English wind. Latin's v against English's w is not a coincidence and not a corruption — it is regular, and once you have seen it you will see it everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "The borrowed branch came later and from French: a vent is a hole for wind, to ventilate is to move wind through, and ventilation is what results."
+            },
+            {
+              "kind": "speech",
+              "text": "And a window is a Norse gift, vindauga — a wind-eye. The hole in the wall that the wind looks through. Even the Germanic side of the family named it after this word."
+            },
+            {
+              "kind": "speech",
+              "text": "So English holds the same root three ways: inherited as wind, borrowed as vent, and compounded by the Vikings as window."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ventus, ventī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ventus, ventī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is English wind borrowed from ventus or descended alongside it? (Descended — a cousin.) What regular difference marks the two branches? (Latin v-, Germanic w-.) And what does window literally mean? (Wind-eye.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C45-caelum",
+      "sequence": 1030,
+      "title": "caelum — the word under celestial, and under a ceiling painted like the sky",
+      "headword": "caelum, caelī",
+      "romanization": "caelum, caelī",
+      "gloss": "the sky, and the heavens — the word under celestial, and under a ceiling painted like the sky",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0d21c673c9bd992",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caelum — \"the sky,\" and also \"the heavens.\""
+            },
+            {
+              "kind": "speech",
+              "text": "One word for both, which is why Latin can be ambiguous in exactly the places theology cares about. When a Roman said caelum, the weather and the gods were the same place."
+            },
+            {
+              "kind": "speech",
+              "text": "English took it directly as celestial, anything of the sky or the heavens, and in Celeste as a name. The blue called cerulean is from the related caeruleus, which you have already met as a colour."
+            },
+            {
+              "kind": "speech",
+              "text": "Ceiling is very probably the same word, arriving through French — a vaulted ceiling in a great hall was painted to look like sky, and the name stuck to the surface. The etymology is not perfectly settled, and this book will say so rather than round it off."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more you may already carry: the equinox you met with nox, and cyan, which is Greek rather than Latin and arrived by its own road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caelum, caelī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caelum, caelī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two things does caelum name? (The sky and the heavens.) What is something celestial? (Of the sky.) And how confident is the ceiling connection? (Probable, not certain — and the book says so.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C45-mare",
+      "sequence": 1040,
+      "title": "mare — the word that finishes Mediterranean and names every marine thing in English",
+      "headword": "mare, maris",
+      "romanization": "mare, maris",
+      "gloss": "the sea — the word that finishes Mediterranean and names every marine thing in English",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72b4e93751a84036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mare — \"the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You met its partner a moment ago. Terra is the land; mare is what is not land, and together they make the mediterrāneum — the sea in the middle of the earth. Two words you now hold explain a name most people use without reading."
+            },
+            {
+              "kind": "speech",
+              "text": "The loans came thickly: marine, maritime, a mariner, a submarine (under the sea), and — through French — a mermaid, whose first half is this word."
+            },
+            {
+              "kind": "speech",
+              "text": "And there is a cousin. Proto-Indo-European mori- also went down the Germanic road and gave English mere, an old word for a lake that survives in place names — Windermere, Grasmere. Small, standing water rather than an ocean, but the same ancestor."
+            },
+            {
+              "kind": "speech",
+              "text": "So once again: a borrowed branch that sounds learned, and an inherited branch that sounds like a field in the north of England."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mare, maris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mare, maris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mare pair with to make Mediterranean? (Terra — the land.) Which English word is its inherited cousin? (Mere, a lake.) And which are loans? (Marine, maritime, mermaid.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

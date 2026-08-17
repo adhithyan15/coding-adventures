@@ -13,6 +13,125 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C214 — nothing local opens a font, so glyph coverage is only ever found in CI
+
+HL-C212 passed 744 local tests and a clean security review, then failed CI eleven
+minutes later on one line: `latin missing_character rose to 2 against a baseline
+of 0`. The cause was **ǣ** (U+01E3) and **Ǣ** (U+01E2) in an Old English citation.
+Latin Modern does not have them.
+
+**Every local gate reads the corpus. None of them opens a font.** That is the gap,
+and it will catch every future tranche that reaches for an unusual character —
+which an etymology-driven curriculum does constantly, by design.
+
+**Two instruments were wrong on the way to the answer, both caught by testing
+them against a known case:**
+
+1. **The guess.** `ǵ` in *\*ǵʰórtos* looks far more exotic than `ǣ` and was the
+   obvious suspect. Querying the actual `.otf` cmap shows **`ǵ` is present**.
+   Rewriting that lesson would have left the failure in place.
+2. **The wrong artifact.** Scanning the lesson SOURCES flagged four more
+   characters — `ʰ`, `₁`, `₂`, `ḗ` — every one a false positive, because the
+   generator turns them into `\textsuperscript{}` / `\textsubscript{}` and they
+   never reach the `.tex`. **Check the generated `.tex`; it is what XeLaTeX
+   reads.**
+
+### The work item
+
+A `check:glyphs` gate that, per track, resolves the fonts that track's book
+actually loads and asserts every non-ASCII character in its generated `.tex` is in
+one of them. Report-only first, per the HL05 precedent.
+
+**It is not free, and that is why this is a row rather than a commit.** Font
+resolution differs per track: the Indic, Arabic and CJK books load vendored Noto
+faces from `_fonts/`, which the repo owns and can read directly, while the
+Latin-script books load **Latin Modern from the TeX Live installation** — a path
+that exists on CI and on a developer machine with TeX Live, and nowhere else. The
+gate has to degrade honestly when a font cannot be resolved (report "unmeasured",
+never "clean"), which is the same distinction `script-closure.ts` already draws
+for an unknown script.
+
+**Until it exists:** any tranche introducing a character outside plain ASCII plus
+macrons should run the fontTools cmap check by hand, self-tested in both
+directions. Recorded in `lessons.md` with the snippet.
+
+## HL-C213 — a late vocabulary lesson RETROACTIVELY creates forward references, and the fix is placement
+
+Found by the Latin tranche, and it will recur on every track that adds basic
+vocabulary at the end of a long book. Recorded because the number it moves is a
+CEILING that may only be raised with a written cause.
+
+Twenty new pre-A1 words in chapters 44-47 pushed `forwardReferences` 500 → 508.
+**None of the eight is a new use.** Every one is a sentence that has been sitting
+in an untouched lesson for months, and became measurable only because the word
+finally got an owner:
+
+```
+LA-C08-manus              domus    71 lessons early   lists domus among feminine -us nouns
+LA-C06-ruber-caeruleus    mare     84                 glosses caeruleum mare
+LA-C27-bene               mel, terra  61, 50          cites mel->miel, terra->tierra
+LA-C40-dormio             somnus   28                 names somnus while teaching dormire
+LA-C41-ambulo             somnus   25                 somnambulist walks in sleep
+LA-C28-dies               Lunae    57                 prints dies Lunae
+LA-C24-propediem-te-videbo Lunae   61                 prints dies Lunae
+```
+
+This is the `LA-C08-manus` / `LA-C37-habeo` class the ceiling's own annotation
+already names. **It was verified rather than assumed**: each of the eight was read
+in its own file and confirmed unmodified by `git diff HEAD`, because "the
+measurement got sharper" is exactly the excuse that would cover real decay if it
+were taken on trust.
+
+**A ninth WAS real and was fixed in content.** `LA-C45-terra` named *mare* four
+lessons before it is taught, to build *mare mediterrāneum*. It now describes the
+name in English and lets the *mare* lesson supply the Latin. That is the correct
+disposition — the ceiling absorbs measurement artefacts, never new debt.
+
+### The finding, which is bigger than this tranche
+
+**Words used 25 to 84 lessons before they are taught are not in the right place.**
+*Domus*, *mare*, *somnus* and *lūna* are pre-A1 basics that the Latin book has
+been leaning on since chapter 6. Appending them at chapter 44 makes them
+measurable and leaves them misplaced.
+
+The real fix is a **placement pass**: these chapters belong early in the book, and
+so do the equivalents on every other track. That is a renumbering of 47 chapters
+and every cross-reference into them — its own change, with its own verification,
+and explicitly NOT something to bury in a content PR. HL-C156 and HL-C137 reached
+the same conclusion from different directions; this is the third instance, which
+is enough to say it is structural.
+
+**Consequence for the queue.** `completion-plan.ts` ranks a vocabulary item by
+headword deficit alone. It cannot see that adding words at the end of a long track
+is worth less than adding them in the right place, and it will keep recommending
+the cheap version. Recorded so the placement work gets scheduled deliberately
+rather than waiting for the plan to ask for it.
+
+## HL-C212 — Latin: twenty pre-A1 nouns, chosen to prove cousinhood
+
+Latin pre-A1 vocabulary **23 → 43** of 300. Four themed chapters, five words
+each, one word per lesson per HL14.
+
+**Selected for what they demonstrate, not for frequency.** This track's whole
+purpose is showing an English reader where their own words come from, so every
+chapter carries at least one genuine *cousin* beside its loans — *hortus* against
+**yard**/**garden**, *ventus* against **wind**, *stēlla* against **star**, *ōvum*
+against **egg**, and *piscis* against **fish**, which is where Grimm's Law is
+finally named after three chapters of quietly showing its results.
+
+**Two claims are hedged, and stay hedged.** The *salārium* salt story is Pliny's
+account and no document records soldiers paid in salt; *caelum* → **ceiling** is
+probable, not settled. A track whose selling point is etymology cannot afford to
+launder a good story into a fact.
+
+**Two gate catches worth carrying forward:**
+
+1. *"the rule that holds this whole curriculum together"* failed
+   `standalone-book`. A reader holding only the Latin PDF has no other volume, so
+   nothing may point outside it. **Write for the book in the reader's hands.**
+2. *"as it almost always is"* tripped the info-dump `always is` rule-statement
+   pattern. A false positive, rephrased anyway.
+
 ## HL-C211 — Japanese: eight hiragana, and the sign taught late on purpose
 
 Second script tranche off the computed queue. Ten lessons, eight signs, two

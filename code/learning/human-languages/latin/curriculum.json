@@ -148,13 +148,20 @@
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
         "LA-C10-aqua-vinum",
-        "LA-C10-panis"
+        "LA-C10-panis",
+        "LA-C44-domus",
+        "LA-C44-porta",
+        "LA-C44-murus",
+        "LA-C44-hortus",
+        "LA-C44-focus"
       ],
       "before": [],
       "inline": [
         "LA-EXT-013-LANGUAGE-SPECIFIC"
       ],
-      "after": []
+      "after": [
+        "LA-EXT-044-HOUSE"
+      ]
     },
     {
       "id": "LA-PATH-014",
@@ -260,33 +267,54 @@
       "id": "LA-PATH-021",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
-        "LA-C23-nihil-est"
+        "LA-C23-nihil-est",
+        "LA-C47-sal",
+        "LA-C47-mel",
+        "LA-C47-lac",
+        "LA-C47-ovum",
+        "LA-C47-piscis"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "LA-EXT-047-TABLE"
+      ]
     },
     {
       "id": "LA-PATH-022",
       "spine_node": "SPINE-TAKE-LEAVE",
       "lessons": [
         "LA-C24-propediem-te-videbo",
-        "LA-C25-cras-te-videbo"
+        "LA-C25-cras-te-videbo",
+        "LA-C46-lux",
+        "LA-C46-umbra",
+        "LA-C46-stella",
+        "LA-C46-luna",
+        "LA-C46-somnus"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "LA-EXT-046-NIGHT"
+      ]
     },
     {
       "id": "LA-PATH-023",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
         "LA-C26-quomodo",
-        "LA-C27-bene"
+        "LA-C27-bene",
+        "LA-C45-terra",
+        "LA-C45-ignis",
+        "LA-C45-ventus",
+        "LA-C45-caelum",
+        "LA-C45-mare"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "LA-EXT-045-WORLD"
+      ]
     },
     {
       "id": "LA-PATH-024",
@@ -1136,6 +1164,66 @@
         "LA-C43-respondeo",
         "LA-C43-convenio",
         "LA-C43-emo"
+      ]
+    },
+    {
+      "id": "LA-EXT-044-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexicon",
+      "canDo": "I can name a house, its door, its wall, its garden and its hearth in Latin, and trace each one into English.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C44-domus",
+        "LA-C44-porta",
+        "LA-C44-murus",
+        "LA-C44-hortus",
+        "LA-C44-focus"
+      ]
+    },
+    {
+      "id": "LA-EXT-045-WORLD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexicon",
+      "canDo": "I can name earth, fire, wind, sky and sea in Latin, and say for each whether English inherited it or borrowed it.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C45-terra",
+        "LA-C45-ignis",
+        "LA-C45-ventus",
+        "LA-C45-caelum",
+        "LA-C45-mare"
+      ]
+    },
+    {
+      "id": "LA-EXT-046-NIGHT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexicon",
+      "canDo": "I can name light, shadow, star, moon and sleep in Latin and use them to close a day.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C46-lux",
+        "LA-C46-umbra",
+        "LA-C46-stella",
+        "LA-C46-luna",
+        "LA-C46-somnus"
+      ]
+    },
+    {
+      "id": "LA-EXT-047-TABLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexicon",
+      "canDo": "I can name salt, honey, milk, egg and fish in Latin, and use Grimm's Law to tell an inherited cousin from a borrowed loan.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-C47-sal",
+        "LA-C47-mel",
+        "LA-C47-lac",
+        "LA-C47-ovum",
+        "LA-C47-piscis"
       ]
     }
   ]
