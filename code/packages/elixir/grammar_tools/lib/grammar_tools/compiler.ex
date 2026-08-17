@@ -294,4 +294,29 @@ defmodule CodingAdventures.GrammarTools.Compiler do
     child = element_src(element, i)
     "{:group, #{child}}"
   end
+
+  defp element_src({:positive_lookahead, element}, indent) do
+    i = indent <> "  "
+    child = element_src(element, i)
+    "{:positive_lookahead, #{child}}"
+  end
+
+  defp element_src({:negative_lookahead, element}, indent) do
+    i = indent <> "  "
+    child = element_src(element, i)
+    "{:negative_lookahead, #{child}}"
+  end
+
+  defp element_src({:one_or_more, element}, indent) do
+    i = indent <> "  "
+    child = element_src(element, i)
+    "{:one_or_more, #{child}}"
+  end
+
+  defp element_src({:separated_repetition, element, separator, at_least_one}, indent) do
+    i = indent <> "  "
+    element_child = element_src(element, i)
+    separator_child = element_src(separator, i)
+    "{:separated_repetition, #{element_child}, #{separator_child}, #{at_least_one}}"
+  end
 end
