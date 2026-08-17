@@ -13,6 +13,52 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C225 — the glyph gate is BUILT, and it took three wrong probes to find the model
+
+HL-C214 specified it and declined to build it. HL-C223 upgraded it to a job after
+a second CI failure. Built now, blocking, 13 tests.
+
+**Every wrong version reported a confident number:**
+
+1. **Probe one** checked the track's SCRIPT characters against the track's SCRIPT
+   font. Reported clean, and was asking the wrong question — those characters were
+   never at risk, because they sit inside `\bn{…}`, which selects a face chosen
+   precisely because it covers them. **This is the probe that let `ɔ` through.**
+2. **Probe two** checked everything else against Latin Modern with a hardcoded
+   list of wrapper commands. The list was wrong — Sanskrit's is `\sk`, not `\sa`
+   — so it reported **14,563 missing characters** on a corpus that compiles clean.
+3. **Probe three** read the wrappers from the preamble and still reported four
+   missing on a clean corpus, because the preambles map them:
+   `\newunicodechar{ṉ}{\b{n}}` renders the character as a composed accent.
+
+**The corpus was the control throughout.** Every book compiles with
+`missing_character=0`, so any probe reporting thousands — or four — was wrong by
+construction. That is what made three iterations converge instead of shipping a
+false clean.
+
+**The model that survives:** a main-font character is safe if it is in Latin
+Modern **or** mapped by `\newunicodechar` in *that book's* preamble; a wrapped
+character is safe if it is in *that wrapper's* font. Validated: 125 main-font
+characters, 121 in the font, 4 mapped, 0 unaccounted for.
+
+### Two design decisions worth defending
+
+**The main-font charset is committed, not queried.** Latin Modern ships with TeX
+Live and is not resolvable from a plain checkout, so a live query would leave this
+gate silently unmeasured wherever TeX Live is absent — most places, including the
+test runner, which is the one place it needs to run. Recorded in
+`core/main-font-charset.json` with provenance and instructions for adding to it.
+Script fonts are vendored under `_fonts/`, so those are read live.
+
+**An unresolvable font is unmeasured, never clean.** No font, no claim — the same
+distinction `script-closure.ts` draws for an unknown script.
+
+### It also closes a layer no previous probe could see
+
+A character in the *wrong* script font — Devanagari inside a `\bn{…}` — renders
+as tofu and would never have reached the main-font check. That is the HL-C202
+mixed-script class arriving by a different road, caught by construction rather
+than by a separate detector.
 ## HL-C224 — the loop's own push cadence is now failing CI, and the failures look like code failures
 
 Three checks on PR 11870 failed with:
