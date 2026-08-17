@@ -275,13 +275,27 @@ pub fn run_source_via(name: &str, source: &str, frontend: Frontend, target: Targ
         Ok(m) => m,
         Err(e) => return RunOutcome::Failed(e),
     };
+    run_module(name, &module, target)
+}
+
+/// Run a hand-built `module` (named `name`) through one `target` directly —
+/// the module-level primitive [`run_source_via`] delegates to once it has a
+/// `Module` in hand. Exposed publicly for callers that construct a `Module`
+/// themselves rather than lowering it from source — e.g. exercising a
+/// builtin no frontend emits yet (SIR21 T3b-2's `div_floor`/`div_trunc`/
+/// `udiv_trunc`/`div_true`), where there is no source text that would lower
+/// to the desired `BuiltinCall` in the first place.
+pub fn run_module(name: &str, module: &Module, target: Target) -> RunOutcome {
+    if !target.available() {
+        return RunOutcome::Skipped(format!("{} not on PATH", target.toolchain()));
+    }
     match target {
-        Target::Python => run_python(name, &module),
-        Target::JavaScript => run_javascript(name, &module),
-        Target::Go => run_go(name, &module),
-        Target::Rust => run_rust(name, &module),
-        Target::C => run_c(name, &module),
-        Target::Ruby => run_ruby(name, &module),
+        Target::Python => run_python(name, module),
+        Target::JavaScript => run_javascript(name, module),
+        Target::Go => run_go(name, module),
+        Target::Rust => run_rust(name, module),
+        Target::C => run_c(name, module),
+        Target::Ruby => run_ruby(name, module),
     }
 }
 

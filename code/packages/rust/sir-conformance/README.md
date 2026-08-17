@@ -165,7 +165,12 @@ cargo test -p sir-conformance -- --nocapture
 
 As a library, `run(&program, target) -> RunOutcome` and `lower(&program)` are
 public so other harnesses (e.g. the eventual typed-integer conformance suite)
-can reuse the emit-and-run plumbing.
+can reuse the emit-and-run plumbing. `run_module(name, &module, target) ->
+RunOutcome` is the module-level sibling of `run`/`run_source_via` for a
+caller that already has a hand-built `Module` rather than source text to
+lower — e.g. `tests/division.rs`'s SIR21 T3b-2 direct-call cases, which
+call `div_floor`/`div_trunc`/`udiv_trunc`/`div_true` directly since no
+frontend emits those names yet and so no source text would reach them.
 
 ## The reference oracle (`oracle` module, SIR21 §P2)
 
@@ -185,8 +190,14 @@ pinned to: `INT32_MAX + 1 == INT32_MIN` (i32 wrap), `0u32 - 1 == 4294967295`,
 honest rounding modes SIR21 §E3 splits apart: `Floor` rounds toward −∞ (Ruby
 `/`, Python `//`; `−7 / 2 == −4`), `Trunc` toward 0 (C/Rust/Go/Java; `−7 / 2 ==
 −3`). Division by zero is `Outcome::DivByZero` (a backend must *raise*), and the
-lone `i128::MIN / -1` overflow is `BeyondOracle`. `div_true` (Python's float
-`/`) is a future float-oracle op, not modelled here.
+lone `i128::MIN / -1` overflow is `BeyondOracle`. Every backend now implements
+the corresponding SIR builtins (`div_floor`/`div_trunc`/`udiv_trunc`, SIR21
+T3b-2 Slice 2) and `tests/division.rs`'s direct-call cases exercise them
+against this oracle on every `Target`. `div_true` (always true-divides,
+models Python's `/`) has no `DivOp` oracle variant — the integer oracle's
+overflow/rounding model doesn't apply to an op that unconditionally floats —
+so its direct-call test hand-computes expected values the same way the
+existing `FLOAT_CASES` in that file already do.
 
 ## The oracle-derived differential runner (`tests/arithmetic.rs`, SIR21 §P1)
 

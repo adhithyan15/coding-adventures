@@ -2,6 +2,52 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.26.0] - SIR21 T3b-2 Slice 3: direct-call coverage for div_floor/div_trunc/udiv_trunc/div_true
+
+Adds `pub fn run_module(name, module, target) -> RunOutcome` — a new
+module-level primitive alongside the existing source-level `run`/
+`run_source_via`, for callers that construct a `Module` directly rather
+than lowering it from source. Needed because Slice 2's four new division
+builtin names (`div_floor`/`div_trunc`/`udiv_trunc`/`div_true`) have no
+frontend emitting them yet (that's Slices 4-6 of this arc), so there is
+no source text that would lower to the desired `BuiltinCall` — the only
+way to reach them is a hand-built `Module`. `run_source_via` now delegates
+to `run_module` internally; no behavior change for existing callers.
+
+`tests/division.rs` gains five new tests using `run_module` directly,
+proving all 7 of Slice 2's backend PRs actually wired their dispatch
+tables correctly, independent of any frontend:
+
+- `direct_call_div_floor_matches_ruby_floor_on_every_backend`
+- `direct_call_div_trunc_truncates_toward_zero_on_every_backend`
+- `direct_call_udiv_trunc_matches_div_trunc_on_nonnegative_operands_every_backend`
+  (scoped to non-negative operands deliberately — a negative operand's
+  "unsigned" interpretation genuinely differs across backends, per each
+  Slice 2 PR's own documentation, not something this parity check should
+  paper over)
+- `direct_call_div_true_always_true_divides_on_every_backend`
+- `direct_call_zero_divisor_raises_for_every_op_on_every_backend` — the
+  first zero-divisor case anywhere in this file; asserts `RunOutcome::Failed`
+  is the EXPECTED outcome (an uncaught raise is a non-zero exit) and that
+  `Ran` (meaning the zero check silently failed to fire) is the bug.
+
+Caught one real bug while writing these: `assert_direct_call_matches_on_
+every_backend`'s first draft passed a constant temp-file name to
+`run_module` for every case, and since `cargo test` runs test functions
+concurrently, two calls sharing a name AND target raced on the identical
+temp path — a `div_floor` case's Python subprocess ran a `div_true` case's
+freshly-overwritten source file mid-race, printing `3.5` where `3` was
+expected. Fixed by deriving the name from `op`/`lhs`/`rhs` per call.
+
+TypeScript's own node-execution proof (the plan's other Slice 3 goal) is
+**not** duplicated here: `semantic-ir-to-typescript`'s own Slice 2 PR
+(`tests/compile_and_run_division_ops.rs`) already covers it end-to-end,
+including asserting `div_floor`'s documented (truncating, not floor)
+behavior for that backend specifically — see that crate's 0.14.0
+changelog entry. `sir-conformance`'s own `Target::all()` still does not
+include `Target::TypeScript` (a separate, larger infrastructure
+investment, unchanged from prior scoping).
+
 ## [0.25.0] - JavaScript OOP surface corpus: THIRD frontend, zero backend changes
 
 Adds `js_oop_method`, `js_counter_state`, `js_inheritance` — the SAME
