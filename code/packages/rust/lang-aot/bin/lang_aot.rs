@@ -64,6 +64,7 @@ fn main() -> ExitCode {
         EmitMode::Mos6502Bin => input.with_extension("bin"),
         EmitMode::M68kBin => input.with_extension("bin"),
         EmitMode::Intel8080Bin => input.with_extension("bin"),
+        EmitMode::MipsR2000Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -168,6 +169,17 @@ enum EmitMode {
     /// direct successor and the CPU inside the Altair 8800 that
     /// launched the personal-computer era.
     Intel8080Bin,
+    /// Flat `.bin` of 32-bit MIPS R2000 instruction words via
+    /// `mips-r2000-backend`, encoded **big-endian** (MIPS R2000's
+    /// default byte order — unlike RISC-V/ARMv7/x86, which are
+    /// little-endian).  Cross-platform.  Downstream consumers: the
+    /// in-tree `mips-r2000-simulator` or any external MIPS R2000/MIPS I
+    /// emulator.  The MIPS R2000 (1985) is the first commercially
+    /// successful RISC processor — used in SGI IRIS workstations, DEC
+    /// DECstation, the original PlayStation, and the Nintendo 64.
+    /// First lane of the 9-architecture expansion following the
+    /// historical-arch backend migration pattern.
+    MipsR2000Bin,
 }
 
 struct CliArgs {
@@ -252,9 +264,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "mos6502" | "6502" | "mos-6502" => Ok(EmitMode::Mos6502Bin),
         "m68k" | "68000" | "mc68000" | "motorola68000" => Ok(EmitMode::M68kBin),
         "intel8080" | "i8080" | "8080" => Ok(EmitMode::Intel8080Bin),
+        "mips-r2000" | "mips" | "r2000" => Ok(EmitMode::MipsR2000Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000"
         )),
     }
 }
@@ -363,6 +376,15 @@ Options:
                                                 intel8080-simulator or an external 8080
                                                 emulator (the 8008's direct successor;
                                                 CPU of the Altair 8800, 1974)
+                             mips-r2000 | mips | r2000
+                                              → flat .bin of big-endian 32-bit
+                                                MIPS R2000 instruction words via
+                                                mips-r2000-backend; cross-
+                                                platform; load into
+                                                mips-r2000-simulator (the first
+                                                commercially successful RISC
+                                                processor, 1985 — SGI IRIS, DEC
+                                                DECstation, PlayStation, N64)
   -h, --help               Show this help.\
 ");
 }
@@ -477,6 +499,16 @@ fn dispatch(
     // `intel8080-simulator` or external) or an EPROM burner.
     if emit == EmitMode::Intel8080Bin {
         return lang_aot::compile_file_to_intel8080_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // MIPS R2000 .bin emission is also cross-platform — write each
+    // 32-bit instruction word as **big-endian** bytes (MIPS R2000's
+    // default byte order) as mips-r2000-backend emits them.  The
+    // MIPS R2000 (1985) is the first commercially successful RISC
+    // processor; downstream is always mips-r2000-simulator or an
+    // external MIPS I emulator.
+    if emit == EmitMode::MipsR2000Bin {
+        return lang_aot::compile_file_to_mips_r2000_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

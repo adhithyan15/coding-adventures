@@ -3,6 +3,26 @@
 **Status:** ✅ **MIGRATION COMPLETE** (Phases 1–7 done, 2026-06-03).  All five historical-arch lanes (GE-225, Intel 4004, ARMv7, Intel 8008, RV32I) now consume typed CIR via the `Backend` trait.  The architectural correctness win — every arch backend uses the same `aot_core::infer` + `aot_core::specialise` + `Backend::compile` pipeline as `aarch64-backend` and `x86_64-backend` — is delivered.
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) (which produced the A1–A5 lanes this migration corrects).
 
+**Follow-on coverage (new architectures, not a migration):** the
+seven-phase migration above corrected five *existing* IIR-level
+lanes.  Separately, new architectures have since been added at the
+*correct* layer from day one — no `iir-to-*` predecessor to migrate
+away from, so each is "1 PR, same pattern" rather than its own
+phase:
+
+| Arch | Encoder crate | Backend crate | Notes |
+|------|----------------|-----------------|-------|
+| IBM 704      | `ibm704-encoder`      | `ibm704-backend`      | L4 of the McCarthy Lisp implementation — see `ibm704-backend`'s own docs. |
+| MIPS R2000   | `mips-r2000-encoder`  | `mips-r2000-backend`  | First lane of a 9-architecture expansion (2026-08-17). Minimal viable: `const_*`/`ret_*` only, `ADDIU $v0, $zero, imm; JR $ra` for the canonical `42` program, verified byte-for-byte and by execution against the new `mips-r2000-simulator` crate (Rust port of `code/packages/python/mips-r2000-simulator`). See [`mips-r2000-encoder.md`](mips-r2000-encoder.md) / [`mips-r2000-backend.md`](mips-r2000-backend.md). |
+
+Each new-architecture lane follows the same shape the table below
+documents for the original five: `{arch}-encoder` (pure encoding,
+no IR knowledge) + `{arch}-backend` (implements `Backend`, lowers
+CIR via the encoder) + `lang-aot --emit={arch}` wiring, with
+`Backend::run` emit-only (panics per the "What about `Backend::run`"
+section below) unless/until a future increment wires it to an
+in-tree simulator.
+
 ## The architectural mistake the A1–A5 cascades made
 
 The A1–A5 architecture-backend lane (`iir-to-riscv`, `iir-to-intel8008`,

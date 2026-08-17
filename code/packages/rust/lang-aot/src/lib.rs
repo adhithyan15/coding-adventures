@@ -227,6 +227,14 @@ pub enum LangAotError {
     /// op/type/operand).  Eighth lane of the 9-architecture expansion
     /// following the historical-arch backend migration pattern.
     M68kBackendError(String),
+    /// The MIPS R2000 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `mips-r2000-backend`
+    /// (which already includes the failing function name and the
+    /// unsupported op/type/operand).  First lane of the
+    /// 9-architecture expansion following the historical-arch
+    /// backend migration pattern.
+    MipsR2000BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -288,6 +296,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Mos6502BackendError(m) => write!(f, "mos6502: {m}"),
             LangAotError::M68kBackendError(m) => write!(f, "m68k: {m}"),
             LangAotError::Intel8080BackendError(m) => write!(f, "intel8080: {m}"),
+            LangAotError::MipsR2000BackendError(m) => write!(f, "mips-r2000: {m}"),
         }
     }
 }
@@ -1662,6 +1671,88 @@ pub fn compile_file_to_m68k_bin(
     }
     if bytes.is_empty() {
         bytes.extend_from_slice(&m68k_encoder::HALT_BYTES);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → MIPS R2000 machine code (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 32-bit
+/// MIPS R2000 instruction words encoded as **big-endian** bytes (MIPS
+/// R2000's default byte order — unlike RISC-V/ARMv7/x86, which are
+/// little-endian).  Downstream consumers:
+///
+/// * [`mips-r2000-simulator`](../mips-r2000-simulator) — load + execute
+///   in-process.
+/// * Any external MIPS R2000/MIPS I emulator that consumes big-endian
+///   byte streams.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-agnostic.
+///
+/// # Wire format
+///
+/// Each emitted R2000 word is written as **big-endian** bytes: bit
+/// `[31:24]` of the word goes to the lowest-address byte.
+/// `u32::to_be_bytes()` is the canonical Rust expression of that
+/// encoding — see `mips_r2000_simulator::encoding::assemble`.
+///
+/// # Why no host gating?
+///
+/// MIPS R2000 host execution would require MIPS silicon (SGI IRIS,
+/// DEC DECstation, or embedded-controller class hardware), which is not
+/// a common dev host today.  The downstream consumer is always a
+/// simulator (in-tree `mips-r2000-simulator` or external) or replica
+/// hardware.  All host OSes can write a flat byte file, so the
+/// pipeline is universally available — same rationale as
+/// `compile_file_to_armv7_bin`.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `MipsR2000BackendError` — the IIR contained an op or type the
+///   MIPS R2000 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=mips-r2000 -o foo.bin
+/// # Then load foo.bin into mips-r2000-simulator
+/// ```
+pub fn compile_file_to_mips_r2000_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // First lane of the 9-architecture expansion: route through
+    // `aot_core` + `mips-r2000-backend` (which itself returns
+    // big-endian-flattened bytes), same per-function-loop pattern as
+    // `compile_file_to_armv7_bin`/`compile_file_to_intel8008_bin`.
+    let _ = stem;
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = mips_r2000_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::MipsR2000BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&mips_r2000_encoder::RET_WORD.to_be_bytes());
     }
 
     std::fs::write(out, &bytes)?;

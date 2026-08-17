@@ -43,6 +43,8 @@ m68k-backend          = { path = "../m68k-backend" }
 m68k-encoder          = { path = "../m68k-encoder" }
 intel8080-backend     = { path = "../intel8080-backend" }
 intel8080-encoder     = { path = "../intel8080-encoder" }
+mips-r2000-backend    = { path = "../mips-r2000-backend" }
+mips-r2000-encoder    = { path = "../mips-r2000-encoder" }
 aot-core              = { path = "../aot-core" }
 jit-core              = { path = "../jit-core" }
 # JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes
