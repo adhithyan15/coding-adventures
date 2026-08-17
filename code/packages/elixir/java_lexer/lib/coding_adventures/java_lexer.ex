@@ -38,11 +38,23 @@ defmodule CodingAdventures.JavaLexer do
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.JavaLexer.Grammar.{V1_0, V1_1, V1_4, V5, V7, V8, V10, V14, V17, V21}
 
   @default_version "21"
   @valid_versions ~w(1.0 1.1 1.4 5 7 8 10 14 17 21)
+
+  @token_grammars %{
+    "1.0" => &V1_0.token_grammar/0,
+    "1.1" => &V1_1.token_grammar/0,
+    "1.4" => &V1_4.token_grammar/0,
+    "5" => &V5.token_grammar/0,
+    "7" => &V7.token_grammar/0,
+    "8" => &V8.token_grammar/0,
+    "10" => &V10.token_grammar/0,
+    "14" => &V14.token_grammar/0,
+    "17" => &V17.token_grammar/0,
+    "21" => &V21.token_grammar/0
+  }
 
   @doc """
   Return the default Java version used when no version is specified.
@@ -144,8 +156,7 @@ defmodule CodingAdventures.JavaLexer do
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
       nil ->
-        tokens_path = Path.join([@grammars_dir, "java", "java#{version}.tokens"])
-        {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
+        grammar = Map.fetch!(@token_grammars, version).()
         :persistent_term.put({__MODULE__, :grammar, version}, grammar)
         grammar
 
