@@ -166,3 +166,25 @@ fn backend_trait_compile_matches_free_function() {
     let via_free_fn = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("free-fn compile");
     assert_eq!(via_trait, via_free_fn);
 }
+
+/// CIR ending in `const_*` with NO following `ret_*` must still be
+/// terminated by a REAL emitted `BRK`, not by coincidentally falling
+/// into zero-filled memory that happens to decode as `BRK` too. This
+/// specifically exercises `const 0`: `LDA #0` ends in a byte (0x00)
+/// numerically identical to `BRK`'s own opcode, which a trailing-byte
+/// comparison (the bug this check replaced, and the same class of bug
+/// found and fixed in the Intel 8051 and Intel 8080 lanes of this
+/// campaign) would misread as "already terminated" and skip appending
+/// the real BRK.
+#[test]
+fn dangling_const_zero_with_no_ret_still_gets_a_real_terminator() {
+    let cir = vec![ci("const_i64", Some("v"), vec![CIROperand::Int(0)], "i64")];
+    let bytes = compile(&ctx("dangling_const_zero", &[], "i64"), &cir).expect("lowering");
+    assert_eq!(bytes, vec![0xA9, 0x00, 0x00], "LDA #0 then a real BRK");
+
+    let mut sim = Mos6502Simulator::new(65536);
+    sim.load_program(&bytes);
+    let result = sim.run_loaded_with_limit(1000);
+    assert!(result.halted, "program should halt, not run out the step budget");
+    assert_eq!(result.steps, 2, "should halt after exactly LDA + the real BRK");
+}

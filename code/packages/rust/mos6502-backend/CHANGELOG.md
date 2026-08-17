@@ -1,5 +1,23 @@
 # Changelog — mos6502-backend
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+
+- The defensive "already terminated?" check in `compile_to_bytes` compared
+  the trailing emitted byte value against `HALT_BYTE` (`0x00`), instead of
+  tracking whether a real `BRK` was actually emitted. Since `0` is also a
+  valid 8-bit `LDA` immediate, `const 0` with no following `ret_*` produced
+  a trailing byte identical to `HALT_BYTE`, fooling the check into skipping
+  the real terminator. (On real 6502 hardware this specific case still
+  halted at runtime by coincidence — `BRK`'s opcode is also `0x00`, so
+  falling into zero-filled memory hit a real `BRK` anyway — but that
+  coincidence wasn't load-bearing by design and doesn't generalise to
+  memory that isn't zero-filled.) Now tracks an explicit `terminated: bool`,
+  set only when a real `BRK` is pushed by a `ret_*`/`ret_void` arm. Same bug
+  class found and fixed in the Intel 8051 and Intel 8080 lanes of the
+  9-architecture expansion this crate is part of.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

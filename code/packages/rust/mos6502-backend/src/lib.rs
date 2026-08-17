@@ -74,7 +74,7 @@
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use mos6502_encoder::{encode_brk, encode_lda_imm, HALT_BYTE};
+use mos6502_encoder::{encode_brk, encode_lda_imm};
 use std::fmt;
 use vm_core::value::Value;
 
@@ -132,12 +132,24 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // the accumulator.  Programs that need more than one live var fall
     // through to `UnsupportedOp`.
     let mut last_const_var: Option<String> = None;
+    // Tracks whether a REAL BRK was emitted -- NOT whether the trailing
+    // byte happens to equal HALT_BYTE (0x00). `LDA #0` ends in a byte
+    // that is numerically identical to BRK's own opcode despite not
+    // being one, which would fool a trailing-byte comparison into
+    // skipping the real terminator for `const 0` with no following
+    // `ret_*`. (On real 6502 hardware this specific case still halts
+    // by coincidence, since zero-filled memory decodes as BRK too --
+    // see the comment this replaced -- but that coincidence shouldn't
+    // be load-bearing, and it doesn't generalise to a simulator or
+    // board whose unused memory isn't zero-filled.)
+    let mut terminated = false;
 
     for instr in cir {
         let op = instr.op.as_str();
 
         if op == "ret_void" {
             bytes.extend_from_slice(&encode_brk());
+            terminated = true;
             continue;
         }
 
@@ -153,6 +165,7 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                 )));
             }
             bytes.extend_from_slice(&encode_brk());
+            terminated = true;
             continue;
         }
 
@@ -162,17 +175,16 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             // const_* always targets the accumulator in this minimal backend.
             bytes.extend_from_slice(&encode_lda_imm(imm));
             last_const_var = Some(dest.to_string());
+            terminated = false;
             continue;
         }
 
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
-    // Defensive -- if no terminator was emitted, append BRK so the
-    // program halts instead of running off the end (which would read
-    // zeroed memory as instructions -- opcode 0x00 happens to decode as
-    // BRK too, but relying on that would be an accident, not a design).
-    if bytes.last() != Some(&HALT_BYTE) {
+    // Defensive -- if no real terminator was emitted, append BRK so the
+    // program halts instead of relying on whatever follows in memory.
+    if !terminated {
         bytes.extend_from_slice(&encode_brk());
     }
     Ok(bytes)
