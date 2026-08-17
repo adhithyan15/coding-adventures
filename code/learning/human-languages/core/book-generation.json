@@ -2241,6 +2241,48 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 53,
+      "output": "malayalam/book/chapters/ch53-overhead.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 54,
+      "output": "malayalam/book/chapters/ch54-a-tree-part-by-part.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 55,
+      "output": "malayalam/book/chapters/ch55-ground-underfoot.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 56,
+      "output": "malayalam/book/chapters/ch56-things-about-the-house.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 57,
+      "output": "malayalam/book/chapters/ch57-five-more-of-the-body.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 58,
+      "output": "malayalam/book/chapters/ch58-five-more-short-answers.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 59,
+      "output": "malayalam/book/chapters/ch59-what-the-air-carries.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",

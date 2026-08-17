@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 58,
+  "title": "Five More Short Answers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5033ac718df05111",
+  "lessons": [
+    {
+      "id": "ML-C58-more",
+      "sequence": 1790,
+      "title": "കൂടുതൽ (kūṭutal) — more",
+      "headword": "കൂടുതൽ",
+      "romanization": "kūṭutal",
+      "gloss": "more",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:320e53186cfd7f22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did nakhaṁ mean, and what did ellŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂടുതൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂടുതൽ (kūṭutal) — \"more\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on കൂടുക (kūṭuka), \"to join, to gather, to increase\", with a tail Malayalam puts on a doing to turn it into a thing. The whole says, roughly, \"an increasing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It answers the question at a Kerala meal, where a server comes round the leaf a second and a third time and the guest has to say something. കൂടുതൽ (kūṭutal) asks for more."
+            },
+            {
+              "kind": "speech",
+              "text": "The long ū at the front carries the word. Shorten it and you have said something else entirely, so it is worth stretching."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five short answers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭutal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭutal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellŭ, then kūṭutal, and stretch the long vowel at the front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellŭ*, then *kūṭutal*, and stretch the long vowel at the front]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൂടുതൽ (kūṭutal) mean? (\"more\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C58-less",
+      "sequence": 1800,
+      "title": "കുറവ് (kuṟavŭ) — less, a shortage",
+      "headword": "കുറവ്",
+      "romanization": "kuṟavŭ",
+      "gloss": "less, a shortage",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9c434c93e7ad7bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kūṭutal mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറവ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറവ് (kuṟavŭ) — \"less, a shortage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The mirror of the last one, built the same way: കുറയുക (kuṟayuka), \"to lessen, to fall short\", plus a tail that makes the doing into a thing."
+            },
+            {
+              "kind": "speech",
+              "text": "കുറവ് (kuṟavŭ) is less of something, and it is also a shortfall or a lack. A house short of water has a water കുറവ് (kuṟavŭ), and a piece of work with something missing has a കുറവ് (kuṟavŭ) in it."
+            },
+            {
+              "kind": "speech",
+              "text": "The റ here is the hard trilled one you met in the rock-word, and the ŭ closes the word the way it closed the root-word and the seed-word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and they are opposites built from the same parts."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟavŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟavŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭutal, then kuṟavŭ, and hear the two tails matching",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭutal*, then *kuṟavŭ*, and hear the two tails matching]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറവ് (kuṟavŭ) mean? (\"less, a shortage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C58-a-little",
+      "sequence": 1810,
+      "title": "കുറച്ച് (kuṟaccŭ) — a little, a few",
+      "headword": "കുറച്ച്",
+      "romanization": "kuṟaccŭ",
+      "gloss": "a little, a few",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05e34dfa4cba381a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kuṟavŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറച്ച്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറച്ച് (kuṟaccŭ) — \"a little, a few\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The same root as the word before it, turned a different way: from കുറ-, \"to be little\", but landing on a quantity rather than on a lack."
+            },
+            {
+              "kind": "speech",
+              "text": "The difference matters at a table. കുറവ് (kuṟavŭ) complains that there is not enough; കുറച്ച് (kuṟaccŭ) politely asks for a small amount. One is a verdict and the other is a request, and they are one syllable apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam gets a great deal out of a single root by varying the tail on it, and this pair is a clean example — the same three sounds at the front, two different jobs at the back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and the last two share a root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaccŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaccŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟavŭ, then kuṟaccŭ, and say which of the two you would use asking for rice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟavŭ*, then *kuṟaccŭ*, and say which of the two you would use asking for rice]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറച്ച് (kuṟaccŭ) mean? (\"a little, a few\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C58-no-need",
+      "sequence": 1820,
+      "title": "വേണ്ട (vēṇṭa) — no need, no thank you",
+      "headword": "വേണ്ട",
+      "romanization": "vēṇṭa",
+      "gloss": "no need, no thank you",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7ec2bc2cfedf73f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kuṟaccŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേണ്ട",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേണ്ട (vēṇṭa) — \"no need, no thank you\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The negative partner of വേണം (vēṇaṁ), \"it is wanted\". വേണ്ട (vēṇṭa) says the opposite: not wanted, not needed, no."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the polite refusal at a Kerala meal, and it is said often, because the serving is persistent. Said gently it declines; said firmly it stops the ladle. A guest who has learned only one refusal in Malayalam should learn this one."
+            },
+            {
+              "kind": "speech",
+              "text": "Note that it declines the offer rather than the person. Malayalam has warmer ways of saying no to a request, and this one keeps to food, drink and objects."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one gets you through a meal."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇṭa, gently, then vēṇṭa again, firmly, and hear the difference the tone makes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇṭa*, gently, then *vēṇṭa* again, firmly, and hear the difference the tone makes]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേണ്ട (vēṇṭa) mean? (\"no need, no thank you\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C58-that-will-do",
+      "sequence": 1830,
+      "title": "പോരും (pōruṁ) — that will do, that is enough",
+      "headword": "പോരും",
+      "romanization": "pōruṁ",
+      "gloss": "that will do, that is enough",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:477dc29942606fee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vēṇṭa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പോരും",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോരും (pōruṁ) — \"that will do, that is enough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From പോരുക (pōruka), \"to suffice\", and it means that what is there is already enough."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against mati, which you already have. The two overlap, and either will stop a server; പോരും (pōruṁ) leans a little more towards \"that reaches far enough\" and mati towards \"stop\". Kerala uses both, often in the same breath."
+            },
+            {
+              "kind": "speech",
+              "text": "The ം at the end is the anusvara, the humming close you have met on the sky-word and the star-word and the vessel-word. It closes a great many Malayalam words, and by now it should be arriving without thought."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and you can answer a served plate five ways: more, less, a little, no need, that will do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōruṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōruṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — kūṭutal, kuṟavŭ, kuṟaccŭ, vēṇṭa, pōruṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *kūṭutal*, *kuṟavŭ*, *kuṟaccŭ*, *vēṇṭa*, *pōruṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പോരും (pōruṁ) mean? (\"that will do, that is enough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1040,6 +1040,153 @@
           "ML-LEX-C52-WELCOME-05"
         ]
       }
+    },
+    {
+      "chapter": 53,
+      "title": "Overhead",
+      "label": "ch:ml-overhead",
+      "canDo": "I can name the sky and four things in it in Malayalam.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ML-C53-sunshine",
+        "kind": "production",
+        "summary": "Complete ML-C53-sunshine and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C53-SKY-01",
+          "ML-LEX-C53-SKY-02",
+          "ML-LEX-C53-SKY-03",
+          "ML-LEX-C53-SKY-04",
+          "ML-LEX-C53-SKY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 54,
+      "title": "A Tree, Part by Part",
+      "label": "ch:ml-a-tree-part-by-part",
+      "canDo": "I can name a tree and four of its parts in Malayalam.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ML-C54-seed",
+        "kind": "production",
+        "summary": "Complete ML-C54-seed and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C54-TREE-01",
+          "ML-LEX-C54-TREE-02",
+          "ML-LEX-C54-TREE-03",
+          "ML-LEX-C54-TREE-04",
+          "ML-LEX-C54-TREE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 55,
+      "title": "Ground Underfoot",
+      "label": "ch:ml-ground-underfoot",
+      "canDo": "I can name five features of the Kerala landscape in Malayalam.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ML-C55-field",
+        "kind": "production",
+        "summary": "Complete ML-C55-field and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C55-GROUND-01",
+          "ML-LEX-C55-GROUND-02",
+          "ML-LEX-C55-GROUND-03",
+          "ML-LEX-C55-GROUND-04",
+          "ML-LEX-C55-GROUND-05"
+        ]
+      }
+    },
+    {
+      "chapter": 56,
+      "title": "Things About the House",
+      "label": "ch:ml-things-about-the-house",
+      "canDo": "I can name five ordinary household things in Malayalam.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ML-C56-box",
+        "kind": "production",
+        "summary": "Complete ML-C56-box and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C56-HOUSE-01",
+          "ML-LEX-C56-HOUSE-02",
+          "ML-LEX-C56-HOUSE-03",
+          "ML-LEX-C56-HOUSE-04",
+          "ML-LEX-C56-HOUSE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 57,
+      "title": "Five More of the Body",
+      "label": "ch:ml-five-more-of-the-body",
+      "canDo": "I can name five more parts of the body in Malayalam.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ML-C57-bone",
+        "kind": "production",
+        "summary": "Complete ML-C57-bone and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C57-FRAME-01",
+          "ML-LEX-C57-FRAME-02",
+          "ML-LEX-C57-FRAME-03",
+          "ML-LEX-C57-FRAME-04",
+          "ML-LEX-C57-FRAME-05"
+        ]
+      }
+    },
+    {
+      "chapter": 58,
+      "title": "Five More Short Answers",
+      "label": "ch:ml-five-more-short-answers",
+      "canDo": "I can accept, refuse and ask for more or less in Malayalam.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ML-C58-that-will-do",
+        "kind": "production",
+        "summary": "Complete ML-C58-that-will-do and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C58-ANSWER-01",
+          "ML-LEX-C58-ANSWER-02",
+          "ML-LEX-C58-ANSWER-03",
+          "ML-LEX-C58-ANSWER-04",
+          "ML-LEX-C58-ANSWER-05"
+        ]
+      }
+    },
+    {
+      "chapter": 59,
+      "title": "What the Air Carries",
+      "label": "ch:ml-what-the-air-carries",
+      "canDo": "I can name wind, sand, mud, smoke and an ember in Malayalam.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ML-C59-ember",
+        "kind": "production",
+        "summary": "Complete ML-C59-ember and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C59-AIR-01",
+          "ML-LEX-C59-AIR-02",
+          "ML-LEX-C59-AIR-03",
+          "ML-LEX-C59-AIR-04",
+          "ML-LEX-C59-AIR-05"
+        ]
+      }
     }
   ]
 }

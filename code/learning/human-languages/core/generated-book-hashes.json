@@ -2971,7 +2971,7 @@
     {
       "language": "malayalam",
       "chapter": 11,
-      "sourceHash": "fnv1a64:56fa8e6f72147a78",
+      "sourceHash": "fnv1a64:5996c56eed52cd93",
       "lessonIds": [
         "ML-C11-nirangal",
         "ML-S06-letter-chillu-ll",
@@ -3238,7 +3238,7 @@
     {
       "language": "malayalam",
       "chapter": 37,
-      "sourceHash": "fnv1a64:bb92a2a6aa6641db",
+      "sourceHash": "fnv1a64:45b6c76dbbb62f67",
       "lessonIds": [
         "ML-C37-kannu",
         "ML-C37-chevi",
@@ -3432,6 +3432,97 @@
         "ML-C52-garland"
       ],
       "tex": "malayalam/book/chapters/ch52-welcoming-a-guest.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:1fa7535add818308",
+      "lessonIds": [
+        "ML-C53-sky",
+        "ML-C53-sun",
+        "ML-C53-moon",
+        "ML-C53-star",
+        "ML-C53-sunshine"
+      ],
+      "tex": "malayalam/book/chapters/ch53-overhead.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:d941ef5bfd9c11a9",
+      "lessonIds": [
+        "ML-C54-tree",
+        "ML-C54-branch",
+        "ML-C54-trunk",
+        "ML-C54-root",
+        "ML-C54-seed"
+      ],
+      "tex": "malayalam/book/chapters/ch54-a-tree-part-by-part.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:abc60a65cbda297a",
+      "lessonIds": [
+        "ML-C55-river",
+        "ML-C55-rock",
+        "ML-C55-homeland",
+        "ML-C55-path",
+        "ML-C55-field"
+      ],
+      "tex": "malayalam/book/chapters/ch55-ground-underfoot.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:f99c68c789186123",
+      "lessonIds": [
+        "ML-C56-mat",
+        "ML-C56-basket",
+        "ML-C56-knife",
+        "ML-C56-vessel",
+        "ML-C56-box"
+      ],
+      "tex": "malayalam/book/chapters/ch56-things-about-the-house.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:8f678ea2515e0b0f",
+      "lessonIds": [
+        "ML-C57-neck",
+        "ML-C57-back",
+        "ML-C57-lip",
+        "ML-C57-nail",
+        "ML-C57-bone"
+      ],
+      "tex": "malayalam/book/chapters/ch57-five-more-of-the-body.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:0f76c7ef56509417",
+      "lessonIds": [
+        "ML-C58-more",
+        "ML-C58-less",
+        "ML-C58-a-little",
+        "ML-C58-no-need",
+        "ML-C58-that-will-do"
+      ],
+      "tex": "malayalam/book/chapters/ch58-five-more-short-answers.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:c88d334e573093c0",
+      "lessonIds": [
+        "ML-C59-wind",
+        "ML-C59-sand",
+        "ML-C59-mud",
+        "ML-C59-smoke",
+        "ML-C59-ember"
+      ],
+      "tex": "malayalam/book/chapters/ch59-what-the-air-carries.tex"
     },
     {
       "language": "marathi",
