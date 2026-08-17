@@ -2,6 +2,31 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.11.0 — SIR21 T3b-2 Slice 4: `/` lowers to `div_floor`
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+[SIR21-type-system-and-integer-semantics.md](../../specs/SIR21-type-system-and-integer-semantics.md)
+§E3). All 7 backends implement `div_floor` (Slice 2, merged); this crate
+is the first frontend to emit it.
+
+**Behavior change**: the `/` operator (both the general binary-op chain
+and the `/=` compound-assign desugaring) no longer lowers to bare
+`BuiltinCall("/", args)`. It now lowers to `BuiltinCall("div_floor",
+args)` — the SIR name for exactly Ruby's own `/` semantics (`Integer#/`
+floors, `Float#/` true-divides), so this is a pure rename with **zero**
+observable behavior change: `div_floor` computes identically to what `/`
+already did on every backend (each backend's Slice 2 PR wired it as a
+bare alias to its existing, already-Ruby-floor-faithful division helper).
+Verified via `sir-conformance`'s existing Ruby-sourced regression gate
+(`division_matches_ruby_floor_on_every_backend`,
+`float_division_true_divides_on_every_backend`,
+`python_division_is_ruby_floor_faithful`), all of which continue passing
+unchanged.
+
+Other arithmetic builtins (`+`, `-`, `*`, `%`, `**`, `<<`, `>>`, `&`,
+`|`, `^`) are untouched — only `/` is in scope for this slice.
+
 ## 0.10.0 — SIR28 Slice 4: `print`/`puts` lower to `__sys_write__`
 
 Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive

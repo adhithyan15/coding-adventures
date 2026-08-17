@@ -3885,7 +3885,7 @@ mod tests {
     //     name: "x",
     //     scope: Local,
     //     value: Expr::BuiltinCall {
-    //       name: "<op>",   // "+", "-", "*", "/", "or", "and"
+    //       name: "<op>",   // "+", "-", "*", "div_floor" ("/="; SIR21 T3b-2), "or", "and"
     //       args: [VarRef("x"), <rhs>],
     //     },
     //   }
@@ -3922,8 +3922,9 @@ mod tests {
     #[test]
     fn all_arithmetic_compound_assigns_lower_correctly() {
         // Each of +=, -=, *=, /= maps to the corresponding binary
-        // op builtin.
-        for (op_src, op_builtin) in [("+=", "+"), ("-=", "-"), ("*=", "*"), ("/=", "/")] {
+        // op builtin. `/=` maps to `div_floor` (SIR21 T3b-2), not bare
+        // `/` — see `token_lexeme_for_op`'s `TokenType::Slash` arm.
+        for (op_src, op_builtin) in [("+=", "+"), ("-=", "-"), ("*=", "*"), ("/=", "div_floor")] {
             let src = format!("x = 1\nx {op_src} 2\n");
             let m = lower(&src);
             let b = main_body(&m);

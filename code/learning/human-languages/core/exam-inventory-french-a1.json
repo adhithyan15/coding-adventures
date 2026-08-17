@@ -286,31 +286,45 @@
       "id": "A1-INT-01",
       "category": "L'interrogation",
       "label": "intonation questions",
-      "probe": null
+      "probe": [
+        "FR-GRAMMAR-INTONATION-01"
+      ]
     },
     {
       "id": "A1-INT-02",
       "category": "L'interrogation",
       "label": "est-ce que",
-      "probe": null
+      "probe": [
+        "FR-GRAMMAR-ESTCEQUE-02"
+      ]
     },
     {
       "id": "A1-INT-03",
       "category": "L'interrogation",
       "label": "subject-verb inversion",
-      "probe": null
+      "probe": [
+        "FR-GRAMMAR-INVERSION-08"
+      ]
     },
     {
       "id": "A1-INT-04",
       "category": "L'interrogation",
       "label": "question words ou, quand, comment, combien, pourquoi",
-      "probe": null
+      "probe": [
+        "FR-LEX-OU-03",
+        "FR-LEX-QUAND-04",
+        "FR-LEX-COMMENT-05",
+        "FR-LEX-COMBIEN-06",
+        "FR-LEX-POURQUOI-07"
+      ]
     },
     {
       "id": "A1-INT-05",
       "category": "L'interrogation",
       "label": "quel / quelle as an interrogative adjective",
-      "probe": null
+      "probe": [
+        "FR-GRAMMAR-QUEL-09"
+      ]
     },
     {
       "id": "A1-PREP-01",

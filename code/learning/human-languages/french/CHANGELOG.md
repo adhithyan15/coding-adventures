@@ -1,5 +1,32 @@
 # Changelog
 
+## [Unreleased]
+
+### Added — Chapter 32, asking a question (HL-C229)
+
+Nine lessons. **L'interrogation 0/5 → 5/5**; French A1 exam coverage **27% → 34%**.
+
+Before this chapter a reader could say a great deal in French and **could not ask
+anything**. The chapter teaches all three ways and, more importantly, when each is
+used:
+
+- **raising your voice** — costs no new words at all, and is by far the commonest
+  in speech;
+- **est-ce que** — neutral, and the default in writing;
+- **inversion** — formal, and the one a beginner is usually taught *first* and
+  then sounds like a textbook forever.
+
+The order is deliberate: inversion is the one to **recognise** immediately and
+**produce** last.
+
+Five question words follow — *où, quand, comment, combien, pourquoi* — and the
+chapter closes on **quel**, the only question word that agrees with its noun, whose
+four forms all sound identical so the agreement is purely a spelling problem.
+
+**It also realizes `SPINE-ASK-LOCATION`**, an A1 spine node French had explicitly
+declared *omitted*. That declaration is no longer true and the ledger says so.
+
+
 ## Sixteen pre-A1 nouns, and what the level gate did — 2026-08-08
 
 - Authored **Chapters 28–31**: sixteen everyday nouns, one per lesson, all
