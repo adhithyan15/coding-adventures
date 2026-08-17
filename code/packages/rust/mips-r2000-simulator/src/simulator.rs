@@ -254,7 +254,7 @@ mod tests {
         let sim = run_program(&[
             encode_addiu(T0, ZERO, 1),
             encode_sll(2, T0, 4),
-            encode_addiu(T1, ZERO, -1i32 & 0xFFFF),
+            encode_addiu(T1, ZERO, (-1i32) as u16 as i32),
             encode_srl(3, T1, 28),
             encode_addiu(T1, ZERO, (-16i32) as u16 as i32),
             encode_sra(4, T1, 2),
@@ -271,7 +271,7 @@ mod tests {
     #[test]
     fn test_mult_multu() {
         let sim = run_program(&[
-            encode_addiu(T0, ZERO, -1i32 & 0xFFFF),
+            encode_addiu(T0, ZERO, (-1i32) as u16 as i32),
             encode_addiu(T1, ZERO, 2),
             encode_mult(T0, T1),
             encode_mflo(2),
