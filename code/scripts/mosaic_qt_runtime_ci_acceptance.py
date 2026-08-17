@@ -23,10 +23,10 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/moslayout-compiler",
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
-        "unknown/programs/task-app",
+        "mosaic/programs/task-app",
     }
 )
-ACCEPTANCE_PACKAGE_PREFIXES = ("unknown/mosaic-pkg-",)
+ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)
 CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
 
 
