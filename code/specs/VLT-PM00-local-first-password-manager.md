@@ -1598,7 +1598,18 @@ changelog, focused build, and downstream validation.
                 collection, application-owned closed seed/algorithm/digit/period
                 validation, durable failures, and an atomic all-current-parent
                 result, using `VLT-PM38-cli-authored-totp-conflict-merge.md`.
-9b-3b-2b-2b-6. remaining authored merge ceremony for opaque records.
+9b-3b-2b-2b-6. completed audit-required user-authored opaque-record conflict
+                merge using an opaque exact-current metadata base whose content
+                type is inherited rather than authored, hidden hexadecimal
+                collection of the complete canonical-CBOR payload,
+                application-owned closed hexadecimal and CBOR-canonicality
+                validation, durable failures, and an atomic all-current-parent
+                result, using
+                `VLT-PM39-cli-authored-opaque-record-conflict-merge.md`. With
+                this slice every record type this product can hold — the six
+                first-party schemas and the opaque pass-through — has an
+                authored conflict merge, so 9b-3b-2b-2b is closed and no
+                authored merge ceremony remains.
 9b-4a. completed authenticated encrypted portable export with a separately
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
@@ -1715,7 +1726,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM35-cli-authored-card-conflict-merge.md`, and
   `VLT-PM36-cli-authored-api-key-conflict-merge.md`, and
   `VLT-PM37-cli-authored-database-credential-conflict-merge.md`, and
-  `VLT-PM38-cli-authored-totp-conflict-merge.md` —
+  `VLT-PM38-cli-authored-totp-conflict-merge.md`, and
+  `VLT-PM39-cli-authored-opaque-record-conflict-merge.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1741,7 +1753,10 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   database-credential conflict merge using
   `VLT-PM37-cli-authored-database-credential-conflict-merge.md`, plus audited
   user-authored TOTP conflict merge using
-  `VLT-PM38-cli-authored-totp-conflict-merge.md`.
+  `VLT-PM38-cli-authored-totp-conflict-merge.md`, plus audited user-authored
+  opaque-record conflict merge using
+  `VLT-PM39-cli-authored-opaque-record-conflict-merge.md`, which completes the
+  authored merge family for every record type this product can hold.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
