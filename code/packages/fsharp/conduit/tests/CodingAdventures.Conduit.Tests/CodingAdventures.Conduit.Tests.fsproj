@@ -2,6 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <!-- Same reason as the library's AssemblyName: csharp/conduit's test
+         project is also called CodingAdventures.Conduit.Tests, and coverlet
+         derives its mapping file name from the test assembly
+         ('CoverletSourceRootsMapping_CodingAdventures.Conduit.Tests'). Renaming
+         the library alone would leave that half of the collision in place. -->
+    <AssemblyName>CodingAdventures.Conduit.FSharp.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

@@ -27,4 +27,4 @@ CONDUIT_CAPI_PATH="$LIB_FILE" \
     /p:CollectCoverage=true \
     /p:Threshold=80 \
     /p:ThresholdType=line \
-    /p:Include="[CodingAdventures.Conduit]*"
+    /p:Include="[CodingAdventures.Conduit.FSharp]*"
