@@ -24,6 +24,21 @@ All notable changes to this package will be documented in this file.
   load-bearing by TEMP-REVERT-CHECK (reverting the check reproduces
   the exact predicted failure: `assertion left == right failed, left:
   1, right: -1`).
+- `table.grow`'s interpreter handler (`0xFC 0x0F`) now also rejects
+  growth that would exceed `MAX_TABLE_ELEMENTS` SUMMED ACROSS ALL
+  TABLES, not just the target table alone. Caught by `/security-review`
+  round 2: the per-table cap above still permitted an aggregate DoS --
+  `MAX_TABLES` (64) tables, each individually grown to
+  `MAX_TABLE_ELEMENTS`, would total ~4.77GB from one small module,
+  reintroducing at RUNTIME exactly the aggregate gap `wasm-validator`'s
+  own "Check 2b" already closes at DECLARE-time for a table's declared
+  `min` (task #96). Sums every other table's current size plus the
+  target's prospective new size and rejects BEFORE calling `Table::
+  grow` at all, so a rejected growth leaves every table untouched. A
+  follow-up task (#101) tracks the identical, larger, pre-existing gap
+  in `LinearMemory::grow` (64 memories × the 65536-page cap ≈ 256GB),
+  out of this PR's scope but the same bug class. Confirmed load-bearing
+  by TEMP-REVERT-CHECK.
 
 ### Added
 

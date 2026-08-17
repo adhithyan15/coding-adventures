@@ -2767,9 +2767,33 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     WasmValue::Ref(v) => v,
                     other => return Err(VMError::GenericError(format!("type mismatch: table.grow expected a reference, got {other:?}"))),
                 };
-                let table = get_table(ctx, data_idx as usize)?;
-                let old_size = table.grow(delta, init);
-                push_wasm(vm, WasmValue::I32(old_size));
+                let target_idx = data_idx as usize;
+                // Security review (task #98, round 2): `Table::grow`'s own
+                // `MAX_TABLE_ELEMENTS` cap bounds a SINGLE table, but
+                // `MAX_TABLES` (64) tables each individually grown to that
+                // cap would still total ~4.77GB from one small module --
+                // reintroducing at RUNTIME exactly the aggregate DoS gap
+                // `wasm-validator`'s "Check 2b" already closes at
+                // DECLARE-time for a table's declared `min`. Sum every
+                // OTHER table's CURRENT size plus this table's PROSPECTIVE
+                // new size (`sz + delta`, not yet applied) and reject
+                // BEFORE ever calling `Table::grow` -- so a rejected
+                // growth leaves every table, including the target,
+                // completely untouched, same "no partial mutation on
+                // failure" discipline `memory.init`'s out-of-range check
+                // (task #95) established.
+                let mut aggregate: u64 = 0;
+                for (i, &ptr) in ctx.tables.iter().enumerate() {
+                    let sz = unsafe { (*ptr).size() as u64 };
+                    aggregate += if i == target_idx { sz + delta as u64 } else { sz };
+                }
+                if aggregate > MAX_TABLE_ELEMENTS as u64 {
+                    push_wasm(vm, WasmValue::I32(-1));
+                } else {
+                    let table = get_table(ctx, target_idx)?;
+                    let old_size = table.grow(delta, init);
+                    push_wasm(vm, WasmValue::I32(old_size));
+                }
             }
             0x10 => {
                 // `table.size` (task #98): no stack operands, pushes the
@@ -9667,6 +9691,38 @@ mod tests {
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memories: Vec::new(),
             tables: vec![Table::new(1, Some(1))],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)]);
+    }
+
+    /// Security review (task #98, round 2): a per-table `MAX_TABLE_
+    /// ELEMENTS` cap alone still permits an AGGREGATE resource-exhaustion
+    /// DoS across many tables. Table 0 is ALREADY at the per-table cap;
+    /// growing table 1 by just 1 entry must still fail, because the
+    /// CROSS-TABLE total would exceed `MAX_TABLE_ELEMENTS` -- even though
+    /// table 1's own per-table check trivially passes on its own (1 is
+    /// nowhere near the cap in isolation). This is the runtime
+    /// counterpart to `wasm-validator`'s declare-time "Check 2b".
+    #[test]
+    fn table_grow_rejects_growth_that_would_exceed_the_cross_table_aggregate_cap() {
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0xD0, 0x70, // ref.null func
+                0x41, 0x01, // i32.const 1 (delta)
+                0xFC, 0x0F, 0x01, // table.grow 1
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(MAX_TABLE_ELEMENTS, None), Table::new(0, None)],
             globals: vec![],
             global_types: vec![],
             func_types: vec![func_type],
