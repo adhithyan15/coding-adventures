@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.8] - 2026-08-16 (task #98 — table.grow/table.size/table.fill)
+
+### Added
+
+- `table.grow`/`table.size`/`table.fill` (`0xFC 0x0F`/`0x10`/`0x11`)
+  interpreter handlers -- entirely unimplemented before this pass.
+  `table.grow` grows by `delta` entries filled with `init`, returning the
+  old size on success or `-1` on failure (a spec-mandated normal return
+  value, never a trap) -- failure cases are exceeding the table's own
+  declared `max_size`, or exceeding what fits in `table.size`'s own
+  `i32` result type (real engines cap table size for exactly this
+  reason). `table.size` pushes the current size. `table.fill` fills a
+  range with a reference value, same overflow-proof, zero-length-
+  still-bounds-checked discipline `LinearMemory::fill` established in
+  task #94 (`dest` must be `<= size()` even when `len == 0`).
+- `Table::grow`/`Table::fill` methods, modeled directly on
+  `LinearMemory::grow`/`fill`'s own contracts.
+- `table.grow`/`table.size`/`table.fill`'s decoded table index reuses
+  `DecodedOperand::BulkMemory`'s existing `data_idx` slot (renamed in
+  spirit, not in code -- see the variant's own updated doc comment) --
+  the same generic-index-slot-reused-by-`sub` pattern `Simd`'s `aux`
+  field already establishes, so no new packed-operand shape was needed.
+
 ## [0.9.7] - 2026-08-16 (task #95 — memory.init/data.drop, passive data segments)
 
 ### Security

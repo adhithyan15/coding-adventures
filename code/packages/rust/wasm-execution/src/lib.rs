@@ -723,10 +723,7 @@ impl LinearMemory {
 pub struct Table {
     /// Elements: `Some(func_index)` or `None` (uninitialized).
     elements: Vec<Option<u32>>,
-    /// Maximum table size.
-    // Captured from the module's table limits for spec completeness; table growth
-    // is not yet enforced against it, so the field is currently write-only.
-    #[allow(dead_code)]
+    /// Maximum table size, enforced by `grow` (task #98).
     max_size: Option<u32>,
 }
 
@@ -773,6 +770,53 @@ impl Table {
     /// checking needs this in addition to `size()`).
     pub fn max_size(&self) -> Option<u32> {
         self.max_size
+    }
+
+    /// Grow the table by `delta` entries, filling new slots with `init`.
+    /// Returns the OLD size on success, `-1` on failure -- same contract
+    /// as `LinearMemory::grow` (task #98). Failure cases: growing past
+    /// the table's own declared `max_size` (if any), or past what fits
+    /// in `table.size`'s own `i32` result type (real engines cap table
+    /// size well under `u32::MAX` for exactly this reason -- a table
+    /// that grew past `i32::MAX` couldn't report its own size back
+    /// through `table.size` without the result looking negative).
+    /// `u64` arithmetic throughout so a huge `delta` can't wrap `usize`/
+    /// `u32` addition and slip past either check.
+    pub fn grow(&mut self, delta: u32, init: Option<u32>) -> i32 {
+        let old_size = self.elements.len() as u32;
+        let new_size = old_size as u64 + delta as u64;
+        if let Some(max) = self.max_size {
+            if new_size > max as u64 {
+                return -1;
+            }
+        }
+        if new_size > i32::MAX as u64 {
+            return -1;
+        }
+        self.elements.resize(new_size as usize, init);
+        old_size as i32
+    }
+
+    /// Fill `len` entries starting at `dest` with `value` -- the
+    /// `table.fill` bulk-table primitive (task #98). Same overflow-proof,
+    /// zero-length-still-bounds-checked discipline as `LinearMemory::
+    /// fill` (established in task #94 after a real bug there): `dest`
+    /// must be `<= size()` even when `len == 0`, so `checked_add` runs
+    /// before any indexing rather than being skipped for a zero-length
+    /// call.
+    pub fn fill(&mut self, dest: u32, value: Option<u32>, len: u32) -> Result<(), TrapError> {
+        let dest = dest as usize;
+        let len = len as usize;
+        match dest.checked_add(len) {
+            Some(dest_end) if dest_end <= self.elements.len() => {
+                self.elements[dest..dest_end].fill(value);
+                Ok(())
+            }
+            _ => Err(TrapError::new(format!(
+                "out of bounds table access: dest={dest}, len={len}, table size={}",
+                self.elements.len()
+            ))),
+        }
     }
 }
 
@@ -1042,14 +1086,18 @@ pub enum DecodedOperand {
     /// opcode, plus `aux`: the single-byte lane-index immediate for
     /// `extract_lane` (0-3), unused (`0`) for every other op here.
     Simd { sub_opcode: u32, aux: u32 },
-    /// A `0xFC`-prefixed bulk-memory/non-trapping-conversion instruction's
-    /// decoded immediates (task #95): the sub-opcode, plus `data_idx` --
-    /// the real data-segment index for `memory.init`/`data.drop` (0x08/
-    /// 0x09), unused (`0`) for every other 0xFC sub-opcode (trunc_sat,
-    /// memory.copy, memory.fill), packed uniformly the same way `Atomic`/
-    /// `Simd` above pack their own sub-opcode + one aux value, so the
-    /// single `0xFC` handler can dispatch *and* read `data_idx` from one
-    /// place.
+    /// A `0xFC`-prefixed bulk-memory/bulk-table/non-trapping-conversion
+    /// instruction's decoded immediates: the sub-opcode, plus `data_idx` --
+    /// a single generic index slot reused across sub-opcodes for whichever
+    /// index space that sub-opcode actually indexes (never more than one
+    /// at a time, since `sub` alone picks the meaning): the real
+    /// data-segment index for `memory.init`/`data.drop` (0x08/0x09, task
+    /// #95), the real table index for `table.grow`/`table.size`/
+    /// `table.fill` (0x0F/0x10/0x11, task #98), unused (`0`) for every
+    /// other 0xFC sub-opcode (trunc_sat, memory.copy, memory.fill). Packed
+    /// uniformly the same way `Atomic`/`Simd` above pack their own
+    /// sub-opcode + one aux value, so the single `0xFC` handler can
+    /// dispatch *and* read `data_idx` from one place.
     BulkMemory { sub: u8, data_idx: u32 },
 }
 
@@ -1133,6 +1181,9 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //   0x09         data.drop           <data_idx:u32leb> (task #95)
         //   0x0A         memory.copy         <dst mem idx> <src mem idx> (both 0 in our modules)
         //   0x0B         memory.fill         <mem idx>
+        //   0x0F         table.grow          <table_idx:u32leb> (task #98)
+        //   0x10         table.size          <table_idx:u32leb> (task #98)
+        //   0x11         table.fill          <table_idx:u32leb> (task #98)
         //
         // `trunc_sat`'s 8 sub-opcodes need no extra immediate bytes consumed
         // here (the default `_ => (0, 0)` arm already handles that correctly).
@@ -1142,7 +1193,11 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         // `data.drop`'s `data_idx` is the one immediate actually used at
         // runtime -- unlike `memory.copy`/`memory.fill`, WHICH data segment
         // to read from can't be hardcoded to "the only one," so this must be
-        // a real decoded value, not a discarded placeholder.
+        // a real decoded value, not a discarded placeholder. `table.grow`/
+        // `table.size`/`table.fill` reuse the same `data_idx` slot to carry
+        // a real table index instead (see `BulkMemory`'s own doc comment) --
+        // this repo supports up to `MAX_TABLES` (64) real tables, so a
+        // table.get/table.set-style hardcoded-to-0 shortcut would be wrong.
         if opcode_byte == 0xFC {
             let sub = if offset < code.len() {
                 let s = code[offset];
@@ -1169,6 +1224,11 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 0x0B => {
                     offset += 1; // memory.fill: one memory-index byte
                     0
+                }
+                0x0F..=0x11 => {
+                    let (idx, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    idx
                 }
                 _ => 0,
             };
@@ -2536,8 +2596,10 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     // `memory.fill` takes three i32 operands pushed in order dest, value, size
     // (`[dest, value, size]`): pop size, then value (truncated to a byte), then
     // dest, and fills `size` bytes starting at `dest` with that byte.
-    // Sub-opcodes 0x00-0x07 (WASM03), 0x0A, and 0x0B are implemented; any other
-    // 0xFC sub-opcode traps rather than silently misbehaving.
+    // Sub-opcodes 0x00-0x07 (WASM03), 0x08/0x09 (memory.init/data.drop, task
+    // #95), 0x0A/0x0B (memory.copy/memory.fill, task #94), and 0x0F/0x10/
+    // 0x11 (table.grow/table.size/table.fill, task #98) are implemented;
+    // any other 0xFC sub-opcode traps rather than silently misbehaving.
     //
     // 0x00-0x07: the "non-trapping float-to-int conversions" proposal's 8
     // `trunc_sat` instructions -- like `trunc_f32_s`/etc. but never traps:
@@ -2674,6 +2736,46 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as u8;
                 let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 get_memory(ctx)?.fill(dest, value, n).map_err(VMError::from)?;
+            }
+            0x0F => {
+                // `table.grow` (task #98): stack (bottom -> top) is
+                // `[init, delta]` -- pop delta (i32), then init (a
+                // reference value, funcref or externref depending on the
+                // target table's own element type -- this interpreter
+                // doesn't distinguish the two at runtime, see
+                // `WasmValue::Ref`'s own doc comment). Pushes the OLD
+                // size (i32) on success, or -1 on failure -- growth
+                // failure is a normal return value per spec, never a
+                // trap, same contract as `memory.grow`.
+                let delta = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                let init = match pop_wasm(vm)? {
+                    WasmValue::Ref(v) => v,
+                    other => return Err(VMError::GenericError(format!("type mismatch: table.grow expected a reference, got {other:?}"))),
+                };
+                let table = get_table(ctx, data_idx as usize)?;
+                let old_size = table.grow(delta, init);
+                push_wasm(vm, WasmValue::I32(old_size));
+            }
+            0x10 => {
+                // `table.size` (task #98): no stack operands, pushes the
+                // table's current size as i32.
+                let table = get_table(ctx, data_idx as usize)?;
+                push_wasm(vm, WasmValue::I32(table.size() as i32));
+            }
+            0x11 => {
+                // `table.fill` (task #98): stack (bottom -> top) is
+                // `[dest, value, len]` -- pop len, then value, then dest,
+                // matching `wasm-validator`'s pop order for this
+                // sub-opcode (mirrors `memory.fill`'s own `[dest, value,
+                // size]` shape just above).
+                let len = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                let value = match pop_wasm(vm)? {
+                    WasmValue::Ref(v) => v,
+                    other => return Err(VMError::GenericError(format!("type mismatch: table.fill expected a reference, got {other:?}"))),
+                };
+                let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+                let table = get_table(ctx, data_idx as usize)?;
+                table.fill(dest, value, len).map_err(VMError::from)?;
             }
             other => {
                 return Err(VMError::GenericError(format!(
@@ -5598,6 +5700,59 @@ mod tests {
 
         table.set(2, Some(42)).unwrap();
         assert_eq!(table.get(2).unwrap(), Some(42));
+    }
+
+    #[test]
+    fn test_table_grow() {
+        let mut table = Table::new(1, Some(3));
+        assert_eq!(table.grow(1, Some(7)), 1); // old size was 1
+        assert_eq!(table.size(), 2);
+        assert_eq!(table.get(1).unwrap(), Some(7));
+        assert_eq!(table.grow(2, None), -1); // would exceed max of 3
+        assert_eq!(table.size(), 2); // unchanged on failure
+    }
+
+    #[test]
+    fn test_table_grow_zero_delta_is_a_no_op_success() {
+        let mut table = Table::new(4, None);
+        assert_eq!(table.grow(0, None), 4);
+        assert_eq!(table.size(), 4);
+    }
+
+    #[test]
+    fn test_table_grow_rejects_growth_past_i32_max_even_with_no_declared_max() {
+        // No `max_size` at all, but growing this far would make `table.size`'s
+        // own i32 result type unable to represent the new size.
+        let mut table = Table::new(16, None);
+        assert_eq!(table.grow(0xFFFF_FFF0, None), -1);
+        assert_eq!(table.size(), 16); // unchanged on failure
+    }
+
+    #[test]
+    fn test_table_fill() {
+        let mut table = Table::new(10, None);
+        table.fill(2, Some(1), 3).unwrap();
+        assert_eq!(table.get(1).unwrap(), None);
+        assert_eq!(table.get(2).unwrap(), Some(1));
+        assert_eq!(table.get(3).unwrap(), Some(1));
+        assert_eq!(table.get(4).unwrap(), Some(1));
+        assert_eq!(table.get(5).unwrap(), None);
+    }
+
+    #[test]
+    fn test_table_fill_zero_length_at_the_exact_end_still_bounds_checks_but_succeeds() {
+        // Same discipline as `LinearMemory::fill` (task #94): `dest ==
+        // size()` with `len == 0` is the one boundary case that's valid,
+        // not an off-by-one trap.
+        let mut table = Table::new(5, None);
+        table.fill(5, Some(1), 0).unwrap();
+    }
+
+    #[test]
+    fn test_table_fill_out_of_bounds_traps_cleanly_not_a_panic() {
+        let mut table = Table::new(5, None);
+        assert!(table.fill(3, Some(1), 3).is_err());
+        assert!(table.fill(6, None, 0).is_err());
     }
 
     #[test]
@@ -9388,6 +9543,150 @@ mod tests {
             "sub-opcode 0x09 and data_idx=1 must be carried in the operand: {:?}",
             instrs[0].operand
         );
+    }
+
+    #[test]
+    fn table_grow_size_fill_decode_and_carry_a_real_table_idx() {
+        // `table.grow`/`table.size`/`table.fill` = `0xFC 0x0F/0x10/0x11
+        // <table_idx:u32leb>` (task #98). table_idx=1 here (not 0) to
+        // prove the decoder reads a REAL immediate, matching memory.
+        // init's own `data_idx` decode -- reusing the same `data_idx`
+        // operand slot for a different index space (see `BulkMemory`'s
+        // own doc comment).
+        for (sub, opcode_name) in [(0x0Fu8, "table.grow"), (0x10, "table.size"), (0x11, "table.fill")] {
+            let body = FunctionBody { locals: vec![], code: vec![0xFC, sub, 0x01, 0x0B] };
+            let instrs = decode_function_body(&body);
+            assert_eq!(instrs.len(), 2, "{opcode_name} (3 bytes) + end -> 2 instrs: {instrs:?}");
+            assert_eq!(instrs[0].opcode, 0xFC);
+            assert!(
+                matches!(instrs[0].operand, DecodedOperand::BulkMemory { sub: s, data_idx: 1 } if s == sub),
+                "{opcode_name}: sub-opcode {sub:#x} and table_idx=1 must be carried in the operand: {:?}",
+                instrs[0].operand
+            );
+        }
+    }
+
+    #[test]
+    fn table_size_pushes_the_targeted_tables_own_size() {
+        // Two tables; table.size on index 1 must read table 1's size, not
+        // table 0's (proving the real decoded table_idx is honored, not
+        // hardcoded to 0 the way `get_memory`'s single-memory helper is).
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code: vec![0xFC, 0x10, 0x01, 0x0B] }; // table.size 1
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(3, None), Table::new(7, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7)]);
+    }
+
+    #[test]
+    fn table_grow_pushes_old_size_and_actually_grows_the_table() {
+        // (ref.null func); i32.const 2; table.grow 0; (ref.null func);
+        // table.get at the newly grown slot to prove it's really there.
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0xD0, 0x70, // ref.null func
+                0x41, 0x02, // i32.const 2 (delta)
+                0xFC, 0x0F, 0x00, // table.grow 0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(1, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]); // old size was 1
+    }
+
+    #[test]
+    fn table_grow_failure_returns_negative_one_not_a_trap() {
+        // Table starts at size 1 with max 1; growing by 1 must fail --
+        // spec-mandated: a growth failure is a normal i32 return value,
+        // never a trap.
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0xD0, 0x70, // ref.null func
+                0x41, 0x01, // i32.const 1 (delta)
+                0xFC, 0x0F, 0x00, // table.grow 0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(1, Some(1))],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)]);
+    }
+
+    #[test]
+    fn table_fill_writes_the_targeted_range_and_traps_cleanly_out_of_bounds() {
+        // i32.const 1 (dest); ref.null func (value); i32.const 2 (len);
+        // table.fill 0 -- fills slots [1,3) with a null funcref, i.e. a
+        // no-op content-wise but proves the whole pop-order/dispatch path.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x01, // i32.const 1 (dest)
+                0xD0, 0x70, // ref.null func (value)
+                0x41, 0x02, // i32.const 2 (len)
+                0xFC, 0x11, 0x00, // table.fill 0
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_ok());
+
+        // Out-of-bounds: dest=4, len=3 on a size-5 table -> traps, not a panic.
+        let func_type2 = FuncType { params: vec![], results: vec![] };
+        let body2 = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x04, // i32.const 4 (dest)
+                0xD0, 0x70, // ref.null func (value)
+                0x41, 0x03, // i32.const 3 (len)
+                0xFC, 0x11, 0x00, // table.fill 0
+                0x0B,
+            ],
+        };
+        let mut engine2 = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![Table::new(5, None)],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type2],
+            func_bodies: vec![Some(body2)],
+            host_functions: vec![None],
+        });
+        assert!(engine2.call_function(0, &[]).is_err());
     }
 
     #[test]

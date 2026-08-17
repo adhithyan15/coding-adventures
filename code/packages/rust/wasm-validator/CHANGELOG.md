@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.11] - 2026-08-16 (task #98 — table.grow/table.size/table.fill type-checking)
+
+### Added
+
+- New `0xFC` sub-opcode type-check arms for `table.grow` (`0x0F`),
+  `table.size` (`0x10`), and `table.fill` (`0x11`) -- previously
+  unhandled. `table.grow`/`table.fill` type-check against the
+  REFERENCED table's own declared element type (funcref vs externref),
+  same per-table lookup `table.get`/`table.set` (task #96) already
+  established, not a hardcoded assumption. All three bounds-check their
+  `table_idx` against `ctx.table_count`, same real-index-check pattern
+  `table.get`/`table.set` use.
+
 ## [0.2.10] - 2026-08-16 (task #95 — memory.init/data.drop type-checking)
 
 ### Added

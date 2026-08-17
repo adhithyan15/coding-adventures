@@ -100,13 +100,24 @@ TESTSUITE_FILES = [
     # regardless of the source (`(table $t2 2 externref)` still parsed as
     # funcref). Deliberately excludes: table.wast (has its own separate
     # remaining gaps -- hex-literal table limits, a real `spectest`
-    # import), table_size.wast/table_grow.wast/table_fill.wast (need
-    # table.size/table.grow/table.fill, entirely unimplemented opcodes --
-    # own future task), and table_init.wast/table_copy.wast (task #97 --
-    # need table.init/table.copy/elem.drop, same shape as memory.init/
+    # import), and table_init.wast/table_copy.wast (task #97 -- need
+    # table.init/table.copy/elem.drop, same shape as memory.init/
     # data.drop's gap).
     "table_get.wast",
     "table_set.wast",
+    # table.size/table.grow/table.fill (task #98) -- entirely unimplemented
+    # before this pass (no opcode decoding, no interpreter handler, no
+    # wast-parser text-form support, no validator type-check rule).
+    # Deliberately excludes table_grow.wast: its own corpus uses `(elem
+    # declare func $f)` -- declarative element segments, a third element-
+    # segment mode this crate has no concept of yet (only active/passive
+    # data segments exist, task #95's `is_passive`; elements have neither)
+    # -- and cross-module `register`/import table-growth propagation tests
+    # that are a fine follow-on once `elem declare` lands, most naturally
+    # alongside task #97's own Element/is_passive rework. table_size.wast
+    # and table_fill.wast use neither and are fully vendorable now.
+    "table_size.wast",
+    "table_fill.wast",
     # Memory
     "memory.wast",
     "address.wast",

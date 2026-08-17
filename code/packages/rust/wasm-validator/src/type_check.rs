@@ -652,6 +652,59 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // byte value
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
                     }
+                    0x0F => {
+                        // `table.grow` (task #98): pops `[init, delta]`
+                        // (init: the REFERENCED table's own element type,
+                        // delta: i32), pushes i32 (old size, or -1 on
+                        // failure -- never a validation-time error, growth
+                        // failure is a normal runtime return value). Same
+                        // per-table element-type lookup as `table.get`/
+                        // `table.set` above (task #96) -- a table.grow on
+                        // a funcref table takes a funcref init value, not
+                        // whatever the FIRST declared table happens to be.
+                        let (table_idx, size) = decode_idx(code, offset)?;
+                        offset += size;
+                        if table_idx >= ctx.table_count {
+                            err!("table.grow references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                        }
+                        let elem_type = match ctx.table_element_types[table_idx as usize] {
+                            0x6F => ValueType::Externref,
+                            _ => ValueType::Funcref,
+                        };
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // delta
+                        pop_expect(&mut stack, frame!(), elem_type)?; // init value
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                    0x10 => {
+                        // `table.size` (task #98): no stack operands,
+                        // pushes the table's size as i32. Only the
+                        // index-bounds check applies -- element type is
+                        // irrelevant to a size query.
+                        let (table_idx, size) = decode_idx(code, offset)?;
+                        offset += size;
+                        if table_idx >= ctx.table_count {
+                            err!("table.size references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                        }
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                    0x11 => {
+                        // `table.fill` (task #98): pops `[dest, value,
+                        // len]` (dest/len: i32, value: the REFERENCED
+                        // table's own element type), no push. Same
+                        // element-type lookup as 0x0F above.
+                        let (table_idx, size) = decode_idx(code, offset)?;
+                        offset += size;
+                        if table_idx >= ctx.table_count {
+                            err!("table.fill references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                        }
+                        let elem_type = match ctx.table_element_types[table_idx as usize] {
+                            0x6F => ValueType::Externref,
+                            _ => ValueType::Funcref,
+                        };
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        pop_expect(&mut stack, frame!(), elem_type)?; // value
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                    }
                     other => err!("unsupported 0xFC sub-opcode {other:#x}"),
                 }
             }

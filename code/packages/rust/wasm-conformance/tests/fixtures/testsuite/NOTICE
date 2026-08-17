@@ -17,6 +17,9 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                files, same pinned commit, no re-pin),
                extended 2026-08-16 (task #95 -- memory_init.wast, real
                passive data segments + memory.init/data.drop, same
+               pinned commit, no re-pin),
+               extended 2026-08-16 (task #98 -- table_size.wast/
+               table_fill.wast, table.size/table.grow/table.fill, same
                pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
