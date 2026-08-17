@@ -1,0 +1,8 @@
+[package]
+name = "mos6502-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "MOS 6502 (1975) behavioral simulator -- Rust port of code/packages/python/mos6502-simulator (Layer 07j). Full 151-opcode / 13-addressing-mode instruction set, BCD decimal-mode ADC/SBC, the documented indirect-JMP page-wrap silicon bug, and the pre-existing BRK-is-HALT convention. Built on the cpu-simulator crate for Memory; register file is a handful of plain typed fields (A/X/Y/S/PC) rather than cpu_simulator::RegisterFile, since the 6502 has no uniform-width GPR bank. Fifth lane of the 9-architecture expansion."
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }
