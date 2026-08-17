@@ -223,6 +223,14 @@ forms are audited before their closed error. The base and every former
 candidate value remain opaque, success names all current candidates as parents,
 and ordinary output contains only the merged item selector.
 
+`conflict merge api-key ITEM BASE_REVISION` extends that ceremony to a complete
+API-key form. The token uses a hidden prompt, and the scope and expiry lines are
+forwarded verbatim so their closed shape is validated inside the
+application-owned preparation and invalid forms are audited before their closed
+error. The base and every former candidate value remain opaque, success names
+all current candidates as parents, and ordinary output contains only the merged
+item selector.
+
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
 schema-specific selectors. It reserves time and audit entropy before
 unlock, then requires exact `yes` through a fixed controlling-terminal prompt.

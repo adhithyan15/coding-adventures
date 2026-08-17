@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge api-key ITEM BASE_REVISION`, which
+  retains the exact current API key opaquely, collects the token through a
+  hidden prompt, forwards the scope and expiry lines verbatim for
+  application-owned closed validation, durably records host and validation
+  failures, and publishes one authored all-current-parent result without
+  exposing prior candidate values.
 - Added audit-required `conflict merge card ITEM BASE_REVISION`, which retains
   the exact current card opaquely, collects PAN/CVV through hidden prompts,
   durably records host and validation failures, and publishes one authored

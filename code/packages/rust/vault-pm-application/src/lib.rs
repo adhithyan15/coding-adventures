@@ -63,13 +63,14 @@ pub use mutation::{
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
-    open_active_vault, recover_pending_publication, AuditedCardConflictMergePreparationV1,
-    AuditedLoginConflictMergePreparationV1, AuditedLoginEditPreparationV1,
-    AuditedSecureNoteConflictMergePreparationV1, CardConflictMergeInputV1,
-    CardConflictMergePreparationV1, ItemHistoryViewV1, LoginConflictMergePreparationV1,
-    LoginEditInputV1, LoginEditPreparationV1, SecureNoteConflictMergeInputV1,
-    SecureNoteConflictMergePreparationV1, UnlockedVaultV1, DEFAULT_ITEM_HISTORY_LIMIT,
-    MAX_ITEM_HISTORY_LIMIT,
+    open_active_vault, recover_pending_publication, ApiKeyConflictMergeInputV1,
+    ApiKeyConflictMergePreparationV1, AuditedApiKeyConflictMergePreparationV1,
+    AuditedCardConflictMergePreparationV1, AuditedLoginConflictMergePreparationV1,
+    AuditedLoginEditPreparationV1, AuditedSecureNoteConflictMergePreparationV1,
+    CardConflictMergeInputV1, CardConflictMergePreparationV1, ItemHistoryViewV1,
+    LoginConflictMergePreparationV1, LoginEditInputV1, LoginEditPreparationV1,
+    SecureNoteConflictMergeInputV1, SecureNoteConflictMergePreparationV1, UnlockedVaultV1,
+    DEFAULT_ITEM_HISTORY_LIMIT, MAX_ITEM_HISTORY_LIMIT,
 };
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,

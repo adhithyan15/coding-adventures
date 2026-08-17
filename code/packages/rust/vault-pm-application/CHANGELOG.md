@@ -2,6 +2,20 @@
 
 All notable changes to this package are documented here.
 
+## [0.58.0] - 2026-08-17
+
+### Added
+
+- Add an opaque audited authored API-key conflict merge preparation with a
+  complete wipe-on-drop replacement form, exact-current API-key base, and
+  application-owned closed scope-line and expiry validation.
+
+### Security
+
+- Keep the token, scope line, and prior candidate documents inside application
+  ownership, publish host and closed form-validation failures before returning
+  them, and publish success atomically with the all-current-parent revision.
+
 ## [0.57.0] - 2026-08-12
 
 ### Added

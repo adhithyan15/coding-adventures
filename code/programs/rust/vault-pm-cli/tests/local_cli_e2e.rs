@@ -297,6 +297,16 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(!failed_card_merge_transcript.contains("Card number: "));
     assert_transcript_excludes_secrets(&failed_card_merge_transcript);
 
+    let (failed_api_key_merge_status, failed_api_key_merge_transcript) = run_unlock_in_pty(
+        &home,
+        &["conflict", "merge", "api-key", &item_id, &original_revision],
+        b"vault-pm: recovery or conflict required",
+    );
+    assert_eq!(failed_api_key_merge_status.code(), Some(5));
+    assert!(!failed_api_key_merge_transcript.contains("Label: "));
+    assert!(!failed_api_key_merge_transcript.contains("Token: "));
+    assert_transcript_excludes_secrets(&failed_api_key_merge_transcript);
+
     let expected_delete = format!("Item deleted: {item_id}");
     let (delete_status, delete_transcript) = run_unlock_in_pty(
         &home,
@@ -376,7 +386,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(
         post_failure_transcript
-            .contains("commits=26 catalogs=6 revisions=5 items=2 audit_events=26"),
+            .contains("commits=27 catalogs=6 revisions=5 items=2 audit_events=27"),
         "unexpected post-failure audit totals: {post_failure_transcript}"
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
@@ -435,7 +445,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         "final audit verification failed: {final_audit_transcript}"
     );
     assert!(
-        final_audit_transcript.contains("audit_events=30"),
+        final_audit_transcript.contains("audit_events=31"),
         "unexpected final audit total: {final_audit_transcript}"
     );
     assert_transcript_excludes_secrets(&final_audit_transcript);
