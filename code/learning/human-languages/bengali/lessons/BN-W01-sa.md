@@ -7,7 +7,7 @@ delivery: script
 chapter: 16
 type: writing
 headword: স
-romanization: "shɔ"
+romanization: "shô"
 gloss: "the consonant that is written s and said sh"
 prerequisites: [BN-W01-ma]
 sounds: []

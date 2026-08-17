@@ -4,14 +4,14 @@
   "chapter": 16,
   "title": "Hanging From the Head-Line, One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:35496814732a04ea",
+  "sourceHash": "fnv1a64:c53696530f0636ec",
   "lessons": [
     {
       "id": "BN-W01-na",
       "sequence": 1600,
-      "title": "ন (nɔ) — the consonant na",
+      "title": "ন (nô) — the consonant na",
       "headword": "ন",
-      "romanization": "nɔ",
+      "romanization": "nô",
       "gloss": "the consonant na — and an inherent vowel that is not 'a'",
       "script": "bengali",
       "modality": "pen",
@@ -21,7 +21,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:19b92e33663dd0ec",
+      "sourceHash": "fnv1a64:eedcc499ba736b46",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -64,15 +64,15 @@
             },
             {
               "kind": "speech",
-              "text": "ন (nɔ)."
+              "text": "ন (nô)."
             },
             {
               "kind": "speech",
-              "text": "Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ɔ — the vowel of English awe, rounded and open. So this letter alone is nɔ, not na."
+              "text": "Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ô — the vowel of English awe, rounded and open. So this letter alone is nô, not na."
             },
             {
               "kind": "speech",
-              "text": "Devanagari's bare consonant says ka; Bengali's says kɔ. Same family, same system, different default. It is one of the first things that makes Bengali sound like Bengali rather than like Hindi read aloud."
+              "text": "Devanagari's bare consonant says ka; Bengali's says kô. Same family, same system, different default. It is one of the first things that makes Bengali sound like Bengali rather than like Hindi read aloud."
             },
             {
               "kind": "speech",
@@ -88,7 +88,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ন (nɔ)",
+              "instruction": "ন (nô)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -118,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "What vowel does a bare Bengali consonant carry? (ɔ, the vowel of awe — not a.) And what does Devanagari's carry instead? (a.)"
+              "text": "What vowel does a bare Bengali consonant carry? (ô, the vowel of awe — not a.) And what does Devanagari's carry instead? (a.)"
             },
             {
               "kind": "speech",
@@ -142,7 +142,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d22210c70f4f2adb",
+      "sourceHash": "fnv1a64:a66fe2c67ac18397",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -188,11 +188,11 @@
             },
             {
               "kind": "speech",
-              "text": "A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ɔ for a long open a."
+              "text": "A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ô for a long open a."
             },
             {
               "kind": "speech",
-              "text": "ন (nɔ) + া (-a) becomes না."
+              "text": "ন (nô) + া (-a) becomes না."
             },
             {
               "kind": "speech",
@@ -391,9 +391,9 @@
     {
       "id": "BN-W01-ha",
       "sequence": 1630,
-      "title": "হ (hɔ) — the consonant ha",
+      "title": "হ (hô) — the consonant ha",
       "headword": "হ",
-      "romanization": "hɔ",
+      "romanization": "hô",
       "gloss": "the consonant ha",
       "script": "bengali",
       "modality": "pen",
@@ -402,7 +402,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:399f4c9d7701c8fd",
+      "sourceHash": "fnv1a64:0eaaa6660e8f638b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -440,11 +440,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "হ (hɔ)."
+              "text": "হ (hô)."
             },
             {
               "kind": "speech",
-              "text": "hɔ — the h of English hat, plus the inherent vowel you now know is ɔ rather than a."
+              "text": "hô — the h of English hat, plus the inherent vowel you now know is ô rather than a."
             },
             {
               "kind": "speech",
@@ -464,7 +464,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "হ (hɔ)",
+              "instruction": "হ (hô)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -494,7 +494,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the inherent vowel in হ (hɔ)? (ɔ.) How many new rules did this lesson add? (None.)"
+              "text": "What is the inherent vowel in হ (hô)? (ô.) How many new rules did this lesson add? (None.)"
             },
             {
               "kind": "speech",
@@ -507,9 +507,9 @@
     {
       "id": "BN-W01-ma",
       "sequence": 1640,
-      "title": "ম (mɔ) — the consonant ma",
+      "title": "ম (mô) — the consonant ma",
       "headword": "ম",
-      "romanization": "mɔ",
+      "romanization": "mô",
       "gloss": "the consonant ma",
       "script": "bengali",
       "modality": "pen",
@@ -518,7 +518,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e13ca2724a1ea3b8",
+      "sourceHash": "fnv1a64:758d761299d55e46",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -556,11 +556,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ম (mɔ)."
+              "text": "ম (mô)."
             },
             {
               "kind": "speech",
-              "text": "mɔ — the m of English met, plus the inherent vowel."
+              "text": "mô — the m of English met, plus the inherent vowel."
             },
             {
               "kind": "speech",
@@ -568,11 +568,11 @@
             },
             {
               "kind": "speech",
-              "text": "ন (nɔ) হ (hɔ) ম (mɔ)."
+              "text": "ন (nô) হ (hô) ম (mô)."
             },
             {
               "kind": "speech",
-              "text": "nɔ, hɔ, mɔ. Notice you are saying aw three times, not ah."
+              "text": "nô, hô, mô. Notice you are saying aw three times, not ah."
             }
           ]
         },
@@ -584,7 +584,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ম (mɔ)",
+              "instruction": "ম (mô)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -614,7 +614,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the three consonants you hold, each with its inherent vowel. (nɔ, hɔ, mɔ.)"
+              "text": "Say the three consonants you hold, each with its inherent vowel. (nô, hô, mô.)"
             },
             {
               "kind": "speech",
@@ -627,9 +627,9 @@
     {
       "id": "BN-W01-sa",
       "sequence": 1650,
-      "title": "স (shɔ) — the consonant that is written s and said sh",
+      "title": "স (shô) — the consonant that is written s and said sh",
       "headword": "স",
-      "romanization": "shɔ",
+      "romanization": "shô",
       "gloss": "the consonant that is written s and said sh",
       "script": "bengali",
       "modality": "pen",
@@ -638,7 +638,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:451438593f4181c5",
+      "sourceHash": "fnv1a64:341320bfbe6972cb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -676,7 +676,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "স (shɔ)."
+              "text": "স (shô)."
             },
             {
               "kind": "speech",
@@ -704,7 +704,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "স (shɔ)",
+              "instruction": "স (shô)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -734,7 +734,7 @@
             },
             {
               "kind": "speech",
-              "text": "How is স (shɔ) written in transliteration, and how is it said? (Written s, said sh.) Why the difference? (The spelling keeps the Sanskrit ancestry; the sound moved on.)"
+              "text": "How is স (shô) written in transliteration, and how is it said? (Written s, said sh.) Why the difference? (The spelling keeps the Sanskrit ancestry; the sound moved on.)"
             },
             {
               "kind": "speech",
@@ -747,9 +747,9 @@
     {
       "id": "BN-W01-ka",
       "sequence": 1660,
-      "title": "ক (kɔ) — the consonant ka",
+      "title": "ক (kô) — the consonant ka",
       "headword": "ক",
-      "romanization": "kɔ",
+      "romanization": "kô",
       "gloss": "the consonant ka — unaspirated",
       "script": "bengali",
       "modality": "pen",
@@ -758,7 +758,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:077dff4ebdb1825b",
+      "sourceHash": "fnv1a64:1c76ab09a17c9bad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -796,11 +796,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ক (kɔ)."
+              "text": "ক (kô)."
             },
             {
               "kind": "speech",
-              "text": "kɔ — the k of English skip, with no puff of breath after it."
+              "text": "kô — the k of English skip, with no puff of breath after it."
             },
             {
               "kind": "speech",
@@ -820,7 +820,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ক (kɔ)",
+              "instruction": "ক (kô)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -850,7 +850,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ক (kɔ) the k of kit or of skip? (Of skip — no puff of air.) Does the script care? (Yes — the breathy one is a different letter.)"
+              "text": "Is ক (kô) the k of kit or of skip? (Of skip — no puff of air.) Does the script care? (Yes — the breathy one is a different letter.)"
             },
             {
               "kind": "speech",
@@ -874,7 +874,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:97fce7e840710a85",
+      "sourceHash": "fnv1a64:e68b33a392711989",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -912,7 +912,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ɔ that is not there."
+              "text": "The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ô that is not there."
             },
             {
               "kind": "speech",
@@ -932,7 +932,7 @@
             },
             {
               "kind": "speech",
-              "text": "স (shɔ) + ্ ((hasanta)) + ক (kɔ) becomes স্ক."
+              "text": "স (shô) + ্ ((hasanta)) + ক (kô) becomes স্ক."
             },
             {
               "kind": "speech",
@@ -991,9 +991,9 @@
     {
       "id": "BN-W01-ra",
       "sequence": 1680,
-      "title": "র (rɔ) — the last consonant of the greeting",
+      "title": "র (rô) — the last consonant of the greeting",
       "headword": "র",
-      "romanization": "rɔ",
+      "romanization": "rô",
       "gloss": "the last consonant of the greeting",
       "script": "bengali",
       "modality": "pen",
@@ -1002,7 +1002,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eddd39c126f6e93b",
+      "sourceHash": "fnv1a64:84a07209c194a1d1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1040,11 +1040,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "র (rɔ)."
+              "text": "র (rô)."
             },
             {
               "kind": "speech",
-              "text": "rɔ — a light tap of the tongue, closer to the r of Spanish pero than to any English r."
+              "text": "rô — a light tap of the tongue, closer to the r of Spanish pero than to any English r."
             },
             {
               "kind": "speech",
@@ -1060,7 +1060,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "র (rɔ)",
+              "instruction": "র (rô)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1090,7 +1090,7 @@
             },
             {
               "kind": "speech",
-              "text": "How is র (rɔ) made? (A light tap, not an English r.)"
+              "text": "How is র (rô) made? (A light tap, not an English r.)"
             },
             {
               "kind": "speech",
@@ -1114,7 +1114,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:01a54994c9f77361",
+      "sourceHash": "fnv1a64:1db3c9f2d04fe9ed",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1156,7 +1156,7 @@
             },
             {
               "kind": "speech",
-              "text": "ন (nɔ) + ম (mɔ) + স (shɔ) + ্ ((hasanta)) + ক (kɔ) + া (-a) + র (rɔ) becomes নমস্কার (nomoshkar)."
+              "text": "ন (nô) + ম (mô) + স (shô) + ্ ((hasanta)) + ক (kô) + া (-a) + র (rô) becomes নমস্কার (nomoshkar)."
             },
             {
               "kind": "speech",
@@ -1164,15 +1164,15 @@
             },
             {
               "kind": "speech",
-              "text": "ন — nɔ, inherent vowel."
+              "text": "ন — nô, inherent vowel."
             },
             {
               "kind": "speech",
-              "text": "ম — mɔ, inherent vowel."
+              "text": "ম — mô, inherent vowel."
             },
             {
               "kind": "speech",
-              "text": "স্ক — the conjunct: the s-letter with its vowel removed, fused to kɔ."
+              "text": "স্ক — the conjunct: the s-letter with its vowel removed, fused to kô."
             },
             {
               "kind": "speech",
@@ -1180,11 +1180,11 @@
             },
             {
               "kind": "speech",
-              "text": "র — rɔ."
+              "text": "র — rô."
             },
             {
               "kind": "speech",
-              "text": "nɔ-mosh-kar — and notice the sh, from a letter written s."
+              "text": "nô-mosh-kar — and notice the sh, from a letter written s."
             },
             {
               "kind": "speech",
@@ -1234,7 +1234,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many new pieces were in this lesson? (None.) What is স্ক made of? (The s-letter with its vowel removed, joined to ক (kɔ).) And what still remains to learn — rules, or shapes? (Shapes.)"
+              "text": "How many new pieces were in this lesson? (None.) What is স্ক made of? (The s-letter with its vowel removed, joined to ক (kô).) And what still remains to learn — rules, or shapes? (Shapes.)"
             },
             {
               "kind": "speech",

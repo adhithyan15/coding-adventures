@@ -13,6 +13,51 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C223 — the glyph probe was mis-scoped, and HL-C214 was one tranche old when it happened
+
+CI: `bengali: missing_character rose to 29 against a baseline of 0`. The cause was
+**U+0254 OPEN O** in the romanizations (`nɔ`, `kɔ`, `mɔ`), and the Bengali book's
+main font is Latin Modern, which does not have it. Fixed by using `ô`, which is
+present and is the ISO 15919 romanization for that vowel anyway.
+
+**HL-C214 was written ONE TRANCHE EARLIER and says to check the generated `.tex`
+against the actual font. I did check.** The probe was scoped to *Bengali
+codepoints* against the *Bengali font* — and both halves are the wrong question:
+
+- the Bengali characters were never at risk. They sit inside `\bn{...}`, which
+  selects a face chosen *because* it covers them.
+- **the prose, the romanization and the IPA render in the MAIN font**, and nothing
+  looked at that at all.
+
+**A book is not one font.** The probe has to cover every non-ASCII character *not*
+inside a script wrapper, against the main font — and separately the wrapped runs
+against their own face.
+
+### This is the second instance, which changes HL-C214 from a row to a job
+
+HL-C214 specified a `check:glyphs` gate and deliberately did not build it, because
+font resolution differs per track. Two CI round-trips later — `ǣ` in Latin, `ɔ` in
+Bengali, both **avoidable and both caught only by the compiler** — that reasoning
+no longer holds. The remaining tranches will keep reaching for phonetic characters,
+because that is what an etymology-and-pronunciation curriculum does.
+
+**Latin Modern is the recurring hazard specifically**, and it is worth stating on
+its own: it is a *typesetter's* font with good Western European coverage and thin
+coverage past it, and **every Latin-script book in this corpus uses it as the main
+font** — including, for the main-font text, all sixteen non-Latin tracks. It lacks
+`ǣ`, it lacks `ɔ`, and it will lack the next one. Characters known present and
+useful: `ā ī ō ū ô ə`.
+
+### And the diagnosis itself ran against the wrong tree
+
+The first scan of `bengali/book/` was run **while checked out on the Hindi
+branch**, which has no Bengali chapter, and confidently reported five pre-existing
+preamble characters as the finding. The tool worked perfectly; the tree was wrong.
+Same family as `git stash` not stashing untracked files (HL-C213).
+
+**Print `git branch --show-current` in the same command as any cross-branch
+diagnosis.** Cheap, and it would have saved the whole detour.
+
 ## HL-C222 — Bengali: same four ideas, different DEFAULT, and a letter that lies about its sound
 
 Seventh script tranche. `neverTaughtGlyphs` 48 → 39; `tracksTeachingNothing` down

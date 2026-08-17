@@ -839,7 +839,7 @@
     {
       "language": "bengali",
       "chapter": 16,
-      "sourceHash": "fnv1a64:35496814732a04ea",
+      "sourceHash": "fnv1a64:c53696530f0636ec",
       "lessonIds": [
         "BN-W01-na",
         "BN-W01-aa-matra",
@@ -856,8 +856,8 @@
       "drivablePrefix": 0,
       "text": "bengali/narration/ch16.txt",
       "json": "bengali/narration/ch16.json",
-      "textHash": "fnv1a64:a2ee5503bd0e0134",
-      "jsonHash": "fnv1a64:68fbca83272c62c7"
+      "textHash": "fnv1a64:017c39a1be8adaea",
+      "jsonHash": "fnv1a64:ad74d9dbcc3fbe39"
     },
     {
       "language": "chinese",

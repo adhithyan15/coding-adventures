@@ -40,7 +40,7 @@ reviews_of: [BN-W01-ka]
 
 The inherent vowel is a nuisance when you do not want it. If a word presses two
 consonants together with no vowel between them, writing them plainly would insert
-an **ɔ** that is not there.
+an **ô** that is not there.
 
 So there is a mark that removes it:
 

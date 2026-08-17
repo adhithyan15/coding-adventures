@@ -44,7 +44,7 @@ To get a different vowel you **replace** the inherent one with a mark called a
 > া
 
 A single upright stroke standing to the **right** of its consonant, dropping from
-the head-line. Attached, it swaps the inherent **ɔ** for a long open **a**.
+the head-line. Attached, it swaps the inherent **ô** for a long open **a**.
 
 > **ন** + **া** → **না**
 

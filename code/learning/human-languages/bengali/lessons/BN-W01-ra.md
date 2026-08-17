@@ -7,7 +7,7 @@ delivery: script
 chapter: 16
 type: writing
 headword: র
-romanization: "rɔ"
+romanization: "rô"
 gloss: "the last consonant of the greeting"
 prerequisites: [BN-W01-hasanta]
 sounds: []
@@ -40,7 +40,7 @@ reviews_of: [BN-W01-hasanta]
 
 > র
 
-**rɔ** — a light tap of the tongue, closer to the *r* of Spanish *pero* than to any
+**rô** — a light tap of the tongue, closer to the *r* of Spanish *pero* than to any
 English *r*.
 
 That is the last piece. Everything the greeting needs is now something you can

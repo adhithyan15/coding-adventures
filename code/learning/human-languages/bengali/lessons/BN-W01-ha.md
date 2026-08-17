@@ -7,7 +7,7 @@ delivery: script
 chapter: 16
 type: writing
 headword: হ
-romanization: "hɔ"
+romanization: "hô"
 gloss: "the consonant ha"
 prerequisites: [BN-W01-aa]
 sounds: []
@@ -40,7 +40,7 @@ reviews_of: [BN-W01-aa]
 
 > হ
 
-**hɔ** — the *h* of English *hat*, plus the inherent vowel you now know is **ɔ**
+**hô** — the *h* of English *hat*, plus the inherent vowel you now know is **ô**
 rather than *a*.
 
 No new machinery: every rule you hold applies unchanged. **New shapes are coming;
@@ -58,7 +58,7 @@ You have been saying this letter since your first lesson — it opens the word f
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-HA-01] -->
 
-[PAUSE 3s] What is the inherent vowel in **হ**? (**ɔ**.) How many new rules did this lesson
+[PAUSE 3s] What is the inherent vowel in **হ**? (**ô**.) How many new rules did this lesson
 add? (**None**.)
 
 Source: [Unicode Bengali chart](https://www.unicode.org/charts/PDF/U0980.pdf).

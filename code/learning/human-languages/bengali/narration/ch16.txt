@@ -3,7 +3,7 @@ Bengali, chapter 16: Hanging From the Head-Line, One Piece at a Time.
 
 
 Lesson 1 of 10.
-ন (nɔ) — the consonant na.
+ন (nô) — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -13,19 +13,19 @@ Nothing is assumed but the words you can already say. This chapter turns them in
 
 Script.
 Bengali is an abugida: a consonant already carries a vowel, and you write a vowel mark only when you want a different one.
-ন (nɔ).
-Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ɔ — the vowel of English awe, rounded and open. So this letter alone is nɔ, not na.
-Devanagari's bare consonant says ka; Bengali's says kɔ. Same family, same system, different default. It is one of the first things that makes Bengali sound like Bengali rather than like Hindi read aloud.
+ন (nô).
+Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ô — the vowel of English awe, rounded and open. So this letter alone is nô, not na.
+Devanagari's bare consonant says ka; Bengali's says kô. Same family, same system, different default. It is one of the first things that makes Bengali sound like Bengali rather than like Hindi read aloud.
 Look at the top of the shape: a horizontal bar, and in running text it joins up across a whole word so the writing hangs from a line — the same head-line Devanagari has, and the one Gujarati erases.
 
 Guided Practice.
-[once you have stopped driving — write: ন (nɔ)]
+[once you have stopped driving — write: ন (nô)]
 [your turn — read: every piece this chapter has given you so far, in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What vowel does a bare Bengali consonant carry? (ɔ, the vowel of awe — not a.) And what does Devanagari's carry instead? (a.)
+What vowel does a bare Bengali consonant carry? (ô, the vowel of awe — not a.) And what does Devanagari's carry instead? (a.)
 Source: Unicode Bengali chart.
 
 
@@ -41,8 +41,8 @@ Write the piece from the previous lesson before adding another.
 Script.
 To get a different vowel you replace the inherent one with a mark called a mātrā.
 া (-a).
-A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ɔ for a long open a.
-ন (nɔ) + া (-a) becomes না.
+A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ô for a long open a.
+ন (nô) + া (-a) becomes না.
 na — and that is the word for no, which you have been saying since your first lesson.
 One consonant and one mark, and a word you could already say became a word you can read.
 
@@ -89,7 +89,7 @@ Source: Unicode Bengali chart.
 
 
 Lesson 4 of 10.
-হ (hɔ) — the consonant ha.
+হ (hô) — the consonant ha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -98,24 +98,24 @@ Warm-up.
 Write the piece from the previous lesson before adding another.
 
 Script.
-হ (hɔ).
-hɔ — the h of English hat, plus the inherent vowel you now know is ɔ rather than a.
+হ (hô).
+hô — the h of English hat, plus the inherent vowel you now know is ô rather than a.
 No new machinery: every rule you hold applies unchanged. New shapes are coming; new rules are not.
 You have been saying this letter since your first lesson — it opens the word for yes.
 
 Guided Practice.
-[once you have stopped driving — write: হ (hɔ)]
+[once you have stopped driving — write: হ (hô)]
 [your turn — read: every piece this chapter has given you so far, in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the inherent vowel in হ (hɔ)? (ɔ.) How many new rules did this lesson add? (None.)
+What is the inherent vowel in হ (hô)? (ô.) How many new rules did this lesson add? (None.)
 Source: Unicode Bengali chart.
 
 
 Lesson 5 of 10.
-ম (mɔ) — the consonant ma.
+ম (mô) — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -124,25 +124,25 @@ Warm-up.
 Write the piece from the previous lesson before adding another.
 
 Script.
-ম (mɔ).
-mɔ — the m of English met, plus the inherent vowel.
+ম (mô).
+mô — the m of English met, plus the inherent vowel.
 Three consonants now. Say them in the order you met them, each with the vowel nobody wrote:
-ন (nɔ) হ (hɔ) ম (mɔ).
-nɔ, hɔ, mɔ. Notice you are saying aw three times, not ah.
+ন (nô) হ (hô) ম (mô).
+nô, hô, mô. Notice you are saying aw three times, not ah.
 
 Guided Practice.
-[once you have stopped driving — write: ম (mɔ)]
+[once you have stopped driving — write: ম (mô)]
 [your turn — read: every piece this chapter has given you so far, in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say the three consonants you hold, each with its inherent vowel. (nɔ, hɔ, mɔ.)
+Say the three consonants you hold, each with its inherent vowel. (nô, hô, mô.)
 Source: Unicode Bengali chart.
 
 
 Lesson 6 of 10.
-স (shɔ) — the consonant that is written s and said sh.
+স (shô) — the consonant that is written s and said sh.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -151,25 +151,25 @@ Warm-up.
 Write the piece from the previous lesson before adding another.
 
 Script.
-স (shɔ).
+স (shô).
 Here the letter and the sound part company, and it is worth knowing early.
 This letter descends from the Sanskrit s, and every transliteration writes it s. In Bengali it is normally pronounced sh — the sh of English shoe.
 So the word you say as nomosh-kar is written with what looks like an s. The spelling records the word's Sanskrit ancestry; the pronunciation records what Bengali did with it afterwards. Both are true, and the script keeps the older one.
 English does exactly this with knight and through. Every literary language accumulates spellings that outlive their sounds.
 
 Guided Practice.
-[once you have stopped driving — write: স (shɔ)]
+[once you have stopped driving — write: স (shô)]
 [your turn — read: every piece this chapter has given you so far, in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How is স (shɔ) written in transliteration, and how is it said? (Written s, said sh.) Why the difference? (The spelling keeps the Sanskrit ancestry; the sound moved on.)
+How is স (shô) written in transliteration, and how is it said? (Written s, said sh.) Why the difference? (The spelling keeps the Sanskrit ancestry; the sound moved on.)
 Source: Unicode Bengali chart.
 
 
 Lesson 7 of 10.
-ক (kɔ) — the consonant ka.
+ক (kô) — the consonant ka.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -178,19 +178,19 @@ Warm-up.
 Write the piece from the previous lesson before adding another.
 
 Script.
-ক (kɔ).
-kɔ — the k of English skip, with no puff of breath after it.
+ক (kô).
+kô — the k of English skip, with no puff of breath after it.
 Hold a palm in front of your mouth and say English kit: you feel air. Say skip: you do not. This is the second one. Bengali has a separate letter for the breathy version, and swapping them changes the word — so a difference English treats as an accident, this script writes down.
 Five consonants, one mātrā, one independent vowel. One piece of machinery left.
 
 Guided Practice.
-[once you have stopped driving — write: ক (kɔ)]
+[once you have stopped driving — write: ক (kô)]
 [your turn — read: every piece this chapter has given you so far, in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is ক (kɔ) the k of kit or of skip? (Of skip — no puff of air.) Does the script care? (Yes — the breathy one is a different letter.)
+Is ক (kô) the k of kit or of skip? (Of skip — no puff of air.) Does the script care? (Yes — the breathy one is a different letter.)
 Source: Unicode Bengali chart.
 
 
@@ -204,12 +204,12 @@ Warm-up.
 Write the piece from the previous lesson before adding another.
 
 Script.
-The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ɔ that is not there.
+The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ô that is not there.
 So there is a mark that removes it:
 ্ ((hasanta)).
 Bengali calls it the hasanta — Devanagari calls the same thing a virama. It sits under a consonant and means: no vowel here.
 Then something happens that no European alphabet does. A consonant stripped of its vowel fuses with the one after it into a single joined shape, a conjunct:
-স (shɔ) + ্ ((hasanta)) + ক (kɔ) becomes স্ক.
+স (shô) + ্ ((hasanta)) + ক (kô) becomes স্ক.
 One cluster. Conjuncts are not new characters to memorise — they are two you already know, joined. Bengali's are more thoroughly fused than Devanagari's, so some take a moment to take apart, but the principle does not change.
 
 Guided Practice.
@@ -224,7 +224,7 @@ Source: Unicode Bengali chart.
 
 
 Lesson 9 of 10.
-র (rɔ) — the last consonant of the greeting.
+র (rô) — the last consonant of the greeting.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -233,18 +233,18 @@ Warm-up.
 Write the piece from the previous lesson before adding another.
 
 Script.
-র (rɔ).
-rɔ — a light tap of the tongue, closer to the r of Spanish pero than to any English r.
+র (rô).
+rô — a light tap of the tongue, closer to the r of Spanish pero than to any English r.
 That is the last piece. Everything the greeting needs is now something you can write from memory.
 
 Guided Practice.
-[once you have stopped driving — write: র (rɔ)]
+[once you have stopped driving — write: র (rô)]
 [your turn — read: every piece this chapter has given you so far, in order]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How is র (rɔ) made? (A light tap, not an English r.)
+How is র (rô) made? (A light tap, not an English r.)
 Source: Unicode Bengali chart.
 
 
@@ -259,14 +259,14 @@ Write the piece from the previous lesson before adding another.
 
 Script.
 Nothing new is introduced here. Every piece below is one you can write.
-ন (nɔ) + ম (mɔ) + স (shɔ) + ্ ((hasanta)) + ক (kɔ) + া (-a) + র (rɔ) becomes নমস্কার (nomoshkar).
+ন (nô) + ম (mô) + স (shô) + ্ ((hasanta)) + ক (kô) + া (-a) + র (rô) becomes নমস্কার (nomoshkar).
 Read it the way you built it:
-ন — nɔ, inherent vowel.
-ম — mɔ, inherent vowel.
-স্ক — the conjunct: the s-letter with its vowel removed, fused to kɔ.
+ন — nô, inherent vowel.
+ম — mô, inherent vowel.
+স্ক — the conjunct: the s-letter with its vowel removed, fused to kô.
 া (-a) — the mātrā, making that piece ka.
-র — rɔ.
-nɔ-mosh-kar — and notice the sh, from a letter written s.
+র — rô.
+nô-mosh-kar — and notice the sh, from a letter written s.
 Count what it took: six consonants, one mātrā, one independent vowel and one hasanta. With them you can read no and the greeting, and every consonant you meet from here obeys rules you already hold.
 Bengali has around forty more letters. It does not have any more systems.
 
@@ -277,5 +277,5 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many new pieces were in this lesson? (None.) What is স্ক made of? (The s-letter with its vowel removed, joined to ক (kɔ).) And what still remains to learn — rules, or shapes? (Shapes.)
+How many new pieces were in this lesson? (None.) What is স্ক made of? (The s-letter with its vowel removed, joined to ক (kô).) And what still remains to learn — rules, or shapes? (Shapes.)
 Source: Unicode Bengali chart.

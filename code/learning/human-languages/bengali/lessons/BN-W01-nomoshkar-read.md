@@ -44,13 +44,13 @@ Nothing new is introduced here. Every piece below is one you can write.
 
 Read it the way you built it:
 
-- **ন** — *nɔ*, inherent vowel
-- **ম** — *mɔ*, inherent vowel
-- **স্ক** — the conjunct: the *s*-letter with its vowel removed, fused to *kɔ*
+- **ন** — *nô*, inherent vowel
+- **ম** — *mô*, inherent vowel
+- **স্ক** — the conjunct: the *s*-letter with its vowel removed, fused to *kô*
 - **া** — the mātrā, making that piece *ka*
-- **র** — *rɔ*
+- **র** — *rô*
 
-**nɔ-mosh-kar** — and notice the *sh*, from a letter written *s*.
+**nô-mosh-kar** — and notice the *sh*, from a letter written *s*.
 
 Count what it took: **six consonants, one mātrā, one independent vowel and one
 hasanta.** With them you can read *no* and the greeting, and every consonant you

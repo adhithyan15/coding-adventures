@@ -7,7 +7,7 @@ delivery: script
 chapter: 16
 type: writing
 headword: ক
-romanization: "kɔ"
+romanization: "kô"
 gloss: "the consonant ka — unaspirated"
 prerequisites: [BN-W01-sa]
 sounds: []
@@ -40,7 +40,7 @@ reviews_of: [BN-W01-sa]
 
 > ক
 
-**kɔ** — the *k* of English *skip*, with **no puff of breath** after it.
+**kô** — the *k* of English *skip*, with **no puff of breath** after it.
 
 Hold a palm in front of your mouth and say English *kit*: you feel air. Say *skip*:
 you do not. **This is the second one.** Bengali has a separate letter for the

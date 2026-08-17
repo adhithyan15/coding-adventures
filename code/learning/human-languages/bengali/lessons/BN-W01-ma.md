@@ -7,7 +7,7 @@ delivery: script
 chapter: 16
 type: writing
 headword: ম
-romanization: "mɔ"
+romanization: "mô"
 gloss: "the consonant ma"
 prerequisites: [BN-W01-ha]
 sounds: []
@@ -40,14 +40,14 @@ reviews_of: [BN-W01-ha]
 
 > ম
 
-**mɔ** — the *m* of English *met*, plus the inherent vowel.
+**mô** — the *m* of English *met*, plus the inherent vowel.
 
 Three consonants now. Say them in the order you met them, each with the vowel
 nobody wrote:
 
 > **ন**  **হ**  **ম**
 
-*nɔ, hɔ, mɔ.* Notice you are saying *aw* three times, not *ah*.
+*nô, hô, mô.* Notice you are saying *aw* three times, not *ah*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-HA-01, BN-SCRIPT-MA-01] -->
@@ -58,7 +58,7 @@ nobody wrote:
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-HA-01, BN-SCRIPT-MA-01] -->
 
-[PAUSE 3s] Say the three consonants you hold, each with its inherent vowel. (***nɔ, hɔ,
-mɔ***.)
+[PAUSE 3s] Say the three consonants you hold, each with its inherent vowel. (***nô, hô,
+mô***.)
 
 Source: [Unicode Bengali chart](https://www.unicode.org/charts/PDF/U0980.pdf).

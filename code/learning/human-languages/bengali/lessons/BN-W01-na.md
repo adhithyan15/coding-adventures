@@ -7,7 +7,7 @@ delivery: script
 chapter: 16
 type: writing
 headword: ন
-romanization: "nɔ"
+romanization: "nô"
 gloss: "the consonant na — and an inherent vowel that is not 'a'"
 prerequisites: [BN-C01-nomoshkar]
 sounds: []
@@ -45,10 +45,10 @@ vowel mark only when you want a different one.
 > ন
 
 Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit.
-The inherent vowel here is **not** *a*. It is **ɔ** — the vowel of English *awe*,
-rounded and open. So this letter alone is **nɔ**, not *na*.
+The inherent vowel here is **not** *a*. It is **ô** — the vowel of English *awe*,
+rounded and open. So this letter alone is **nô**, not *na*.
 
-Devanagari's bare consonant says *ka*; Bengali's says *kɔ*. Same family, same
+Devanagari's bare consonant says *ka*; Bengali's says *kô*. Same family, same
 system, **different default**. It is one of the first things that makes Bengali
 sound like Bengali rather than like Hindi read aloud.
 
@@ -65,7 +65,7 @@ Devanagari has, and the one Gujarati erases.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NA-01] -->
 
-[PAUSE 3s] What vowel does a bare Bengali consonant carry? (**ɔ**, the vowel of *awe* —
+[PAUSE 3s] What vowel does a bare Bengali consonant carry? (**ô**, the vowel of *awe* —
 not *a*.) And what does Devanagari's carry instead? (***a***.)
 
 Source: [Unicode Bengali chart](https://www.unicode.org/charts/PDF/U0980.pdf).

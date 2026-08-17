@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:597e8d753435a324",
+  "sourceHash": "fnv1a64:29c3c3b410691ab2",
   "summary": {
     "totalLessons": 2895,
     "voice": 2042,
@@ -19368,7 +19368,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:19b92e33663dd0ec",
+      "sourceHash": "fnv1a64:eedcc499ba736b46",
       "detachableSegments": [
         "Script"
       ],
@@ -19391,7 +19391,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d22210c70f4f2adb",
+      "sourceHash": "fnv1a64:a66fe2c67ac18397",
       "detachableSegments": [
         "Script"
       ],
@@ -19437,7 +19437,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:399f4c9d7701c8fd",
+      "sourceHash": "fnv1a64:0eaaa6660e8f638b",
       "detachableSegments": [
         "Script"
       ],
@@ -19460,7 +19460,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e13ca2724a1ea3b8",
+      "sourceHash": "fnv1a64:758d761299d55e46",
       "detachableSegments": [
         "Script"
       ],
@@ -19483,7 +19483,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:451438593f4181c5",
+      "sourceHash": "fnv1a64:341320bfbe6972cb",
       "detachableSegments": [
         "Script"
       ],
@@ -19506,7 +19506,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:077dff4ebdb1825b",
+      "sourceHash": "fnv1a64:1c76ab09a17c9bad",
       "detachableSegments": [
         "Script"
       ],
@@ -19529,7 +19529,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:97fce7e840710a85",
+      "sourceHash": "fnv1a64:e68b33a392711989",
       "detachableSegments": [
         "Script"
       ],
@@ -19552,7 +19552,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:eddd39c126f6e93b",
+      "sourceHash": "fnv1a64:84a07209c194a1d1",
       "detachableSegments": [
         "Script"
       ],
@@ -19575,7 +19575,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:01a54994c9f77361",
+      "sourceHash": "fnv1a64:1db3c9f2d04fe9ed",
       "detachableSegments": [
         "Script"
       ],
