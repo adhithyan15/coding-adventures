@@ -22,7 +22,7 @@ use coding_adventures_vault_pm_domain::{
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
 use coding_adventures_vault_records::{
-    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote,
+    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed,
 };
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
@@ -43,6 +43,13 @@ const MAX_API_KEY_SCOPES: usize = 64;
 const MAX_API_KEY_SCOPE_BYTES: usize = 256;
 /// Largest database engine identifier accepted behind the audited boundary.
 const MAX_DATABASE_ENGINE_BYTES: usize = 32;
+/// Largest canonical unpadded Base32 TOTP seed line, in ASCII characters.
+///
+/// 256 Base32 characters carry exactly 160 bytes, the ceiling VLT-PM29 places
+/// on a stored seed, so this one bound enforces both the line and byte limits.
+const MAX_TOTP_SECRET_BASE32_CHARS: usize = 256;
+/// Largest TOTP time step accepted behind the audited boundary, in seconds.
+const MAX_TOTP_PERIOD_SECONDS: u32 = 3_600;
 
 /// Owned wipe-on-drop caller fields for one complete login edit.
 pub struct LoginEditInputV1 {
@@ -159,6 +166,42 @@ impl DatabaseCredentialConflictMergeInputV1 {
             database,
             username,
             password,
+        }
+    }
+}
+
+/// Owned wipe-on-drop caller fields for one complete TOTP merge.
+///
+/// Every field arrives exactly as the terminal collected it — the seed as its
+/// Base32 line rather than as decoded bytes — so that the closed shape rules of
+/// `VLT-PM29-cli-totp-create.md` are re-checked behind the audited boundary
+/// rather than being trusted from the host.
+pub struct TotpConflictMergeInputV1 {
+    label: Zeroizing<String>,
+    issuer: Option<Zeroizing<String>>,
+    secret: Zeroizing<String>,
+    algorithm: Zeroizing<String>,
+    digits: Zeroizing<String>,
+    period: Zeroizing<String>,
+}
+
+impl TotpConflictMergeInputV1 {
+    /// Take the complete bounded TOTP form collected by a trusted host.
+    pub const fn new(
+        label: Zeroizing<String>,
+        issuer: Option<Zeroizing<String>>,
+        secret: Zeroizing<String>,
+        algorithm: Zeroizing<String>,
+        digits: Zeroizing<String>,
+        period: Zeroizing<String>,
+    ) -> Self {
+        Self {
+            label,
+            issuer,
+            secret,
+            algorithm,
+            digits,
+            period,
         }
     }
 }
@@ -465,6 +508,36 @@ impl AuditedDatabaseCredentialConflictMergePreparationV1 {
     pub fn into_preparation(
         self,
     ) -> Result<DatabaseCredentialConflictMergePreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
+/// Opaque application-owned state for one validated authored TOTP conflict
+/// merge.
+pub struct TotpConflictMergePreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    base: Zeroizing<ItemDocument>,
+    failure_audit: ConflictMergeFailureAuditV1,
+}
+
+/// Audited result of validating one authored TOTP conflict merge target.
+pub enum AuditedTotpConflictMergePreparationV1 {
+    /// The application retains the base document and complete conflict set.
+    Ready(Box<TotpConflictMergePreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedTotpConflictMergePreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(self) -> Result<TotpConflictMergePreparationV1, ApplicationError> {
         match self {
             Self::Ready(preparation) => Ok(*preparation),
             Self::Failed(failure) => match failure.into_operation() {
@@ -990,6 +1063,222 @@ fn replacement_database_credential_document(
             // a secret that no issuer ever vouched for.
             lease_id: None,
             expires_at: None,
+        }),
+        current.attachments().clone(),
+    )
+    .map_err(|_| ApplicationError::InvalidInput)
+}
+
+impl TotpConflictMergePreparationV1 {
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    /// Complete the authored TOTP merge and its atomic event.
+    pub fn complete_audited(
+        self,
+        input: TotpConflictMergeInputV1,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let document =
+            match replacement_totp_document(&self.base, input, self.failure_audit.wall_time_ms) {
+                Ok(document) => document,
+                Err(error) => return self.publish_audited_failure(error, local_state_store),
+            };
+        let active = self.session.merge_item_conflict(
+            document,
+            self.failure_audit.wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.session.finish_audited_access(
+            AuditActionV1::ItemConflictMerge,
+            Some(self.item_id),
+            None,
+            self.failure_audit.wall_time_ms,
+            self.failure_audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
+
+/// Check one already-bounded TOTP algorithm line against its closed set.
+///
+/// The three names are the only HMAC constructions RFC 6238 defines for TOTP,
+/// and they are accepted in exactly one spelling each so that `SHA1` and `sha1`
+/// cannot denote two different records in the same vault.
+fn validate_totp_algorithm(line: &str) -> Result<(), ApplicationError> {
+    matches!(line, "SHA1" | "SHA256" | "SHA512")
+        .then_some(())
+        .ok_or(ApplicationError::InvalidInput)
+}
+
+/// Interpret one already-bounded TOTP digit-count line.
+///
+/// Six and eight are the only widths interoperable authenticators emit. The
+/// record schema itself admits `4..=10`, so this narrower closed set is the
+/// authored form's own rule, matching `VLT-PM29-cli-totp-create.md`.
+fn parse_totp_digits_line(line: &str) -> Result<u8, ApplicationError> {
+    match line {
+        "6" => Ok(6),
+        "8" => Ok(8),
+        _ => Err(ApplicationError::InvalidInput),
+    }
+}
+
+/// Interpret one already-bounded TOTP period line as a time step in seconds.
+///
+/// The line must be one canonical unsigned decimal in `1..=3600`: no sign, no
+/// leading zero, and not zero itself, so a single stored period always has
+/// exactly one accepted spelling.
+fn parse_totp_period_line(line: &str) -> Result<u32, ApplicationError> {
+    if line.starts_with('0') || !line.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let period = line
+        .parse::<u32>()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    (period != 0 && period <= MAX_TOTP_PERIOD_SECONDS)
+        .then_some(period)
+        .ok_or(ApplicationError::InvalidInput)
+}
+
+/// Decode one already-bounded TOTP seed line from canonical unpadded Base32.
+///
+/// Base32 packs five bits per character, so eight characters carry five bytes:
+///
+/// ```text
+///   characters  J  B  S  W  Y  3  D  P
+///   5-bit       01001 00001 11001 10110 11000 11011 00011 01111
+///   8-bit       01001000 01110011 01101100 01101000 11011001 111
+///   bytes       'H'      's'      'l'      'h'      0xd9     ^^^ 3 unused bits
+/// ```
+///
+/// The three bits left over at the end must be zero: a nonzero remainder means
+/// the line could not have been produced by encoding any byte string, so it is
+/// not a spelling of a seed at all. Re-encoding the decoded bytes and requiring
+/// the exact typed line back enforces the same one-spelling-per-seed rule the
+/// rest of this module applies to ports, expiries, and engines — it rejects
+/// lowercase, `=` padding, and impossible lengths in one comparison.
+///
+/// The output accumulates into a wipe-on-drop buffer sized so that it never
+/// reallocates: `n` Base32 characters decode to exactly `n * 5 / 8` bytes, so a
+/// rejected line can leave no intact copy of a partially decoded seed behind in
+/// a stale allocation. The five-bit bit accumulator is wiped on every exit for
+/// the same reason.
+fn decode_totp_secret_line(line: &str) -> Result<Zeroizing<Vec<u8>>, ApplicationError> {
+    if line.is_empty() || line.len() > MAX_TOTP_SECRET_BASE32_CHARS {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let mut output = Zeroizing::new(Vec::with_capacity(line.len() * 5 / 8));
+    let mut buffer = 0_u16;
+    let mut bits = 0_u8;
+    for byte in line.bytes() {
+        let digit = match byte {
+            b'A'..=b'Z' => byte - b'A',
+            b'2'..=b'7' => byte - b'2' + 26,
+            _ => {
+                buffer.zeroize();
+                bits.zeroize();
+                return Err(ApplicationError::InvalidInput);
+            }
+        };
+        buffer = (buffer << 5) | u16::from(digit);
+        bits += 5;
+        if bits >= 8 {
+            bits -= 8;
+            output.push((buffer >> bits) as u8);
+            buffer &= (1_u16 << bits) - 1;
+        }
+    }
+    let rejected = output.is_empty()
+        || (bits != 0 && buffer != 0)
+        || encode_totp_secret_base32(&output).as_str() != line;
+    buffer.zeroize();
+    bits.zeroize();
+    if rejected {
+        return Err(ApplicationError::InvalidInput);
+    }
+    Ok(output)
+}
+
+/// Re-encode decoded seed bytes as canonical unpadded RFC 4648 Base32.
+///
+/// This exists only to decide canonicality inside
+/// [`decode_totp_secret_line`], so its result is a wipe-on-drop buffer that
+/// never leaves the comparison.
+fn encode_totp_secret_base32(value: &[u8]) -> Zeroizing<String> {
+    const ALPHABET: &[u8; 32] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let mut output = Zeroizing::new(String::with_capacity((value.len() * 8).div_ceil(5)));
+    let mut buffer = 0_u16;
+    let mut bits = 0_u8;
+    for byte in value {
+        buffer = (buffer << 8) | u16::from(*byte);
+        bits += 8;
+        while bits >= 5 {
+            bits -= 5;
+            output.push(ALPHABET[((buffer >> bits) & 0x1f) as usize] as char);
+            buffer &= (1_u16 << bits) - 1;
+        }
+    }
+    if bits != 0 {
+        output.push(ALPHABET[((buffer << (5 - bits)) & 0x1f) as usize] as char);
+    }
+    buffer.zeroize();
+    bits.zeroize();
+    output
+}
+
+fn replacement_totp_document(
+    current: &ItemDocument,
+    input: TotpConflictMergeInputV1,
+    updated_at_ms: u64,
+) -> Result<ItemDocument, ApplicationError> {
+    let AnyRecord::TotpSeed(_) = current.payload() else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    validate_totp_algorithm(&input.algorithm)?;
+    let digits = parse_totp_digits_line(&input.digits)?;
+    let period = parse_totp_period_line(&input.period)?;
+    // Decoded last so that on the success path the owned seed bytes are handed
+    // straight to the zeroizing record with no fallible step in between; on
+    // every rejection path the wipe-on-drop buffer is dropped instead.
+    let secret = decode_totp_secret_line(&input.secret)?;
+    ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        updated_at_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        // Every `TOTP_SEED_V1` field is authored by this form. Unlike the
+        // database credential of VLT-PM37, the schema has no lease or other
+        // issuance-only attribute, so nothing is inherited from the base
+        // candidate and nothing resets to a static default.
+        AnyRecord::TotpSeed(TotpSeed {
+            label: input.label.into_inner(),
+            issuer: input.issuer.map(Zeroizing::into_inner),
+            secret: secret.into_inner(),
+            algorithm: input.algorithm.into_inner(),
+            digits,
+            period,
         }),
         current.attachments().clone(),
     )
@@ -2965,6 +3254,55 @@ impl UnlockedVaultV1 {
         Ok(base)
     }
 
+    /// Validate one exact current live TOTP seed as the opaque metadata base
+    /// for an authored conflict merge, or publish the failed precondition.
+    pub fn prepare_audited_totp_conflict_merge(
+        self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedTotpConflictMergePreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        match self.totp_conflict_merge_precondition(item_id, base_revision) {
+            Ok(base) => Ok(AuditedTotpConflictMergePreparationV1::Ready(Box::new(
+                TotpConflictMergePreparationV1 {
+                    session: self,
+                    item_id,
+                    base,
+                    failure_audit: ConflictMergeFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    },
+                },
+            ))),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemConflictMerge,
+                    Some(item_id),
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| AuditedTotpConflictMergePreparationV1::Failed(Box::new(failure))),
+        }
+    }
+
+    fn totp_conflict_merge_precondition(
+        &self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let base = self.conflict_merge_base_precondition(item_id, base_revision)?;
+        let AnyRecord::TotpSeed(_) = base.payload() else {
+            return Err(ApplicationError::Unsupported);
+        };
+        Ok(base)
+    }
+
     fn conflict_merge_base_precondition(
         &self,
         item_id: ItemId,
@@ -4299,6 +4637,73 @@ mod tests {
                     password: password.to_owned(),
                     lease_id: None,
                     expires_at: None,
+                }),
+                ObservedSet::new(),
+            )
+            .unwrap();
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                [],
+                ItemState::Live(Box::new(document)),
+            )
+            .unwrap();
+            let base = 0xf1u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revisions.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revisions.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revisions.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xf7; 32], [0xf8; 24], [0xf9; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revisions,
+        )
+    }
+
+    fn pending_totp_conflict_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revisions = Vec::new();
+        for (index, (label, secret)) in [
+            ("Keep seed left", b"left-seed-bytes!".to_vec()),
+            ("Keep seed right", b"right-seed-bytes".to_vec()),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let document = ItemDocument::new(
+                item_id,
+                ContentType::new(coding_adventures_vault_records::TOTP_SEED_V1).unwrap(),
+                500,
+                500,
+                LwwRegister::new(true, 500, OperationId::new([0xf0; 32])),
+                ObservedSet::new(),
+                ObservedSet::new(),
+                AnyRecord::TotpSeed(TotpSeed {
+                    label: label.to_owned(),
+                    issuer: Some("Example".to_owned()),
+                    secret,
+                    algorithm: "SHA1".to_owned(),
+                    digits: 6,
+                    period: 30,
                 }),
                 ObservedSet::new(),
             )
@@ -10279,6 +10684,627 @@ mod tests {
             RevisionId::new([0x89; 32]),
             527,
             audited_access_randomness(0x8a),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(result.is_err());
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn authored_totp_secret_and_parameter_lines_are_closed() {
+        for accepted in ["SHA1", "SHA256", "SHA512"] {
+            assert_eq!(validate_totp_algorithm(accepted), Ok(()));
+        }
+        for rejected in [
+            "",         // an algorithm is required
+            "sha1",     // lowercase is not canonical
+            "SHA-1",    // the closed set has no punctuation spelling
+            "SHA1 ",    // untrimmed is not canonical
+            "SHA224",   // not a TOTP construction
+            "MD5",      // not a TOTP construction
+            "SHA1SHA1", // no repetition
+        ] {
+            assert!(
+                matches!(
+                    validate_totp_algorithm(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "algorithm must be rejected"
+            );
+        }
+
+        assert_eq!(parse_totp_digits_line("6"), Ok(6));
+        assert_eq!(parse_totp_digits_line("8"), Ok(8));
+        for rejected in ["", "4", "5", "7", "9", "10", "06", "6 ", "+6", "six"] {
+            assert!(
+                matches!(
+                    parse_totp_digits_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "digit count must be rejected"
+            );
+        }
+
+        assert_eq!(parse_totp_period_line("1"), Ok(1));
+        assert_eq!(parse_totp_period_line("30"), Ok(30));
+        assert_eq!(parse_totp_period_line("3600"), Ok(3_600));
+        for rejected in [
+            "",      // a period is required
+            "0",     // zero is not a time step
+            "030",   // leading zero is not canonical
+            "+30",   // signs are not accepted
+            "-30",   // signs are not accepted
+            "30 ",   // trailing space is not a digit
+            "3601",  // one past the accepted ceiling
+            "0x1e",  // no alternate radix
+            "99999", // far past the ceiling
+        ] {
+            assert!(
+                matches!(
+                    parse_totp_period_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "period line must be rejected"
+            );
+        }
+
+        // Canonical Base32 round trips: each vector is the only spelling of
+        // its bytes, so decoding and re-encoding must return the input.
+        for (encoded, bytes) in [
+            ("AA", [0_u8].as_slice()),
+            ("7A", [0xf8].as_slice()),
+            ("JBSWY3DP", b"Hello".as_slice()),
+            ("JBSWY3DPEHPK3PXP", b"Hello!\xde\xad\xbe\xef".as_slice()),
+        ] {
+            let decoded = decode_totp_secret_line(encoded).unwrap();
+            assert_eq!(decoded.as_slice(), bytes);
+            assert_eq!(encode_totp_secret_base32(&decoded).as_str(), encoded);
+        }
+        for rejected in [
+            "",                                            // a seed is required
+            "A",                                           // five bits decode to no byte
+            "jbswy3dp",                                    // lowercase is not canonical
+            "JBSWY3DP=",                                   // unpadded Base32 only
+            "JBSWY3D0",                                    // `0` is not in the alphabet
+            "JBSWY3D1",                                    // `1` is not in the alphabet
+            "JBSWY3D-",                                    // punctuation is not in the alphabet
+            "JBSWY3DÖ",                                    // ASCII only
+            "AB",                                          // 3 unused trailing bits are nonzero
+            &"A".repeat(MAX_TOTP_SECRET_BASE32_CHARS + 1), // oversized line
+        ] {
+            assert!(
+                matches!(
+                    decode_totp_secret_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "seed line must be rejected: {rejected}"
+            );
+        }
+        // The longest accepted line carries exactly the 160-byte ceiling
+        // VLT-PM29 places on a stored seed.
+        assert_eq!(
+            decode_totp_secret_line(&"A".repeat(MAX_TOTP_SECRET_BASE32_CHARS))
+                .unwrap()
+                .len(),
+            160
+        );
+    }
+
+    #[test]
+    fn audited_authored_totp_merge_records_failure_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x32; 16]);
+        let (publication, revisions) = pending_totp_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(528, audited_access_randomness(0x8b), &local)
+        .unwrap();
+
+        let base_revision = revisions[0];
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_totp_conflict_merge(
+            item_id,
+            base_revision,
+            529,
+            audited_access_randomness(0x8c),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .record_audited_host_failure(&local)
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        // A noncanonical seed line is caught behind the audited boundary, so
+        // the closed failure is already durable when the caller learns of it.
+        session
+            .prepare_audited_totp_conflict_merge(
+                item_id,
+                base_revision,
+                530,
+                audited_access_randomness(0x8d),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                TotpConflictMergeInputV1::new(
+                    Zeroizing::new("Authored seed".to_owned()),
+                    Some(Zeroizing::new("Example".to_owned())),
+                    Zeroizing::new("jbswy3dp".to_owned()),
+                    Zeroizing::new("SHA1".to_owned()),
+                    Zeroizing::new("6".to_owned()),
+                    Zeroizing::new("30".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x8e),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .expect_err("noncanonical TOTP seed must remain a closed failed operation");
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        // An out-of-set algorithm is refused by the same boundary.
+        session
+            .prepare_audited_totp_conflict_merge(
+                item_id,
+                base_revision,
+                531,
+                audited_access_randomness(0x8f),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                TotpConflictMergeInputV1::new(
+                    Zeroizing::new("Authored seed".to_owned()),
+                    Some(Zeroizing::new("Example".to_owned())),
+                    Zeroizing::new("JBSWY3DP".to_owned()),
+                    Zeroizing::new("SHA224".to_owned()),
+                    Zeroizing::new("6".to_owned()),
+                    Zeroizing::new("30".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x90),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .expect_err("unknown TOTP algorithm must remain a closed failed operation");
+        // So are an out-of-set digit count and an out-of-range period.
+        for (digits, period, seed) in [("7", "30", 0x91), ("6", "3601", 0x93)] {
+            let session = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            assert_eq!(session.conflicted_item_count(), 1);
+            session
+                .prepare_audited_totp_conflict_merge(
+                    item_id,
+                    base_revision,
+                    532,
+                    audited_access_randomness(seed),
+                    &local,
+                )
+                .unwrap()
+                .into_preparation()
+                .unwrap()
+                .complete_audited(
+                    TotpConflictMergeInputV1::new(
+                        Zeroizing::new("Authored seed".to_owned()),
+                        None,
+                        Zeroizing::new("JBSWY3DP".to_owned()),
+                        Zeroizing::new("SHA1".to_owned()),
+                        Zeroizing::new(digits.to_owned()),
+                        Zeroizing::new(period.to_owned()),
+                    ),
+                    resolve_item_conflict_randomness(seed + 1),
+                    &local,
+                )
+                .unwrap()
+                .into_operation()
+                .expect_err("out-of-set TOTP parameter must remain a closed failed operation");
+        }
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        let base_document = session.current_catalog.items[&item_id]
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .and_then(|candidate| match candidate.state() {
+                ItemState::Live(document) => Some(document),
+                ItemState::Tombstone(_) => None,
+            })
+            .unwrap();
+        let expected_favorite = base_document.favorite().clone();
+        let expected_collections = base_document.collection_ids().clone();
+        let expected_tags = base_document.tags().clone();
+        let expected_attachments = base_document.attachments().clone();
+
+        session
+            .prepare_audited_totp_conflict_merge(
+                item_id,
+                base_revision,
+                533,
+                audited_access_randomness(0x95),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                TotpConflictMergeInputV1::new(
+                    Zeroizing::new("Authored seed".to_owned()),
+                    Some(Zeroizing::new("Merged issuer".to_owned())),
+                    Zeroizing::new("JBSWY3DPEHPK3PXP".to_owned()),
+                    Zeroizing::new("SHA256".to_owned()),
+                    Zeroizing::new("8".to_owned()),
+                    Zeroizing::new("60".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x96),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored TOTP merge must be the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions.iter().copied().collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored TOTP merge must publish a live document")
+        };
+        assert_eq!(document.created_at_ms(), 500);
+        assert_eq!(document.updated_at_ms(), 533);
+        assert_eq!(document.favorite(), &expected_favorite);
+        assert_eq!(document.collection_ids(), &expected_collections);
+        assert_eq!(document.tags(), &expected_tags);
+        assert_eq!(document.attachments(), &expected_attachments);
+        let AnyRecord::TotpSeed(seed) = document.payload() else {
+            panic!("authored TOTP merge must retain its schema")
+        };
+        assert_eq!(seed.label, "Authored seed");
+        assert_eq!(seed.issuer.as_deref(), Some("Merged issuer"));
+        assert_eq!(seed.secret, b"Hello!\xde\xad\xbe\xef");
+        assert_eq!(seed.algorithm, "SHA256");
+        assert_eq!(seed.digits, 8);
+        assert_eq!(seed.period, 60);
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_totp_merge_accepts_an_absent_issuer() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x33; 16]);
+        let (publication, revisions) = pending_totp_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(534, audited_access_randomness(0x97), &local)
+        .unwrap();
+
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_totp_conflict_merge(
+            item_id,
+            revisions[1],
+            535,
+            audited_access_randomness(0x98),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .complete_audited(
+            TotpConflictMergeInputV1::new(
+                Zeroizing::new("Authored seed".to_owned()),
+                None,
+                Zeroizing::new("JBSWY3DP".to_owned()),
+                Zeroizing::new("SHA1".to_owned()),
+                Zeroizing::new("6".to_owned()),
+                Zeroizing::new("30".to_owned()),
+            ),
+            resolve_item_conflict_randomness(0x99),
+            &local,
+        )
+        .unwrap()
+        .into_operation()
+        .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored TOTP merge must be the sole current candidate")
+        };
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored TOTP merge must publish a live document")
+        };
+        let AnyRecord::TotpSeed(seed) = document.payload() else {
+            panic!("authored TOTP merge must retain its schema")
+        };
+        // An absent issuer stays absent rather than being inherited from the
+        // base candidate, which carried one.
+        assert_eq!(seed.issuer, None);
+        assert_eq!(seed.secret, b"Hello");
+    }
+
+    #[test]
+    fn audited_authored_totp_merge_rejects_a_database_credential_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x34; 16]);
+        let (publication, revisions) =
+            pending_database_credential_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(536, audited_access_randomness(0x9a), &local)
+        .unwrap();
+
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_totp_conflict_merge(
+            item_id,
+            revisions[0],
+            537,
+            audited_access_randomness(0x9b),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(result, Err(ApplicationError::Unsupported)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn audited_authored_totp_merge_requires_an_exact_current_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x35; 16]);
+        let (publication, _) = pending_totp_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(538, audited_access_randomness(0x9c), &local)
+        .unwrap();
+
+        // A revision that is not a current candidate of this item is refused,
+        // and the refusal is durable before the caller ever sees it.
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_totp_conflict_merge(
+            item_id,
+            RevisionId::new([0x9d; 32]),
+            539,
+            audited_access_randomness(0x9e),
             &local,
         )
         .unwrap()

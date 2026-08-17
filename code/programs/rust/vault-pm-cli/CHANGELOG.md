@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited authored TOTP conflict merge with a hidden Base32 seed
+  prompt, opaque base retention, closed seed/algorithm/digit/period validation,
+  and all-current-parent publication.
 - Exposed audited authored database-credential conflict merge with a hidden
   password prompt, opaque base retention, closed engine/port validation, and
   all-current-parent publication of a static (leaseless) credential.

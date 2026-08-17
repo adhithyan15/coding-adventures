@@ -2,6 +2,26 @@
 
 All notable changes to this package are documented here.
 
+## [0.60.0] - 2026-08-17
+
+### Added
+
+- Add an opaque audited authored TOTP conflict merge preparation with a
+  complete wipe-on-drop replacement form, exact-current TOTP base, and
+  application-owned closed seed, algorithm, digit, and period validation. The
+  Base32 seed line is decoded behind the audited boundary and accepted only in
+  its canonical unpadded spelling. `TOTP_SEED_V1` has no issuance-only field,
+  so every schema field is authored and nothing is inherited from the base
+  candidate.
+
+### Security
+
+- Keep the seed line, decoded seed bytes, and prior candidate documents inside
+  application ownership, decode into a wipe-on-drop buffer that cannot
+  reallocate and wipe the partial bit accumulator on every exit, publish host
+  and closed form-validation failures before returning them, and publish
+  success atomically with the all-current-parent revision.
+
 ## [0.59.0] - 2026-08-17
 
 ### Added

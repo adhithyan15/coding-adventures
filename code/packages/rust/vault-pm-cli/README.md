@@ -240,6 +240,15 @@ credential with no lease. The base and every former candidate value remain
 opaque, success names all current candidates as parents, and ordinary output
 contains only the merged item selector.
 
+`conflict merge totp ITEM BASE_REVISION` extends that ceremony to a complete
+TOTP form. The seed uses a hidden prompt, and the Base32 line and every
+parameter are forwarded verbatim so their closed shape is decoded and validated
+inside the application-owned preparation and invalid forms are audited before
+their closed error. Every `TOTP_SEED_V1` field is authored, so nothing carries
+over from the base candidate. The base and every former candidate value remain
+opaque, success names all current candidates as parents, and ordinary output
+contains only the merged item selector.
+
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
 schema-specific selectors. It reserves time and audit entropy before
 unlock, then requires exact `yes` through a fixed controlling-terminal prompt.
