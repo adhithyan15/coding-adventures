@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.10] - 2026-08-17 (task #97 — table.init/table.copy/elem.drop)
+
+### Added
+
+- `table.init` (`0xFC 0x0C`), `elem.drop` (`0xFC 0x0D`), `table.copy`
+  (`0xFC 0x0E`) interpreter handlers -- entirely unimplemented before
+  this pass, mirroring `memory.init`/`data.drop`'s own shape (task
+  #95): `WasmExecutionContext.elements: Vec<Vec<Option<u32>>>` and
+  `dropped_elements: Vec<bool>` fields threaded through
+  `WasmExecutionEngine` (`set_elements`/`set_dropped_elements`,
+  `into_state()`, context construction), a real `elem_idx` bounds check
+  as a hard error (not deferred to a runtime trap) matching every
+  other indexed immediate, and a soft "already dropped -> treat as
+  empty" degrade for `table.init` matching `memory.init`'s own.
+- `DecodedOperand::BulkMemory` gained a third field, `aux: u8`, packed
+  into the same `usize` operand alongside `sub`/`data_idx` (bits 40-47
+  -- 24 bits were free) to carry the SECOND index `table.init`/
+  `table.copy` need (elemidx+tableidx, or dst_table+src_table).
+- `Table::copy_between(dst_table: &mut Table, src_table: &Table, ...)`
+  -- a free function (not a `&mut self` method) taking two SEPARATE
+  references so a same-table self-copy still works, via two
+  independently-obtained raw pointers from `ctx.tables`. Reads the
+  source range into an owned `Vec` before any write (overlap-safe,
+  same atomicity discipline as `LinearMemory::copy`), bounds-checks
+  BOTH tables before any write.
+
+### Fixed
+
+- **Real, load-bearing bug caught by `wasm-runtime`'s own persistence
+  test, not this crate's unit tests**: the shared `call_function`/
+  `call_function_with_v128` post-call state-restore block wrote
+  `self.dropped_data_segments = ctx.dropped_data_segments.clone()`
+  (task #95) but had no equivalent line for `dropped_elements` -- an
+  `elem.drop` from one call never stuck for a LATER, separate call on
+  the same engine (it silently reverted to all-`false` the moment the
+  call returned). This crate's own single-call tests couldn't catch it
+  (they only ever call `call_function` once); `wasm-runtime`'s
+  `elem_drop_persists_across_separate_calls_on_the_same_instance` test
+  (mirroring task #95's own `data_drop_persists_across_separate_calls_
+  on_the_same_instance`) failed immediately until this line was added,
+  confirming the fix was load-bearing.
+
 ## [0.9.9] - 2026-08-17 (task #101 — memory.grow cross-memory aggregate cap)
 
 ### Security

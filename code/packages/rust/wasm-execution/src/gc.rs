@@ -292,6 +292,8 @@ mod tests {
             pending_tail_call: None,
             data_segments: Vec::new(),
             dropped_data_segments: Vec::new(),
+            elements: Vec::new(),
+            dropped_elements: Vec::new(),
         }
     }
 

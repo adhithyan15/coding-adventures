@@ -168,6 +168,10 @@ struct ModuleCtx {
     /// `memory.init`/`data.drop` reference a data segment by this same
     /// name/index space, mirroring every other `*_names` map here.
     data_names: HashMap<String, u32>,
+    /// An element segment's own `$id` -> its index in `module.elements`
+    /// (task #97). `table.init`/`elem.drop` reference an element segment
+    /// by this same name/index space, mirroring `data_names` above.
+    elem_names: HashMap<String, u32>,
 }
 
 fn resolve_idx(map: &HashMap<String, u32>, expr: &SExpr, space: &'static str) -> Result<u32, WastParseError> {
@@ -391,6 +395,11 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
     // same index `build_data`'s later `ctx.module.data.push(...)` will
     // assign, since both loops walk `fields` in the same order.
     let mut data_i = 0u32;
+    // Element segments (task #97) have the same "no import counterpart,
+    // index space is just textual declaration order" shape as data
+    // segments above -- this counter tracks the same index `build_elem`'s
+    // later `ctx.module.elements.push(...)` will assign.
+    let mut elem_i = 0u32;
     for f in fields {
         if f.is_keyword_list("func") {
             let items = f.as_list().unwrap();
@@ -445,6 +454,18 @@ fn collect_symbols(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastPar
                 }
             }
             data_i += 1;
+        } else if f.is_keyword_list("elem") {
+            // No placeholder pushed here (same reasoning as the "data"
+            // branch above): `build_elem` (pass 2) is the only thing
+            // that appends to `ctx.module.elements`, so this just
+            // registers `$id -> elem_i` ahead of time.
+            let items = f.as_list().unwrap();
+            if let Some(name) = items.get(1).and_then(|e| e.as_atom()) {
+                if name.starts_with('$') {
+                    insert_unique(&mut ctx.elem_names, name, elem_i, f.pos(), "elem")?;
+                }
+            }
+            elem_i += 1;
         }
     }
 
@@ -1071,9 +1092,9 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
             expected: "an (elem ...) form",
         });
     }
-    let function_indices: Vec<u32> = elem_items[1..]
+    let function_indices: Vec<Option<u32>> = elem_items[1..]
         .iter()
-        .map(|f| resolve_idx(&ctx.func_names, f, "func"))
+        .map(|f| resolve_idx(&ctx.func_names, f, "func").map(Some))
         .collect::<Result<_, _>>()?;
     let count = function_indices.len() as u32;
     ctx.module.tables[storage_idx as usize].limits = Limits { min: count, max: Some(count) };
@@ -1081,51 +1102,120 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         table_index: table_idx,
         offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
         function_indices,
+        is_passive: false,
     });
     Ok(())
 }
 
 fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let mut i = 0;
-    let table_index = if fields.first().is_some_and(|e| e.is_keyword_list("table")) {
-        let table_form = fields[0].as_list().unwrap();
+    // Optional leading `$id` (task #97): already registered into
+    // `ctx.elem_names` by `collect_symbols`'s pass-1 pre-pass (mirrors
+    // `data_names`'s own task #95 pattern), so this is a skip only.
+    if fields.first().and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) {
+        i += 1;
+    }
+    let has_table_clause = fields.get(i).is_some_and(|e| e.is_keyword_list("table"));
+    let table_index = if has_table_clause {
+        let table_form = fields[i].as_list().unwrap();
         let idx = resolve_idx(&ctx.table_names, expect_get(table_form, 1)?, "table")?;
         i += 1;
         idx
     } else {
         0
     };
-    let offset_expr_form = expect_get(fields, i)?;
-    let offset_expr = if offset_expr_form.is_keyword_list("offset") {
-        let items = offset_expr_form.as_list().unwrap();
-        let mut code = Vec::new();
-        encode_instr_list(&items[1..], &mut InstrCtx::empty(ctx), &mut code)?;
-        code.push(0x0B);
-        i += 1;
-        code
+    // Passive segment (bulk-table proposal, task #97): no `(table ...)`
+    // clause AND the next field is the `func` keyword or a reftype
+    // keyword (`funcref`/`externref`) rather than an offset expression --
+    // same "check the shape of the next field" style `build_data`'s own
+    // `is_passive` detection uses (task #95). A `(table ...)` clause
+    // alone already proves this segment is active (a passive segment has
+    // no target table to name at declaration time -- `table.init`
+    // supplies one per-call instead).
+    let is_passive = !has_table_clause
+        && fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "func" || s == "funcref" || s == "externref");
+    let offset_expr = if is_passive {
+        Vec::new()
     } else {
-        // Shorthand: a single folded instruction with no `(offset ...)` wrapper.
-        let mut code = Vec::new();
-        encode_instr_list(std::slice::from_ref(offset_expr_form), &mut InstrCtx::empty(ctx), &mut code)?;
-        code.push(0x0B);
+        let offset_expr_form = expect_get(fields, i)?;
+        let offset_expr = if offset_expr_form.is_keyword_list("offset") {
+            let items = offset_expr_form.as_list().unwrap();
+            let mut code = Vec::new();
+            encode_instr_list(&items[1..], &mut InstrCtx::empty(ctx), &mut code)?;
+            code.push(0x0B);
+            code
+        } else {
+            // Shorthand: a single folded instruction with no `(offset ...)` wrapper.
+            let mut code = Vec::new();
+            encode_instr_list(std::slice::from_ref(offset_expr_form), &mut InstrCtx::empty(ctx), &mut code)?;
+            code.push(0x0B);
+            code
+        };
         i += 1;
-        code
+        offset_expr
     };
-    // Reference-types proposal (task #96): an ACTIVE elem segment's
-    // function-index list may be preceded by a bare `func` keyword atom
-    // -- `(elem (table $t3) (i32.const 1) func $dummy)` -- a marker that
-    // doesn't affect encoding (this repo only supports funcref elem
-    // segments; there's no other kind to disambiguate FROM here), so it's
-    // simply skipped rather than resolved as an index.
-    if fields.get(i).is_some_and(|f| matches!(f, SExpr::Atom(s, _) if s == "func")) {
+    // Reftype-vs-funcidx-list disambiguation (task #97): a leading
+    // `funcref`/`externref` keyword means every following entry is a
+    // real encoded expression (`(ref.func N)`/`(ref.null T)`, binary
+    // exprs-list mode 5 -- this repo only ever produces `funcref`,
+    // matching `parse_element_section`'s own scoped decode). Otherwise,
+    // an OPTIONAL leading bare `func` keyword atom (task #96's own
+    // established skip, now shared by both active and passive
+    // funcidx-list segments) is simply skipped -- it doesn't affect
+    // encoding, this repo only supports funcref elem segments either way.
+    let use_exprs = if fields.get(i).and_then(|e| e.as_atom()).is_some_and(|s| s == "funcref" || s == "externref") {
         i += 1;
-    }
+        true
+    } else {
+        if fields.get(i).is_some_and(|f| matches!(f, SExpr::Atom(s, _) if s == "func")) {
+            i += 1;
+        }
+        false
+    };
     let mut function_indices = Vec::new();
     for f in fields.get(i..).unwrap_or(&[]) {
-        function_indices.push(resolve_idx(&ctx.func_names, f, "func")?);
+        if use_exprs {
+            function_indices.push(resolve_elem_expr_entry(f, ctx)?);
+        } else {
+            function_indices.push(Some(resolve_idx(&ctx.func_names, f, "func")?));
+        }
     }
-    ctx.module.elements.push(Element { table_index, offset_expr, function_indices });
+    ctx.module.elements.push(Element { table_index, offset_expr, function_indices, is_passive });
     Ok(())
+}
+
+/// Resolve one exprs-list element-segment entry -- `(ref.func $name_or_
+/// idx)` (→ `Some(idx)`) or `(ref.null func)`/`(ref.null extern)` (→
+/// `None`, a real null table slot) -- the same two shapes `parse_
+/// element_section`'s own `read_elem_expr_entry` decodes from binary
+/// (task #97). Any other expression is a clean parse error, matching
+/// this crate's scoped-modes discipline.
+fn resolve_elem_expr_entry(expr: &SExpr, ctx: &ModuleCtx) -> Result<Option<u32>, WastParseError> {
+    let items = expr.as_list().ok_or_else(|| WastParseError::UnexpectedToken {
+        pos: expr.pos(),
+        found: "atom".to_string(),
+        expected: "(ref.func ...) or (ref.null ...)",
+    })?;
+    match expect_get(items, 0)?.as_atom() {
+        Some("ref.func") => {
+            let idx = resolve_idx(&ctx.func_names, expect_get(items, 1)?, "func")?;
+            Ok(Some(idx))
+        }
+        Some("ref.null") => {
+            // Heap type is validated for shape but otherwise unused --
+            // this repo's `WasmValue::Ref(None)` representation doesn't
+            // distinguish a null funcref from a null externref (see its
+            // own doc comment), so the specific keyword doesn't change
+            // anything downstream.
+            let _ = parse_ref_null_heap_type(expect_get(items, 1)?)?;
+            Ok(None)
+        }
+        _ => Err(WastParseError::UnexpectedToken {
+            pos: expr.pos(),
+            found: "list".to_string(),
+            expected: "(ref.func ...) or (ref.null ...)",
+        }),
+    }
 }
 
 fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
@@ -1462,6 +1552,39 @@ fn encode_stream_instr(
         out.push(0x11);
         out.extend(wasm_leb128::encode_unsigned(0));
         return Ok(0);
+    }
+    // `table.init` / `table.copy` / `elem.drop` (bulk-table proposal,
+    // task #97): same "no vendored corpus file exercises this flat/
+    // stream form" deferral as `table.grow`/`table.size`/`table.fill`
+    // above -- `table_init.wast`/`table_copy.wast` only ever use folded
+    // syntax (confirmed by direct census, `code/specs/
+    // W17-wasm-bulk-table-ops.md`). `table.init` still needs a real
+    // elem-segment index (unlike table/memory indices, WHICH segment to
+    // read from can't be hardcoded), so this consumes ONE following
+    // token even in this deferred form; `table.copy` needs no immediate
+    // token at all (both table operands are 0); `elem.drop` needs a real
+    // elem-segment index, same shape as `data.drop`.
+    if name == "table.init" {
+        let idx = resolve_idx(&icx.module.elem_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "elem")?;
+        out.push(0xFC);
+        out.push(0x0C);
+        out.extend(wasm_leb128::encode_unsigned(idx as u64));
+        out.push(0x00); // table index
+        return Ok(1);
+    }
+    if name == "table.copy" {
+        out.push(0xFC);
+        out.push(0x0E);
+        out.push(0x00); // destination table index
+        out.push(0x00); // source table index
+        return Ok(0);
+    }
+    if name == "elem.drop" {
+        let idx = resolve_idx(&icx.module.elem_names, following.first().ok_or(WastParseError::UnexpectedEof)?, "elem")?;
+        out.push(0xFC);
+        out.push(0x0D);
+        out.extend(wasm_leb128::encode_unsigned(idx as u64));
+        return Ok(1);
     }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
     // WASM17): neither is registered in `wasm_opcodes::OPCODES` (see
@@ -1818,6 +1941,61 @@ fn encode_table_fill_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>)
     Ok(())
 }
 
+/// `table.init $t $e (dest)(src)(len)` (task #97) — folded form. Kept as
+/// its own `#[inline(never)]` function for the same stack-frame-bloat
+/// reason `encode_table_grow_flat`'s own doc comment explains (task
+/// #98). LEADING immediates, matching `"call" | "return_call"`'s own
+/// folded shape -- unlike `table.grow`/`table.size`/`table.fill`'s
+/// single OPTIONAL table index, `table.init` always takes TWO required
+/// leading tokens: the target table (`$t`) THEN the source elem segment
+/// (`$e`), in that TEXT order -- but the real BINARY encoding is
+/// `elemidx` FIRST, `tableidx` SECOND (`0xFC 0x0C <elemidx> <tableidx>`,
+/// same "segment index, then target index" convention `memory.init`'s
+/// own `0xFC 0x08 <dataidx> <memidx>` already establishes), so the two
+/// resolved indices are written in the OPPOSITE order from how they're
+/// read here.
+#[inline(never)]
+fn encode_table_init_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
+    let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 1)?, "elem")?;
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFC);
+    out.push(0x0C);
+    out.extend(wasm_leb128::encode_unsigned(elem_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(table_idx as u64));
+    Ok(())
+}
+
+/// `table.copy $dst $src (dest)(src)(len)` (task #97) — folded form. See
+/// [`encode_table_init_flat`]'s doc comment for why this is its own
+/// function. Unlike `table.init`, the TEXT and BINARY operand orders
+/// match (`0xFC 0x0E <dst_tableidx> <src_tableidx>`, destination first
+/// both times) -- no reordering needed.
+#[inline(never)]
+fn encode_table_copy_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let dst_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 0)?, "table")?;
+    let src_table_idx = resolve_idx(&icx.module.table_names, expect_get(args, 1)?, "table")?;
+    encode_instr_list(&args[2..], icx, out)?;
+    out.push(0xFC);
+    out.push(0x0E);
+    out.extend(wasm_leb128::encode_unsigned(dst_table_idx as u64));
+    out.extend(wasm_leb128::encode_unsigned(src_table_idx as u64));
+    Ok(())
+}
+
+/// `elem.drop $e` (task #97) — folded form. See
+/// [`encode_table_init_flat`]'s doc comment for why this is its own
+/// function. No stack operands at all, same shape `data.drop`'s own
+/// folded arm uses (task #95).
+#[inline(never)]
+fn encode_elem_drop_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let elem_idx = resolve_idx(&icx.module.elem_names, expect_get(args, 0)?, "elem")?;
+    out.push(0xFC);
+    out.push(0x0D);
+    out.extend(wasm_leb128::encode_unsigned(elem_idx as u64));
+    Ok(())
+}
+
 /// Encode a **folded** instruction (`(name args...)`) — `args` mixes zero
 /// or more operand sub-expressions (encoded first, recursively) with this
 /// instruction's own trailing immediate atoms, per instruction kind. See
@@ -1907,6 +2085,22 @@ fn encode_flat_instr(
     }
     if name == "table.fill" {
         return encode_table_fill_flat(args, icx, out);
+    }
+    // `table.init` / `table.copy` / `elem.drop` (bulk-table proposal,
+    // task #97): same `#[inline(never)]`-factored-out shape as `table.
+    // grow`/`table.size`/`table.fill` above, for the identical stack-
+    // frame-bloat reason -- `table_init.wast`/`table_copy.wast` (unlike
+    // `table_grow.wast`) exclusively use FOLDED syntax for these three,
+    // confirmed by direct census (`code/specs/W17-wasm-bulk-table-ops.
+    // md`), so this is where the real work happens.
+    if name == "table.init" {
+        return encode_table_init_flat(args, icx, out);
+    }
+    if name == "table.copy" {
+        return encode_table_copy_flat(args, icx, out);
+    }
+    if name == "elem.drop" {
+        return encode_elem_drop_flat(args, icx, out);
     }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
     // WASM17): see the matching comment in `encode_stream_instr` -- neither
@@ -2877,6 +3071,93 @@ mod tests {
         assert_eq!(code_of(&folded_drop, 0), &[0xFC, 0x09, 0x00, 0x0B]);
     }
 
+    /// Task #97: an ACTIVE element segment with an explicit table and a
+    /// `func`-keyword-prefixed funcidx-list -- the exact shape `table_
+    /// init.wast`/`table_copy.wast` use throughout (`(elem (table $t0)
+    /// (i32.const 2) func 3 1 4 1)`).
+    #[test]
+    fn active_element_segment_explicit_table_funcidx_list() {
+        let m = parse_module(
+            r#"(module
+                 (func) (func) (func) (func) (func)
+                 (table $t0 30 30 funcref)
+                 (elem (table $t0) (i32.const 2) func 3 1 4 1))"#,
+        )
+        .unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(!m.elements[0].is_passive);
+        assert_eq!(m.elements[0].table_index, 0);
+        assert_eq!(m.elements[0].function_indices, vec![Some(3), Some(1), Some(4), Some(1)]);
+    }
+
+    /// Task #97: a PASSIVE element segment using the exprs-list form,
+    /// mixing real `ref.func` entries with a `ref.null` entry -- the
+    /// `ref.null` case is the whole reason `Element.function_indices`
+    /// widened to `Vec<Option<u32>>`.
+    #[test]
+    fn passive_element_segment_exprs_list_with_ref_func_and_ref_null() {
+        let m = parse_module(
+            r#"(module
+                 (func) (func) (func)
+                 (elem funcref (ref.func 0) (ref.null func) (ref.func 2)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.elements.len(), 1);
+        assert!(m.elements[0].is_passive);
+        assert!(m.elements[0].offset_expr.is_empty());
+        assert_eq!(m.elements[0].function_indices, vec![Some(0), None, Some(2)]);
+    }
+
+    /// Task #97: `table.init`/`table.copy`/`elem.drop`'s folded-form
+    /// encoding, using the exact real syntax `table_init.wast`/
+    /// `table_copy.wast` use throughout -- `(table.init $t 0 (dest)(src)
+    /// (len))`, `(table.copy $dst $src (dest)(src)(len))`, `(elem.drop
+    /// 0)`. `table.init`'s binary operand order is elemidx-THEN-tableidx
+    /// (opposite of its own text order); `table.copy`'s binary order
+    /// matches its text order (dst-then-src both times).
+    #[test]
+    fn table_init_copy_elem_drop_folded_form_encode_correctly() {
+        let init = parse_module(
+            r#"(module
+                 (func) (table $t 30 30 funcref) (elem $e (table $t) (i32.const 0) func 0)
+                 (func (table.init $t $e (i32.const 1) (i32.const 0) (i32.const 4))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&init, 1),
+            &[
+                0x41, 0x01, // i32.const 1 (dest)
+                0x41, 0x00, // i32.const 0 (src)
+                0x41, 0x04, // i32.const 4 (len)
+                0xFC, 0x0C, 0x00, 0x00, // table.init elemidx=0 tableidx=0
+                0x0B,
+            ]
+        );
+
+        let copy = parse_module(
+            r#"(module
+                 (table $t0 30 30 funcref) (table $t1 30 30 funcref)
+                 (func (table.copy $t1 $t0 (i32.const 20) (i32.const 15) (i32.const 5))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&copy, 0),
+            &[
+                0x41, 20, // i32.const 20 (dest)
+                0x41, 15, // i32.const 15 (src)
+                0x41, 5, // i32.const 5 (len)
+                0xFC, 0x0E, 0x01, 0x00, // table.copy dst=1 src=0
+                0x0B,
+            ]
+        );
+
+        let drop = parse_module(
+            r#"(module (func) (elem $e (i32.const 0) func 0) (func (elem.drop $e)))"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&drop, 1), &[0xFC, 0x0D, 0x00, 0x0B]);
+    }
+
     /// Task #98: `table.size`'s folded form resolves a REAL leading `$t`
     /// table index (defaulting to 0 when omitted), same disambiguation
     /// `table.get`/`table.set` already use.
@@ -3327,7 +3608,7 @@ mod tests {
         assert_eq!(m.tables[0].limits, Limits { min: 2, max: Some(2) });
         assert_eq!(m.elements.len(), 1);
         assert_eq!(m.elements[0].table_index, 0);
-        assert_eq!(m.elements[0].function_indices, vec![0, 1]);
+        assert_eq!(m.elements[0].function_indices, vec![Some(0), Some(1)]);
         assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
     }
 

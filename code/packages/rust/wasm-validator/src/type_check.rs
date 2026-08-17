@@ -705,6 +705,61 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), elem_type)?; // value
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
                     }
+                    0x0C => {
+                        // `table.init` (task #97): pops `[dest, src, len]`
+                        // (all i32), no push. Binary immediate order is
+                        // `elemidx` THEN `tableidx` (opposite of the text
+                        // form's `$table $elem` order -- confirmed against
+                        // the real testsuite encoding). Both indices are
+                        // hard validation errors on out-of-bounds, same
+                        // discipline as `memory.init`'s data_idx check
+                        // above (task #95).
+                        let (elem_idx, elem_size) = decode_idx(code, offset)?;
+                        let (table_idx, table_size) = decode_idx(code, offset + elem_size)?;
+                        offset += elem_size + table_size;
+                        if elem_idx as usize >= ctx.module.elements.len() {
+                            err!("table.init references out-of-bounds element segment index {elem_idx}");
+                        }
+                        if table_idx >= ctx.table_count {
+                            err!("table.init references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                    }
+                    0x0D => {
+                        // `elem.drop` (task #97): no stack operands, no
+                        // table requirement at all (a module with zero
+                        // tables can still declare and drop a passive elem
+                        // segment it never `table.init`s from) -- mirrors
+                        // `data.drop` above exactly.
+                        let (elem_idx, size) = decode_idx(code, offset)?;
+                        offset += size;
+                        if elem_idx as usize >= ctx.module.elements.len() {
+                            err!("elem.drop references out-of-bounds element segment index {elem_idx}");
+                        }
+                    }
+                    0x0E => {
+                        // `table.copy` (task #97): pops `[dest, src, len]`
+                        // (all i32), no push. Text and binary immediate
+                        // orders MATCH here (dst-then-src both times,
+                        // unlike table.init above). Both table indices are
+                        // bounds-checked independently -- a self-copy
+                        // (dst == src) is valid and checked at runtime, not
+                        // rejected here.
+                        let (dst_table_idx, dst_size) = decode_idx(code, offset)?;
+                        let (src_table_idx, src_size) = decode_idx(code, offset + dst_size)?;
+                        offset += dst_size + src_size;
+                        if dst_table_idx >= ctx.table_count {
+                            err!("table.copy references destination table index {dst_table_idx}, but only {} tables exist", ctx.table_count);
+                        }
+                        if src_table_idx >= ctx.table_count {
+                            err!("table.copy references source table index {src_table_idx}, but only {} tables exist", ctx.table_count);
+                        }
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // destination
+                    }
                     other => err!("unsupported 0xFC sub-opcode {other:#x}"),
                 }
             }

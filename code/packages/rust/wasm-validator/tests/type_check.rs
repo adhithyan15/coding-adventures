@@ -368,6 +368,65 @@ fn invalid_table_size_without_a_declared_table() {
     assert_invalid(r#"(module (func (result i32) (table.size)))"#);
 }
 
+// ── task #97: table.init / table.copy / elem.drop ────────────────────────
+
+#[test]
+fn valid_table_init_copy_and_elem_drop() {
+    assert_valid(
+        r#"(module
+             (func $callee)
+             (table $t0 4 funcref)
+             (table $t1 4 funcref)
+             (elem $e func $callee $callee)
+             (func
+               (table.init $t0 $e (i32.const 0) (i32.const 0) (i32.const 2))
+               (elem.drop $e)
+               (table.copy $t1 $t0 (i32.const 0) (i32.const 0) (i32.const 2))))"#,
+    );
+}
+
+#[test]
+fn valid_elem_drop_with_zero_tables_declared() {
+    // elem.drop has no table requirement at all, mirroring data.drop's own
+    // "no memory requirement" reasoning -- a module with zero tables can
+    // still declare and drop a passive elem segment it never table.inits.
+    assert_valid(r#"(module (func $callee) (elem $e func $callee) (func (elem.drop $e)))"#);
+}
+
+#[test]
+fn invalid_table_init_references_an_out_of_bounds_elem_segment_index() {
+    // No `elem` section at all declared, so elem index 0 in the raw
+    // encoding below is out of bounds -- a hard validation error, not
+    // deferred to a runtime trap, mirroring memory.init's data_idx check.
+    let mut module = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 0, 0x41, 0, 0xFC, 0x0C, 0, 0, 0x0B],
+    );
+    module.tables.push(wasm_types::TableType { element_type: 0x70, limits: wasm_types::Limits { min: 4, max: None } });
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "table.init with an out-of-bounds elem segment index must be rejected");
+}
+
+#[test]
+fn invalid_table_copy_references_an_out_of_bounds_table_index() {
+    // Only one table declared (index 0); the encoded body targets a
+    // nonexistent destination table index 1.
+    let mut module = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 0, 0x41, 0, 0xFC, 0x0E, 1, 0, 0x0B],
+    );
+    module.tables.push(wasm_types::TableType { element_type: 0x70, limits: wasm_types::Limits { min: 4, max: None } });
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "table.copy with an out-of-bounds destination table index must be rejected");
+}
+
+#[test]
+fn invalid_elem_drop_references_an_out_of_bounds_elem_segment_index() {
+    let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0xFC, 0x0D, 0, 0x0B]);
+    let result = wasm_validator::validate(&module);
+    assert!(result.is_err(), "elem.drop with an out-of-bounds elem segment index must be rejected");
+}
+
 // ── WASM18: atomic load/store/RMW/cmpxchg/fence, shared memory guard ────
 
 #[test]
