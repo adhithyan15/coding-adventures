@@ -6,13 +6,25 @@
       "id": "GU-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "GU-C01-namaste"
+        "GU-C01-namaste",
+        "GU-W01-ha",
+        "GU-W01-aa-matra",
+        "GU-W01-aa",
+        "GU-W01-na",
+        "GU-W01-ma",
+        "GU-W01-sa",
+        "GU-W01-ta",
+        "GU-W01-e-matra",
+        "GU-W01-virama",
+        "GU-W01-namaste-read"
       ],
       "before": [],
       "inline": [
         "GU-EXT-001-INLINE-SCRIPT"
       ],
-      "after": []
+      "after": [
+        "GU-EXT-016-SCRIPT-FIRST-PIECES"
+      ]
     },
     {
       "id": "GU-PATH-002",
@@ -670,6 +682,26 @@
         "GU-C12-kaan",
         "GU-C12-modhu",
         "GU-C12-naak"
+      ]
+    },
+    {
+      "id": "GU-EXT-016-SCRIPT-FIRST-PIECES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write nine Gujarati pieces from memory — four consonants, two vowel signs, an independent vowel and the virama — and read the words for yes, no and the greeting by assembling them.",
+      "prerequisites": [],
+      "lessons": [
+        "GU-W01-ha",
+        "GU-W01-aa-matra",
+        "GU-W01-aa",
+        "GU-W01-na",
+        "GU-W01-ma",
+        "GU-W01-sa",
+        "GU-W01-ta",
+        "GU-W01-e-matra",
+        "GU-W01-virama",
+        "GU-W01-namaste-read"
       ]
     }
   ]

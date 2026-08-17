@@ -1,5 +1,37 @@
 # Changelog
 
+## [Unreleased]
+
+### Added — Chapter 13, the first nine pieces of the script (HL-C215)
+
+Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles
+the greeting from pieces the reader can already write:
+
+    હ  ા  આ  ન        ->  હા "yes", ના "no"
+    મ  સ  ત  ે  ્     ->  નમસ્તે, including its conjunct
+
+`scriptLessons` 0 → 10, `taughtGlyphs` 0 → 9, `neverTaughtGlyphs` **41 → 32**.
+
+**The abugida is taught as a system, not as forty shapes.** Four ideas carry the
+whole chapter, and each gets its own lesson: the **inherent vowel** (a bare
+consonant already says *a*), the **mātrā** that replaces it, the **independent
+vowel** that does the same job at the start of a word — a *different character*,
+which is the commonest spelling error in the script — and the **virama**, which
+deletes the inherent vowel and fuses two consonants into a conjunct.
+
+After those four, every remaining letter is a shape rather than a rule. The
+chapter says so explicitly: *the script has around forty more letters; it does not
+have any more systems.*
+
+**Two payoffs land inside the chapter.** One consonant and one mātrā make **હા**
+readable at the second lesson; a third piece makes **ના** readable at the fourth.
+The reader is decoding real words before the halfway point.
+
+The headless-script fact — Gujarati is Devanagari with the top bar erased — is
+taught on the very first shape, because it is the one difference visible at a
+glance and it makes every later letter easier to place.
+
+
 ## Pre-A1 vocabulary tranche — twelve everyday nouns, three chapters
 
 The level gate (`src/level-gate.ts`) reports every track blocked on
