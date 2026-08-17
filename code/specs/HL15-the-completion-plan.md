@@ -111,12 +111,36 @@ one track clears the floor.
 ```
 1. exam-inventory   you cannot aim at a target you have not written down
 2. script-closure   decoding is a precondition for reading, and it ENDS
-3. vocabulary       the dominant remaining mass
-4. exam-point       named gaps against the external list
+3. exam-point       named gaps against the external list  [was 4 — see below]
+4. vocabulary       the dominant remaining mass           [was 3]
 5. reinforcement    retention — what separates a corpus claim from a learner one
 6. atom-budget      a ramp that got steeper is a regression, not a backlog item
 7. spine-nodes      functional coverage, the coarsest of the six
 ```
+
+**Why `exam-point` moved above `vocabulary`, and it is the one ordering here
+changed against a measurement rather than an argument.** This spec originally put
+vocabulary third because it is the dominant mass. Writing the French and German A1
+inventories (HL-C226, HL-C227) produced the same shape twice, from two different
+awarding bodies' syllabuses:
+
+```
+                     French          German
+questions            0/5             0/4
+articles / nouns     0/4             0/5
+prepositions         0/4             0/4
+core vocabulary      6/10            6/12   <- the STRONGEST column both times
+```
+
+German holds 123 atoms across 106 lessons and **six** of them are grammar; French
+holds 109 with nine. **54 of French's 74 A1 points have no corresponding atom in
+the corpus at all, and no quantity of headwords creates one.** Leaving vocabulary
+first recommended, for those tracks, work that cannot move the number the reader
+is graded on.
+
+Vocabulary keeps its place for a track with **no** inventory, because there the
+headword count is the only measurement that exists — which is still 19 of the 22
+tracks.
 
 **Why `exam-inventory` is first and cheapest.** Until the list exists, every other
 number for that (track, level) is a proxy for something nobody is graded on. It is

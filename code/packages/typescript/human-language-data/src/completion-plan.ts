@@ -60,12 +60,28 @@ export type WorkKind =
  * forever; vocabulary runs to 16,000 per track. Finite work that unblocks
  * infinite work goes first, and a vocabulary tranche authored into an unclosed
  * script is authored onto sand: the reader cannot decode the word it teaches.
+ *
+ * `exam-point` was 4 and is now 3, ABOVE vocabulary, and that reordering is the
+ * one change here made against a measurement rather than an argument. Writing the
+ * French and German A1 inventories (HL-C226, HL-C227) produced the same shape
+ * twice, from two different awarding bodies' syllabuses:
+ *
+ *     questions 0/5 and 0/4 · articles 0/4 and 0/5 · prepositions 0/4 and 0/4
+ *     core vocabulary 6/10 and 6/12 — the STRONGEST column both times
+ *
+ * German holds 123 atoms across 106 lessons and six of them are grammar. **54 of
+ * French's 74 A1 points have no corresponding atom in the corpus at all, and no
+ * quantity of headwords creates one.** Ranking vocabulary first for those tracks
+ * recommended work that cannot move the number the reader is graded on.
+ *
+ * Vocabulary keeps its place for a track with NO inventory, because there the
+ * headword count is the only measurement that exists.
  */
 export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "exam-inventory": 1,
   "script-closure": 2,
-  vocabulary: 3,
-  "exam-point": 4,
+  "exam-point": 3,
+  vocabulary: 4,
   reinforcement: 5,
   "atom-budget": 6,
   "spine-nodes": 7,
@@ -150,15 +166,40 @@ export interface InventoryPresence {
   level: CefrLevel;
 }
 
+/** How far one track is from one level's external point list. */
+export interface ExamCoverageSummary {
+  language: string;
+  level: CefrLevel;
+  enumerated: number;
+  covered: number;
+}
+
 export interface CompletionPlanInput {
   levelGate: LevelGateReport;
   scriptClosure: ScriptClosureReport;
   /** Which external inventories exist. Absent ones become `exam-inventory` items. */
   inventories: readonly InventoryPresence[];
+  /**
+   * Measured coverage for every inventory that exists.
+   *
+   * Kept separate from `inventories` because presence and coverage answer
+   * different questions: one says whether a target is written down, the other
+   * says how far the corpus is from it. A track can have an inventory and still
+   * need every point in it.
+   */
+  examCoverage?: readonly ExamCoverageSummary[];
   /** How far the plan runs. Defaults to C2 — the whole ladder. */
   ceiling?: CefrLevel;
   /** How many items to enumerate. Defaults to 25. */
   headSize?: number;
+  /**
+   * Inventories that exist on disk but could not be read.
+   *
+   * Reported as its own category rather than folded into either "written" or
+   * "not written", because it is neither: the target exists and is unusable, and
+   * saying "not written" sends somebody to author a file that is already there.
+   */
+  unreadableInventories?: number;
 }
 
 /** Ceil-divide, with the degenerate case that zero outstanding is zero tranches. */
@@ -258,7 +299,37 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 3..7. Whatever the level gate says is short, in its own units. The gate
+    // 3. Points the external list enumerates and the corpus does not cover.
+    //
+    // Ranked at the track's IN-PROGRESS level rather than at the level the
+    // inventory describes, so it competes with that track's floor work instead
+    // of sorting behind it. That is deliberate and is the whole point of
+    // HL-C226: French sits at pre-A1 and its A1 gap is grammar-shaped, so pre-A1
+    // headwords are the wrong next move however large the headword deficit looks.
+    for (const coverage of input.examCoverage ?? []) {
+      if (coverage.language !== track.language) continue;
+      if (levelRank(coverage.level) > levelRank(ceiling)) continue;
+      // `buildCompletionPlan` is exported, so these numbers are not necessarily
+      // the ones `measureExamCoverage` produced. `uncovered <= 0` is FALSE for
+      // NaN, so without the finite check a NaN reaches `tranches` and the
+      // projected total.
+      if (!Number.isFinite(coverage.enumerated) || !Number.isFinite(coverage.covered)) continue;
+      const uncovered = Math.max(0, Math.trunc(coverage.enumerated - coverage.covered));
+      if (uncovered <= 0) continue;
+      mine.push({
+        id: `exam-point/${track.language}/${coverage.level}`,
+        kind: "exam-point",
+        language: track.language,
+        level,
+        goal:
+          `cover ${uncovered} of ${coverage.enumerated} ${coverage.level} exam point(s) ` +
+          `${track.language} does not teach`,
+        outstanding: uncovered,
+        tranches: tranchesFor(uncovered, "exam-point"),
+      });
+    }
+
+    // 4..7. Whatever the level gate says is short, in its own units. The gate
     // already scopes each criterion to at-or-below the level, which is the bug
     // HL09 recorded and this module must not reintroduce by re-deriving them.
     for (const blocker of track.blockers) {
@@ -410,6 +481,21 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
 
   const counted = (kind: WorkKind) => items.filter((item) => item.kind === kind).length;
 
+  // Projectable only over inventories that EXIST. The 129 unwritten ones are
+  // counted by the `exam-inventory` family above, and guessing how many points
+  // they will hold would be inventing a number.
+  const written = input.examCoverage ?? [];
+  const examUncovered = written.reduce(
+    (sum, c) =>
+      sum + (Number.isFinite(c.enumerated) && Number.isFinite(c.covered) ? Math.max(0, Math.trunc(c.enumerated - c.covered)) : 0),
+    0,
+  );
+  // TRACKS, not (track, level) pairs. `written` is per level, so subtracting its
+  // length claims one track fewer is unmeasurable for every second inventory a
+  // track gains -- and the A2 inventories are already anticipated.
+  const measuredTracks = new Set(written.map((c) => c.language)).size;
+  const examPointItems = written.length === 0 ? null : Math.ceil(examUncovered / TRANCHE_SIZE["exam-point"]);
+
   return [
     {
       kind: "vocabulary",
@@ -430,8 +516,15 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     },
     {
       kind: "exam-point",
-      items: null,
-      detail: "not projectable — depends on inventories not yet written",
+      items: examPointItems,
+      detail:
+        examPointItems === null
+          ? "not projectable — no inventory has been written yet"
+          : `${examUncovered} uncovered point(s) across ${(input.examCoverage ?? []).length} ` +
+            `written inventory/inventories, at ${TRANCHE_SIZE["exam-point"]} per tranche; ` +
+            `the other ${input.levelGate.tracks.length - measuredTracks} ` +
+            `track(s) cannot be measured until theirs exist` +
+            (input.unreadableInventories ? `; ${input.unreadableInventories} exist but could not be READ` : ""),
     },
     {
       kind: "reinforcement",

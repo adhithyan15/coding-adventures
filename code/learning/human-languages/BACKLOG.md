@@ -13,6 +13,64 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C228 — exam points now outrank vocabulary, and the family had never been generated
+
+HL-C226 recorded the evidence; this acts on it. Two things changed, and the second
+is the one that mattered.
+
+**1. `exam-point` was a declared family that NOTHING GENERATED.** The plan has been
+ranking work for 22 tracks with one of its seven families permanently empty since
+HL15 shipped. Vocabulary was not beating exam points — it was **running
+unopposed**. Every "vocabulary is the top item" observation in this backlog was
+made against a queue that could not have said anything else.
+
+That is worth more than the reordering. A family declared in a type, given a
+priority and a tranche size, and never emitted, looks exactly like a family that
+was considered and lost.
+
+**2. The priority swap, 4 → 3, above vocabulary.** Made against the HL-C226/C227
+measurement rather than an argument, and scoped: vocabulary keeps its place for a
+track with **no** inventory, because there the headword count is the only
+measurement that exists — still 19 of 22 tracks.
+
+Items are ranked at the track's **in-progress** level, not the inventory's. French
+sits at pre-A1 and its A1 gap is grammar-shaped; ranking the item at A1 would sort
+it behind every pre-A1 item and change nothing.
+
+Result: French and German lead with *"cover 54 of 74 A1 exam points french does
+not teach"*. Spanish, at 100%, correctly keeps vocabulary.
+
+### The review found that a comment I wrote was false, and that is the finding
+
+The code and the changelog both said an unreadable inventory "shows up as an
+`exam-inventory` item instead". **It did not.** `listExamInventories` lists any
+file that parses and declares a string language/level; `loadExamInventory` is far
+stricter. A file in the gap between them was listed as PRESENT — so no
+`exam-inventory` item — and threw on load — so no `exam-point` item. **The track
+vanished from both families while the report asserted its inventory existed**, at
+exit 0, with nothing on stderr.
+
+No corruption is needed to trigger it: rename one file toward the `spanish → es`
+code convention the loader **already uses**, and it is unmeasurable forever.
+
+Fixed by collecting failures — stderr, removed from the presence list, their own
+projection category, exit 1. And the general lesson: **a comment asserting a
+fallback behaviour is a claim, and claims about error paths are the ones least
+likely to have been run.** This one had never been executed once.
+
+### Three more that were fail-open in the same direction
+
+- **A missing `probe` key scores as COVERED.** `covered` is `probe !== null && …`
+  and `undefined !== null` is true, so an inventory with every probe deleted
+  reports **100%** and suppresses its own work item. Never reached the try/catch.
+  The empty-array case had been refused for exactly this reason; `undefined` is
+  the same fault in a different shape.
+- **A bare `catch {}`** swallowed a `TypeError` from any future refactor exactly
+  like a missing file — turning the feature off and printing a self-contradicting
+  report, with nothing in CI to notice.
+- **`plan-cli` had no test file at all**, so every one of the review's dirty
+  controls left the suite green. It now has five, each built from a control.
+
 ## HL-C227 — German says the same thing French did, which makes it a pattern rather than a track
 
 Third inventory. **German covers 21 of 70 (30%)** against the Goethe-Zertifikat A1
