@@ -962,6 +962,90 @@
           "LA-ETYMON-DO-02"
         ]
       }
+    },
+    {
+      "chapter": 44,
+      "title": "The House, and Who Is Inside It",
+      "label": "ch:la-domus",
+      "canDo": "I can name the parts of a house in Latin — the building, its door, its wall, its garden and its hearth — and point to the English words each one left behind.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "LA-C44-focus",
+        "kind": "task",
+        "summary": "The fifth word of the group, taken apart against the four before it.",
+        "assesses": [
+          "LA-LEX-C44-HOUSE-01",
+          "LA-LEX-C44-HOUSE-02",
+          "LA-LEX-C44-HOUSE-03",
+          "LA-LEX-C44-HOUSE-04",
+          "LA-LEX-C44-HOUSE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 45,
+      "title": "Earth, Fire, Wind, Sky, Sea",
+      "label": "ch:la-mundus",
+      "canDo": "I can name the five great outdoor things in Latin and say which of them English inherited by descent and which it borrowed from books.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "LA-C45-mare",
+        "kind": "task",
+        "summary": "The fifth word of the group, taken apart against the four before it.",
+        "assesses": [
+          "LA-LEX-C45-WORLD-01",
+          "LA-LEX-C45-WORLD-02",
+          "LA-LEX-C45-WORLD-03",
+          "LA-LEX-C45-WORLD-04",
+          "LA-LEX-C45-WORLD-05"
+        ]
+      }
+    },
+    {
+      "chapter": 46,
+      "title": "Light, Shadow, and Going to Sleep",
+      "label": "ch:la-lux",
+      "canDo": "I can name light, shadow, star, moon and sleep in Latin, and use them to close a day the way a Latin speaker would.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "LA-C46-somnus",
+        "kind": "task",
+        "summary": "The fifth word of the group, taken apart against the four before it.",
+        "assesses": [
+          "LA-LEX-C46-NIGHT-01",
+          "LA-LEX-C46-NIGHT-02",
+          "LA-LEX-C46-NIGHT-03",
+          "LA-LEX-C46-NIGHT-04",
+          "LA-LEX-C46-NIGHT-05"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
+      "title": "Salt, Honey, Milk, Egg, Fish",
+      "label": "ch:la-mensa",
+      "canDo": "I can name five things on a Latin table, and I can use Grimm's Law to tell an inherited English cousin from a borrowed Latin loan.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "LA-C47-piscis",
+        "kind": "task",
+        "summary": "The fifth word of the group, taken apart against the four before it.",
+        "assesses": [
+          "LA-LEX-C47-TABLE-01",
+          "LA-LEX-C47-TABLE-02",
+          "LA-LEX-C47-TABLE-03",
+          "LA-LEX-C47-TABLE-04",
+          "LA-LEX-C47-TABLE-05"
+        ]
+      }
     }
   ]
 }

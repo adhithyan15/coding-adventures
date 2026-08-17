@@ -1932,6 +1932,26 @@
       "output": "latin/book/chapters/ch43-answering-meeting-buying.tex"
     },
     {
+      "language": "latin",
+      "chapter": 44,
+      "output": "latin/book/chapters/ch44-domus.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 45,
+      "output": "latin/book/chapters/ch45-mundus.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 46,
+      "output": "latin/book/chapters/ch46-lux.tex"
+    },
+    {
+      "language": "latin",
+      "chapter": 47,
+      "output": "latin/book/chapters/ch47-mensa.tex"
+    },
+    {
       "language": "malayalam",
       "chapter": 6,
       "output": "malayalam/book/chapters/ch06-dative-case.tex",

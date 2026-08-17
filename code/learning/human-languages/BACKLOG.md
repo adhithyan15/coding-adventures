@@ -13,6 +13,83 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C213 — a late vocabulary lesson RETROACTIVELY creates forward references, and the fix is placement
+
+Found by the Latin tranche, and it will recur on every track that adds basic
+vocabulary at the end of a long book. Recorded because the number it moves is a
+CEILING that may only be raised with a written cause.
+
+Twenty new pre-A1 words in chapters 44-47 pushed `forwardReferences` 500 → 508.
+**None of the eight is a new use.** Every one is a sentence that has been sitting
+in an untouched lesson for months, and became measurable only because the word
+finally got an owner:
+
+```
+LA-C08-manus              domus    71 lessons early   lists domus among feminine -us nouns
+LA-C06-ruber-caeruleus    mare     84                 glosses caeruleum mare
+LA-C27-bene               mel, terra  61, 50          cites mel->miel, terra->tierra
+LA-C40-dormio             somnus   28                 names somnus while teaching dormire
+LA-C41-ambulo             somnus   25                 somnambulist walks in sleep
+LA-C28-dies               Lunae    57                 prints dies Lunae
+LA-C24-propediem-te-videbo Lunae   61                 prints dies Lunae
+```
+
+This is the `LA-C08-manus` / `LA-C37-habeo` class the ceiling's own annotation
+already names. **It was verified rather than assumed**: each of the eight was read
+in its own file and confirmed unmodified by `git diff HEAD`, because "the
+measurement got sharper" is exactly the excuse that would cover real decay if it
+were taken on trust.
+
+**A ninth WAS real and was fixed in content.** `LA-C45-terra` named *mare* four
+lessons before it is taught, to build *mare mediterrāneum*. It now describes the
+name in English and lets the *mare* lesson supply the Latin. That is the correct
+disposition — the ceiling absorbs measurement artefacts, never new debt.
+
+### The finding, which is bigger than this tranche
+
+**Words used 25 to 84 lessons before they are taught are not in the right place.**
+*Domus*, *mare*, *somnus* and *lūna* are pre-A1 basics that the Latin book has
+been leaning on since chapter 6. Appending them at chapter 44 makes them
+measurable and leaves them misplaced.
+
+The real fix is a **placement pass**: these chapters belong early in the book, and
+so do the equivalents on every other track. That is a renumbering of 47 chapters
+and every cross-reference into them — its own change, with its own verification,
+and explicitly NOT something to bury in a content PR. HL-C156 and HL-C137 reached
+the same conclusion from different directions; this is the third instance, which
+is enough to say it is structural.
+
+**Consequence for the queue.** `completion-plan.ts` ranks a vocabulary item by
+headword deficit alone. It cannot see that adding words at the end of a long track
+is worth less than adding them in the right place, and it will keep recommending
+the cheap version. Recorded so the placement work gets scheduled deliberately
+rather than waiting for the plan to ask for it.
+
+## HL-C212 — Latin: twenty pre-A1 nouns, chosen to prove cousinhood
+
+Latin pre-A1 vocabulary **23 → 43** of 300. Four themed chapters, five words
+each, one word per lesson per HL14.
+
+**Selected for what they demonstrate, not for frequency.** This track's whole
+purpose is showing an English reader where their own words come from, so every
+chapter carries at least one genuine *cousin* beside its loans — *hortus* against
+**yard**/**garden**, *ventus* against **wind**, *stēlla* against **star**, *ōvum*
+against **egg**, and *piscis* against **fish**, which is where Grimm's Law is
+finally named after three chapters of quietly showing its results.
+
+**Two claims are hedged, and stay hedged.** The *salārium* salt story is Pliny's
+account and no document records soldiers paid in salt; *caelum* → **ceiling** is
+probable, not settled. A track whose selling point is etymology cannot afford to
+launder a good story into a fact.
+
+**Two gate catches worth carrying forward:**
+
+1. *"the rule that holds this whole curriculum together"* failed
+   `standalone-book`. A reader holding only the Latin PDF has no other volume, so
+   nothing may point outside it. **Write for the book in the reader's hands.**
+2. *"as it almost always is"* tripped the info-dump `always is` rule-statement
+   pattern. A false positive, rephrased anyway.
+
 ## HL-C211 — Japanese: eight hiragana, and the sign taught late on purpose
 
 Second script tranche off the computed queue. Ten lessons, eight signs, two

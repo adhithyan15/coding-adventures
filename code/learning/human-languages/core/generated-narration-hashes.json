@@ -5168,6 +5168,78 @@
       "jsonHash": "fnv1a64:a97a2763013cd568"
     },
     {
+      "language": "latin",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:9c7be8656e2aff79",
+      "lessonIds": [
+        "LA-C44-domus",
+        "LA-C44-porta",
+        "LA-C44-murus",
+        "LA-C44-hortus",
+        "LA-C44-focus"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "latin/narration/ch44.txt",
+      "json": "latin/narration/ch44.json",
+      "textHash": "fnv1a64:7c6c19a8a942c306",
+      "jsonHash": "fnv1a64:20ff643704715357"
+    },
+    {
+      "language": "latin",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:c85cdf80ed10d7e1",
+      "lessonIds": [
+        "LA-C45-terra",
+        "LA-C45-ignis",
+        "LA-C45-ventus",
+        "LA-C45-caelum",
+        "LA-C45-mare"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "latin/narration/ch45.txt",
+      "json": "latin/narration/ch45.json",
+      "textHash": "fnv1a64:5fbee0118f05ea7c",
+      "jsonHash": "fnv1a64:5c9bb42c9a368000"
+    },
+    {
+      "language": "latin",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:a3b9c2e3a75c56aa",
+      "lessonIds": [
+        "LA-C46-lux",
+        "LA-C46-umbra",
+        "LA-C46-stella",
+        "LA-C46-luna",
+        "LA-C46-somnus"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "latin/narration/ch46.txt",
+      "json": "latin/narration/ch46.json",
+      "textHash": "fnv1a64:0b3e423b61763dc3",
+      "jsonHash": "fnv1a64:85642680334a9463"
+    },
+    {
+      "language": "latin",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:66dd692ecd5ed78c",
+      "lessonIds": [
+        "LA-C47-sal",
+        "LA-C47-mel",
+        "LA-C47-lac",
+        "LA-C47-ovum",
+        "LA-C47-piscis"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "latin/narration/ch47.txt",
+      "json": "latin/narration/ch47.json",
+      "textHash": "fnv1a64:0317cda354ade2ac",
+      "jsonHash": "fnv1a64:1bf3af776595596c"
+    },
+    {
       "language": "malayalam",
       "chapter": 1,
       "sourceHash": "fnv1a64:87215aacbb547f09",

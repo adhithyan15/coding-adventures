@@ -1,0 +1,573 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 47,
+  "title": "Salt, Honey, Milk, Egg, Fish",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:66dd692ecd5ed78c",
+  "lessons": [
+    {
+      "id": "LA-C47-sal",
+      "sequence": 1100,
+      "title": "sāl — a cousin of English salt, and the word a Roman soldier's salary was named for",
+      "headword": "sāl, salis",
+      "romanization": "sāl, salis",
+      "gloss": "salt — a cousin of English salt, and the word a Roman soldier's salary was named for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7be2e789b89a63a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new group of five words begins here. Nothing is assumed but the alphabet you already read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sāl — \"salt.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A cousin: Proto-Indo-European séh₂ls gave Latin sāl and Germanic saltom, which is English salt. And then Latin lent the same root back into English several more times, all through food."
+            },
+            {
+              "kind": "speech",
+              "text": "A salad is herba salāta, salted greens. A sauce is salsa, the salted thing — and Spanish salsa is the very same word, arriving by a different road. A sausage is salsīcia, salted meat. Four English food words, one Latin root."
+            },
+            {
+              "kind": "speech",
+              "text": "Then salary. Latin salārium was money paid to Roman soldiers, and the ancient explanation — that it was an allowance for salt — is what Pliny reports. Treat it as the standard account rather than as settled fact: no document actually records soldiers being paid in salt, and some historians think salārium simply meant a ration allowance generally. The word is certainly from sāl. What the money bought is less certain than the story suggests."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāl, salis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāl, salis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is English salt a cousin or a loan? (A cousin.) Name three loans from the same root. (Salad, sauce, sausage, salsa.) And how solid is the salary story? (Standard, not proven — the word is from sāl, the salt payment is Pliny's account.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C47-mel",
+      "sequence": 1110,
+      "title": "mel — the root of mellifluous and marmalade, and of molasses by way of Portuguese",
+      "headword": "mel, mellis",
+      "romanization": "mel, mellis",
+      "gloss": "honey — the root of mellifluous and marmalade, and of molasses by way of Portuguese",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:241ac997ca81a5cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mel — \"honey.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Proto-Indo-European melit-, and it is one of those roots that turns up in languages that otherwise share very little — Greek meli, Hittite milit, and Latin mel, all honey."
+            },
+            {
+              "kind": "speech",
+              "text": "Something mellifluous is mel plus fluere, flowing with honey — used of a voice. Mellow is probably from the same family, though the road is not clean."
+            },
+            {
+              "kind": "speech",
+              "text": "Two food words came in through Portuguese, which is why they look nothing alike. Marmalade is marmelada, a quince paste — Portuguese marmelo, \"quince,\" from Greek melimēlon, a honey-apple. And molasses is Portuguese melaço, the honey-like residue left when sugar is refined."
+            },
+            {
+              "kind": "speech",
+              "text": "English honey itself is Germanic and comes from a root meaning \"golden.\" Unrelated — a different language naming the same substance by a different property."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mel, mellis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mel, mellis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mellifluous literally say? (Flowing with honey.) Which two food words came through Portuguese? (Marmalade, molasses.) And is English honey related? (No — Germanic, from a root meaning golden.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C47-lac",
+      "sequence": 1120,
+      "title": "lac — the root of lactose, lettuce and, at one remove, of the Milky Way itself",
+      "headword": "lac, lactis",
+      "romanization": "lac, lactis",
+      "gloss": "milk — the root of lactose, lettuce and, at one remove, of the Milky Way itself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b9215d07f877ceb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lac — \"milk.\" The stem is lact-, which is where every English relative comes from."
+            },
+            {
+              "kind": "speech",
+              "text": "Lactose is milk sugar; lactic acid is named from souring milk; to lactate is to produce it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then a word nobody expects. Lettuce is Latin lactūca — \"the milky one,\" named for the white sap that bleeds from a cut lettuce stem. Pick one and you can watch the etymology happen."
+            },
+            {
+              "kind": "speech",
+              "text": "And the Greek sibling is gala, stem galakt-, also \"milk.\" The Greeks called the band of light across the night sky the galaxías kúklos, the milky circle — which Latin rendered as via lactea and English as the Milky Way. So galaxy and lactose are the same word, and the Milky Way is a translation."
+            },
+            {
+              "kind": "speech",
+              "text": "You met stēlla and lūna a moment ago. This is the sky they are in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lac, lactis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lac, lactis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is lettuce named for? (Its milky sap.) What does galaxy mean? (Milky — the same root, through Greek.) And what is the Milky Way a translation of? (Greek galaxías, Latin via lactea.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C47-ovum",
+      "sequence": 1130,
+      "title": "ōvum — a cousin of English egg, with two sound changes that hide the relationship completely",
+      "headword": "ōvum, ōvī",
+      "romanization": "ōvum, ōvī",
+      "gloss": "the egg — a cousin of English egg, with two sound changes that hide the relationship completely",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ac235bb9bf2bee7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōvum — \"an egg.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Ōvum and egg are cousins — the same Proto-Indo-European h₂ōwyóm — and they look nothing like each other, which makes this a good place to see how much sound change can hide."
+            },
+            {
+              "kind": "speech",
+              "text": "The loans are transparent: something oval is egg-shaped, an ovary is where eggs are made, ovulation is their release."
+            },
+            {
+              "kind": "speech",
+              "text": "The inherited word had a rougher time. Old English had ǣg, and it was losing ground when Norse settlers brought their own form, egg. For a while both were in use — Caxton complained in 1490 that a merchant asking for eggys in Kent was not understood, because there they said eyren. The Norse form won, and the native English one vanished."
+            },
+            {
+              "kind": "speech",
+              "text": "So the everyday word is a Viking word that replaced a cousin of itself, and the learned words came from Latin. English is full of this."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōvum, ōvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōvum, ōvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Are ōvum and egg related? (Yes — cousins, heavily disguised.) What was the native English word? (Ǣg, plural eyren.) And why do we say egg? (It is the Norse form, and it won.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C47-piscis",
+      "sequence": 1140,
+      "title": "piscis — and the single clearest demonstration in this book of the sound law linking Latin to English",
+      "headword": "piscis, piscis",
+      "romanization": "piscis, piscis",
+      "gloss": "the fish — and the single clearest demonstration in this book of the sound law linking Latin to English",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7582cd633bb90d22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the previous word in this chapter before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "piscis — \"a fish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Keep this word. It is the cleanest single demonstration in this book of how a Latin word and an English one can be the same word."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin p-iscis. English f-ish. Same word."
+            },
+            {
+              "kind": "speech",
+              "text": "The change is not random. Around two thousand years ago the Germanic branch shifted every inherited p to f, and it did so without exception. That is Grimm's Law, and you have already been shown its results without being told the name:"
+            },
+            {
+              "kind": "speech",
+              "text": "pater becomes father."
+            },
+            {
+              "kind": "speech",
+              "text": "pēs, pedis becomes foot."
+            },
+            {
+              "kind": "speech",
+              "text": "piscis becomes fish."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pairs, one rule. Once you have it, you can run it yourself: Latin plēnus against English full, Latin prō against for."
+            },
+            {
+              "kind": "speech",
+              "text": "The loans came separately and kept the p: Pisces the constellation, something piscine, a piscina. So English holds both the inherited form and the borrowed one, and now you can tell which is which by looking at a single letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piscis, piscis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piscis, piscis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every word this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every word this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does Latin p correspond to in inherited English words? (F — Grimm's Law.) Give two more pairs. (Pater/father, pēs/foot.) And why does Pisces keep its p? (It is a loan, not inherited.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
