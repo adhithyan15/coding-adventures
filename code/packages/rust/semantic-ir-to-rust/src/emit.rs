@@ -1619,6 +1619,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "-" => ("__sir::minus", true),
         "*" => ("__sir::times", true),
         "/" => ("__sir::divide", true),
+        // SIR21 T3b-2: `div_floor` is a bare rename of `divide` (Ruby's `/`
+        // already floors ints / true-divides floats — see `divide`'s own
+        // doc comment). `div_trunc`/`udiv_trunc`/`div_true` are genuinely
+        // new, strictly-binary ops (see `runtime.rs`'s doc comments above
+        // `trunc_div`/`utrunc_div`/`true_div`).
+        "div_floor" => ("__sir::divide", true),
+        "div_trunc" => ("__sir::trunc_div", false),
+        "udiv_trunc" => ("__sir::utrunc_div", false),
+        "div_true" => ("__sir::true_div", false),
         "=" => ("__sir::eq", false),
         "case_eq" => ("__sir::case_eq", false),
         "<" => ("__sir::lt", false),

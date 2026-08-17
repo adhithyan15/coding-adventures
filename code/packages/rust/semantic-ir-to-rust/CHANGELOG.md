@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.41.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive-only: adds the four new division builtin names from SIR21 T3b-2
+(`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). Bare `"/"`
+keeps working unchanged — no frontend emits any of the new names yet.
+
+- `div_floor` is a bare dispatch-table rename of the existing `divide`
+  (Ruby's `/` already floors ints and true-divides floats — zero new
+  logic).
+- `div_trunc`/`udiv_trunc` (signed/unsigned truncating division, rounds
+  toward zero) are genuinely new: `runtime.rs`'s `trunc_div`/
+  `utrunc_div`. Rust's own `i64`/`u64` `/` already truncates toward
+  zero, so unlike `divide`'s floor path these need no adjustment — the
+  unsigned variant exists because a `u64` ≥ 2^63 misreads as negative
+  unless reinterpreted before dividing.
+- `div_true` (always coerces to float, models Python's `/`) is also new:
+  `runtime.rs`'s `true_div`.
+- All three new functions raise a typed `ZeroDivisionError` on a zero
+  divisor — on every operand — matching `divide`'s own convention (never
+  let a bare host `/` leak IEEE `inf`/`NaN` through).
+- Added dispatch entries to both call sites: the emitter's
+  `(helper, variadic)` match table in `emit.rs`, and the by-name
+  `call_builtin_by_name` forward-compat dispatcher in `runtime.rs`.
+- New `tests/compile_and_run_division_ops.rs`: real `rustc`-compile-and-
+  execute proof for all four ops, including a zero-divisor case for
+  each (an uncaught raise exits non-zero and prints
+  `"ZeroDivisionError: divided by 0"` on stderr).
+
 ## 0.40.0 — SIR28 §7: remove dead bare `print`/`puts` handling
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`

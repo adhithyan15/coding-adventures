@@ -615,6 +615,59 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Int(acc)
     }
 
+    // ── SIR21 T3b-2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true` ────
+    //
+    // `divide` above IS `div_floor` — Ruby's `/` already floors ints and
+    // true-divides floats, so `div_floor` is wired as a bare rename in the
+    // emitter's dispatch table (no new function). The three below are
+    // genuinely new: SIR21 §E3 splits the old overloaded `/` into four
+    // named ops so a non-Ruby-sourced frontend can pick its own rounding
+    // mode instead of silently inheriting Ruby's. All three are strictly
+    // binary (unlike the variadic `+`/`-`/`*`/`/`) — no frontend emits a
+    // chained `div_trunc(a, b, c)`.
+    //
+    // Both raise a typed `ZeroDivisionError` on a zero divisor, on every
+    // operand type, matching `divide`'s own convention above (never let a
+    // bare host `/` leak IEEE `inf`/`NaN` through).
+
+    /// Signed truncating division (rounds toward zero). Integer-only —
+    /// matches the C backend's `tdiv`, which `div_trunc` absorbs/replaces.
+    /// Unlike `divide`'s floor path, this needs NO adjustment: Rust's own
+    /// `i64` `/` already truncates toward zero.
+    pub fn trunc_div(a: Value, b: Value) -> Value {
+        let x = as_i64(&a);
+        let y = as_i64(&b);
+        if y == 0 {
+            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+        }
+        Value::Int(x / y)
+    }
+
+    /// Unsigned truncating division — the twin of `trunc_div` for values
+    /// that are semantically `u64` but stored tagged as `i64`. A `u64` ≥
+    /// 2^63 misreads as negative unless reinterpreted before dividing, so
+    /// this is NOT just `trunc_div` under another name.
+    pub fn utrunc_div(a: Value, b: Value) -> Value {
+        let x = as_i64(&a) as u64;
+        let y = as_i64(&b) as u64;
+        if y == 0 {
+            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+        }
+        Value::Int((x / y) as i64)
+    }
+
+    /// Always true-divides — coerces both operands to `f64` and divides,
+    /// even when both are ints (`6 / 3` yields `2.0`, not `2`). Models
+    /// Python's `/`. Genuinely new on every backend: no prior op in this
+    /// runtime unconditionally floats an all-integer division.
+    pub fn true_div(a: Value, b: Value) -> Value {
+        let y = as_f64(&b);
+        if y == 0.0 {
+            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+        }
+        Value::Float(as_f64(&a) / y)
+    }
+
     // ── comparison ────────────────────────────────────────────────
     pub fn eq(a: Value, b: Value) -> Value {
         Value::Bool(value_eq(&a, &b))
@@ -1297,6 +1350,19 @@ pub const RUNTIME: &str = r##"mod __sir {
             "-" => minus(args),
             "*" => times(args),
             "/" => divide(args),
+            "div_floor" => divide(args),
+            "div_trunc" => {
+                let mut it = args.into_iter();
+                trunc_div(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
+            "udiv_trunc" => {
+                let mut it = args.into_iter();
+                utrunc_div(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
+            "div_true" => {
+                let mut it = args.into_iter();
+                true_div(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
             // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It
             // was UNIMPLEMENTED here, so any negative literal panicked with
             // "unknown builtin: neg" (the JS/Python runtimes already had it).
