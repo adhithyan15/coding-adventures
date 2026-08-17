@@ -13,6 +13,57 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C215 — Gujarati: nine pieces, and an abugida taught as four ideas
+
+Third script tranche. `neverTaughtGlyphs` 41 → 32, `scriptLessons` 0 → 10, and
+`tracksTeachingNothing` reaches **5** — down from 8 where these tranches started.
+
+**The method that generalises to the other five Indic tracks.** An abugida is not
+forty shapes to memorise, it is four ideas plus shapes, and each idea gets its own
+lesson before any shape depends on it:
+
+1. the **inherent vowel** — a bare consonant already says *a*;
+2. the **mātrā** — a mark that REPLACES that vowel rather than adding one;
+3. the **independent vowel** — the same sound, a different character, used only at
+   the start of a word. This is the commonest spelling error in every Indic script
+   and it is cheaper to teach as a contrast than to correct later;
+4. the **virama** — deletes the inherent vowel, and the stripped consonant fuses
+   with the next into a conjunct.
+
+After those four, the chapter can say something that is both true and encouraging:
+*the script has around forty more letters, and no more systems.* Marathi, Punjabi,
+Bengali, Hindi and Sanskrit should reuse this shape rather than reinvent an order.
+
+**Two readable words inside the chapter.** One consonant plus one mātrā makes
+"yes" readable at lesson two; one more consonant makes "no" readable at lesson
+four. Payoff before the halfway point is what keeps a script chapter from reading
+as a chore, and it fell out of choosing the ORDER by what it unlocks rather than
+by frequency — the same lesson HL-C211 recorded for Japanese.
+
+### A debt assertion was pointing the wrong way, and this tranche exposed it
+
+`script-closure.test.ts` asserted `tracksTeachingNothing` **> 5** — written when
+the number was 8 and the point was "the debt is large". Three tranches later the
+number is 5 and the assertion FAILED ON PROGRESS.
+
+Converted to a **ceiling** (`<= 5`), on the same footing as the forward-reference
+ratchet: it may fall, never grow, and whoever raises it writes down why. The
+`violations > 500` assertion in the same test still carries the test's stated
+point on its own.
+
+**Worth a sweep.** Any assertion of the form "we have at least N problems" will do
+this. It reads as a strong test and is actually a floor under the debt, failing
+exactly when the work succeeds.
+
+### Still open on this track, and not touched here
+
+`headwordsWithoutRomanization: 26` — 26 Gujarati lessons show a headword in
+Gujarati script with no romanization declared, so those headwords are LOAD-BEARING
+rather than exposure. And every Gujarati lesson has `sequence: 0`, so the track has
+no declared reading order at all and the continuity walk is measuring it in
+filename order. Both are pre-existing, both are cheap, and both should land before
+the next Gujarati script tranche rather than after.
+
 ## HL-C214 — nothing local opens a font, so glyph coverage is only ever found in CI
 
 HL-C212 passed 744 local tests and a clean security review, then failed CI eleven

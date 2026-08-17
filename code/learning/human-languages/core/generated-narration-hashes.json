@@ -2109,6 +2109,29 @@
       "jsonHash": "fnv1a64:2d898857829749aa"
     },
     {
+      "language": "gujarati",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:a84ace486b6c7315",
+      "lessonIds": [
+        "GU-W01-ha",
+        "GU-W01-aa-matra",
+        "GU-W01-aa",
+        "GU-W01-na",
+        "GU-W01-ma",
+        "GU-W01-sa",
+        "GU-W01-ta",
+        "GU-W01-e-matra",
+        "GU-W01-virama",
+        "GU-W01-namaste-read"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch13.txt",
+      "json": "gujarati/narration/ch13.json",
+      "textHash": "fnv1a64:e6d62fed75af393f",
+      "jsonHash": "fnv1a64:6edb158a9c2a6cae"
+    },
+    {
       "language": "hindi",
       "chapter": 1,
       "sourceHash": "fnv1a64:d107feb63e65ce1e",

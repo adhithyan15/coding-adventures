@@ -202,7 +202,14 @@ describe("the real corpus", () => {
     // for arriving too fast; closure flags hundreds for arriving untaught, and
     // a track can satisfy the budget perfectly while teaching nothing.
     expect(report.summary.violations).toBeGreaterThan(500);
-    expect(report.summary.tracksTeachingNothing).toBeGreaterThan(5);
+    // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
+    // a fact about the corpus and started being a fact about how much of it has
+    // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
+    // a track, 8 -> 5, and the floor failed. Debt assertions belong the other way
+    // up, so this is now a CEILING on the same footing as the forward-reference
+    // one — it may fall, never grow, and whoever raises it writes down why.
+    // `violations` above still carries this test's stated point on its own.
+    expect(report.summary.tracksTeachingNothing).toBeLessThanOrEqual(5); // 8 -> 5: chinese (HL-C209), japanese (HL-C211), gujarati (HL-C215)
   });
 
   it("every violation names real glyphs and a real lesson", () => {

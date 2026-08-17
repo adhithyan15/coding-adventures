@@ -904,6 +904,24 @@
       "tex": "gujarati/book/chapters/ch12-face-parts.tex"
     },
     {
+      "language": "gujarati",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:875656e5ea8969e9",
+      "lessonIds": [
+        "GU-W01-ha",
+        "GU-W01-aa-matra",
+        "GU-W01-aa",
+        "GU-W01-na",
+        "GU-W01-ma",
+        "GU-W01-sa",
+        "GU-W01-ta",
+        "GU-W01-e-matra",
+        "GU-W01-virama",
+        "GU-W01-namaste-read"
+      ],
+      "tex": "gujarati/book/chapters/ch13-script-first.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 6,
       "sourceHash": "fnv1a64:06cd03dcec0f8c10",

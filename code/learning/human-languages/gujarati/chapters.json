@@ -93,7 +93,9 @@
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
-      "spineNodes": ["SPINE-COUNT-ONE-TO-FIVE"],
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
       "payoff": {
         "lesson": "GU-C06-number-histories",
         "kind": "task",
@@ -114,7 +116,9 @@
       "title": "Six Verbs at the Core",
       "label": "ch:gu-core-verbs",
       "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "GU-C07-jaanvun",
         "kind": "production",
@@ -137,7 +141,9 @@
       "title": "The Mind and the Page",
       "label": "ch:gu-mind-and-page",
       "canDo": "I can say that I think, understand, read and write in Gujarati, hear and write the nasal that sits in the middle of વાંચવું, and name what each of the four roots was doing before it meant a mental act — ranging about, waking up, speaking, and scratching.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "GU-C08-lakhvun",
         "kind": "production",
@@ -168,7 +174,9 @@
       "title": "Taking, Asking, Helping, Liking",
       "label": "ch:gu-doing-verbs",
       "canDo": "I can take, ask, help and say what I like in Gujarati, explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter, and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject.",
-      "spineNodes": ["SPINE-SAY-WHAT-I-DO"],
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
       "payoff": {
         "lesson": "GU-C09-gamvun",
         "kind": "production",
@@ -202,7 +210,9 @@
       "title": "Water, Tea, Milk, and Bread",
       "label": "ch:gu-request-food-drink",
       "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "GU-C10-rotli",
         "kind": "production",
@@ -228,7 +238,9 @@
       "title": "Friend and Family",
       "label": "ch:gu-friend-and-family",
       "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "GU-C11-bahen",
         "kind": "production",
@@ -253,7 +265,9 @@
       "title": "Eye, Ear, Mouth, and Nose",
       "label": "ch:gu-face-parts",
       "canDo": "I can name the eye, ear, mouth, and nose in Gujarati, tell a nasal that only marks a sound from one that marks the neuter gender, and say which two of the four are unbroken cousins of their English counterparts.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "GU-C12-naak",
         "kind": "production",
@@ -272,6 +286,30 @@
           "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
           "GU-FORM-JAVU-JOVU-CONTRAST",
           "GU-SCRIPT-ANUSVARA-MEDIAL"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "The Headless Script, One Piece at a Time",
+      "label": "ch:gu-script-first",
+      "canDo": "I can write nine Gujarati pieces from memory — four consonants, two vowel signs, an independent vowel and the virama — and read the words for yes, no and the greeting by assembling them from those pieces rather than recalling the words whole.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC",
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "GU-W01-namaste-read",
+        "kind": "reading",
+        "summary": "The greeting assembled from six pieces the reader can each write from memory, including the conjunct, and introducing nothing new at all.",
+        "assesses": [
+          "GU-SCRIPT-NAMASTE-READ-01",
+          "GU-SCRIPT-NA-01",
+          "GU-SCRIPT-MA-01",
+          "GU-SCRIPT-SA-01",
+          "GU-SCRIPT-TA-01",
+          "GU-SCRIPT-E-MATRA-01",
+          "GU-SCRIPT-VIRAMA-01"
         ]
       }
     }
