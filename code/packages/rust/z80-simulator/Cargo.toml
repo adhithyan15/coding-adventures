@@ -1,0 +1,8 @@
+[package]
+name = "z80-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Zilog Z80 (1976) behavioral simulator -- Rust port of code/packages/python/z80-simulator. Base 8080-compatible instruction set (byte-identical encoding), alternate register bank (EX AF,AF' / EXX), CB-prefixed bit manipulation + extended rotate/shift, DJNZ/JR relative jumps, and IX/IY basics (LD/INC). ED-prefix (block ops, 16-bit ADC/SBC HL,rp, I/R moves) deliberately not ported -- see lib.rs module docs. Built on the cpu-simulator crate for Memory; module split mirrors mips-r2000-simulator / intel8080-simulator. Seventh lane of the 9-architecture expansion."
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }

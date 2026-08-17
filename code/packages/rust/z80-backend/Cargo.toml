@@ -1,0 +1,29 @@
+[package]
+name = "z80-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Zilog Z80 backend for jit-core / aot-core.  Lowers Vec<CIRInstr> to Z80 machine code via z80-encoder.  Seventh lane of the 9-architecture expansion."
+
+[lib]
+name = "z80_backend"
+path = "src/lib.rs"
+
+[dependencies]
+z80-encoder = { path = "../z80-encoder" }
+jit-core    = { path = "../jit-core" }
+vm-core     = { path = "../vm-core" }
+
+[dev-dependencies]
+# NOTE: intel8080-backend / intel8080-simulator are NOT depended on here.
+# This lane (z80) is being built on a worktree branched fresh off
+# origin/main, which at this point in the 9-architecture expansion has
+# only ARM1 merged -- the Intel 8080 lane (third of the expansion) is
+# still an unmerged sibling PR and its crates do not exist in this
+# workspace snapshot.  The cross-architecture byte-identity claim in
+# tests/test_backend.rs is therefore pinned as a literal hard-coded byte
+# array (matching intel8080-encoder's own documented/tested output for
+# `MVI A,42; HLT`) rather than a live crate dependency.  Once
+# intel8080-backend merges to main, a follow-up can add it as a
+# dev-dependency and assert equality directly against
+# `intel8080_backend::compile(...)`'s return value.
+z80-simulator = { path = "../z80-simulator" }
