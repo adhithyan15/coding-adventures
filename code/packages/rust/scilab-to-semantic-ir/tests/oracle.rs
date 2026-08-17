@@ -148,19 +148,19 @@
 //!    this is a second genuinely-new-here display gap — see
 //!    `percent_inf_display_format_diverges`/
 //!    `percent_eps_display_format_diverges` below.
-//! 5. **NOT new — the SAME still-OPEN "integer-literal division floors"
-//!    bug `matlab-to-semantic-ir/tests/oracle.rs`'s own module doc already
-//!    documents, confirmed to also affect Scilab** (inherited, not
-//!    independently reintroduced): Scilab has no integer type either —
-//!    every number is an `array-runtime` `f64` — so `1 / 3` is `0.333...`
-//!    on the ground-truth side (`ops::div` is a plain float divide), but
-//!    `number_literal_expr` (`src/lower.rs`, mirroring
-//!    `matlab_to_semantic_ir::number_literal_expr` exactly) lowers a
-//!    decimal-point-free literal to `Expr::IntLit`, and the shared JS
-//!    backend's `divide()` runtime helper (`runtime.rs`, built for Ruby's
-//!    `Integer#/`, which really does floor) floors whenever BOTH operands
-//!    are integer-valued — so the compiled side prints `0`, not `0.333...`.
-//!    See `integer_literal_division_floors_a_shared_backend_gap` below.
+//! 5. **WAS the SAME still-OPEN "integer-literal division floors" bug
+//!    `matlab-to-semantic-ir/tests/oracle.rs`'s own module doc documents,
+//!    confirmed to also affect Scilab. FIXED (SIR21 T3b-2 Slice 5b).**
+//!    `/` now lowers to `div_true` (always true-divides) instead of bare
+//!    `/`, closing the floor bug for both this crate and, independently,
+//!    `matlab-to-semantic-ir`. Fixing it surfaced a NARROWER version of
+//!    finding three: `10 / 2` (an EXACT/integral quotient) still prints
+//!    `"5.0"` on the compiled side instead of Scilab's own `"5"`, since
+//!    `div_true`'s result is boxed through the same Ruby-family
+//!    `mkFloat`/`SirFloat` display convention finding three already
+//!    covers — see `exact_integer_division_folds_cleanly` below. `1 / 3`
+//!    (non-integral) isn't affected and now passes outright — see
+//!    `integer_literal_division_floors_a_shared_backend_gap` below.
 //! 6. **GENUINE BUG, confirmed directly by running actual `node` output —
 //!    NOT a display-convention gap. FIXED (task #111).** `matmul(a, b)` in
 //!    `semantic-ir-to-javascript/src/runtime.rs` used to read `a.shape`/
@@ -330,7 +330,19 @@ const CORPUS: &[Case] = &[
         setup: "",
         final_expr: "10 / 2",
         expected: "5",
-        known_bug: None,
+        known_bug: Some(
+            "Finding three (module doc), surfacing via a new path post-SIR21-T3b-2-Slice-5b: \
+             now that `/` lowers to `div_true` (fixing Finding five's floor bug -- see \
+             `integer_literal_division_floors_a_shared_backend_gap` above), an EXACT \
+             (integral-quotient) division result hits the SAME shared Ruby-family FloatLit \
+             boxing convention `bare_whole_valued_float_literal_prints_a_spurious_trailing_dot_\
+             zero` already documents: the compiled side's `div_true` always boxes its result via \
+             `__Sir.mkFloat(...)`, so `10 / 2` renders as \"5.0\" (SirFloat's own display \
+             convention), but scilab-runtime's `array_runtime::fmt_num` drops the trailing `.0` \
+             for any integral-valued double and prints \"5\". Not a new bug independent of \
+             Finding three -- the identical shared-crate display gap, now also reachable through \
+             division instead of only a bare float literal.",
+        ),
     },
     Case {
         name: "reassignment_of_a_known_local_takes_the_later_value",
@@ -725,28 +737,23 @@ const CORPUS: &[Case] = &[
              percent_inf_display_format_diverges, for a different magnitude regime.",
         ),
     },
-    // Finding five: NOT new -- the same still-OPEN integer-literal-division-
-    // floors bug matlab-to-semantic-ir/tests/oracle.rs's own module doc
-    // documents, confirmed to also affect Scilab (inherited via the shared
-    // divide() runtime helper and the identical number_literal_expr
-    // int-vs-float lowering rule -- not independently reintroduced here).
+    // Finding five: WAS the still-open integer-literal-division-floors bug
+    // matlab-to-semantic-ir/tests/oracle.rs's own module doc documents.
+    // FIXED (SIR21 T3b-2 Slice 5b): this frontend's `/` now lowers to
+    // `div_true` (always true-divides) instead of bare `/` (which the
+    // shared JS backend's `divide()` helper floors when both operands are
+    // integer-valued, per Ruby's `Integer#/`). Name kept as-is for
+    // history/traceability even though it no longer floors. See the
+    // `exact_integer_division_folds_cleanly` case below for the NEW,
+    // narrower display-convention gap this same fix exposes for an
+    // EXACT (integral) quotient specifically -- `1 / 3` isn't integral,
+    // so it doesn't hit that one and passes outright.
     Case {
         name: "integer_literal_division_floors_a_shared_backend_gap",
         setup: "",
         final_expr: "1 / 3",
         expected: "0.3333333333333333",
-        known_bug: Some(
-            "Finding five (module doc) -- confirmed to affect Scilab too, NOT independently \
-             reintroduced here: Scilab has no integer type either (array-runtime's f64 core is \
-             always a true divide, ops::div), so ground truth is 0.333.... But number_literal_expr \
-             lowers a decimal-point-free literal to Expr::IntLit (mirroring matlab_to_semantic_ir::\
-             number_literal_expr exactly), and semantic-ir-to-javascript's shared divide() runtime \
-             helper (built for Ruby's Integer#/, which really does floor) floors whenever BOTH \
-             operands are integer-valued -- so the compiled side prints \"0\". Same still-open, \
-             shared-crate gap matlab-to-semantic-ir/tests/oracle.rs's own module doc already \
-             documents for MATLAB; this crate inherits it via the identical lowering rule and the \
-             identical shared runtime helper, not via any bug of its own.",
-        ),
+        known_bug: None,
     },
     // Finding six: was a GENUINE BUG (not a display-convention gap),
     // confirmed by actually running the generated JS through node -- see

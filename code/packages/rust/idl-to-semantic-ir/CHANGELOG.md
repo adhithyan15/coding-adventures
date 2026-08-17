@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.3.0] - 2026-08-17
+
+### Changed — SIR21 T3b-2 Slice 5b: scalar `/` lowers to `div_true`
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). All 7
+backends implement `div_true` (Slice 2, merged); this crate migrates
+alongside `matlab-to-semantic-ir`/`scilab-to-semantic-ir` (Slice 5b).
+
+**Behavior change**: `lower_multiplicative`'s scalar `SLASH` arm no
+longer lowers to bare `BuiltinCall("/", args)`. It now lowers to
+`BuiltinCall("div_true", args)` — IDL has no int/float distinction to
+conflate scalar `/` with, so it always true-divides.
+
+`expr_is_known_scalar` (the scalar/elementwise classifier
+`lower_multiplicative`/`lower_additive` consult to decide broadcast
+dispatch) is updated in the same commit to recognise `div_true` as
+scalar-preserving, so a division subexpression's result is still
+correctly threaded as scalar into any outer expression.
+
 ## [0.2.0] - 2026-08-11
 
 ### Changed — SIR28 Slice 6: `PRINT` lowers to `__sys_write__`
