@@ -2,6 +2,90 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.9] - 2026-08-17 (task #101 — memory.grow cross-memory aggregate cap)
+
+### Security
+
+- `memory.grow`'s interpreter handler (`0x40`) now rejects growth that
+  would push the SUM of every memory's page count -- across ALL
+  memories, not just the target -- past `MAX_TOTAL_MEMORY_PAGES`
+  (65536, a new constant). Mirrors `table.grow`'s own task #98 round-2
+  fix: `LinearMemory::grow`'s per-memory 65536-page cap alone still
+  permitted an aggregate DoS across `MAX_MEMORIES` (64) memories --
+  each individually grown to the per-memory cap would total ~256GB from
+  one small module, reintroducing at RUNTIME exactly what `wasm-
+  validator`'s existing declare-time "Check 1b" already closes for
+  every memory's DECLARED minimum. Reuses that same 65536-page bound
+  (not a new arbitrary constant) so "total pages across every memory,
+  declared or grown, never exceeds 65536" is one consistent invariant
+  at both points in a module's lifecycle. The threshold arithmetic is
+  factored into a pure `memory_grow_would_exceed_aggregate_cap`
+  function specifically so it's cheaply unit-testable with small
+  synthetic page counts -- the real cap is 65536 pages (4GB), far too
+  large to actually allocate in a unit test. Confirmed load-bearing by
+  TEMP-REVERT-CHECK (stubbing the check to always return `false`
+  reproduces the exact predicted failures across all three threshold
+  tests, while the positive-path wiring test still passes).
+
+## [0.9.8] - 2026-08-16 (task #98 — table.grow/table.size/table.fill)
+
+### Security
+
+- `Table::grow` now rejects growth past `MAX_TABLE_ELEMENTS`
+  (10,000,000), independent of whether the module declared its own
+  `max_size`. Caught by `/security-review` round 1: with no declared
+  max (entirely legal WASM), the only prior ceiling was `i32::MAX`
+  entries -- since `Table::elements` is `Vec<Option<u32>>` (8 bytes/
+  entry, no niche optimization for `u32`), a single `table.grow` call
+  from one attacker-controlled `.wasm` module could resize to ~17GB,
+  and Rust's default allocation-failure handler aborts the whole
+  process, not just the offending instance. `MAX_TABLE_ELEMENTS`
+  already existed (task #96, security review) to bound a table's
+  DECLARED `min` for this exact resource-exhaustion reason, but that
+  check never applied to runtime growth -- mirrors `LinearMemory::
+  grow`'s own two-tier shape (module-declared max, THEN a hard
+  implementation ceiling independent of it). New tests pin both the
+  zero-cap-declared and grown-to-cap-then-grow-again shapes; confirmed
+  load-bearing by TEMP-REVERT-CHECK (reverting the check reproduces
+  the exact predicted failure: `assertion left == right failed, left:
+  1, right: -1`).
+- `table.grow`'s interpreter handler (`0xFC 0x0F`) now also rejects
+  growth that would exceed `MAX_TABLE_ELEMENTS` SUMMED ACROSS ALL
+  TABLES, not just the target table alone. Caught by `/security-review`
+  round 2: the per-table cap above still permitted an aggregate DoS --
+  `MAX_TABLES` (64) tables, each individually grown to
+  `MAX_TABLE_ELEMENTS`, would total ~4.77GB from one small module,
+  reintroducing at RUNTIME exactly the aggregate gap `wasm-validator`'s
+  own "Check 2b" already closes at DECLARE-time for a table's declared
+  `min` (task #96). Sums every other table's current size plus the
+  target's prospective new size and rejects BEFORE calling `Table::
+  grow` at all, so a rejected growth leaves every table untouched. A
+  follow-up task (#101) tracks the identical, larger, pre-existing gap
+  in `LinearMemory::grow` (64 memories × the 65536-page cap ≈ 256GB),
+  out of this PR's scope but the same bug class. Confirmed load-bearing
+  by TEMP-REVERT-CHECK.
+
+### Added
+
+- `table.grow`/`table.size`/`table.fill` (`0xFC 0x0F`/`0x10`/`0x11`)
+  interpreter handlers -- entirely unimplemented before this pass.
+  `table.grow` grows by `delta` entries filled with `init`, returning the
+  old size on success or `-1` on failure (a spec-mandated normal return
+  value, never a trap) -- failure cases are exceeding the table's own
+  declared `max_size`, or exceeding what fits in `table.size`'s own
+  `i32` result type (real engines cap table size for exactly this
+  reason). `table.size` pushes the current size. `table.fill` fills a
+  range with a reference value, same overflow-proof, zero-length-
+  still-bounds-checked discipline `LinearMemory::fill` established in
+  task #94 (`dest` must be `<= size()` even when `len == 0`).
+- `Table::grow`/`Table::fill` methods, modeled directly on
+  `LinearMemory::grow`/`fill`'s own contracts.
+- `table.grow`/`table.size`/`table.fill`'s decoded table index reuses
+  `DecodedOperand::BulkMemory`'s existing `data_idx` slot (renamed in
+  spirit, not in code -- see the variant's own updated doc comment) --
+  the same generic-index-slot-reused-by-`sub` pattern `Simd`'s `aux`
+  field already establishes, so no new packed-operand shape was needed.
+
 ## [0.9.7] - 2026-08-16 (task #95 — memory.init/data.drop, passive data segments)
 
 ### Security

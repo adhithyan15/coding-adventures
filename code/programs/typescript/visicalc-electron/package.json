@@ -11,6 +11,6 @@
     "test": "node -e \"require('./main.js'); console.log('main.js parses')\""
   },
   "dependencies": {
-    "electron": "^39.8.5"
+    "electron": "^43.4.0"
   }
 }

@@ -40,6 +40,18 @@ module CodingAdventures
     # Navigate up from lib/coding_adventures/mosaic_parser/ to code/grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     MOSAIC_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "mosaic", "mosaic.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.raw_parser_grammar
+      @raw_parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
+
+    # The pre-compiled grammar with alternative ordering fixed (see
+    # fix_slot_type_ordering / fix_property_value_ordering below). Computed
+    # once and memoized since the fixes are pure rewrites of immutable data.
+    def self.parser_grammar
+      @parser_grammar ||= fix_property_value_ordering(fix_slot_type_ordering(raw_parser_grammar))
+    end
 
     # Parse a string of Mosaic source into a generic AST.
     #
@@ -62,24 +74,15 @@ module CodingAdventures
     # @param source [String] Mosaic source text to parse
     # @return [CodingAdventures::Parser::ASTNode] the root AST node
     def self.parse(source)
-
       # Step 1: Tokenize using the Mosaic lexer.
       tokens = CodingAdventures::MosaicLexer.tokenize(source)
 
-      # Step 2: Load and parse the Mosaic grammar.
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(MOSAIC_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-
-      # Step 3: Reorder alternatives to avoid greedy-match failures.
-      # Two issues in the grammar:
+      # Step 2: Parse tokens using the grammar-driven parser, with the
+      # pre-compiled grammar's alternative ordering already fixed (see
+      # parser_grammar above):
       #   1. slot_type: list_type must come before KEYWORD (list<text> fix)
       #   2. property_value: enum_value must come before NAME (heading.large fix)
-      grammar = fix_slot_type_ordering(grammar)
-      grammar = fix_property_value_ordering(grammar)
-
-      # Step 4: Parse tokens using the grammar-driven parser.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
 

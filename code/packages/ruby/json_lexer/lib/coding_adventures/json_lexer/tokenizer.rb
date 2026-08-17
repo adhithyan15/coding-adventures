@@ -61,6 +61,11 @@ module CodingAdventures
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     JSON_TOKENS_PATH = File.join(GRAMMAR_DIR, "json", "json.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Tokenize a string of JSON text into an array of Token objects.
     #
@@ -77,19 +82,11 @@ module CodingAdventures
     # @param source [String] JSON text to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source)
-      # Read the json.tokens file and parse it into a TokenGrammar.
-      # The TokenGrammar contains the regex patterns for STRING, NUMBER,
-      # TRUE, FALSE, NULL, and the structural delimiters. There are no
-      # keywords or reserved words sections.
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(JSON_TOKENS_PATH, encoding: "UTF-8")
-      )
-
       # Create a GrammarLexer instance and run it. The lexer walks through
       # the source character by character, matching patterns from the grammar
       # in priority order (first match wins). Since JSON has no indentation
       # mode, the lexer runs in its simplest configuration.
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.tokenize
     end
   end

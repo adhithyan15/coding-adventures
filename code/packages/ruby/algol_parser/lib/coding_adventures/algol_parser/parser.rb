@@ -90,11 +90,10 @@ module CodingAdventures
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     VALID_VERSIONS = %w[algol60].freeze
     ALGOL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "algol", "algol60.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
 
-    def self.resolve_grammar_path(version = "algol60")
-      if version.nil? || version.empty?
-        version = "algol60"
-      end
+    def self.validate_version!(version = "algol60")
+      version = "algol60" if version.nil? || version.empty?
 
       unless VALID_VERSIONS.include?(version)
         raise ArgumentError,
@@ -102,7 +101,11 @@ module CodingAdventures
           "Valid versions: #{VALID_VERSIONS.sort.join(", ")}"
       end
 
-      File.join(GRAMMAR_DIR, "algol", "#{version}.grammar")
+      version
+    end
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
     end
 
     # Parse a string of ALGOL 60 source text into a generic AST.
@@ -127,18 +130,16 @@ module CodingAdventures
       # Keywords like "begin" and "integer" are reclassified from IDENT.
       tokens = CodingAdventures::AlgolLexer.tokenize(source, version: version)
 
-      # Step 2: Load and parse the ALGOL 60 grammar.
-      # The grammar file uses EBNF notation to describe ALGOL 60's
-      # block structure, declarations, statements, and expressions.
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(resolve_grammar_path(version), encoding: "UTF-8")
-      )
+      # Step 2: Validate the version, then use the pre-compiled ParserGrammar
+      # (embedded as native Ruby data structures in _grammar.rb) instead of
+      # reading and parsing algol60.grammar at runtime.
+      validate_version!(version)
 
       # Step 3: Parse tokens using the grammar-driven parser.
       # The parser uses recursive descent with backtracking to match
       # the token stream against the grammar rules, producing an AST
       # where each node records which rule produced it.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end

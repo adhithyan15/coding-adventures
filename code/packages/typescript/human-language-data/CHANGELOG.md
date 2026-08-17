@@ -2,6 +2,42 @@
 
 ## Unreleased
 
+### Changed - exam points now outrank vocabulary, and the plan finally emits them (HL-C228)
+
+- `exam-point` was a declared family that **nothing generated**. The plan has been ranking work for 22 tracks with one of its seven families permanently empty, which is why vocabulary won every time — it was not beating exam points, it was running unopposed.
+- `buildCompletionPlan` now takes measured `examCoverage` and emits one item per (track, level) with uncovered points, ranked at the track's **in-progress** level rather than the inventory's. That is deliberate: French sits at pre-A1 and its A1 gap is grammar-shaped, so ranking the item at A1 would sort it behind every pre-A1 item and change nothing.
+- `exam-point` moves from priority 4 to 3, above `vocabulary` — the one ordering in this spec changed against a measurement rather than an argument. See HL-C226/HL-C227: two tracks, two awarding bodies, same shape, with core vocabulary the strongest column both times and 54 of French's 74 A1 points having no corresponding atom at all.
+- **Vocabulary keeps its place for a track with no inventory**, because there the headword count is the only measurement that exists — still 19 of 22 tracks.
+- The projection is honest about its reach: it counts uncovered points across the three written inventories and names the 19 tracks that *cannot* be measured until theirs exist, rather than extrapolating.
+- A malformed inventory is skipped rather than fatal — one bad file should not stop the queue being computed, and its absence resurfaces as an `exam-inventory` item.
+- **Seven security-review findings fixed in the same change**, the first of which proved a claim in this file false. The comment and changelog both said an unreadable inventory "shows up as an `exam-inventory` item instead". It did not: `listExamInventories` lists any file that parses, `loadExamInventory` is far stricter, and a file in the gap was listed as PRESENT (no `exam-inventory` item) *and* threw on load (no `exam-point` item). The track vanished from both families while the report asserted its inventory existed — silently, at exit 0. Renaming one file toward the `spanish → es` convention the loader already uses is enough to trigger it.
+- Failures are now collected: named on stderr, removed from the presence list so the `exam-inventory` item genuinely does return, counted as their own projection category ("exist but could not be READ"), and the CLI exits **1**. A target we can see but cannot measure must not be reportable as clean.
+- The bare `catch {}` is bound and filtered — it swallowed a `TypeError` from any future refactor exactly like a missing file, which would silently disable the whole feature and print a report whose two lines contradict each other.
+- **`loadExamInventory` now refuses a point whose `probe` key is missing or non-array.** `covered` is `probe !== null && …`, and `undefined !== null` is true — so an inventory with every probe deleted reported **100% covered** and suppressed its own work item. This never reached the try/catch. The empty-array case was already refused for exactly this reason.
+- The projection's "cannot be measured" denominator counts **tracks**, not (track, level) pairs — it would have gone wrong the moment any track gained a second inventory, which the A2 work already anticipates.
+- Inventories are deduplicated on (language, level). Two files declaring the same pair produced two items with the **identical** `id` — documented as "stable and derivable" — a doubled projection, and a shrunken backlog.
+- `buildCompletionPlan` is exported, so `enumerated`/`covered` are validated as finite before use; `uncovered <= 0` is false for `NaN`, which otherwise reached `tranches` and the projected total.
+- `plan-cli` had **no test file at all**, so every one of those controls left the suite green. It now has five, each built from the review's own dirty control.
+- Result: French and German's first recommended action changes from another vocabulary tranche to *"cover 54 of 74 A1 exam points french does not teach"*. Spanish, at 100%, correctly keeps vocabulary.
+
+
+### Added - the glyph-coverage gate (HL-C214, HL-C223, HL-C225)
+
+- Add `glyph-coverage.ts`: every character in every generated book is checked against the font that will actually render it. Twice a tranche was merged-ready and failed CI on a missing glyph — `ǣ` in Latin, `ɔ` in Bengali — because every other gate reads the corpus and **none of them opens a font**.
+- **A book is not one font.** Text inside a `\bn{…}`-style wrapper is checked against that wrapper's vendored Noto face; everything else against the main font. Wrapper commands and their fonts are read **from each book's preamble**, in both declaration forms in use — hardcoding them is what made Sanskrit's `\sk` invisible to an earlier probe, which then reported 14,563 missing characters on a corpus that compiles clean.
+- **`\newunicodechar` is the escape hatch and the gate knows it.** A character absent from the font but re-rendered by the preamble (`\newunicodechar{ṉ}{\b{n}}`) passes — per book, since a mapping in Tamil's preamble does nothing for Bengali's. Validated against the committed corpus: 125 main-font characters, 121 in the font, 4 mapped, 0 unaccounted for, which is exactly the `missing_character=0` every book reports.
+- Main-font coverage comes from `core/main-font-charset.json`, generated once by querying the real Latin Modern cmap. The font ships with TeX Live and is not resolvable from a plain checkout, so a live query would leave the gate silently unmeasured wherever TeX Live is absent — including the test runner. Script fonts *are* vendored, so those are read live from `_fonts/`.
+- An unresolvable font is **unmeasured, never clean**: no font, no claim.
+- **Seven security-review findings fixed in the same change**, the first of them serious: the hand-rolled cmap parser's format-12 branch took `start`/`end` as raw UInt32s, so one 12-byte record claiming `[0, 0xFFFFFFFF]` drove 4.29 billion `Set.add` calls — **548 MB RSS and a hard V8 abort under a 256 MB heap, from a 68-byte file**. Now clamped to `0x10FFFF`.
+- Format 4 is bounded by **work done, not set size**. Budgeting on `out.size` looks equivalent and is not: format 4 caps at 65,536 codepoints, so thousands of overlapping full-range segments never grow the set past that ceiling and loop anyway — **5,430 ms → 41 ms**.
+- Every offset read from the font is bounds-checked before use; five malformed shapes that each threw an uncaught `RangeError` now return cleanly. Node bounds-checks `readUInt*BE`, so this was availability, never disclosure.
+- `scriptFonts` is a null-prototype object and the read site uses `Object.hasOwn`. A preamble naming a font `constructor` resolved through the prototype chain to a truthy value, sailed past the unmeasured guard, and threw on `.has`.
+- **Font-family declarations are found by scanning, not by regex.** CodeQL flagged `js/polynomial-redos` on the pattern even after the whitespace fix, for a *different* ambiguity in the same expression: `[^\]]*` inside `\[...\]` rescans to end-of-input from every unterminated `[`, so N declaration heads cost O(N²). A scan has nothing to backtrack — 32,000 unterminated heads go from a quadratic blow-up to **1 ms**, and the security sub-agent had rated the same regex only LOW after measuring the other input shape.
+- `FONT_FAMILY` no longer splits whitespace ambiguously across two nullable `\s*` (**2,530 ms → 0 ms** at 64k spaces), and `partition()` caps its rewrite passes rather than looping unbounded on deep nesting.
+- An unparseable font is now dropped from the map — genuinely unmeasured — rather than mapping to an empty set that would report every character in that script as a gap. The doc comment previously promised an assertion that did not exist.
+- Self-tested against both real failures before being trusted — `ǣ` planted in Latin and `ɔ` planted in Bengali each fire by exact codepoint, a Devanagari letter inside a Bengali wrapper fires on the script layer, and a covered character stays silent.
+
+
 ### Added - the literal-markup gate (HL-C217, HL-C221)
 
 - Add `literal-markup.ts`: authoring markup that survives escaping into reader-facing text — HTML entities, numeric entities, and a closed list of bare HTML tags.

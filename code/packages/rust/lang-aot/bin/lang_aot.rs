@@ -47,6 +47,7 @@ fn main() -> ExitCode {
     //   * Intel8008Bin → .bin (foo.oct → foo.bin), shares the `.bin` convention with RV32I
     //   * Armv7Bin     → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Intel4004Bin → .bin (foo.bf → foo.bin), shares the `.bin` convention
+    //   * Arm1Bin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
@@ -56,6 +57,7 @@ fn main() -> ExitCode {
         EmitMode::Intel4004Bin => input.with_extension("bin"),
         EmitMode::Ge225Bin => input.with_extension("bin"),
         EmitMode::Ibm704Bin => input.with_extension("bin"),
+        EmitMode::Arm1Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -125,6 +127,14 @@ enum EmitMode {
     /// 1959 — the closing half of the **CAR/CDR birthplace
     /// round-trip**.
     Ibm704Bin,
+    /// Flat `.bin` of little-endian 32-bit ARM1 (ARMv1) instruction
+    /// words via `arm1-backend`.  Cross-platform.  Downstream
+    /// consumers: the in-tree `arm1-simulator` or any external
+    /// ARM1/ARMv1 emulator.  The ARM1 (1985) is Sophie Wilson and
+    /// Steve Furber's original Acorn RISC Machine — the first
+    /// commercially successful RISC chip and architectural ancestor
+    /// of the already-migrated ARMv7 lane.
+    Arm1Bin,
 }
 
 struct CliArgs {
@@ -205,9 +215,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "intel4004" | "i4004" | "4004" => Ok(EmitMode::Intel4004Bin),
         "ge225" | "ge-225" | "225" => Ok(EmitMode::Ge225Bin),
         "ibm704" | "ibm-704" | "704" => Ok(EmitMode::Ibm704Bin),
+        "arm1" | "armv1" | "arm-1" => Ok(EmitMode::Arm1Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1"
         )),
     }
 }
@@ -281,6 +292,15 @@ Options:
                                                 — the birthplace round-trip (CAR/CDR
                                                 are literal 704 instruction-field
                                                 mnemonics)
+                             arm1 | armv1 | arm-1
+                                              → flat .bin of little-endian 32-bit
+                                                ARM1 (ARMv1) instruction words via
+                                                arm1-backend; cross-platform; load
+                                                into arm1-simulator or an external
+                                                ARM1/ARMv1 emulator (Sophie Wilson
+                                                and Steve Furber's original Acorn
+                                                RISC Machine, 1985 — architectural
+                                                ancestor of the ARMv7 lane above)
   -h, --help               Show this help.\
 ");
 }
@@ -350,6 +370,16 @@ fn dispatch(
     // mnemonics.  Downstream is always an emulator or replica.
     if emit == EmitMode::Ibm704Bin {
         return lang_aot::compile_file_to_ibm704_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // ARM1 .bin emission is also cross-platform — flatten each
+    // 32-bit ARM1 word to little-endian bytes (ARM1's byte order —
+    // see arm1_simulator::ARM1::read_word/write_word).  No linker,
+    // no host gating (no modern dev host is ARM1 silicon);
+    // downstream is always arm1-simulator or an external ARM1/ARMv1
+    // emulator.
+    if emit == EmitMode::Arm1Bin {
+        return lang_aot::compile_file_to_arm1_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

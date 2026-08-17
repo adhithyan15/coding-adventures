@@ -504,9 +504,15 @@ export function loadExamInventory(
     if (point.category === "__proto__" || point.category === "constructor" || point.category === "prototype") {
       throw new Error(`exam inventory: point '${point.id}' uses a reserved category name`);
     }
-    if (Array.isArray(point.probe) && point.probe.length === 0) {
+    // `covered` is `probe !== null && ...`. A MISSING key is `undefined`, which is
+    // not `null`, so the point scores COVERED while demonstrating nothing -- and
+    // an inventory with every probe deleted reports 100% and silently suppresses
+    // its own work item. The empty-array case was already refused for exactly
+    // this reason; `undefined` and a non-array are the same fault in a different
+    // shape, so all three are refused together.
+    if (!(point.probe === null || (Array.isArray(point.probe) && point.probe.length > 0))) {
       throw new Error(
-        `exam inventory: point '${point.id}' has an empty probe; use null to mean "nothing in the corpus covers this"`,
+        `exam inventory: point '${point.id}' has no usable probe; use null to mean "nothing in the corpus covers this"`,
       );
     }
   }
@@ -543,4 +549,157 @@ export function listExamInventories(root = defaultCurriculumRoot()): { language:
     }
   }
   return found;
+}
+
+/**
+ * Everything the glyph gate needs: each book's preamble, its generated files, and
+ * the coverage of every vendored font its preamble names.
+ *
+ * Fonts are read from `_fonts/` and their cmaps decoded here rather than in
+ * `glyph-coverage.ts`, so that module stays pure over data and can be tested
+ * without a font on disk.
+ */
+export function loadBookFonts(root = defaultCurriculumRoot()): {
+  language: string;
+  preamble: string;
+  files: { path: string; text: string }[];
+  scriptFonts: Record<string, Set<number>>;
+}[] {
+  const out: ReturnType<typeof loadBookFonts> = [];
+  const fontCache = new Map<string, Set<number>>();
+  for (const track of sortedEntries(root)) {
+    if (!track.isDirectory()) continue;
+    const bookDir = resolve(root, track.name, "book");
+    const preamblePath = resolve(bookDir, "preamble.tex");
+    if (!existsSync(preamblePath)) continue;
+    const preamble = readFileSync(preamblePath, "utf8");
+
+    const files: { path: string; text: string }[] = [];
+    const walk = (dir: string): void => {
+      for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+        const full = resolve(dir, entry.name);
+        if (entry.isDirectory()) walk(full);
+        else if (entry.name.endsWith(".tex") && entry.name !== "preamble.tex") {
+          files.push({ path: `${track.name}/book/${full.slice(bookDir.length + 1)}`, text: readFileSync(full, "utf8") });
+        }
+      }
+    };
+    walk(bookDir);
+
+    // `Object.create(null)`: a font named `constructor` or `__proto__` in a
+    // preamble would otherwise resolve through the prototype chain to a truthy
+    // value, sail past the `if (!cover)` unmeasured guard, and throw on
+    // `cover.has`. The write side only accepts `.ttf`/`.otf`; the READ side had
+    // no such filter, and that asymmetry was the bug.
+    const scriptFonts: Record<string, Set<number>> = Object.create(null);
+    for (const [, file] of preamble.matchAll(/\\newfontfamily\\\w+\s*(?:\[[^\]]*\])?\s*\{([^}]*)\}/g)) {
+      const name = file.trim();
+      if (!name.endsWith(".ttf") && !name.endsWith(".otf")) continue;
+      let cover = fontCache.get(name);
+      if (!cover) {
+        const path = resolve(root, "_fonts", name.split("/").pop()!);
+        // A font that cannot be resolved is left OUT of the map, which
+        // `measureGlyphCoverage` treats as unmeasured rather than as clean.
+        if (!existsSync(path)) continue;
+        cover = readFontCoverage(readFileSync(path));
+        // An empty cmap means the font did not parse. Leaving it OUT of the map
+        // is genuinely unmeasured; putting it in would report every character in
+        // that script as missing. The doc comment above used to promise an
+        // assertion here that did not exist.
+        if (cover.size === 0) continue;
+        fontCache.set(name, cover);
+      }
+      scriptFonts[name] = cover;
+    }
+    out.push({ language: track.name, preamble, files, scriptFonts });
+  }
+  return out;
+}
+
+/**
+ * Codepoints a TrueType/OpenType font covers, from its `cmap` table.
+ *
+ * Only formats 4 and 12 are decoded; between them they carry every mapping in
+ * the vendored Noto faces. A font whose cmap uses neither yields an EMPTY set,
+ * which would report every character missing -- so `loadBookFonts` drops an
+ * empty result from the map, leaving that font genuinely unmeasured.
+ */
+function readFontCoverage(buffer: Buffer): Set<number> {
+  const out = new Set<number>();
+  // Every offset below is read FROM the buffer and then used to index it, so each
+  // one is bounds-checked before use. Node's readUInt*BE throws rather than
+  // reading out of bounds, so the risk is availability, not disclosure -- but an
+  // unhandled RangeError takes the whole report down, and a font is exactly the
+  // kind of file somebody drops in without looking.
+  if (buffer.length < 12) return out;
+  const numTables = buffer.readUInt16BE(4);
+  let cmapOffset = 0;
+  for (let i = 0; i < numTables; i += 1) {
+    const record = 12 + i * 16;
+    if (record + 16 > buffer.length) break;
+    if (buffer.toString("ascii", record, record + 4) === "cmap") cmapOffset = buffer.readUInt32BE(record + 8);
+  }
+  if (cmapOffset === 0 || cmapOffset + 4 > buffer.length) return out;
+  const numSub = buffer.readUInt16BE(cmapOffset + 2);
+  // A budget on WORK DONE, not on set size. Bounding by `out.size` looks
+  // equivalent and is not: format 4 caps at 65,536 codepoints, so a font with
+  // thousands of overlapping full-range segments never grows the set past that
+  // ceiling and loops for 5.4 seconds anyway. Counting additions instead bounds
+  // both branches. 0x110000 is the whole of Unicode; anything past it is a font
+  // asking to map more codepoints than exist.
+  const BUDGET = 0x110000;
+  let work = 0;
+  for (let i = 0; i < numSub; i += 1) {
+    const sub = cmapOffset + 4 + i * 8;
+    if (sub + 8 > buffer.length) break;
+    const table = cmapOffset + buffer.readUInt32BE(sub + 4);
+    if (table + 4 > buffer.length) continue;
+    const format = buffer.readUInt16BE(table);
+    if (format === 4) {
+      if (table + 16 > buffer.length) continue;
+      const segX2 = buffer.readUInt16BE(table + 6);
+      const ends = table + 14;
+      const starts = ends + segX2 + 2;
+      if (starts + segX2 > buffer.length) continue;
+      for (let s = 0; s < segX2; s += 2) {
+        const end = buffer.readUInt16BE(ends + s);
+        const start = buffer.readUInt16BE(starts + s);
+        // `start > end` is malformed; without the guard a crafted font can spend
+        // 45 seconds on segments that contribute nothing.
+        if (start === 0xffff || start > end) continue;
+        for (let c = start; c <= end; c += 1) out.add(c);
+        work += end - start + 1;
+        if (work >= BUDGET) return out;
+      }
+    } else if (format === 12) {
+      if (table + 16 > buffer.length) continue;
+      const groups = buffer.readUInt32BE(table + 12);
+      for (let g = 0; g < groups; g += 1) {
+        const rec = table + 16 + g * 12;
+        if (rec + 12 > buffer.length) break;
+        const start = buffer.readUInt32BE(rec);
+        // UNCLAMPED, this was a hard OOM in a 68-byte file: one group record
+        // claiming [0, 0xFFFFFFFF] drives 4.29 BILLION Set.add calls, 548MB RSS
+        // and a V8 fatal abort under a constrained heap. Clamping to the real
+        // Unicode ceiling costs nothing and removes the whole class.
+        const end = Math.min(buffer.readUInt32BE(rec + 4), 0x10ffff);
+        if (start > end || start > 0x10ffff) continue;
+        for (let c = start; c <= end; c += 1) out.add(c);
+        work += end - start + 1;
+        if (work >= BUDGET) return out;
+      }
+    }
+  }
+  return out;
+}
+
+/** The characters verified present in the books' main font. */
+export function loadMainFontCharset(root = defaultCurriculumRoot()): Set<string> {
+  const parsed = JSON.parse(readFileSync(resolve(root, "core", "main-font-charset.json"), "utf8")) as {
+    characters: { char: string }[];
+  };
+  if (!Array.isArray(parsed.characters) || parsed.characters.length === 0) {
+    throw new Error("main-font-charset.json has no characters; refusing to report a clean glyph gate");
+  }
+  return new Set(parsed.characters.map((entry) => entry.char));
 }

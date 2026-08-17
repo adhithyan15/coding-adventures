@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.6.0 — SIR21 T3b-2 Slice 2: `trunc_div`/`utrunc_div`/`true_div`
+
+Additive-only: adds the three genuinely-new division functions from the
+SIR21 T3b-2 four-way `/` split (`code/specs/SIR21-type-system-and-integer-semantics.md`
+§E3). `div` (already present) IS `div_floor` — no change there.
+
+- `trunc_div(a, b)` — signed truncating division (rounds toward zero,
+  matching C's integer `/`). Python's own `//` floors, not truncates, so
+  this cannot delegate to a native operator; the exact truncated quotient
+  is `divmod`'s floor quotient adjusted by one exactly when there's a
+  nonzero remainder and the operands' signs differ. `divmod` operates on
+  Python's arbitrary-precision `int` directly, so unlike a fixed-width
+  `i64`/`int64` backend there is no precision loss and no `MIN / -1`
+  overflow edge case to guard.
+- `utrunc_div(a, b)` — delegates straight to `trunc_div`. Python's `int`
+  has no fixed width and no separate signed/unsigned representation
+  (unlike C/Go/Rust, which must reinterpret bits so a `u64` ≥ 2^63
+  doesn't misread as negative), so this backend's `udiv_trunc` computes
+  identically to `div_trunc` — documented, not a bug. Kept as a distinct
+  function purely so every sibling backend's four names are all present.
+- `true_div(a, b)` — always true-divides, even on two int operands
+  (`true_div(6, 3) == 2.0`, not `2`). Models Python's own `/`, but routed
+  through this helper (not a bare `/`) so the zero-divisor path re-raises
+  as the typed `SirError` every sibling op uses, matching `div`'s own
+  wrap-the-native-fault convention.
+- All three raise `SirError("ZeroDivisionError", "divided by 0")` on a
+  zero divisor.
+- Exported from `__init__.py` and wired into `runtime.py`'s
+  `call_builtin` dispatch table under `div_floor`/`div_trunc`/
+  `udiv_trunc`/`div_true`.
+
 ## 0.5.0 — SIR28 §7: remove dead `sir_print`/`sir_puts`
 
 Every SIR frontend now emits `__sys_write__` (`semantic-ir-to-python`'s

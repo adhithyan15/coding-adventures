@@ -66,6 +66,11 @@ module CodingAdventures
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     STARLARK_TOKENS_PATH = File.join(GRAMMAR_DIR, "starlark", "starlark.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Tokenize a string of Starlark source code into an array of Token objects.
     #
@@ -83,18 +88,11 @@ module CodingAdventures
     # @param source [String] Starlark source code to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source)
-      # Read the starlark.tokens file and parse it into a TokenGrammar.
-      # The TokenGrammar contains the regex patterns, keyword lists,
-      # reserved word lists, and mode settings (indentation mode).
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(STARLARK_TOKENS_PATH, encoding: "UTF-8")
-      )
-
       # Create a GrammarLexer instance and run it. The lexer walks through
       # the source character by character, matching patterns from the grammar
       # in priority order (first match wins). When in indentation mode, it
       # also tracks leading whitespace and emits INDENT/DEDENT tokens.
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.tokenize
     end
   end

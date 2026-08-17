@@ -49,6 +49,11 @@ module CodingAdventures
     #                 tokenizer.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     MOSAIC_TOKENS_PATH = File.join(GRAMMAR_DIR, "mosaic", "mosaic.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Tokenize a string of Mosaic source into an array of Token objects.
     #
@@ -65,11 +70,7 @@ module CodingAdventures
     # @param source [String] Mosaic source text to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(MOSAIC_TOKENS_PATH, encoding: "UTF-8")
-      )
-
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.tokenize
     end
   end

@@ -15,11 +15,18 @@ import {
   listExamInventories,
   loadChapterPolicy,
   loadEverything,
+  loadExamInventory,
   loadTrackChapters,
 } from "./loader.js";
 import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport } from "./report.js";
-import { buildCompletionPlan, renderCompletionPlan, type InventoryPresence } from "./completion-plan.js";
+import {
+  buildCompletionPlan,
+  renderCompletionPlan,
+  type ExamCoverageSummary,
+  type InventoryPresence,
+} from "./completion-plan.js";
+import { measureExamCoverage } from "./exam-inventory.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 
 interface PlanOptions {
@@ -95,15 +102,74 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     return 2;
   }
 
+  // Deduped on (language, level). `listExamInventories` does not, so two files
+  // declaring the same pair -- which the `spanish -> es` naming convention makes
+  // easy to create by accident -- produced two `exam-point` items carrying the
+  // IDENTICAL id, double-counted the projection, and shrank the `exam-inventory`
+  // backlog. `WorkItem.id` is documented as stable and derivable.
+  const seenInventory = new Set<string>();
   const inventories = listExamInventories(options.root).flatMap<InventoryPresence>((entry) => {
     const level = CEFR_LEVELS.find((candidate) => candidate === entry.level);
-    return level ? [{ language: entry.language, level }] : [];
+    if (!level) return [];
+    const key = `${entry.language}/${level}`;
+    if (seenInventory.has(key)) return [];
+    seenInventory.add(key);
+    return [{ language: entry.language, level }];
   });
+
+  // Coverage is measured here rather than in `buildCompletionPlan`, which stays
+  // pure over report data.
+  //
+  // AN UNREADABLE INVENTORY IS NOT AN ABSENT ONE, and an earlier version of this
+  // comment claimed it resurfaced as an `exam-inventory` item. It did not.
+  // `listExamInventories` lists any file that parses and declares a string
+  // language/level; `loadExamInventory` is far stricter. A file in the gap
+  // between them was listed as PRESENT -- so no `exam-inventory` item -- and threw
+  // on load -- so no `exam-point` item. The track vanished from both families
+  // while the report asserted its inventory existed. Renaming one file toward the
+  // `spanish -> es` code convention the loader already uses is enough to trigger
+  // it, with no corruption at all.
+  //
+  // So failures are COLLECTED: named on stderr, removed from the presence list so
+  // the `exam-inventory` item genuinely does come back, and counted separately in
+  // the projection. Unmeasured must never be reportable as clean.
+  const examCoverage: ExamCoverageSummary[] = [];
+  const unreadable: { language: string; level: CefrLevel; reason: string }[] = [];
+  const readable: InventoryPresence[] = [];
+  for (const entry of inventories) {
+    try {
+      const coverage = measureExamCoverage(loadExamInventory(entry.language, entry.level, options.root), lessons);
+      readable.push(entry);
+      examCoverage.push({
+        language: entry.language,
+        level: entry.level,
+        enumerated: coverage.enumerated,
+        covered: coverage.covered,
+      });
+    } catch (error) {
+      // Bound and filtered. A bare `catch {}` swallows a TypeError from a future
+      // refactor of `measureExamCoverage` exactly like a missing file -- which
+      // would turn this whole feature off and print a report whose two lines
+      // contradict each other, with nothing in CI to notice.
+      const cause = error as NodeJS.ErrnoException;
+      const expected =
+        error instanceof SyntaxError ||
+        cause?.code === "ENOENT" ||
+        (error instanceof Error && error.message.startsWith("exam inventory:"));
+      if (!expected) throw error;
+      unreadable.push({ ...entry, reason: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  for (const bad of unreadable) {
+    process.stderr.write(`plan: ${bad.language} ${bad.level} inventory exists but could not be read -- ${bad.reason}\n`);
+  }
 
   const plan = buildCompletionPlan({
     levelGate: report.levelGate,
     scriptClosure: report.scriptClosure,
-    inventories,
+    inventories: readable,
+    examCoverage,
+    unreadableInventories: unreadable.length,
     ceiling: options.ceiling,
     headSize: options.headSize,
   });
@@ -111,7 +177,10 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
   process.stdout.write(
     options.format === "json" ? `${JSON.stringify(plan, null, 2)}\n` : `${renderCompletionPlan(plan).join("\n")}\n`,
   );
-  return 0;
+  // Non-zero when a target we can SEE could not be measured. The queue is still
+  // printed and still usable; the exit code is what stops it being mistaken for a
+  // complete answer by anything automated.
+  return unreadable.length > 0 ? 1 : 0;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

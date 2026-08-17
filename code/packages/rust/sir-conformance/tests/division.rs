@@ -48,8 +48,12 @@
 //! remains as a granular per-backend guard. The toolchain-free control below
 //! always runs.
 
+use semantic_ir::{
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Span,
+    Stmt,
+};
 use sir_conformance::oracle::{DivOp, Outcome};
-use sir_conformance::{run_source, RunOutcome, Target};
+use sir_conformance::{run_module, run_source, RunOutcome, Target};
 
 /// `(lhs, rhs)` pairs covering every sign combination plus exact division.
 /// Ruby evaluates each with **floor** `/`.
@@ -210,4 +214,207 @@ fn python_division_is_ruby_floor_faithful() {
             "python_division_is_ruby_floor_faithful: python3 / sir-runtime-* unavailable — skipped"
         );
     }
+}
+
+// ── SIR21 T3b-2 Slice 3: direct-call coverage for the new division ops ─────
+//
+// `division_matches_ruby_floor_on_every_backend` above sources through Ruby,
+// so it only ever exercises bare `/` (no frontend emits `div_floor`/
+// `div_trunc`/`udiv_trunc`/`div_true` yet — that's Slices 4-6 of this arc).
+// This section calls each new op DIRECTLY by name via a hand-built `Module`
+// (`sir_conformance::run_module`, added alongside these tests specifically
+// because no source text exists that would lower to these builtins), so it
+// proves every one of Slice 2's 7 backend PRs actually wired the dispatch
+// table correctly — independent of any frontend migration.
+
+fn s() -> Span {
+    Span::synthetic()
+}
+fn ilit(v: i64) -> Expr {
+    Expr::IntLit { value: v, span: s() }
+}
+fn call(name: &str, args: Vec<Expr>) -> Expr {
+    Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+}
+fn bin(name: &str, a: Expr, b: Expr) -> Expr {
+    call(name, vec![a, b])
+}
+fn print_stmt(expr: Expr) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            span: s(),
+        },
+        span: s(),
+    }
+}
+
+fn div_module(stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: "divdirect".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
+            Feature::Floats,
+            Feature::Exceptions,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: s(),
+    }
+}
+
+/// Every backend that runs a `bin(op, lhs, rhs)` case must reproduce
+/// `expected`. Mirrors [`division_matches_ruby_floor_on_every_backend`]'s
+/// own accounting: `Skipped` is not asserted (no toolchain), `Failed` is a
+/// hard failure naming the offending backend, and at least one backend must
+/// have actually run or the assertion proved nothing.
+fn assert_direct_call_matches_on_every_backend(op: &str, lhs: i64, rhs: i64, expected: &str) {
+    let m = div_module(vec![print_stmt(bin(op, ilit(lhs), ilit(rhs)))]);
+    // `run_module`'s temp filename is built from `name` + target + PID only
+    // (no per-call nonce) — since `cargo test` runs test functions
+    // concurrently within one process, two calls sharing a name AND target
+    // race on the same temp path, so distinguish every case explicitly.
+    let name = format!("divdirect_{op}_{lhs}_{rhs}").replace('-', "n");
+    let mut ran = 0usize;
+    for &target in Target::all() {
+        match run_module(&name, &m, target) {
+            RunOutcome::Ran(out) => {
+                assert_eq!(
+                    out,
+                    expected,
+                    "\nDIRECT-CALL {op}: backend {} computed {op}({lhs}, {rhs}) = {out}, expected {expected}\n",
+                    target.tag(),
+                );
+                ran += 1;
+            }
+            RunOutcome::Failed(msg) => panic!(
+                "DIRECT-CALL {op}: backend {} failed on {op}({lhs}, {rhs}): {}",
+                target.tag(),
+                msg.lines().next().unwrap_or("")
+            ),
+            RunOutcome::Skipped(_) => {}
+        }
+    }
+    assert!(ran > 0, "DIRECT-CALL {op}({lhs}, {rhs}): no backend toolchain available");
+}
+
+#[test]
+fn direct_call_div_floor_matches_ruby_floor_on_every_backend() {
+    for &(lhs, rhs) in CASES {
+        let expected = floor_expected(lhs, rhs);
+        assert_direct_call_matches_on_every_backend(
+            "div_floor",
+            lhs as i64,
+            rhs as i64,
+            &expected,
+        );
+    }
+}
+
+#[test]
+fn direct_call_div_trunc_truncates_toward_zero_on_every_backend() {
+    for &(lhs, rhs) in CASES {
+        let expected = match DivOp::Trunc.eval(lhs, rhs) {
+            Outcome::Value(v) => v.to_string(),
+            other => panic!("div_trunc case {lhs}/{rhs}: oracle gave {other:?}, expected a Value"),
+        };
+        assert_direct_call_matches_on_every_backend(
+            "div_trunc",
+            lhs as i64,
+            rhs as i64,
+            &expected,
+        );
+    }
+}
+
+/// `udiv_trunc` is only exercised on NON-NEGATIVE operands here — a negative
+/// operand's "unsigned" interpretation genuinely differs across backends
+/// (C/Go/Rust reinterpret the bit pattern as `u64`; Python/Ruby/JS/TS have
+/// no fixed width and no signed/unsigned distinction to reinterpret, so
+/// they'd compute plain signed truncation instead), which is exactly the
+/// documented, intentional per-backend divergence each Slice 2 PR already
+/// recorded — not something this cross-backend parity check should paper
+/// over by picking one interpretation. On non-negative operands every
+/// backend agrees, which is what this asserts.
+#[test]
+fn direct_call_udiv_trunc_matches_div_trunc_on_nonnegative_operands_every_backend() {
+    const NONNEGATIVE_CASES: &[(i128, i128)] = &[(7, 2), (6, 3), (0, 5)];
+    for &(lhs, rhs) in NONNEGATIVE_CASES {
+        let expected = match DivOp::Trunc.eval(lhs, rhs) {
+            Outcome::Value(v) => v.to_string(),
+            other => panic!("udiv_trunc case {lhs}/{rhs}: oracle gave {other:?}, expected a Value"),
+        };
+        assert_direct_call_matches_on_every_backend(
+            "udiv_trunc",
+            lhs as i64,
+            rhs as i64,
+            &expected,
+        );
+    }
+}
+
+/// `div_true` always true-divides — no `DivOp` oracle variant exists for it
+/// (the integer oracle's overflow/rounding model doesn't apply to an op that
+/// unconditionally floats), so expected values are hand-computed the same
+/// way [`FLOAT_CASES`] above already does.
+#[test]
+fn direct_call_div_true_always_true_divides_on_every_backend() {
+    const TRUE_DIV_CASES: &[(i64, i64, &str)] = &[
+        (7, 2, "3.5"),
+        (-7, 2, "-3.5"),
+        (6, 3, "2.0"), // exact division still true-divides, not "2"
+    ];
+    for &(lhs, rhs, expected) in TRUE_DIV_CASES {
+        assert_direct_call_matches_on_every_backend("div_true", lhs, rhs, expected);
+    }
+}
+
+/// Every one of the four new division ops must raise on a zero divisor, on
+/// every backend — a case entirely untested before this Slice 3 addition
+/// (no zero-divisor case existed anywhere in this file). An uncaught raise
+/// is a non-zero exit, which `run_module` reports as `RunOutcome::Failed`
+/// — so here (uniquely in this file) `Failed` is the EXPECTED outcome, not
+/// a test failure; a `Ran` outcome means the zero check silently failed to
+/// fire, which IS the bug this test exists to catch.
+#[test]
+fn direct_call_zero_divisor_raises_for_every_op_on_every_backend() {
+    let mut ran = 0usize;
+    for op in ["div_floor", "div_trunc", "udiv_trunc", "div_true"] {
+        let m = div_module(vec![print_stmt(bin(op, ilit(7), ilit(0)))]);
+        let name = format!("divdirectzero_{op}");
+        for &target in Target::all() {
+            match run_module(&name, &m, target) {
+                RunOutcome::Ran(out) => panic!(
+                    "DIRECT-CALL ZERO-DIVISOR: backend {} did NOT raise for {op}(7, 0) — \
+                     printed {out:?} instead of failing",
+                    target.tag(),
+                ),
+                RunOutcome::Failed(_) => ran += 1,
+                RunOutcome::Skipped(_) => {}
+            }
+        }
+    }
+    assert!(ran > 0, "DIRECT-CALL ZERO-DIVISOR: no backend toolchain available");
 }

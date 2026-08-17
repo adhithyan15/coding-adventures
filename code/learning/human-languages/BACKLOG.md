@@ -13,6 +13,220 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C228 — exam points now outrank vocabulary, and the family had never been generated
+
+HL-C226 recorded the evidence; this acts on it. Two things changed, and the second
+is the one that mattered.
+
+**1. `exam-point` was a declared family that NOTHING GENERATED.** The plan has been
+ranking work for 22 tracks with one of its seven families permanently empty since
+HL15 shipped. Vocabulary was not beating exam points — it was **running
+unopposed**. Every "vocabulary is the top item" observation in this backlog was
+made against a queue that could not have said anything else.
+
+That is worth more than the reordering. A family declared in a type, given a
+priority and a tranche size, and never emitted, looks exactly like a family that
+was considered and lost.
+
+**2. The priority swap, 4 → 3, above vocabulary.** Made against the HL-C226/C227
+measurement rather than an argument, and scoped: vocabulary keeps its place for a
+track with **no** inventory, because there the headword count is the only
+measurement that exists — still 19 of 22 tracks.
+
+Items are ranked at the track's **in-progress** level, not the inventory's. French
+sits at pre-A1 and its A1 gap is grammar-shaped; ranking the item at A1 would sort
+it behind every pre-A1 item and change nothing.
+
+Result: French and German lead with *"cover 54 of 74 A1 exam points french does
+not teach"*. Spanish, at 100%, correctly keeps vocabulary.
+
+### The review found that a comment I wrote was false, and that is the finding
+
+The code and the changelog both said an unreadable inventory "shows up as an
+`exam-inventory` item instead". **It did not.** `listExamInventories` lists any
+file that parses and declares a string language/level; `loadExamInventory` is far
+stricter. A file in the gap between them was listed as PRESENT — so no
+`exam-inventory` item — and threw on load — so no `exam-point` item. **The track
+vanished from both families while the report asserted its inventory existed**, at
+exit 0, with nothing on stderr.
+
+No corruption is needed to trigger it: rename one file toward the `spanish → es`
+code convention the loader **already uses**, and it is unmeasurable forever.
+
+Fixed by collecting failures — stderr, removed from the presence list, their own
+projection category, exit 1. And the general lesson: **a comment asserting a
+fallback behaviour is a claim, and claims about error paths are the ones least
+likely to have been run.** This one had never been executed once.
+
+### Three more that were fail-open in the same direction
+
+- **A missing `probe` key scores as COVERED.** `covered` is `probe !== null && …`
+  and `undefined !== null` is true, so an inventory with every probe deleted
+  reports **100%** and suppresses its own work item. Never reached the try/catch.
+  The empty-array case had been refused for exactly this reason; `undefined` is
+  the same fault in a different shape.
+- **A bare `catch {}`** swallowed a `TypeError` from any future refactor exactly
+  like a missing file — turning the feature off and printing a self-contradicting
+  report, with nothing in CI to notice.
+- **`plan-cli` had no test file at all**, so every one of the review's dirty
+  controls left the suite green. It now has five, each built from a control.
+
+## HL-C227 — German says the same thing French did, which makes it a pattern rather than a track
+
+Third inventory. **German covers 21 of 70 (30%)** against the Goethe-Zertifikat A1
+syllabus. Two tracks, authored independently from two different awarding bodies'
+syllabuses, and the shape is the same:
+
+```
+                     French          German
+questions            0/5             0/4
+sentence structure   0/4             1/5
+nouns / articles     0/4             0/5  (articles)
+prepositions         0/4             0/4
+verbs                6/17            2/12
+core vocabulary      6/10            6/12   <- the strongest column both times
+```
+
+**German holds 123 atoms across 106 lessons and SIX of them are grammar.** French
+holds 109 across 105 with NINE. Neither track can currently take a candidate to a
+question, an article, or a preposition — and both have respectable vocabulary.
+
+That was a plausible one-off after HL-C226. With a second track it is a property
+of how the corpus was built: **vocabulary tranches are the work that has been
+done, so vocabulary is what the corpus is good at.** The exam does not weight it
+that way.
+
+### The three numbers side by side, and why Spanish is not the counter-example
+
+```
+spanish  85/85  (100%)
+french   20/74  (27%)
+german   21/70  (30%)
+```
+
+Spanish's 100% is **not** an artifact of grading its own homework — HL-C128
+deliberately closed those gaps step by step over ten merged tranches, and the
+inventory was written first. What Spanish shows is the *cost*: bringing one track
+from a French-shaped number to 100% took a sustained, explicitly-grammar programme.
+French and German show what every other track looks like before that work.
+
+**So the real estimate the plan is missing:** there are 20 tracks in a
+French/German-shaped position, and closing each takes something like HL-C128. That
+is not a vocabulary problem and no vocabulary tranche will touch it.
+
+### Method notes for the next inventory
+
+- **Read atom ids out of the corpus.** `GE-LEX-GELB-05` was a guess; the real one
+  is `GE-LEX-GELB-04`. A wrong id is fail-safe and silent — it reports taught
+  material as a gap.
+- **Verify by re-reading the file in the command that wrote it.** Both inventories
+  did; HL-C226's 88% bug came from not doing it.
+- **A probe that cannot resolve is worse than an honest null.** Where the corpus
+  has nothing for a point, `null` is the answer.
+
+## HL-C226 — French A1 is the second exam inventory, and it says the gap is GRAMMAR not vocabulary
+
+`exam-inventory-french-a1.json`: 74 points, 12 categories, restated from the CECRL
+A1 descriptors and the DELF A1 syllabus structure. **French covers 20 of 74 (27%)** —
+the first honest exam number for any track other than Spanish. 1 of 132 becomes 2.
+
+**The shape matters more than the percentage:**
+
+```
+0/5   L'interrogation      a candidate cannot ask a question
+0/4   La phrase            no sentence structure at all
+0/4   Le nom               gender, plural, agreement
+0/4   Les prepositions     no a/de, no contractions, no place or time
+6/17  Le verbe             the best-covered grammar category, still a third
+6/10  Lexique de base      vocabulary is the STRONGEST column
+```
+
+**French has 105 lessons and 109 atoms, of which NINE are grammar.** The vocabulary
+tranches were never going to move these numbers, because the gap is not lexical.
+This is the concrete form of what HL-C182 warned about in the abstract: the corpus
+has been measured on the thing it is good at.
+
+**Consequence for the plan, and it is a real one.** `completion-plan.ts` ranks
+`vocabulary` above `exam-point` for every track, because vocabulary is the biggest
+number. For French that ordering is wrong: **54 of its 74 A1 points have no
+corresponding atom in the corpus at all**, and no quantity of headwords creates
+one. `exam-point` should outrank `vocabulary` for any track whose inventory exists
+and reports a grammar-shaped gap. Not changed yet — recorded with the evidence, so
+the change is made against a measurement rather than a hunch.
+
+### Two authoring mistakes, both caught by the NUMBER being implausible
+
+1. **`probe: null` was dropped from 53 points.** A helper that omitted
+   `None`-valued keys removed the key entirely rather than writing `null`, and
+   `covered` is `point.probe !== null && …` — an absent key is `undefined`, which
+   is not `null`, so it scored COVERED. It reported **65/74 (88%)** for a track
+   with nine grammar atoms. `null` is load-bearing here; dropping it inverts the
+   measurement in the flattering direction.
+2. **The atom suffixes were guessed.** `FR-LEX-CAFE-01` exists; `FR-LEX-VERT-01`
+   does not, because the numeric suffix varies per lesson. Nine points read as
+   partial until the real ids were read out of the corpus. 16% → 27%.
+
+Both are the stale-annotation failure `exam-inventory.ts` exists to prevent,
+arriving from the AUTHORING side rather than the corpus side. **Neither was caught
+by a test** — both were caught by the number looking wrong. Now pinned by three
+tests: every point keeps its probe key, every probed atom exists in the corpus,
+and the gap stays grammar-shaped.
+
+**Two habits worth keeping:** re-read a file in the same command that wrote it,
+and read atom ids out of the corpus rather than typing them.
+
+### One point is deliberately unprobeable
+
+`pleuvoir` has no lexical atom anywhere in the track, so the weather point keeps
+`probe: null` rather than a probe that could never resolve. A probe that cannot
+succeed is worse than an honest null: it reads as a content gap when it is a data
+gap.
+## HL-C225 — the glyph gate is BUILT, and it took three wrong probes to find the model
+
+HL-C214 specified it and declined to build it. HL-C223 upgraded it to a job after
+a second CI failure. Built now, blocking, 13 tests.
+
+**Every wrong version reported a confident number:**
+
+1. **Probe one** checked the track's SCRIPT characters against the track's SCRIPT
+   font. Reported clean, and was asking the wrong question — those characters were
+   never at risk, because they sit inside `\bn{…}`, which selects a face chosen
+   precisely because it covers them. **This is the probe that let `ɔ` through.**
+2. **Probe two** checked everything else against Latin Modern with a hardcoded
+   list of wrapper commands. The list was wrong — Sanskrit's is `\sk`, not `\sa`
+   — so it reported **14,563 missing characters** on a corpus that compiles clean.
+3. **Probe three** read the wrappers from the preamble and still reported four
+   missing on a clean corpus, because the preambles map them:
+   `\newunicodechar{ṉ}{\b{n}}` renders the character as a composed accent.
+
+**The corpus was the control throughout.** Every book compiles with
+`missing_character=0`, so any probe reporting thousands — or four — was wrong by
+construction. That is what made three iterations converge instead of shipping a
+false clean.
+
+**The model that survives:** a main-font character is safe if it is in Latin
+Modern **or** mapped by `\newunicodechar` in *that book's* preamble; a wrapped
+character is safe if it is in *that wrapper's* font. Validated: 125 main-font
+characters, 121 in the font, 4 mapped, 0 unaccounted for.
+
+### Two design decisions worth defending
+
+**The main-font charset is committed, not queried.** Latin Modern ships with TeX
+Live and is not resolvable from a plain checkout, so a live query would leave this
+gate silently unmeasured wherever TeX Live is absent — most places, including the
+test runner, which is the one place it needs to run. Recorded in
+`core/main-font-charset.json` with provenance and instructions for adding to it.
+Script fonts are vendored under `_fonts/`, so those are read live.
+
+**An unresolvable font is unmeasured, never clean.** No font, no claim — the same
+distinction `script-closure.ts` draws for an unknown script.
+
+### It also closes a layer no previous probe could see
+
+A character in the *wrong* script font — Devanagari inside a `\bn{…}` — renders
+as tofu and would never have reached the main-font check. That is the HL-C202
+mixed-script class arriving by a different road, caught by construction rather
+than by a separate detector.
 ## HL-C224 — the loop's own push cadence is now failing CI, and the failures look like code failures
 
 Three checks on PR 11870 failed with:
@@ -98,6 +312,32 @@ Same family as `git stash` not stashing untracked files (HL-C213).
 
 **Print `git branch --show-current` in the same command as any cross-branch
 diagnosis.** Cheap, and it would have saved the whole detour.
+
+## HL-C223b — the glyph gate caught its first defect BEFORE a push, and it was a third instance
+
+The Hindi tranche used **ɑ** (U+0251 LATIN SMALL LETTER ALPHA) in four
+romanizations — `bhɑ`, `yɑ`, `bɑ`, `ḍɑ`. Latin Modern does not have it.
+
+That is the **third** instance of this exact class:
+
+```
+ǣ  U+01E3  Latin      HL-C214   found by CI, 11 minutes after push
+ɔ  U+0254  Bengali    HL-C223   found by CI, 11 minutes after push
+ɑ  U+0251  Hindi      here      found locally, BEFORE push
+```
+
+**The pattern is now unmistakable and worth stating as a rule.** Every instance is
+a **phonetic character in a romanization**, reached for because the prose is
+describing a sound English has no letter for. That is not an occasional slip; it
+is what an etymology-and-pronunciation curriculum does several times per tranche.
+
+Latin Modern is a typesetter's font: excellent Western European coverage, and it
+holds almost none of the IPA block. Known present and safe: `ā ī ō ū ô ə`. Known
+absent: `ǣ ɔ ɑ`, and by extension most of U+0250–U+02AF.
+
+**The cheap habit that removes the whole class:** describe the sound in words
+("the vowel of English *awe*") and romanise with a character the font has. The IPA
+symbol buys precision the reader mostly cannot use and costs a CI round trip.
 
 ## HL-C222 — Bengali: same four ideas, different DEFAULT, and a letter that lies about its sound
 

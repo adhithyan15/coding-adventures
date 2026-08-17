@@ -16,6 +16,7 @@ module GrammarToolsProgram
     TYPESCRIPT_VERSIONS = %w[ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8].freeze
     PYTHON_VERSIONS = %w[2.7 3.0 3.6 3.8 3.10 3.12].freeze
     JAVA_VERSIONS = %w[1.0 1.1 1.4 5 7 8 10 14 17 21].freeze
+    CSHARP_VERSIONS = %w[1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0].freeze
 
     def initialize(root)
       @root = Pathname(root).expand_path
@@ -50,6 +51,28 @@ module GrammarToolsProgram
       1
     end
 
+    # Regenerate only the Ruby-target _grammar.rb files. Unlike #run, this
+    # never builds the Go/Rust binaries and never shells out to Python or
+    # Node — every compile_ruby_* call below is pure Ruby (parses a
+    # .tokens/.grammar file with the in-process GrammarTools library and
+    # writes a generated .rb module), so this is safe and fast to run in a
+    # CI job that only has a Ruby toolchain available (e.g. a drift check
+    # that fails the build if a committed _grammar.rb no longer matches its
+    # source .tokens/.grammar file).
+    def run_ruby_only
+      puts
+      puts "=== Generating Ruby _grammar files ==="
+      puts
+
+      emit_ruby_only_sections
+      emit_ruby_versioned_sections
+
+      report
+    rescue StandardError => e
+      warn "ERROR: #{e.message}"
+      1
+    end
+
     private
 
     def build_toolchains(tmp_dir)
@@ -64,6 +87,8 @@ module GrammarToolsProgram
       section("css") do
         compile_python_tokens("css")
         compile_python_grammar("css")
+        compile_ruby_tokens("css")
+        compile_ruby_grammar("css")
         compile_rust_tokens("css")
         compile_rust_grammar("css")
       end
@@ -123,6 +148,8 @@ module GrammarToolsProgram
       section("lisp") do
         compile_python_tokens("lisp")
         compile_python_grammar("lisp")
+        compile_ruby_tokens("lisp")
+        compile_ruby_grammar("lisp")
         compile_rust_tokens("lisp")
         compile_rust_grammar("lisp")
       end
@@ -234,6 +261,64 @@ module GrammarToolsProgram
         compile_typescript_tokens("xml")
         compile_rust_tokens("xml", tokens_name: "xml_rust")
       end
+
+      section("nib (ruby)") do
+        compile_ruby_tokens("nib")
+        compile_ruby_grammar("nib")
+      end
+
+      section("dartmouth_basic (ruby)") do
+        compile_ruby_tokens("dartmouth_basic")
+        compile_ruby_grammar("dartmouth_basic")
+      end
+
+      section("mosaic (ruby)") do
+        compile_ruby_tokens("mosaic")
+        compile_ruby_grammar("mosaic")
+      end
+
+      section("brainfuck (ruby)") do
+        compile_ruby_token_file(@grammars.join("brainfuck", "brainfuck.tokens"), "brainfuck", "_token_grammar.rb")
+        compile_ruby_parser_file(@grammars.join("brainfuck", "brainfuck.grammar"), "brainfuck", "_parser_grammar.rb")
+      end
+    end
+
+    # The Ruby-only subset of emit_generic_sections: same section names and
+    # same target grammars, but only the compile_ruby_* calls (no python/
+    # go/typescript/rust). Kept in sync with emit_generic_sections by hand;
+    # a mismatch here just means run_ruby_only skips a Ruby package that
+    # #run would still cover, so it fails safe (under-checks) rather than
+    # unsafe.
+    RUBY_ONLY_GRAMMARS = %w[
+      css excel javascript json lattice lisp ruby sql starlark toml
+      typescript verilog vhdl
+    ].freeze
+    RUBY_ONLY_TOKENS_ONLY_GRAMMARS = %w[xml].freeze
+    RUBY_ONLY_NEW_GRAMMARS = %w[nib dartmouth_basic mosaic].freeze
+
+    def emit_ruby_only_sections
+      RUBY_ONLY_GRAMMARS.each do |grammar|
+        section(grammar) do
+          compile_ruby_tokens(grammar)
+          compile_ruby_grammar(grammar)
+        end
+      end
+
+      RUBY_ONLY_TOKENS_ONLY_GRAMMARS.each do |grammar|
+        section(grammar) { compile_ruby_tokens(grammar) }
+      end
+
+      RUBY_ONLY_NEW_GRAMMARS.each do |grammar|
+        section("#{grammar} (ruby)") do
+          compile_ruby_tokens(grammar)
+          compile_ruby_grammar(grammar)
+        end
+      end
+
+      section("brainfuck (ruby)") do
+        compile_ruby_token_file(@grammars.join("brainfuck", "brainfuck.tokens"), "brainfuck", "_token_grammar.rb")
+        compile_ruby_parser_file(@grammars.join("brainfuck", "brainfuck.grammar"), "brainfuck", "_parser_grammar.rb")
+      end
     end
 
     def emit_ruby_versioned_sections
@@ -251,6 +336,10 @@ module GrammarToolsProgram
 
       section("python versioned (ruby)") do
         compile_ruby_python_versions("python_lexer", "python_parser")
+      end
+
+      section("csharp versioned (ruby)") do
+        compile_ruby_csharp_versions("csharp_lexer", "csharp_parser")
       end
     end
 
@@ -438,6 +527,17 @@ module GrammarToolsProgram
         suffix = version.tr(".", "_")
         compile_ruby_token_file(@grammars.join("python", "python#{version}.tokens"), lexer_pkg, "_grammar_#{suffix}.rb")
         compile_ruby_parser_file(@grammars.join("python", "python#{version}.grammar"), parser_pkg, "_grammar_#{suffix}.rb")
+      end
+    end
+
+    def compile_ruby_csharp_versions(lexer_pkg, parser_pkg)
+      compile_ruby_token_file(@grammars.join("csharp", "csharp12.0.tokens"), lexer_pkg, "_grammar.rb")
+      compile_ruby_parser_file(@grammars.join("csharp", "csharp12.0.grammar"), parser_pkg, "_grammar.rb")
+
+      CSHARP_VERSIONS.each do |version|
+        suffix = version.tr(".", "_")
+        compile_ruby_token_file(@grammars.join("csharp", "csharp#{version}.tokens"), lexer_pkg, "_grammar_#{suffix}.rb")
+        compile_ruby_parser_file(@grammars.join("csharp", "csharp#{version}.grammar"), parser_pkg, "_grammar_#{suffix}.rb")
       end
     end
 

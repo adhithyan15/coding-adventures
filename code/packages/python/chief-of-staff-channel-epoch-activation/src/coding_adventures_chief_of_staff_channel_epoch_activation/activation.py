@@ -176,32 +176,49 @@ class EpochActivationStore:
     def create_epoch_channel(
         self, definition: ChannelDefinition, initial_cmk: ChannelMasterKey
     ) -> EpochState:
-        if (
-            definition.channel_id != self._channel_id
-            or definition.lifecycle != "active"
-        ):
-            initial_cmk.destroy()
-            _fail("invalid_plan")
-        self._import_initial_key(definition.key_epoch, initial_cmk)
-        definitions = ChannelDefinitionStore(self._backend)
+        """Create a D18T-aware channel, custody before any D18S state.
+
+        The definition is settled *before* the custody import, and that ordering
+        matters. Custody slots are keyed by ``(channel_id, epoch)`` and the first
+        writer wins permanently. Importing first would let a caller presenting a
+        mismatched definition claim an unclaimed slot and then fail, leaving the
+        legitimate import to hit ``conflicting_active_key`` forever -- fail
+        closed, but permanently wedged. D18T only requires custody before
+        *state*, so validating the definition first costs nothing.
+        """
+        consumed = False
         try:
-            existing = definitions.load(self._channel_id)
-            if existing is None:
-                definitions.create(definition)
-            elif existing.lifecycle == "destroyed":
-                _fail("channel_destroyed")
-            elif existing != definition:
+            if (
+                definition.channel_id != self._channel_id
+                or definition.lifecycle != "active"
+            ):
                 _fail("invalid_plan")
-        except EpochActivationError:
-            raise
-        except ChannelProfileError as error:
-            if error.code == "channel_destroyed":
-                _fail("channel_destroyed")
-            if error.code == "conflicting_definition":
-                _fail("invalid_plan")
-            _fail("corrupt_record")
-        except Exception:
-            _fail("storage_error")
+            definitions = ChannelDefinitionStore(self._backend)
+            try:
+                existing = definitions.load(self._channel_id)
+                if existing is None:
+                    definitions.create(definition)
+                elif existing.lifecycle == "destroyed":
+                    _fail("channel_destroyed")
+                elif existing != definition:
+                    _fail("invalid_plan")
+            except EpochActivationError:
+                raise
+            except ChannelProfileError as error:
+                if error.code == "channel_destroyed":
+                    _fail("channel_destroyed")
+                if error.code == "conflicting_definition":
+                    _fail("invalid_plan")
+                _fail("corrupt_record")
+            except Exception:
+                _fail("storage_error")
+            consumed = True
+            self._import_initial_key(definition.key_epoch, initial_cmk)
+        finally:
+            # _import_initial_key owns the erase once it runs; every earlier
+            # exit must still erase, so an unused secret never outlives the call.
+            if not consumed:
+                initial_cmk.destroy()
         return self.migrate_epoch_state(definition)
 
     def migrate_epoch_state(
@@ -580,6 +597,28 @@ class EpochActivationStore:
         stored = self.activation_plan(plan.new_epoch)
         if stored != plan:
             _fail("corrupt_record")
+        # Phase 6 reloads every grant from public storage. This is invariant 3,
+        # "all grants before visibility" -- not paranoia about our own writes.
+        # The record a put echoes back sits on the same trust boundary as the
+        # write itself, so against a write-behind or eventually-consistent
+        # backend an echoed success does not prove the grant is retrievable.
+        # Activation may only advance the epoch once every receiver's grant can
+        # actually be read.
+        for data in prepared.grants:
+            grant = _deserialize_grant(data)
+            key = key_grant_record_key(
+                self._channel_id, grant.key_epoch, grant.receiver_id
+            )
+            record = self._stored_record(key)
+            if record is None:
+                _fail("corrupt_record")
+            self._require_envelope(record, key, CHANNEL_GRANT_CONTENT_TYPE)
+            if record.body != data:
+                # corrupt_record, not conflicting_grant: _put_immutable above
+                # already reports a genuine slot conflict, so reaching here
+                # means the backend returned something other than what it had
+                # acknowledged writing. Matches the Rust reference.
+                _fail("corrupt_record")
 
     def _encrypt_with_handle(
         self,
@@ -608,6 +647,12 @@ class EpochActivationStore:
                 _fail("crypto_error")
 
         return self._custody_call(lambda: self._custody.with_key(handle, encrypt))
+
+    def _stored_record(self, key: str) -> StorageRecord | None:
+        """Read one public record, mapping backend failure to storage_error."""
+        return _backend_call(
+            lambda: self._backend.get(CHANNEL_STORAGE_NAMESPACE, key)
+        )
 
     def _require_handle(self, epoch: int) -> EpochKeyHandle:
         handle = self._resolve_handle(epoch)

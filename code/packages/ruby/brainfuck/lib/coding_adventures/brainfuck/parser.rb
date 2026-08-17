@@ -49,6 +49,11 @@ module CodingAdventures
       # grammars/.
       GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
       BF_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "brainfuck", "brainfuck.grammar")
+      COMPILED_GRAMMAR_PATH = File.expand_path("_parser_grammar.rb", __dir__)
+
+      def self.parser_grammar
+        @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+      end
 
       # Parse a Brainfuck source string into an Abstract Syntax Tree.
       #
@@ -75,20 +80,14 @@ module CodingAdventures
         # The resulting array contains only command tokens and EOF.
         tokens = CodingAdventures::Brainfuck::Lexer.tokenize(source)
 
-        # Step 2: Load and parse the Brainfuck grammar.
-        # The EBNF grammar file describes program, instruction, loop, and
-        # command rules. The GrammarTools library converts this text into
-        # a ParserGrammar struct holding the compiled rule graph.
-        grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-          File.read(BF_GRAMMAR_PATH, encoding: "UTF-8")
-        )
-
-        # Step 3: Run the grammar-driven parser.
-        # The parser uses recursive descent with the grammar's rule graph.
-        # It starts with the first rule (program) and recursively matches
-        # instructions. Loops trigger recursion — the parser re-enters
-        # the instruction rule for each token inside the brackets.
-        parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+        # Step 2: Run the grammar-driven parser using the pre-compiled
+        # ParserGrammar (embeds program, instruction, loop, and command
+        # rules as native Ruby data structures). The parser uses recursive
+        # descent with the grammar's rule graph. It starts with the first
+        # rule (program) and recursively matches instructions. Loops trigger
+        # recursion — the parser re-enters the instruction rule for each
+        # token inside the brackets.
+        parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
         parser.parse
       end
 
@@ -101,10 +100,7 @@ module CodingAdventures
       # @return [CodingAdventures::Parser::GrammarDrivenParser] a ready parser
       def self.create_parser(source)
         tokens = CodingAdventures::Brainfuck::Lexer.tokenize(source)
-        grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-          File.read(BF_GRAMMAR_PATH, encoding: "UTF-8")
-        )
-        CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+        CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       end
     end
   end

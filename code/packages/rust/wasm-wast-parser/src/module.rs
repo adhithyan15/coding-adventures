@@ -1437,6 +1437,32 @@ fn encode_stream_instr(
         out.extend(wasm_leb128::encode_unsigned(idx as u64));
         return Ok(1);
     }
+    // `table.grow` / `table.size` / `table.fill` (bulk-table proposal,
+    // task #98): same 0xFC-prefixed shape as memory.copy/fill above, and
+    // the same "no vendored corpus file exercises a non-default table
+    // index through this flat/stream form" deferral `"memory.size" |
+    // "memory.grow"`'s own arm below documents -- always table 0 here,
+    // not a real lookup. The FOLDED form (`encode_flat_instr`) DOES
+    // resolve a real leading `$t` table index (table_size.wast/
+    // table_fill.wast only ever use folded syntax).
+    if name == "table.grow" {
+        out.push(0xFC);
+        out.push(0x0F);
+        out.extend(wasm_leb128::encode_unsigned(0));
+        return Ok(0);
+    }
+    if name == "table.size" {
+        out.push(0xFC);
+        out.push(0x10);
+        out.extend(wasm_leb128::encode_unsigned(0));
+        return Ok(0);
+    }
+    if name == "table.fill" {
+        out.push(0xFC);
+        out.push(0x11);
+        out.extend(wasm_leb128::encode_unsigned(0));
+        return Ok(0);
+    }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
     // WASM17): neither is registered in `wasm_opcodes::OPCODES` (see
     // `code/specs/W08-wasm-funcref-externref.md` -- both already have real
@@ -1739,6 +1765,59 @@ fn encode_stream_structured_instr(
     Ok(i)
 }
 
+/// `table.grow $t? (init)(delta)` (task #98) — folded form. Kept as its
+/// own `#[inline(never)]` function rather than inlined into
+/// `encode_flat_instr` directly: see that call site's own comment for why
+/// (a debug-build stack frame bloat that broke a stack-overflow-guard
+/// test). The table-index immediate is OPTIONAL, defaulting to table 0
+/// -- same disambiguation `"table.get" | "table.set"` already uses
+/// elsewhere in this file (task #96): an explicit index is always a bare
+/// `Atom` here, while every real operand is always a nested, parenthesized
+/// instruction (`SExpr::List`) in folded form.
+#[inline(never)]
+fn encode_table_grow_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let (table_idx, operands) = match args.first() {
+        Some(expr @ SExpr::Atom(..)) => (resolve_idx(&icx.module.table_names, expr, "table")?, &args[1..]),
+        _ => (0, args),
+    };
+    encode_instr_list(operands, icx, out)?;
+    out.push(0xFC);
+    out.push(0x0F);
+    out.extend(wasm_leb128::encode_unsigned(table_idx as u64));
+    Ok(())
+}
+
+/// `table.size $t?` (task #98) — folded form. See
+/// [`encode_table_grow_flat`]'s doc comment for why this is its own
+/// function.
+#[inline(never)]
+fn encode_table_size_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let table_idx = match args.first() {
+        Some(expr @ SExpr::Atom(..)) => resolve_idx(&icx.module.table_names, expr, "table")?,
+        _ => 0,
+    };
+    out.push(0xFC);
+    out.push(0x10);
+    out.extend(wasm_leb128::encode_unsigned(table_idx as u64));
+    Ok(())
+}
+
+/// `table.fill $t? (dest)(value)(len)` (task #98) — folded form. See
+/// [`encode_table_grow_flat`]'s doc comment for why this is its own
+/// function.
+#[inline(never)]
+fn encode_table_fill_flat(args: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<(), WastParseError> {
+    let (table_idx, operands) = match args.first() {
+        Some(expr @ SExpr::Atom(..)) => (resolve_idx(&icx.module.table_names, expr, "table")?, &args[1..]),
+        _ => (0, args),
+    };
+    encode_instr_list(operands, icx, out)?;
+    out.push(0xFC);
+    out.push(0x11);
+    out.extend(wasm_leb128::encode_unsigned(table_idx as u64));
+    Ok(())
+}
+
 /// Encode a **folded** instruction (`(name args...)`) — `args` mixes zero
 /// or more operand sub-expressions (encoded first, recursively) with this
 /// instruction's own trailing immediate atoms, per instruction kind. See
@@ -1805,6 +1884,29 @@ fn encode_flat_instr(
         out.push(0x09);
         out.extend(wasm_leb128::encode_unsigned(idx as u64));
         return Ok(());
+    }
+    // `table.grow` / `table.size` / `table.fill` (bulk-table proposal,
+    // task #98): same 0xFC-prefixed shape as memory.init/data.drop above
+    // (neither is in `wasm_opcodes::OPCODES`, so all three are
+    // intercepted here before the `get_opcode_by_name` lookup). Factored
+    // out into their own `#[inline(never)]` functions rather than inlined
+    // here directly: `encode_flat_instr` is the recursive descent's own
+    // funnel (`encode_flat_instr` -> `encode_instr_list` -> `encode_one`
+    // -> ...), and a debug-build stack frame sizes to the union of ALL of
+    // a function's locals across every branch, not just the one actually
+    // taken. Inlining these 3 arms here once measurably pushed ordinary
+    // deeply-nested `i32.add` recursion -- which never touches this code
+    // at all -- past the real stack limit before `MAX_INSTR_NESTING_
+    // DEPTH`'s own guard could fire, breaking `deeply_nested_folded_
+    // arithmetic_errors_cleanly_not_stack_overflow`.
+    if name == "table.grow" {
+        return encode_table_grow_flat(args, icx, out);
+    }
+    if name == "table.size" {
+        return encode_table_size_flat(args, icx, out);
+    }
+    if name == "table.fill" {
+        return encode_table_fill_flat(args, icx, out);
     }
     // `ref.null <heaptype>` / `ref.is_null` (reference-types proposal,
     // WASM17): see the matching comment in `encode_stream_instr` -- neither
@@ -2773,6 +2875,68 @@ mod tests {
 
         let folded_drop = parse_module(r#"(module (data $d "hi") (func (data.drop $d)))"#).unwrap();
         assert_eq!(code_of(&folded_drop, 0), &[0xFC, 0x09, 0x00, 0x0B]);
+    }
+
+    /// Task #98: `table.size`'s folded form resolves a REAL leading `$t`
+    /// table index (defaulting to 0 when omitted), same disambiguation
+    /// `table.get`/`table.set` already use.
+    #[test]
+    fn table_size_folded_form_resolves_a_named_table_index_or_defaults_to_zero() {
+        let default_idx = parse_module(r#"(module (table $t 1 funcref) (func (result i32) (table.size)))"#).unwrap();
+        assert_eq!(code_of(&default_idx, 0), &[0xFC, 0x10, 0x00, 0x0B]);
+
+        let explicit_idx = parse_module(
+            r#"(module (table $t0 1 funcref) (table $t1 1 funcref) (func (result i32) (table.size $t1)))"#,
+        )
+        .unwrap();
+        assert_eq!(code_of(&explicit_idx, 0), &[0xFC, 0x10, 0x01, 0x0B]);
+    }
+
+    /// Task #98: `table.grow`'s folded form encodes its two operands
+    /// (init value, then delta) before the `0xFC 0x0F <table_idx>` bytes,
+    /// same operand-then-opcode order as `memory.fill`'s own folded arm.
+    #[test]
+    fn table_grow_folded_form_encodes_operands_then_the_real_table_index() {
+        let m = parse_module(
+            r#"(module (table $t0 1 funcref) (table $t1 1 funcref)
+                 (func (result i32) (table.grow $t1 (ref.null func) (i32.const 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[0xD0, 0x70, /* ref.null func */ 0x41, 0x02, /* i32.const 2 */ 0xFC, 0x0F, 0x01, 0x0B]
+        );
+    }
+
+    /// Task #98: `table.fill`'s folded form encodes its three operands
+    /// (dest, value, len) before the `0xFC 0x11 <table_idx>` bytes, same
+    /// shape as `table.grow` above but with one more operand.
+    #[test]
+    fn table_fill_folded_form_encodes_operands_then_the_real_table_index() {
+        let m = parse_module(
+            r#"(module (table $t 5 funcref)
+                 (func (table.fill $t (i32.const 1) (ref.null func) (i32.const 2))))"#,
+        )
+        .unwrap();
+        assert_eq!(
+            code_of(&m, 0),
+            &[
+                0x41, 0x01, // i32.const 1
+                0xD0, 0x70, // ref.null func
+                0x41, 0x02, // i32.const 2
+                0xFC, 0x11, 0x00, 0x0B
+            ]
+        );
+    }
+
+    /// Task #98: the FLAT/stream form defers to table 0 always, same
+    /// documented scope boundary as `"memory.size" | "memory.grow"`'s own
+    /// flat-form arm -- no vendored corpus file exercises a non-default
+    /// table index through this form.
+    #[test]
+    fn table_grow_size_fill_flat_form_always_defaults_to_table_zero() {
+        let m = parse_module(r#"(module (table $t 1 funcref) (func (result i32) table.size))"#).unwrap();
+        assert_eq!(code_of(&m, 0), &[0xFC, 0x10, 0x00, 0x0B]);
     }
 
     #[test]

@@ -1,0 +1,1329 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 59,
+  "title": "The Vowel You Write and Do Not Say",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7a9745d5b38f0017",
+  "lessons": [
+    {
+      "id": "HI-W12-schwa-drop",
+      "sequence": 2100,
+      "title": "नाम (nām) — the vowel at the end of a word that you write and do not say",
+      "headword": "नाम",
+      "romanization": "nām",
+      "gloss": "the vowel at the end of a word that you write and do not say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:acd2e20f7ed77765",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already hold the whole system: inherent vowel, matra, matra position, virama and conjunct. What is left is shapes -- and one rule nobody told you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know that a bare consonant carries an inherent a. Here is the exception that governs almost every Hindi word, and nobody tells a beginner until they have already mispronounced a hundred of them."
+            },
+            {
+              "kind": "speech",
+              "text": "At the end of a word, that inherent vowel is not pronounced."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the word for name. Written out piece by piece it is न + ा + म, and reading each piece aloud gives nā-ma. But the word is nām. The final म carries an inherent a that Hindi simply does not say."
+            },
+            {
+              "kind": "speech",
+              "text": "This is called schwa deletion, and it is why:"
+            },
+            {
+              "kind": "speech",
+              "text": "नाम is nām, not nāma."
+            },
+            {
+              "kind": "speech",
+              "text": "घर is ghar, not ghara."
+            },
+            {
+              "kind": "speech",
+              "text": "राम is Rām, not Rāma."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit says the final vowel. Hindi drops it. The spelling is inherited from Sanskrit and never changed; the pronunciation moved on a thousand years ago. Both are true, and the script keeps the older one — exactly as English keeps the k in knight."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things follow, and the second is the useful one:"
+            },
+            {
+              "kind": "speech",
+              "text": "A word you sound out letter by letter will end one vowel too long. Trim it."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not a special case to memorise per word. It is the default. Say the final consonant bare unless something is written after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "नाम (nām)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: नाम]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to the inherent vowel at the end of a Hindi word? (It is not pronounced.) So how is नाम said? (nām, not nāma.) And why is the vowel still written? (The spelling is inherited from Sanskrit; the sound moved on.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-ii-matra",
+      "sequence": 2110,
+      "title": "ी (-ī) — the long ee, and the mātrā that blocks more words than any other",
+      "headword": "ी",
+      "romanization": "-ī",
+      "gloss": "the long ee, and the mātrā that blocks more words than any other",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bd24dbfb0483a64d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ी (-ī)."
+            },
+            {
+              "kind": "speech",
+              "text": "ī, the long ee of English see. It stands to the right of its consonant, with a curve that rises and hooks back over the head-line to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep it apart from the ā mātrā you already know: that one is a plain upright, this one carries the hook. In fast handwriting the hook is the only difference, and it changes the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Of every piece of Devanagari this book still owes you, this one unlocks the most words — it appears in more of the lessons ahead than any other single mark."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ी (-ī)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ी]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does ी (-ī) add? (ī, the ee of see.) How do you tell it from the ā mātrā? (The hook back over the head-line.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-u-matra",
+      "sequence": 2120,
+      "title": "ु (-u) — a mātrā that hangs BELOW the letter",
+      "headword": "ु",
+      "romanization": "-u",
+      "gloss": "a mātrā that hangs BELOW the letter",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:91e5d78642127ce4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ु (-u)."
+            },
+            {
+              "kind": "speech",
+              "text": "u, the short oo of English put. And it introduces a position you have not met: it hangs below the consonant, tucked under its foot."
+            },
+            {
+              "kind": "speech",
+              "text": "You now have mātrās in three places — to the right, above, and below. Position is part of a character's identity, not decoration, and a reader learns to look all the way around a consonant rather than only after it."
+            },
+            {
+              "kind": "speech",
+              "text": "The long version of this vowel hangs below too, with an extra tail. Both are written under the letter they belong to, never beside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ु (-u)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ु]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does this mātrā sit? (Below the consonant.) How many positions have you now met? (Three — right, above, below.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-ai-matra",
+      "sequence": 2130,
+      "title": "ै (-ai) — two strokes above the head-line, and one of the commonest endings in the language",
+      "headword": "ै",
+      "romanization": "-ai",
+      "gloss": "two strokes above the head-line, and one of the commonest endings in the language",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d9fb96021d1934c2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ै (-ai)."
+            },
+            {
+              "kind": "speech",
+              "text": "ai, roughly the vowel of English cat in most of Hindi. It sits above the head-line as two short strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Its single-stroke relative is the e mātrā, and the difference is exactly one stroke — one stroke for e, two for ai. Miscount and you have a different word."
+            },
+            {
+              "kind": "speech",
+              "text": "This one is worth the attention because of where it turns up: है, the word for is, ends in it, and that word appears in almost every sentence you will ever read."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ै (-ai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ै]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes above the head-line? (Two — one is a different vowel.) And which very common word ends in it? (है, is.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-aa",
+      "sequence": 2140,
+      "title": "आ (ā) — the independent vowel, for when a word begins with it",
+      "headword": "आ",
+      "romanization": "ā",
+      "gloss": "the independent vowel, for when a word begins with it",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d103ad341cdad26f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आ (ā)."
+            },
+            {
+              "kind": "speech",
+              "text": "You know the ā mātrā. It only works attached to a consonant, so when a word begins with that vowel there is nothing to attach it to."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the character for that job: an independent vowel, standing on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "These are two different characters, not two styles of one. A font, a keyboard and this book treat them as entirely separate, and confusing them is the commonest spelling error in every Indic script. What decides which you write is position, not sound — this one begins a word, the mātrā rides on a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the shape: it is the independent a with the same upright the mātrā uses added on the right. The relationship is visible, which is a rare kindness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आ (ā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: आ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which one begins a word? (आ (ā).) Which rides on a consonant? (ा.) Are they the same character? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-ii",
+      "sequence": 2150,
+      "title": "ई (ī) — the independent form of the long ee",
+      "headword": "ई",
+      "romanization": "ī",
+      "gloss": "the independent form of the long ee",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c7f3af40250e49d4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ई (ī)."
+            },
+            {
+              "kind": "speech",
+              "text": "The same job as the last lesson, for the vowel you learned two lessons ago: this is ī standing on its own, for a word that begins with it."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern is now visible and it is worth naming, because it repeats for every vowel in the script:"
+            },
+            {
+              "kind": "speech",
+              "text": "every vowel has two forms — one independent, for the start of a word, and one mātrā, for riding on a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not two alphabets. It is one alphabet with a positional rule, and you have now met it three times."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ई (ī)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ई]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many forms does a Devanagari vowel have? (Two — independent and mātrā.) What decides which you write? (Position in the word.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-chandrabindu",
+      "sequence": 2160,
+      "title": "ँ (-ṁ) — a moon and a dot that send the vowel through the nose",
+      "headword": "ँ",
+      "romanization": "-ṁ",
+      "gloss": "a moon and a dot that send the vowel through the nose",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:35253c62f72a20a4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ँ (-ṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Not a vowel. The chandrabindu — chandra \"moon\", bindu \"dot\" — a crescent with a dot inside it, sitting above the head-line."
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change which vowel you say. It says: send that vowel through your nose."
+            },
+            {
+              "kind": "speech",
+              "text": "English does this constantly and never writes it. Say bad, then ban — the vowel in the second is nasalised before you reach the n. Hindi writes what English leaves implicit, and here it is meaning-bearing: drop the mark and you have a different word."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a plain dot without the crescent that does a related job, and which of the two you write depends on what else is sitting above the letter. For now: crescent plus dot means through the nose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ँ (-ṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ँ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the chandrabindu do? (Nasalises the vowel.) Does it change which vowel you say? (No.) And what do its two parts mean? (Moon and dot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-bha",
+      "sequence": 2170,
+      "title": "भ (bha) — an aspirated consonant",
+      "headword": "भ",
+      "romanization": "bha",
+      "gloss": "an aspirated consonant — the puff of air that changes the word",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:320913d70f0989b4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ (bha)."
+            },
+            {
+              "kind": "speech",
+              "text": "bha — and the h is not decoration. This is b followed by a real puff of breath, and Hindi has a separate letter for it."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold your palm in front of your mouth. English bin gives almost no air; this letter demands a clear push. English treats the difference as an accident of emphasis; Hindi treats it as the difference between two words."
+            },
+            {
+              "kind": "speech",
+              "text": "Devanagari is systematic about it: nearly every consonant has an unaspirated and an aspirated partner, written as different letters, and the aspirated one usually looks like a variation on its plain twin. Once you know the pattern you can read half the alphabet from the other half."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "भ (bha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: भ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the h in bha mean? (A real puff of breath.) Does Hindi treat that as a different letter? (Yes — and a different word.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-ya",
+      "sequence": 2180,
+      "title": "य — the consonant ya",
+      "headword": "य",
+      "romanization": "ya",
+      "gloss": "the consonant ya",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c03a6628710ff914",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "य (ya)."
+            },
+            {
+              "kind": "speech",
+              "text": "ya, the y of English yes, plus the inherent vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "A plain consonant with no new machinery — and by now that sentence should feel like the point rather than an apology. Everything you learn from here is a shape. The rules were all taught in the first script chapters: inherent vowel, mātrā, mātrā position, virama and conjunct, and the two forms of every vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य (ya)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: य]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the inherent vowel in य (ya)? (a — but not at the end of a word.) And what remains to learn in this script — rules, or shapes? (Shapes.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-ba",
+      "sequence": 2190,
+      "title": "ब (ba) — the plain twin of an aspirated letter you already know",
+      "headword": "ब",
+      "romanization": "ba",
+      "gloss": "the plain twin of an aspirated letter you already know",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4fbf6674eebb7208",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ब (ba)."
+            },
+            {
+              "kind": "speech",
+              "text": "ba — the b of English bin, with no puff of air."
+            },
+            {
+              "kind": "speech",
+              "text": "Now put it beside the aspirated letter from a moment ago. Same family, same basic skeleton, one extra stroke on the aspirated one. That is the pattern this script uses across the whole consonant chart, and seeing it once here means you can guess at pairs you have not met."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters, one distinction, and English speakers hear it as no distinction at all — which is why it is worth the whole lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ब (ba)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ब]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two has the puff of air? (भ (bha).) And what is the shape relationship? (The aspirated one is a variation on the plain twin.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W12-da-retroflex",
+      "sequence": 2200,
+      "title": "ड (ḍa) — a consonant made with the tongue curled back",
+      "headword": "ड",
+      "romanization": "ḍa",
+      "gloss": "a consonant made with the tongue curled back",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5a303b8ffb2e8fa5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ड (ḍa)."
+            },
+            {
+              "kind": "speech",
+              "text": "ḍa — and the dot under the transliteration is doing real work."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a retroflex: the tongue tip curls back and touches the roof of the mouth well behind the teeth. Hindi has a full retroflex set, and each one contrasts with a dental partner made with the tongue against the back of the teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "English has neither. Its d sits between the two, which is why an English speaker saying a Hindi word usually lands in the gap and is understood as neither. This is the single most audible foreign-accent tell in Hindi, more than any vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "The good news is that it is a position, not a sound to hear. Curl the tongue back and the rest follows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ड (ḍa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ड]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "every piece this chapter has given you so far, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the tongue go for ड (ḍa)? (Curled back, behind the teeth.) What does it contrast with? (A dental partner, tongue against the teeth.) And where does English sit? (Between the two — neither.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

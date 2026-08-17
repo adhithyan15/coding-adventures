@@ -12,8 +12,8 @@
 //! - `encode_*` helpers — typed functions that take ARM register
 //!   indices / immediates and return `u32` instruction words.
 //!
-//! No IR knowledge.  Consumed by `armv7-backend` and re-exported
-//! by the deprecated `iir-to-armv7` for backwards compatibility.
+//! No IR knowledge.  Consumed by `armv7-backend`.  The deprecated
+//! `iir-to-armv7` re-export was removed once the migration completed.
 //!
 //! ## ABI assumed
 //!

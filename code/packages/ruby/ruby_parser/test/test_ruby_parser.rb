@@ -67,4 +67,44 @@ class TestRubyParser < Minitest::Test
     ast = parse("")
     assert_equal "program", ast.rule_name
   end
+
+  # Regression tests for statement types that were silently unparseable
+  # under a stale compiled grammar (_grammar.rb had drifted far behind
+  # ruby.grammar -- def/class/if/while/case/begin were all missing rule
+  # references). These lock in that the compiled grammar stays in sync.
+  def test_def_statement
+    ast = parse("def greet(name)\n  puts name\nend")
+    assert_equal "program", ast.rule_name
+    refute_empty find_nodes(ast, "def_statement")
+  end
+
+  def test_class_statement
+    ast = parse("class Foo\n  def bar\n  end\nend")
+    assert_equal "program", ast.rule_name
+    refute_empty find_nodes(ast, "class_statement")
+  end
+
+  def test_if_statement
+    ast = parse("if x\n  y = 1\nend")
+    assert_equal "program", ast.rule_name
+    refute_empty find_nodes(ast, "if_statement")
+  end
+
+  def test_while_statement
+    ast = parse("while x\n  y = 1\nend")
+    assert_equal "program", ast.rule_name
+    refute_empty find_nodes(ast, "while_statement")
+  end
+
+  def test_case_statement
+    ast = parse("case x\nwhen 1\n  y = 1\nend")
+    assert_equal "program", ast.rule_name
+    refute_empty find_nodes(ast, "case_statement")
+  end
+
+  def test_begin_statement
+    ast = parse("begin\n  x = 1\nend")
+    assert_equal "program", ast.rule_name
+    refute_empty find_nodes(ast, "begin_statement")
+  end
 end

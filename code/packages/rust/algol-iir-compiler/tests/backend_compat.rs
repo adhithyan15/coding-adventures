@@ -160,8 +160,13 @@ fn algol_runtime_string_local_lowers_to_wasm_jvm_clr_beam_and_llvm() {
         &iir_to_cil_bytecode::IIRClrConfig::new("AlgolRuntimeStringLocal"),
     )
     .expect("runtime string local should emit CLR IL");
-    assert!(clr.contains("string 'pick'(int32 A_0)"));
-    assert!(clr.contains("call string AlgolRuntimeStringLocalProgram::'pick'(int32)"));
+    // ALGOL `integer` is i64, and the textual CIL backend now has a real int64
+    // register model (it used to collapse every scalar to int32), so the
+    // procedure's parameter is `int64`. Updated to the new shape rather than
+    // relaxed — the point of this assertion is that the signature is spelled
+    // exactly, whatever the width.
+    assert!(clr.contains("string 'pick'(int64 A_0)"), "got:\n{clr}");
+    assert!(clr.contains("call string AlgolRuntimeStringLocalProgram::'pick'(int64)"), "got:\n{clr}");
     assert!(clr.contains("System.String::Concat(string, string)"));
     assert!(clr.contains("System.String::Equals(string, string)"));
 
@@ -282,7 +287,11 @@ fn algol_captured_array_lowers_to_every_standard_backend() {
         &iir_to_cil_bytecode::IIRClrConfig::new("AlgolCapturedArray"),
     )
     .expect("captured array should emit CLR IL");
-    assert!(clr.contains(".field public static int32[]"));
+    // Same reason: an ALGOL `integer array` global is now `int64[]`. The element
+    // width and the handle type must agree — `iir-to-cil-bytecode` enforces that
+    // now, because `stelem.i8` against an `int32[]` is an out-of-bounds write on
+    // CoreCLR.
+    assert!(clr.contains(".field public static int64[]"), "got:\n{clr}");
 
     let llvm = iir_to_llvm::lower_iir_to_llvm(
         &module,

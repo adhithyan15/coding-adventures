@@ -57,6 +57,19 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "tmod",
     "utdiv",
     "utmod",
+    // SIR21 T3b-2: the four-way division-op split. `div_floor` is a bare
+    // alias for the pre-existing `/` (Ruby's own `Integer#/`/`Float#/`
+    // ALREADY are floor/true-divide, respectively — no runtime helper
+    // needed). `div_trunc`/`udiv_trunc` reuse the existing `sir_tdiv`
+    // helper above (same as `tdiv`/`utdiv`, which this pair will
+    // eventually replace — see the spec's "absorbs/replaces" note).
+    // `div_true` is genuinely new: see `sir_true_div`'s doc comment in
+    // `runtime.rs` for why it needs an explicit zero-check (Ruby's native
+    // `Float#/0` silently returns `Infinity`, unlike `Integer#/0`).
+    "div_floor",
+    "div_trunc",
+    "udiv_trunc",
+    "div_true",
     // Numeric conversions (SIR27 milestone 9, floating point): `to_f` widens an
     // integer to `double`, `to_i` truncates a `double` toward zero to an integer
     // (the frontend then masks it to the target width with a `Convert`).
@@ -1482,6 +1495,24 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // non-negative Integer, for which truncation and flooring coincide.
         "tdiv" | "utdiv" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
         "tmod" | "utmod" => format!("sir_tmod({}, {})", arg(&a, 0), arg(&a, 1)),
+        // SIR21 T3b-2: `div_floor` renders IDENTICALLY to bare `/` — Ruby's
+        // own `/` already is `div_floor` (floors ints, true-divides
+        // floats), so this is a pure alias, not a new code path. It
+        // deliberately inherits `/`'s existing float-zero-divisor
+        // behavior (native Ruby `1.0 / 0` silently returns `Infinity`,
+        // unlike `Integer#/0`, which raises) rather than retroactively
+        // "fixing" it here — this additive slice changes zero pre-existing
+        // behavior, matching the precedent set by this arc's C backend PR
+        // (whose `div_floor` alias inherited that backend's own
+        // pre-existing float-zero gap for the identical reason).
+        "div_floor" => format!("({})", join_op(&a, " / ", "1")),
+        // `div_trunc`/`udiv_trunc` reuse the existing `sir_tdiv` helper —
+        // identical to `tdiv`/`utdiv` today (this pair is slated to
+        // replace those names in a later cleanup slice; both stay wired
+        // to the same helper in the meantime, per the spec's
+        // absorbs/replaces decision).
+        "div_trunc" | "udiv_trunc" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
+        "div_true" => format!("sir_true_div({}, {})", arg(&a, 0), arg(&a, 1)),
         // `to_f`/`to_i`: Ruby's native `Numeric#to_f` (int → Float) and
         // `Float#to_i` (truncates toward zero, matching C's `(int)double` cast).
         "to_f" => format!("({}).to_f", arg(&a, 0)),

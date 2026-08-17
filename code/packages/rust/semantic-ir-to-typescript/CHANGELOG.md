@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.14.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive-only: adds the four new division builtin names from SIR21 T3b-2
+(`code/specs/SIR21-type-system-and-integer-semantics.md` §E3) to the
+emitter's dispatch table. Bare `"/"` keeps working unchanged — no
+frontend emits any of the new names yet.
+
+- `div_floor` is a bare alias for the pre-existing `div` — **a
+  documented, unfixed limitation, not a fix**: this runtime's `Val` (see
+  `sir-runtime-core`'s `arithmetic.ts`) has no boxed-float tag, so it
+  cannot distinguish a Ruby Integer from a Ruby Float at runtime the way
+  `semantic-ir-to-javascript`'s `SirFloat` does, and `div_floor`'s
+  floor-vs-true-divide dispatch cannot be made correct without first
+  adding that tagging throughout this runtime — out of scope for this
+  additive slice. `div_floor` therefore inherits `div`'s existing
+  truncating behavior unchanged.
+- `div_trunc`/`udiv_trunc` route to a new `truncDiv` function — fully
+  correct (not a workaround): truncation toward zero needs no int/float
+  distinction, so it is well-defined in this runtime's untagged numeric
+  model. `udiv_trunc` computes identically (no fixed-width
+  signed/unsigned distinction to reinterpret, unlike C/Go/Rust).
+- `div_true` routes to a new `trueDiv` function — also fully correct for
+  the same reason: unconditional float coercion needs no tagging either.
+- New `tests/compile_and_run_division_ops.rs`: real `node`-execution
+  proof (via the crate's established strip-and-stub harness) asserting
+  BOTH `div_trunc`/`udiv_trunc`/`div_true`'s correct values AND
+  `div_floor`'s actual (truncating, not floor) output — the test
+  documents the limitation rather than hiding it.
+
 ## 0.13.0 — APL display convention (found via the first real array-codegen execution proof)
 
 `emit_module` now emits `__Sir.setDisplayConvention("apl")` for an

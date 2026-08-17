@@ -55,14 +55,14 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_swift_runtime(
-                {"affected_packages": ["unknown/programs/task-app"]}
+                {"affected_packages": ["mosaic/programs/task-app"]}
             )
         )
 
     def test_standard_mosaic_package_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_swift_runtime(
-                {"affected_packages": ["unknown/mosaic-pkg-grid"]}
+                {"affected_packages": ["mosaic/mosaic-pkg-grid"]}
             )
         )
 

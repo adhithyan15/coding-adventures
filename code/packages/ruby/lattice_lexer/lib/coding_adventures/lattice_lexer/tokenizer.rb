@@ -54,6 +54,11 @@ module CodingAdventures
     # to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     LATTICE_TOKENS_PATH = File.join(GRAMMAR_DIR, "lattice", "lattice.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Tokenize Lattice source text and return an array of Token objects.
     #
@@ -70,10 +75,7 @@ module CodingAdventures
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     # @raise [CodingAdventures::Lexer::LexerError] on unrecognized input
     def self.tokenize(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(LATTICE_TOKENS_PATH, encoding: "UTF-8")
-      )
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.tokenize
     end
 
@@ -86,10 +88,7 @@ module CodingAdventures
     # @param source [String] Lattice source text to tokenize
     # @return [CodingAdventures::Lexer::GrammarLexer]
     def self.create_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(LATTICE_TOKENS_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
     end
   end
 end

@@ -312,6 +312,62 @@ fn invalid_table_set_rejects_the_wrong_reftype_for_a_multi_table_module() {
     );
 }
 
+// ── task #98: table.grow / table.size / table.fill ──────────────────────
+
+#[test]
+fn valid_table_size_pushes_i32() {
+    assert_valid(r#"(module (table $t 1 funcref) (func (result i32) (table.size $t)))"#);
+}
+
+#[test]
+fn valid_table_grow_matches_the_targeted_tables_own_element_type() {
+    assert_valid(
+        r#"(module
+             (table $tf 1 funcref)
+             (table $te 1 externref)
+             (func (param $f funcref) (param $e externref) (result i32 i32)
+               (table.grow $tf (local.get $f) (i32.const 1))
+               (table.grow $te (local.get $e) (i32.const 1))))"#,
+    );
+}
+
+#[test]
+fn valid_table_fill_matches_the_targeted_tables_own_element_type() {
+    assert_valid(
+        r#"(module
+             (table $t 1 externref)
+             (func (param $v externref)
+               (table.fill $t (i32.const 0) (local.get $v) (i32.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_grow_rejects_the_wrong_reftype_for_a_multi_table_module() {
+    assert_invalid(
+        r#"(module
+             (table $tf 1 funcref)
+             (table $te 1 externref)
+             (func (param $e externref) (result i32)
+               (table.grow $tf (local.get $e) (i32.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_fill_rejects_the_wrong_reftype_for_a_multi_table_module() {
+    assert_invalid(
+        r#"(module
+             (table $tf 1 funcref)
+             (table $te 1 externref)
+             (func (param $e externref)
+               (table.fill $tf (i32.const 0) (local.get $e) (i32.const 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_table_size_without_a_declared_table() {
+    assert_invalid(r#"(module (func (result i32) (table.size)))"#);
+}
+
 // ── WASM18: atomic load/store/RMW/cmpxchg/fence, shared memory guard ────
 
 #[test]

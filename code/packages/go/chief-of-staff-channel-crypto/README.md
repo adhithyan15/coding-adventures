@@ -46,6 +46,27 @@ outcome, err := receiverEpochs.InstallGrant(grant)
 epochKey, err := receiverEpochs.Key(fields.KeyEpoch())
 ```
 
+### Verifying a grant you cannot open
+
+Opening a grant needs the receiver's private key, because unwrapping performs an
+X25519 agreement. An originator holds no receiver secrets, so it cannot open the
+grants it seals — yet D18T requires it to verify the originator signature on
+every receiver's grant before a rotation candidate may be offered to key
+custody. `VerifyGrantSignature` is that weaker, receiver-key-free check:
+
+```go
+err := channelcrypto.VerifyGrantSignature(
+    grant, expectedOriginatorID, expectedReceiverID, channelID, originatorPublicKey,
+)
+```
+
+It proves the originator signed this exact `(originator, receiver, channel,
+epoch, ephemeral key, nonce, wrapped CMK)` tuple. It proves nothing about
+whether the wrapped CMK decrypts — only unwrapping can establish that, so a
+caller verifying grants it cannot open must not treat success as proof the
+receiver will be able to use the grant. Both entry points share one verification
+path, so they always agree on binding order and stable error codes.
+
 `PlanRotation` creates a complete receiver-sorted prospective plan and emits no
 grant for a revoked receiver. D18Q failures are `KeyGrantProfileError` values
 with stable codes. `GrantSecretErasureCapability()` honestly reports

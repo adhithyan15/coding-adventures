@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.39.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive only — no frontend emits these names yet, bare `"/"` keeps working
+unchanged. Both dispatch sites (the single unified emit-name table and
+`_sir_call_builtin_by_name` in `runtime.rs`) gained entries for the four new
+canonical division op names, per
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3:
+
+- `div_floor` → `_sir_divide` (the SAME helper `/` already uses — a rename,
+  zero new logic).
+- `div_trunc` → new `_sir_trunc_div`: Go's native int64 `/` already
+  truncates toward zero, so this is a thin wrapper (unlike `_sir_divide`'s
+  int path, which explicitly adjusts for floor semantics).
+- `udiv_trunc` → new `_sir_utrunc_div`: `div_trunc`'s unsigned twin —
+  reinterprets the `int64` bit pattern as `uint64` before dividing (this
+  backend has no typed-unsigned frontend reaching it yet, but the helper is
+  implemented faithfully, mirroring `semantic-ir-to-c`'s existing
+  `_sir_itdiv`/`_sir_utdiv` split, the first backend to need this
+  distinction).
+- `div_true` → new `_sir_true_div`: always coerces both operands to
+  `float64` and divides, regardless of operand tag. Raises
+  `ZeroDivisionError` unconditionally, matching `_sir_divide`'s own
+  float-path convention (Python's `/` behaves the same way) — IEEE `+Inf`
+  is never a silently-produced result here.
+
+New `tests/compile_and_run_division_ops.rs`: real `go run` compile-and-execute
+proof for all four ops (6 tests, mirrors `compile_and_run_floats.rs`'s
+pattern) — §E3's own worked example, the floor-vs-truncate divergence on
+negative operands, and the zero-divisor panic path (Go's uncaught-panic
+default behaviour: nonzero exit + `SirError.Error()`'s formatted message on
+stderr) for every one of the four ops — no existing test covered this path
+before this PR.
+
 ## 0.38.0 — SIR28 §7: remove dead bare `print`/`puts` handling
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`

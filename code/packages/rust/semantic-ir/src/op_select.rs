@@ -127,8 +127,15 @@ pub enum BinaryLowering {
 /// | arithmetic | `+` `-` `*`                     |
 /// | comparison | `<` `>` `<=` `>=` `==` `!=`      |
 ///
-/// (`/` is deliberately absent — division is split into `div_floor`/`div_trunc`
-/// with its own rounding semantics; see SIR21 §E3 and `sir-conformance`.)
+/// (`/` is deliberately absent — division is split into its own op family,
+/// `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`, each with its own
+/// rounding semantics; see SIR21 §E3 and `sir-conformance`. None of the four
+/// reach this resolver: every frontend that emits one already knows its
+/// exact rounding mode at emission time — that's the entire point of having
+/// four distinct names instead of one overloaded `/` — so there is no
+/// "resolve the right primitive from operand types" decision left for
+/// `resolve_binary` to make here, unlike `+`/`-`/`*`, which stay genuinely
+/// polymorphic on operand type.)
 pub fn resolve_binary(op: &str, lhs: Option<&SirType>, rhs: Option<&SirType>) -> BinaryLowering {
     match op {
         // `+` is polymorphic: string concat when both are strings, else numeric.

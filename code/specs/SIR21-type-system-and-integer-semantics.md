@@ -314,6 +314,56 @@ puts(div_true(7, 2))     // 3.5 — Python's `/`
 Each op is distinct in the IR; every backend emits the matching primitive. No
 `divide` that "means Ruby on Tuesdays."
 
+There is a fourth name, `udiv_trunc` — `div_trunc`'s unsigned twin, needed
+because every backend stores values as tagged `i64`/`f64`: a `u64` ≥ 2^63
+misreads as negative unless routed to a distinct code path. This is not a new
+rounding mode — `div_trunc`/`udiv_trunc` round identically (toward zero); the
+split is purely a backend *representation* concern, the same reason SIR
+already has separate `tdiv`/`utdiv`/`tmod`/`utmod` names for C's own
+truncating division/modulo. **T3b-2 folds `tdiv`/`utdiv` into
+`div_trunc`/`udiv_trunc`** — one canonical truncating-division name family,
+not two synonyms for the same rounding mode (per this section's own "no
+`divide` that means Ruby on Tuesdays" rule, which applies just as much to a
+second name for the *same* semantics as it does to one name with two
+semantics). `tmod`/`utmod` (modulo) are **not** touched by T3b-2 — they stay
+under their existing names, a deliberate, visible asymmetry (division
+renamed, modulo not) left as a forward pointer to a future, not-yet-numbered
+milestone rather than silently expanded scope here.
+
+**Which ops are new code vs. a rename** (non-obvious enough to state
+explicitly): every backend already has a division helper that floors
+integers and true-divides floats — matching `div_floor` exactly — so on
+six of the seven backends (C, Go, JavaScript, Python, Ruby, Rust)
+`div_floor` is a *rename* of existing, already-correct logic, not new
+behavior. TypeScript is the one exception: its division helper always
+truncates, even on float operands, diverging from every sibling backend's
+Ruby-floor-faithfulness — a real, previously undetected bug (invisible
+because the TypeScript backend isn't in `sir-conformance`'s test matrix),
+fixed as part of wiring `div_floor` there for the first time. `div_trunc`/
+`udiv_trunc` are likewise a rename on C and Ruby (from `tdiv`/`utdiv`) but
+genuinely new code on the other five. `div_true` — always coerce to float,
+never branch on operand tag — is genuinely new on every backend; it must
+raise the same typed `ZeroDivisionError` on a zero divisor every sibling op
+already raises, not let a bare host `/` produce IEEE `Infinity`/`NaN`.
+
+Twig (`twig-to-semantic-ir`, an internal Lisp-S-expression IR-testing DSL,
+unrelated to PHP's Twig templates) does **not** migrate to the `div_*`
+family and keeps emitting bare `"/"` permanently: its own `/` is variadic
+(any number of operands folded left-to-right) where every `div_*` op is
+strictly binary, and its numeric tower carries no static int/float
+distinction to pick among the three rounding modes with. This is a
+considered design conclusion, not deferred work — consequently, bare `"/"`
+is never fully dead code on any backend and stays as Twig's permanent,
+documented route (every backend keeps `"/"` pointed at the same
+implementation as the renamed `div_floor`).
+
+No `semantic-ir` core-IR or validator change is required to add
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` as new `BuiltinCall` names —
+`validator.rs`'s entire `Expr::BuiltinCall` validation only special-cases
+`"cons"|"car"|"cdr"|"pair?"` for `Feature::Pairs`; every other name,
+including these four, passes through unconstrained (arity and existence are
+each backend's own concern, exactly as `tdiv`/`utdiv` already are today).
+
 ---
 
 ## Escape hatch integration
@@ -458,7 +508,7 @@ One PR per row; backend rows fan out in parallel after the core rows land.
 | T2d | `sir-conformance` | Extend the coverage gate from the `(op × backend)` arithmetic grid to the full `SirType`/feature surface of the golden corpus (e.g. `case_eq`, strings), keyed on each backend's accept-manifest. |
 | T3a ✅ | `semantic-ir` | Integer-reflection const-intrinsics: `int_const` module — `IntConst {Max,Min,Width}` with canonical names and `eval(spec) -> Option<i128>` that const-folds from the `IntSpec` bounds (`None` for arbitrary). Pure, additive, behaviour-preserving. *(Done — CHANGELOG 0.18.0.)* |
 | T3b-1 ✅ | `sir-conformance` | Division **reference semantics**: `oracle::DivOp { Floor, Trunc }` with `eval` (floor→−∞, trunc→0), `Outcome::DivByZero`, `MIN/-1`→`BeyondOracle`; canonical names `div_floor`/`div_trunc`. `div_true` (float) deferred to a float oracle. Pure/additive, out of `IntOp::ALL` (coverage gate untouched). *(Done — CHANGELOG 0.9.0.)* |
-| T3b-2 | `semantic-ir` + frontend + backends | Wire the split into the pipeline: distinct `div_floor` / `div_trunc` / `div_true` IR ops (replacing the overloaded `_sir_divide`); the Ruby frontend emits `div_floor`; each backend lowers to its matching primitive; add division conformance cases judged by the T3b-1 oracle. |
+| T3b-2 (in progress) | frontends + backends | Wire the split into the pipeline per §E3's own decisions: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true` IR ops, `div_trunc`/`udiv_trunc` absorbing `tdiv`/`utdiv`. Additive backend rollout (all 7) first, then frontend migration (Ruby → `div_floor`; Python/JavaScript/MATLAB/Scilab/IDL → `div_true`; C → `div_true`+`div_trunc`/`udiv_trunc`; Twig stays on bare `"/"` permanently, see §E3), then a cleanup slice deleting the now-dead `tdiv`/`utdiv`. Division conformance cases judged by the T3b-1 oracle, plus a dedicated TypeScript execution test proving its floor-vs-truncate bug fix (see §E3). |
 | T3c-1 ✅ | `semantic-ir` | Type-directed op-selection **rule**: `op_select::resolve_numeric(lhs, rhs) -> NumericLowering` (`Int(spec)` / `Float` / `RuntimeDispatch`) — the pure decision each backend consults to specialise a numeric `+`/`-`/`*` from operand types, or dispatch when `Dynamic`/mismatched. No inference, no behaviour change. *(Done — CHANGELOG 0.19.0.)* |
 | T3c-2 ✅ | `semantic-ir` | Fold string-concat (`+` on `Str`) and comparison operators into the resolver: `resolve_binary(op, lhs, rhs) -> BinaryLowering` (`IntArith`/`FloatArith`/`StrConcat`/`TypedCompare`/`RuntimeDispatch`). Pure/additive; `/` deliberately excluded (division split, §E3). *(Done — CHANGELOG 0.20.0.)* |
 | T3c-3-prereq ✅ | `semantic-ir` | Discovered while starting T3c-3: `resolve_binary`'s `Option<&SirType>` operand types have nowhere to come from at a `BuiltinCall`'s call site — `sir_type` lives on *declaration* sites (`Param`/`Capture`/`LetBinding`/`LetStarBinding`) only, not on `Expr::VarRef` or any literal. `type_env::TypeEnv` is the missing name→type lookup: seed from a function's params/captures, `observe_stmt` as a caller walks a block in lexical order, `expr_type` resolves a `VarRef` or returns `None`. Pure/additive, 9 unit tests, not yet consulted by any backend. *(Done — CHANGELOG 0.24.0.)* |

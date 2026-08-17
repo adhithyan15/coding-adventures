@@ -20,5 +20,4 @@ No IR knowledge.  No `jit-core` dependency.
 ## See also
 
 - [`intel4004-backend`](../intel4004-backend) — Phase 4 of the migration
-- [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md) — phase plan
-- [`iir-to-intel4004`](../iir-to-intel4004) — deprecated predecessor
+- [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md) — phase plan (`iir-to-intel4004`, the deprecated predecessor, was removed once the migration completed)

@@ -85,6 +85,11 @@ module CodingAdventures
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     SQL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "sql", "sql.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Create a GrammarDrivenParser configured for SQL text.
     #
@@ -98,10 +103,7 @@ module CodingAdventures
     # @return [CodingAdventures::Parser::GrammarDrivenParser] configured parser
     def self.create_sql_parser(source)
       tokens = CodingAdventures::SqlLexer.tokenize_sql(source)
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(SQL_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
     end
 
     # Parse a string of SQL text into a generic AST.

@@ -173,6 +173,11 @@ module CodingAdventures
     #
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     DARTMOUTH_BASIC_TOKENS_PATH = File.join(GRAMMAR_DIR, "dartmouth_basic", "dartmouth_basic.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # ----------------------------------------------------------------
     # tokenize(source) — The Main Entry Point
@@ -195,20 +200,13 @@ module CodingAdventures
     # @param source [String] Dartmouth BASIC source text to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source)
-      # Parse the grammar file into a TokenGrammar struct. The struct
-      # contains all the regex patterns, keyword list, skip rules, and
-      # metadata like case_insensitive: true.
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(DARTMOUTH_BASIC_TOKENS_PATH, encoding: "UTF-8")
-      )
-
-      # Create a GrammarLexer. The grammar has case_sensitive: false, so
-      # the lexer lowercases the source before matching. Keywords like
-      # PRINT, LET, IF match the lowercase KEYWORD regex pattern and are
-      # then normalised back to uppercase by the @case_insensitive emit path.
-      # Non-keyword identifiers (NAME, BUILTIN_FN, USER_FN) are upcased
-      # by hook 3 below.
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      # Create a GrammarLexer using the pre-compiled TokenGrammar. The
+      # grammar has case_sensitive: false, so the lexer lowercases the
+      # source before matching. Keywords like PRINT, LET, IF match the
+      # lowercase KEYWORD regex pattern and are then normalised back to
+      # uppercase by the @case_insensitive emit path. Non-keyword
+      # identifiers (NAME, BUILTIN_FN, USER_FN) are upcased by hook 3 below.
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
 
       # Hook 1: relabel the first NUMBER on each line to LINE_NUM.
       # The grammar matches both line numbers and numeric literals with

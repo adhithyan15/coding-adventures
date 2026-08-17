@@ -1,6 +1,87 @@
 # Changelog — iir-to-cil-bytecode
 
 
+## 0.45.0 - 2026-08-15 - a real int64 register model for the textual CIL backend
+
+The `.il` emitter was uniformly 32-bit: `cil_local_type` mapped every scalar —
+`i64` included — to `int32`, and `const` emitted `ldc.i4`, **refusing** any
+literal outside the `int32` range.
+
+That refusal was correct. Truncating a literal silently is the one thing a
+backend must never do, and it is the failure mode this whole campaign exists to
+eliminate. But the refusal was also a wall: it made a class of program
+*inexpressible*. COBOL's `COMPUTE R = A / B + C` over `PIC 9(4)V99` carries the
+division at a fixed **scale-12** intermediate, so `10^12` is inherent to the
+language's arithmetic, not an accident of the frontend — and the CLR could only
+say no:
+
+```text
+ClrBackendError("InvalidOperand { detail: \"integer literal 1000000000000 out of int32 range\" }")
+```
+
+Real CoreCLR has a native 64-bit integer stack type. So the fix is to
+**represent** the width, not to weaken the refusal:
+
+* `i64`/`u64` now declare `int64` locals; `const` emits `ldc.i8`.
+* The int32 refusal is **unchanged** and still fires — now only for a genuinely
+  32-bit destination, the one case where emitting the literal would mean
+  truncating it.
+* `array<i64>` is a real `int64[]` (`newarr System.Int64`, `ldelem.i8`/
+  `stelem.i8`), not the old `int32[]` collapse. Keeping arrays at `int32[]`
+  while scalars widened would have put a `conv.i4` on every `array_set` — an
+  unannounced truncation of the top 32 bits on the way into the array.
+
+CIL arithmetic is stack-type-overloaded — one `add` serves `int32+int32` and
+`int64+int64`, and `int32+int64` is simply not a legal transition — so the
+discipline throughout is: know each operand's width and make the widths agree
+before the opcode. A new `emit_width_conv` inserts `conv.i4`/`conv.i8` at every
+seam: `mov`, `ret` (the entry still returns `int32`), call arguments and
+results, comparisons (which run at the **wider** operand, never the narrower),
+globals, array elements and indices, the byte tape, and the narrow-width
+`u4`/`u8`/`u16` masks. `print_i64` and `input_i64` now pick the
+`Console.WriteLine`/`Parse` overload matching the value's own width, and
+`real_to_int_*` narrows with `conv.ovf.i8` for an `i64` destination.
+
+The `u8`-over-`i64` pin was **rewritten, not deleted**. It used to assert the IL
+contained no `int64`/`ldc.i8` — asserting that now would assert the bug back in.
+What must not change is the arithmetic, so it now pins the collapse *as an
+explicit `conv.i4` on each operand* (chosen by the op's `u8` destination), an
+`int32` mask, and — in a new real-`ilasm`/`dotnet` test — the answer itself:
+`200u8 + 100u8` still wraps to `44`. Three further end-to-end CoreCLR tests pin
+the scale-12 chain and a wide `int64[]` element round-trip.
+
+Run-verified: the `COMPUTE R = A / B + C` matrix cell goes green on Clr.
+
+
+### Security review follow-ups
+
+Two regressions this change introduced, both found by assembling with real
+`ilasm` and running on CoreCLR 9 rather than by reading the diff:
+
+* **Array element-width confusion → out-of-bounds heap write (HIGH).**
+  `array_get`/`array_set` took the element opcode from the ACCESS instruction's
+  hint while the handle's local type came from the PRODUCING instruction's hint,
+  and nothing reconciled them. Harmless while every element collapsed to
+  `int32[]`/`.i4`; with a real int64 model, `stelem.i8` against an `int32[]`
+  makes the JIT scale the address by 8 while bounds-checking against the element
+  COUNT. Writing index 1023 of an `int32[1024]` stored eight bytes ~4 KB past the
+  end, into a different live array, and the process exited 0 with no exception.
+  `checked_array_access` now ENFORCES the agreement the doc comment previously
+  only asserted. No frontend produced the mismatch — all three ALGOL
+  `integer array` programs are width-consistent — but a hostile or inconsistent
+  `IIRModule` is the same input class `checked_cil_ident` already guards.
+* **`u32`/`i32` stopped wrapping on an int64 slot (MEDIUM).**
+  `emit_narrow_width_mask` returned early for those widths on the premise that
+  "the 32-bit op already wrapped". This change falsified it: the arithmetic arm
+  takes its width from the destination's home, so a `u32` op into an `int64`
+  local computed at 64 bits unmasked. `0x7FFFFFFF + 0x7FFFFFFF` gave
+  `4294967294` where 32-bit wrap gives `-2`.
+
+A third finding (`cmp_operand_width` claiming to reconcile a float/int pair while
+`emit_width_conv` emits nothing, so `1.5 < 2` returns 0) is PRE-EXISTING and left
+tracked rather than fixed here — but the doc no longer claims a guarantee it does
+not provide.
+
 ## 0.44.0 - 2026-08-15 - the entry result leaves on stderr, so a program can print AND return
 
 The launcher wrote the entry's `int32` to stdout, but ONLY when the module did

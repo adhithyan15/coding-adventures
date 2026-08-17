@@ -66,7 +66,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 )
 
     def test_task_app_requires_acceptance(self) -> None:
-        for package in ("unknown/programs/task-app", "rust/task-mosaic-app"):
+        for package in ("mosaic/programs/task-app", "rust/task-mosaic-app"):
             with self.subTest(package=package):
                 self.assertTrue(
                     MODULE.requires_mosaic_xaml_windows(
@@ -77,7 +77,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
     def test_standard_mosaic_package_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_xaml_windows(
-                {"affected_packages": ["unknown/mosaic-pkg-grid"]}
+                {"affected_packages": ["mosaic/mosaic-pkg-grid"]}
             )
         )
 

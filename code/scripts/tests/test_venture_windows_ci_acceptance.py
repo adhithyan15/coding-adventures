@@ -51,7 +51,7 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
     def test_mosaic_package_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_venture_windows(
-                {"affected_packages": ["unknown/programs/venture-browser"]}
+                {"affected_packages": ["mosaic/programs/venture-browser"]}
             )
         )
 

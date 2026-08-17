@@ -16,7 +16,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/venture-browser-macos",
         "rust/venture-browser-qt",
         "rust/venture-browser-windows",
-        "unknown/programs/venture-browser",
+        "mosaic/programs/venture-browser",
     }
 )
 

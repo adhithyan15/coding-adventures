@@ -2401,6 +2401,19 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "-" => "__Sir.sub",
         "*" => "__Sir.mul",
         "/" => "__Sir.div",
+        // SIR21 T3b-2: `div_floor` is a bare alias for `div` (a documented
+        // pre-existing limitation — this runtime's untagged `Val` model
+        // cannot distinguish Ruby Integer from Ruby Float at runtime, so
+        // `div_floor`'s floor-vs-true-divide dispatch cannot be made
+        // correct without a larger, out-of-scope value-tagging change —
+        // see `div`'s own doc comment in `arithmetic.ts`). `div_trunc`/
+        // `udiv_trunc` both route to `truncDiv` (identical here — no
+        // fixed-width signed/unsigned distinction to reinterpret).
+        // `div_true` is genuinely new.
+        "div_floor" => "__Sir.div",
+        "div_trunc" => "__Sir.truncDiv",
+        "udiv_trunc" => "__Sir.truncDiv",
+        "div_true" => "__Sir.trueDiv",
         "=" => "__Sir.eq",
         "<" => "__Sir.lt",
         ">" => "__Sir.gt",

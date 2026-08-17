@@ -1,5 +1,36 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.20 — 2026-08-16 — table.grow/table.size/table.fill text-form parsing (task #98)
+
+### Added
+
+- `table.grow`/`table.size`/`table.fill` text-form parsing, both flat
+  and folded instruction syntax -- entirely unimplemented before this
+  pass. The folded form resolves a REAL, optional leading `$t` table
+  index (defaulting to table 0), same disambiguation `table.get`/
+  `table.set` (task #96) already established; the flat/stream form
+  defers to table 0 always, same documented scope boundary `"memory.
+  size" | "memory.grow"`'s own flat-form arm uses (no vendored corpus
+  file exercises a non-default table index through flat syntax).
+
+### Fixed
+
+- The three new folded-form encoders were extracted into their own
+  `#[inline(never)]` functions (`encode_table_grow_flat`/`_size_flat`/
+  `_fill_flat`) rather than inlined directly into `encode_flat_instr`.
+  `encode_flat_instr` is the recursive descent's own funnel
+  (`encode_flat_instr` -> `encode_instr_list` -> `encode_one` -> ...),
+  and a debug-build stack frame sizes to the union of ALL of a
+  function's locals across every branch, not just the one actually
+  taken -- inlining the 3 new arms there directly measurably pushed
+  ordinary deeply-nested `i32.add` recursion (which never touches this
+  code at all) past the real stack limit before `MAX_INSTR_NESTING_
+  DEPTH`'s own guard could fire, breaking `deeply_nested_folded_
+  arithmetic_errors_cleanly_not_stack_overflow`. Confirmed by direct
+  before/after observation: the inlined version crashed that test with
+  a real SIGABRT stack overflow; the extracted version passes it (and
+  the full suite) consistently across repeated runs.
+
 ## 0.1.19 — 2026-08-16 — memory.init/data.drop + passive data segments (task #95)
 
 ### Added
