@@ -5027,6 +5027,48 @@
       "language": "spanish",
       "chapter": 295,
       "output": "spanish/book/chapters/ch295-el-sendero.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 52,
+      "output": "hindi/book/chapters/ch52-in-the-kitchen.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 53,
+      "output": "hindi/book/chapters/ch53-more-of-the-body.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 54,
+      "output": "hindi/book/chapters/ch54-animals.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 55,
+      "output": "hindi/book/chapters/ch55-the-sky.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 56,
+      "output": "hindi/book/chapters/ch56-the-road.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 57,
+      "output": "hindi/book/chapters/ch57-a-gift-and-a-feast.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 58,
+      "output": "hindi/book/chapters/ch58-inside-the-house.tex",
+      "scriptSet": "hindi-main"
     }
   ],
   "handwritten": [
