@@ -5,9 +5,69 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
-three measurements changed what the top of this list should be. See
-**Prioritization, 2026-08-12** below for the current order and the numbers behind it.
+**The order no longer lives in this file.** As of HL-C208 the queue is computed
+from the measured deficit — run `npm run plan` in
+`code/packages/typescript/human-language-data`, or see
+[`HL15`](../../specs/HL15-the-completion-plan.md) for why. This file remains the
+record of what was *learned*; it is no longer the record of what is *next*, because
+a hand-ordered list goes stale silently and in the flattering direction. The
+prioritization sections below are kept as history and are dated accordingly.
+
+## HL-C208 — the backlog is now a function; and the head of it is SCRIPT, not vocabulary
+
+The prioritization header on this file was three days stale on the day it was read:
+it ordered work against the frame HL-C183/HL-C184 had already replaced. Nobody was
+careless. That is what happens when the ordering lives in prose that nothing
+recomputes, while every number needed to derive it is computed on every run.
+
+So it is derived now (`completion-plan.ts`, `npm run plan`, spec HL15). Two things
+the first build of it got wrong are worth recording, because both looked right:
+
+**1. A flat sort by family produced a useless queue.** Level rank, then family
+priority, then cost — each key defensible, and the head came out as twenty-two
+consecutive `exam-inventory` items. Every track's research task ahead of every
+track's content, because all 22 tracks sit on the same rung and that family is
+priority 1. No language would have moved until all of them had moved on one axis.
+**Fixed by rotating across tracks**: each language contributes its single most
+important next action before any language contributes a second.
+
+**2. Lookahead outranked the floor.** `pre-A1` is not a CEFR level and no awarding
+body publishes an inventory for it, so a track at pre-A1 generates an inventory item
+for **A1** — the rung above. Family priority then put that ahead of the pre-A1
+content, which is exactly backwards: it is preparation for a climb that has not
+started. An inventory for a level the track has not reached now sorts last within
+that track, and jumps back to first the moment the track stands on that rung.
+
+### What the corrected queue actually says
+
+The head is **not** vocabulary. It is **script**, in fourteen of the first
+twenty-two slots:
+
+```
+459 glyphs shown but never taught, corpus-wide, across 16 non-Latin tracks
+756 lessons ask a reader to decode a glyph nobody taught them
+8 tracks teach NO letters at all
+```
+
+This was already in the report and had never been ordered against anything. It
+outranks the vocabulary grind for a reason that survives argument: it is the only
+family with a terminal state. Tamil has 247 glyphs and then it is done forever;
+vocabulary runs to 16,000 per track. A vocabulary tranche authored into an unclosed
+script is authored onto sand, because the reader cannot decode the word it teaches.
+The owner asked for gentle script introduction on 2026-08-17 independently, which
+agrees with the measurement rather than overriding it.
+
+### The size of the thing, stated plainly
+
+**~10,172 items to C2 across 22 tracks**, of which 89 are enumerable today. 9,995
+are vocabulary tranches, 131 are exam inventories, 46 are script tranches. The other
+four families are not projectable and are reported as `null` rather than as zero,
+because "cannot be projected" and "nothing left to do" are opposite facts.
+
+**1 of 132 exam inventories exists** (Spanish A1). Until a track's inventory is
+written, every number this repository reports for that track at that level is a
+proxy for something nobody is graded on — which is HL-C184's Phase 0 restated, now
+with the item queued per track instead of listed once and forgotten.
 
 ## HL-C207 — Hindi round two landed; Tamil and Malayalam are now the only tracks a round behind
 

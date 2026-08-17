@@ -302,6 +302,20 @@ export {
 } from "./level-gate.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
+export { runCompletionPlan } from "./plan-cli.js";
+export {
+  buildCompletionPlan,
+  renderCompletionPlan,
+  CERTIFIABLE_LEVELS,
+  KIND_PRIORITY,
+  TRANCHE_SIZE,
+  type CompletionPlan,
+  type CompletionPlanInput,
+  type InventoryPresence,
+  type PlanProjection,
+  type WorkItem,
+  type WorkKind,
+} from "./completion-plan.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
 export {
   FIGURE_CONFIG_PATH,

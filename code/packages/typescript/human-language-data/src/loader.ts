@@ -490,3 +490,35 @@ export function loadExamInventory(
   }
   return inventory;
 }
+
+/**
+ * Every external exam inventory that exists on disk, by its own declared fields.
+ *
+ * Deliberately NOT derived from the filename. `loadExamInventory` maps
+ * `spanish` to the code `es`, so the file is `exam-inventory-es-a1.json` while
+ * the track is `spanish` — and a queue keyed on the filename would therefore
+ * report Spanish's A1 inventory as missing and queue somebody to write it again.
+ * The file states `language` and `level` itself; that is the answer.
+ *
+ * A malformed file is SKIPPED rather than thrown on. This function answers
+ * "which targets are written down", and one unparseable file should not stop the
+ * whole plan from being computed — `loadExamInventory` is still the strict door
+ * that anything actually measuring coverage has to come through.
+ */
+export function listExamInventories(root = defaultCurriculumRoot()): { language: string; level: string }[] {
+  const directory = resolve(root, "core");
+  if (!existsSync(directory)) return [];
+  const found: { language: string; level: string }[] = [];
+  for (const file of readdirSync(directory).sort()) {
+    if (!file.startsWith("exam-inventory-") || !file.endsWith(".json")) continue;
+    try {
+      const parsed = JSON.parse(readFileSync(resolve(directory, file), "utf8")) as Partial<ExamInventory>;
+      if (typeof parsed.language === "string" && typeof parsed.level === "string") {
+        found.push({ language: parsed.language, level: parsed.level });
+      }
+    } catch {
+      // Skipped on purpose — see the note above.
+    }
+  }
+  return found;
+}

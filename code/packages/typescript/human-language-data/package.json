@@ -17,6 +17,7 @@
     "generate:progress": "node dist/track-progress-cli.js --write",
     "check:progress": "node dist/track-progress-cli.js --check",
     "report": "node dist/report-cli.js",
+    "plan": "node dist/plan-cli.js",
     "validate": "vitest run tests/integration.test.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
