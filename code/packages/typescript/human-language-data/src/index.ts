@@ -304,6 +304,12 @@ export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
 export { runCompletionPlan } from "./plan-cli.js";
 export {
+  measureLiteralMarkup,
+  renderLiteralMarkup,
+  type LiteralMarkupFinding,
+  type LiteralMarkupReport,
+} from "./literal-markup.js";
+export {
   buildCompletionPlan,
   renderCompletionPlan,
   CERTIFIABLE_LEVELS,

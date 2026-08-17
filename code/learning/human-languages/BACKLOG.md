@@ -13,6 +13,56 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C221 — the literal-markup gate is BUILT, and what it cost to justify
+
+HL-C217 specified it and logged it. HL-C219 then reintroduced the defect **one PR
+after fixing it** — two lessons in the very next tranche carried `&nbsp;` again,
+from a template that still had it, caught by hand only because somebody went
+looking. That is the whole argument: **a mistake that survives its own fix by one
+iteration will not be fixed by remembering harder.**
+
+Built as `literal-markup.ts`, blocking, 11 tests. `npm test` now fails on any
+HTML entity or bare HTML tag that would reach a reader.
+
+**Three design choices worth keeping:**
+
+1. **Two layers, two patterns.** The source scan finds `&nbsp;` in a `.md` and
+   names the file an author edits. The rendered scan finds `\&nbsp;` in the
+   generated `.tex` — a *different pattern*, because the escaper has been over it,
+   which is precisely why grepping the books for `&nbsp;` found nothing for three
+   releases.
+2. **Exemptions are load-bearing.** `<!-- hl-knowledge -->` IS the corpus's
+   directive syntax; code fences and inline spans are how a lesson (or this
+   backlog entry) *quotes* markup rather than emitting it. Without those three
+   exemptions the gate flags every lesson in the corpus and is switched off within
+   a day. Exempt spans are blanked, not deleted, so line numbers survive.
+3. **Blocking from commit one.** The corpus is clean at both layers today — 0
+   findings across 2,885 lessons and every generated book — so there is no
+   inherited debt for authors to route around. HL05's "report-only first" rule
+   exists for gates that start red; this one starts green.
+
+**Self-tested against a real planted defect, not fixtures.** `&nbsp;` was added to
+a committed Spanish lesson; the gate failed naming `ES-C01-hola:68 &nbsp;`; the
+file was restored and the gate went green. A fixture-only proof would not have
+shown that the corpus assertion is wired to the corpus.
+
+**The corpus assertion names its findings rather than counting them**, and a
+companion test plants one line into the real lesson set to pin that the same
+measurement still fires — so a clean run cannot be vacuous.
+
+### The class this belongs to, which is bigger than one gate
+
+Every other check in this package asks whether the output is **safe** or
+**reproducible**. `check:books` confirmed the byte-identical `\&nbsp;` on every
+run for three releases, faithfully reproducing the mistake. **Nothing asked
+whether the output was MEANINGFUL.**
+
+Other members of the same class, not yet covered and worth their own rows: a
+Markdown link whose text and target disagree, a `[YOU SAY: …]` stage direction
+with an empty payload, a table with a header and no rows, a cross-reference to a
+lesson that exists but teaches something else. All render perfectly and all say
+the wrong thing.
+
 ## HL-C220 — three Russian words were written with Latin letters, and the ъ ones are NOT the same class
 
 Surfaced by the security review of HL-C219 as an informational note, then swept

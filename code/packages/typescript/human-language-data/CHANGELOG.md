@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+### Added - the literal-markup gate (HL-C217, HL-C221)
+
+- Add `literal-markup.ts`: authoring markup that survives escaping into reader-facing text — HTML entities, numeric entities, and a closed list of bare HTML tags.
+- Checks **both layers**. The lesson source is where an author can act; the generated `.tex` is what the reader actually gets, and catches markup arriving from a template rather than a lesson.
+- The rendered pattern is separate from the source one on purpose: the escaper turns `&` into `\&`, so grepping the book for `&nbsp;` finds nothing. That is exactly how the defect stayed invisible through three merged releases.
+- Exempts the corpus's own `<!-- hl-knowledge -->` / `<!-- hl-activity -->` directives, fenced code blocks and inline code spans — a gate that flags every lesson, or every backlog entry describing the defect, gets switched off within a day. Exempt spans are blanked rather than deleted so reported line numbers stay true.
+- **Blocking from the first commit**, not report-only: the corpus is clean at both layers today (0 findings across 2,885 lessons and every generated book), so there is no inherited debt to route around.
+- Self-tested against a real planted defect, not just fixtures: `&nbsp;` added to a committed Spanish lesson, gate failed naming `ES-C01-hola:68 &nbsp;`, file restored, gate green.
+- The corpus assertion names its findings rather than counting them, and a companion test pins that the same measurement over the same corpus plus one planted line still fires — so a clean run cannot be vacuous.
+
+### Fixed - an authoring comment was typesetting into the shipped Spanish book (HL-C221)
+
+- `renderMarkdown` passed any non-directive `<!-- ... -->` straight into the book as body text. One had been printing inside a coloured culture box in `spanish/book/chapters/ch07-thank-you.tex` — a note from an author to future authors, in the reader's PDF.
+- `parse.ts` strips the `hl-knowledge` and `hl-activity` directives because it consumes them; everything else arrived at the renderer untouched. Comments are now stripped whole-string, so a multi-line one goes as a unit.
+- Found by the security review of the gate above, which observed that applying **Markdown** comment semantics to **LaTeX** output made the gate blind in exactly the place it exists to watch.
+
+### Fixed - four findings from the gate's own security review (HL-C221)
+
+- **Polynomial ReDoS.** `<\s*\/?\s*` split N whitespace characters between two `\s*` in O(N²) ways: measured **2,634 ms at N=64,000**, and reachable from ordinary Markdown because a long inline code span is blanked *into spaces*. Regrouping the slash gives **0 ms** at the same input. Timing harness self-tested against `/(a+)+b/` first.
+- **Exemptions no longer apply to the rendered layer.** In LaTeX `<!--` is not a comment and a backtick is an open quote; blanking on them hid 7,852 characters of the real corpus and let `\&nbsp;` be smuggled past inside a comment.
+- **`<!--` and `-->` are now themselves rendered-layer findings**, since either one reaching a `.tex` means an authoring comment reached the reader.
+- **`stripHtmlComments` replaces the comment regex with a linear scan**, fixing three CodeQL high alerts at once: `js/polynomial-redos` (`<!--[\s\S]*?-->` rescanned to EOF from every unterminated opener — 76 ms at 32 KB, now 1 ms), `js/bad-tag-filter` (HTML also closes a comment with `--!>`, so one closed that way survived the strip), and `js/incomplete-multi-character-sanitization` (a single pass over a malformed comment could leave fragments that re-form). Consuming the whole span from `<!--` to its terminator means nothing can re-form; an unterminated comment runs to end-of-text, as a browser treats one.
+- **Control characters are stripped from rendered findings.** `[^>]*` admits ESC, CR and BEL and the finding goes straight to a terminal; a finding must not be able to repaint the report that reports it.
+
+
+
 ### Fixed - a lesson id is validated at parse (HL-C211)
 
 - `lessonId` is interpolated RAW into `\label{lesson:<id>}` and into the `% canonical-lessons:` header of every generated `.tex` — the sibling of the `chapters.json` label hole closed in HL-C209, and found by the security review of the very next tranche.
