@@ -184,3 +184,33 @@ fn backend_trait_compile_matches_free_function() {
     let via_free_fn = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("free-fn compile");
     assert_eq!(via_trait, via_free_fn);
 }
+
+/// `const_i64 v=165` with NO following `ret` -- 165 (0xA5) is the
+/// HALT sentinel's own byte value, so `MOV A, #165` ends in a byte
+/// that is numerically identical to `encode_halt()`. A trailing-byte
+/// comparison (the original, buggy defensive-termination check) would
+/// be fooled into believing a real HALT was already emitted and skip
+/// appending one, leaving the compiled program unterminated. This
+/// proves the fix: the real terminator is still appended, so the
+/// output is `[0x74, 0xA5, 0xA5]` (`MOV A, #0xA5` + the actual HALT),
+/// not just `[0x74, 0xA5]`.
+#[test]
+fn const_matching_halt_sentinel_byte_value_still_gets_a_real_terminator() {
+    let cir = vec![ci(
+        "const_i64",
+        Some("v"),
+        vec![CIROperand::Int(0xA5)],
+        "i64",
+    )];
+    let bytes = compile(&ctx("halt_byte_collision", &[], "i64"), &cir).expect("lowering");
+    assert_eq!(bytes, vec![0x74, 0xA5, 0xA5]);
+
+    // And prove it actually halts when run, rather than spinning
+    // through zeroed-memory NOPs until the simulator's step budget
+    // is exhausted.
+    let mut sim = Intel8051Simulator::new();
+    sim.load_program(&bytes, 0);
+    let result = sim.run_loaded_with_limit(1000);
+    assert!(result.halted, "program should halt, not run out the step budget");
+    assert!(result.steps < 1000, "should halt well before the step limit");
+}

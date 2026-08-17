@@ -141,12 +141,21 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // `UnsupportedOp` (returned as `None` from the Backend trait) --
     // identical scheme to arm1-backend/intel8008-backend.
     let mut last_const_var: Option<String> = None;
+    // Tracks whether a REAL halt instruction was emitted -- NOT
+    // whether the trailing byte happens to equal the sentinel value.
+    // A trailing-byte comparison is unsound here: `const_* 165` emits
+    // `MOV A, #0xA5` (`[0x74, 0xA5]`), whose last byte is
+    // numerically identical to the HALT sentinel despite not being
+    // one, which would fool a byte-value check into skipping the
+    // real terminator.
+    let mut terminated = false;
 
     for instr in cir {
         let op = instr.op.as_str();
 
         if op == "ret_void" {
             bytes.push(encode_halt());
+            terminated = true;
             continue;
         }
 
@@ -159,6 +168,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                 )));
             }
             bytes.push(encode_halt());
+            terminated = true;
             continue;
         }
 
@@ -167,19 +177,20 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             let imm8 = encode_immediate_8(instr.srcs.first())?;
             bytes.extend_from_slice(&encode_mov_a_imm(imm8));
             last_const_var = Some(dest.to_string());
+            terminated = false;
             continue;
         }
 
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
-    // Defensive -- if no terminator was emitted, append the HALT
+    // Defensive -- if no real terminator was emitted, append the HALT
     // sentinel so the program stops instead of running off the end
     // (which would read zeroed code memory as instructions -- 0x00
     // happens to be NOP on the 8051, so an un-terminated program
     // would spin through NOPs rather than crash, but that's still not
     // "the program is done").
-    if bytes.last() != Some(&encode_halt()) {
+    if !terminated {
         bytes.push(encode_halt());
     }
     Ok(bytes)
