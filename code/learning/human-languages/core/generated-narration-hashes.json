@@ -837,6 +837,29 @@
       "jsonHash": "fnv1a64:59e6e5d0b0e5d0b8"
     },
     {
+      "language": "bengali",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:c53696530f0636ec",
+      "lessonIds": [
+        "BN-W01-na",
+        "BN-W01-aa-matra",
+        "BN-W01-aa",
+        "BN-W01-ha",
+        "BN-W01-ma",
+        "BN-W01-sa",
+        "BN-W01-ka",
+        "BN-W01-hasanta",
+        "BN-W01-ra",
+        "BN-W01-nomoshkar-read"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "bengali/narration/ch16.txt",
+      "json": "bengali/narration/ch16.json",
+      "textHash": "fnv1a64:017c39a1be8adaea",
+      "jsonHash": "fnv1a64:ad74d9dbcc3fbe39"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:6e5b00565489fe34",
