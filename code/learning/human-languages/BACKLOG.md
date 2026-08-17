@@ -13,6 +13,47 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C224 — the loop's own push cadence is now failing CI, and the failures look like code failures
+
+Three checks on PR 11870 failed with:
+
+```
+##[error]Response status code does not indicate success: 429 (Too Many Requests).
+##[error]Failed to download archive '.../actions/setup-go/...' after 3 attempts.
+```
+
+**Every one failed at `Set up job`, before a single line of the build ran.** GitHub
+is rate-limiting *action downloads* for this repository, and the cause is this
+loop: eleven PRs in a session, each triggering CI + CodeQL + Books, several of them
+twice, plus a re-push per PR for review fixes.
+
+**Why this is worth a row rather than a shrug.** A 429 at setup is reported in
+exactly the same place, and with exactly the same red X, as a genuine test failure.
+The first instinct on seeing `Build and publish all human-language books: fail` is
+to go looking at the books — and on this PR that was doubly misleading, because
+there HAD been a real books failure (HL-C223) minutes earlier. **The second failure
+looked like the first one not being fixed.** It was not; the fix was never
+compiled.
+
+**Rule: read the failing STEP name before the failing job name.** `Set up job`,
+`Post job cleanup` and `Checkout` failures are infrastructure. Only a failure
+inside a named build or test step is evidence about the change.
+
+### What the loop should do about it
+
+1. **One PR in flight at a time**, which was already the intent but not the
+   practice — the Hindi branch was authored while Bengali was still in CI, and
+   only held back from pushing because of a pin conflict (HL-C213's sibling).
+2. **Do not re-push to fix review findings while CI is mid-run.** Each push
+   cancels nothing and starts a second full set of workflows; this PR accumulated
+   four CI runs.
+3. **Space pushes.** The limit recovers on its own; the correct response to a 429
+   is to wait and re-run the failed jobs, never to change code.
+
+Recorded because an agent loop is exactly the thing that generates this pattern,
+and the failure mode — infrastructure noise that reads as a code defect — costs
+more than the delay does.
+
 ## HL-C223 — the glyph probe was mis-scoped, and HL-C214 was one tranche old when it happened
 
 CI: `bengali: missing_character rose to 29 against a baseline of 0`. The cause was
