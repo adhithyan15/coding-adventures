@@ -1926,6 +1926,11 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
+        // SIR21 T3b-2: `div_floor` is `/` under its canonical name (same
+        // floor-int/true-divide-float helper, zero behaviour change) --
+        // bare `/` stays too, as Twig's permanent fallback (see the SIR21
+        // spec's §E3).
+        "div_floor" => "_sir_divide",
         // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It was
         // UNIMPLEMENTED here, so any negative literal made the C backend report
         // an unsupported builtin and skip. Unary minus IS single-argument
@@ -2573,6 +2578,15 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "tmod" => ("_sir_itmod", 2),
         "utdiv" => ("_sir_utdiv", 2),
         "utmod" => ("_sir_utmod", 2),
+        // SIR21 T3b-2: div_trunc/udiv_trunc are tdiv/utdiv under their new
+        // canonical names (same helpers, zero behaviour change -- see this
+        // crate's CHANGELOG for why T3b-2 folds the synonym families
+        // together). div_true is genuinely new: always coerce to float,
+        // never branch on operand tag (see `_sir_true_div`'s own doc
+        // comment in runtime.rs for its zero-divisor handling).
+        "div_trunc" => ("_sir_itdiv", 2),
+        "udiv_trunc" => ("_sir_utdiv", 2),
+        "div_true" => ("_sir_true_div", 2),
         // Milestone 9 numeric conversions: `to_f` (int → double) and `to_i`
         // (double → int, truncating toward zero, matching C's `(int)double`).
         "to_f" => ("_sir_to_f", 1),
