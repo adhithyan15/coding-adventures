@@ -299,6 +299,49 @@ describe("arithmetic", () => {
     expect(sir.lt(1, 2)).toBe(true);
     expect(sir.gt(2, 1)).toBe(true);
   });
+
+  // ── SIR21 T3b-2: `truncDiv` / `trueDiv` ──────────────────────────────
+  //
+  // `div` above IS `div_floor`'s dispatch target (a documented, unfixed
+  // pre-existing limitation — see `div`'s own doc comment in
+  // `arithmetic.ts`), so no separate test is needed for that name here.
+
+  it("truncDiv rounds toward zero on every sign combination", () => {
+    expect(sir.truncDiv(7, 2)).toBe(3);
+    expect(sir.truncDiv(-7, 2)).toBe(-3);
+    expect(sir.truncDiv(7, -2)).toBe(-3);
+    expect(sir.truncDiv(-7, -2)).toBe(3);
+    expect(sir.truncDiv(-6, 2)).toBe(-3); // exact division: trunc == floor
+  });
+
+  it("truncDiv by zero raises a typed ZeroDivisionError", () => {
+    expect(() => sir.truncDiv(1, 0)).toThrow(SirError);
+    try {
+      sir.truncDiv(1, 0);
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("ZeroDivisionError");
+      expect((e as Error).message).toBe("divided by 0");
+    }
+  });
+
+  it("trueDiv always true-divides, even on two integer operands", () => {
+    // `div`'s own test above asserts `sir.div(7, 2) === 3` (truncated);
+    // trueDiv on the SAME operands must be the exact float `3.5` — the
+    // entire point of a separate always-float op.
+    expect(sir.trueDiv(7, 2)).toBe(3.5);
+    expect(sir.trueDiv(-7, 2)).toBe(-3.5);
+    expect(sir.trueDiv(6, 3)).toBe(2);
+  });
+
+  it("trueDiv by zero raises a typed ZeroDivisionError", () => {
+    expect(() => sir.trueDiv(1, 0)).toThrow(SirError);
+    try {
+      sir.trueDiv(1, 0);
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("ZeroDivisionError");
+      expect((e as Error).message).toBe("divided by 0");
+    }
+  });
 });
 
 describe("polymorphic + (string/array concat)", () => {
