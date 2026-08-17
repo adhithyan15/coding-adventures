@@ -1816,7 +1816,12 @@ impl Lowerer {
             let le = convert_ct(le, lp, CType::Double);
             let re = convert_ct(re, rp, CType::Double);
             let sir_op = match op {
-                "+" | "-" | "*" | "/" => op,
+                "+" | "-" | "*" => op,
+                // SIR21 T3b-2: C's `/` on `double` operands always
+                // true-divides (there is no int/float distinction left to
+                // conflate it with once both sides are promoted to
+                // `double`), so it maps to `div_true`, not bare `/`.
+                "/" => "div_true",
                 other => {
                     return Err(CLowerError {
                         message: format!("operator `{other}` is not defined on `double`"),
@@ -1889,13 +1894,22 @@ impl Lowerer {
             // Signedness matters for the same reason it does for `>>`: the
             // backends store values in a signed int64, so an unsigned operand
             // ≥ 2^63 is a negative int64 and a signed division would be wrong.
-            // Unsigned `/`/`%` therefore route to `utdiv`/`utmod` (which the C
-            // backend does over uint64).
+            // Unsigned `/` therefore routes to `udiv_trunc` (which the C
+            // backend does over uint64). `%` stays on `tmod`/`utmod` for now
+            // — modulo is explicitly out of scope for the SIR21 T3b-2
+            // division-op split (a future milestone's territory).
+            //
+            // SIR21 T3b-2: `tdiv`/`utdiv` are ABSORBED by `div_trunc`/
+            // `udiv_trunc` (one canonical truncating-division name family,
+            // not two synonyms for the same rounding mode) — this is a
+            // rename of these exact two names, not a new builtin. The old
+            // `tdiv`/`utdiv` dispatch entries are dead code once this
+            // frontend (their only emitter) migrates; removed in Slice 7.
             "/" => {
                 if c.signed {
-                    "tdiv"
+                    "div_trunc"
                 } else {
-                    "utdiv"
+                    "udiv_trunc"
                 }
             }
             "%" => {

@@ -190,11 +190,16 @@ mod tests {
 
     #[test]
     fn double_division_is_true_division_not_truncating() {
-        // `/` on doubles must be the plain `/` builtin (true division), never the
-        // integer `tdiv`/`utdiv` truncating helpers.
+        // `/` on doubles must lower to `div_true` (SIR21 T3b-2 — always
+        // true-divides, no int/float distinction left once both sides are
+        // promoted to `double`), never the integer `div_trunc`/`udiv_trunc`
+        // truncating builtins (formerly `tdiv`/`utdiv`).
         let m = lower("int main(void) { double q = 7.0 / 2.0; return 0; }");
         let text = semantic_ir::print_module(&m);
-        assert!(text.contains("(builtin-call /"), "no true `/`:\n{text}");
+        assert!(
+            text.contains("(builtin-call div_true"),
+            "no div_true:\n{text}"
+        );
         assert!(!text.contains("tdiv"), "double `/` used tdiv:\n{text}");
     }
 
@@ -491,9 +496,11 @@ mod tests {
     #[test]
     fn division_and_modulo_lower_to_truncating_builtins() {
         // C `/` truncates toward zero (unlike SIR/Ruby floor), so it must lower
-        // to the dedicated `tdiv`/`tmod` builtins, not the flooring `/`/`%`.
+        // to `div_trunc` (SIR21 T3b-2 — absorbed and renamed from the old
+        // `tdiv`, which is now dead code removed in Slice 7), not the
+        // flooring `/`. `%` is untouched by this arc — `tmod` stays as-is.
         let m = lower("int f(int a, int b) { return a / b; }");
-        assert!(semantic_ir::print_module(&m).contains("(builtin-call tdiv"));
+        assert!(semantic_ir::print_module(&m).contains("(builtin-call div_trunc"));
         let m = lower("int f(int a, int b) { return a % b; }");
         assert!(semantic_ir::print_module(&m).contains("(builtin-call tmod"));
     }

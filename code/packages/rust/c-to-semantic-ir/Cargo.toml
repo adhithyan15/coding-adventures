@@ -1,6 +1,6 @@
 [package]
 name = "c-to-semantic-ir"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "C (integer-core subset) → Semantic IR (SIR27). Assigns a concrete IntSpec to every expression and inserts Convert nodes per C's integer promotions, so C's width/wrap/truncate semantics survive the narrow waist."
 
