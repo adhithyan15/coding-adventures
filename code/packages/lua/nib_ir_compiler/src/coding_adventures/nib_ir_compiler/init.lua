@@ -10,7 +10,15 @@ local expression_rules = {
     eq_expr = true,
     cmp_expr = true,
     add_expr = true,
-    -- mul_expr sits between add_expr and bitwise_expr in the precedence cascade
+    -- shift_expr sits between add_expr and mul_expr in the precedence cascade
+    -- (#11257). Nib's lexer does not tokenize SHL/SHR yet,
+    -- so every shift_expr node parses as a transparent single-operand wrapper
+    -- around mul_expr. It must be here so expression_children does not filter
+    -- it out when add_expr walks its operands -- otherwise a plain `a + b`
+    -- loses both operands (they're wrapped in shift_expr) and compiles to
+    -- nothing.
+    shift_expr = true,
+    -- mul_expr sits between shift_expr and bitwise_expr in the precedence cascade
     -- (LANG-FULL N1). It must be here so expression_children does not filter it
     -- out when add_expr walks its operands.
     mul_expr = true,

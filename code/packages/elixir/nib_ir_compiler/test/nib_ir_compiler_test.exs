@@ -29,6 +29,13 @@ defmodule CodingAdventures.NibIrCompilerTest do
     assert :call in opcodes
   end
 
+  test "emits plain additive add shapes (regression: shift_expr level)" do
+    program = compile_source("fn add(a: u4, b: u4) -> u4 { return a + b; }")
+    opcodes = Enum.map(program.instructions, & &1.opcode)
+
+    assert :add in opcodes
+  end
+
   test "emits loop control flow" do
     program =
       compile_source("""

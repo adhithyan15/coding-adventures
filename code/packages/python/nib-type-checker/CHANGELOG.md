@@ -4,6 +4,54 @@ All notable changes to this package are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project
 uses [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] — 2026-08-17
+
+### Investigated
+
+- `nib.grammar` gained a new `shift_expr` precedence level between
+  `add_expr` and `mul_expr` (task #11257, "lower shift expressions"):
+  `add_expr = shift_expr { ... }` / `shift_expr = mul_expr { (SHL|SHR)
+  mul_expr }`. The equivalent TypeScript packages (`nib-formatter`,
+  `nib-type-checker`) needed an explicit `"shift_expr"` entry added to a
+  rule-name allowlist Set to avoid choking on the new wrapper node, and it
+  was suspected this Python package would need the same fix.
+- Confirmed by direct testing that **no code change is needed here**.
+  `NibTypeChecker` dispatches expression nodes through
+  `GenericTypeChecker.dispatch()`/`_check_ast_expr()`, whose fallback path
+  unwraps *any* unrecognised single-child rule node (`if len(node.children)
+  == 1: return self._check_expr(node.children[0], scope)`) regardless of
+  its `rule_name`. This is the same generic mechanism that has always kept
+  the pre-existing `mul_expr` level (added in #5677, itself never
+  registered as an explicit hook here) transparent, so the new
+  `shift_expr` level — a transparent single-child wrapper whenever no
+  `<<`/`>>` operator is present — is handled correctly with no additional
+  code. The handful of hardcoded rule-name lists elsewhere in
+  `checker.py` (`_check_let_stmt`, `_check_assign_stmt`,
+  `_check_return_stmt`, `_check_for_stmt`, `_check_if_stmt`,
+  `_check_call_expr`) only ever match the immediate child of a statement
+  node, which is always the `expr` rule itself (already present in every
+  one of those lists) — they are unaffected by rule names added deeper in
+  the expression tree.
+- Also confirmed (contrary to an initial assumption) that Python's
+  `nib-lexer` *does* tokenize `SHL`/`SHR` (it loads the shared
+  `nib.tokens` file at runtime, same as the Rust/TS frontends), so
+  `shift_expr` nodes are not unconditionally single-operand — real `<<`/`>>`
+  usage is parsed. Real shift/multiplication semantics (e.g. `a << b`,
+  `a * b`) are not fully type-checked by this package (there is no
+  registered hook for `mul_expr`/`shift_expr` operator nodes with 3+
+  children, so `_check_ast_expr` falls through to `None` for those), but
+  that is a pre-existing gap dating back to `mul_expr`'s introduction in
+  #5677 and is out of scope for this fix — this change only concerns the
+  transparent-wrapper regression pattern.
+
+### Added
+
+- Regression tests `test_plain_add_two_variables` and
+  `test_plain_add_two_variables_type_mismatch` in
+  `tests/test_nib_type_checker.py`, exercising a plain 2-operand `a + b`
+  (both `NAME` operands, no shift operator) to lock in the transparent
+  `shift_expr` pass-through behaviour above.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

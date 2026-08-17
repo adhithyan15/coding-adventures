@@ -18,6 +18,17 @@ local expression_rules = {
     eq_expr = true,
     cmp_expr = true,
     add_expr = true,
+    -- shift_expr sits between add_expr and mul_expr in the precedence cascade
+    -- (#11257). Nib's lexer does not tokenize SHL/SHR yet,
+    -- so every shift_expr node parses as a transparent single-operand wrapper
+    -- around mul_expr. It must be here so expression_children does not filter
+    -- it out when add_expr walks its operands -- otherwise a plain `a + b`
+    -- collapses to zero recognized operands, add_expr's binary type-check
+    -- branch never runs (the #operands >= 2 guard fails), and check_expr
+    -- silently falls through to the single-child passthrough at the bottom of
+    -- the function, inferring the type from only the left operand and never
+    -- validating the right operand or reporting a mismatch.
+    shift_expr = true,
     bitwise_expr = true,
     unary_expr = true,
     primary = true,

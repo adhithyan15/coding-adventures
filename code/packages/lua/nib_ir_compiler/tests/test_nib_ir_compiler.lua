@@ -43,6 +43,22 @@ describe("nib_ir_compiler", function()
         assert.is_true(saw_add)
     end)
 
+    it("emits add for a plain two-operand add_expr wrapped in shift_expr", function()
+        -- Regression test: add_expr = shift_expr { (PLUS|MINUS|...) shift_expr }
+        -- (#11257). Nib's lexer does not tokenize SHL/SHR,
+        -- so every operand of a plain `a + b` is parsed as a shift_expr node
+        -- that transparently wraps a single mul_expr child. Before shift_expr
+        -- was added to this compiler's expression_rules allowlist,
+        -- expression_children(add_expr) filtered out both shift_expr operands,
+        -- so compile_add saw zero operands and emitted nothing for the add.
+        local program = compile_source("fn add(a: u4, b: u4) -> u4 { return a + b; } fn main() -> u4 { return add(3, 4); }")
+        local saw_add = false
+        for _, instr in ipairs(program.instructions) do
+            saw_add = saw_add or instr.opcode == ir.IrOp.ADD or instr.opcode == ir.IrOp.ADD_IMM
+        end
+        assert.is_true(saw_add)
+    end)
+
     it("emits loop control flow", function()
         local program = compile_source([[
             fn count_to(n: u4) -> u4 {

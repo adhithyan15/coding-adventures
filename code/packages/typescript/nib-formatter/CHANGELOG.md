@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.2
+
+- fix the same class of crash for shift (`shift_expr`) expressions: #11257
+  inserted a new `shift_expr` precedence level between `add_expr` and
+  `mul_expr` (`add_expr → shift_expr → mul_expr → bitwise_expr → unary_expr`)
+  to support `<<`/`>>`, but only updated the Rust `nib-parser`/`nib-iir-compiler`
+  consumers. This formatter's `EXPRESSION_RULES` set and `printExpression`
+  switch — which read the shared `nib.grammar` file at runtime rather than a
+  generated copy — didn't know about the new rule, so every `add_expr` (even
+  plain `a + b`) now wrapped an unrecognised `shift_expr` node and threw
+  `Malformed add_expr: expected at least one operand`. Added `shift_expr`
+  alongside `add_expr`/`mul_expr`/`bitwise_expr` in both places.
+
 ## 0.1.1
 
 - fix a latent crash on multiplicative (`mul_expr`) expressions: the Nib

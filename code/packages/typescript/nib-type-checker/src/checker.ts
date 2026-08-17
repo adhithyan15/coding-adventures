@@ -31,6 +31,13 @@ const EXPRESSION_RULES = new Set([
   // add_expr, leaving it with zero operands and no inferred type (e.g.
   // `a +% b` would never annotate its `u4` operands).
   "mul_expr",
+  // Shift expressions (<<, >>) sit between add_expr and mul_expr in the
+  // precedence cascade (add_expr → shift_expr → mul_expr). Nib's TypeScript
+  // lexer doesn't tokenize SHL/SHR yet, so a shift_expr node always wraps
+  // exactly one mul_expr — but it must still be recognised as an expression
+  // rule, or `expressionChildren` filters it out of the enclosing add_expr,
+  // leaving it with zero operands and no inferred type.
+  "shift_expr",
   "bitwise_expr",
   "unary_expr",
   "primary",

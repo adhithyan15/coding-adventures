@@ -314,7 +314,18 @@ module CodingAdventures
         # mul_expr sits between add_expr and bitwise_expr in the precedence
         # cascade (LANG-FULL N1). It must be here so expression_children does not
         # filter it out when add_expr walks its operands.
-        %w[expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr].include?(name)
+        #
+        # shift_expr sits between add_expr and mul_expr (#11257). Ruby's
+        # nib_lexer never tokenizes SHL/SHR, so every shift_expr node the
+        # parser produces has exactly one child (its mul_expr operand) — a
+        # transparent wrapper. It must be listed here for the same reason
+        # mul_expr is: without it, expression_children filters shift_expr
+        # out of add_expr's operand list and check_add_expr sees no operands
+        # at all, so even plain `a + b` infers no type. Once listed, the
+        # single-child node falls through check_expr's default case (no
+        # extra dispatch branch needed — it doesn't have real 2-operand
+        # semantics to route through check_add_expr).
+        %w[expr or_expr and_expr eq_expr cmp_expr add_expr shift_expr mul_expr bitwise_expr unary_expr primary call_expr].include?(name)
       end
 
       def unwrap_top_decl(node)

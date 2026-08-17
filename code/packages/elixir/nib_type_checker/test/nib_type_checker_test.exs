@@ -51,4 +51,9 @@ defmodule CodingAdventures.NibTypeCheckerTest do
     refute result.ok
     assert Enum.any?(result.errors, &String.contains?(&1.message, "type mismatch"))
   end
+
+  test "accepts plain additive expressions (regression: shift_expr level)" do
+    result = tc("fn add(a: u4, b: u4) -> u4 { return a + b; }")
+    assert result.ok
+  end
 end
