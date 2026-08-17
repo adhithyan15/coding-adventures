@@ -857,6 +857,26 @@
       "jsonHash": "fnv1a64:029cf1efe539783a"
     },
     {
+      "language": "chinese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:6cc4da73adfd1029",
+      "lessonIds": [
+        "ZH-W01-ren",
+        "ZH-W01-ren-radical",
+        "ZH-W01-er",
+        "ZH-W01-ni-build",
+        "ZH-W01-nu",
+        "ZH-W01-zi",
+        "ZH-W01-hao-build"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch02.txt",
+      "json": "chinese/narration/ch02.json",
+      "textHash": "fnv1a64:e4ed180b0ef82ee6",
+      "jsonHash": "fnv1a64:c69bc9760cd1f486"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",

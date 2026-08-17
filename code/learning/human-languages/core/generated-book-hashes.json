@@ -484,6 +484,21 @@
       "tex": "chinese/book/chapters/ch01-nihao.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:ee2336dc0d22b914",
+      "lessonIds": [
+        "ZH-W01-ren",
+        "ZH-W01-ren-radical",
+        "ZH-W01-er",
+        "ZH-W01-ni-build",
+        "ZH-W01-nu",
+        "ZH-W01-zi",
+        "ZH-W01-hao-build"
+      ],
+      "tex": "chinese/book/chapters/ch02-components.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

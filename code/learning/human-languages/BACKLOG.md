@@ -13,6 +13,88 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C210 — teaching a glyph and teaching it FIRST are two different fixes
+
+Found while closing Chinese's script debt, and it generalises to all sixteen
+non-Latin tracks, so it is recorded before the next one is attempted.
+
+`script-closure.ts` reports two numbers and they move independently:
+
+| number | what it means | Chinese, after HL-C209 |
+|---|---|---:|
+| `neverTaughtGlyphs` | shown somewhere, taught nowhere | 7 -> **0** |
+| `violations` | a lesson asks for a glyph not yet taught **at that point** | 4 -> **4** |
+
+Authoring seven component lessons drove the first to zero and left the second
+untouched, because the lessons that USE those glyphs sit in Chapter 1 and the
+chapter that TEACHES them is Chapter 2. In reading order nothing changed.
+
+**This is not a defect in the new lessons.** It is a second, pre-existing defect
+that the first fix makes visible: Chapter 1's decomposition prose displays 亻, 尔,
+女 and 子 as load-bearing text while teaching by ear. Its own headwords are exempt
+(they carry romanization); the components in the body are not.
+
+Two ways to close it, and the choice is a real one:
+
+1. **Trim Chapter 1's prose** so it names the components without displaying them
+   until Chapter 2 has taught them. Keeps HL11's ordering (useful by ear from
+   page 1, script drizzles in behind) and costs some of the track's best writing.
+2. **Put the script chapter first.** Satisfies closure outright and inverts HL11's
+   stated ordering for this track — defensible only if Chinese is genuinely the
+   case where decoding IS the ramp, which HL12 leaves open.
+
+**Do not pick one from the armchair.** The measurement that decides it is
+drivability: option 2 makes the track's opening chapter entirely pen-and-eye,
+which for a commute-first course is a real cost and is already visible — this
+tranche alone moved corpus `drivablePercent` 88 -> 87.
+
+**The generalisation, which is the reason this row exists:** every one of the
+eight tracks that teaches no letters at all will hit this the moment it stops.
+Closing `neverTaughtGlyphs` is the cheap half. Ordering is the expensive half, and
+the plan's `script-closure` family currently measures only the cheap one — see
+`completion-plan.ts`, where `outstanding` is deliberately `neverTaughtGlyphs`
+rather than `violations` because deleting a lesson would otherwise count as
+progress. That choice is still right, and it means the queue will under-report
+this family until ordering is measured separately.
+
+## HL-C209 — Chinese teaches its script; one glyph per lesson, two of them assemblies
+
+Seven writing lessons, Chapter 2. 人 → 亻 → 尔 → 你, then 女 → 子 → 好. Five teach a
+component; **two introduce no new stroke at all** and instead show what two known
+pieces do when they share a square — the composition lesson HL14 §1.1 records as
+missing from every track.
+
+`tracksTeachingNothing` 8 → 7. Chinese was one of eight tracks showing a reader a
+writing system while teaching no letter of it.
+
+**A new chapter, not a longer one.** Seven atoms into Chapter 1 took it to 18
+against a budget of 12. HL-C167 says change the content rather than re-seat the
+number, so the content changed shape: Chapter 1 stays the spoken greeting and is
+drivable end to end, Chapter 2 is the pen.
+
+### Three authoring traps, all caught by gates rather than by reading
+
+1. **A citation carried its Chinese title.** *Xiandai Hanyu Tongyongzi Bishun
+   Guifan* was written with its 现代汉语通用字笔顺规范 form alongside — **eleven
+   untaught glyphs, in a lesson whose entire job is to teach one.** The script
+   ramp caught it at 12 new glyphs against a budget of 3. HL-C191 already required
+   romanised cross-script citations; this is the first time the cost was visible.
+   **Check the SOURCE LINE, not only the prose.**
+2. **"if you are used to an alphabet"** matched the info-dump `is/are used to`
+   rule-statement pattern. A false positive — and it was still rephrased, because
+   arguing with a gate inside the prose is how the prose gets worse.
+3. **A chapter title carrying target script** drifts against the generated
+   `\zh{...}` wrapper and reads as `titleDrift: 1`.
+
+### And one that was NOT a trap
+
+The chapter-2 payoff first assessed 3 of the chapter's 7 atoms — below the 0.5
+representativeness floor. The fix was **not** to widen the declaration to hit the
+number: the lesson genuinely retrieves the earlier assembly ("the first one you
+built had a meaning half and a sound half"), so the atom was declared because it
+is exercised. Widening a declaration to clear a floor is how a floor stops
+measuring anything.
+
 ## HL-C208 — the backlog is now a function; and the head of it is SCRIPT, not vocabulary
 
 The prioritization header on this file was three days stale on the day it was read:

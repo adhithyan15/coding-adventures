@@ -5,6 +5,49 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Added — Chapter 2, the components, one glyph per lesson (HL-C209)
+
+Seven writing lessons, each teaching **exactly one** glyph, in the order that
+lets the reader build the greeting rather than memorise it:
+
+    人  ->  亻  ->  尔  ->  你          (person, squashed person, sound half, assembly)
+    女  ->  子  ->  好                  (woman, child, assembly)
+
+Two of the seven are **assembly** lessons — they introduce no new stroke at all.
+They take two pieces the reader wrote a moment earlier and show what happens when
+the pieces share a square. This is the join HL14 §1.1 names as missing: the moment
+a reader stops recognising a character and starts *decoding* one.
+
+**What moved.** `scriptLessons` 0 -> 7, `taughtGlyphs` 0 -> 7,
+`neverTaughtGlyphs` **7 -> 0**. Corpus-wide, `tracksTeachingNothing` falls 8 -> 7:
+Chinese was one of eight tracks that showed a reader a writing system and never
+taught a letter of it.
+
+**What did NOT move, stated plainly.** The four closure *violations* stand at 4.
+Every glyph is now taught, but the four lessons that use them sit in Chapter 1,
+ahead of the chapter that teaches them, so in reading order the debt is unchanged.
+Teaching the glyphs and teaching them *first* are two different fixes; this is the
+first. See HL-C210 in `BACKLOG.md` for the second.
+
+**Why a new chapter rather than more of Chapter 1.** Folding seven atoms into
+Chapter 1 took it to 18 against a per-chapter budget of 12 — a measured ramp
+regression. HL-C167's rule is to change the content, not re-seat the number, and
+the content change that fits is a second chapter. Chapter 1 keeps its spoken
+greeting, drivable end to end; Chapter 2 is the pen.
+
+Three things the authoring got wrong first, all caught by gates rather than by
+reading:
+
+- The stroke-order **citation carried its Chinese title**, pulling eleven untaught
+  glyphs into a lesson whose whole job is to teach one. HL-C191 already says
+  cross-script citations must be romanised; this is why.
+- "if you are **used to** an alphabet" tripped the info-dump rule-statement
+  detector. A false positive — and rephrasing is still the right move, because
+  arguing with a gate in prose is how prose gets worse.
+- The chapter title carried the target script, which drifts against the generated
+  `\zh{...}` wrapper.
+
+
 ### Added — the track, and Chapter 1 (HL-C39)
 
 Mandarin joins as the twenty-first registered track and the first outside the
