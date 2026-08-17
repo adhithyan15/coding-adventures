@@ -1,0 +1,16 @@
+[package]
+name = "intel8051-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Intel 8051 (MCS-51) instruction encoder.  Re-exports the encode_mov_a_imm/encode_halt helpers (plus opcode constants) from intel8051-simulator (the in-tree source of truth for 8051 encoding) for the LANG VM intel8051-backend to lower CIR into 8051 machine code.  No IR knowledge.  Fourth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "intel8051_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for 8051 bit-level encoding.  We re-export rather
+# than duplicate so any future opcode fix in the simulator propagates
+# to encoder consumers automatically (same pattern as arm1-encoder
+# re-exporting from arm1-simulator).
+intel8051-simulator = { path = "../intel8051-simulator" }

@@ -67,6 +67,7 @@ fn main() -> ExitCode {
         EmitMode::Intel8080Bin => input.with_extension("bin"),
         EmitMode::MipsR2000Bin => input.with_extension("bin"),
         EmitMode::Z80Bin => input.with_extension("bin"),
+        EmitMode::Intel8051Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -190,6 +191,15 @@ enum EmitMode {
     /// Game Boy (via a variant core), and countless CP/M machines —
     /// one of the most widely produced microprocessors ever.
     Z80Bin,
+    /// Flat `.bin` of 8-bit Intel 8051 (MCS-51) opcode bytes via
+    /// `intel8051-backend`.  Cross-platform.  Downstream consumers:
+    /// the in-tree `intel8051-simulator`, an external MCS-51
+    /// emulator/in-circuit debugger, or a flash/EPROM burner for a
+    /// real 8051-family part.  The 8051 (1980) is the most-
+    /// manufactured CPU architecture in history — over 20 billion
+    /// units, still fabricated today (Atmel/Microchip AT89, NXP
+    /// 80C51, and others).
+    Intel8051Bin,
 }
 
 struct CliArgs {
@@ -276,9 +286,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "intel8080" | "i8080" | "8080" => Ok(EmitMode::Intel8080Bin),
         "mips-r2000" | "mips" | "r2000" => Ok(EmitMode::MipsR2000Bin),
         "z80" | "zilog-z80" => Ok(EmitMode::Z80Bin),
+        "intel8051" | "i8051" | "8051" | "mcs51" => Ok(EmitMode::Intel8051Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80 | intel8051"
         )),
     }
 }
@@ -407,6 +418,15 @@ Options:
                                                 that powered the TRS-80, ZX
                                                 Spectrum, MSX, the original Game
                                                 Boy, and countless CP/M machines)
+                             intel8051 | i8051 | 8051 | mcs51
+                                              → flat .bin of 8-bit Intel 8051
+                                                (MCS-51) opcodes via
+                                                intel8051-backend; cross-platform;
+                                                load into intel8051-simulator, an
+                                                external MCS-51 emulator, or burn
+                                                to a real 8051-family part (the
+                                                most-manufactured CPU architecture
+                                                in history — 20+ billion units)
   -h, --help               Show this help.\
 ");
 }
@@ -542,6 +562,17 @@ fn dispatch(
     // an EPROM burner.
     if emit == EmitMode::Z80Bin {
         return lang_aot::compile_file_to_z80_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 8051 .bin emission is also cross-platform — write each
+    // opcode byte-for-byte (no endianness conversion; like the 8008
+    // and 4004, every 8051 instruction is a byte sequence, not a
+    // fixed-width word).  No linker, no host gating (no modern dev
+    // host is 8051 silicon); downstream is always
+    // intel8051-simulator, an external MCS-51 emulator, or a real
+    // 8051-family part.
+    if emit == EmitMode::Intel8051Bin {
+        return lang_aot::compile_file_to_intel8051_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]
