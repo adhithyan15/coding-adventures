@@ -469,6 +469,24 @@
       "tex": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:02ca3eaf2ccc4806",
+      "lessonIds": [
+        "BN-W01-na",
+        "BN-W01-aa-matra",
+        "BN-W01-aa",
+        "BN-W01-ha",
+        "BN-W01-ma",
+        "BN-W01-sa",
+        "BN-W01-ka",
+        "BN-W01-hasanta",
+        "BN-W01-ra",
+        "BN-W01-nomoshkar-read"
+      ],
+      "tex": "bengali/book/chapters/ch16-script-first.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:bdf9d6e995f6b71d",

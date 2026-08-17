@@ -389,6 +389,10 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 - **A hand-written AST tree-walker that switches on rule names will silently rot when the shared grammar grows new precedence layers — and the failure mode is `nil`, not a parse error.** `sql-execution-engine` (Go) walks the `sql-parser` AST with a `switch node.RuleName` in `evalExpr`. Over many PRs (#4055–#4164) `code/grammars/sql.grammar` adopted SQLite's full operator-precedence ladder, inserting two new rules — `collated` (`COLLATE` postfix) and `bitwise` (`& | << >>`) — *between* `comparison` and `additive`, and rewrote `comparison` to take `collated` operands. The evaluator had no `case "collated"`/`case "bitwise"`, so every expression fell through to `default: return nil` *before reaching* `column_ref`. Result: `SELECT id, name` returned `<nil>` for every cell, `WHERE` matched zero rows, and `TestWhereNumericComparison` panicked on an empty slice. `SELECT *` kept working because it reads the row map directly and never touches `evalExpr` — a misleading "half the package works" signal. Separately, `limit_clause` changed from bare `NUMBER` tokens to `signed_number` child nodes (plus negative-LIMIT-means-unbounded and MySQL `LIMIT m, n`), so `executeLimit` found no NUMBER tokens and ignored LIMIT/OFFSET entirely. **Why it lay hidden**: the Go build tool only rebuilds/tests packages whose diff touches them or a transitive dep, so the break stayed dormant until an unrelated `go/lexer` change re-triggered the engine's tests on a `main` CodeQL build. **Fix pattern**: when you add a precedence layer to a shared `.grammar`, grep every consumer that walks the parse tree by rule name (`grep -rl 'RuleName' code/packages/*/sql-*`) and add the passthrough/eval case in the same PR. A new wrapper rule needs at minimum a passthrough case (`evalCollated` just evaluates its inner node); operator layers need real evaluation (`evalBitwise`, `||` concat, unary `~`/`+`). **Prevention idea**: give the tree-walker a `default:` that returns a sentinel error instead of `nil`, so an unhandled rule surfaces as a loud `EvaluationError` rather than silent NULLs — file a follow-up to do this across the grammar-driven Go engines.
 
+## Nib `shift_expr` grammar addition — a shared-grammar precedence-layer change must be greped across EVERY language port, not just the one PR touched
+
+- **Adding a rule to a shared `.grammar` file breaks every language's downstream consumers that read that grammar at runtime, not just the language the PR happened to touch — and CI can go red on all 5 build shards simultaneously from one merged PR.** PR #11257 ("lower shift expressions") inserted a new `shift_expr` precedence level into `code/grammars/nib/nib.grammar`, changing the cascade from `add_expr → mul_expr → ...` to `add_expr → shift_expr → mul_expr → ...`. The PR updated only the Rust consumers (`nib-lexer`, `nib-parser`, `nib-iir-compiler`, `nib-type-checker`) because Rust — like Go and Haskell — embeds its own generated copy of the grammar (`_grammar.rs` / `grammar_data.go` / `Generated/ParserGrammar.hs`), so those three languages were each independently safe *by construction* (Go/Haskell simply don't support shift expressions yet — a feature gap, not a regression, since their embedded copies were never regenerated either). But TypeScript, Python, Elixir, Lua, Perl, and Ruby's `nib-parser` packages all read the shared `nib.grammar` file at runtime (`readFileSync`/`File.read`/etc.) as their single source of truth — so all six started emitting an extra `shift_expr` wrapper node around every `add_expr` operand immediately, even for plain `a + b`, with zero code changes on their end. Their `nib-type-checker`/`nib-ir-compiler` packages each hardcode an expression-rule allowlist (`EXPRESSION_RULES` Set in TS, `@expression_rules`/`%_EXPRESSION_RULE`/`expression_rules` table in Elixir/Perl/Lua, an inline `%w[...]` array in Ruby) that didn't list `shift_expr`, so the operand got silently filtered out of `add_expr`'s children — same failure shape as the sql-execution-engine lesson above (`nil`/`undef`/zero-operands, not a parse error). This is exactly the same bug class recurring across *six* independent hand-rolled tree-walkers at once, because they all copy-pasted the same allowlist pattern originally (there's even prior art baked into the comments: `mul_expr` had to be added to every one of these same lists in an earlier PR, #5677/#7378, for the identical reason). **Why some failures were louder than others**: TS `nib-formatter` crashed outright (`Malformed add_expr: expected at least one operand` — its printer required ≥1 operand); TS/Elixir/Lua/Perl/Ruby `nib-type-checker`s degraded silently, returning `nil`/`None`/no type-error instead of crashing, so a couple of them (Lua, Ruby) had type-mismatch bugs (e.g. `u4 + u8` silently accepted) that never showed up as a hard test failure in CI at all — only found by writing a *new* targeted regression test, not by re-running the existing suite. **Fix pattern, extending the sql-execution-engine lesson**: when a shared `.grammar` file gains a rule, `grep -rn "add_expr\|<old-neighbor-rule>"` across `code/packages/*/nib-*` (all languages, not just the one the PR's diff touched) to find every hand-rolled allowlist/dispatch that needs the new rule name added — and check whether each language's own lexer/parser reads the shared grammar file at runtime (affected) or embeds a generated/hand-written copy (safe until that copy is regenerated, at which point it becomes affected too — track as a separate future task, don't conflate "doesn't support the feature yet" with "broken"). A single Rust-only PR is not "done" for a repo that ports the same language to 6+ runtime-grammar-reading implementations. **Verification note**: local `npm test`/`pytest`/`mix test`/`busted`/etc. across 6 languages needed Node 22 (local Node 20.11.1 too old for vitest 4/vite 8 — installed via `brew install node@22`, ran with `PATH="/opt/homebrew/opt/node@22/bin:$PATH"` rather than touching the system default) and each package's exact BUILD-file install order (`file:`/`-e`/`npm ci` chains) — the fix could not be trusted from code-reading alone; every claimed "unaffected" (Go, Haskell, TS `nib-ir-compiler`, Python both packages, Perl `nib-ir-compiler`) was confirmed by actually running that package's tests, not by inspection.
+
 ## closure compiler clone (closurec) — pass scheduler `changed=true` infinite-loop hazard
 
 - **Under `IterationPolicy::FixedPoint`, a pass that reports `changed = true` while returning an unchanged program causes the pipeline scheduler to re-run that pass forever.** Surfaced first as a security-review catch on CLOC13.E (PR #4766, `closure-pass-remove-unused-vars`). The pattern that triggers it: a pass body wires up new analysis (scope-analyzer use-count, alias scan, shape candidates, etc.), identifies candidates, but *defers the actual program mutation* to a follow-up PR. The intuitive draft is `changed = !candidates.is_empty()` — "I found work, so something changed." But the scheduler keys `FixedPoint` on `changed`: each iteration re-runs the pass, the pass re-finds the same candidates, claims a change, returns the same program, and the loop spins. **Fix pattern (now codified across CLOC13.A..E)**: until step 3 (the apply step) actually mutates the program, hard-pin `changed = false` as a struct literal in the returned `PassOutput { .. changed: false, .. }`. Don't derive it. Don't condition it. Add inline comment AND CHANGELOG note pointing at this lesson so the next contributor doesn't reintroduce the bug when they wire the apply step. The same discipline applies to `OneShot` passes (rename, CLOC13.A) even though the literal infinite loop doesn't fire — pipeline consumers may key off `changed` for cache invalidation or to skip downstream serialization, and reporting `true` without mutation forces unnecessary work. **Defence in depth**: the candidate vec gets bound to `_alias_candidates` / `_shape_candidates` / etc. so the work-survey is preserved for the apply-step PR without triggering an unused-var warning, and so the `_` prefix telegraphs "this is deliberately unused until step 3 lands."
@@ -3345,3 +3349,52 @@ refs the existing lesson about a character no book has rendered before.
 **Cheapest content fix:** use the citation form that stays inside the font.
 Old English *æg* (plain ash) is a standard rendering of the same word and is
 present in every Latin-script face in the repo.
+
+## The font a ROMANIZATION renders in is not the font the script renders in — scope the glyph probe to the whole page, not to the script (human-language books)
+
+**Context:** HL-C222, the Bengali script tranche. HL-C214 had been written ONE
+TRANCHE EARLIER, saying in so many words: check the generated `.tex` against the
+actual font file. I did. CI still failed:
+
+    bengali: missing_character rose to 29 against a baseline of 0
+
+**What happened:** the lessons romanise Bengali's inherent vowel as `nɔ`, `kɔ`,
+`mɔ` — U+0254 LATIN SMALL LETTER OPEN O, the correct IPA. Bengali's book sets
+`\setmainfont{Latin Modern Roman}`, and **Latin Modern does not have U+0254**.
+Twenty-nine occurrences, exactly the number CI counted.
+
+**Why the probe missed it, and this is the whole lesson.** I scanned
+`bengali/book/**/*.tex` for codepoints **in the Bengali range** against
+**NotoSansBengali**. Both halves of that are too narrow:
+
+- the Bengali characters were never the risk — they are inside `\bn{...}`, which
+  selects the Noto face that was chosen *because* it covers them;
+- **everything else on the page — the prose, the romanization, the IPA — renders
+  in the MAIN font**, and nothing was checking it.
+
+A book is not one font. Scope the probe to **every non-ASCII character not inside
+a script wrapper, against the main font**, and separately to the wrapped runs
+against their own face.
+
+```python
+text = re.sub(r"\\bn\{(?:[^{}]|\{[^{}]*\})*\}", "", tex)   # strip wrapped runs
+missing = {c for c in text if ord(c) > 127 and ord(c) not in latin_modern_cmap}
+```
+
+Note the nested-brace form of that regex: `\bn{\textbf{x}}` is common and a
+`[^{}]*` version silently fails to strip it, which puts Bengali characters into
+the main-font bucket and produces a flood of false positives.
+
+**And a second instrument failure inside the same investigation.** My first pass
+scanned `bengali/book/` **while checked out on a different branch** — the Hindi
+one, which has no Bengali chapter — and reported the five pre-existing preamble
+characters as if they were the answer. Same family as `git stash` not stashing
+untracked files: *the tool ran perfectly against the wrong tree.* **Print
+`git branch --show-current` in the same command as any cross-branch diagnosis.**
+
+**Rule of thumb for this corpus:** the Latin-script books (Spanish, Latin, French…)
+have only Latin Modern, which is a **typesetter's** font — good Western European
+coverage, thin outside it. It lacks `ǣ` (HL-C214) and `ɔ` (this one), and it will
+lack the next IPA symbol somebody reaches for. If a romanization needs a phonetic
+character, check it before writing 29 of them; `ô` (U+00F4) and `ə` (U+0259) are
+present and usually say what is needed.

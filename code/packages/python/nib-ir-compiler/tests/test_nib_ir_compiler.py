@@ -361,6 +361,48 @@ class TestSubtraction:
 
 
 # ---------------------------------------------------------------------------
+# 5b. Regression: plain 2-operand add_expr through the shift_expr wrapper
+# ---------------------------------------------------------------------------
+
+
+class TestPlainAddVariablesRegression:
+    """Regression tests for a new ``shift_expr`` precedence level inserted
+    between ``add_expr`` and ``mul_expr`` in ``nib.grammar`` (task #11257,
+    see the grammar comment on ``shift_expr``).
+
+    Every ``add_expr`` operand is now a ``shift_expr`` node instead of a
+    ``mul_expr``/``bitwise_expr`` node directly, even when the source has no
+    ``<<``/``>>`` operator (the zero-repetition case of
+    ``shift_expr = mul_expr { (SHL|SHR) mul_expr }`` makes it a transparent
+    single-child wrapper). ``_Compiler._compile_expr`` must keep unwrapping
+    this wrapper via its generic single-child fallback (the same mechanism
+    that already transparently handles the ``mul_expr`` level) rather than
+    silently dropping the right-hand operand.
+    """
+
+    def test_plain_add_two_variables_emits_add(self) -> None:
+        """``a + b`` with two NAME operands must still emit ADD."""
+        p = compile_source(
+            "fn main() { let a: u4 = 1; let b: u4 = 2; let c: u4 = a + b; }"
+        )
+        assert IrOp.ADD in opcodes(p)
+
+    def test_plain_add_two_variables_uses_both_operands(self) -> None:
+        """The emitted ADD must reference both operand registers (v2 for
+        ``a`` and v3 for ``b``), not silently drop the right-hand side."""
+        p = compile_source(
+            "fn main() { let a: u4 = 1; let b: u4 = 2; let c: u4 = a + b; }"
+        )
+        add_instrs = [i for i in p.instructions if i.opcode == IrOp.ADD]
+        assert len(add_instrs) == 1
+        operand_indices = {
+            op.index for op in add_instrs[0].operands if hasattr(op, "index")
+        }
+        # v2 = a, v3 = b (params/locals are allocated starting at v2).
+        assert {2, 3}.issubset(operand_indices)
+
+
+# ---------------------------------------------------------------------------
 # 6. Comparison operators
 # ---------------------------------------------------------------------------
 

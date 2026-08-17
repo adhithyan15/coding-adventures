@@ -4,7 +4,7 @@ defmodule CodingAdventures.NibIrCompiler.MixProject do
   def project do
     [
       app: :coding_adventures_nib_ir_compiler,
-      version: "0.1.0",
+      version: "0.1.2",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),

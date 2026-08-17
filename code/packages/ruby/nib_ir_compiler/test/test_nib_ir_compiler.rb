@@ -27,6 +27,20 @@ class NibIrCompilerTest < Minitest::Test
     assert_includes opcodes, CodingAdventures::CompilerIr::IrOp::CALL
   end
 
+  # Regression test for #11257: see the matching test in nib_type_checker's
+  # suite for the full root-cause writeup. The bug also broke code
+  # generation here -- compile_add couldn't find its add_expr operands
+  # either, so no ADD/ADD_IMM instruction was ever emitted for plain
+  # additive expressions like `a + b` (using the PLUS operator, as opposed
+  # to `+%`/WRAP_ADD used by the other tests in this file, which happens to
+  # exercise the same bug already).
+  def test_emits_add_for_plain_additive_expression
+    program = compile_source("fn add(a: u4, b: u4) -> u4 { return a + b; } fn main() -> u4 { return add(3, 4); }")
+    opcodes = program.instructions.map(&:opcode)
+
+    assert_includes opcodes, CodingAdventures::CompilerIr::IrOp::ADD
+  end
+
   def test_emits_loop_branches
     program = compile_source(<<~NIB)
       fn count_to(n: u4) -> u4 {

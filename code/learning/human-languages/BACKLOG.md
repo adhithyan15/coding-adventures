@@ -13,6 +13,125 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C224 — the loop's own push cadence is now failing CI, and the failures look like code failures
+
+Three checks on PR 11870 failed with:
+
+```
+##[error]Response status code does not indicate success: 429 (Too Many Requests).
+##[error]Failed to download archive '.../actions/setup-go/...' after 3 attempts.
+```
+
+**Every one failed at `Set up job`, before a single line of the build ran.** GitHub
+is rate-limiting *action downloads* for this repository, and the cause is this
+loop: eleven PRs in a session, each triggering CI + CodeQL + Books, several of them
+twice, plus a re-push per PR for review fixes.
+
+**Why this is worth a row rather than a shrug.** A 429 at setup is reported in
+exactly the same place, and with exactly the same red X, as a genuine test failure.
+The first instinct on seeing `Build and publish all human-language books: fail` is
+to go looking at the books — and on this PR that was doubly misleading, because
+there HAD been a real books failure (HL-C223) minutes earlier. **The second failure
+looked like the first one not being fixed.** It was not; the fix was never
+compiled.
+
+**Rule: read the failing STEP name before the failing job name.** `Set up job`,
+`Post job cleanup` and `Checkout` failures are infrastructure. Only a failure
+inside a named build or test step is evidence about the change.
+
+### What the loop should do about it
+
+1. **One PR in flight at a time**, which was already the intent but not the
+   practice — the Hindi branch was authored while Bengali was still in CI, and
+   only held back from pushing because of a pin conflict (HL-C213's sibling).
+2. **Do not re-push to fix review findings while CI is mid-run.** Each push
+   cancels nothing and starts a second full set of workflows; this PR accumulated
+   four CI runs.
+3. **Space pushes.** The limit recovers on its own; the correct response to a 429
+   is to wait and re-run the failed jobs, never to change code.
+
+Recorded because an agent loop is exactly the thing that generates this pattern,
+and the failure mode — infrastructure noise that reads as a code defect — costs
+more than the delay does.
+
+## HL-C223 — the glyph probe was mis-scoped, and HL-C214 was one tranche old when it happened
+
+CI: `bengali: missing_character rose to 29 against a baseline of 0`. The cause was
+**U+0254 OPEN O** in the romanizations (`nɔ`, `kɔ`, `mɔ`), and the Bengali book's
+main font is Latin Modern, which does not have it. Fixed by using `ô`, which is
+present and is the ISO 15919 romanization for that vowel anyway.
+
+**HL-C214 was written ONE TRANCHE EARLIER and says to check the generated `.tex`
+against the actual font. I did check.** The probe was scoped to *Bengali
+codepoints* against the *Bengali font* — and both halves are the wrong question:
+
+- the Bengali characters were never at risk. They sit inside `\bn{...}`, which
+  selects a face chosen *because* it covers them.
+- **the prose, the romanization and the IPA render in the MAIN font**, and nothing
+  looked at that at all.
+
+**A book is not one font.** The probe has to cover every non-ASCII character *not*
+inside a script wrapper, against the main font — and separately the wrapped runs
+against their own face.
+
+### This is the second instance, which changes HL-C214 from a row to a job
+
+HL-C214 specified a `check:glyphs` gate and deliberately did not build it, because
+font resolution differs per track. Two CI round-trips later — `ǣ` in Latin, `ɔ` in
+Bengali, both **avoidable and both caught only by the compiler** — that reasoning
+no longer holds. The remaining tranches will keep reaching for phonetic characters,
+because that is what an etymology-and-pronunciation curriculum does.
+
+**Latin Modern is the recurring hazard specifically**, and it is worth stating on
+its own: it is a *typesetter's* font with good Western European coverage and thin
+coverage past it, and **every Latin-script book in this corpus uses it as the main
+font** — including, for the main-font text, all sixteen non-Latin tracks. It lacks
+`ǣ`, it lacks `ɔ`, and it will lack the next one. Characters known present and
+useful: `ā ī ō ū ô ə`.
+
+### And the diagnosis itself ran against the wrong tree
+
+The first scan of `bengali/book/` was run **while checked out on the Hindi
+branch**, which has no Bengali chapter, and confidently reported five pre-existing
+preamble characters as the finding. The tool worked perfectly; the tree was wrong.
+Same family as `git stash` not stashing untracked files (HL-C213).
+
+**Print `git branch --show-current` in the same command as any cross-branch
+diagnosis.** Cheap, and it would have saved the whole detour.
+
+## HL-C222 — Bengali: same four ideas, different DEFAULT, and a letter that lies about its sound
+
+Seventh script tranche. `neverTaughtGlyphs` 48 → 39; `tracksTeachingNothing` down
+to **2**, from 8 where these tranches started.
+
+HL-C218 established that the fourth idea is chosen per track. Bengali confirms the
+prediction made there — its greeting carries a conjunct, so it takes Marathi's
+order unchanged — and adds a dimension neither Gujarati nor Marathi needed.
+
+**The inherent vowel is not the same in every abugida.** Devanagari's bare
+consonant says *ka*; Bengali's says *kɔ*, the vowel of English *awe*. Same script
+family, same four ideas, **different default** — and it is most of why Bengali does
+not sound like Hindi read aloud. It has to be taught on the FIRST shape, because
+every letter after it inherits the difference.
+
+**And one letter is written *s* but said *sh*.** স descends from the Sanskrit *s*,
+every transliteration writes it that way, and Bengali says *sh*. Worth teaching
+early and plainly rather than letting a reader discover that the transliteration
+they were given does not predict the sound.
+
+### What to check before the next Indic tranche
+
+The template now has three per-track questions, not one:
+
+1. **Which fourth idea?** — read the track's first three words (HL-C218).
+2. **What is the inherent vowel?** — do not assume *a* (this row).
+3. **Which letters lie about their sound in transliteration?** — teach those early.
+
+Hindi and Sanskrit remain, and both are Devanagari, so (1) and (2) are already
+answered for them by HL-C216. (3) is not: Hindi drops the inherent vowel at the end
+of a word — *nām* not *nāma* — which is the same class of defect between spelling
+and sound and belongs in Hindi's first script chapter.
+
 ## HL-C221 — the literal-markup gate is BUILT, and what it cost to justify
 
 HL-C217 specified it and logged it. HL-C219 then reintroduced the defect **one PR

@@ -171,6 +171,52 @@ def test_wrap_add_u8() -> None:
     assert tc("fn main() { let x: u8 = 100 +% 200; }").ok
 
 
+def test_plain_add_two_variables() -> None:
+    """Regression test: a plain 2-operand ``a + b`` (both NAME operands)
+    must still type-check and be annotated correctly.
+
+    ``nib.grammar`` grew a new ``shift_expr`` precedence level between
+    ``add_expr`` and ``mul_expr`` (see grammar comment on ``shift_expr``,
+    task #11257). Every ``add_expr`` operand is now a ``shift_expr`` node
+    instead of a ``mul_expr``/``bitwise_expr`` node directly, even when no
+    ``<<``/``>>`` operator is present in the source (the operand list is
+    the plain grammar `{ (SHL|SHR) mul_expr }` zero-repetition case, so
+    ``shift_expr`` is a transparent single-child wrapper around ``mul_expr``
+    in that case). ``NibTypeChecker`` must keep unwrapping this wrapper via
+    its generic ``_check_ast_expr`` single-child fallback (the same
+    mechanism that already transparently handles the ``mul_expr`` level for
+    the equivalent reason) rather than requiring an explicit
+    ``shift_expr``/``mul_expr`` entry in a rule-name allowlist.
+    """
+    result = tc("fn main() { let a: u4 = 1; let b: u4 = 2; let c: u4 = a + b; }")
+    assert result.ok
+
+    from nib_type_checker.types import NibType as _NibType  # local import, test-only
+
+    add_exprs = []
+
+    def _walk(node: object) -> None:
+        if hasattr(node, "rule_name"):
+            if node.rule_name == "add_expr":  # type: ignore[attr-defined]
+                add_exprs.append(node)
+            for child in node.children:  # type: ignore[attr-defined]
+                _walk(child)
+
+    _walk(result.typed_ast)
+    assert add_exprs, "expected at least one add_expr node in the typed AST"
+    assert all(getattr(n, "_nib_type", None) == _NibType.U4 for n in add_exprs)
+
+
+def test_plain_add_two_variables_type_mismatch() -> None:
+    """Regression test: type errors on a plain ``a + b`` must still surface
+    through the new ``shift_expr`` wrapper level (see
+    ``test_plain_add_two_variables`` for background)."""
+    result = tc(
+        "fn main() { let a: u4 = 1; let b: u8 = 2; let c: u4 = a + b; }"
+    )
+    assert not result.ok
+
+
 def test_fn_with_params() -> None:
     """Function with parameters; call with matching types."""
     assert tc("fn add(a: u4, b: u4) -> u4 { return a +% b; } fn main() { let r: u4 = add(1, 2); }").ok

@@ -84,6 +84,18 @@ describe("formatNib()", () => {
     );
   });
 
+  it("formats additive expressions now that shift_expr sits between add_expr and mul_expr", () => {
+    // Regression for #11257, which inserted a new `shift_expr` precedence
+    // level into the grammar (add_expr → shift_expr → mul_expr → ...) to
+    // support `<<`/`>>`. Before `shift_expr` was added to `EXPRESSION_RULES`,
+    // *every* add_expr — even a plain `a + b` — wrapped an unrecognised
+    // shift_expr node, and the printer threw "Malformed add_expr: expected
+    // at least one operand".
+    expect(formatNib("fn main(){return a+b;}")).toBe(
+      "fn main() {\n  return a + b;\n}",
+    );
+  });
+
   it("respects mul-over-add precedence when printing a mixed chain", () => {
     // `a + b * c` — the `b * c` mul_expr nests inside the add_expr without
     // needing parentheses, exactly as the precedence cascade implies.

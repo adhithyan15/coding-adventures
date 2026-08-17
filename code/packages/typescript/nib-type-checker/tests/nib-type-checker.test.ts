@@ -30,6 +30,20 @@ describe("nib-type-checker", () => {
     expect(findAnnotatedTypes(result.typedAst)).toContain("u4");
   });
 
+  it("infers types through additive expressions now that shift_expr sits between add_expr and mul_expr", () => {
+    // Regression for #11257, which inserted a new `shift_expr` precedence
+    // level into the grammar (add_expr → shift_expr → mul_expr → ...) to
+    // support `<<`/`>>`. Before `shift_expr` was recognised as an expression
+    // rule, an enclosing add_expr filtered its shift_expr operand out and
+    // inferred no type, so *any* additive expression — even `a + b` —
+    // annotated nothing.
+    const ast = parseNib("fn add(a: u4, b: u4) -> u4 { return a + b; }");
+    const result = checkNib(ast);
+
+    expect(result.ok).toBe(true);
+    expect(findAnnotatedTypes(result.typedAst)).toContain("u4");
+  });
+
   it("infers types through multiplicative (mul_expr) operators", () => {
     // Regression for the precedence cascade add_expr → mul_expr → bitwise_expr:
     // before `mul_expr` was recognised as an expression rule, an enclosing

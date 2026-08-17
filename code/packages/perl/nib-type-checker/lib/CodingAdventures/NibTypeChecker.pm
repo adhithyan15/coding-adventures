@@ -56,11 +56,19 @@ use constant {
 };
 
 # mul_expr sits between add_expr and bitwise_expr in the precedence cascade
-# (LANG-FULL N1). It must be in this set so _expression_children does not filter
-# it out when add_expr walks its operands.
+# (LANG-FULL N1). shift_expr sits between add_expr and mul_expr (add_expr's
+# operands are shift_expr nodes, not mul_expr nodes directly). Both must be
+# in this set so _expression_children does not filter them out when add_expr
+# walks its operands via _check_add_expression.
+#
+# Note: the Nib lexer does not yet tokenize SHL/SHR, so every shift_expr node
+# the parser produces wraps exactly one mul_expr child (a transparent
+# pass-through). It is still routed through the generic single-child fallback
+# in _check_expression (rather than through _check_add_expression like
+# mul_expr), which already handles that case correctly.
 my %_EXPRESSION_RULE = map { $_ => 1 } qw(
-    expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr
-    unary_expr primary call_expr
+    expr or_expr and_expr eq_expr cmp_expr add_expr shift_expr mul_expr
+    bitwise_expr unary_expr primary call_expr
 );
 
 sub check_source {
