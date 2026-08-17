@@ -2,6 +2,11 @@
 
 All notable changes to `coding_adventures_javascript_parser` will be documented in this file.
 
+## [0.2.1] - 2026-08-17
+
+### Fixed
+- Regenerated every versioned `_grammar_es*.rb` file, which had drifted out of sync with the current `ecmascript/es*.grammar` source (the `assignment_expression` alternation had its two choices in the wrong order). Found by a new CI drift check that regenerates every `_grammar.rb` and fails on mismatch.
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

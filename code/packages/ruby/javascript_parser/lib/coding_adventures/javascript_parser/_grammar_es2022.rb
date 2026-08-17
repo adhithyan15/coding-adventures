@@ -1080,7 +1080,6 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
     GT::GrammarRule.new(
       name: "assignment_expression",
       body: GT::Alternation.new(choices: [
-        GT::RuleReference.new(name: "conditional_expression", is_token: false),
         GT::RuleReference.new(name: "arrow_function", is_token: false),
         GT::RuleReference.new(name: "async_arrow_function", is_token: false),
         GT::RuleReference.new(name: "yield_expression", is_token: false),
@@ -1089,6 +1088,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "assignment_operator", is_token: false),
           GT::RuleReference.new(name: "assignment_expression", is_token: false),
         ]),
+        GT::RuleReference.new(name: "conditional_expression", is_token: false),
       ]),
       line_number: 362,
     ),

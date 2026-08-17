@@ -2,6 +2,11 @@
 
 All notable changes to `coding_adventures_javascript_lexer` will be documented in this file.
 
+## [0.2.1] - 2026-08-17
+
+### Fixed
+- Regenerated `_grammar_es2024.rb`/`_grammar_es2025.rb`, which had drifted out of sync with the current `ecmascript/es2024.tokens`/`es2025.tokens` source (the ES2025 `REGEX` token pattern was missing the `u` unicode flag). Found by a new CI drift check that regenerates every `_grammar.rb` and fails on mismatch.
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

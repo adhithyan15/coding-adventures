@@ -126,6 +126,10 @@ class TestGenerateCompiledGrammarsDispatch < Minitest::Test
       def run
         17
       end
+
+      def run_ruby_only
+        23
+      end
     end
 
     GrammarToolsProgram.send(:remove_const, :CompiledGrammarGenerator)
@@ -143,5 +147,17 @@ class TestGenerateCompiledGrammarsDispatch < Minitest::Test
 
   def test_rejects_extra_files
     assert_equal 2, dispatch("generate-compiled-grammars", ["unexpected"])
+  end
+
+  def test_lane_ruby_dispatches_to_run_ruby_only
+    assert_equal 23, dispatch("generate-compiled-grammars", [], nil, false, "ruby")
+  end
+
+  def test_no_lane_dispatches_to_run
+    assert_equal 17, dispatch("generate-compiled-grammars", [], nil, false, nil)
+  end
+
+  def test_unknown_lane_is_a_usage_error
+    assert_equal 2, dispatch("generate-compiled-grammars", [], nil, false, "kotlin")
   end
 end

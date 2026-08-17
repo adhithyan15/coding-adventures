@@ -51,6 +51,28 @@ module GrammarToolsProgram
       1
     end
 
+    # Regenerate only the Ruby-target _grammar.rb files. Unlike #run, this
+    # never builds the Go/Rust binaries and never shells out to Python or
+    # Node — every compile_ruby_* call below is pure Ruby (parses a
+    # .tokens/.grammar file with the in-process GrammarTools library and
+    # writes a generated .rb module), so this is safe and fast to run in a
+    # CI job that only has a Ruby toolchain available (e.g. a drift check
+    # that fails the build if a committed _grammar.rb no longer matches its
+    # source .tokens/.grammar file).
+    def run_ruby_only
+      puts
+      puts "=== Generating Ruby _grammar files ==="
+      puts
+
+      emit_ruby_only_sections
+      emit_ruby_versioned_sections
+
+      report
+    rescue StandardError => e
+      warn "ERROR: #{e.message}"
+      1
+    end
+
     private
 
     def build_toolchains(tmp_dir)
@@ -253,6 +275,44 @@ module GrammarToolsProgram
       section("mosaic (ruby)") do
         compile_ruby_tokens("mosaic")
         compile_ruby_grammar("mosaic")
+      end
+
+      section("brainfuck (ruby)") do
+        compile_ruby_token_file(@grammars.join("brainfuck", "brainfuck.tokens"), "brainfuck", "_token_grammar.rb")
+        compile_ruby_parser_file(@grammars.join("brainfuck", "brainfuck.grammar"), "brainfuck", "_parser_grammar.rb")
+      end
+    end
+
+    # The Ruby-only subset of emit_generic_sections: same section names and
+    # same target grammars, but only the compile_ruby_* calls (no python/
+    # go/typescript/rust). Kept in sync with emit_generic_sections by hand;
+    # a mismatch here just means run_ruby_only skips a Ruby package that
+    # #run would still cover, so it fails safe (under-checks) rather than
+    # unsafe.
+    RUBY_ONLY_GRAMMARS = %w[
+      css excel javascript json lattice lisp ruby sql starlark toml
+      typescript verilog vhdl
+    ].freeze
+    RUBY_ONLY_TOKENS_ONLY_GRAMMARS = %w[xml].freeze
+    RUBY_ONLY_NEW_GRAMMARS = %w[nib dartmouth_basic mosaic].freeze
+
+    def emit_ruby_only_sections
+      RUBY_ONLY_GRAMMARS.each do |grammar|
+        section(grammar) do
+          compile_ruby_tokens(grammar)
+          compile_ruby_grammar(grammar)
+        end
+      end
+
+      RUBY_ONLY_TOKENS_ONLY_GRAMMARS.each do |grammar|
+        section(grammar) { compile_ruby_tokens(grammar) }
+      end
+
+      RUBY_ONLY_NEW_GRAMMARS.each do |grammar|
+        section("#{grammar} (ruby)") do
+          compile_ruby_tokens(grammar)
+          compile_ruby_grammar(grammar)
+        end
       end
 
       section("brainfuck (ruby)") do
