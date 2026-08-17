@@ -198,6 +198,16 @@ never inherits dynamic-issuance state from a base candidate. Successful
 database-credential merges retain only the base's non-form metadata and never
 return the prior password to the host.
 
+TOTP authored merges use that same opaque preparation. The Base32 seed line and
+every parameter arrive exactly as typed and are turned into a record only behind
+the boundary, so the closed rules — a canonical unpadded `A-Z2-7` seed with zero
+unused trailing bits, one of `SHA1`/`SHA256`/`SHA512`, six or eight digits, and
+a canonical period in `1..=3600` — publish their failed `ItemConflictMerge`
+event before returning. `TOTP_SEED_V1` has no lease or other issuance-only
+attribute, so the whole schema is authored and nothing carries over from the
+base candidate. Successful TOTP merges retain only the base's non-form metadata
+and never return the prior seed to the host.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct
