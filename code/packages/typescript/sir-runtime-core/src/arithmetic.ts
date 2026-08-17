@@ -295,6 +295,33 @@ export function mul(...args: Val[]): Val {
  * (`div(10, 2, 0)` raises on the trailing 0). We test `=== 0` rather than
  * "falsy" so a legitimate non-zero divisor is never mistaken; the message is
  * Ruby's exact `"divided by 0"`.
+ *
+ * **SIR21 T3b-2 `div_floor` dispatches here unchanged (known limitation).**
+ * The spec's `div_floor` is Ruby's own `/`: `Integer#/` FLOORS toward −∞
+ * (`-7 / 2 == -4` in real Ruby), while `Float#/` true-divides. This
+ * function always TRUNCATES instead (`div(-7, 2) === -3`, not `-4`) —
+ * every sibling backend's `div_floor` is either a bare rename of
+ * already-Ruby-floor-faithful logic, or (for `semantic-ir-to-javascript`,
+ * the closest sibling to this one) built on a boxed `SirFloat`/`isFloat`
+ * runtime tag that lets it dispatch floor-vs-true-divide correctly. This
+ * runtime's `Val` (see the module doc comment) has NO such tag — every
+ * number, whether it came from an `IntLit` or a `FloatLit`, is an
+ * indistinguishable plain JS `number` by the time it reaches here — so
+ * there is no way to tell "this operand is a Ruby Integer" from "this
+ * operand is a Ruby Float holding a whole number" at this point, and
+ * `div_floor` cannot be made floor-vs-true-divide-correct without first
+ * adding value-level float tagging throughout this runtime (mirroring
+ * `semantic-ir-to-javascript`'s `SirFloat`/`mkFloat`/`isFloat` — a
+ * runtime-wide change touching `add`/`sub`/`mul`/comparisons/display, not
+ * a division-only fix). That is out of scope for the additive SIR21
+ * T3b-2 Slice 2 rollout (backend dispatch-table wiring only); `div_floor`
+ * therefore deliberately inherits this pre-existing truncating behavior
+ * rather than silently changing it here — matching the precedent set by
+ * this same arc's `semantic-ir-to-c`/`semantic-ir-to-ruby` PRs, whose own
+ * `div_floor` aliases likewise inherited THEIR backends' pre-existing
+ * zero-divisor quirks rather than being retroactively "fixed" mid-slice.
+ * `div_trunc`/`udiv_trunc`/`div_true` below do NOT have this problem —
+ * see their own doc comments for why.
  */
 export function div(...args: Val[]): Val {
   if (args.length === 0) {
@@ -309,6 +336,55 @@ export function div(...args: Val[]): Val {
     acc = Math.trunc(acc / divisor);
   }
   return acc;
+}
+
+/**
+ * SIR21 T3b-2 `div_trunc` / `udiv_trunc` — signed/unsigned truncating
+ * division (rounds toward zero, matching C's integer `/`). This is
+ * exactly what {@link div} above already computes — exported under its
+ * own correctly-scoped name purely so this backend exposes the same four
+ * division-op names every sibling backend does.
+ *
+ * Unlike `div_floor` (see the dispatch-table comment in `emit.rs` for why
+ * that name is NOT fixed here), `div_trunc`'s spec — "always round toward
+ * zero" — needs no int/float distinction to be correct: truncation
+ * toward zero is the SAME operation regardless of whether an operand is
+ * semantically a Ruby Integer or Float. That is what makes this a
+ * genuinely well-defined function in this runtime, where {@link div}'s
+ * int-vs-float polymorphism is not.
+ *
+ * `udiv_trunc` (the twin C/Go/Rust need bit-reinterpretation for, since a
+ * tagged `u64` >= 2^63 misreads as negative in their fixed-width models)
+ * computes IDENTICALLY here: this runtime's `Val` has no fixed width and
+ * no separate signed/unsigned representation (see the module doc comment
+ * — every number is a plain JS `number`), so there is nothing to
+ * reinterpret. Both SIR names route to this one function.
+ */
+export function truncDiv(a: Val, b: Val): Val {
+  const bn = num(b);
+  if (bn === 0) {
+    raiseError("ZeroDivisionError", "divided by 0");
+  }
+  return Math.trunc(num(a) / bn);
+}
+
+/**
+ * SIR21 T3b-2 `div_true` — ALWAYS true-divides, even when both operands
+ * are meant as Ruby Integers (`trueDiv(6, 3) === 2`, the plain JS number
+ * — this runtime has no boxed-float type to re-tag the result with, see
+ * the module doc comment). Models Python's `/`.
+ *
+ * Unlike {@link div}/`div_floor`, this needs no int/float distinction
+ * either: it unconditionally treats both operands as numeric and
+ * true-divides, so it is fully and correctly implementable in this
+ * runtime's untagged numeric model — genuinely new, not a rename.
+ */
+export function trueDiv(a: Val, b: Val): Val {
+  const bn = num(b);
+  if (bn === 0) {
+    raiseError("ZeroDivisionError", "divided by 0");
+  }
+  return num(a) / bn;
 }
 
 /** Less-than. */
