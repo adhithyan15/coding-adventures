@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2906,
+    "totalLessons": 2915,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -32,12 +32,12 @@
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 585,
-    "forwardReferences": 508,
+    "atomsNeverRevisited": 586,
+    "forwardReferences": 511,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2478,
+    "drivableLessons": 2487,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 84,
     "unexplainedModalityOverrides": 0
@@ -1679,7 +1679,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "bookChapters": [
           1,
@@ -1712,7 +1713,8 @@
           28,
           29,
           30,
-          31
+          31,
+          32
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3026,10 +3028,10 @@
       {
         "language": "french",
         "status": "mixed",
-        "lessonCount": 105,
+        "lessonCount": 114,
         "versions": {
           "1": 64,
-          "2": 41
+          "2": 50
         }
       },
       {
@@ -3758,8 +3760,8 @@
       },
       {
         "language": "french",
-        "bookChapters": 31,
-        "declaredChapters": 31,
+        "bookChapters": 32,
+        "declaredChapters": 32,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -3910,8 +3912,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 911,
-      "declaredChapters": 911,
+      "bookChapters": 912,
+      "declaredChapters": 912,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3923,10 +3925,10 @@
     }
   },
   "levels": {
-    "totalLessons": 2906,
+    "totalLessons": 2915,
     "byLevel": {
       "pre-A1": 1644,
-      "A1": 548,
+      "A1": 557,
       "A2": 543,
       "B1": 40,
       "B2": 17,
@@ -3983,10 +3985,10 @@
       },
       {
         "language": "french",
-        "lessonCount": 105,
+        "lessonCount": 114,
         "byLevel": {
           "pre-A1": 42,
-          "A1": 24,
+          "A1": 33,
           "A2": 25,
           "B1": 0,
           "B2": 0,
@@ -4773,8 +4775,8 @@
       },
       {
         "language": "french",
-        "lessonCount": 105,
-        "measurable": 41,
+        "lessonCount": 114,
+        "measurable": 50,
         "unmeasurable": 64,
         "lessonViolations": 6,
         "chapterViolations": 0
@@ -5704,7 +5706,7 @@
           "language": "french",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 105,
+          "lessonCount": 114,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -21333,10 +21335,34 @@
         "revisits": 0
       },
       {
+        "atom": "FR-ETYMON-FERMER-11",
+        "language": "french",
+        "introducedBy": "FR-C27-fermer",
+        "introducedAt": 88,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "FR-ETYMON-JAUNE-05",
         "language": "french",
         "introducedBy": "FR-C23-vert-jaune",
         "introducedAt": 72,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-LEVER-05",
+        "language": "french",
+        "introducedBy": "FR-C27-se-lever",
+        "introducedAt": 86,
         "missed": [
           "R1",
           "R2",
@@ -21391,6 +21417,18 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "FR-ETYMON-SUCRE-08",
+        "language": "french",
+        "introducedBy": "FR-C28-sucre",
+        "introducedAt": 92,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
       },
       {
         "atom": "FR-ETYMON-TETE-03",
@@ -21463,6 +21501,18 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-FERMER-10",
+        "language": "french",
+        "introducedBy": "FR-C27-fermer",
+        "introducedAt": 88,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
       },
       {
         "atom": "FR-LEX-JAUNE-04",
@@ -33595,6 +33645,28 @@
         "revisits": 1
       },
       {
+        "atom": "FR-ETYMON-AMI-03",
+        "language": "french",
+        "introducedBy": "FR-C29-ami",
+        "introducedAt": 93,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-ETYMON-ASSEOIR-02",
+        "language": "french",
+        "introducedBy": "FR-C27-sasseoir",
+        "introducedAt": 85,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-ETYMON-BEURRE-04",
         "language": "french",
         "introducedBy": "FR-C30-beurre",
@@ -33604,6 +33676,28 @@
           "R2"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-BOUCHE-06",
+        "language": "french",
+        "introducedBy": "FR-C31-bouche",
+        "introducedAt": 103,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-CAFE-02",
+        "language": "french",
+        "introducedBy": "FR-C28-cafe",
+        "introducedAt": 89,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FR-ETYMON-CHAT-05",
@@ -33672,17 +33766,6 @@
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-FERMER-11",
-        "language": "french",
-        "introducedBy": "FR-C27-fermer",
-        "introducedAt": 88,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FR-ETYMON-FROMAGE-02",
         "language": "french",
         "introducedBy": "FR-C30-fromage",
@@ -33694,15 +33777,15 @@
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-LEVER-05",
+        "atom": "FR-ETYMON-LAIT-06",
         "language": "french",
-        "introducedBy": "FR-C27-se-lever",
-        "introducedAt": 86,
+        "introducedBy": "FR-C28-lait",
+        "introducedAt": 91,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "FR-ETYMON-LIRE-07",
@@ -33749,6 +33832,28 @@
         "revisits": 1
       },
       {
+        "atom": "FR-ETYMON-OEUF-08",
+        "language": "french",
+        "introducedBy": "FR-C30-oeuf",
+        "introducedAt": 100,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-OUVRIR-08",
+        "language": "french",
+        "introducedBy": "FR-C27-ouvrir",
+        "introducedAt": 87,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-ETYMON-PERSONNE-09",
         "language": "french",
         "introducedBy": "FR-C29-personne",
@@ -33771,15 +33876,37 @@
         "revisits": 0
       },
       {
-        "atom": "FR-ETYMON-SUCRE-08",
+        "atom": "FR-ETYMON-THE-04",
         "language": "french",
-        "introducedBy": "FR-C28-sucre",
-        "introducedAt": 92,
+        "introducedBy": "FR-C28-the",
+        "introducedAt": 90,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-ETYMON-VENTRE-08",
+        "language": "french",
+        "introducedBy": "FR-C31-ventre",
+        "introducedAt": 104,
         "missed": [
           "R1",
           "R2"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "FR-GRAMMAR-ASSEOIR-TWO-STEMS-03",
+        "language": "french",
+        "introducedBy": "FR-C27-sasseoir",
+        "introducedAt": 85,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "FR-GRAMMAR-DORMIR-STEM-06",
@@ -33815,6 +33942,17 @@
         "revisits": 3
       },
       {
+        "atom": "FR-GRAMMAR-OUVRIR-ER-ENDINGS-09",
+        "language": "french",
+        "introducedBy": "FR-C27-ouvrir",
+        "introducedAt": 87,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-GRAMMAR-PRENDRE-STEM-03",
         "language": "french",
         "introducedBy": "FR-C24-prendre",
@@ -33835,6 +33973,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-ASSEOIR-01",
+        "language": "french",
+        "introducedBy": "FR-C27-sasseoir",
+        "introducedAt": 85,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "FR-LEX-CHAT-04",
@@ -33863,6 +34012,17 @@
         "language": "french",
         "introducedBy": "FR-C26-courir",
         "introducedAt": 84,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-DEBOUT-06",
+        "language": "french",
+        "introducedBy": "FR-C27-se-lever",
+        "introducedAt": 86,
         "missed": [
           "R2",
           "R3"
@@ -33925,23 +34085,34 @@
         "revisits": 4
       },
       {
-        "atom": "FR-LEX-FERMER-10",
-        "language": "french",
-        "introducedBy": "FR-C27-fermer",
-        "introducedAt": 88,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FR-LEX-IL-PLEUT-04",
         "language": "french",
         "introducedBy": "FR-C21-le-temps",
         "introducedAt": 70,
         "missed": [
           "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-LAIT-05",
+        "language": "french",
+        "introducedBy": "FR-C28-lait",
+        "introducedAt": 91,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-LEVER-04",
+        "language": "french",
+        "introducedBy": "FR-C27-se-lever",
+        "introducedAt": 86,
+        "missed": [
+          "R2",
           "R3"
         ],
         "revisits": 2
@@ -33980,6 +34151,28 @@
         "revisits": 2
       },
       {
+        "atom": "FR-LEX-OUVRIR-07",
+        "language": "french",
+        "introducedBy": "FR-C27-ouvrir",
+        "introducedAt": 87,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-SUCRE-07",
+        "language": "french",
+        "introducedBy": "FR-C28-sucre",
+        "introducedAt": 92,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "FR-LEX-TETE-02",
         "language": "french",
         "introducedBy": "FR-C17-tete",
@@ -33989,6 +34182,28 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-THE-03",
+        "language": "french",
+        "introducedBy": "FR-C28-the",
+        "introducedAt": 90,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-VENTRE-07",
+        "language": "french",
+        "introducedBy": "FR-C31-ventre",
+        "introducedAt": 104,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
       },
       {
         "atom": "FR-PRAGMATICS-SI-05",
@@ -47117,70 +47332,20 @@
         "revisits": 4
       },
       {
-        "atom": "FR-ETYMON-AMI-03",
+        "atom": "FR-ETYMON-NEZ-04",
         "language": "french",
-        "introducedBy": "FR-C29-ami",
-        "introducedAt": 93,
+        "introducedBy": "FR-C31-nez",
+        "introducedAt": 102,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "FR-ETYMON-ASSEOIR-02",
+        "atom": "FR-ETYMON-OEIL-02",
         "language": "french",
-        "introducedBy": "FR-C27-sasseoir",
-        "introducedAt": 85,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "FR-ETYMON-BOUCHE-06",
-        "language": "french",
-        "introducedBy": "FR-C31-bouche",
-        "introducedAt": 103,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-CAFE-02",
-        "language": "french",
-        "introducedBy": "FR-C28-cafe",
-        "introducedAt": 89,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "FR-ETYMON-LAIT-06",
-        "language": "french",
-        "introducedBy": "FR-C28-lait",
-        "introducedAt": 91,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "FR-ETYMON-OEUF-08",
-        "language": "french",
-        "introducedBy": "FR-C30-oeuf",
-        "introducedAt": 100,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-OUVRIR-08",
-        "language": "french",
-        "introducedBy": "FR-C27-ouvrir",
-        "introducedAt": 87,
+        "introducedBy": "FR-C31-oeil",
+        "introducedAt": 101,
         "missed": [
           "R2"
         ],
@@ -47197,34 +47362,14 @@
         "revisits": 2
       },
       {
-        "atom": "FR-ETYMON-THE-04",
+        "atom": "FR-GRAMMAR-ELISION-ARTICLE-02",
         "language": "french",
-        "introducedBy": "FR-C28-the",
-        "introducedAt": 90,
+        "introducedBy": "FR-C29-ami",
+        "introducedAt": 93,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "FR-GRAMMAR-ASSEOIR-TWO-STEMS-03",
-        "language": "french",
-        "introducedBy": "FR-C27-sasseoir",
-        "introducedAt": 85,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "FR-GRAMMAR-OUVRIR-ER-ENDINGS-09",
-        "language": "french",
-        "introducedBy": "FR-C27-ouvrir",
-        "introducedAt": 87,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
+        "revisits": 4
       },
       {
         "atom": "FR-GRAMMAR-PLEASE-REGISTER-04",
@@ -47237,14 +47382,14 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-ASSEOIR-01",
+        "atom": "FR-LEX-AMI-01",
         "language": "french",
-        "introducedBy": "FR-C27-sasseoir",
-        "introducedAt": 85,
+        "introducedBy": "FR-C29-ami",
+        "introducedAt": 93,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FR-LEX-BEURRE-03",
@@ -47257,6 +47402,26 @@
         "revisits": 2
       },
       {
+        "atom": "FR-LEX-BOUCHE-05",
+        "language": "french",
+        "introducedBy": "FR-C31-bouche",
+        "introducedAt": 103,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-LEX-CAFE-01",
+        "language": "french",
+        "introducedBy": "FR-C28-cafe",
+        "introducedAt": 89,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "FR-LEX-COMPRENDRE-01",
         "language": "french",
         "introducedBy": "FR-C25-comprendre",
@@ -47265,16 +47430,6 @@
           "R3"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "FR-LEX-DEBOUT-06",
-        "language": "french",
-        "introducedBy": "FR-C27-se-lever",
-        "introducedAt": 86,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "FR-LEX-ENFANT-06",
@@ -47307,26 +47462,6 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-LAIT-05",
-        "language": "french",
-        "introducedBy": "FR-C28-lait",
-        "introducedAt": 91,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "FR-LEX-LEVER-04",
-        "language": "french",
-        "introducedBy": "FR-C27-se-lever",
-        "introducedAt": 86,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "FR-LEX-MAIN-02",
         "language": "french",
         "introducedBy": "FR-C17-main",
@@ -47337,6 +47472,36 @@
         "revisits": 5
       },
       {
+        "atom": "FR-LEX-NEZ-03",
+        "language": "french",
+        "introducedBy": "FR-C31-nez",
+        "introducedAt": 102,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-OEIL-01",
+        "language": "french",
+        "introducedBy": "FR-C31-oeil",
+        "introducedAt": 101,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-OEUF-07",
+        "language": "french",
+        "introducedBy": "FR-C30-oeuf",
+        "introducedAt": 100,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "FR-LEX-OUI-02",
         "language": "french",
         "introducedBy": "FR-C18-oui",
@@ -47345,16 +47510,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "FR-LEX-OUVRIR-07",
-        "language": "french",
-        "introducedBy": "FR-C27-ouvrir",
-        "introducedAt": 87,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
       },
       {
         "atom": "FR-LEX-PENSER-04",
@@ -47385,26 +47540,6 @@
           "R3"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "FR-LEX-SUCRE-07",
-        "language": "french",
-        "introducedBy": "FR-C28-sucre",
-        "introducedAt": 92,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "FR-LEX-THE-03",
-        "language": "french",
-        "introducedBy": "FR-C28-the",
-        "introducedAt": 90,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "FR-SOUND-NON-03",
@@ -53779,6 +53914,14 @@
         "lessonsEarly": 75
       },
       {
+        "lessonId": "FR-W01-accents",
+        "language": "french",
+        "position": 32,
+        "word": "où",
+        "taughtBy": "FR-C32-ou",
+        "lessonsEarly": 75
+      },
+      {
         "lessonId": "ES-C50-hable-usted",
         "language": "spanish",
         "position": 250,
@@ -53800,6 +53943,14 @@
         "position": 252,
         "word": "por",
         "taughtBy": "ES-C51-por",
+        "lessonsEarly": 72
+      },
+      {
+        "lessonId": "FR-C05-habiter",
+        "language": "french",
+        "position": 35,
+        "word": "où",
+        "taughtBy": "FR-C32-ou",
         "lessonsEarly": 72
       },
       {
@@ -53864,6 +54015,14 @@
         "position": 27,
         "word": "qué",
         "taughtBy": "ES-C07-que",
+        "lessonsEarly": 69
+      },
+      {
+        "lessonId": "FR-C05-practice",
+        "language": "french",
+        "position": 38,
+        "word": "où",
+        "taughtBy": "FR-C32-ou",
         "lessonsEarly": 69
       },
       {
@@ -57556,13 +57715,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 105,
+        "lessonCount": 114,
         "lessonsWithoutSequence": 64,
         "forwardPrerequisites": 21,
         "forwardReviews": 28,
-        "atomsTaught": 109,
-        "atomsNeverRevisited": 31,
-        "forwardReferences": 60
+        "atomsTaught": 118,
+        "atomsNeverRevisited": 32,
+        "forwardReferences": 63
       },
       {
         "language": "german",
@@ -57750,16 +57909,16 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4060,
-      "atomsNeverRevisited": 585,
+      "atomsTaught": 4069,
+      "atomsNeverRevisited": 586,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1125,
-        "R2": 3134,
-        "R3": 2892,
+        "R1": 1127,
+        "R2": 3144,
+        "R3": 2914,
         "R4": 1572
       },
-      "forwardReferences": 508
+      "forwardReferences": 511
     }
   },
   "scriptClosure": {
@@ -63366,9 +63525,14 @@
             "criterion": "atom-budget",
             "detail": "3 lesson(s) at or below pre-A1 exceed the new-atom budget",
             "shortfall": 3
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "2 atom(s) at or below pre-A1 are revisited fewer than twice (22 etymology hook(s) waived)",
+            "shortfall": 2
           }
         ],
-        "vocabulary": 94
+        "vocabulary": 98
       },
       {
         "language": "german",
@@ -63779,11 +63943,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2906,
-    "voice": 2042,
+    "totalLessons": 2915,
+    "voice": 2051,
     "sight": 582,
     "pen": 282,
-    "coreVoice": 2478,
+    "coreVoice": 2487,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 85,
     "tracks": [
@@ -64598,13 +64762,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 105,
-        "voice": 90,
+        "lessonCount": 114,
+        "voice": 99,
         "sight": 12,
         "pen": 3,
-        "coreVoice": 90,
-        "drivablePercent": 86,
-        "drivablePrefixTotal": 74,
+        "coreVoice": 99,
+        "drivablePercent": 87,
+        "drivablePrefixTotal": 83,
         "chapters": [
           {
             "language": "french",
@@ -65047,6 +65211,20 @@
               "voice"
             ],
             "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 32,
+            "lessonCount": 9,
+            "voice": 9,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 9,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 9,
             "firstNonVoiceLesson": null
           }
         ]
@@ -77633,7 +77811,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2906,
+    "lessons": 2915,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -77643,18 +77821,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 2849,
-    "usesBeforeIntroduction": 11209,
-    "technicalUsesBeforeIntroduction": 3111,
-    "technicalLessons": 1599,
+    "lessonsUsingTerms": 2858,
+    "usesBeforeIntroduction": 11238,
+    "technicalUsesBeforeIntroduction": 3122,
+    "technicalLessons": 1605,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1005
+        "lessons": 1006
       },
       {
         "term": "noun",
-        "lessons": 526
+        "lessons": 528
       },
       {
         "term": "tense",
@@ -77666,7 +77844,7 @@
       },
       {
         "term": "adjective",
-        "lessons": 144
+        "lessons": 145
       },
       {
         "term": "pronoun",
@@ -77675,12 +77853,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 2906,
+    "lessonsScanned": 2915,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1043,
+    "filesScanned": 1044,
     "mainCharacters": 125,
     "scriptCharacters": 663,
     "gaps": 0
