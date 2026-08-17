@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.9] - 2026-08-17 (task #101 — memory.grow cross-memory aggregate cap)
+
+### Security
+
+- `memory.grow`'s interpreter handler (`0x40`) now rejects growth that
+  would push the SUM of every memory's page count -- across ALL
+  memories, not just the target -- past `MAX_TOTAL_MEMORY_PAGES`
+  (65536, a new constant). Mirrors `table.grow`'s own task #98 round-2
+  fix: `LinearMemory::grow`'s per-memory 65536-page cap alone still
+  permitted an aggregate DoS across `MAX_MEMORIES` (64) memories --
+  each individually grown to the per-memory cap would total ~256GB from
+  one small module, reintroducing at RUNTIME exactly what `wasm-
+  validator`'s existing declare-time "Check 1b" already closes for
+  every memory's DECLARED minimum. Reuses that same 65536-page bound
+  (not a new arbitrary constant) so "total pages across every memory,
+  declared or grown, never exceeds 65536" is one consistent invariant
+  at both points in a module's lifecycle. The threshold arithmetic is
+  factored into a pure `memory_grow_would_exceed_aggregate_cap`
+  function specifically so it's cheaply unit-testable with small
+  synthetic page counts -- the real cap is 65536 pages (4GB), far too
+  large to actually allocate in a unit test. Confirmed load-bearing by
+  TEMP-REVERT-CHECK (stubbing the check to always return `false`
+  reproduces the exact predicted failures across all three threshold
+  tests, while the positive-path wiring test still passes).
+
 ## [0.9.8] - 2026-08-16 (task #98 — table.grow/table.size/table.fill)
 
 ### Security
