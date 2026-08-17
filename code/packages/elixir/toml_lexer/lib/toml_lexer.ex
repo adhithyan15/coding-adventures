@@ -2,9 +2,10 @@ defmodule CodingAdventures.TomlLexer do
   @moduledoc """
   TOML Lexer — Thin wrapper around the grammar-driven lexer engine.
 
-  This module reads `toml.tokens` from the shared grammars directory and
-  uses `GrammarLexer.tokenize/2` to tokenize TOML source code. It's the
-  Elixir equivalent of the Python `toml_lexer` package.
+  This module embeds a pre-compiled `toml.tokens` grammar (see
+  `CodingAdventures.TomlLexer.Grammar`) and uses `GrammarLexer.tokenize/2`
+  to tokenize TOML source code. It's the Elixir equivalent of the Python
+  `toml_lexer` package.
 
   ## Usage
 
@@ -34,9 +35,7 @@ defmodule CodingAdventures.TomlLexer do
 
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.TomlLexer.Grammar
 
   @doc """
   Tokenize TOML source code.
@@ -57,9 +56,7 @@ defmodule CodingAdventures.TomlLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "toml", "toml.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Grammar.token_grammar()
   end
 
   # Cache the grammar in a persistent_term for fast repeated access.

@@ -2,8 +2,9 @@ defmodule CodingAdventures.Brainfuck.Lexer do
   @moduledoc """
   Brainfuck Lexer — Thin wrapper around the grammar-driven lexer engine.
 
-  This module reads `brainfuck.tokens` from the shared grammars directory
-  and uses `GrammarLexer.tokenize/2` to tokenize Brainfuck source code.
+  This module uses the pre-compiled `brainfuck.tokens` grammar (see
+  `CodingAdventures.Brainfuck.Grammar.Tokens`) and `GrammarLexer.tokenize/2`
+  to tokenize Brainfuck source code.
 
   ## What is Brainfuck tokenization?
 
@@ -34,39 +35,18 @@ defmodule CodingAdventures.Brainfuck.Lexer do
 
   ## How It Works
 
-  1. On first call, `create_lexer/0` parses `brainfuck.tokens` into a
-     `TokenGrammar` struct. This result is cached in `:persistent_term`
-     so subsequent calls pay no file I/O cost.
+  1. On first call, `create_lexer/0` fetches the pre-compiled
+     `TokenGrammar` struct from `CodingAdventures.Brainfuck.Grammar.Tokens`.
+     This result is cached in `:persistent_term` so subsequent calls pay
+     no recomputation cost.
 
   2. `tokenize/1` passes the source and grammar to `GrammarLexer.tokenize/2`,
      which does all the actual scanning work.
   """
 
+  alias CodingAdventures.Brainfuck.Grammar.Tokens
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  # Path to the shared grammars directory.
-  #
-  # The directory layout (from this file's location outward):
-  #
-  #   code/
-  #     grammars/
-  #       brainfuck.tokens   <-- we need this
-  #     packages/
-  #       elixir/
-  #         brainfuck/
-  #           lib/
-  #             brainfuck/
-  #               lexer.ex   <-- __DIR__ points here
-  #
-  # Navigating up from __DIR__ (lib/brainfuck/):
-  #   1 → lib/
-  #   2 → brainfuck/   (package root)
-  #   3 → elixir/
-  #   4 → packages/
-  #   5 → code/        ← repo root; grammars/ lives here
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @doc """
   Tokenize Brainfuck source code into a flat token stream.
@@ -95,16 +75,14 @@ defmodule CodingAdventures.Brainfuck.Lexer do
   end
 
   @doc """
-  Parse the `brainfuck.tokens` grammar file and return the `TokenGrammar`.
+  Return the pre-compiled `brainfuck.tokens` `TokenGrammar`.
 
   This is useful for inspecting the grammar or reusing it directly.
   For most callers, `tokenize/1` is the right entry point.
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "brainfuck", "brainfuck.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Tokens.token_grammar()
   end
 
   # Retrieve the cached TokenGrammar, building and caching it on first access.

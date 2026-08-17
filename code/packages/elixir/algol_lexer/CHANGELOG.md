@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — Unreleased
+
+### Fixed
+- Eliminated runtime grammar loading: `create_lexer/1` now imports a pre-compiled grammar module (`CodingAdventures.AlgolLexer.Grammar.Algol60`) instead of `File.read!`-ing `algol60.tokens` from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published Hex package does not ship, so `mix deps.get` + first use would raise `File.Error` (enoent). The `version` parameter and its `ArgumentError` on unknown versions are unchanged.
+
 ## 0.1.0 — 2026-04-06
 
 ### Added
