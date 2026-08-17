@@ -1720,8 +1720,29 @@ fn encode_stream_instr(
             // `return_call_indirect` (WASM16) shares this exact shape --
             // same immediates (typeidx, tableidx), only the opcode byte
             // itself differs, already selected via `info.opcode`.
-            let sig_end = following.iter().position(|a| !is_type_or_param_or_result(a)).unwrap_or(following.len());
-            let sig_fields = &following[..sig_end];
+            //
+            // Optional leading table token (task #107): the reference-
+            // types proposal's explicit-table-index text form is
+            // `call_indirect $table (type $t) ...` -- a bare atom BEFORE
+            // the `(type ...)` list, not itself a type/param/result
+            // keyword list. Defaults to table 0 when absent, matching
+            // every other MVP module (real corpus precedent:
+            // `table_copy.wast`/`table_init.wast` use this form
+            // pervasively in FOLDED syntax; no vendored file needs it in
+            // this flat/stream form, but the parse shape is identical).
+            let has_table_token = following.first().is_some_and(|a| a.as_atom().is_some());
+            let table_idx = if has_table_token {
+                resolve_idx(&icx.module.table_names, &following[0], "table")?
+            } else {
+                0
+            };
+            let sig_start = if has_table_token { 1 } else { 0 };
+            let sig_end = sig_start
+                + following[sig_start..]
+                    .iter()
+                    .position(|a| !is_type_or_param_or_result(a))
+                    .unwrap_or(following.len() - sig_start);
+            let sig_fields = &following[sig_start..sig_end];
             let type_form = sig_fields.iter().find(|a| a.is_keyword_list("type"));
             let type_idx = if let Some(t) = type_form {
                 resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
@@ -1732,7 +1753,7 @@ fn encode_stream_instr(
             };
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
-            out.push(0x00);
+            out.extend(wasm_leb128::encode_unsigned(table_idx as u64));
             Ok(sig_end)
         }
         "br" | "br_if" => {
@@ -2263,19 +2284,41 @@ fn encode_flat_instr(
             // `(call_indirect (type $t) (param...) (result...) operand-exprs...)`
             // `return_call_indirect` (WASM16) shares this exact shape --
             // same immediates, only the opcode byte differs.
-            let type_form = args.iter().find(|a| a.is_keyword_list("type"));
-            let operand_start = args.iter().position(|a| !is_type_or_param_or_result(a)).unwrap_or(args.len());
+            //
+            // Optional leading table token (task #107): a bare atom
+            // BEFORE the `(type ...)`/`(param...)`/`(result...)` fields
+            // names an explicit non-default table -- pervasive in the
+            // real corpus (`table_init.wast`/`table_copy.wast` use
+            // `(call_indirect $t0 (type 0) ...)` throughout). Same
+            // detection shape as the flat-form arm above: a bare atom
+            // isn't itself a type/param/result keyword list, so without
+            // this check the type/param/result scan below would
+            // misidentify the table token as the start of the operand-
+            // expression list. Defaults to table 0 when absent.
+            let has_table_token = args.first().is_some_and(|a| a.as_atom().is_some());
+            let table_idx = if has_table_token {
+                resolve_idx(&icx.module.table_names, &args[0], "table")?
+            } else {
+                0
+            };
+            let sig_start = if has_table_token { 1 } else { 0 };
+            let type_form = args[sig_start..].iter().find(|a| a.is_keyword_list("type"));
+            let operand_start = sig_start
+                + args[sig_start..]
+                    .iter()
+                    .position(|a| !is_type_or_param_or_result(a))
+                    .unwrap_or(args.len() - sig_start);
             encode_instr_list(&args[operand_start..], icx, out)?;
             out.push(info.opcode);
             let type_idx = if let Some(t) = type_form {
                 resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
-                let sig_fields: Vec<&SExpr> = args[..operand_start].iter().collect();
+                let sig_fields: Vec<&SExpr> = args[sig_start..operand_start].iter().collect();
                 let ty = parse_func_signature(&sig_fields)?;
                 dedup_type(&mut icx.module.module, ty)
             };
             out.extend(wasm_leb128::encode_unsigned(type_idx as u64));
-            out.push(0x00); // table index, always 0 in WASM 1.0
+            out.extend(wasm_leb128::encode_unsigned(table_idx as u64));
             Ok(())
         }
         "br" | "br_if" => {
@@ -3927,6 +3970,38 @@ mod tests {
         .unwrap();
         // i32.const 5 ; i32.const 0 ; return_call_indirect type=0 table=0 ; end
         assert_eq!(code_of(&m, 0), &[0x41, 0x05, 0x41, 0x00, 0x13, 0x00, 0x00, 0x0B]);
+    }
+
+    /// Task #107: `call_indirect`/`return_call_indirect` with an EXPLICIT,
+    /// non-default table index -- the reference-types proposal's own text
+    /// syntax (`(call_indirect $t0 (type 0) ...)`), pervasive throughout
+    /// `table_init.wast`/`table_copy.wast`. Two tables declared; targets
+    /// the SECOND one by name, confirming the table token is resolved and
+    /// encoded, not silently ignored the way it used to be.
+    #[test]
+    fn folded_call_indirect_with_explicit_nonzero_table_index() {
+        let m = parse_module(
+            "(module (type $t (func (param i32) (result i32))) \
+              (table $t0 1 funcref) (table $t1 1 funcref) \
+              (func (result i32) (call_indirect $t1 (type $t) (i32.const 5) (i32.const 0))))",
+        )
+        .unwrap();
+        // i32.const 5 ; i32.const 0 ; call_indirect type=0 table=1 ; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x05, 0x41, 0x00, 0x11, 0x00, 0x01, 0x0B]);
+    }
+
+    /// Same as above, but in the FLAT (non-folded) form, and for
+    /// `return_call_indirect` -- confirms both encoder arms got the fix,
+    /// not just the folded `call_indirect` one.
+    #[test]
+    fn flat_return_call_indirect_with_explicit_nonzero_table_index() {
+        let m = parse_module(
+            "(module (type $t (func (param i32) (result i32))) \
+              (table $t0 1 funcref) (table $t1 1 funcref) \
+              (func (result i32) i32.const 5 i32.const 0 return_call_indirect $t1 (type $t)))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&m, 0), &[0x41, 0x05, 0x41, 0x00, 0x13, 0x00, 0x01, 0x0B]);
     }
 
     /// Flat (non-folded) `return_call_indirect`.

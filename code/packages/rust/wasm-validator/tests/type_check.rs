@@ -147,6 +147,36 @@ fn valid_call_and_call_indirect() {
     );
 }
 
+/// Task #107: `call_indirect`/`return_call_indirect` with an explicit,
+/// non-default table index -- validates against the NAMED table, not
+/// unconditionally table 0.
+#[test]
+fn valid_call_indirect_with_explicit_nonzero_table_index() {
+    assert_valid(
+        "(module
+           (type $t (func (param i32) (result i32)))
+           (func $callee (param i32) (result i32) (local.get 0))
+           (table $t0 1 funcref)
+           (table $t1 1 funcref)
+           (elem (table $t1) (i32.const 0) func $callee)
+           (func (result i32) (call_indirect $t1 (type $t) (i32.const 1) (i32.const 0))))",
+    );
+}
+
+#[test]
+fn invalid_call_indirect_references_an_out_of_bounds_table_index() {
+    // A raw numeric table index isn't checked against declared table
+    // COUNT at parse time (only a `$name` is resolved against a symbol
+    // table there) -- `5` with only 1 table declared must be caught by
+    // the validator itself.
+    assert_invalid(
+        "(module
+           (type $t (func (result i32)))
+           (table 1 funcref)
+           (func (result i32) (call_indirect 5 (type $t) (i32.const 0))))",
+    );
+}
+
 #[test]
 fn valid_return_call_and_return_call_indirect() {
     // WASM16: same param-popping shape as call/call_indirect, but the

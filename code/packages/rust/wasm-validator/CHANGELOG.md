@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.13] - 2026-08-17 (task #107 — call_indirect/return_call_indirect table-index bounds check)
+
+### Fixed
+
+- `call_indirect` (`0x11`) and `return_call_indirect` (`0x13`)'s
+  `tableidx` immediate was decoded and then explicitly discarded via
+  `let (_table_idx, ..)`, never bounds-checked. Now checked against
+  `ctx.table_count`, same shape `table.grow`/`table.size`/`table.fill`
+  (task #98) and `table.init`/`table.copy` (task #97) already use.
+
 ## [0.2.12] - 2026-08-17 (task #97 — table.init/table.copy/elem.drop type-checking)
 
 ### Added
