@@ -36,7 +36,7 @@ reviews_of: [ZH-W01-ren-radical, ZH-W01-er]
 
 [PAUSE 3s] Two pieces, both already yours. Draw them side by side:
 
-> 亻 &nbsp;&nbsp; 尔
+> 亻   尔
 
 The narrow person on the left. The five-stroke sound piece on the right.
 

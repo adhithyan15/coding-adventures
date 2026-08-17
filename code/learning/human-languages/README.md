@@ -144,7 +144,7 @@ enter cross-language review only after focused retrieval.
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 177 | 173 | 52 chapters; through Ch. 52; 47 generated |
 | [Italian](./italian/README.md) | Romance / Latin | 88 | 87 | 25 chapters; through Ch. 25; 24 generated |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | 96 | 95 | 26 chapters; through Ch. 26; 25 generated |
-| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 57 | 13 chapters; through Ch. 13; 8 generated |
+| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 73 | 68 | 14 chapters; through Ch. 14; 9 generated |
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi | 61 | 54 | 13 chapters; through Ch. 13; 8 generated |
 | [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 70 | 66 | 15 chapters; through Ch. 15; 10 generated |
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 69 | 65 | 13 chapters; through Ch. 13; 8 generated |

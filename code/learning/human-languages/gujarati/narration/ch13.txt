@@ -107,7 +107,7 @@ Now put the mātrā on it, exactly as you did with the first consonant:
 ન (na) + ા (-ā) becomes ના.
 nā — and that is no.
 You now hold both answers to a yes-or-no question, and you can read them both off the page:
-હા &nbsp;&nbsp; ના.
+હા ના.
 Two consonants and one mark. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables very quickly.
 
 Guided Practice.
@@ -161,7 +161,7 @@ Script.
 સ (sa).
 sa. The s of English sit, plus the inherent vowel.
 You are four consonants and one mātrā into this script, and every one of them has behaved the same way. Say the four aloud in the order you met them, each with its inherent vowel:
-હ (ha) &nbsp; ન (na) &nbsp; મ (ma) &nbsp; સ (sa).
+હ (ha) ન (na) મ (ma) સ (sa).
 ha, na, ma, sa. Four beats, four shapes, no bar across any of them.
 
 Guided Practice.

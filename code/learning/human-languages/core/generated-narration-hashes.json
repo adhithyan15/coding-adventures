@@ -859,7 +859,7 @@
     {
       "language": "chinese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:6cc4da73adfd1029",
+      "sourceHash": "fnv1a64:64ef4a9e6f25106d",
       "lessonIds": [
         "ZH-W01-ren",
         "ZH-W01-ren-radical",
@@ -873,8 +873,8 @@
       "drivablePrefix": 0,
       "text": "chinese/narration/ch02.txt",
       "json": "chinese/narration/ch02.json",
-      "textHash": "fnv1a64:e4ed180b0ef82ee6",
-      "jsonHash": "fnv1a64:c69bc9760cd1f486"
+      "textHash": "fnv1a64:7b28ae4919b294f2",
+      "jsonHash": "fnv1a64:57153004a2405256"
     },
     {
       "language": "french",
@@ -2111,7 +2111,7 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:a84ace486b6c7315",
+      "sourceHash": "fnv1a64:da47e3b137301490",
       "lessonIds": [
         "GU-W01-ha",
         "GU-W01-aa-matra",
@@ -2128,8 +2128,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch13.txt",
       "json": "gujarati/narration/ch13.json",
-      "textHash": "fnv1a64:e6d62fed75af393f",
-      "jsonHash": "fnv1a64:6edb158a9c2a6cae"
+      "textHash": "fnv1a64:dd2137c239f8ec8f",
+      "jsonHash": "fnv1a64:69abe68830a49354"
     },
     {
       "language": "hindi",
@@ -3549,7 +3549,7 @@
     {
       "language": "japanese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:3919f574889a11c5",
+      "sourceHash": "fnv1a64:6f566408e539a412",
       "lessonIds": [
         "JA-W01-i",
         "JA-W01-ha",
@@ -3566,8 +3566,8 @@
       "drivablePrefix": 0,
       "text": "japanese/narration/ch02.txt",
       "json": "japanese/narration/ch02.json",
-      "textHash": "fnv1a64:95efceb9a8c7485b",
-      "jsonHash": "fnv1a64:6202d375a89e8436"
+      "textHash": "fnv1a64:3e5230985378a580",
+      "jsonHash": "fnv1a64:4a0f57dceb21953d"
     },
     {
       "language": "kannada",
@@ -6345,6 +6345,30 @@
       "json": "marathi/narration/ch13.json",
       "textHash": "fnv1a64:5988d20e6b2bbcc9",
       "jsonHash": "fnv1a64:9fccf6dfa1364ba9"
+    },
+    {
+      "language": "marathi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:da1616ad5a472c41",
+      "lessonIds": [
+        "MR-W01-ha",
+        "MR-W01-o-matra",
+        "MR-W01-na",
+        "MR-W01-aa-matra",
+        "MR-W01-ii-matra",
+        "MR-W01-ma",
+        "MR-W01-sa",
+        "MR-W01-ka",
+        "MR-W01-virama",
+        "MR-W01-ra",
+        "MR-W01-namaskar-read"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch14.txt",
+      "json": "marathi/narration/ch14.json",
+      "textHash": "fnv1a64:887fa0efc572a4d2",
+      "jsonHash": "fnv1a64:038600c3072b41e7"
     },
     {
       "language": "persian",

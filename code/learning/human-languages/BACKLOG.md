@@ -13,6 +13,83 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C217 — `&nbsp;` reaches the reader as literal text, and it shipped in three merged tranches
+
+Found by the security review of HL-C216, filed by it as a **non-security note** —
+which is the only reason it was caught at all.
+
+Eight lessons across **four** tracks used `&nbsp;` to space out a display line of
+separate glyphs. `&nbsp;` is HTML, not Markdown. The LaTeX escaper does exactly
+its job and neutralises the `&`, so the generated book prints:
+
+```
+\gu{હા} \&nbsp;\&nbsp; \gu{ના}
+```
+
+A reader of the PDF sees the literal characters `&nbsp;`. Three of the four tracks
+— chinese, japanese, gujarati — **were already merged**, so this was live in three
+published books.
+
+**Why every gate missed it.** It is not a schema error, not an untaught glyph, not
+a LaTeX injection, not a font gap, and not a ramp violation. It is *correctly
+escaped text that should never have been text*. The whole gate suite checks that
+generated output is SAFE and REPRODUCIBLE; nothing checks that it is
+**meaningful**. `check:books` even confirms the byte-identical `\&nbsp;` on every
+run, because the generator is faithfully reproducing the mistake.
+
+**Fixed** in all eight lessons by using plain spaces — deliberately not a Unicode
+space or a middle dot, because a new codepoint is new font-coverage exposure and
+HL-C214 is one PR old.
+
+### The gap worth closing
+
+A **literal-markup gate**: scan generated `.tex` for escaped sequences that are
+almost certainly authoring mistakes rather than content — `\&nbsp;`, `\&amp;`,
+`\&lt;`, `\&#\d+;`, a bare `<br>`, `\textbackslash{}n`. Every one of them means
+the author typed markup for a renderer that is not the one running.
+
+Cheap, report-only, and it generalises past this instance: the class is
+"**author-facing markup that survived escaping into reader-facing text**", and the
+corpus will keep producing it as long as lessons are written in Markdown and
+rendered to LaTeX.
+
+## HL-C216 — Marathi: the abugida shape replicates, and the cost of script is now visible
+
+Fourth script tranche, and the first that was a **replication rather than a
+design**. `neverTaughtGlyphs` 46 → 36; `tracksTeachingNothing` reaches **4**, from
+8 where these tranches started.
+
+**HL-C215's four ideas transferred without modification** — inherent vowel, mātrā,
+virama, conjunct — because they are facts about the abugida, not about Gujarati.
+Only the shapes and one signature changed: Devanagari hangs from the
+**shirorekhā** and Gujarati erases it, and naming that contrast on the first shape
+makes both scripts easier to place. **Punjabi, Bengali, Hindi and Sanskrit should
+be replications too**, not fresh designs; the per-track work is choosing which ten
+pieces unlock that track's first words.
+
+**Authoring cost, measured across four tranches:** 10 lessons for 8 glyphs
+(Japanese), 10 for 9 (Gujarati), 11 for 10 (Marathi). Roughly **1.1 lessons per
+glyph**, which puts the corpus's remaining ~410 untaught glyphs at about **450
+lessons**. That is the whole cost of gentle script introduction across sixteen
+non-Latin tracks, and it is small beside ~10,000 vocabulary tranches.
+
+### The cost that is NOT free, and it finally showed up in a number
+
+`drivablePercent` fell **72 → 71**. Three script tranches in a row have added
+pen-only lessons and nothing a commuter can do, and the corpus share has now
+rounded down for the first time.
+
+**This is the designed trade, not a regression** — HL08's whole point is that the
+complete book keeps the handwriting and the driving edition filters it out — but it
+is worth stating plainly rather than letting it drift: **every script tranche makes
+the corpus less drivable**, and the remaining ~450 script lessons will move this
+number several more points.
+
+Two things follow. The driving edition stops being a nice-to-have and becomes the
+thing that keeps the course usable on a commute while the script work lands. And
+`unstartableChapters` is now the number to watch instead: a script chapter has no
+drivable prefix at all, so it is 186 and climbing by one per tranche, by design.
+
 ## HL-C215 — Gujarati: nine pieces, and an abugida taught as four ideas
 
 Third script tranche. `neverTaughtGlyphs` 41 → 32, `scriptLessons` 0 → 10, and

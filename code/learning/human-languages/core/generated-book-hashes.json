@@ -486,7 +486,7 @@
     {
       "language": "chinese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:ee2336dc0d22b914",
+      "sourceHash": "fnv1a64:6caa25387e298904",
       "lessonIds": [
         "ZH-W01-ren",
         "ZH-W01-ren-radical",
@@ -906,7 +906,7 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:875656e5ea8969e9",
+      "sourceHash": "fnv1a64:f47d16047dfdaa32",
       "lessonIds": [
         "GU-W01-ha",
         "GU-W01-aa-matra",
@@ -1817,7 +1817,7 @@
     {
       "language": "japanese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:f29ef748ca046f9e",
+      "sourceHash": "fnv1a64:664789ddc7990979",
       "lessonIds": [
         "JA-W01-i",
         "JA-W01-ha",
@@ -3525,6 +3525,25 @@
         "MR-C13-hrudaya"
       ],
       "tex": "marathi/book/chapters/ch13-heart.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:823201992120effc",
+      "lessonIds": [
+        "MR-W01-ha",
+        "MR-W01-o-matra",
+        "MR-W01-na",
+        "MR-W01-aa-matra",
+        "MR-W01-ii-matra",
+        "MR-W01-ma",
+        "MR-W01-sa",
+        "MR-W01-ka",
+        "MR-W01-virama",
+        "MR-W01-ra",
+        "MR-W01-namaskar-read"
+      ],
+      "tex": "marathi/book/chapters/ch14-script-first.tex"
     },
     {
       "language": "persian",
