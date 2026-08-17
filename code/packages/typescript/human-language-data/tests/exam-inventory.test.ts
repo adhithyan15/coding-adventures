@@ -425,10 +425,18 @@ describe("the committed French A1 inventory", () => {
     expect(coverage.enumerated).toBe(74);
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
-    expect(coverage.covered).toBe(20);
-    // The shape, not the score: vocabulary is the best-covered column and the
-    // sentence-level categories are empty. No quantity of headwords moves these.
-    for (const empty of ["L'interrogation", "La phrase", "Le nom", "Les prepositions"]) {
+    //
+    // 20 -> 25: HL-C229 authored chapter 32 and took L'interrogation from 0/5 to
+    // 5/5 -- the first time this loop closed end to end, with the plan naming the
+    // gap, the inventory naming the five points, nine lessons teaching them, and
+    // the probes then resolving against real atoms. The number moved because the
+    // CORPUS changed, not because the target was edited.
+    expect(coverage.covered).toBe(25);
+    expect(coverage.byCategory["L'interrogation"]).toEqual({ enumerated: 5, covered: 5 });
+    // The shape, not the score: vocabulary is still a strong column and the
+    // sentence-level categories are still empty. No quantity of headwords moves
+    // these -- only grammar chapters like the one that just closed the fourth.
+    for (const empty of ["La phrase", "Le nom", "Les prepositions"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     expect(coverage.byCategory["Lexique de base"]!.covered).toBeGreaterThan(0);

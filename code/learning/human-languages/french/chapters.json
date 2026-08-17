@@ -615,6 +615,27 @@
           "FR-LEX-OEUF-07"
         ]
       }
+    },
+    {
+      "chapter": 32,
+      "title": "Asking a Question — Three Ways, and Which One to Use",
+      "label": "ch:fr-questions",
+      "canDo": "I can ask a question in French three ways — by raising my voice, with est-ce que, and by inversion — choose between them by how formal the moment is, and ask where, when, how, how much and why.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "FR-C32-quel",
+        "kind": "task",
+        "summary": "The one question word that agrees with its noun, closing a chapter that began with the question costing no new words at all.",
+        "assesses": [
+          "FR-GRAMMAR-QUEL-09",
+          "FR-GRAMMAR-INTONATION-01",
+          "FR-GRAMMAR-ESTCEQUE-02",
+          "FR-GRAMMAR-INVERSION-08",
+          "FR-LEX-OU-03"
+        ]
+      }
     }
   ]
 }
