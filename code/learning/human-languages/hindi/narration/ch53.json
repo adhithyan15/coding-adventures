@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 53,
+  "title": "More of the Body",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:92b48fc24df9b33d",
+  "lessons": [
+    {
+      "id": "HI-C53-shoulder",
+      "sequence": 1750,
+      "title": "कंधा (kandhā) — a shoulder",
+      "headword": "कंधा",
+      "romanization": "kandhā",
+      "gloss": "a shoulder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd828af34298f3fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did the last two words of the chapter before mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कंधा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कंधा (kandhā) — \"a shoulder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit स्कन्ध (skandha), 'shoulder'. The initial sk- cluster could not survive into everyday Hindi and lost its s, which is the ordinary fate of a cluster like that in this family."
+            },
+            {
+              "kind": "speech",
+              "text": "Skandha had a second life meaning 'the trunk of a tree' and then 'a section, a division' — the sense Buddhist texts use for the five aggregates. Hindi kept the shoulder and let the philosophy go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five more parts of the body."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandhā, and touch it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandhā*, and touch it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कंधा (kandhā) mean? (\"a shoulder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C53-knee",
+      "sequence": 1760,
+      "title": "घुटना (ghuṭnā) — a knee",
+      "headword": "घुटना",
+      "romanization": "ghuṭnā",
+      "gloss": "a knee",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b94c2690cca9a23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did the word before this one mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घुटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुटना (ghuṭnā) — \"a knee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit source is घुण्ट (ghuṇṭa), a word for the ankle or knee joint, though the details of how it arrived are not agreed on."
+            },
+            {
+              "kind": "speech",
+              "text": "Be careful with this one in a dictionary: घुटना (ghuṭnā) is also a verb meaning 'to be stifled', and the two are unrelated. Hindi has a small number of these exact collisions, and the only way through is the sentence around the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The second of five, and a word with a twin that means something else entirely."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghuṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghuṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghuṭnā, then kandhā — the joint low, the joint high",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghuṭnā*, then *kandhā* — the joint low, the joint high]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घुटना (ghuṭnā) mean? (\"a knee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C53-forehead",
+      "sequence": 1770,
+      "title": "माथा (māthā) — a forehead",
+      "headword": "माथा",
+      "romanization": "māthā",
+      "gloss": "a forehead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b52a1b7a39e2acd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 2 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: माथा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माथा (māthā) — \"a forehead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit मस्तक (mastaka), 'head'. The everyday word narrowed as it wore down: what meant the whole head now means the front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "मस्तक itself is still in Hindi, unworn, in formal and literary registers. So you have another register doublet of the kind you met with सुबह beside प्रभात — the same ancestor arriving twice, once eroded and everyday, once intact and bookish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third of five, and a narrowing you can watch happen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māthā, and then सिर, which you met when the head was first named",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māthā*, and then सिर, which you met when the head was first named]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does माथा (māthā) mean? (\"a forehead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C53-back",
+      "sequence": 1780,
+      "title": "पीठ (pīṭh) — the back",
+      "headword": "पीठ",
+      "romanization": "pīṭh",
+      "gloss": "the back",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e552a55b35deb71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 3 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पीठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पीठ (pīṭh) — \"the back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit पृष्ठ (pṛṣṭha), 'back, surface'. The heavy -ṛṣṭh- in the middle collapsed and paid for itself by lengthening the vowel in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same bargain that gave you कान out of karṇa when the ear was named — a cluster gives way, and the vowel before it grows to keep the syllable's weight. Once you have seen the trade twice it stops looking like an exception."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth of five, and the second time you have seen that trade."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīṭh, then kandhā — the back and the shoulder above it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīṭh*, then *kandhā* — the back and the shoulder above it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पीठ (pīṭh) mean? (\"the back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C53-lip",
+      "sequence": 1790,
+      "title": "होंठ (hoṇṭh) — a lip",
+      "headword": "होंठ",
+      "romanization": "hoṇṭh",
+      "gloss": "a lip",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d850b2554c017f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 4 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: होंठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "होंठ (hoṇṭh) — \"a lip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit ओष्ठ (oṣṭha), 'lip'. Hindi added the nasal in the middle and an h at the front, both of which are ordinary enough in this line of descent."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not reach for Latin labium as a cousin here — it is not one. Two Indo-European languages can have perfectly ordinary words for the same body part that descend from completely different roots, which you have already met with रात beside nox."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fifth of five. That is the body, from the forehead down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoṇṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoṇṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoṇṭh, māthā, kandhā, pīṭh, ghuṭnā — top to bottom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoṇṭh*, *māthā*, *kandhā*, *pīṭh*, *ghuṭnā* — top to bottom]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does होंठ (hoṇṭh) mean? (\"a lip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -9,6 +9,51 @@ Last prioritized: 2026-08-12 (second pass), after the CEFR climb reached B2 and
 three measurements changed what the top of this list should be. See
 **Prioritization, 2026-08-12** below for the current order and the numbers behind it.
 
+## HL-C207 — Hindi round two landed; Tamil and Malayalam are now the only tracks a round behind
+
+Hindi chapters 52-58, 35 headwords on pre-A1 nodes, **85/300 -> 120/300**. Hindi now
+leads the corpus, ahead of Spanish's 118. R1 0.2818 -> 0.2793 with the numerator held
+at 1106; hindi `forwardReferences` holds at 11; all 35 lessons are `voice`, so the
+whole wave is drivable.
+
+**The queue after this tranche**, cheapest first:
+
+```
+tamil 84/300   malayalam 84/300      <- a round behind, and the next two tranches
+sanskrit 104   telugu 116   kannada 117   spanish 118   hindi 120
+```
+
+Tamil and Malayalam are the only two still carrying a round-one number. Bringing
+them up is the obvious next work, after which all seven sit within ~16 of each
+other and round three can start from a level field.
+
+### Two things this tranche learned that the next one should not relearn
+
+**1. Do not write "chapter N" in lesson prose — the gate forbids the reference, not
+the staleness.** Seven of the new lessons pointed back by number, and every number
+was verified against the corpus before it was written. All seven still failed
+`chapter-references.test.ts`, which pins cross-chapter references per track (hindi
+at 20) because a number correct today goes stale at the next chapter split, silently.
+Verifying them made them accurate and left the debt exactly as toxic. Name the thing
+instead — "when the ear was named", "at the end of the welcome chapter". Recorded in
+`lessons.md` too, because the careful-looking version of the habit is the trap.
+
+**2. The Devanagari screen discards far less than the Spanish one, and that is a
+property of the script, not of the screening.** 64 candidates screened, **1**
+discarded, against Spanish round two's 35 of 146. A Latin-script headword hides
+inside longer words constantly (*aam* inside *naam*, *anda* inside
+`standard-colloquial` in frontmatter); a Devanagari one does not, because an
+independent vowel (आ) and a vowel sign (ा) are different code points. **Screen on the
+Devanagari headword against lesson BODIES, which is what `taughtWords` actually
+indexes — not on the romanization, and not on raw substrings.** A romanization
+screen over whole files reported 15 of 64 dirty; 14 of those were phantoms.
+
+**A control that is itself wrong looks exactly like a broken instrument.** The
+whole-word screen reported छत clean while a raw-substring pass flagged it in
+`HI-C35-puchna.md`. The screen was right: छत occurs there only inside पूछते and
+पृच्छति. Per HL-C203's rule, the dirty control was checked before the instrument was
+blamed — and this time the control was the thing at fault.
+
 ## HL-C205 — the gap report's cost model, and why its test timeout is not a dial
 
 Recorded because three separate sessions raised the same timeout and none of them

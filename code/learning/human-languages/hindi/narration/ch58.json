@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 58,
+  "title": "Inside the House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5fc3ceb880c84204",
+  "lessons": [
+    {
+      "id": "HI-C58-wall",
+      "sequence": 2000,
+      "title": "दीवार (dīvār) — a wall",
+      "headword": "दीवार",
+      "romanization": "dīvār",
+      "gloss": "a wall",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b28e17ca1b98aab6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did the last two words of the chapter before mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दीवार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दीवार (dīvār) — \"a wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A Persian word, dīvār, 'wall'. Its older Iranian form was a compound, and the piece at the front of it is not certainly identified, so this book will name the Persian and stop there."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a loan and not a cousin, which is worth keeping straight: दरवाज़ा, which you already own, is Persian too, and the two of them furnish most of the outside of a Hindi house between them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five parts of the house."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīvār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīvār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīvār, and दरवाज़ा in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīvār*, and दरवाज़ा in it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दीवार (dīvār) mean? (\"a wall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C58-roof",
+      "sequence": 2010,
+      "title": "छत (chat) — a roof",
+      "headword": "छत",
+      "romanization": "chat",
+      "gloss": "a roof",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:740bc3b6f30730f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did the word before this one mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छत (chat) — \"a roof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit छत्र (chatra), which meant a parasol — the thing held over a person's head. The word came down off the handle and settled onto the building."
+            },
+            {
+              "kind": "speech",
+              "text": "A flat छत (chat) in North India is a place people go, not only a lid: it is where washing dries and where the evening is sat out. The word covers the surface and the use at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The second of five, and a parasol that turned into a roof."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chat, over the dīvār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chat*, over the *dīvār*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छत (chat) mean? (\"a roof\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C58-window",
+      "sequence": 2020,
+      "title": "खिड़की (khiṛkī) — a window",
+      "headword": "खिड़की",
+      "romanization": "khiṛkī",
+      "gloss": "a window",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba06d4287b34ca35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 2 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खिड़की",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खिड़की (khiṛkī) — \"a window\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The origin of खिड़की (khiṛkī) is not settled, and the derivations offered for it are guesses of varying quality rather than an agreed line."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the second time this book has had to say that about a piece of an ordinary house, and it will not be the last. A word being everywhere is no guarantee that its history was written down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third of five, and another honest gap."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṛkī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṛkī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khiṛkī, cut into the dīvār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khiṛkī*, cut into the *dīvār*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खिड़की (khiṛkī) mean? (\"a window\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C58-stairs",
+      "sequence": 2030,
+      "title": "सीढ़ी (sīṛhī) — a staircase, a ladder",
+      "headword": "सीढ़ी",
+      "romanization": "sīṛhī",
+      "gloss": "a staircase, a ladder",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52cfe32b8c4f26a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 3 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सीढ़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीढ़ी (sīṛhī) — \"a staircase, a ladder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सीढ़ी (sīṛhī) is traced to a Sanskrit word for a flight of steps, but the exact form behind it is disputed and the sources differ on which one it was."
+            },
+            {
+              "kind": "speech",
+              "text": "The word does not distinguish a staircase from a ladder. Both are सीढ़ी (sīṛhī), because what the word names is the going up, not the thing's construction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth of five, and one word for two objects."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīṛhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīṛhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīṛhī, up to the chat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīṛhī*, up to the *chat*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सीढ़ी (sīṛhī) mean? (\"a staircase, a ladder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C58-sheet",
+      "sequence": 2040,
+      "title": "चादर (chādar) — a sheet",
+      "headword": "चादर",
+      "romanization": "chādar",
+      "gloss": "a sheet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35012d7df5a2fb35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 4 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चादर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चादर (chādar) — \"a sheet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian chādar, a sheet or a veil — a single broad piece of cloth, whatever it is spread over. English borrowed it too, as chuddar."
+            },
+            {
+              "kind": "speech",
+              "text": "So it ends the chapter the way दीवार (dīvār) began it: a Persian word for a plain domestic thing, taken whole. A Hindi house is furnished in two languages at once, and neither of them is hiding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fifth of five. That is the house, wall to roof."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chādar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chādar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chādar, sīṛhī, khiṛkī, chat, dīvār — name the house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chādar*, *sīṛhī*, *khiṛkī*, *chat*, *dīvār* — name the house]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चादर (chādar) mean? (\"a sheet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

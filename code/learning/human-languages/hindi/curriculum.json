@@ -675,6 +675,118 @@
         "HI-EXT-51-WELCOME"
       ],
       "after": []
+    },
+    {
+      "id": "HI-PATH-52-KITCHEN",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "HI-C52-rice",
+        "HI-C52-lentils",
+        "HI-C52-oil",
+        "HI-C52-sugar",
+        "HI-C52-vegetable"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-52-KITCHEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-53-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C53-shoulder",
+        "HI-C53-knee",
+        "HI-C53-forehead",
+        "HI-C53-back",
+        "HI-C53-lip"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-53-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-54-ANIMAL",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C54-cow",
+        "HI-C54-horse",
+        "HI-C54-fish",
+        "HI-C54-bird",
+        "HI-C54-goat"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-54-ANIMAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-55-SKY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "HI-C55-sun",
+        "HI-C55-moon",
+        "HI-C55-star",
+        "HI-C55-cloud",
+        "HI-C55-sky"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-55-SKY"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-56-ROAD",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C56-road",
+        "HI-C56-village",
+        "HI-C56-market",
+        "HI-C56-shop",
+        "HI-C56-field"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-56-ROAD"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-57-GIFT",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "HI-C57-present",
+        "HI-C57-feast",
+        "HI-C57-platter",
+        "HI-C57-fragrance",
+        "HI-C57-sweetness"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-57-GIFT"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-58-HOUSE",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C58-wall",
+        "HI-C58-roof",
+        "HI-C58-window",
+        "HI-C58-stairs",
+        "HI-C58-sheet"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-58-HOUSE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -683,7 +795,8 @@
         "HI-PATH-001",
         "HI-PATH-100",
         "HI-PATH-030",
-        "HI-PATH-51-WELCOME"
+        "HI-PATH-51-WELCOME",
+        "HI-PATH-58-HOUSE"
       ],
       "omits": [
         "GREETING-PEACE",
@@ -695,7 +808,8 @@
       "segments": [
         "HI-PATH-002",
         "HI-PATH-005",
-        "HI-PATH-50-COURTESY"
+        "HI-PATH-50-COURTESY",
+        "HI-PATH-57-GIFT"
       ],
       "omits": [],
       "relocates": {}
@@ -703,7 +817,8 @@
     "SPINE-RESPOND-BASIC": {
       "segments": [
         "HI-PATH-011",
-        "HI-PATH-48-REPLY"
+        "HI-PATH-48-REPLY",
+        "HI-PATH-55-SKY"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -718,7 +833,8 @@
         "HI-PATH-015",
         "HI-PATH-020",
         "HI-PATH-033",
-        "HI-PATH-47-ROLE"
+        "HI-PATH-47-ROLE",
+        "HI-PATH-54-ANIMAL"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -731,7 +847,8 @@
         "HI-PATH-027",
         "HI-PATH-016",
         "HI-PATH-032",
-        "HI-PATH-46-BODY"
+        "HI-PATH-46-BODY",
+        "HI-PATH-53-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -744,7 +861,8 @@
         "HI-PATH-012",
         "HI-PATH-018",
         "HI-PATH-031",
-        "HI-PATH-45-ASK"
+        "HI-PATH-45-ASK",
+        "HI-PATH-52-KITCHEN"
       ],
       "omits": [],
       "relocates": {}
@@ -754,7 +872,8 @@
         "HI-PATH-003",
         "HI-PATH-009",
         "HI-PATH-025",
-        "HI-PATH-49-LEAVE"
+        "HI-PATH-49-LEAVE",
+        "HI-PATH-56-ROAD"
       ],
       "omits": [
         "FAREWELL-SOON"
@@ -1577,6 +1696,111 @@
         "HI-C51-courtyard",
         "HI-C51-table",
         "HI-C51-sweet"
+      ]
+    },
+    {
+      "id": "HI-EXT-52-KITCHEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five staples a Hindi kitchen is stocked with.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C52-rice",
+        "HI-C52-lentils",
+        "HI-C52-oil",
+        "HI-C52-sugar",
+        "HI-C52-vegetable"
+      ]
+    },
+    {
+      "id": "HI-EXT-53-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C53-shoulder",
+        "HI-C53-knee",
+        "HI-C53-forehead",
+        "HI-C53-back",
+        "HI-C53-lip"
+      ]
+    },
+    {
+      "id": "HI-EXT-54-ANIMAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five animals a Hindi speaker meets every day.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C54-cow",
+        "HI-C54-horse",
+        "HI-C54-fish",
+        "HI-C54-bird",
+        "HI-C54-goat"
+      ]
+    },
+    {
+      "id": "HI-EXT-55-SKY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things overhead.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C55-sun",
+        "HI-C55-moon",
+        "HI-C55-star",
+        "HI-C55-cloud",
+        "HI-C55-sky"
+      ]
+    },
+    {
+      "id": "HI-EXT-56-ROAD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five places between a house and the next village.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C56-road",
+        "HI-C56-village",
+        "HI-C56-market",
+        "HI-C56-shop",
+        "HI-C56-field"
+      ]
+    },
+    {
+      "id": "HI-EXT-57-GIFT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things that travel with gratitude.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C57-present",
+        "HI-C57-feast",
+        "HI-C57-platter",
+        "HI-C57-fragrance",
+        "HI-C57-sweetness"
+      ]
+    },
+    {
+      "id": "HI-EXT-58-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five parts of the house a guest walks through.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C58-wall",
+        "HI-C58-roof",
+        "HI-C58-window",
+        "HI-C58-stairs",
+        "HI-C58-sheet"
       ]
     }
   ]

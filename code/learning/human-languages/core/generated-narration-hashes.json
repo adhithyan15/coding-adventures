@@ -2944,6 +2944,132 @@
       "jsonHash": "fnv1a64:1bc0788dd86193e4"
     },
     {
+      "language": "hindi",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:13550d1f85bf5d6c",
+      "lessonIds": [
+        "HI-C52-rice",
+        "HI-C52-lentils",
+        "HI-C52-oil",
+        "HI-C52-sugar",
+        "HI-C52-vegetable"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch52.txt",
+      "json": "hindi/narration/ch52.json",
+      "textHash": "fnv1a64:96aec961eb9f1d02",
+      "jsonHash": "fnv1a64:ffad7a77118406db"
+    },
+    {
+      "language": "hindi",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:92b48fc24df9b33d",
+      "lessonIds": [
+        "HI-C53-shoulder",
+        "HI-C53-knee",
+        "HI-C53-forehead",
+        "HI-C53-back",
+        "HI-C53-lip"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch53.txt",
+      "json": "hindi/narration/ch53.json",
+      "textHash": "fnv1a64:4291dabbf9d40b68",
+      "jsonHash": "fnv1a64:c93eaea901d2358d"
+    },
+    {
+      "language": "hindi",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:b5fce6ba6d7c7f5b",
+      "lessonIds": [
+        "HI-C54-cow",
+        "HI-C54-horse",
+        "HI-C54-fish",
+        "HI-C54-bird",
+        "HI-C54-goat"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch54.txt",
+      "json": "hindi/narration/ch54.json",
+      "textHash": "fnv1a64:0fa46e4036438a44",
+      "jsonHash": "fnv1a64:e33aafc2222b4aff"
+    },
+    {
+      "language": "hindi",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:559a30138d923f66",
+      "lessonIds": [
+        "HI-C55-sun",
+        "HI-C55-moon",
+        "HI-C55-star",
+        "HI-C55-cloud",
+        "HI-C55-sky"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch55.txt",
+      "json": "hindi/narration/ch55.json",
+      "textHash": "fnv1a64:62cddb89241a4228",
+      "jsonHash": "fnv1a64:f5495d24e6d9dfb9"
+    },
+    {
+      "language": "hindi",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:a9fe12878b752301",
+      "lessonIds": [
+        "HI-C56-road",
+        "HI-C56-village",
+        "HI-C56-market",
+        "HI-C56-shop",
+        "HI-C56-field"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch56.txt",
+      "json": "hindi/narration/ch56.json",
+      "textHash": "fnv1a64:4767c14d898f0b47",
+      "jsonHash": "fnv1a64:969fe35134f9de6a"
+    },
+    {
+      "language": "hindi",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:2a1a6a6de2d54e00",
+      "lessonIds": [
+        "HI-C57-present",
+        "HI-C57-feast",
+        "HI-C57-platter",
+        "HI-C57-fragrance",
+        "HI-C57-sweetness"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch57.txt",
+      "json": "hindi/narration/ch57.json",
+      "textHash": "fnv1a64:aa8dcc761abbe88b",
+      "jsonHash": "fnv1a64:00a24797b7c01983"
+    },
+    {
+      "language": "hindi",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:5fc3ceb880c84204",
+      "lessonIds": [
+        "HI-C58-wall",
+        "HI-C58-roof",
+        "HI-C58-window",
+        "HI-C58-stairs",
+        "HI-C58-sheet"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch58.txt",
+      "json": "hindi/narration/ch58.json",
+      "textHash": "fnv1a64:399611870c8efd98",
+      "jsonHash": "fnv1a64:12189f331c19b02b"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",

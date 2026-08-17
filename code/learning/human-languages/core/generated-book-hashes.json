@@ -1404,6 +1404,97 @@
       "tex": "hindi/book/chapters/ch51-welcoming-a-guest.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:c97df85e3b455b57",
+      "lessonIds": [
+        "HI-C52-rice",
+        "HI-C52-lentils",
+        "HI-C52-oil",
+        "HI-C52-sugar",
+        "HI-C52-vegetable"
+      ],
+      "tex": "hindi/book/chapters/ch52-in-the-kitchen.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:3eeac91cd724efd0",
+      "lessonIds": [
+        "HI-C53-shoulder",
+        "HI-C53-knee",
+        "HI-C53-forehead",
+        "HI-C53-back",
+        "HI-C53-lip"
+      ],
+      "tex": "hindi/book/chapters/ch53-more-of-the-body.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:6f6d4f06d7c74526",
+      "lessonIds": [
+        "HI-C54-cow",
+        "HI-C54-horse",
+        "HI-C54-fish",
+        "HI-C54-bird",
+        "HI-C54-goat"
+      ],
+      "tex": "hindi/book/chapters/ch54-animals.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:93f8a47ba6cedbaf",
+      "lessonIds": [
+        "HI-C55-sun",
+        "HI-C55-moon",
+        "HI-C55-star",
+        "HI-C55-cloud",
+        "HI-C55-sky"
+      ],
+      "tex": "hindi/book/chapters/ch55-the-sky.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:57764767fb4c0250",
+      "lessonIds": [
+        "HI-C56-road",
+        "HI-C56-village",
+        "HI-C56-market",
+        "HI-C56-shop",
+        "HI-C56-field"
+      ],
+      "tex": "hindi/book/chapters/ch56-the-road.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:973915b167ba105f",
+      "lessonIds": [
+        "HI-C57-present",
+        "HI-C57-feast",
+        "HI-C57-platter",
+        "HI-C57-fragrance",
+        "HI-C57-sweetness"
+      ],
+      "tex": "hindi/book/chapters/ch57-a-gift-and-a-feast.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:0a0a8763a6854255",
+      "lessonIds": [
+        "HI-C58-wall",
+        "HI-C58-roof",
+        "HI-C58-window",
+        "HI-C58-stairs",
+        "HI-C58-sheet"
+      ],
+      "tex": "hindi/book/chapters/ch58-inside-the-house.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
