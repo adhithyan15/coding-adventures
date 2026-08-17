@@ -77678,5 +77678,11 @@
     "lessonsScanned": 2906,
     "sourceFindings": 0,
     "renderedFindings": 0
+  },
+  "glyphCoverage": {
+    "filesScanned": 1043,
+    "mainCharacters": 125,
+    "scriptCharacters": 663,
+    "gaps": 0
   }
 }
