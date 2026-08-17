@@ -2,6 +2,11 @@
 
 All notable changes to the JavaScript Lexer (TypeScript) package will be documented in this file.
 
+## [0.2.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `tokenizeJavascript`/`createJavascriptLexer` now import a pre-compiled `_grammar[_es<version>].ts` per ECMAScript edition instead of `readFileSync`-ing the `.tokens` file from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published npm package does not ship, so `npm install` + first use would throw `ENOENT`.
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

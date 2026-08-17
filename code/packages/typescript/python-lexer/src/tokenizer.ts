@@ -31,27 +31,23 @@
  * Locating the Grammar Files
  * --------------------------
  *
- * Grammar files live in `code/grammars/python/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts
- *     └── python-lexer/      (parent)
- *         └── typescript/     (parent)
- *             └── packages/   (parent)
- *                 └── code/   (parent)
- *                     └── grammars/
- *                         └── python/
- *                             └── python3.12.tokens
+ * Grammar files live in `code/grammars/python/` at the repository root, but a
+ * published npm package would never ship that monorepo directory. Instead,
+ * every version's grammar is pre-compiled to a native TypeScript module
+ * (`_grammar_<version>.ts`) at build time and statically imported below, so
+ * no filesystem access happens at runtime.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
+
+import { TOKEN_GRAMMAR as GRAMMAR_2_7 } from "./_grammar_2_7.js";
+import { TOKEN_GRAMMAR as GRAMMAR_3_0 } from "./_grammar_3_0.js";
+import { TOKEN_GRAMMAR as GRAMMAR_3_6 } from "./_grammar_3_6.js";
+import { TOKEN_GRAMMAR as GRAMMAR_3_8 } from "./_grammar_3_8.js";
+import { TOKEN_GRAMMAR as GRAMMAR_3_10 } from "./_grammar_3_10.js";
+import { TOKEN_GRAMMAR as GRAMMAR_3_12 } from "./_grammar_3_12.js";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -64,28 +60,22 @@ const DEFAULT_VERSION = "3.12";
 export const SUPPORTED_VERSIONS = ["2.7", "3.0", "3.6", "3.8", "3.10", "3.12"];
 
 // ---------------------------------------------------------------------------
-// Grammar File Location
+// Grammar Map
 // ---------------------------------------------------------------------------
 //
-// We navigate from this file's directory (src/) up four levels to reach
-// the code/ directory, then into grammars/python/.
-//
-//   src/ -> python-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/python/
+// All Python version grammars, keyed by version string. Populated via static
+// imports above so every version ships inside the published package with no
+// runtime filesystem access.
 // ---------------------------------------------------------------------------
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars", "python");
-
-// ---------------------------------------------------------------------------
-// Grammar Cache
-// ---------------------------------------------------------------------------
-//
-// Parsed TokenGrammar objects are cached per version string. Once a grammar
-// is parsed it is reused for all subsequent calls with that version. Since
-// TokenGrammar is a read-only data structure, sharing it is safe.
-// ---------------------------------------------------------------------------
-
-const grammarCache = new Map<string, TokenGrammar>();
+const VERSIONED_GRAMMARS: Record<string, TokenGrammar> = {
+  "2.7": GRAMMAR_2_7,
+  "3.0": GRAMMAR_3_0,
+  "3.6": GRAMMAR_3_6,
+  "3.8": GRAMMAR_3_8,
+  "3.10": GRAMMAR_3_10,
+  "3.12": GRAMMAR_3_12,
+};
 
 /**
  * Resolve the version string. Empty or undefined defaults to "3.12".
@@ -95,28 +85,20 @@ function resolveVersion(version?: string): string {
 }
 
 /**
- * Return the file path for the grammar of the given Python version.
- *
- * @param version - A version string like "3.12" or "2.7".
- * @returns Absolute path to the `.tokens` file.
- */
-function grammarPath(version: string): string {
-  return join(GRAMMARS_DIR, `python${version}.tokens`);
-}
-
-/**
- * Load and parse (or retrieve from cache) the TokenGrammar for a Python version.
+ * Look up the pre-compiled TokenGrammar for a Python version.
  *
  * @param version - Resolved version string (not empty).
- * @returns The parsed TokenGrammar.
+ * @returns The TokenGrammar for that version.
+ * @throws Error if `version` is not one of `SUPPORTED_VERSIONS`.
  */
 function loadGrammar(version: string): TokenGrammar {
-  const cached = grammarCache.get(version);
-  if (cached) return cached;
-
-  const grammarText = readFileSync(grammarPath(version), "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
-  grammarCache.set(version, grammar);
+  const grammar = VERSIONED_GRAMMARS[version];
+  if (!grammar) {
+    throw new Error(
+      `Unknown Python version "${version}". ` +
+        `Valid values: ${SUPPORTED_VERSIONS.join(", ")}`
+    );
+  }
   return grammar;
 }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 -- 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `Lexer.tokenize`/`createLexer` and `Parser.parse`/`createParser` now import pre-compiled `_token_grammar.ts`/`_parser_grammar.ts` instead of `readFileSync`-ing `brainfuck.tokens`/`brainfuck.grammar` from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published npm package does not ship, so `npm install` + first use would throw `ENOENT`.
+
 ## 0.3.0 -- 2026-04-10
 
 ### Added

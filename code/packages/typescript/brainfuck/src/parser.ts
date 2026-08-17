@@ -71,42 +71,26 @@
  * is caught at parse time, not at run time. This is one advantage of the
  * grammar-driven approach over the direct-translation approach in `translator.ts`.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `brainfuck.grammar` file lives in `code/grammars/` at the repository root.
+ * The parser grammar is compiled ahead of time from `brainfuck.grammar`
+ * (in `code/grammars/brainfuck/`) into `./_parser_grammar.ts`, a native
+ * TypeScript object literal. This avoids reading and parsing a grammar
+ * file from disk at runtime -- which would break once this package is
+ * published, since a published npm package never ships the monorepo's
+ * `code/grammars/` tree.
  *
- *     src/parser.ts -> brainfuck/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * (This package's `lexer.ts` also has a compiled *token* grammar in this
+ * same `src/` directory, named `_token_grammar.ts` to avoid colliding
+ * with this file.)
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeBrainfuck } from "./lexer.js";
 
-/**
- * Resolve __dirname for ESM modules.
- * See lexer.ts for a detailed explanation of the ESM __dirname pattern.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname   = .../brainfuck/src/
- *   ..          = .../brainfuck/
- *   ../..       = .../typescript/
- *   ../../..    = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const BF_GRAMMAR_PATH = join(GRAMMARS_DIR, "brainfuck", "brainfuck.grammar");
+import { PARSER_GRAMMAR } from "./_parser_grammar.js";
 
 /**
  * Parse Brainfuck source text and return an AST.
@@ -145,30 +129,21 @@ export function parseBrainfuck(source: string): ASTNode {
   const tokens = tokenizeBrainfuck(source);
 
   /**
-   * Step 2: Load the grammar.
-   * The grammar file defines the syntax rules in EBNF-like notation:
+   * Step 2: Parse.
+   * The GrammarParser takes the token array and the pre-compiled
+   * PARSER_GRAMMAR constant, then performs recursive descent with
+   * backtracking to produce an AST. The starting rule is determined by
+   * the grammar (the first rule defined, which for brainfuck.grammar is
+   * "program"):
    *   program = { instruction } ;
    *   instruction = loop | command ;
    *   loop = LOOP_START { instruction } LOOP_END ;
    *   command = RIGHT | LEFT | INC | DEC | OUTPUT | INPUT ;
    *
-   * parseParserGrammar converts the text into a structured object that
-   * the GrammarParser can use for recursive descent.
-   */
-  const grammarText = readFileSync(BF_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-
-  /**
-   * Step 3: Parse.
-   * The GrammarParser takes the token array and grammar rules, then
-   * performs recursive descent with backtracking to produce an AST.
-   * The starting rule is determined by the grammar (the first rule
-   * defined, which for brainfuck.grammar is "program").
-   *
    * Unmatched brackets cause the parser to throw -- e.g., "[" without
    * a matching "]" will be detected because the loop rule requires
    * LOOP_END after the loop body.
    */
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   return parser.parse();
 }

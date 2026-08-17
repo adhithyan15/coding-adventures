@@ -44,50 +44,20 @@
  * patterns (so whitespace is preserved as content) and re-enables them
  * when leaving the group.
  *
- * Locating the Grammar File
- * --------------------------
+ * Grammar Source
+ * --------------
  *
- * The `xml.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate there from this file's location:
- *
- *     src/tokenizer.ts -> xml-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The token grammar is compiled ahead of time from `xml.tokens` (in
+ * `code/grammars/xml/`) into `./_grammar.ts`, a native TypeScript object
+ * literal. This avoids reading and parsing a grammar file from disk at
+ * runtime -- which would break once this package is published, since a
+ * published npm package never ships the monorepo's `code/grammars/` tree.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarLexer, LexerContext } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-// ---------------------------------------------------------------------------
-// Grammar File Location
-// ---------------------------------------------------------------------------
-
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist — we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/tokenizer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname = .../xml-lexer/src/
- *   ..         = .../xml-lexer/
- *   ../..      = .../typescript/
- *   ../../..   = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const XML_TOKENS_PATH = join(GRAMMARS_DIR, "xml", "xml.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 // ---------------------------------------------------------------------------
 // XML On-Token Callback
@@ -233,19 +203,13 @@ export function xmlOnToken(token: Token, ctx: LexerContext): void {
  */
 export function createXMLLexer(source: string): GrammarLexer {
   /**
-   * Read and parse the grammar file. The `xml.tokens` file defines
-   * 5 pattern groups (default, tag, comment, cdata, pi) with their
-   * respective token patterns.
+   * Create the lexer against the pre-compiled TOKEN_GRAMMAR constant,
+   * which defines 5 pattern groups (default, tag, comment, cdata, pi)
+   * with their respective token patterns, and register the callback.
+   * The GrammarLexer handles the actual regex matching and position
+   * tracking. Our callback handles the context-sensitive group switching.
    */
-  const grammarText = readFileSync(XML_TOKENS_PATH, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
-
-  /**
-   * Create the lexer and register the callback. The GrammarLexer
-   * handles the actual regex matching and position tracking. Our
-   * callback handles the context-sensitive group switching.
-   */
-  const lexer = new GrammarLexer(source, grammar);
+  const lexer = new GrammarLexer(source, TOKEN_GRAMMAR);
   lexer.setOnToken(xmlOnToken);
   return lexer;
 }

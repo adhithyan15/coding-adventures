@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/csharp-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parses C# source code into ASTs using the grammar-driven parser — a thin wrapper that loads csharp{version}.grammar",
   "type": "module",
   "main": "src/index.ts",

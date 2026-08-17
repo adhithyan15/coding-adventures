@@ -73,54 +73,26 @@
  * counter would drift. By routing `\n` through WHITESPACE, the engine sees
  * every newline and increments the line counter correctly.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `brainfuck.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
+ * The token grammar is compiled ahead of time from `brainfuck.tokens` (in
+ * `code/grammars/brainfuck/`) into `./_token_grammar.ts`, a native
+ * TypeScript object literal. This avoids reading and parsing a grammar
+ * file from disk at runtime -- which would break once this package is
+ * published, since a published npm package never ships the monorepo's
+ * `code/grammars/` tree.
  *
- *     src/lexer.ts -> brainfuck/ -> typescript/ -> packages/ -> code/ -> grammars/
- *
- * That is 4 levels up from `src/`:
- *   __dirname       = .../brainfuck/src/
- *   ..              = .../brainfuck/
- *   ../..           = .../typescript/
- *   ../../..        = .../packages/
- *   ../../../..     = .../code/
- *   + grammars      = .../code/grammars/
+ * (This package also has a `parser.ts` that needs a compiled *parser*
+ * grammar. Since both live in this same `src/` directory, the generated
+ * files use distinct names -- `_token_grammar.ts` here and
+ * `_parser_grammar.ts` for the parser -- to avoid a collision.)
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist -- we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/lexer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path string.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname   = .../brainfuck/src/
- *   ..          = .../brainfuck/
- *   ../..       = .../typescript/
- *   ../../..    = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const BF_TOKENS_PATH = join(GRAMMARS_DIR, "brainfuck", "brainfuck.tokens");
+import { TOKEN_GRAMMAR } from "./_token_grammar.js";
 
 /**
  * Tokenize Brainfuck source text and return an array of tokens.
@@ -163,27 +135,10 @@ const BF_TOKENS_PATH = join(GRAMMARS_DIR, "brainfuck", "brainfuck.tokens");
  */
 export function tokenizeBrainfuck(source: string): Token[] {
   /**
-   * Read the grammar file from disk. In a production system, you would
-   * cache this -- but for an educational codebase, reading on every call
-   * keeps the code simple and makes the data flow obvious.
+   * Run the generic grammar-driven tokenizer against the pre-compiled
+   * TOKEN_GRAMMAR constant. This is the same engine used for JSON,
+   * Starlark, Python, Ruby, and other languages -- the only thing that
+   * changes between languages is the grammar.
    */
-  const grammarText = readFileSync(BF_TOKENS_PATH, "utf-8");
-
-  /**
-   * Parse the grammar text into a structured TokenGrammar object.
-   * This extracts:
-   *   - Token patterns (8 single-character literals)
-   *   - Skip patterns (WHITESPACE and COMMENT)
-   *
-   * Brainfuck has no keyword reclassification, no reserved words,
-   * and no indentation mode -- the grammar is as simple as it gets.
-   */
-  const grammar = parseTokenGrammar(grammarText);
-
-  /**
-   * Run the generic grammar-driven tokenizer. This is the same engine
-   * used for JSON, Starlark, Python, Ruby, and other languages -- the
-   * only thing that changes between languages is the grammar file.
-   */
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }

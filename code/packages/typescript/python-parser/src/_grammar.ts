@@ -1,4 +1,4 @@
-// AUTO-GENERATED FILE — DO NOT EDIT
+// AUTO-GENERATED FILE - DO NOT EDIT
 // Source: python.grammar
 // Regenerate with: grammar-tools compile-grammar python.grammar
 //

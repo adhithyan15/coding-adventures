@@ -53,46 +53,20 @@
  *   | COMMA     | ,           | Element separator                          |
  *   | EOF       | (synthetic) | End of input                               |
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Source
+ * --------------
  *
- * The `json.tokens` file lives in `code/grammars/` at the repository root.
- * We navigate from this module's location up to that directory:
- *
- *     src/tokenizer.ts -> json-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The token grammar is compiled ahead of time from `json.tokens` (in
+ * `code/grammars/json/`) into `./_grammar.ts`, a native TypeScript object
+ * literal. This avoids reading and parsing a grammar file from disk at
+ * runtime -- which would break once this package is published, since a
+ * published npm package never ships the monorepo's `code/grammars/` tree.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
-/**
- * Resolve __dirname for ESM modules.
- *
- * In CommonJS, __dirname is a global. In ESM, it does not exist -- we must
- * derive it from import.meta.url, which gives the file URL of the current
- * module (e.g., "file:///path/to/tokenizer.ts"). The fileURLToPath + dirname
- * pattern converts this to a directory path.
- */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Navigate from src/ up to the grammars/ directory.
- *
- * The path traversal:
- *   __dirname = .../json-lexer/src/
- *   ..         = .../json-lexer/
- *   ../..      = .../typescript/
- *   ../../..   = .../packages/
- *   ../../../.. = .../code/
- *   + grammars  = .../code/grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const JSON_TOKENS_PATH = join(GRAMMARS_DIR, "json", "json.tokens");
+import { TOKEN_GRAMMAR } from "./_grammar.js";
 
 /**
  * Tokenize JSON text and return an array of tokens.
@@ -134,26 +108,10 @@ const JSON_TOKENS_PATH = join(GRAMMARS_DIR, "json", "json.tokens");
  */
 export function tokenizeJSON(source: string): Token[] {
   /**
-   * Read the grammar file from disk. In a production system, you would
-   * cache this -- but for an educational codebase, reading on every call
-   * keeps the code simple and makes the data flow obvious.
+   * Run the generic grammar-driven tokenizer against the pre-compiled
+   * TOKEN_GRAMMAR constant. This is the same engine used for Starlark,
+   * Python, Ruby, and other languages -- the only thing that changes
+   * between languages is the grammar.
    */
-  const grammarText = readFileSync(JSON_TOKENS_PATH, "utf-8");
-
-  /**
-   * Parse the grammar text into a structured TokenGrammar object.
-   * This extracts:
-   *   - Token patterns (regex and literal)
-   *   - Skip patterns (whitespace)
-   *
-   * JSON has no keywords, reserved words, or indentation mode.
-   */
-  const grammar = parseTokenGrammar(grammarText);
-
-  /**
-   * Run the generic grammar-driven tokenizer. This is the same engine
-   * used for Starlark, Python, Ruby, and other languages -- the only thing
-   * that changes between languages is the grammar file.
-   */
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }

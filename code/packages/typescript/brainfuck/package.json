@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/brainfuck",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "description": "Brainfuck interpreter built on the pluggable GenericVM",
   "type": "module",
   "main": "src/index.ts",

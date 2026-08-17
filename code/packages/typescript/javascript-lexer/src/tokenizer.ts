@@ -2,8 +2,8 @@
  * JavaScript Lexer — tokenizes JavaScript source code using the grammar-driven approach.
  *
  * This module is a **thin wrapper** around the generic `grammarTokenize` function
- * from the `@coding-adventures/lexer` package. It loads a JavaScript `.tokens`
- * grammar file and delegates all tokenization work to the generic engine.
+ * from the `@coding-adventures/lexer` package. It selects a precompiled JavaScript
+ * `TokenGrammar` and delegates all tokenization work to the generic engine.
  *
  * JavaScript has features that Python and Ruby do not:
  * - `let`, `const`, `var` for variable declarations
@@ -23,52 +23,58 @@
  * ECMAScript has gone through many editions since ES1 (1997). This module
  * supports selecting a specific edition grammar by version string:
  *
- * | Version string | Grammar file                           |
- * |----------------|----------------------------------------|
- * | `"es1"`        | `grammars/ecmascript/es1.tokens`       |
- * | `"es3"`        | `grammars/ecmascript/es3.tokens`       |
- * | `"es5"`        | `grammars/ecmascript/es5.tokens`       |
- * | `"es2015"`     | `grammars/ecmascript/es2015.tokens`    |
- * | `"es2016"`     | `grammars/ecmascript/es2016.tokens`    |
- * | `"es2017"`     | `grammars/ecmascript/es2017.tokens`    |
- * | `"es2018"`     | `grammars/ecmascript/es2018.tokens`    |
- * | `"es2019"`     | `grammars/ecmascript/es2019.tokens`    |
- * | `"es2020"`     | `grammars/ecmascript/es2020.tokens`    |
- * | `"es2021"`     | `grammars/ecmascript/es2021.tokens`    |
- * | `"es2022"`     | `grammars/ecmascript/es2022.tokens`    |
- * | `"es2023"`     | `grammars/ecmascript/es2023.tokens`    |
- * | `"es2024"`     | `grammars/ecmascript/es2024.tokens`    |
- * | `"es2025"`     | `grammars/ecmascript/es2025.tokens`    |
- * | `undefined`/`""`| `grammars/javascript.tokens` (generic) |
+ * | Version string | Compiled grammar module |
+ * |-----------------|-------------------------|
+ * | `"es1"`        | `./_grammar_es1.js`     |
+ * | `"es3"`        | `./_grammar_es3.js`     |
+ * | `"es5"`        | `./_grammar_es5.js`     |
+ * | `"es2015"`     | `./_grammar_es2015.js`  |
+ * | `"es2016"`     | `./_grammar_es2016.js`  |
+ * | `"es2017"`     | `./_grammar_es2017.js`  |
+ * | `"es2018"`     | `./_grammar_es2018.js`  |
+ * | `"es2019"`     | `./_grammar_es2019.js`  |
+ * | `"es2020"`     | `./_grammar_es2020.js`  |
+ * | `"es2021"`     | `./_grammar_es2021.js`  |
+ * | `"es2022"`     | `./_grammar_es2022.js`  |
+ * | `"es2023"`     | `./_grammar_es2023.js`  |
+ * | `"es2024"`     | `./_grammar_es2024.js`  |
+ * | `"es2025"`     | `./_grammar_es2025.js`  |
+ * | `undefined`/`""`| `./_grammar.js` (generic) |
  *
- * When no version is supplied the generic `javascript.tokens` grammar is used,
- * which covers the broad intersection of JavaScript syntax — the same behaviour
- * as v0.1.x.
+ * When no version is supplied the generic grammar is used, which covers the
+ * broad intersection of JavaScript syntax — the same behaviour as v0.1.x.
  *
- * Locating the Grammar File
- * -------------------------
+ * Locating the Grammar
+ * ---------------------
  *
- * The `javascript.tokens` file lives in `code/grammars/` at the repository root.
- * Versioned grammars live in `code/grammars/ecmascript/`.
- *
- *     src/ -> javascript-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * Grammars are no longer read from disk at runtime. Each `.tokens` source
+ * file under `code/grammars/` is compiled ahead of time into a sibling
+ * `_grammar*.ts` module (via `code/scripts/_ts_grammar_compile.ts`) that
+ * embeds the `TokenGrammar` as a native TypeScript object literal. This
+ * keeps the package self-contained — a published npm package never needs to
+ * reach outside its own directory — and avoids repeated file I/O and
+ * re-parsing on every call.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize, GrammarLexer } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Root of the grammars directory.
- * Walk up: src/ -> javascript-lexer/ -> typescript/ -> packages/ -> code/ -> grammars/
- */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+import { TOKEN_GRAMMAR as GENERIC } from "./_grammar.js";
+import { TOKEN_GRAMMAR as ES1 } from "./_grammar_es1.js";
+import { TOKEN_GRAMMAR as ES3 } from "./_grammar_es3.js";
+import { TOKEN_GRAMMAR as ES5 } from "./_grammar_es5.js";
+import { TOKEN_GRAMMAR as ES2015 } from "./_grammar_es2015.js";
+import { TOKEN_GRAMMAR as ES2016 } from "./_grammar_es2016.js";
+import { TOKEN_GRAMMAR as ES2017 } from "./_grammar_es2017.js";
+import { TOKEN_GRAMMAR as ES2018 } from "./_grammar_es2018.js";
+import { TOKEN_GRAMMAR as ES2019 } from "./_grammar_es2019.js";
+import { TOKEN_GRAMMAR as ES2020 } from "./_grammar_es2020.js";
+import { TOKEN_GRAMMAR as ES2021 } from "./_grammar_es2021.js";
+import { TOKEN_GRAMMAR as ES2022 } from "./_grammar_es2022.js";
+import { TOKEN_GRAMMAR as ES2023 } from "./_grammar_es2023.js";
+import { TOKEN_GRAMMAR as ES2024 } from "./_grammar_es2024.js";
+import { TOKEN_GRAMMAR as ES2025 } from "./_grammar_es2025.js";
 
 /**
  * Valid ECMAScript version strings accepted by this module.
@@ -77,53 +83,54 @@ const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
  * use the four-digit year naming introduced by TC39 when they moved to annual
  * releases.
  */
-const VALID_ES_VERSIONS = new Set([
-  "es1",
-  "es3",
-  "es5",
-  "es2015",
-  "es2016",
-  "es2017",
-  "es2018",
-  "es2019",
-  "es2020",
-  "es2021",
-  "es2022",
-  "es2023",
-  "es2024",
-  "es2025",
-]);
+const VERSIONED_GRAMMARS: Record<string, TokenGrammar> = {
+  es1: ES1,
+  es3: ES3,
+  es5: ES5,
+  es2015: ES2015,
+  es2016: ES2016,
+  es2017: ES2017,
+  es2018: ES2018,
+  es2019: ES2019,
+  es2020: ES2020,
+  es2021: ES2021,
+  es2022: ES2022,
+  es2023: ES2023,
+  es2024: ES2024,
+  es2025: ES2025,
+};
 
 /**
- * Resolve the path to the JavaScript token grammar for the given version.
+ * Resolve the compiled `TokenGrammar` for the given version.
  *
  * @param version - An optional ECMAScript version string (e.g. `"es2015"`,
  *   `"es5"`). Pass `undefined` or `""` to use the generic grammar.
- * @returns Absolute path to the `.tokens` grammar file.
+ * @returns The precompiled `TokenGrammar` object.
  * @throws Error if `version` is a non-empty string that is not a recognised
  *   ECMAScript edition identifier.
  *
  * @example
- *   resolveTokensPath("es2015")
- *   // => ".../code/grammars/ecmascript/es2015.tokens"
+ *   resolveTokenGrammar("es2015")
+ *   // => the compiled es2015 TokenGrammar
  *
- *   resolveTokensPath()
- *   // => ".../code/grammars/javascript/javascript.tokens"
+ *   resolveTokenGrammar()
+ *   // => the compiled generic TokenGrammar
  */
-function resolveTokensPath(version?: string): string {
+function resolveTokenGrammar(version?: string): TokenGrammar {
   if (!version) {
     // Generic grammar — same behaviour as v0.1.x.
-    return join(GRAMMARS_DIR, "javascript", "javascript.tokens");
+    return GENERIC;
   }
 
-  if (!VALID_ES_VERSIONS.has(version)) {
+  const grammar = VERSIONED_GRAMMARS[version];
+  if (!grammar) {
     throw new Error(
       `Unknown JavaScript/ECMAScript version "${version}". ` +
-        `Valid values: ${[...VALID_ES_VERSIONS].join(", ")}`
+        `Valid values: ${Object.keys(VERSIONED_GRAMMARS).join(", ")}`
     );
   }
 
-  return join(GRAMMARS_DIR, "ecmascript", `${version}.tokens`);
+  return grammar;
 }
 
 /**
@@ -131,9 +138,8 @@ function resolveTokensPath(version?: string): string {
  *
  * @param source  - The JavaScript source code to tokenize.
  * @param version - Optional ECMAScript edition string. When omitted (or the
- *   empty string) the generic `javascript.tokens` grammar is used, which
- *   covers the union of all modern JS keyword sets and is backwards-compatible
- *   with v0.1.x.
+ *   empty string) the generic grammar is used, which covers the union of
+ *   all modern JS keyword sets and is backwards-compatible with v0.1.x.
  *   Pass a version like `"es2015"` or `"es5"` to use an edition-exact grammar.
  * @returns An array of Token objects. The last token is always EOF.
  *
@@ -146,9 +152,7 @@ function resolveTokensPath(version?: string): string {
  *     const tokens = tokenizeJavascript("let x = 1 + 2;", "es2015");
  */
 export function tokenizeJavascript(source: string, version?: string): Token[] {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return grammarTokenize(source, grammar);
 }
 
@@ -174,8 +178,6 @@ export function createJavascriptLexer(
   source: string,
   version?: string
 ): GrammarLexer {
-  const tokensPath = resolveTokensPath(version);
-  const grammarText = readFileSync(tokensPath, "utf-8");
-  const grammar = parseTokenGrammar(grammarText);
+  const grammar = resolveTokenGrammar(version);
   return new GrammarLexer(source, grammar);
 }

@@ -32,33 +32,17 @@
  * Locating the Grammar File
  * -------------------------
  *
- * The `python.grammar` file lives in `code/grammars/` at the repository root.
- * We locate it relative to this module's file path, similar to how the Python
- * lexer locates `python.tokens`.
+ * The `python.grammar` file lives in `code/grammars/` at the repository root,
+ * but a published npm package would never ship that monorepo directory.
+ * Instead, the grammar is pre-compiled to a native TypeScript module
+ * (`_grammar.ts`) at build time and imported below, so no filesystem access
+ * happens at runtime.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizePython } from "@coding-adventures/python-lexer";
-
-// ---------------------------------------------------------------------------
-// Grammar File Location
-// ---------------------------------------------------------------------------
-//
-// We navigate from this file's directory (src/) up four levels to reach
-// the code/ directory, then into grammars/.
-//
-//   src/ -> python-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
-// ---------------------------------------------------------------------------
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const PYTHON_GRAMMAR_PATH = join(GRAMMARS_DIR, "python", "python.grammar");
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 /**
  * Parse Python source code and return an AST.
@@ -82,8 +66,6 @@ const PYTHON_GRAMMAR_PATH = join(GRAMMARS_DIR, "python", "python.grammar");
  */
 export function parsePython(source: string): ASTNode {
   const tokens = tokenizePython(source);
-  const grammarText = readFileSync(PYTHON_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   return parser.parse();
 }

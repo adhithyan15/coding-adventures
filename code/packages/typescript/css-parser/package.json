@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/css-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parses CSS text into ASTs using the shared grammar-driven parser",
   "type": "module",
   "main": "src/index.ts",

@@ -2,6 +2,11 @@
 
 All notable changes to the XML Lexer package will be documented in this file.
 
+## [0.1.2] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `createXMLLexer` now imports a pre-compiled `_grammar.ts` instead of `readFileSync`-ing `xml.tokens` from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published npm package does not ship, so `npm install` + first use would throw `ENOENT`.
+
 ## [0.1.1] - 2026-08-07
 
 ### Fixed

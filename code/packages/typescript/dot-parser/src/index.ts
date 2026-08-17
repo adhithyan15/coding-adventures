@@ -1,10 +1,22 @@
 export const VERSION = "0.1.0";
 
-import { readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+/**
+ * Grammar Source
+ * --------------
+ *
+ * The token and parser grammars are compiled ahead of time from
+ * `dot.tokens` and `dot.grammar` (in `code/grammars/dot/`) into
+ * `./_token_grammar.ts` and `./_parser_grammar.ts`, native TypeScript
+ * object literals. This avoids reading and parsing grammar files from
+ * disk at runtime -- which would break once this package is published,
+ * since a published npm package never ships the monorepo's
+ * `code/grammars/` tree.
+ *
+ * This package's lexer and parser both live in this one module, so the
+ * two generated files use distinct names (`_token_grammar.ts` /
+ * `_parser_grammar.ts`) to avoid a collision.
+ */
 
-import { parseParserGrammar, parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 import { GrammarParser, collectTokens, isASTNode } from "@coding-adventures/parser";
@@ -20,10 +32,8 @@ import {
   type GraphNode,
 } from "@coding-adventures/diagram-ir";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const DOT_TOKENS_PATH = join(GRAMMARS_DIR, "dot", "dot.tokens");
-const DOT_GRAMMAR_PATH = join(GRAMMARS_DIR, "dot", "dot.grammar");
+import { TOKEN_GRAMMAR } from "./_token_grammar.js";
+import { PARSER_GRAMMAR } from "./_parser_grammar.js";
 
 export interface DotAttribute {
   key: string;
@@ -65,14 +75,6 @@ export interface DotDocument {
   strict: boolean;
   id?: string;
   statements: DotStatement[];
-}
-
-function loadDotTokenGrammar() {
-  return parseTokenGrammar(readFileSync(DOT_TOKENS_PATH, "utf-8"));
-}
-
-function loadDotParserGrammar() {
-  return parseParserGrammar(readFileSync(DOT_GRAMMAR_PATH, "utf-8"));
 }
 
 function ruleChildren(node: ASTNode, ruleName?: string): ASTNode[] {
@@ -188,8 +190,7 @@ function parseStatement(node: ASTNode): DotStatement {
 
 function parseDotSyntaxTree(source: string): ASTNode {
   const tokens = tokenizeDot(source);
-  const grammar = loadDotParserGrammar();
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   return parser.parse();
 }
 
@@ -273,7 +274,7 @@ function lowerEdge(
 }
 
 export function tokenizeDot(source: string): Token[] {
-  return grammarTokenize(source, loadDotTokenGrammar());
+  return grammarTokenize(source, TOKEN_GRAMMAR);
 }
 
 export function parseDot(source: string): DotDocument {

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/json-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parses JSON text into ASTs using the grammar-driven parser — a thin wrapper that loads json.grammar",
   "type": "module",
   "main": "src/index.ts",

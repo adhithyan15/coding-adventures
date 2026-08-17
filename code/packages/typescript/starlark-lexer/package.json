@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/starlark-lexer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tokenizes Starlark source code using the grammar-driven lexer — a thin wrapper that loads starlark.tokens",
   "type": "module",
   "main": "src/index.ts",

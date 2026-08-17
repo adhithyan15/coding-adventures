@@ -92,3 +92,45 @@ describe("operator precedence", () => {
     expect(expressions.length).toBeGreaterThanOrEqual(1);
   });
 });
+
+// Regression tests for statement types that were silently unparseable under
+// a stale compiled grammar (_grammar.ts had drifted far behind ruby.grammar
+// -- def/class/if/while/case/begin were all missing rule references). These
+// lock in that the compiled grammar stays in sync.
+describe("statement types (regression)", () => {
+  it("parses a def statement", () => {
+    const ast = parseRuby('def greet(name)\n  puts name\nend');
+    expect(ast.ruleName).toBe("program");
+    expect(findNodes(ast, "def_statement")).not.toHaveLength(0);
+  });
+
+  it("parses a class statement", () => {
+    const ast = parseRuby("class Foo\n  def bar\n  end\nend");
+    expect(ast.ruleName).toBe("program");
+    expect(findNodes(ast, "class_statement")).not.toHaveLength(0);
+  });
+
+  it("parses an if statement", () => {
+    const ast = parseRuby("if x\n  y = 1\nend");
+    expect(ast.ruleName).toBe("program");
+    expect(findNodes(ast, "if_statement")).not.toHaveLength(0);
+  });
+
+  it("parses a while statement", () => {
+    const ast = parseRuby("while x\n  y = 1\nend");
+    expect(ast.ruleName).toBe("program");
+    expect(findNodes(ast, "while_statement")).not.toHaveLength(0);
+  });
+
+  it("parses a case statement", () => {
+    const ast = parseRuby("case x\nwhen 1\n  y = 1\nend");
+    expect(ast.ruleName).toBe("program");
+    expect(findNodes(ast, "case_statement")).not.toHaveLength(0);
+  });
+
+  it("parses a begin statement", () => {
+    const ast = parseRuby("begin\n  x = 1\nend");
+    expect(ast.ruleName).toBe("program");
+    expect(findNodes(ast, "begin_statement")).not.toHaveLength(0);
+  });
+});

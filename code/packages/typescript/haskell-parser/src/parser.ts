@@ -38,30 +38,47 @@
  *
  * When no version is supplied, Haskell 21 (the latest LTS) is used as the default.
  *
- * Locating the Grammar File
- * -------------------------
+ * Grammar Data
+ * ------------
  *
- * The `haskell*.grammar` files live in `code/grammars/haskell/` at the repository root.
- *
- *     src/ -> haskell-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * The `haskell*.grammar` files under `code/grammars/haskell/` at the
+ * repository root are compiled ahead of time into `./_grammar.ts` (the
+ * default) and one `./_grammar_<version>.ts` per supported edition (see
+ * `code/scripts/_ts_grammar_compile.ts`). This module statically imports
+ * all of them and looks up the right one at call time — it never reads
+ * the monorepo's `code/grammars/` tree at runtime, so a published npm
+ * package works standalone.
  */
 
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
+import type { ParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import { tokenizeHaskell } from "@coding-adventures/haskell-lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { PARSER_GRAMMAR as DEFAULT_GRAMMAR } from "./_grammar.js";
+import { PARSER_GRAMMAR as V1_0 } from "./_grammar_1_0.js";
+import { PARSER_GRAMMAR as V1_1 } from "./_grammar_1_1.js";
+import { PARSER_GRAMMAR as V1_2 } from "./_grammar_1_2.js";
+import { PARSER_GRAMMAR as V1_3 } from "./_grammar_1_3.js";
+import { PARSER_GRAMMAR as V1_4 } from "./_grammar_1_4.js";
+import { PARSER_GRAMMAR as V98 } from "./_grammar_98.js";
+import { PARSER_GRAMMAR as V2010 } from "./_grammar_2010.js";
 
 /**
- * Root of the grammars directory.
- * Walk up: src/ -> haskell-parser/ -> typescript/ -> packages/ -> code/ -> grammars/
+ * Every supported Haskell edition's parser grammar, pre-compiled at build
+ * time from the `.grammar` files in `code/grammars/haskell/`. ESM static
+ * imports can't be conditional on a runtime string, so every version is
+ * imported up front and looked up by key in `resolveParserGrammar`.
  */
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
+const VERSIONED_GRAMMARS: Record<string, ParserGrammar> = {
+  "1.0": V1_0,
+  "1.1": V1_1,
+  "1.2": V1_2,
+  "1.3": V1_3,
+  "1.4": V1_4,
+  "98": V98,
+  "2010": V2010,
+};
 
 /**
  * Valid Haskell version strings accepted by this module.
@@ -83,24 +100,26 @@ const VALID_HASKELL_VERSIONS = new Set([
 const DEFAULT_HASKELL_VERSION = "2010";
 
 /**
- * Resolve the path to the Haskell parser grammar for the given version.
+ * Resolve the compiled Haskell parser grammar for the given version.
  *
  * @param version - An optional Haskell version string. Pass `undefined` or `""`
- *   to use the default (Haskell 21).
- * @returns Absolute path to the `.grammar` file.
+ *   to use the default (Haskell 2010).
+ * @returns The pre-compiled `ParserGrammar` for that version.
  * @throws Error if `version` is not a recognised Haskell version.
  */
-function resolveGrammarPath(version?: string): string {
-  const effectiveVersion = version || DEFAULT_HASKELL_VERSION;
+function resolveParserGrammar(version?: string): ParserGrammar {
+  if (!version) {
+    return DEFAULT_GRAMMAR;
+  }
 
-  if (!VALID_HASKELL_VERSIONS.has(effectiveVersion)) {
+  if (!VALID_HASKELL_VERSIONS.has(version)) {
     throw new Error(
-      `Unknown Haskell version "${effectiveVersion}". ` +
+      `Unknown Haskell version "${version}". ` +
         `Valid values: ${[...VALID_HASKELL_VERSIONS].join(", ")}`
     );
   }
 
-  return join(GRAMMARS_DIR, "haskell", `haskell${effectiveVersion}.grammar`);
+  return VERSIONED_GRAMMARS[version];
 }
 
 /**
@@ -124,9 +143,7 @@ export function createHaskellParser(
   version?: string
 ): GrammarParser {
   const tokens = tokenizeHaskell(source, version);
-  const grammarPath = resolveGrammarPath(version);
-  const grammarText = readFileSync(grammarPath, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
+  const grammar = resolveParserGrammar(version);
   return new GrammarParser(tokens, grammar);
 }
 

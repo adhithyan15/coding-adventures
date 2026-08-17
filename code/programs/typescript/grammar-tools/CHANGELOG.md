@@ -1,5 +1,10 @@
 # Changelog — grammar-tools (TypeScript program)
 
+## [2.0.1] - 2026-08-17
+
+### Added
+- `--force` / `-f` flag on `compile-tokens`/`compile-grammar` — skip grammar validation and compile anyway (mirrors the flag the Ruby/Go/Rust ports already had). Needed because several `.grammar` files in `code/grammars/` (csharp, java, ecmascript es2018+, typescript ts3.0+) have pre-existing "unreachable rule" or "undefined rule reference" validation warnings that otherwise block compilation of their downstream `_grammar.ts` files — see the changelogs of `csharp-parser`, `java-parser`, `javascript-parser`, and `typescript-parser` for exactly which files needed it and why.
+
 ## [2.0.0] - 2026-03-26
 
 ### Added
