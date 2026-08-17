@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited authored database-credential conflict merge with a hidden
+  password prompt, opaque base retention, closed engine/port validation, and
+  all-current-parent publication of a static (leaseless) credential.
 - Exposed audited authored API-key conflict merge with a hidden token prompt,
   opaque base retention, closed scope/expiry validation, and all-current-parent
   publication.
