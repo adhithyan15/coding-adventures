@@ -184,3 +184,32 @@ describe("buildDataset", () => {
     expect(ds.languages).toEqual(["german", "spanish"]);
   });
 });
+
+describe("lesson id validation", () => {
+  // The id is interpolated RAW into \label{lesson:<id>} and into the
+  // `% canonical-lessons:` header of every generated .tex -- the sibling of the
+  // chapters.json label hole closed in HL-C209. A review demonstrated an id
+  // closing its own brace and emitting a live control sequence into a file
+  // XeLaTeX compiles in CI.
+  const withId = (id: string) =>
+    lesson({ id, chapter: "1", type: "word", headword: "hola", gloss: "hello", concept_tag: "GREETING-HELLO" });
+
+  it("refuses an id that can break out of \\label{...}", () => {
+    expect(() => parseLesson(withId("X}\\write18{id}{"), "spanish")).toThrow(
+      /stable hyphenated token/,
+    );
+  });
+
+  it("refuses ids carrying a brace, a backslash, or stray punctuation", () => {
+    for (const id of ["A}", "A{", "A\\input", "-A", "A-", "A--B", "A.B", "A/B"]) {
+      expect(() => parseLesson(withId(id), "spanish")).toThrow(/stable hyphenated token/);
+    }
+  });
+
+  it("still accepts the id shapes the corpus actually uses", () => {
+    for (const id of ["JA-W01-ha", "ES-C17-comer-futuro", "TA-W01-curves-va-ka", "ZH-C01-ni"]) {
+      expect(() => parseLesson(withId(id), "spanish")).not.toThrow();
+      expect(parseLesson(withId(id), "spanish").realization.lessonId).toBe(id);
+    }
+  });
+});

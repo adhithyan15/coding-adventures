@@ -141,7 +141,16 @@ describe("canonical book generator filesystem shell", () => {
   it("resolves reusable script sets for cross-script comparison chapters", () => {
     const root = fixture();
     const lesson = join(root, "test", "lessons", "hello.md");
-    writeFileSync(lesson, readFileSync(lesson, "utf8").replaceAll("hello", "తెలుగు தமிழ்"));
+    // Narrowed from a blanket replaceAll: that also rewrote `id: TEST-C01-hello`
+    // into a non-ASCII id, which was incidental to this test and is now refused
+    // by the parser. Only the headword, gloss and body are the subject here.
+    writeFileSync(
+      lesson,
+      readFileSync(lesson, "utf8")
+        .replaceAll("headword: hello", "headword: తెలుగు தமிழ்")
+        .replaceAll("gloss: hello", "gloss: తెలుగు தமிழ்")
+        .replaceAll("# hello", "# తెలుగు தமிழ்"),
+    );
     writeFileSync(
       join(root, "core", "book-generation.json"),
       `${JSON.stringify({

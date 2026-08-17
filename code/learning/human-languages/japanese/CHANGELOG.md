@@ -4,6 +4,37 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — Chapter 2, eight hiragana signs, one per lesson (HL-C211)
+
+Ten lessons. **Eight teach one sign each; two introduce nothing at all** and
+instead assemble a word out of signs the reader can already write:
+
+    i -> ha -> [hai] -> e        both yes-or-no answers become readable
+    ko -> n -> ni -> chi -> wa -> [konnichiwa]
+
+`scriptLessons` 0 -> 10, `taughtGlyphs` 0 -> 8, `neverTaughtGlyphs` **43 -> 35**.
+Corpus-wide `tracksTeachingNoScript` falls to **6**.
+
+**The sign for *wa* is taught deliberately late**, after the greeting is already
+known — so that the shape arrives with its warning attached. The daytime greeting
+*sounds* like it ends in *wa* and is written with the sign read *ha*, because that
+sign is doing a second job as the topic marker. Teaching the *wa* sign first would
+have quietly created the commonest beginner spelling error in the language.
+
+**Three signs deliver a payoff the same day they are learned.** Two signs make the
+word for *yes* readable; a third adds the word for *no*. The assembly lessons exist
+to mark that moment — the point where a reader stops recalling a shape and starts
+sounding one out.
+
+**The mora rule gets its clearest evidence here.** The sign with no vowel takes a
+full beat, exactly as long as the four around it, which is why the greeting is five
+beats rather than four. The romanization cannot show that; the signs can.
+
+This is the first of five tranches for this track. 35 glyphs remain — 16 hiragana,
+10 katakana, 9 kanji — and the katakana and kanji sets are separate writing systems
+with their own ramps.
+
+
 ### Added — Chapter 1, "Three Writing Systems in One Doorway" (HL-C40)
 
 - Registered `japanese` in `core/languages.json` (Japonic / `japanese` script,

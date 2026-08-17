@@ -13,6 +13,21 @@ voicing mark and its own etymology; **ありがとうございます** names the
 Japanese politeness is grammar, not word choice. A six-line doorway exchange
 closes the chapter using nothing that was not taught.
 
+Chapter 2 turns the reading round. Chapter 1 shows a reader whole words in three
+scripts; **Chapter 2 teaches eight hiragana signs, one per lesson**, until three of
+those words can be read from their parts rather than recalled as shapes. Two of its
+ten lessons introduce nothing new at all — they exist to mark the moment the pieces
+become a word.
+
+The sign for *wa* is taught **last, and on purpose**. The daytime greeting sounds
+like it ends in *wa* and is written with the sign read *ha*, because that sign is
+also the topic marker. Teaching the *wa* sign before that fact is established
+would manufacture the commonest beginner spelling error in Japanese.
+
+Eight of forty-six basic hiragana are done. The remaining 35 glyphs this track
+shows — 16 hiragana, 10 katakana, 9 kanji — arrive the same way, and the katakana
+and kanji sets are separate writing systems with ramps of their own.
+
 ## What this track had to do differently
 
 Japanese is the first track in this corpus with no shared ancestry with English,

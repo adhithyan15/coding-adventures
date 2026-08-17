@@ -1797,6 +1797,24 @@
       "tex": "japanese/book/chapters/ch01-three-scripts.tex"
     },
     {
+      "language": "japanese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:f29ef748ca046f9e",
+      "lessonIds": [
+        "JA-W01-i",
+        "JA-W01-ha",
+        "JA-W01-hai-read",
+        "JA-W01-e",
+        "JA-W01-ko",
+        "JA-W01-n",
+        "JA-W01-ni",
+        "JA-W01-chi",
+        "JA-W01-wa",
+        "JA-W01-konnichiwa-read"
+      ],
+      "tex": "japanese/book/chapters/ch02-hiragana-eight.tex"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "sourceHash": "fnv1a64:0dd0018832133f4e",
