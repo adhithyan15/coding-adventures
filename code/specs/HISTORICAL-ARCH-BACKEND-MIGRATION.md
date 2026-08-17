@@ -140,6 +140,35 @@ is verified both as a hand-derived byte array and by actually
 executing the emitted bytes in `arm1-simulator` and asserting
 `R0 == 42`.
 
+**MOS 6502** — `mos6502-encoder` + `mos6502-backend`, minimal viable
+(`const_*`/`ret_*` only, single-accumulator allocator, same trivial-ROM
+scope as `arm1-backend`/`armv7-backend`).  Fifth lane of the expansion.
+Unlike ARM1 (whose behavioral simulator pre-existed complete in-tree),
+the MOS 6502 needed a brand-new Rust simulator (`mos6502-simulator`,
+~1870 lines across 6 modules) — a full 151-opcode / 13-addressing-mode
+port of the pre-existing Python simulator
+(`code/packages/python/mos6502-simulator`, Layer 07j), including BCD
+decimal-mode `ADC`/`SBC` and the documented indirect-`JMP` page-wrap
+silicon bug, ported faithfully rather than skipped.  One
+architecture-specific design decision (or rather, the *absence* of one):
+unlike ARM1/ARMv1, which has no real halt instruction and required
+`arm1-backend` to invent a pseudo-halt (`SWI #0x123456`), the MOS 6502
+already has a genuine one-byte instruction, `BRK` (opcode `0x00`), that
+the *pre-existing* Python simulator's own module docstring documents as
+the established HALT convention: *"BRK (opcode 0x00) is treated as
+HALT... matches the convention used throughout the simulator stack (HLT
+for 8080, TRAP for IBM 704, etc.)"*.  `ret_*`/`ret_void` in
+`mos6502-backend` therefore lower to `BRK` directly — mirroring this
+repo's own established, pre-existing semantics for the ISA rather than
+inventing a new KIL/JAM-illegal-opcode or self-jump-spin-loop
+convention — see `code/specs/mos6502-backend.md` and
+`code/specs/mos6502-encoder.md` for the full rationale and the
+alternatives considered and rejected.  Byte-for-byte parity for the
+canonical `LDA #42; BRK` sequence (`[0xA9, 0x2A, 0x00]`) is verified
+both as a hand-derived byte array and by actually executing the
+emitted bytes in `mos6502-simulator` and asserting `A == 42` and
+`halted() == true`.
+
 Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
 in parallel PRs and are not enumerated here to avoid merge
 conflicts with concurrently-landing work — see each lane's own
