@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:29c3c3b410691ab2",
+  "sourceHash": "fnv1a64:45422153a5299004",
   "summary": {
-    "totalLessons": 2895,
+    "totalLessons": 2906,
     "voice": 2042,
     "sight": 582,
-    "pen": 271,
+    "pen": 282,
     "drivableLessons": 2042,
-    "drivablePercent": 71,
+    "drivablePercent": 70,
     "trackCount": 22,
-    "chapterCount": 910,
+    "chapterCount": 911,
     "drivablePrefixTotal": 1818,
     "fullyDrivableChapters": 590,
-    "unstartableChapters": 189,
+    "unstartableChapters": 190,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -2263,11 +2263,11 @@
     },
     {
       "language": "hindi",
-      "lessonCount": 227,
+      "lessonCount": 238,
       "voice": 154,
       "sight": 39,
-      "pen": 34,
-      "drivablePercent": 68,
+      "pen": 45,
+      "drivablePercent": 65,
       "drivablePrefixTotal": 137,
       "modalities": [
         "voice",
@@ -3314,6 +3314,21 @@
             "HI-C58-stairs",
             "HI-C58-sheet"
           ]
+        },
+        {
+          "chapter": 59,
+          "lessonCount": 11,
+          "voice": 0,
+          "sight": 0,
+          "pen": 11,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "HI-W12-schwa-drop",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -29484,6 +29499,260 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:35012d7df5a2fb35"
+    },
+    {
+      "id": "HI-W12-schwa-drop",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2100,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:acd2e20f7ed77765",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-ii-matra",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2110,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:bd24dbfb0483a64d",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-u-matra",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2120,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:91e5d78642127ce4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-ai-matra",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2130,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d9fb96021d1934c2",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-aa",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2140,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d103ad341cdad26f",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-ii",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2150,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c7f3af40250e49d4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-chandrabindu",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2160,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:35253c62f72a20a4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-bha",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2170,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:320913d70f0989b4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-ya",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2180,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c03a6628710ff914",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-ba",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2190,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4fbf6674eebb7208",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "HI-W12-da-retroflex",
+      "language": "hindi",
+      "chapter": 59,
+      "sequence": 2200,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5a303b8ffb2e8fa5",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
     },
     {
       "id": "IT-C01-buongiorno",

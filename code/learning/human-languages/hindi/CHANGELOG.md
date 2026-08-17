@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased]
+
+### Added — Chapter 59, the vowel you write and do not say (HL-C223)
+
+Eleven lessons. `neverTaughtGlyphs` **16 → 12**; Hindi now teaches 45 of the 57
+glyphs it shows, the most of any non-Latin track.
+
+**It opens with a rule, not a shape.** At the end of a word the inherent vowel is
+not pronounced: **नाम** is *nām*, not *nāma*. Every reader who sounds a word out
+letter by letter ends one vowel too long, and this is the **default** rather than
+a per-word exception. Sanskrit says the final vowel; Hindi dropped it a thousand
+years ago and kept the spelling — the same bargain English makes with the *k* in
+*knight*.
+
+Ten glyphs follow, chosen by how many lessons each unblocks rather than by
+alphabet order. Two of them carry ideas: **ु** hangs *below* its consonant, giving
+the reader a third mātrā position, and **ँ**, the chandrabindu, nasalises without
+changing the vowel.
+
+The chapter closes on the **retroflex** ड — the single most audible foreign-accent
+tell in Hindi, and a tongue position rather than a sound to hear.
+
+
 ## Unreleased — Chapters 52-58: Thirty-five more everyday words, round two
 
 The second HL-C198 tranche for Hindi, in the shape the first one fixed. Hindi
