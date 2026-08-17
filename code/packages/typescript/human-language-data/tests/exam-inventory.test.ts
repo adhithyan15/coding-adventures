@@ -434,3 +434,38 @@ describe("the committed French A1 inventory", () => {
     expect(coverage.byCategory["Lexique de base"]!.covered).toBeGreaterThan(0);
   }, 60_000);
 });
+
+describe("the committed German A1 inventory", () => {
+  const inventory = loadExamInventory("german", "A1");
+
+  it("keeps every point's probe key", () => {
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+    }
+  });
+
+  it("probes only atoms that exist in the corpus", () => {
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "german");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("reports the same grammar-shaped gap French does", () => {
+    // German holds 123 atoms across 106 lessons and SIX of them are grammar. The
+    // categories that stay empty are the ones a candidate is examined on: the
+    // article system, questions, prepositions. Vocabulary is again the strongest
+    // column. Two independent tracks, one shape — see HL-C226.
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(70);
+    expect(coverage.covered).toBe(21);
+    for (const empty of ["Der Artikel", "Die Frage", "Die Praeposition"]) {
+      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    }
+    expect(coverage.byCategory["Grundwortschatz"]!.covered).toBeGreaterThan(0);
+  }, 60_000);
+});

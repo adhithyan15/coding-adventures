@@ -1,0 +1,478 @@
+{
+  "version": 1,
+  "language": "german",
+  "level": "A1",
+  "about": "An enumeration of the grammar, phonology and core lexis a Goethe-Zertifikat A1 (Start Deutsch 1) candidate is expected to hold, restated in our own words from the CECRL A1 descriptors and the structure the Goethe-Institut publishes for the level. A working restatement for measuring this corpus, not a reproduction of any awarding body's document.",
+  "source": "https://www.goethe.de/en/spr/kup/prf/prf/gzsd1.html",
+  "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is a finding rather than a gap in the data -- so a null probe counts as UNCOVERED and is reported by name.",
+  "points": [
+    {
+      "id": "A1-N-01",
+      "category": "Das Nomen",
+      "label": "nouns are capitalised, always",
+      "probe": null
+    },
+    {
+      "id": "A1-N-02",
+      "category": "Das Nomen",
+      "label": "three genders, not predictable from meaning",
+      "probe": null
+    },
+    {
+      "id": "A1-N-03",
+      "category": "Das Nomen",
+      "label": "the five plural patterns (-e, -er, -n/-en, -s, zero)",
+      "probe": null
+    },
+    {
+      "id": "A1-N-04",
+      "category": "Das Nomen",
+      "label": "umlaut in the plural",
+      "probe": [
+        "GE-GRAMMAR-UMLAUT-BREAK-08"
+      ]
+    },
+    {
+      "id": "A1-N-05",
+      "category": "Das Nomen",
+      "label": "feminine agent nouns in -in",
+      "probe": [
+        "GE-GRAMMAR-SUFFIX-IN-03"
+      ]
+    },
+    {
+      "id": "A1-N-06",
+      "category": "Das Nomen",
+      "label": "compound nouns take the gender of the last element",
+      "probe": [
+        "GE-COMPOUND-KOPFSCHMERZEN-04"
+      ]
+    },
+    {
+      "id": "A1-ART-01",
+      "category": "Der Artikel",
+      "label": "definite der / die / das",
+      "probe": null
+    },
+    {
+      "id": "A1-ART-02",
+      "category": "Der Artikel",
+      "label": "indefinite ein / eine",
+      "probe": null
+    },
+    {
+      "id": "A1-ART-03",
+      "category": "Der Artikel",
+      "label": "negative kein / keine",
+      "probe": null
+    },
+    {
+      "id": "A1-ART-04",
+      "category": "Der Artikel",
+      "label": "nominative and accusative forms",
+      "probe": null
+    },
+    {
+      "id": "A1-ART-05",
+      "category": "Der Artikel",
+      "label": "dative forms after common prepositions",
+      "probe": null
+    },
+    {
+      "id": "A1-PRO-01",
+      "category": "Das Pronomen",
+      "label": "personal pronouns in the nominative",
+      "probe": null
+    },
+    {
+      "id": "A1-PRO-02",
+      "category": "Das Pronomen",
+      "label": "personal pronouns in the accusative",
+      "probe": null
+    },
+    {
+      "id": "A1-PRO-03",
+      "category": "Das Pronomen",
+      "label": "du / ihr / Sie as a register choice",
+      "probe": null
+    },
+    {
+      "id": "A1-PRO-04",
+      "category": "Das Pronomen",
+      "label": "possessives mein, dein, sein, ihr",
+      "probe": null
+    },
+    {
+      "id": "A1-PRO-05",
+      "category": "Das Pronomen",
+      "label": "impersonal es",
+      "probe": [
+        "GE-GRAMMAR-WEATHER-SEIN-04"
+      ]
+    },
+    {
+      "id": "A1-ADJ-01",
+      "category": "Das Adjektiv",
+      "label": "predicative adjectives do not inflect",
+      "probe": null
+    },
+    {
+      "id": "A1-ADJ-02",
+      "category": "Das Adjektiv",
+      "label": "attributive adjective endings after the definite article",
+      "probe": null
+    },
+    {
+      "id": "A1-ADJ-03",
+      "category": "Das Adjektiv",
+      "label": "comparison gut / besser, gern / lieber",
+      "probe": [
+        "GE-GRAMMAR-GERN-11"
+      ]
+    },
+    {
+      "id": "A1-ADJ-04",
+      "category": "Das Adjektiv",
+      "label": "colour adjectives",
+      "probe": [
+        "GE-LEX-GELB-04"
+      ]
+    },
+    {
+      "id": "A1-V-01",
+      "category": "Das Verb",
+      "label": "present tense of sein",
+      "probe": null
+    },
+    {
+      "id": "A1-V-02",
+      "category": "Das Verb",
+      "label": "present tense of haben",
+      "probe": null
+    },
+    {
+      "id": "A1-V-03",
+      "category": "Das Verb",
+      "label": "regular present-tense endings",
+      "probe": null
+    },
+    {
+      "id": "A1-V-04",
+      "category": "Das Verb",
+      "label": "stem-vowel change in strong verbs",
+      "probe": [
+        "GE-GRAMMAR-STRONG-VOWEL-09"
+      ]
+    },
+    {
+      "id": "A1-V-05",
+      "category": "Das Verb",
+      "label": "separable verbs and where the prefix goes",
+      "probe": [
+        "GE-GRAMMAR-SEPARABLE-09"
+      ]
+    },
+    {
+      "id": "A1-V-06",
+      "category": "Das Verb",
+      "label": "modal verbs koennen, muessen, moechten",
+      "probe": null
+    },
+    {
+      "id": "A1-V-07",
+      "category": "Das Verb",
+      "label": "the imperative for instructions",
+      "probe": null
+    },
+    {
+      "id": "A1-V-08",
+      "category": "Das Verb",
+      "label": "Perfekt with haben",
+      "probe": null
+    },
+    {
+      "id": "A1-V-09",
+      "category": "Das Verb",
+      "label": "Perfekt with sein",
+      "probe": null
+    },
+    {
+      "id": "A1-V-10",
+      "category": "Das Verb",
+      "label": "the past participle in ge- ... -t / -en",
+      "probe": null
+    },
+    {
+      "id": "A1-V-11",
+      "category": "Das Verb",
+      "label": "es gibt for existence",
+      "probe": null
+    },
+    {
+      "id": "A1-V-12",
+      "category": "Das Verb",
+      "label": "reflexive verbs with sich",
+      "probe": null
+    },
+    {
+      "id": "A1-NEG-01",
+      "category": "Die Negation",
+      "label": "nicht and where it stands",
+      "probe": null
+    },
+    {
+      "id": "A1-NEG-02",
+      "category": "Die Negation",
+      "label": "kein for negating a noun",
+      "probe": null
+    },
+    {
+      "id": "A1-NEG-03",
+      "category": "Die Negation",
+      "label": "doch as the answer that contradicts a negative",
+      "probe": [
+        "GE-PRAGMATICS-DOCH-05"
+      ]
+    },
+    {
+      "id": "A1-FR-01",
+      "category": "Die Frage",
+      "label": "yes/no questions by inversion",
+      "probe": null
+    },
+    {
+      "id": "A1-FR-02",
+      "category": "Die Frage",
+      "label": "W-questions: wer, was, wo, wann, wie, warum",
+      "probe": null
+    },
+    {
+      "id": "A1-FR-03",
+      "category": "Die Frage",
+      "label": "wie viel / wie viele",
+      "probe": null
+    },
+    {
+      "id": "A1-FR-04",
+      "category": "Die Frage",
+      "label": "welcher as an interrogative determiner",
+      "probe": null
+    },
+    {
+      "id": "A1-PRAEP-01",
+      "category": "Die Praeposition",
+      "label": "accusative: fuer, ohne, durch, gegen, um",
+      "probe": null
+    },
+    {
+      "id": "A1-PRAEP-02",
+      "category": "Die Praeposition",
+      "label": "dative: mit, nach, bei, seit, von, zu, aus",
+      "probe": null
+    },
+    {
+      "id": "A1-PRAEP-03",
+      "category": "Die Praeposition",
+      "label": "two-way prepositions in and auf",
+      "probe": null
+    },
+    {
+      "id": "A1-PRAEP-04",
+      "category": "Die Praeposition",
+      "label": "time: am, im, um",
+      "probe": null
+    },
+    {
+      "id": "A1-ADV-01",
+      "category": "Das Adverb",
+      "label": "time: heute, morgen, gestern, jetzt, immer, oft",
+      "probe": null
+    },
+    {
+      "id": "A1-ADV-02",
+      "category": "Das Adverb",
+      "label": "place: hier, dort, links, rechts",
+      "probe": null
+    },
+    {
+      "id": "A1-ADV-03",
+      "category": "Das Adverb",
+      "label": "degree: sehr, ein bisschen, zu",
+      "probe": null
+    },
+    {
+      "id": "A1-ADV-04",
+      "category": "Das Adverb",
+      "label": "gern with a verb to express liking",
+      "probe": [
+        "GE-GRAMMAR-GERN-11"
+      ]
+    },
+    {
+      "id": "A1-SATZ-01",
+      "category": "Der Satz",
+      "label": "the conjugated verb stands second",
+      "probe": null
+    },
+    {
+      "id": "A1-SATZ-02",
+      "category": "Der Satz",
+      "label": "the verb bracket, with the second part at the end",
+      "probe": [
+        "GE-GRAMMAR-SEPARABLE-09"
+      ]
+    },
+    {
+      "id": "A1-SATZ-03",
+      "category": "Der Satz",
+      "label": "coordination with und, oder, aber, denn",
+      "probe": null
+    },
+    {
+      "id": "A1-SATZ-04",
+      "category": "Der Satz",
+      "label": "weil and the verb-final clause",
+      "probe": null
+    },
+    {
+      "id": "A1-SATZ-05",
+      "category": "Der Satz",
+      "label": "introducing oneself and others",
+      "probe": null
+    },
+    {
+      "id": "A1-AUS-01",
+      "category": "Aussprache und Orthografie",
+      "label": "the umlauts ae, oe, ue",
+      "probe": null
+    },
+    {
+      "id": "A1-AUS-02",
+      "category": "Aussprache und Orthografie",
+      "label": "ch after front and back vowels",
+      "probe": [
+        "GE-SOUND-MILCH-03"
+      ]
+    },
+    {
+      "id": "A1-AUS-03",
+      "category": "Aussprache und Orthografie",
+      "label": "final devoicing of b, d, g",
+      "probe": [
+        "GE-SOUND-FREUND-03"
+      ]
+    },
+    {
+      "id": "A1-AUS-04",
+      "category": "Aussprache und Orthografie",
+      "label": "the eszett and when ss is written instead",
+      "probe": [
+        "GE-SOUND-FUSS-03"
+      ]
+    },
+    {
+      "id": "A1-AUS-05",
+      "category": "Aussprache und Orthografie",
+      "label": "z as ts, and w as v",
+      "probe": [
+        "GE-SOUND-HERZ-03"
+      ]
+    },
+    {
+      "id": "A1-AUS-06",
+      "category": "Aussprache und Orthografie",
+      "label": "word stress on the stem",
+      "probe": null
+    },
+    {
+      "id": "A1-LEX-01",
+      "category": "Grundwortschatz",
+      "label": "greetings and farewells",
+      "probe": null
+    },
+    {
+      "id": "A1-LEX-02",
+      "category": "Grundwortschatz",
+      "label": "courtesy: bitte, danke, entschuldigung",
+      "probe": [
+        "GE-PRAGMATICS-SORRY-04"
+      ]
+    },
+    {
+      "id": "A1-LEX-03",
+      "category": "Grundwortschatz",
+      "label": "yes and no",
+      "probe": [
+        "GE-SOUND-JA-03",
+        "GE-SOUND-NEIN-03"
+      ]
+    },
+    {
+      "id": "A1-LEX-04",
+      "category": "Grundwortschatz",
+      "label": "family",
+      "probe": [
+        "GE-SOUND-FAMILIE-03"
+      ]
+    },
+    {
+      "id": "A1-LEX-05",
+      "category": "Grundwortschatz",
+      "label": "the body",
+      "probe": [
+        "GE-SOUND-HAND-03",
+        "GE-SOUND-KOPF-03",
+        "GE-SOUND-NASE-03",
+        "GE-SOUND-OHR-03"
+      ]
+    },
+    {
+      "id": "A1-LEX-06",
+      "category": "Grundwortschatz",
+      "label": "food and drink",
+      "probe": [
+        "GE-SOUND-KAFFEE-03",
+        "GE-SOUND-TEE-03",
+        "GE-SOUND-MILCH-03"
+      ]
+    },
+    {
+      "id": "A1-LEX-07",
+      "category": "Grundwortschatz",
+      "label": "numbers 0-100",
+      "probe": null
+    },
+    {
+      "id": "A1-LEX-08",
+      "category": "Grundwortschatz",
+      "label": "days, months, seasons",
+      "probe": null
+    },
+    {
+      "id": "A1-LEX-09",
+      "category": "Grundwortschatz",
+      "label": "telling the time",
+      "probe": null
+    },
+    {
+      "id": "A1-LEX-10",
+      "category": "Grundwortschatz",
+      "label": "weather",
+      "probe": [
+        "GE-GRAMMAR-WEATHER-SEIN-04"
+      ]
+    },
+    {
+      "id": "A1-LEX-11",
+      "category": "Grundwortschatz",
+      "label": "countries, nationalities, languages",
+      "probe": null
+    },
+    {
+      "id": "A1-LEX-12",
+      "category": "Grundwortschatz",
+      "label": "everyday verbs",
+      "probe": null
+    }
+  ]
+}

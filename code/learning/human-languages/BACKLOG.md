@@ -13,6 +13,59 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C227 — German says the same thing French did, which makes it a pattern rather than a track
+
+Third inventory. **German covers 21 of 70 (30%)** against the Goethe-Zertifikat A1
+syllabus. Two tracks, authored independently from two different awarding bodies'
+syllabuses, and the shape is the same:
+
+```
+                     French          German
+questions            0/5             0/4
+sentence structure   0/4             1/5
+nouns / articles     0/4             0/5  (articles)
+prepositions         0/4             0/4
+verbs                6/17            2/12
+core vocabulary      6/10            6/12   <- the strongest column both times
+```
+
+**German holds 123 atoms across 106 lessons and SIX of them are grammar.** French
+holds 109 across 105 with NINE. Neither track can currently take a candidate to a
+question, an article, or a preposition — and both have respectable vocabulary.
+
+That was a plausible one-off after HL-C226. With a second track it is a property
+of how the corpus was built: **vocabulary tranches are the work that has been
+done, so vocabulary is what the corpus is good at.** The exam does not weight it
+that way.
+
+### The three numbers side by side, and why Spanish is not the counter-example
+
+```
+spanish  85/85  (100%)
+french   20/74  (27%)
+german   21/70  (30%)
+```
+
+Spanish's 100% is **not** an artifact of grading its own homework — HL-C128
+deliberately closed those gaps step by step over ten merged tranches, and the
+inventory was written first. What Spanish shows is the *cost*: bringing one track
+from a French-shaped number to 100% took a sustained, explicitly-grammar programme.
+French and German show what every other track looks like before that work.
+
+**So the real estimate the plan is missing:** there are 20 tracks in a
+French/German-shaped position, and closing each takes something like HL-C128. That
+is not a vocabulary problem and no vocabulary tranche will touch it.
+
+### Method notes for the next inventory
+
+- **Read atom ids out of the corpus.** `GE-LEX-GELB-05` was a guess; the real one
+  is `GE-LEX-GELB-04`. A wrong id is fail-safe and silent — it reports taught
+  material as a gap.
+- **Verify by re-reading the file in the command that wrote it.** Both inventories
+  did; HL-C226's 88% bug came from not doing it.
+- **A probe that cannot resolve is worse than an honest null.** Where the corpus
+  has nothing for a point, `null` is the answer.
+
 ## HL-C226 — French A1 is the second exam inventory, and it says the gap is GRAMMAR not vocabulary
 
 `exam-inventory-french-a1.json`: 74 points, 12 categories, restated from the CECRL
