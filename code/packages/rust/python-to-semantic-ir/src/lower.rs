@@ -3639,8 +3639,14 @@ impl Lowerer {
                         (None, _) => operand,
                         (Some(lhs), Some(op)) => {
                             let span = lhs.span().clone();
+                            // SIR21 T3b-2: Python's `/` always true-divides
+                            // (no `Integer#/`-style floor — that's `//`,
+                            // not lowered here), so it maps to `div_true`,
+                            // not the operator-spelling passthrough `+`/
+                            // `-`/`*`/`%` use.
+                            let name = if op == "/" { "div_true".to_string() } else { op };
                             Expr::BuiltinCall {
-                                name: op,
+                                name,
                                 args: vec![lhs, operand],
                                 effects: EffectSet::PURE,
                                 span,

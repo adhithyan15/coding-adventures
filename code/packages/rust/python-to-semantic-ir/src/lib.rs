@@ -388,11 +388,14 @@ mod tests {
 
     #[test]
     fn arithmetic_operators_lower_to_builtin_calls() {
+        // `/` maps to `div_true` (SIR21 T3b-2), not the operator-spelling
+        // passthrough `+`/`-`/`*`/`%` use — Python's `/` always
+        // true-divides.
         for (src, op) in [
             ("a = 1\na + 1\n", "+"),
             ("a = 1\na - 1\n", "-"),
             ("a = 1\na * 2\n", "*"),
-            ("a = 1\na / 2\n", "/"),
+            ("a = 1\na / 2\n", "div_true"),
             ("a = 1\na % 2\n", "%"),
         ] {
             let m = lower(src);
