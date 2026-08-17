@@ -98,36 +98,19 @@ defmodule CodingAdventures.DartmouthBasicParser do
 
   ## Grammar Caching
 
-  The `dartmouth_basic.grammar` file is read once and cached in `:persistent_term`
-  (a BEAM-level key-value store for "write once, read many" immutable data).
+  The `dartmouth_basic.grammar` is pre-compiled into
+  `CodingAdventures.DartmouthBasicParser.Grammar` at build time and built
+  once into a `ParserGrammar` struct cached in `:persistent_term` (a
+  BEAM-level key-value store for "write once, read many" immutable data).
   Unlike ETS (which copies terms on every access), `persistent_term` returns a
-  direct reference with zero copy overhead. The first call pays the file I/O cost;
-  every subsequent call is effectively free.
+  direct reference with zero copy overhead. The first call pays the struct
+  construction cost; every subsequent call is effectively free.
   """
 
+  alias CodingAdventures.DartmouthBasicParser.Grammar, as: GrammarSource
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.DartmouthBasicLexer
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
-
-  # ---------------------------------------------------------------------------
-  # Grammar path resolution
-  # ---------------------------------------------------------------------------
-  #
-  # __DIR__ is the compile-time directory of THIS source file:
-  #   .../code/packages/elixir/dartmouth_basic_parser/lib/coding_adventures
-  #
-  # Walking up with ".." five times reaches code/:
-  #   (1) lib/coding_adventures  →  lib
-  #   (2) lib                    →  dartmouth_basic_parser
-  #   (3) dartmouth_basic_parser →  elixir
-  #   (4) elixir                 →  packages
-  #   (5) packages               →  code
-  #   then append "grammars"     →  code/grammars
-  #
-  # Path.expand/1 resolves all ".." components to an absolute path so that
-  # File.read! works regardless of the current working directory at runtime.
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   # ---------------------------------------------------------------------------
   # Public API
@@ -196,16 +179,17 @@ defmodule CodingAdventures.DartmouthBasicParser do
   end
 
   @doc """
-  Parse the `dartmouth_basic.grammar` file and return the `ParserGrammar`.
+  Return the pre-compiled `dartmouth_basic.grammar` `ParserGrammar`.
 
   Returns a `%ParserGrammar{}` struct containing all grammar rules. You can
   inspect it to enumerate the rules, check alternation order, or verify that
   the grammar loaded correctly. The grammar drives the parser engine in
   `GrammarParser.parse/2`.
 
-  This function always reads fresh from disk — it does NOT return the cached
-  copy. Use it for introspection and testing. For production parsing, prefer
-  `parse/1` or `parse_source/1`, which use the cached grammar.
+  This function rebuilds the struct from the pre-compiled grammar module
+  each call — it does NOT return the cached copy. Use it for introspection
+  and testing. For production parsing, prefer `parse/1` or `parse_source/1`,
+  which use the cached grammar.
 
   ## Example
 
@@ -216,9 +200,7 @@ defmodule CodingAdventures.DartmouthBasicParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join([@grammars_dir, "dartmouth_basic", "dartmouth_basic.grammar"])
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    grammar
+    GrammarSource.parser_grammar()
   end
 
   # ---------------------------------------------------------------------------
