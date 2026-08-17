@@ -835,23 +835,108 @@ fn parse_start_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Wa
 ///
 /// At instantiation, `func_indices[i]` is written into `table[table_idx][offset + i]`.
 /// This is how C function-pointer arrays and C++ vtables get populated.
+/// The real encoding has **eight** binary segment-mode variants (bulk-
+/// table + reference-types proposals); this repo decodes the four
+/// (task #97, `code/specs/W17-wasm-bulk-table-ops.md`) confirmed by
+/// direct census of the two real corpus files that need them:
+///
+/// | `flags` | Mode                              | Fields between `flags` and the entry list |
+/// |---------|------------------------------------|--------------------------------------------|
+/// | `0x00`  | active, implicit table 0, funcidx  | `offset_expr` only                        |
+/// | `0x01`  | passive, funcidx-list              | `elemkind:u8` (must be `0x00`)            |
+/// | `0x02`  | active, explicit table, funcidx    | `table_idx:u32leb` then `offset_expr`     |
+/// | `0x05`  | passive, exprs-list (funcref only) | `reftype:u8` (must be `0x70`)             |
+///
+/// Modes 3/7 (declarative) and 4/6 (an ACTIVE segment carrying exprs) are
+/// each a clean, explicit `WasmParseError` -- not a silent misparse --
+/// same "structurally earlier than data segments were pre-task-#95"
+/// posture the old unconditional-mode-0-only version of this function
+/// had (it never even read a `flags` byte at all, so it couldn't
+/// distinguish ANY mode).
+///
+/// A funcidx-list entry (modes 0-2) is a bare `funcidx:u32leb`, always
+/// `Some`. An exprs-list entry (mode 5) is a real encoded constant
+/// expression -- this repo only decodes the two shapes its own corpus
+/// actually uses, `ref.func funcidx` (→ `Some(funcidx)`) and `ref.null
+/// func` (→ `None`, a real null table slot, not merely absent) -- any
+/// other expression opcode is a clean parse error, matching this
+/// function's own scoped-modes discipline.
 fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), WasmParseError> {
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
-        let table_index = p.read_u32leb()?;
-        let offset_expr = p.read_expr()?;
-        let func_count = p.read_u32leb()? as usize;
-        let mut function_indices = Vec::with_capacity(func_count.min(MAX_PREALLOC));
-        for _ in 0..func_count {
-            function_indices.push(p.read_u32leb()?);
+        let flags = p.read_u32leb()?;
+        let (table_index, offset_expr, is_passive, use_exprs) = match flags {
+            0 => (0, p.read_expr()?, false, false),
+            1 => {
+                let elemkind = p.read_u8()?;
+                if elemkind != 0x00 {
+                    return Err(p.error(format!("unsupported element segment elemkind {elemkind:#04x} (only funcref/0x00 supported)")));
+                }
+                (0, Vec::new(), true, false)
+            }
+            2 => {
+                let table_index = p.read_u32leb()?;
+                (table_index, p.read_expr()?, false, false)
+            }
+            5 => {
+                let reftype = p.read_u8()?;
+                if reftype != 0x70 {
+                    return Err(p.error(format!("unsupported element segment reftype {reftype:#04x} (only funcref/0x70 supported)")));
+                }
+                (0, Vec::new(), true, true)
+            }
+            other => {
+                return Err(p.error(format!("unsupported element segment mode flags {other} (only 0/1/2/5 supported)")));
+            }
+        };
+        let entry_count = p.read_u32leb()? as usize;
+        let mut function_indices = Vec::with_capacity(entry_count.min(MAX_PREALLOC));
+        for _ in 0..entry_count {
+            if use_exprs {
+                function_indices.push(read_elem_expr_entry(p)?);
+            } else {
+                function_indices.push(Some(p.read_u32leb()?));
+            }
         }
         module.elements.push(Element {
             table_index,
             offset_expr,
             function_indices,
+            is_passive,
         });
     }
     Ok(())
+}
+
+/// Decode one exprs-list element-segment entry: a real encoded constant
+/// expression, restricted to the two shapes this repo's own corpus uses
+/// (see `parse_element_section`'s own doc comment) -- `ref.func funcidx`
+/// (`0xD2 <funcidx:u32leb> 0x0B`) or `ref.null func` (`0xD0 0x70 0x0B`).
+/// Deliberately NOT implemented via the generic `read_expr` (which reads
+/// arbitrary constant-expression bytes verbatim for `offset_expr`/
+/// `init_expr` use sites): `read_expr`'s own catch-all arm for an
+/// unrecognized opcode does not know to skip `ref.func`'s funcidx
+/// immediate or `ref.null`'s heaptype immediate, so reusing it here
+/// would misparse the very shapes this function exists to decode.
+fn read_elem_expr_entry(p: &mut Parser) -> Result<Option<u32>, WasmParseError> {
+    let opcode = p.read_u8()?;
+    let value = match opcode {
+        0xD2 => Some(p.read_u32leb()?), // ref.func <funcidx>
+        0xD0 => {
+            let _heaptype = p.read_u8()?; // ref.null <heaptype> -- byte consumed, value unused
+            None
+        }
+        other => {
+            return Err(p.error(format!(
+                "unsupported element exprs-list entry opcode {other:#04x} (only ref.func/0xD2 and ref.null/0xD0 supported)"
+            )));
+        }
+    };
+    let end = p.read_u8()?;
+    if end != END_OPCODE {
+        return Err(p.error("element exprs-list entry missing terminating end opcode"));
+    }
+    Ok(value)
 }
 
 /// Parse the **code section** (§10): function bodies.
@@ -1624,7 +1709,7 @@ mod tests {
     fn test_element_section() {
         let payload = vec![
             0x01, // count = 1
-            0x00, // table_idx = 0
+            0x00, // flags = 0 (active, implicit table 0)
             0x41, 0x00, 0x0B, // i32.const 0; end
             0x02, // func_count = 2
             0x00, // func 0
@@ -1635,7 +1720,7 @@ mod tests {
         assert_eq!(m.elements.len(), 1);
         assert_eq!(m.elements[0].table_index, 0);
         assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
-        assert_eq!(m.elements[0].function_indices, vec![0, 1]);
+        assert_eq!(m.elements[0].function_indices, vec![Some(0), Some(1)]);
     }
 
     #[test]

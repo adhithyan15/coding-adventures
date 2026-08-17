@@ -1408,6 +1408,28 @@
       "jsonHash": "fnv1a64:3ff87a738c13e9ba"
     },
     {
+      "language": "french",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:4e14a8ba01008ac8",
+      "lessonIds": [
+        "FR-C32-intonation",
+        "FR-C32-est-ce-que",
+        "FR-C32-ou",
+        "FR-C32-quand",
+        "FR-C32-comment",
+        "FR-C32-combien",
+        "FR-C32-pourquoi",
+        "FR-C32-inversion",
+        "FR-C32-quel"
+      ],
+      "voiceLessons": 9,
+      "drivablePrefix": 9,
+      "text": "french/narration/ch32.txt",
+      "json": "french/narration/ch32.json",
+      "textHash": "fnv1a64:f09f8d778d1153e2",
+      "jsonHash": "fnv1a64:dd2457530a36d0ba"
+    },
+    {
       "language": "german",
       "chapter": 1,
       "sourceHash": "fnv1a64:3eb0a576892fbc9e",

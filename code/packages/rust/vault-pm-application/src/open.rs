@@ -21,7 +21,9 @@ use coding_adventures_vault_pm_domain::{
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
-use coding_adventures_vault_records::{AnyRecord, ApiKey, Card, Login, SecureNote};
+use coding_adventures_vault_records::{
+    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote,
+};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
@@ -39,6 +41,8 @@ const MAX_API_KEY_SCOPE_LINE_BYTES: usize = 2_048;
 const MAX_API_KEY_SCOPES: usize = 64;
 /// Largest single API-key scope component in UTF-8 bytes.
 const MAX_API_KEY_SCOPE_BYTES: usize = 256;
+/// Largest database engine identifier accepted behind the audited boundary.
+const MAX_DATABASE_ENGINE_BYTES: usize = 32;
 
 /// Owned wipe-on-drop caller fields for one complete login edit.
 pub struct LoginEditInputV1 {
@@ -117,6 +121,44 @@ impl ApiKeyConflictMergeInputV1 {
             token,
             scopes,
             expiry,
+        }
+    }
+}
+
+/// Owned wipe-on-drop caller fields for one complete database-credential merge.
+///
+/// The engine and port arrive exactly as the terminal collected them so that
+/// their closed shape rules are re-checked behind the audited boundary rather
+/// than being trusted from the host.
+pub struct DatabaseCredentialConflictMergeInputV1 {
+    label: Zeroizing<String>,
+    engine: Zeroizing<String>,
+    host: Zeroizing<String>,
+    port: Zeroizing<String>,
+    database: Option<Zeroizing<String>>,
+    username: Zeroizing<String>,
+    password: Zeroizing<String>,
+}
+
+impl DatabaseCredentialConflictMergeInputV1 {
+    /// Take the complete bounded database-credential form from a trusted host.
+    pub const fn new(
+        label: Zeroizing<String>,
+        engine: Zeroizing<String>,
+        host: Zeroizing<String>,
+        port: Zeroizing<String>,
+        database: Option<Zeroizing<String>>,
+        username: Zeroizing<String>,
+        password: Zeroizing<String>,
+    ) -> Self {
+        Self {
+            label,
+            engine,
+            host,
+            port,
+            database,
+            username,
+            password,
         }
     }
 }
@@ -391,6 +433,38 @@ pub enum AuditedApiKeyConflictMergePreparationV1 {
 impl AuditedApiKeyConflictMergePreparationV1 {
     /// Return the opaque preparation or its already-durable operation failure.
     pub fn into_preparation(self) -> Result<ApiKeyConflictMergePreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
+/// Opaque application-owned state for one validated authored
+/// database-credential conflict merge.
+pub struct DatabaseCredentialConflictMergePreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    base: Zeroizing<ItemDocument>,
+    failure_audit: ConflictMergeFailureAuditV1,
+}
+
+/// Audited result of validating one authored database-credential merge.
+pub enum AuditedDatabaseCredentialConflictMergePreparationV1 {
+    /// The application retains the base document and complete conflict set.
+    Ready(Box<DatabaseCredentialConflictMergePreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedDatabaseCredentialConflictMergePreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(
+        self,
+    ) -> Result<DatabaseCredentialConflictMergePreparationV1, ApplicationError> {
         match self {
             Self::Ready(preparation) => Ok(*preparation),
             Self::Failed(failure) => match failure.into_operation() {
@@ -785,6 +859,137 @@ fn replacement_api_key_document(
             token: input.token.into_inner(),
             scopes,
             expires_at,
+        }),
+        current.attachments().clone(),
+    )
+    .map_err(|_| ApplicationError::InvalidInput)
+}
+
+impl DatabaseCredentialConflictMergePreparationV1 {
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    /// Complete the authored database-credential merge and its atomic event.
+    pub fn complete_audited(
+        self,
+        input: DatabaseCredentialConflictMergeInputV1,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let document = match replacement_database_credential_document(
+            &self.base,
+            input,
+            self.failure_audit.wall_time_ms,
+        ) {
+            Ok(document) => document,
+            Err(error) => return self.publish_audited_failure(error, local_state_store),
+        };
+        let active = self.session.merge_item_conflict(
+            document,
+            self.failure_audit.wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.session.finish_audited_access(
+            AuditActionV1::ItemConflictMerge,
+            Some(self.item_id),
+            None,
+            self.failure_audit.wall_time_ms,
+            self.failure_audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
+
+/// Check one already-bounded database engine against its closed identifier
+/// shape.
+///
+/// The identifier is provider neutral by construction: a lowercase ASCII letter
+/// followed only by lowercase letters, digits, `-`, or `_`. Accepting exactly
+/// one spelling per engine keeps `postgres`, `Postgres`, and `postgres ` from
+/// denoting three different engines in the same vault, and the closed alphabet
+/// leaves no room for a value that a later consumer might read as a URL scheme,
+/// a path, or a driver argument.
+fn validate_database_engine(engine: &str) -> Result<(), ApplicationError> {
+    let mut bytes = engine.bytes();
+    let Some(first) = bytes.next() else {
+        return Err(ApplicationError::InvalidInput);
+    };
+    if engine.len() > MAX_DATABASE_ENGINE_BYTES
+        || !first.is_ascii_lowercase()
+        || !bytes
+            .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || b"-_".contains(&byte))
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    Ok(())
+}
+
+/// Interpret one already-bounded database port line as a TCP port.
+///
+/// The line must be one canonical unsigned decimal in `1..=65535`: no sign, no
+/// leading zero, and not zero itself, so a single stored port always has
+/// exactly one accepted spelling.
+fn parse_database_port_line(line: &str) -> Result<u16, ApplicationError> {
+    if line.starts_with('0') || !line.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let port = line
+        .parse::<u16>()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    (port != 0)
+        .then_some(port)
+        .ok_or(ApplicationError::InvalidInput)
+}
+
+fn replacement_database_credential_document(
+    current: &ItemDocument,
+    input: DatabaseCredentialConflictMergeInputV1,
+    updated_at_ms: u64,
+) -> Result<ItemDocument, ApplicationError> {
+    let AnyRecord::DatabaseCredential(_) = current.payload() else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    validate_database_engine(&input.engine)?;
+    let port = parse_database_port_line(&input.port)?;
+    ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        updated_at_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        AnyRecord::DatabaseCredential(DatabaseCredential {
+            label: input.label.into_inner(),
+            engine: input.engine.into_inner(),
+            host: input.host.into_inner(),
+            port,
+            database: input.database.map(Zeroizing::into_inner),
+            username: input.username.into_inner(),
+            password: input.password.into_inner(),
+            // An authored credential is static. VLT-PM28 already rules that a
+            // locally typed credential has no lease, and carrying a base
+            // candidate's lease forward would attach dynamic-issuance state to
+            // a secret that no issuer ever vouched for.
+            lease_id: None,
+            expires_at: None,
         }),
         current.attachments().clone(),
     )
@@ -2708,6 +2913,58 @@ impl UnlockedVaultV1 {
         Ok(base)
     }
 
+    /// Validate one exact current live database credential as the opaque
+    /// metadata base for an authored conflict merge, or publish the failed
+    /// precondition.
+    pub fn prepare_audited_database_credential_conflict_merge(
+        self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedDatabaseCredentialConflictMergePreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        match self.database_credential_conflict_merge_precondition(item_id, base_revision) {
+            Ok(base) => Ok(AuditedDatabaseCredentialConflictMergePreparationV1::Ready(
+                Box::new(DatabaseCredentialConflictMergePreparationV1 {
+                    session: self,
+                    item_id,
+                    base,
+                    failure_audit: ConflictMergeFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    },
+                }),
+            )),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemConflictMerge,
+                    Some(item_id),
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| {
+                    AuditedDatabaseCredentialConflictMergePreparationV1::Failed(Box::new(failure))
+                }),
+        }
+    }
+
+    fn database_credential_conflict_merge_precondition(
+        &self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let base = self.conflict_merge_base_precondition(item_id, base_revision)?;
+        let AnyRecord::DatabaseCredential(_) = base.payload() else {
+            return Err(ApplicationError::Unsupported);
+        };
+        Ok(base)
+    }
+
     fn conflict_merge_base_precondition(
         &self,
         item_id: ItemId,
@@ -3972,6 +4229,76 @@ mod tests {
                     token: token.to_owned(),
                     scopes: vec!["repo".to_owned()],
                     expires_at: Some(1_900_000_000),
+                }),
+                ObservedSet::new(),
+            )
+            .unwrap();
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                [],
+                ItemState::Live(Box::new(document)),
+            )
+            .unwrap();
+            let base = 0xf1u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revisions.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revisions.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revisions.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xf7; 32], [0xf8; 24], [0xf9; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revisions,
+        )
+    }
+
+    fn pending_database_credential_conflict_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revisions = Vec::new();
+        for (index, (label, password)) in [
+            ("Keep database left", "left-password-value"),
+            ("Keep database right", "right-password-value"),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let document = ItemDocument::new(
+                item_id,
+                ContentType::new(coding_adventures_vault_records::DATABASE_CREDENTIAL_V1).unwrap(),
+                500,
+                500,
+                LwwRegister::new(true, 500, OperationId::new([0xf0; 32])),
+                ObservedSet::new(),
+                ObservedSet::new(),
+                AnyRecord::DatabaseCredential(DatabaseCredential {
+                    label: label.to_owned(),
+                    engine: "postgres".to_owned(),
+                    host: "db.example".to_owned(),
+                    port: 5432,
+                    database: Some("orders".to_owned()),
+                    username: "service".to_owned(),
+                    password: password.to_owned(),
+                    lease_id: None,
+                    expires_at: None,
                 }),
                 ObservedSet::new(),
             )
@@ -9411,6 +9738,547 @@ mod tests {
             RevisionId::new([0x7a; 32]),
             516,
             audited_access_randomness(0x79),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(result.is_err());
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn authored_database_credential_engine_and_port_lines_are_closed() {
+        for accepted in ["postgres", "mysql8", "sql-server", "my_engine", "p"] {
+            assert_eq!(validate_database_engine(accepted), Ok(()));
+        }
+        for rejected in [
+            "",                                         // an engine is required
+            "Postgres",                                 // uppercase is not canonical
+            "9postgres",                                // must start with a letter
+            "-postgres",                                // must start with a letter
+            "postgres ",                                // untrimmed is not canonical
+            "post gres",                                // no interior spaces
+            "postgres.db",                              // closed alphabet excludes `.`
+            "postgres/db",                              // closed alphabet excludes `/`
+            &"p".repeat(MAX_DATABASE_ENGINE_BYTES + 1), // oversized identifier
+            "pö",                                       // ASCII only
+        ] {
+            assert!(
+                matches!(
+                    validate_database_engine(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "engine must be rejected"
+            );
+        }
+
+        assert_eq!(parse_database_port_line("1"), Ok(1));
+        assert_eq!(parse_database_port_line("5432"), Ok(5432));
+        assert_eq!(parse_database_port_line("65535"), Ok(65535));
+        for rejected in [
+            "",       // a port is required
+            "0",      // zero is not a TCP port
+            "05432",  // leading zero is not canonical
+            "+5432",  // signs are not accepted
+            "-5432",  // signs are not accepted
+            "5432 ",  // trailing space is not a digit
+            "65536",  // one past the u16 port space
+            "0x1538", // no alternate radix
+        ] {
+            assert!(
+                matches!(
+                    parse_database_port_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "port line must be rejected"
+            );
+        }
+    }
+
+    #[test]
+    fn audited_authored_database_credential_merge_records_failure_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x2e; 16]);
+        let (publication, revisions) =
+            pending_database_credential_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(517, audited_access_randomness(0x7b), &local)
+        .unwrap();
+
+        let base_revision = revisions[0];
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_database_credential_conflict_merge(
+            item_id,
+            base_revision,
+            518,
+            audited_access_randomness(0x7c),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .record_audited_host_failure(&local)
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        // An invalid port is caught behind the audited boundary, so the closed
+        // failure is already durable when the caller learns about it.
+        session
+            .prepare_audited_database_credential_conflict_merge(
+                item_id,
+                base_revision,
+                519,
+                audited_access_randomness(0x7d),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                DatabaseCredentialConflictMergeInputV1::new(
+                    Zeroizing::new("Authored database".to_owned()),
+                    Zeroizing::new("postgres".to_owned()),
+                    Zeroizing::new("db.example".to_owned()),
+                    Zeroizing::new("65536".to_owned()),
+                    Some(Zeroizing::new("orders".to_owned())),
+                    Zeroizing::new("service".to_owned()),
+                    Zeroizing::new("authored-password-value".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x7e),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .expect_err("invalid database-credential form must remain a closed failed operation");
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        // An invalid engine is refused by the same boundary.
+        session
+            .prepare_audited_database_credential_conflict_merge(
+                item_id,
+                base_revision,
+                520,
+                audited_access_randomness(0x7f),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                DatabaseCredentialConflictMergeInputV1::new(
+                    Zeroizing::new("Authored database".to_owned()),
+                    Zeroizing::new("Postgres".to_owned()),
+                    Zeroizing::new("db.example".to_owned()),
+                    Zeroizing::new("5432".to_owned()),
+                    Some(Zeroizing::new("orders".to_owned())),
+                    Zeroizing::new("service".to_owned()),
+                    Zeroizing::new("authored-password-value".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x80),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .expect_err("invalid database engine must remain a closed failed operation");
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        let base_document = session.current_catalog.items[&item_id]
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .and_then(|candidate| match candidate.state() {
+                ItemState::Live(document) => Some(document),
+                ItemState::Tombstone(_) => None,
+            })
+            .unwrap();
+        let expected_favorite = base_document.favorite().clone();
+        let expected_collections = base_document.collection_ids().clone();
+        let expected_tags = base_document.tags().clone();
+        let expected_attachments = base_document.attachments().clone();
+
+        session
+            .prepare_audited_database_credential_conflict_merge(
+                item_id,
+                base_revision,
+                521,
+                audited_access_randomness(0x81),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                DatabaseCredentialConflictMergeInputV1::new(
+                    Zeroizing::new("Authored database".to_owned()),
+                    Zeroizing::new("mysql".to_owned()),
+                    Zeroizing::new("replica.example".to_owned()),
+                    Zeroizing::new("3306".to_owned()),
+                    Some(Zeroizing::new("ledger".to_owned())),
+                    Zeroizing::new("merged-service".to_owned()),
+                    Zeroizing::new("authored-password-value".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x82),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored database-credential merge must be the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions.iter().copied().collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored database-credential merge must publish a live document")
+        };
+        assert_eq!(document.created_at_ms(), 500);
+        assert_eq!(document.updated_at_ms(), 521);
+        assert_eq!(document.favorite(), &expected_favorite);
+        assert_eq!(document.collection_ids(), &expected_collections);
+        assert_eq!(document.tags(), &expected_tags);
+        assert_eq!(document.attachments(), &expected_attachments);
+        let AnyRecord::DatabaseCredential(credential) = document.payload() else {
+            panic!("authored database-credential merge must retain its schema")
+        };
+        assert_eq!(credential.label, "Authored database");
+        assert_eq!(credential.engine, "mysql");
+        assert_eq!(credential.host, "replica.example");
+        assert_eq!(credential.port, 3306);
+        assert_eq!(credential.database.as_deref(), Some("ledger"));
+        assert_eq!(credential.username, "merged-service");
+        assert_eq!(credential.password, "authored-password-value");
+        // An authored credential is static: VLT-PM37 §1 keeps the lease absent
+        // rather than inheriting one from the base candidate.
+        assert_eq!(credential.lease_id, None);
+        assert_eq!(credential.expires_at, None);
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_database_credential_merge_accepts_an_absent_database_name() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x2f; 16]);
+        let (publication, revisions) =
+            pending_database_credential_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(522, audited_access_randomness(0x83), &local)
+        .unwrap();
+
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_database_credential_conflict_merge(
+            item_id,
+            revisions[1],
+            523,
+            audited_access_randomness(0x84),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .complete_audited(
+            DatabaseCredentialConflictMergeInputV1::new(
+                Zeroizing::new("Authored database".to_owned()),
+                Zeroizing::new("postgres".to_owned()),
+                Zeroizing::new("db.example".to_owned()),
+                Zeroizing::new("5432".to_owned()),
+                None,
+                Zeroizing::new("service".to_owned()),
+                Zeroizing::new("authored-password-value".to_owned()),
+            ),
+            resolve_item_conflict_randomness(0x85),
+            &local,
+        )
+        .unwrap()
+        .into_operation()
+        .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored database-credential merge must be the sole current candidate")
+        };
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored database-credential merge must publish a live document")
+        };
+        let AnyRecord::DatabaseCredential(credential) = document.payload() else {
+            panic!("authored database-credential merge must retain its schema")
+        };
+        assert_eq!(credential.database, None);
+        assert_eq!(credential.lease_id, None);
+        assert_eq!(credential.expires_at, None);
+    }
+
+    #[test]
+    fn audited_authored_database_credential_merge_rejects_an_api_key_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x30; 16]);
+        let (publication, revisions) = pending_api_key_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(524, audited_access_randomness(0x86), &local)
+        .unwrap();
+
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_database_credential_conflict_merge(
+            item_id,
+            revisions[0],
+            525,
+            audited_access_randomness(0x87),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(result, Err(ApplicationError::Unsupported)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn audited_authored_database_credential_merge_requires_an_exact_current_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x31; 16]);
+        let (publication, _) = pending_database_credential_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(526, audited_access_randomness(0x88), &local)
+        .unwrap();
+
+        // A revision that is not a current candidate of this item is refused,
+        // and the refusal is durable before the caller ever sees it.
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_database_credential_conflict_merge(
+            item_id,
+            RevisionId::new([0x89; 32]),
+            527,
+            audited_access_randomness(0x8a),
             &local,
         )
         .unwrap()

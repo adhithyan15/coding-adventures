@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.12] - 2026-08-17 (task #97 — table.init/table.copy/elem.drop type-checking)
+
+### Added
+
+- New `0xFC` sub-opcode type-check arms for `table.init` (`0x0C`),
+  `elem.drop` (`0x0D`), and `table.copy` (`0x0E`) -- previously fell
+  into the catch-all `"unsupported 0xFC sub-opcode"` error. `table.init`
+  bounds-checks BOTH its elem segment index (against
+  `ctx.module.elements.len()`, mirroring `memory.init`'s own data_idx
+  check, task #95) and its table index (against `ctx.table_count`,
+  mirroring `table.grow`'s own check, task #98); pops `[dest, src,
+  len]` as three `ValueType::I32`. `elem.drop` bounds-checks only its
+  elem segment index, no table requirement at all, mirroring
+  `data.drop`'s own "no memory requirement" reasoning. `table.copy`
+  bounds-checks both table indices independently (a self-copy, dst ==
+  src, is valid and left to a runtime check, not rejected here).
+
+### Fixed
+
+- `Check 9`'s element-segment function-index bounds-check loop
+  (`for func_idx in &elem.function_indices { if let Some(idx) = ...`)
+  triggered clippy's `manual_flatten` lint after `function_indices`
+  widened to `Vec<Option<u32>>` (task #97, `wasm-types`); rewritten as
+  `for idx in elem.function_indices.iter().flatten()`.
+
 ## [0.2.11] - 2026-08-16 (task #98 — table.grow/table.size/table.fill type-checking)
 
 ### Added

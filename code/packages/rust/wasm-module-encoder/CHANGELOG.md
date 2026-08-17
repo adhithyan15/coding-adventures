@@ -1,5 +1,18 @@
 # Changelog
 
+- 0.2.3 (task #97): `encode_element` rewritten to write the real binary
+  flags byte and dispatch across the 4 element-segment modes this repo
+  now represents (0/1/2/5), the encoder-side counterpart to
+  `wasm-module-parser`'s decode fix -- previously only ever wrote mode
+  0 (active, implicit table 0, funcidx-list) regardless of
+  `Element.is_passive`/the new exprs-list shape. Uses `unwrap_or(0)` as
+  a defensive-but-non-panicking fallback for the structurally-
+  unreachable case of an ACTIVE segment containing a `None` (`ref.null`)
+  entry -- this crate's only callers construct `Element` from Rust
+  code, never from parsed external/attacker bytes, so this can't
+  actually happen, but a silent wrong-but-valid encoding is safer here
+  than a panic either way.
+
 - 0.2.2 (task #95): `encode_data_segment` now writes the real segment-
   mode flag (`1` for a passive segment, `0` + the offset expression for
   active) instead of unconditionally writing `memory_index` then an

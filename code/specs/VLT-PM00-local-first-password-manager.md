@@ -1587,8 +1587,14 @@ changelog, focused build, and downstream validation.
                 collection, application-owned closed scope/expiry validation,
                 durable failures, and an atomic all-current-parent result,
                 using `VLT-PM36-cli-authored-api-key-conflict-merge.md`.
-9b-3b-2b-2b-4. remaining authored merge ceremonies for database credentials,
-                TOTP, and opaque records.
+9b-3b-2b-2b-4. completed audit-required user-authored database-credential
+                conflict merge using an opaque exact-current metadata base,
+                hidden password collection, application-owned closed
+                engine/port validation, durable failures, and an atomic
+                all-current-parent result, using
+                `VLT-PM37-cli-authored-database-credential-conflict-merge.md`.
+9b-3b-2b-2b-5. remaining authored merge ceremonies for TOTP and opaque
+                records.
 9b-4a. completed authenticated encrypted portable export with a separately
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
@@ -1703,7 +1709,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM33-cli-authored-login-conflict-merge.md`, and
   `VLT-PM34-cli-authored-secure-note-conflict-merge.md`, and
   `VLT-PM35-cli-authored-card-conflict-merge.md`, and
-  `VLT-PM36-cli-authored-api-key-conflict-merge.md` —
+  `VLT-PM36-cli-authored-api-key-conflict-merge.md`, and
+  `VLT-PM37-cli-authored-database-credential-conflict-merge.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1725,7 +1732,9 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   user-authored payment-card conflict merge using
   `VLT-PM35-cli-authored-card-conflict-merge.md`, plus audited user-authored
   API-key conflict merge using
-  `VLT-PM36-cli-authored-api-key-conflict-merge.md`.
+  `VLT-PM36-cli-authored-api-key-conflict-merge.md`, plus audited user-authored
+  database-credential conflict merge using
+  `VLT-PM37-cli-authored-database-credential-conflict-merge.md`.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

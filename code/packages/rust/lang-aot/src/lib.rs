@@ -213,6 +213,13 @@ pub enum LangAotError {
     /// 9-architecture expansion following the historical-arch
     /// backend migration pattern.
     Arm1BackendError(String),
+    /// The MOS 6502 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `mos6502-backend` (which
+    /// already includes the failing function name and the unsupported
+    /// op/type/operand).  Fifth lane of the 9-architecture expansion
+    /// following the historical-arch backend migration pattern.
+    Mos6502BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -263,6 +270,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Ge225BackendError(m) => write!(f, "ge225: {m}"),
             LangAotError::Ibm704BackendError(m) => write!(f, "ibm704: {m}"),
             LangAotError::Arm1BackendError(m) => write!(f, "arm1: {m}"),
+            LangAotError::Mos6502BackendError(m) => write!(f, "mos6502: {m}"),
         }
     }
 }
@@ -1499,6 +1507,75 @@ pub fn compile_file_to_arm1_bin(
     }
     if bytes.is_empty() {
         bytes.extend_from_slice(&arm1_encoder::HALT_WORD.to_le_bytes());
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → MOS 6502 machine code (`.bin`) on disk.
+///
+/// Unlike the fixed-width-word targets above (ARM1, MIPS R2000, RV32I),
+/// the MOS 6502 is a byte-oriented ISA with no word endianness — each
+/// `mos6502-backend`-compiled function's bytes are already the wire
+/// format, so no endianness flattening step is needed before writing
+/// them to disk (unlike `compile_file_to_arm1_bin`'s
+/// `to_le_bytes()`/`compile_file_to_mips_r2000_bin`'s big-endian
+/// `assemble`).
+///
+/// Downstream consumers:
+///
+/// * [`mos6502-simulator`](../mos6502-simulator) — load + execute.
+/// * Any external MOS 6502 emulator that consumes flat byte streams.
+///
+/// The MOS 6502 (1975) is Chuck Peddle's $25 chip that powered the Apple
+/// II, Commodore 64, Atari 8-bit line, BBC Micro, and (via the Ricoh
+/// 2A03 variant) the NES/Famicom — one of the most influential 8-bit
+/// CPUs ever made.
+///
+/// # Errors
+///
+/// * `UnsupportedLanguage` / `FrontendError` — no Rust IIR frontend for
+///   `language`, or the frontend rejected the source.
+/// * `Mos6502BackendError` — the IIR contained an op or type the MOS
+///   6502 backend does not yet handle (the message names the failing
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=mos6502 -o foo.bin
+/// # Then load foo.bin into mos6502-simulator
+/// ```
+pub fn compile_file_to_mos6502_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Fifth lane of the 9-architecture expansion: route through
+    // `aot_core` + `mos6502-backend`, same per-function-loop pattern as
+    // `compile_file_to_arm1_bin`/`compile_file_to_mips_r2000_bin`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = mos6502_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Mos6502BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.push(mos6502_encoder::HALT_BYTE);
     }
 
     std::fs::write(out, &bytes)?;

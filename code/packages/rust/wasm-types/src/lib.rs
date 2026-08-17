@@ -680,12 +680,32 @@ pub struct Global {
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct Element {
-    /// Index of the table to initialize (always 0 in WASM 1.0).
+    /// Index of the table to initialize. Meaningless when `is_passive` is
+    /// `true` -- kept `0`/unset by convention rather than wrapped in an
+    /// `Option`, matching `DataSegment.memory_index`'s own style.
     pub table_index: u32,
     /// Constant expression that computes the starting offset in the table.
+    /// Empty when `is_passive` is `true` (a passive segment has no offset
+    /// at all -- it is never applied at instantiation time, only copied on
+    /// demand by an explicit `table.init`, task #97).
     pub offset_expr: Vec<u8>,
-    /// The function indices to write into the table.
-    pub function_indices: Vec<u32>,
+    /// The function indices to write into the table. `Some(idx)` for a
+    /// real `ref.func idx` entry (or a bare funcidx-list entry, binary
+    /// modes 0-3); `None` for a `ref.null` entry (binary exprs-list modes
+    /// 4-7, task #97) -- an explicit null table slot, not merely absent.
+    /// Same `Some`/`None` shape `Table::elements`/`WasmValue::Ref` already
+    /// use for exactly this "funcref, nullable" concept.
+    pub function_indices: Vec<Option<u32>>,
+    /// `true` for a passive segment (bulk-table proposal, task #97):
+    /// declared with no offset expression (`(elem funcref ...)`, or binary
+    /// segment-mode flag `0x01`/`0x05`), so `wasm-runtime::instantiate()`
+    /// never applies it automatically -- it stays resident until an
+    /// explicit `table.init` copies from it (any number of times) or
+    /// `elem.drop` frees its backing indices. `false` for an ordinary
+    /// active segment, applied once at instantiation via `offset_expr`/
+    /// `table_index` above. Same role `DataSegment.is_passive` plays for
+    /// data segments (task #95).
+    pub is_passive: bool,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1131,10 +1151,11 @@ mod tests {
         let elem = Element {
             table_index: 0,
             offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
-            function_indices: vec![1, 3, 5, 7],
+            function_indices: vec![Some(1), Some(3), Some(5), Some(7)],
+            is_passive: false,
         };
         assert_eq!(elem.table_index, 0);
-        assert_eq!(elem.function_indices, vec![1, 3, 5, 7]);
+        assert_eq!(elem.function_indices, vec![Some(1), Some(3), Some(5), Some(7)]);
         assert_eq!(elem.function_indices.len(), 4);
     }
 

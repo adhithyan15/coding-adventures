@@ -2,7 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.2.5] — 2026-08-16 — decode all 3 real data-segment modes, not just mode 0 (task #95)
+## [0.2.6] — 2026-08-17 — decode all 4 real element-segment modes (task #97)
+
+### Changed
+
+- `parse_element_section` rewritten to decode the real binary flags
+  byte and dispatch across the 4 element-segment modes this repo now
+  represents (0/1/2/5 -- see `wasm-types`' own CHANGELOG entry for the
+  full mode list and the real-corpus census that scoped it), instead
+  of only ever reading mode 0 (active, implicit table 0, funcidx-list).
+  Modes 1/2/5 previously had no decode path at all.
+- New `read_elem_expr_entry` helper decodes a single exprs-list entry
+  (`ref.func`/`ref.null`) directly -- NOT via the generic `read_expr`,
+  which doesn't know to stop at these two opcodes' own immediates and
+  would misparse the entry.
+
+
 
 ### Fixed
 
