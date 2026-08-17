@@ -35,6 +35,8 @@ ge225-backend         = { path = "../ge225-backend" }
 ge225-encoder         = { path = "../ge225-encoder" }
 ibm704-backend        = { path = "../ibm704-backend" }
 ibm704-encoder        = { path = "../ibm704-encoder" }
+arm1-backend          = { path = "../arm1-backend" }
+arm1-encoder          = { path = "../arm1-encoder" }
 aot-core              = { path = "../aot-core" }
 jit-core              = { path = "../jit-core" }
 # JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes

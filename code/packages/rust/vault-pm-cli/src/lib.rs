@@ -7,10 +7,10 @@ use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
     prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,
-    ApplicationError, AuditEventViewV1, AuditVerificationV1, AuditedAccessRandomnessV1,
-    AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore, BootstrapStoreError,
-    CardConflictMergeInputV1, DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1,
-    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1,
+    ApiKeyConflictMergeInputV1, ApplicationError, AuditEventViewV1, AuditVerificationV1,
+    AuditedAccessRandomnessV1, AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore,
+    BootstrapStoreError, CardConflictMergeInputV1, DeleteItemRandomnessV1, GenerationZeroPolicyV1,
+    ItemHistoryViewV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1,
     PortableExportPolicyV1, PortableExportRandomnessV1, PortableImportRandomnessV1,
     PortableOpenPolicyV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
     RestoreItemRandomnessV1, RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1,
@@ -54,7 +54,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -655,6 +655,10 @@ enum Command {
         item_id: ItemId,
         base_revision: RevisionId,
     },
+    ConflictMergeApiKey {
+        item_id: ItemId,
+        base_revision: RevisionId,
+    },
     Help,
 }
 
@@ -882,6 +886,13 @@ fn parse_conflict(arguments: &[String]) -> Result<Command, CliFailure> {
                     .map_err(|_| CliFailure::InvalidCommand)?,
             })
         }
+        [action, kind, item, revision] if action == "merge" && kind == "api-key" => {
+            Ok(Command::ConflictMergeApiKey {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                base_revision: RevisionId::from_user_string(revision)
+                    .map_err(|_| CliFailure::InvalidCommand)?,
+            })
+        }
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -1100,6 +1111,17 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_id,
             base_revision,
         } => conflict_merge_card(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            item_id,
+            base_revision,
+        ),
+        Command::ConflictMergeApiKey {
+            item_id,
+            base_revision,
+        } => conflict_merge_api_key(
             host,
             prepared.paths(),
             &writer,
@@ -2738,6 +2760,72 @@ fn conflict_merge_card(
             host.read_card_expiry_year()?,
             host.read_card_cvv()?,
             host.read_card_billing_postal_code()?,
+        ))
+    })();
+    let input = match input {
+        Ok(input) => input,
+        Err(error) => {
+            preparation
+                .record_audited_host_failure(&application_store)
+                .map_err(map_application)?;
+            return Err(map_host(error));
+        }
+    };
+    let mut mutation_random = [0_u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES];
+    if let Err(error) = host.fill_entropy(&mut mutation_random) {
+        preparation
+            .record_audited_host_failure(&application_store)
+            .map_err(map_application)?;
+        return Err(map_host(error));
+    }
+    preparation
+        .complete_audited(
+            input,
+            ResolveItemConflictRandomnessV1::new(mutation_random),
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Conflict merged: {}\n",
+        item_id.to_user_string()
+    )))
+}
+
+fn conflict_merge_api_key(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    base_revision: RevisionId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let preparation = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .prepare_audited_api_key_conflict_merge(
+            item_id,
+            base_revision,
+            wall_time_ms,
+            failure_randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_preparation()
+        .map_err(map_application)?;
+    // The scope and expiry lines travel to the application exactly as typed:
+    // the audited preparation, not the CLI, is what turns them into a record,
+    // so an invalid form is recorded before its error is ever returned.
+    let input = (|| {
+        Ok::<_, HostError>(ApiKeyConflictMergeInputV1::new(
+            host.read_api_key_label()?,
+            host.read_api_key_service()?,
+            host.read_api_key_token()?,
+            host.read_api_key_scopes()?,
+            host.read_api_key_expiry()?,
         ))
     })();
     let input = match input {
@@ -4650,6 +4738,37 @@ mod tests {
             parse([
                 "conflict",
                 "merge",
+                "api-key",
+                item.as_str(),
+                revision.as_str(),
+            ]),
+            default_invocation(Command::ConflictMergeApiKey {
+                item_id,
+                base_revision: revision_id,
+            })
+        );
+        assert_eq!(
+            parse([
+                "--vault",
+                "work",
+                "conflict",
+                "merge",
+                "api-key",
+                item.as_str(),
+                revision.as_str(),
+            ]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ConflictMergeApiKey {
+                    item_id,
+                    base_revision: revision_id,
+                },
+            })
+        );
+        assert_eq!(
+            parse([
+                "conflict",
+                "merge",
                 "login",
                 item.as_str(),
                 revision.to_lowercase().as_str(),
@@ -4664,6 +4783,20 @@ mod tests {
                 item.as_str(),
                 revision.to_lowercase().as_str(),
             ]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse([
+                "conflict",
+                "merge",
+                "api-key",
+                item.as_str(),
+                revision.to_lowercase().as_str(),
+            ]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["conflict", "merge", "api-key", item.as_str()]),
             Err(CliFailure::InvalidCommand)
         );
     }
@@ -7127,6 +7260,21 @@ mod tests {
             "{note_merged:?}"
         );
         assert!(note_merged.stdout().is_empty());
+
+        // The authored API-key merge must also stop at the unconflicted
+        // precondition, before any label, token, scope, or expiry is asked for.
+        let api_key_merge_host =
+            TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 128);
+        let api_key_merged = run(
+            ["conflict", "merge", "api-key", item, revision.as_str()],
+            &api_key_merge_host,
+        );
+        assert_eq!(
+            api_key_merged.exit_code(),
+            ExitCode::Conflict,
+            "{api_key_merged:?}"
+        );
+        assert!(api_key_merged.stdout().is_empty());
 
         let choose_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 127);
         let chosen = run(

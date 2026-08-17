@@ -298,6 +298,14 @@ _builtins: dict[str, Callable[..., Any]] = {
     "-": arithmetic.sub,
     "*": arithmetic.mul,
     "/": arithmetic.div,
+    # SIR21 T3b-2: `div_floor` is a bare alias for `div` (Ruby's `/` already
+    # floors ints / true-divides floats — see `arithmetic.div`'s own
+    # docstring). `div_trunc`/`udiv_trunc`/`div_true` are genuinely new —
+    # see `arithmetic.trunc_div`/`utrunc_div`/`true_div`.
+    "div_floor": arithmetic.div,
+    "div_trunc": arithmetic.trunc_div,
+    "udiv_trunc": arithmetic.utrunc_div,
+    "div_true": arithmetic.true_div,
     "=": values.eq,
     # `==` is a synonym for `=`; `!=`/`<=`/`>=` complete the comparison family
     # the Ruby frontend lowers a comparison chain to.  Present here (not only in

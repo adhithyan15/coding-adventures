@@ -21,8 +21,8 @@ use coding_adventures_vault_pm_domain::{
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
-use coding_adventures_vault_records::{AnyRecord, Card, Login, SecureNote};
-use coding_adventures_zeroize::Zeroizing;
+use coding_adventures_vault_records::{AnyRecord, ApiKey, Card, Login, SecureNote};
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -33,6 +33,12 @@ pub const DEFAULT_ITEM_HISTORY_LIMIT: usize = 100;
 /// Hard maximum number of historical revisions returned for one item.
 pub const MAX_ITEM_HISTORY_LIMIT: usize = 4_096;
 const MAX_LOGIN_URLS: usize = 16;
+/// Largest complete API-key scope line accepted behind the audited boundary.
+const MAX_API_KEY_SCOPE_LINE_BYTES: usize = 2_048;
+/// Largest number of comma-separated components in one API-key scope line.
+const MAX_API_KEY_SCOPES: usize = 64;
+/// Largest single API-key scope component in UTF-8 bytes.
+const MAX_API_KEY_SCOPE_BYTES: usize = 256;
 
 /// Owned wipe-on-drop caller fields for one complete login edit.
 pub struct LoginEditInputV1 {
@@ -79,6 +85,38 @@ impl CardConflictMergeInputV1 {
             expiry_year,
             cvv,
             billing_zip,
+        }
+    }
+}
+
+/// Owned wipe-on-drop caller fields for one complete API-key merge.
+///
+/// The scope line and expiry arrive exactly as the terminal collected them so
+/// that their closed shape rules are re-checked behind the audited boundary
+/// rather than being trusted from the host.
+pub struct ApiKeyConflictMergeInputV1 {
+    label: Zeroizing<String>,
+    service: Zeroizing<String>,
+    token: Zeroizing<String>,
+    scopes: Zeroizing<String>,
+    expiry: Zeroizing<String>,
+}
+
+impl ApiKeyConflictMergeInputV1 {
+    /// Take the complete bounded API-key form collected by a trusted host.
+    pub const fn new(
+        label: Zeroizing<String>,
+        service: Zeroizing<String>,
+        token: Zeroizing<String>,
+        scopes: Zeroizing<String>,
+        expiry: Zeroizing<String>,
+    ) -> Self {
+        Self {
+            label,
+            service,
+            token,
+            scopes,
+            expiry,
         }
     }
 }
@@ -323,6 +361,36 @@ pub enum AuditedCardConflictMergePreparationV1 {
 impl AuditedCardConflictMergePreparationV1 {
     /// Return the opaque preparation or its already-durable operation failure.
     pub fn into_preparation(self) -> Result<CardConflictMergePreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
+/// Opaque application-owned state for one validated authored API-key conflict
+/// merge.
+pub struct ApiKeyConflictMergePreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    base: Zeroizing<ItemDocument>,
+    failure_audit: ConflictMergeFailureAuditV1,
+}
+
+/// Audited result of validating one authored API-key conflict merge.
+pub enum AuditedApiKeyConflictMergePreparationV1 {
+    /// The application retains the base document and complete conflict set.
+    Ready(Box<ApiKeyConflictMergePreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedApiKeyConflictMergePreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(self) -> Result<ApiKeyConflictMergePreparationV1, ApplicationError> {
         match self {
             Self::Ready(preparation) => Ok(*preparation),
             Self::Failed(failure) => match failure.into_operation() {
@@ -578,6 +646,145 @@ fn replacement_card_document(
             expiry_year,
             cvv: input.cvv.into_inner(),
             billing_zip: input.billing_zip.map(Zeroizing::into_inner),
+        }),
+        current.attachments().clone(),
+    )
+    .map_err(|_| ApplicationError::InvalidInput)
+}
+
+impl ApiKeyConflictMergePreparationV1 {
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    /// Complete the user-authored API-key merge and its atomic audit event.
+    pub fn complete_audited(
+        self,
+        input: ApiKeyConflictMergeInputV1,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let document = match replacement_api_key_document(
+            &self.base,
+            input,
+            self.failure_audit.wall_time_ms,
+        ) {
+            Ok(document) => document,
+            Err(error) => return self.publish_audited_failure(error, local_state_store),
+        };
+        let active = self.session.merge_item_conflict(
+            document,
+            self.failure_audit.wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.session.finish_audited_access(
+            AuditActionV1::ItemConflictMerge,
+            Some(self.item_id),
+            None,
+            self.failure_audit.wall_time_ms,
+            self.failure_audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
+
+/// Split one already-bounded API-key scope line into its closed component list.
+///
+/// The line is authoritative exactly as typed: it is split only on commas, and
+/// every component must already be trimmed. Rejecting untrimmed components
+/// instead of silently trimming them keeps one scope line from denoting two
+/// different records depending on who normalized it.
+fn parse_api_key_scope_line(line: &str) -> Result<Vec<String>, ApplicationError> {
+    if line.len() > MAX_API_KEY_SCOPE_LINE_BYTES {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if line.is_empty() {
+        return Ok(Vec::new());
+    }
+    let mut seen = BTreeSet::new();
+    let mut scopes: Vec<String> = Vec::new();
+    for scope in line.split(',') {
+        if scopes.len() == MAX_API_KEY_SCOPES
+            || scope.is_empty()
+            || scope.trim() != scope
+            || scope.len() > MAX_API_KEY_SCOPE_BYTES
+            || !seen.insert(scope)
+        {
+            // A rejected line is still authored user data. The components
+            // accepted before the rejection are owned plaintext copies, and on
+            // this path they never reach the zeroizing record that would wipe
+            // them, so wipe them here rather than freeing them intact.
+            scopes.iter_mut().for_each(Zeroize::zeroize);
+            return Err(ApplicationError::InvalidInput);
+        }
+        scopes.push(scope.to_owned());
+    }
+    Ok(scopes)
+}
+
+/// Interpret one already-bounded API-key expiry line as optional Unix seconds.
+///
+/// An empty line means "no expiry". Anything else must be one canonical
+/// unsigned decimal: no sign, no leading zero, and not zero itself, so a single
+/// stored instant always has exactly one accepted spelling.
+fn parse_api_key_expiry_line(line: &str) -> Result<Option<u64>, ApplicationError> {
+    if line.is_empty() {
+        return Ok(None);
+    }
+    if line.starts_with('0') || !line.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let seconds = line
+        .parse::<u64>()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    (seconds != 0)
+        .then_some(Some(seconds))
+        .ok_or(ApplicationError::InvalidInput)
+}
+
+fn replacement_api_key_document(
+    current: &ItemDocument,
+    input: ApiKeyConflictMergeInputV1,
+    updated_at_ms: u64,
+) -> Result<ItemDocument, ApplicationError> {
+    let AnyRecord::ApiKey(_) = current.payload() else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    let expires_at = parse_api_key_expiry_line(&input.expiry)?;
+    // Parsed last so that on the success path the owned plaintext scope copies
+    // are handed straight to the zeroizing record with no fallible step in
+    // between; the parser wipes them itself when it rejects the line.
+    let scopes = parse_api_key_scope_line(&input.scopes)?;
+    ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        updated_at_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        AnyRecord::ApiKey(ApiKey {
+            label: input.label.into_inner(),
+            service: input.service.into_inner(),
+            token: input.token.into_inner(),
+            scopes,
+            expires_at,
         }),
         current.attachments().clone(),
     )
@@ -2452,6 +2659,55 @@ impl UnlockedVaultV1 {
         Ok(base)
     }
 
+    /// Validate one exact current live API key as the opaque metadata base for
+    /// an authored conflict merge, or publish the failed precondition.
+    pub fn prepare_audited_api_key_conflict_merge(
+        self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedApiKeyConflictMergePreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        match self.api_key_conflict_merge_precondition(item_id, base_revision) {
+            Ok(base) => Ok(AuditedApiKeyConflictMergePreparationV1::Ready(Box::new(
+                ApiKeyConflictMergePreparationV1 {
+                    session: self,
+                    item_id,
+                    base,
+                    failure_audit: ConflictMergeFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    },
+                },
+            ))),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemConflictMerge,
+                    Some(item_id),
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| AuditedApiKeyConflictMergePreparationV1::Failed(Box::new(failure))),
+        }
+    }
+
+    fn api_key_conflict_merge_precondition(
+        &self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let base = self.conflict_merge_base_precondition(item_id, base_revision)?;
+        let AnyRecord::ApiKey(_) = base.payload() else {
+            return Err(ApplicationError::Unsupported);
+        };
+        Ok(base)
+    }
+
     fn conflict_merge_base_precondition(
         &self,
         item_id: ItemId,
@@ -3678,6 +3934,72 @@ mod tests {
             ObjectKind::Catalog,
             &catalog.encode().unwrap(),
             &ObjectRandomness::new([0xe7; 32], [0xe8; 24], [0xe9; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revisions,
+        )
+    }
+
+    fn pending_api_key_conflict_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revisions = Vec::new();
+        for (index, (label, token)) in [
+            ("Keep key left", "left-token-value"),
+            ("Keep key right", "right-token-value"),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let document = ItemDocument::new(
+                item_id,
+                ContentType::new(coding_adventures_vault_records::API_KEY_V1).unwrap(),
+                500,
+                500,
+                LwwRegister::new(true, 500, OperationId::new([0xf0; 32])),
+                ObservedSet::new(),
+                ObservedSet::new(),
+                AnyRecord::ApiKey(ApiKey {
+                    label: label.to_owned(),
+                    service: "github.com".to_owned(),
+                    token: token.to_owned(),
+                    scopes: vec!["repo".to_owned()],
+                    expires_at: Some(1_900_000_000),
+                }),
+                ObservedSet::new(),
+            )
+            .unwrap();
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                [],
+                ItemState::Live(Box::new(document)),
+            )
+            .unwrap();
+            let base = 0xf1u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revisions.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revisions.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revisions.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xf7; 32], [0xf8; 24], [0xf9; 24]),
         )
         .unwrap();
         (
@@ -8594,6 +8916,506 @@ mod tests {
         .unwrap()
         .into_preparation();
         assert!(matches!(result, Err(ApplicationError::Unsupported)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn authored_api_key_scope_and_expiry_lines_are_closed() {
+        assert_eq!(parse_api_key_scope_line("").unwrap(), Vec::<String>::new());
+        assert_eq!(
+            parse_api_key_scope_line("repo,read:org").unwrap(),
+            vec!["repo".to_owned(), "read:org".to_owned()]
+        );
+        // Order is preserved exactly as typed, never sorted or deduplicated.
+        assert_eq!(
+            parse_api_key_scope_line("write,read").unwrap(),
+            vec!["write".to_owned(), "read".to_owned()]
+        );
+        for rejected in [
+            "repo,repo",                                // duplicate component
+            "repo, read",                               // untrimmed component
+            "repo ",                                    // untrimmed single component
+            "repo,",                                    // empty trailing component
+            ",repo",                                    // empty leading component
+            &"a".repeat(MAX_API_KEY_SCOPE_BYTES + 1),   // oversized component
+            &"a,".repeat(MAX_API_KEY_SCOPE_LINE_BYTES), // oversized line
+            &(0..=MAX_API_KEY_SCOPES)
+                .map(|index| index.to_string())
+                .collect::<Vec<_>>()
+                .join(","), // too many components
+        ] {
+            assert!(
+                matches!(
+                    parse_api_key_scope_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "scope line must be rejected"
+            );
+        }
+
+        assert_eq!(parse_api_key_expiry_line("").unwrap(), None);
+        assert_eq!(parse_api_key_expiry_line("1").unwrap(), Some(1));
+        assert_eq!(
+            parse_api_key_expiry_line("1900000000").unwrap(),
+            Some(1_900_000_000)
+        );
+        for rejected in [
+            "0",                    // zero is not an instant
+            "01",                   // leading zero is not canonical
+            "+1",                   // signs are not accepted
+            "-1",                   // signs are not accepted
+            "1 ",                   // trailing space is not a digit
+            "1e9",                  // no exponent form
+            "18446744073709551616", // one past u64::MAX
+        ] {
+            assert!(
+                matches!(
+                    parse_api_key_expiry_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "expiry line must be rejected"
+            );
+        }
+    }
+
+    #[test]
+    fn audited_authored_api_key_merge_records_host_validation_failure_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x26; 16]);
+        let (publication, revisions) = pending_api_key_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(507, audited_access_randomness(0x6d), &local)
+        .unwrap();
+
+        let base_revision = revisions[0];
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_api_key_conflict_merge(
+            item_id,
+            base_revision,
+            508,
+            audited_access_randomness(0x6e),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .record_audited_host_failure(&local)
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        session
+            .prepare_audited_api_key_conflict_merge(
+                item_id,
+                base_revision,
+                509,
+                audited_access_randomness(0x6f),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                ApiKeyConflictMergeInputV1::new(
+                    Zeroizing::new("Authored key".to_owned()),
+                    Zeroizing::new("github.com".to_owned()),
+                    Zeroizing::new("authored-token-value".to_owned()),
+                    Zeroizing::new("repo,repo".to_owned()),
+                    Zeroizing::new("1900000001".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x70),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .expect_err("invalid API-key form must remain a closed failed operation");
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        let base_document = session.current_catalog.items[&item_id]
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .and_then(|candidate| match candidate.state() {
+                ItemState::Live(document) => Some(document),
+                ItemState::Tombstone(_) => None,
+            })
+            .unwrap();
+        let expected_favorite = base_document.favorite().clone();
+        let expected_collections = base_document.collection_ids().clone();
+        let expected_tags = base_document.tags().clone();
+        let expected_attachments = base_document.attachments().clone();
+
+        session
+            .prepare_audited_api_key_conflict_merge(
+                item_id,
+                base_revision,
+                510,
+                audited_access_randomness(0x71),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                ApiKeyConflictMergeInputV1::new(
+                    Zeroizing::new("Authored key".to_owned()),
+                    Zeroizing::new("api.example".to_owned()),
+                    Zeroizing::new("authored-token-value".to_owned()),
+                    Zeroizing::new("repo,read:org".to_owned()),
+                    Zeroizing::new("1900000001".to_owned()),
+                ),
+                resolve_item_conflict_randomness(0x72),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored API-key merge must be the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions.iter().copied().collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored API-key merge must publish a live document")
+        };
+        assert_eq!(document.created_at_ms(), 500);
+        assert_eq!(document.updated_at_ms(), 510);
+        assert_eq!(document.favorite(), &expected_favorite);
+        assert_eq!(document.collection_ids(), &expected_collections);
+        assert_eq!(document.tags(), &expected_tags);
+        assert_eq!(document.attachments(), &expected_attachments);
+        let AnyRecord::ApiKey(api_key) = document.payload() else {
+            panic!("authored API-key merge must retain its schema")
+        };
+        assert_eq!(api_key.label, "Authored key");
+        assert_eq!(api_key.service, "api.example");
+        assert_eq!(api_key.token, "authored-token-value");
+        assert_eq!(
+            api_key.scopes,
+            vec!["repo".to_owned(), "read:org".to_owned()]
+        );
+        assert_eq!(api_key.expires_at, Some(1_900_000_001));
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_api_key_merge_accepts_an_empty_scope_and_expiry_form() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x27; 16]);
+        let (publication, revisions) = pending_api_key_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(511, audited_access_randomness(0x73), &local)
+        .unwrap();
+
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_api_key_conflict_merge(
+            item_id,
+            revisions[1],
+            512,
+            audited_access_randomness(0x74),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .complete_audited(
+            ApiKeyConflictMergeInputV1::new(
+                Zeroizing::new("Authored key".to_owned()),
+                Zeroizing::new("api.example".to_owned()),
+                Zeroizing::new("authored-token-value".to_owned()),
+                Zeroizing::new(String::new()),
+                Zeroizing::new(String::new()),
+            ),
+            resolve_item_conflict_randomness(0x75),
+            &local,
+        )
+        .unwrap()
+        .into_operation()
+        .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored API-key merge must be the sole current candidate")
+        };
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored API-key merge must publish a live document")
+        };
+        let AnyRecord::ApiKey(api_key) = document.payload() else {
+            panic!("authored API-key merge must retain its schema")
+        };
+        assert!(api_key.scopes.is_empty());
+        assert_eq!(api_key.expires_at, None);
+    }
+
+    #[test]
+    fn audited_authored_api_key_merge_rejects_a_card_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x28; 16]);
+        let (publication, revisions) = pending_card_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(513, audited_access_randomness(0x76), &local)
+        .unwrap();
+
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_api_key_conflict_merge(
+            item_id,
+            revisions[0],
+            514,
+            audited_access_randomness(0x77),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(result, Err(ApplicationError::Unsupported)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn audited_authored_api_key_merge_requires_an_exact_current_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x29; 16]);
+        let (publication, _) = pending_api_key_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(515, audited_access_randomness(0x78), &local)
+        .unwrap();
+
+        // A revision that is not a current candidate of this item is refused,
+        // and the refusal is durable before the caller ever sees it.
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_api_key_conflict_merge(
+            item_id,
+            RevisionId::new([0x7a; 32]),
+            516,
+            audited_access_randomness(0x79),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(result.is_err());
         let reopened = open_active_vault(
             Zeroizing::new(b"active passphrase".to_vec()),
             locator,

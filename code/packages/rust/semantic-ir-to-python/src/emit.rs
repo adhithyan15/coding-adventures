@@ -1759,6 +1759,18 @@ fn emit_builtin_call(
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
+        // SIR21 T3b-2: `div_floor` is a bare alias for `_sir_divide` (Ruby's
+        // `/` already floors ints / true-divides floats — see
+        // `arithmetic.div`'s own docstring in sir-runtime-core).
+        // `div_trunc`/`udiv_trunc`/`div_true` are genuinely new — see
+        // `arithmetic.trunc_div`/`utrunc_div`/`true_div`. Not part of the
+        // `resolve_binary` type-directed fast path above (division is
+        // deliberately excluded there — see `op_select.rs`'s own doc
+        // comment), so these always route through this helper table.
+        "div_floor" => "_sir_divide",
+        "div_trunc" => "_sir_trunc_div",
+        "udiv_trunc" => "_sir_utrunc_div",
+        "div_true" => "_sir_true_div",
         "=" => "_sir_eq",
         "<" => "_sir_lt",
         ">" => "_sir_gt",
@@ -2741,6 +2753,29 @@ mod tests {
             out,
             r#"_sir_oop_def_method("Dog", "speak", _sir_make_closure(speak, []))"#
         );
+    }
+
+    fn ilit(v: i64) -> Expr {
+        Expr::IntLit { value: v, span: s() }
+    }
+
+    #[test]
+    fn division_ops_dispatch_to_the_matching_runtime_helper() {
+        // SIR21 T3b-2: div_floor is a bare alias for the pre-existing
+        // _sir_divide; div_trunc/udiv_trunc/div_true route to the three new
+        // helpers. Each is strictly binary (no frontend emits a chained
+        // div_trunc(a, b, c)).
+        for (op, helper) in [
+            ("div_floor", "_sir_divide"),
+            ("div_trunc", "_sir_trunc_div"),
+            ("udiv_trunc", "_sir_utrunc_div"),
+            ("div_true", "_sir_true_div"),
+        ] {
+            let e = builtin(op, vec![ilit(7), ilit(2)]);
+            let mut out = String::new();
+            emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
+            assert_eq!(out, format!("{helper}(7, 2)"), "op {op} got:\n{out}");
+        }
     }
 
     #[test]

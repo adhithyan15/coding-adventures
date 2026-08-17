@@ -180,6 +180,14 @@ validation remains application-owned so invalid forms publish their failed
 `ItemConflictMerge` event before returning. Successful card merges retain only
 the base's non-form metadata and never return prior card values to the host.
 
+API-key authored merges use that same opaque preparation. The scope and expiry
+lines arrive exactly as typed and are turned into a record only behind the
+boundary, so the closed rules — a bounded comma-split scope line of trimmed,
+unique, non-empty components and a canonical nonzero expiry or none — publish
+their failed `ItemConflictMerge` event before returning. Successful API-key
+merges retain only the base's non-form metadata and never return the prior
+token to the host.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct

@@ -244,6 +244,77 @@ def div(*args: Any) -> Any:
     return acc
 
 
+def trunc_div(a: Any, b: Any) -> Any:
+    """SIR21 T3b-2 ``div_trunc`` — signed truncating division (rounds toward
+    zero), the twin split off :func:`div`'s floor semantics so a
+    non-Ruby-sourced program can pick truncation explicitly (matches C's
+    integer ``/``; absorbs/replaces the older ``tdiv`` name from
+    ``sir-typed-runtime-errors``).
+
+    Python's own ``//`` **floors**, not truncates (``-7 // 2 == -4``, not
+    ``-3``), so unlike :func:`div` we cannot delegate to a native operator
+    directly. The exact truncated quotient is the floor quotient adjusted by
+    one exactly when there's a nonzero remainder AND the operands' signs
+    differ (i.e. the true mathematical quotient is negative and not an
+    integer — floor rounds it further from zero than truncation would):
+
+    | ``a`` | ``b`` | floor (``//``) | remainder | signs differ? | trunc |
+    |------:|------:|---------------:|----------:|:--------------|------:|
+    |     7 |     2 |              3 |         1 | no             |     3 |
+    |    -7 |     2 |             -4 |         1 | yes            |    -3 |
+    |     7 |    -2 |             -4 |        -1 | yes            |    -3 |
+    |    -7 |    -2 |              3 |        -1 | no             |     3 |
+
+    ``divmod`` works on Python's arbitrary-precision ``int`` directly, so —
+    unlike a fixed-width ``i64`` backend — there is no ``MIN / -1`` overflow
+    edge case to guard here.
+    """
+    if b == 0:
+        raise_error("ZeroDivisionError", "divided by 0")
+    q, r = divmod(a, b)
+    if r != 0 and (a < 0) != (b < 0):
+        q += 1
+    return q
+
+
+def utrunc_div(a: Any, b: Any) -> Any:
+    """SIR21 T3b-2 ``udiv_trunc`` — the unsigned twin of :func:`trunc_div`.
+
+    On the fixed-width C/Go/Rust backends, values are stored tagged as a
+    signed ``i64``/``int64``, so a logically-unsigned ``u64`` ≥ 2^63
+    misreads as negative unless the bits are reinterpreted before dividing
+    — that reinterpretation is the entire reason ``udiv_trunc`` exists as a
+    separate op from ``div_trunc``. Python's ``int`` has **no fixed width**
+    and no separate signed/unsigned representation — a value a frontend
+    intends as unsigned is simply the same ``int`` it already is here, so
+    this backend needs no reinterpretation step and the two ops compute
+    identically. Kept as a distinct function (delegating to
+    :func:`trunc_div`) purely so this backend exposes the same four names
+    every sibling backend does, not because the arithmetic differs.
+    """
+    return trunc_div(a, b)
+
+
+def true_div(a: Any, b: Any) -> Any:
+    """SIR21 T3b-2 ``div_true`` — ALWAYS true-divides, even when both
+    operands are ints (``true_div(6, 3) == 2.0``, not ``2``). Models
+    Python's own ``/`` operator — but we still route it through this
+    explicit helper (rather than letting a translated program emit a bare
+    ``/``) so the zero-divisor re-raise matches every sibling op's typed
+    ``ZeroDivisionError`` convention (see :func:`div`'s own docstring for
+    why the *native* ``ZeroDivisionError`` must be wrapped: the SIR rescue
+    matcher only recognises the typed :class:`SirError` form).
+
+    Genuinely new on this backend: no prior op unconditionally floats an
+    all-integer division the way :func:`div` (Ruby-faithful, floors ints)
+    or :func:`trunc_div` (also integer-only) do.
+    """
+    try:
+        return float(a) / float(b)
+    except ZeroDivisionError:
+        raise_error("ZeroDivisionError", "divided by 0")
+
+
 def lt(a: Any, b: Any) -> bool:
     """Less-than."""
     return bool(a < b)

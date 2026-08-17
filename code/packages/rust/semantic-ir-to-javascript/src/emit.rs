@@ -1744,6 +1744,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             // not a `ZeroDivisionError`) AND picks Integer#/ floor vs Float#/
             // true-division from the operand tags.  See `runtime::divide`.
             "/" => Some("__Sir.divide"),
+            // SIR21 T3b-2: `div_floor` is a bare alias for `divide` above
+            // (Ruby's `/` already floors ints / true-divides floats — no
+            // new logic). `div_trunc`/`udiv_trunc`/`div_true` are
+            // genuinely new — see `runtime::truncDiv`/`utruncDiv`/
+            // `trueDiv`'s doc comments.
+            "div_floor" => Some("__Sir.divide"),
+            "div_trunc" => Some("__Sir.truncDiv"),
+            "udiv_trunc" => Some("__Sir.utruncDiv"),
+            "div_true" => Some("__Sir.trueDiv"),
             // `-` and `%` route through runtime helpers (not native infix)
             // because their result must be RE-TAGGED: a boxed Float operand
             // yields a boxed Float result (`7.0 - 1 == 6.0`), which native

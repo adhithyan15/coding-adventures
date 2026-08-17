@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited authored API-key conflict merge with a hidden token prompt,
+  opaque base retention, closed scope/expiry validation, and all-current-parent
+  publication.
 - Exposed audited authored payment-card conflict merge with hidden PAN/CVV,
   opaque base retention, closed validation, and all-current-parent publication.
 - Exposed audited authored secure-note conflict merge with hidden body input,

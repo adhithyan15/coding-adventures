@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.53.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive-only: adds the four new division builtin names from SIR21 T3b-2
+(`code/specs/SIR21-type-system-and-integer-semantics.md` §E3) to both the
+emitter's inline 2-arg fast path and the `builtins` forward-compat
+dispatch table. Bare `"/"` keeps working unchanged — no frontend emits
+any of the new names yet.
+
+- `div_floor` is a bare alias for the pre-existing `divide` (already
+  zero-check-correct on both int and float paths — Ruby's `/` already
+  floors ints and true-divides floats, so zero new logic).
+- `div_trunc`/`udiv_trunc`/`div_true` route to three new runtime
+  functions (`truncDiv`/`utruncDiv`/`trueDiv`). All three raise the same
+  typed `ZeroDivisionError` `divide` does — never let a bare `/` leak
+  native JS `Infinity`/`NaN` through.
+- JS numbers are IEEE-754 doubles with no fixed width and no separate
+  signed/unsigned representation, so unlike C/Go/Rust's `udiv_trunc`
+  (which must reinterpret bits to avoid a `u64` ≥ 2^63 misreading as
+  negative), this backend's `udiv_trunc` computes identically to
+  `truncDiv` — documented in `runtime.rs`, not a bug.
+- New `tests/compile_and_run_division_ops.rs`: real `node`-execution
+  proof for all four ops, including the §E3 worked example,
+  floor-vs-truncate divergence, and a zero-divisor case for every op.
+
 ## 0.52.0 — SIR28 §7: remove dead bare `print`/`puts` handling (final backend)
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`

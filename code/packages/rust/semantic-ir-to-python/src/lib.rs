@@ -2707,4 +2707,188 @@ mod tests {
             assert_eq!(out, "\n");
         }
     }
+
+    // ── SIR21 T3b-2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true` ────
+    //
+    // Hand-build a module calling each op directly (bypassing the frontend,
+    // since no frontend emits these names yet), emit Python, run it through
+    // a real interpreter via `run_division_program` (mirrors
+    // `run_sys_write`'s pattern), and assert stdout/exit status.
+
+    fn division_bin(name: &str, a: Expr, b: Expr) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args: vec![a, b], effects: EffectSet::PURE, span: s() }
+    }
+
+    fn division_print_stmt(expr: Expr) -> Stmt {
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__sys_write__".into(),
+                args: vec![str_lit("stdout"), str_lit("once"), bool_lit(false), expr],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            span: s(),
+        }
+    }
+
+    fn division_module(stmts: Vec<Stmt>) -> Module {
+        Module {
+            name: "divprog".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
+                Feature::Strings,
+                Feature::Floats,
+                Feature::Exceptions,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new().with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    /// Run a `division_module` and return `(stdout, stderr, success)`, or
+    /// `None` to skip when no usable Python interpreter is present. Unlike
+    /// `run_sys_write` (which asserts success unconditionally), this
+    /// returns the exit status too, since the zero-divisor tests below
+    /// expect a NON-zero exit.
+    fn run_division_program(m: &Module) -> Option<(String, String, bool)> {
+        let exe = ["python3", "python"].into_iter().find(|e| python_is_runnable(e))?;
+        let source = compile(m).expect("compile to python").source;
+
+        let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+        let pythonpath = std::env::join_paths([
+            py_root.join("sir-runtime-core/src"),
+            py_root.join("sir-runtime-pairs/src"),
+            py_root.join("sir-runtime-oop/src"),
+            py_root.join("sir-runtime-range/src"),
+            py_root.join("sir-runtime-regex/src"),
+            py_root.join("sir-runtime-exceptions/src"),
+        ])
+        .expect("join PYTHONPATH");
+
+        static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let file =
+            std::env::temp_dir().join(format!("sir_div_{}_{}.py", std::process::id(), nonce));
+        std::fs::write(&file, &source).expect("write temp python");
+        let out = std::process::Command::new(exe)
+            .arg(&file)
+            .env("PYTHONPATH", &pythonpath)
+            .output()
+            .expect("spawn python");
+        let _ = std::fs::remove_file(&file);
+
+        Some((
+            String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"),
+            String::from_utf8_lossy(&out.stderr).replace("\r\n", "\n"),
+            out.status.success(),
+        ))
+    }
+
+    fn run_division_ok(m: &Module) -> Option<String> {
+        let (out, err, ok) = run_division_program(m)?;
+        assert!(ok, "emitted Python failed:\n{err}");
+        Some(out)
+    }
+
+    // ── §E3's own worked example, verbatim ──────────────────────────────
+
+    #[test]
+    fn e3_worked_example() {
+        let m = division_module(vec![
+            division_print_stmt(division_bin("div_floor", int_lit(7), int_lit(2))),
+            division_print_stmt(division_bin("div_trunc", int_lit(-7), int_lit(2))),
+            division_print_stmt(division_bin("div_true", int_lit(7), int_lit(2))),
+        ]);
+        if let Some(out) = run_division_ok(&m) {
+            assert_eq!(out, "3\n-3\n3.5\n");
+        }
+    }
+
+    // ── div_floor: a bare alias for `div`'s existing floor logic ─────────
+
+    #[test]
+    fn div_floor_floors_toward_negative_infinity() {
+        let m = division_module(vec![
+            division_print_stmt(division_bin("div_floor", int_lit(7), int_lit(2))),
+            division_print_stmt(division_bin("div_floor", int_lit(-7), int_lit(2))),
+            division_print_stmt(division_bin("div_floor", int_lit(7), int_lit(-2))),
+            division_print_stmt(division_bin("div_floor", int_lit(-7), int_lit(-2))),
+        ]);
+        if let Some(out) = run_division_ok(&m) {
+            assert_eq!(out, "3\n-4\n-4\n3\n");
+        }
+    }
+
+    // ── div_trunc/udiv_trunc: truncate toward zero ───────────────────────
+
+    #[test]
+    fn div_trunc_truncates_toward_zero() {
+        let m = division_module(vec![
+            division_print_stmt(division_bin("div_trunc", int_lit(7), int_lit(2))),
+            division_print_stmt(division_bin("div_trunc", int_lit(-7), int_lit(2))),
+            division_print_stmt(division_bin("div_trunc", int_lit(7), int_lit(-2))),
+            division_print_stmt(division_bin("div_trunc", int_lit(-7), int_lit(-2))),
+        ]);
+        if let Some(out) = run_division_ok(&m) {
+            assert_eq!(out, "3\n-3\n-3\n3\n");
+        }
+    }
+
+    #[test]
+    fn udiv_trunc_matches_div_trunc_on_positive_operands() {
+        let m = division_module(vec![division_print_stmt(division_bin(
+            "udiv_trunc",
+            int_lit(7),
+            int_lit(2),
+        ))]);
+        if let Some(out) = run_division_ok(&m) {
+            assert_eq!(out, "3\n");
+        }
+    }
+
+    // ── div_true: genuinely new — always true-divides ────────────────────
+
+    #[test]
+    fn div_true_always_true_divides_even_on_integer_operands() {
+        let m = division_module(vec![
+            division_print_stmt(division_bin("div_true", int_lit(7), int_lit(2))),
+            division_print_stmt(division_bin("div_true", int_lit(-7), int_lit(2))),
+            division_print_stmt(division_bin("div_true", int_lit(6), int_lit(3))),
+        ]);
+        if let Some(out) = run_division_ok(&m) {
+            assert_eq!(out, "3.5\n-3.5\n2.0\n");
+        }
+    }
+
+    #[test]
+    fn zero_divisor_fails_with_a_typed_sir_error_for_every_op() {
+        for op in ["div_floor", "div_trunc", "udiv_trunc", "div_true"] {
+            let m = division_module(vec![division_print_stmt(division_bin(
+                op,
+                int_lit(7),
+                int_lit(0),
+            ))]);
+            let Some((out, err, ok)) = run_division_program(&m) else {
+                break;
+            };
+            assert!(!ok, "[{op}] expected a non-zero exit; stdout={out:?}");
+            assert!(
+                err.contains("SirError: divided by 0"),
+                "[{op}] expected 'SirError: divided by 0' on stderr, got:\n{err}"
+            );
+        }
+    }
 }
