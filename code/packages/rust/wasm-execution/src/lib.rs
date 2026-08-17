@@ -1923,6 +1923,22 @@ pub const MAX_TABLES: usize = 64;
 /// the process.
 pub const MAX_TABLE_ELEMENTS: u32 = 10_000_000;
 
+/// Caps the SUM of every memory's page count -- declared minimum plus
+/// any `memory.grow` growth -- at RUNTIME (task #101). `wasm-validator`'s
+/// own "Check 1b" already caps the sum of every memory's DECLARED
+/// minimum at this same bound (65536 pages = 4GB, the real single-memory
+/// spec max, generalized across however many memories a module
+/// declares) -- but that check only runs at declare time. Without a
+/// matching runtime check, a module could declare `MAX_MEMORIES` (64)
+/// memories each at `min = 0`, then `memory.grow` each independently up
+/// to its own per-memory 65536-page cap, reaching ~256GB from one small
+/// module -- reintroducing at runtime exactly what Check 1b closes at
+/// declare-time. Reuses the SAME bound Check 1b already uses, rather
+/// than a new arbitrary constant, so "total pages across every memory,
+/// declared or grown, never exceeds 65536" is one consistent invariant
+/// enforced at both points in a module's lifecycle.
+pub const MAX_TOTAL_MEMORY_PAGES: u32 = 65536;
+
 thread_local! {
     /// How many WASM10 dedicated threads deep the CURRENT thread is
     /// nested, relative to the original (non-WASM-spawned) caller — see
@@ -2158,6 +2174,24 @@ fn get_memory_at<'a>(ctx: &WasmExecutionContext, memidx: usize) -> Result<&'a mu
             ctx.memories.len()
         ))),
     }
+}
+
+/// Pure aggregate-cap check for `memory.grow` (task #101): given every
+/// memory's CURRENT page count, which one is being grown, and by how
+/// much, returns whether the resulting CROSS-MEMORY total would exceed
+/// `MAX_TOTAL_MEMORY_PAGES`. `u64` arithmetic throughout so a huge
+/// `delta` (up to `u32::MAX`) can't wrap the sum and slip past the
+/// check. Kept as a free function, separate from the `0x40` interpreter
+/// handler, purely so it's cheaply unit-testable with small synthetic
+/// page counts -- `MAX_TOTAL_MEMORY_PAGES` (65536 pages = 4GB) is far
+/// too large to actually allocate in a unit test just to exercise the
+/// threshold.
+fn memory_grow_would_exceed_aggregate_cap(current_pages: &[u32], target_idx: usize, delta: u32) -> bool {
+    let mut aggregate: u64 = 0;
+    for (i, &pages) in current_pages.iter().enumerate() {
+        aggregate += if i == target_idx { pages as u64 + delta as u64 } else { pages as u64 };
+    }
+    aggregate > MAX_TOTAL_MEMORY_PAGES as u64
 }
 
 // ── Helper: get table from context ────────────────────────────────────────
@@ -3993,10 +4027,31 @@ fn register_memory(vm: &mut GenericVM) {
             Some(Operand::Index(i)) => *i,
             _ => 0,
         };
-        let delta = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let result = match ctx.memories.get(memidx) {
-            Some(&ptr) => unsafe { (*ptr).grow(delta as u32) },
-            None => -1,
+        let delta = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32;
+        // Security review follow-up (task #101, mirroring `table.grow`'s
+        // own task #98 round-2 fix): `LinearMemory::grow`'s per-memory
+        // 65536-page cap alone still permits an AGGREGATE DoS across
+        // `MAX_MEMORIES` (64) memories -- each individually grown to
+        // 65536 pages (4GB) would total ~256GB from one small module.
+        // `wasm-validator`'s own "Check 1b" already caps the SUM of every
+        // memory's DECLARED minimum at 65536 pages total (the real
+        // single-memory spec max, generalized across however many
+        // memories a module declares); this reuses that exact same
+        // `MAX_TOTAL_MEMORY_PAGES` bound at RUNTIME, so growth can't
+        // reintroduce what Check 1b already closes at declare-time.
+        // `memory_grow_would_exceed_aggregate_cap` (see its own doc
+        // comment) does the actual arithmetic, kept as a pure function so
+        // it's cheaply unit-testable without allocating anywhere near
+        // 4GB of real backing memory just to exercise the threshold.
+        let result = if memidx >= ctx.memories.len() {
+            -1
+        } else {
+            let current_pages: Vec<u32> = ctx.memories.iter().map(|&ptr| unsafe { (*ptr).size() }).collect();
+            if memory_grow_would_exceed_aggregate_cap(&current_pages, memidx, delta) {
+                -1
+            } else {
+                unsafe { (*ctx.memories[memidx]).grow(delta) }
+            }
         };
         push_wasm(vm, WasmValue::I32(result));
         vm.advance_pc();
@@ -6637,6 +6692,85 @@ mod tests {
 
         let state = engine.into_state();
         assert_eq!(state.memories[0].size(), 1, "memory 0 must not have grown");
+        assert_eq!(state.memories[1].size(), 5, "memory 1 must have grown by 2 (3 -> 5)");
+    }
+
+    /// Security review (task #101): a per-memory 65536-page cap alone
+    /// still permits an AGGREGATE resource-exhaustion DoS across many
+    /// memories -- `memory_grow_would_exceed_aggregate_cap` (extracted as
+    /// a pure function specifically so it's cheaply testable with small
+    /// synthetic page counts, since `MAX_TOTAL_MEMORY_PAGES` itself is
+    /// 65536 pages = 4GB, far too large to actually allocate in a unit
+    /// test) is the runtime counterpart to `wasm-validator`'s declare-time
+    /// "Check 1b". These tests pin the exact threshold arithmetic the
+    /// `0x40` (`memory.grow`) handler relies on.
+    #[test]
+    fn memory_grow_aggregate_cap_rejects_a_small_target_growth_when_another_memory_is_already_at_the_cap() {
+        // Memory 0 is (synthetically) already at the full aggregate cap;
+        // growing memory 1 by just 1 page must still be rejected, because
+        // the CROSS-MEMORY total would exceed the cap -- even though
+        // memory 1's own per-memory check would trivially pass on its
+        // own (1 page is nowhere near the per-memory 65536-page cap in
+        // isolation).
+        let current_pages = [MAX_TOTAL_MEMORY_PAGES, 0];
+        assert!(memory_grow_would_exceed_aggregate_cap(&current_pages, 1, 1));
+    }
+
+    #[test]
+    fn memory_grow_aggregate_cap_allows_growth_exactly_up_to_the_cap() {
+        // Two memories whose pages, plus the delta, sum to EXACTLY
+        // `MAX_TOTAL_MEMORY_PAGES` -- must be allowed (the check is `>`,
+        // not `>=`).
+        let current_pages = [100u32, 200];
+        let delta = MAX_TOTAL_MEMORY_PAGES - 300;
+        assert!(!memory_grow_would_exceed_aggregate_cap(&current_pages, 0, delta));
+    }
+
+    #[test]
+    fn memory_grow_aggregate_cap_rejects_one_page_past_the_cap() {
+        let current_pages = [100u32, 200];
+        let delta = MAX_TOTAL_MEMORY_PAGES - 300 + 1;
+        assert!(memory_grow_would_exceed_aggregate_cap(&current_pages, 0, delta));
+    }
+
+    #[test]
+    fn memory_grow_aggregate_cap_arithmetic_does_not_overflow_with_a_huge_delta() {
+        // `delta` can be as large as `u32::MAX` (a WASM module's i32
+        // operand, reinterpreted). `u64` arithmetic throughout must
+        // correctly reject this without wrapping.
+        let current_pages = [0u32];
+        assert!(memory_grow_would_exceed_aggregate_cap(&current_pages, 0, u32::MAX));
+    }
+
+    /// End-to-end wiring proof: growth that stays well under the
+    /// aggregate cap across multiple memories must still succeed and
+    /// leave every other memory unaffected -- confirms the aggregate
+    /// check doesn't wrongly reject ordinary, small multi-memory growth
+    /// (the happy path this whole feature must not break).
+    #[test]
+    fn memory_grow_aggregate_cap_does_not_block_ordinary_small_multi_memory_growth() {
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x41, 0x02, // i32.const 2 (delta)
+                0x40, 0x01, // memory.grow memidx=1
+                0x0B,
+            ],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None), LinearMemory::new(3, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(3)]); // old size
+
+        let state = engine.into_state();
+        assert_eq!(state.memories[0].size(), 1, "memory 0 must be untouched");
         assert_eq!(state.memories[1].size(), 5, "memory 1 must have grown by 2 (3 -> 5)");
     }
 
