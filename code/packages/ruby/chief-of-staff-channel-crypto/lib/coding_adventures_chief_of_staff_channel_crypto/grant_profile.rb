@@ -540,24 +540,71 @@ module CodingAdventures
       KeyGrantSupport.wipe(wrapping_key) unless wrapping_key.nil?
     end
 
-    def open_channel_key_grant(grant, expected_originator_id, expected_receiver_id, expected_channel_id,
-                               receiver_key_pair, originator_public_key)
+    # Check every public D18G binding and the originator's Ed25519 signature
+    # without needing the receiver's private key.
+    #
+    # Opening a grant answers "may I, the receiver, unwrap this CMK?" and needs
+    # a receiver secret, because unwrapping performs an X25519 agreement. Some
+    # callers need a strictly weaker answer: "is this grant authentic?" D18T is
+    # the motivating case -- before a rotation candidate may be offered to key
+    # custody it must verify the originator signature on *every* receiver's
+    # grant, and the originator holds no receiver private keys, so it cannot
+    # open any of them.
+    #
+    # A successful return proves the originator named by +originator_public_key+
+    # signed this exact (originator, receiver, channel, epoch, ephemeral key,
+    # nonce, wrapped CMK) tuple. It proves nothing about whether the wrapped CMK
+    # decrypts -- only unwrapping can establish that. A caller verifying grants
+    # it cannot open must not treat success as proof the receiver will be able
+    # to use the grant.
+    #
+    # Shares one verification path with #open_channel_key_grant, so the two can
+    # never drift on binding order or stable error codes.
+    def verify_grant_signature(grant, expected_originator_id, expected_receiver_id, expected_channel_id,
+                               originator_public_key)
+      verify_grant_bindings(
+        grant, expected_originator_id, expected_receiver_id, expected_channel_id, originator_public_key
+      )
+      nil
+    end
+
+    # Shared authenticity path. Returns the grant's destructured values so the
+    # unwrapping caller does not re-read them.
+    def verify_grant_bindings(grant, expected_originator_id, expected_receiver_id, expected_channel_id,
+                              originator_public_key)
       KeyGrantSupport.validate_grant(grant)
       expected_originator = KeyGrantSupport.copy_bytes(expected_originator_id)
       expected_receiver = KeyGrantSupport.copy_bytes(expected_receiver_id)
       expected_channel = KeyGrantSupport.fixed_copy(expected_channel_id, 16)
       public_key = KeyGrantSupport.fixed_copy(originator_public_key, 32)
-      KeyGrantSupport.fail!("invalid_field") unless receiver_key_pair.is_a?(ReceiverKeyPair)
+      values = grant.__values
       originator_id, receiver_id, channel_id, key_epoch, ephemeral_public, nonce, wrapped_cmk,
-        signature = grant.__values
+        signature = values
       KeyGrantSupport.fail!("unexpected_originator") unless KeyGrantSupport.equal_bytes(originator_id, expected_originator)
       KeyGrantSupport.fail!("unexpected_receiver") unless KeyGrantSupport.equal_bytes(receiver_id, expected_receiver)
       KeyGrantSupport.fail!("unexpected_channel") unless KeyGrantSupport.equal_bytes(channel_id, expected_channel)
       signature_input = grant_signature_values(
         originator_id, receiver_id, channel_id, key_epoch, ephemeral_public, nonce, wrapped_cmk
       )
-      signature_valid = Ed25519.verify(signature_input, signature, public_key)
+      # A raise from verify is treated exactly like a false return: the caller
+      # learns only that the signature did not check out.
+      signature_valid = begin
+        Ed25519.verify(signature_input, signature, public_key)
+      rescue StandardError
+        false
+      end
       KeyGrantSupport.fail!("invalid_signature") unless signature_valid
+      values
+    end
+    private_class_method :verify_grant_bindings
+
+    def open_channel_key_grant(grant, expected_originator_id, expected_receiver_id, expected_channel_id,
+                               receiver_key_pair, originator_public_key)
+      KeyGrantSupport.fail!("invalid_field") unless receiver_key_pair.is_a?(ReceiverKeyPair)
+      originator_id, receiver_id, channel_id, key_epoch, ephemeral_public, nonce, wrapped_cmk =
+        verify_grant_bindings(
+          grant, expected_originator_id, expected_receiver_id, expected_channel_id, originator_public_key
+        )
       shared_secret = receiver_key_pair.agree(ephemeral_public)
       wrapping_key = derive_key_grant_wrapping_key(shared_secret, channel_id, key_epoch, receiver_id)
       aad = grant_aad_values(originator_id, receiver_id, channel_id, key_epoch, ephemeral_public)
@@ -569,11 +616,10 @@ module CodingAdventures
     rescue KeyGrantProfileError
       raise
     rescue StandardError
-      if signature_valid == false || signature_valid.nil?
-        KeyGrantSupport.fail!("invalid_signature")
-      else
-        KeyGrantSupport.fail!("authentication_failed")
-      end
+      # Every pre-unwrap failure now raises KeyGrantProfileError from
+      # verify_grant_bindings and re-raises above, so anything reaching here
+      # arose during agreement or AEAD open -- after the signature checked out.
+      KeyGrantSupport.fail!("authentication_failed")
     ensure
       KeyGrantSupport.wipe(shared_secret) unless shared_secret.nil?
       KeyGrantSupport.wipe(wrapping_key) unless wrapping_key.nil?
