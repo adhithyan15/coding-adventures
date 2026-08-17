@@ -371,6 +371,14 @@ func tarExtract(files []string, opts TarOptions, stdout io.Writer, stderr io.Wri
 			}
 		}
 
+		// Security: reject any entry name that isn't a plain relative path
+		// (no leading "/", no ".." segments) before it touches the
+		// filesystem at all.
+		if !filepath.IsLocal(name) {
+			fmt.Fprintf(stderr, "tar: %s: path escapes target directory\n", name)
+			continue
+		}
+
 		// Security: prevent path traversal.
 		targetPath := filepath.Join(targetDirAbs, name)
 		targetPathAbs, err := filepath.Abs(targetPath)

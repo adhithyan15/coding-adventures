@@ -9,10 +9,7 @@ import { JSDOM } from "jsdom";
 const backend = existsSync(resolve("VentureChrome.js")) ? "webcomponent" : "html";
 
 test(`${backend} controls cross the Mosaic host seam`, async () => {
-  const source = readFileSync(resolve("index.html"), "utf8").replace(
-    /<script\b[^>]*>[\s\S]*?<\/script>|<script\b[^>]*\/?>/gi,
-    "",
-  );
+  const source = stripScriptTags(readFileSync(resolve("index.html"), "utf8"));
   const dom = new JSDOM(source, {
     url: "https://venture.test/",
     runScripts: "dangerously",
@@ -117,6 +114,22 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     dom.window.close();
   }
 });
+
+// A single-pass replace can reintroduce a "<script" sequence when two
+// overlapping matches straddle each other (e.g. "<scr<script>ipt>ipt>"),
+// so keep stripping until a pass makes no further change.
+function stripScriptTags(html) {
+  let current = html;
+  let previous;
+  do {
+    previous = current;
+    current = previous.replace(
+      /<script\b[^>]*>[\s\S]*?<\/script>|<script\b[^>]*\/?>/gi,
+      "",
+    );
+  } while (current !== previous);
+  return current;
+}
 
 function findRoot() {
   const root =
