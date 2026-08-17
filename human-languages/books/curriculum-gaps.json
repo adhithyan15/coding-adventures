@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2885,
+    "totalLessons": 2895,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -28,18 +28,18 @@
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 756,
     "scriptExposureExemptedGlyphs": 2220,
-    "tracksTeachingNoScript": 3,
+    "tracksTeachingNoScript": 2,
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 583,
+    "atomsNeverRevisited": 584,
     "forwardReferences": 508,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
     "drivableLessons": 2478,
     "drivablePercent": 86,
-    "chaptersWithoutDrivablePrefix": 82,
+    "chaptersWithoutDrivablePrefix": 83,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -2705,7 +2705,8 @@
           12,
           13,
           14,
-          15
+          15,
+          16
         ],
         "bookChapters": [
           1,
@@ -2722,7 +2723,8 @@
           12,
           13,
           14,
-          15
+          15,
+          16
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3130,10 +3132,10 @@
       {
         "language": "bengali",
         "status": "mixed",
-        "lessonCount": 70,
+        "lessonCount": 80,
         "versions": {
           "1": 30,
-          "2": 40
+          "2": 50
         }
       },
       {
@@ -3738,8 +3740,8 @@
       },
       {
         "language": "bengali",
-        "bookChapters": 15,
-        "declaredChapters": 15,
+        "bookChapters": 16,
+        "declaredChapters": 16,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -3906,8 +3908,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 909,
-      "declaredChapters": 909,
+      "bookChapters": 910,
+      "declaredChapters": 910,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3919,9 +3921,9 @@
     }
   },
   "levels": {
-    "totalLessons": 2885,
+    "totalLessons": 2895,
     "byLevel": {
-      "pre-A1": 1623,
+      "pre-A1": 1633,
       "A1": 548,
       "A2": 543,
       "B1": 40,
@@ -3949,9 +3951,9 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 70,
+        "lessonCount": 80,
         "byLevel": {
-          "pre-A1": 46,
+          "pre-A1": 56,
           "A1": 1,
           "A2": 19,
           "B1": 0,
@@ -4753,8 +4755,8 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 70,
-        "measurable": 40,
+        "lessonCount": 80,
+        "measurable": 50,
         "unmeasurable": 30,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -5680,7 +5682,7 @@
           "language": "bengali",
           "script": "bengali",
           "latinScript": false,
-          "lessonCount": 70,
+          "lessonCount": 80,
           "totalGlyphs": 48,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -30313,6 +30315,28 @@
         "revisits": 1
       },
       {
+        "atom": "BN-GRAMMAR-C13-FUTURE-POLITE-02",
+        "language": "bengali",
+        "introducedBy": "BN-C13-maf-korben",
+        "introducedAt": 59,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-GRAMMAR-C13-KORE-02",
+        "language": "bengali",
+        "introducedBy": "BN-C13-doya-kore",
+        "introducedAt": 57,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-LEX-C07-HOWA-01",
         "language": "bengali",
         "introducedBy": "BN-C07-howa",
@@ -30434,6 +30458,17 @@
         "revisits": 2
       },
       {
+        "atom": "BN-LEX-C11-BON-01",
+        "language": "bengali",
+        "introducedBy": "BN-C11-bon",
+        "introducedAt": 52,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-LEX-C11-BONDHU-01",
         "language": "bengali",
         "introducedBy": "BN-C11-bondhu",
@@ -30443,6 +30478,94 @@
           "R3"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "BN-LEX-C11-PORIBAR-01",
+        "language": "bengali",
+        "introducedBy": "BN-C11-poribar",
+        "introducedAt": 50,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C12-CHOKH-01",
+        "language": "bengali",
+        "introducedBy": "BN-C12-chokh",
+        "introducedAt": 53,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "BN-LEX-C12-HRIDOY-01",
+        "language": "bengali",
+        "introducedBy": "BN-C12-hridoy",
+        "introducedAt": 56,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C12-NAK-01",
+        "language": "bengali",
+        "introducedBy": "BN-C12-nak",
+        "introducedAt": 55,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C13-DOYAKORE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C13-doya-kore",
+        "introducedAt": 57,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C13-DUKKHITO-01",
+        "language": "bengali",
+        "introducedBy": "BN-C13-dukkhito",
+        "introducedAt": 58,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C13-MAFKORBEN-01",
+        "language": "bengali",
+        "introducedBy": "BN-C13-maf-korben",
+        "introducedAt": 59,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C15-CHOSHMA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C15-choshma",
+        "introducedAt": 69,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
       },
       {
         "atom": "BN-SOUND-C09-SAHAJJO-02",
@@ -45239,26 +45362,6 @@
         "revisits": 4
       },
       {
-        "atom": "BN-GRAMMAR-C13-FUTURE-POLITE-02",
-        "language": "bengali",
-        "introducedBy": "BN-C13-maf-korben",
-        "introducedAt": 59,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "BN-GRAMMAR-C13-KORE-02",
-        "language": "bengali",
-        "introducedBy": "BN-C13-doya-kore",
-        "introducedAt": 57,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "BN-HISTORY-DUI-AREAL-COMPANY",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
@@ -45349,84 +45452,24 @@
         "revisits": 2
       },
       {
-        "atom": "BN-LEX-C11-BON-01",
+        "atom": "BN-LEX-C11-BHAI-01",
         "language": "bengali",
-        "introducedBy": "BN-C11-bon",
-        "introducedAt": 52,
+        "introducedBy": "BN-C11-bhai",
+        "introducedAt": 51,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 2
       },
       {
-        "atom": "BN-LEX-C11-PORIBAR-01",
+        "atom": "BN-LEX-C12-MUKH-01",
         "language": "bengali",
-        "introducedBy": "BN-C11-poribar",
-        "introducedAt": 50,
+        "introducedBy": "BN-C12-mukh",
+        "introducedAt": 54,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 2
-      },
-      {
-        "atom": "BN-LEX-C12-CHOKH-01",
-        "language": "bengali",
-        "introducedBy": "BN-C12-chokh",
-        "introducedAt": 53,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "BN-LEX-C12-HRIDOY-01",
-        "language": "bengali",
-        "introducedBy": "BN-C12-hridoy",
-        "introducedAt": 56,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "BN-LEX-C12-NAK-01",
-        "language": "bengali",
-        "introducedBy": "BN-C12-nak",
-        "introducedAt": 55,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "BN-LEX-C13-DOYAKORE-01",
-        "language": "bengali",
-        "introducedBy": "BN-C13-doya-kore",
-        "introducedAt": 57,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "BN-LEX-C13-DUKKHITO-01",
-        "language": "bengali",
-        "introducedBy": "BN-C13-dukkhito",
-        "introducedAt": 58,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "BN-LEX-C13-MAFKORBEN-01",
-        "language": "bengali",
-        "introducedBy": "BN-C13-maf-korben",
-        "introducedAt": 59,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "BN-LEX-C13-SBAGOTOM-01",
@@ -45467,6 +45510,46 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C14-SHOBUJ-01",
+        "language": "bengali",
+        "introducedBy": "BN-C14-shobuj",
+        "introducedAt": 65,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-LEX-C15-JAMA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C15-jama",
+        "introducedAt": 67,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-LEX-C15-KAPOR-01",
+        "language": "bengali",
+        "introducedBy": "BN-C15-kapor",
+        "introducedAt": 66,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "BN-LEX-C15-SHARI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C15-shari",
+        "introducedAt": 68,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "BN-LEX-NUMBERS-ONE-TO-FIVE",
@@ -57378,12 +57461,12 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 70,
+        "lessonCount": 80,
         "lessonsWithoutSequence": 30,
         "forwardPrerequisites": 13,
         "forwardReviews": 14,
-        "atomsTaught": 64,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 74,
+        "atomsNeverRevisited": 2,
         "forwardReferences": 7
       },
       {
@@ -57592,13 +57675,13 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4039,
-      "atomsNeverRevisited": 583,
+      "atomsTaught": 4049,
+      "atomsNeverRevisited": 584,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1123,
-        "R2": 3124,
-        "R3": 2869,
+        "R1": 1124,
+        "R2": 3129,
+        "R3": 2881,
         "R4": 1561
       },
       "forwardReferences": 508
@@ -57622,11 +57705,11 @@
       {
         "language": "bengali",
         "script": "bengali",
-        "lessonCount": 70,
-        "scriptLessons": 0,
-        "taughtGlyphs": 0,
+        "lessonCount": 80,
+        "scriptLessons": 10,
+        "taughtGlyphs": 9,
         "shownGlyphs": 48,
-        "neverTaughtGlyphs": 48,
+        "neverTaughtGlyphs": 39,
         "violations": 65,
         "exposureOnly": 0,
         "exposureExemptedGlyphs": 179,
@@ -63111,7 +63194,7 @@
     ],
     "summary": {
       "tracksWithScript": 16,
-      "tracksTeachingNothing": 3,
+      "tracksTeachingNothing": 2,
       "violations": 756,
       "exposureOnly": 176,
       "exposureExemptedGlyphs": 2220,
@@ -63160,6 +63243,11 @@
             "criterion": "vocabulary",
             "detail": "teaches 46 distinct headwords at or below pre-A1, against 300",
             "shortfall": 254
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "3 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 3
           }
         ],
         "vocabulary": 65
@@ -63616,10 +63704,10 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2885,
+    "totalLessons": 2895,
     "voice": 2042,
     "sight": 582,
-    "pen": 261,
+    "pen": 271,
     "coreVoice": 2478,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 86,
@@ -64151,12 +64239,12 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 70,
+        "lessonCount": 80,
         "voice": 14,
         "sight": 56,
-        "pen": 0,
+        "pen": 10,
         "coreVoice": 69,
-        "drivablePercent": 99,
+        "drivablePercent": 86,
         "drivablePrefixTotal": 64,
         "chapters": [
           {
@@ -64373,6 +64461,21 @@
             ],
             "drivablePrefix": 4,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "bengali",
+            "chapter": 16,
+            "lessonCount": 10,
+            "voice": 0,
+            "sight": 0,
+            "pen": 10,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "BN-W01-na"
           }
         ]
       },
@@ -77440,7 +77543,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2885,
+    "lessons": 2895,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -77450,8 +77553,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 2830,
-    "usesBeforeIntroduction": 11172,
+    "lessonsUsingTerms": 2838,
+    "usesBeforeIntroduction": 11189,
     "technicalUsesBeforeIntroduction": 3110,
     "technicalLessons": 1598,
     "worstTerms": [
@@ -77482,7 +77585,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 2885,
+    "lessonsScanned": 2895,
     "sourceFindings": 0,
     "renderedFindings": 0
   }
