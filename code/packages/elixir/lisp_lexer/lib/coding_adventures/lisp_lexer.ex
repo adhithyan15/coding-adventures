@@ -1,17 +1,17 @@
 defmodule CodingAdventures.LispLexer do
   @moduledoc """
-  Lisp lexer backed by the shared grammar-driven lexer engine.
+  Lisp lexer backed by a pre-compiled, in-source grammar.
 
-  The lexer reads `lisp.tokens` from `code/grammars/`, parses the file into a
-  `TokenGrammar`, caches it in `:persistent_term`, and delegates tokenization
-  to `CodingAdventures.Lexer.GrammarLexer`.
+  `CodingAdventures.LispLexer.Grammar` embeds the parsed `lisp.tokens`
+  grammar as native Elixir data (generated via `grammar-tools compile-tokens`
+  from `code/grammars/lisp/lisp.tokens`). The lexer caches that grammar in
+  `:persistent_term` and delegates tokenization to
+  `CodingAdventures.Lexer.GrammarLexer`.
   """
 
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.LispLexer.Grammar
 
   @doc """
   Tokenize Lisp source code and return `{:ok, tokens}` or `{:error, message}`.
@@ -23,14 +23,13 @@ defmodule CodingAdventures.LispLexer do
   end
 
   @doc """
-  Parse and return the cached Lisp `TokenGrammar`.
+  Return the cached Lisp `TokenGrammar`.
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
     case :persistent_term.get({__MODULE__, :grammar}, nil) do
       nil ->
-        tokens_path = Path.join([@grammars_dir, "lisp", "lisp.tokens"])
-        {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
+        grammar = Grammar.token_grammar()
         :persistent_term.put({__MODULE__, :grammar}, grammar)
         grammar
 
