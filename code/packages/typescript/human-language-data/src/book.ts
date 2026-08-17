@@ -889,6 +889,16 @@ function renderMarkdown(
   options?: InlineRenderOptionsInput,
   tableLayout: "grid" | "records" = "grid",
 ): string {
+  // An HTML comment is BY DEFINITION not reader-facing, and this renderer used
+  // to pass any non-directive one straight into the book as body text. One had
+  // been typesetting into the shipped Spanish PDF -- a note from an author to
+  // future authors, printed inside a coloured culture box for the reader.
+  //
+  // `parse.ts` strips the `hl-knowledge` and `hl-activity` directives because it
+  // consumes them; everything else arrived here untouched. Stripping is done on
+  // the whole string rather than per line so a comment spanning several lines --
+  // which the live instance did -- goes as one unit.
+  markdown = markdown.replace(/<!--[\s\S]*?-->/g, "");
   const output: string[] = [];
   const paragraph: string[] = [];
   const quote: string[] = [];

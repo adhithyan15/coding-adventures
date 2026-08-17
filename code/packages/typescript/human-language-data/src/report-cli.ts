@@ -16,6 +16,7 @@ import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
 import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
 import { measureInfoDump, renderInfoDump } from "./info-dump.js";
 import { measureMetalanguage, renderMetalanguage } from "./metalanguage.js";
+import { measureLiteralMarkup, renderLiteralMarkup } from "./literal-markup.js";
 
 interface ReportOptions {
   root?: string;
@@ -96,8 +97,15 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
   // singular present indicative" has spent six technical terms on one form.
   const metalanguage = measureMetalanguage(lessons, loadMetalanguage(options.root));
 
+  // HL-C217. Authoring markup that survived escaping into reader-facing text --
+  // the one class the rest of this suite cannot see, because the output is both
+  // safe and reproducible and simply says the wrong thing. Source layer only
+  // here; the rendered layer is checked in the test suite, which already has the
+  // generator's output in hand and does not need the report to rebuild it.
+  const literalMarkup = measureLiteralMarkup(lessons);
+
   const json = `${JSON.stringify(
-    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary },
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary, literalMarkup: literalMarkup.summary },
     null,
     2,
   )}\n`;
@@ -112,6 +120,7 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     renderInfoDump(infoDump).join("\n"),
     "",
     renderMetalanguage(metalanguage).join("\n"),
+    renderLiteralMarkup(literalMarkup).join("\n"),
     "",
   ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);
