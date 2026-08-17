@@ -46,7 +46,7 @@ You are four consonants and one mātrā into this script, and every one of them 
 behaved the same way. Say the four aloud in the order you met them, each with its
 inherent vowel:
 
-> **હ** &nbsp; **ન** &nbsp; **મ** &nbsp; **સ**
+> **હ**   **ન**   **મ**   **સ**
 
 *ha, na, ma, sa.* Four beats, four shapes, no bar across any of them.
 

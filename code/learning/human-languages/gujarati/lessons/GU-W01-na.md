@@ -52,7 +52,7 @@ Now put the mātrā on it, exactly as you did with the first consonant:
 You now hold both answers to a yes-or-no question, and you can read them both off
 the page:
 
-> **હા** &nbsp;&nbsp; **ના**
+> **હા**   **ના**
 
 Two consonants and one mark. That is the arithmetic of an abugida: consonants and
 vowel signs multiply, so a small number of pieces reaches a large number of

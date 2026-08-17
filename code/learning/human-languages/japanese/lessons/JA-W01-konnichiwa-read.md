@@ -37,7 +37,7 @@ reviews_of: [JA-W01-wa, JA-W01-ko, JA-W01-n, JA-W01-ni, JA-W01-chi, JA-C01-konni
 [PAUSE 4s] Four signs, one after another, from memory. Say each beat as you
 finish writing it:
 
-> こ &nbsp; ん &nbsp; に &nbsp; ち
+> こ   ん   に   ち
 
 ## Script — the assembly
 <!-- hl-knowledge: introduces=[JA-SCRIPT-KONNICHIWA-READ-01]; assesses=[JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-HIRAGANA-MORA] -->

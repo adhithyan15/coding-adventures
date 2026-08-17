@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Reading the Greeting — One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6cc4da73adfd1029",
+  "sourceHash": "fnv1a64:64ef4a9e6f25106d",
   "lessons": [
     {
       "id": "ZH-W01-ren",
@@ -471,7 +471,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3b5ae5c4410d2ed3",
+      "sourceHash": "fnv1a64:328329e181918529",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -503,7 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "亻 (rén (as a component)) &nbsp;&nbsp; 尔 (ěr)."
+              "text": "亻 (rén (as a component)) 尔 (ěr)."
             },
             {
               "kind": "speech",
@@ -950,7 +950,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a3a9a1b71c50b8a6",
+      "sourceHash": "fnv1a64:05834146103e3854",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -981,7 +981,7 @@
             },
             {
               "kind": "speech",
-              "text": "女 (nǚ) &nbsp;&nbsp; 子 (zǐ)."
+              "text": "女 (nǚ) 子 (zǐ)."
             }
           ]
         },

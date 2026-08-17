@@ -2297,6 +2297,13 @@
       "scriptCommand": "mr"
     },
     {
+      "language": "marathi",
+      "chapter": 14,
+      "output": "marathi/book/chapters/ch14-script-first.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
       "language": "persian",
       "chapter": 3,
       "output": "persian/book/chapters/ch03-ask-and-answer-names.tex",

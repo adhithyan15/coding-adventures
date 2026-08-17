@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Eight Signs, and Three Words You Can Read",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3919f574889a11c5",
+  "sourceHash": "fnv1a64:6f566408e539a412",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -306,7 +306,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ea300047005fbe5",
+      "sourceHash": "fnv1a64:62d719b3344477a5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -337,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "は (ha) &nbsp;&nbsp; い (i)."
+              "text": "は (ha) い (i)."
             }
           ]
         },
@@ -1324,7 +1324,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1f86a56d3fc6cd89",
+      "sourceHash": "fnv1a64:a793162b6bbde88b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1355,7 +1355,7 @@
             },
             {
               "kind": "speech",
-              "text": "こ (ko) &nbsp; ん &nbsp; に (ni) &nbsp; ち (chi)."
+              "text": "こ (ko) ん (n) に (ni) ち (chi)."
             }
           ]
         },

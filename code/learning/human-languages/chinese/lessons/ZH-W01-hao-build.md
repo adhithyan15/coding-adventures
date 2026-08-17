@@ -36,7 +36,7 @@ reviews_of: [ZH-W01-nu, ZH-W01-zi]
 
 [PAUSE 3s] Both pieces are yours. Draw them side by side:
 
-> 女 &nbsp;&nbsp; 子
+> 女   子
 
 ## Script — the assembly
 <!-- hl-knowledge: introduces=[ZH-SCRIPT-HAO-BUILD-01]; assesses=[ZH-SCRIPT-NU-01, ZH-SCRIPT-ZI-01, ZH-SCRIPT-NI-BUILD-01] -->

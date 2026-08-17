@@ -37,7 +37,7 @@ reviews_of: [JA-W01-ha, JA-W01-i, JA-C01-hai]
 [PAUSE 3s] Both signs are yours. Write them, in this order, and say each beat as
 you finish it:
 
-> は &nbsp;&nbsp; い
+> は   い
 
 ## Script — no new sign at all
 <!-- hl-knowledge: introduces=[JA-SCRIPT-HAI-READ-01]; assesses=[JA-SCRIPT-HA-01, JA-SCRIPT-I-01] -->
