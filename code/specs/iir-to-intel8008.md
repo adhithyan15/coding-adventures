@@ -1,5 +1,12 @@
 # iir-to-intel8008 — IIR → Intel 8008 machine code backend
 
+> ⚠ **REMOVED (2026-08-17).** The `iir-to-intel8008` crate has been
+> deleted. It lowered IIR directly to machine bytes, skipping type
+> monomorphization and the `Backend` trait; it was superseded by
+> `intel8008-encoder` + `intel8008-backend`, which lower CIR instead. See
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+> This spec is preserved as a historical record of the original design.
+
 **Status:** v0.1.0 — skeleton (A2)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A2
 **Related:** [`iir-to-riscv`][rv], [`intel8008-simulator`][sim]

@@ -2,7 +2,7 @@
 name = "armv7-encoder"
 version = "0.1.0"
 edition = "2021"
-description = "Pure-Rust ARMv7-A (A32) instruction encoder.  Covers the subset of A32 opcodes the LANG VM armv7-backend uses to lower CIR to phone-class ARM machine code.  Output: Vec<u32> instruction words (little-endian on disk via .to_le_bytes()).  No IR knowledge — consumed by `armv7-backend` and re-exported by the deprecated `iir-to-armv7` for backwards compatibility.  See code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
+description = "Pure-Rust ARMv7-A (A32) instruction encoder.  Covers the subset of A32 opcodes the LANG VM armv7-backend uses to lower CIR to phone-class ARM machine code.  Output: Vec<u32> instruction words (little-endian on disk via .to_le_bytes()).  No IR knowledge — consumed by `armv7-backend`.  The old `iir-to-armv7` re-export was removed once the migration to `armv7-backend` completed.  See code/specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md."
 
 [lib]
 name = "armv7_encoder"

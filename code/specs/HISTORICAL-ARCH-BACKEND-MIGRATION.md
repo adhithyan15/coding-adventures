@@ -93,11 +93,22 @@ Per-arch end state:
 | RV32I       | `riscv-encoder`      | `riscv-backend`      | `iir-to-riscv` v0.4.0 |
 
 `lang-aot` v0.12.0 routes every `--emit=<arch>` flag through the
-new `Backend`-trait path.  The deprecated `iir-to-*` crates stay
-in the workspace (with `#[deprecated]` attributes on their public
-APIs) so existing downstream test invariants keep regressing
-against the old byte sequences — a belt-and-braces guarantee
-that the new path produces compatible output.
+new `Backend`-trait path.  The deprecated `iir-to-*` crates stayed
+in the workspace for a time (with `#[deprecated]` attributes on
+their public APIs) so existing downstream test invariants kept
+regressing against the old byte sequences — a belt-and-braces
+guarantee that the new path produced compatible output.
+
+**Update (2026-08-17): the five deprecated `iir-to-*` crates have
+been deleted.** Nothing outside each crate itself ever depended on
+them (verified: no other `Cargo.toml` `path = "../iir-to-*"`
+dependency, no non-comment `iir_to_*::` import elsewhere in the
+workspace) — every reference left in `lang-aot` and elsewhere was
+prose/doc-comments documenting byte-format provenance, which are
+left in place as historical context. The corresponding
+`code/specs/iir-to-{riscv,intel4004,intel8008,armv7,ge225}.md`
+spec files are kept as a historical record of the original
+(superseded) design, each now bannered as removed.
 
 Each phase = 1 PR + babysitter cron + auto-merge + next-phase
 kickoff.  Same cadence as the A5 cascade.

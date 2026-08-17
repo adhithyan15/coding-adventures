@@ -1,5 +1,12 @@
 # iir-to-ge225 — IIR → GE-225 machine code backend
 
+> ⚠ **REMOVED (2026-08-17).** The `iir-to-ge225` crate has been
+> deleted. It lowered IIR directly to machine bytes, skipping type
+> monomorphization and the `Backend` trait; it was superseded by
+> `ge225-encoder` + `ge225-backend`, which lower CIR instead. See
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+> This spec is preserved as a historical record of the original design.
+
 **Status:** v0.9.0 — neg via 0-src, BASIC unary minus works end-to-end (A5++++++++++)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A5
 **Related:** [`iir-to-intel4004`][i4004], [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]
