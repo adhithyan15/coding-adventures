@@ -384,3 +384,53 @@ describe("what the corpus actually covers", () => {
     expect(unevenReport[3]).toContain("2/2  Alpha");
   });
 });
+
+describe("the committed French A1 inventory", () => {
+  const inventory = loadExamInventory("french", "A1");
+
+  it("keeps every point's probe key, because a MISSING probe scores as covered", () => {
+    // `covered` is `point.probe !== null && …`. A point whose `probe` key is
+    // absent reads as `undefined`, which is not `null`, so it scores COVERED
+    // while demonstrating nothing. Authoring this file with a helper that
+    // omitted null-valued keys reported 65/74 (88%) for a track with nine
+    // grammar atoms, and only the implausibility of the number caught it.
+    for (const point of inventory.points) {
+      expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
+    }
+  });
+
+  it("refuses an empty probe, which would score as covered", () => {
+    for (const point of inventory.points) {
+      expect(Array.isArray(point.probe) ? point.probe.length : 1).toBeGreaterThan(0);
+    }
+  });
+
+  it("probes only atoms that EXIST, so a guessed id cannot under-report", () => {
+    // The other direction of the same failure: `FR-LEX-CAFE-01` exists but
+    // `FR-LEX-VERT-01` does not, because the suffix varies per lesson. A guessed
+    // id resolves to "not introduced", which is fail-safe, silent, and wrong —
+    // it reports taught material as a content gap.
+    const { lessons } = loadEverything();
+    const taught = trackIntroducedAtoms(lessons, "french");
+    const unknown: string[] = [];
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) if (!taught.has(atom)) unknown.push(`${point.id}:${atom}`);
+    }
+    expect(unknown).toEqual([]);
+  }, 60_000);
+
+  it("reports the gap as GRAMMAR-shaped, which is the finding", () => {
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.enumerated).toBe(74);
+    // Pinned so a future tranche has to say which points it moved. It may rise;
+    // a fall means coverage was lost and wants explaining.
+    expect(coverage.covered).toBe(20);
+    // The shape, not the score: vocabulary is the best-covered column and the
+    // sentence-level categories are empty. No quantity of headwords moves these.
+    for (const empty of ["L'interrogation", "La phrase", "Le nom", "Les prepositions"]) {
+      expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
+    }
+    expect(coverage.byCategory["Lexique de base"]!.covered).toBeGreaterThan(0);
+  }, 60_000);
+});

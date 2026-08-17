@@ -13,6 +13,63 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C226 — French A1 is the second exam inventory, and it says the gap is GRAMMAR not vocabulary
+
+`exam-inventory-french-a1.json`: 74 points, 12 categories, restated from the CECRL
+A1 descriptors and the DELF A1 syllabus structure. **French covers 20 of 74 (27%)** —
+the first honest exam number for any track other than Spanish. 1 of 132 becomes 2.
+
+**The shape matters more than the percentage:**
+
+```
+0/5   L'interrogation      a candidate cannot ask a question
+0/4   La phrase            no sentence structure at all
+0/4   Le nom               gender, plural, agreement
+0/4   Les prepositions     no a/de, no contractions, no place or time
+6/17  Le verbe             the best-covered grammar category, still a third
+6/10  Lexique de base      vocabulary is the STRONGEST column
+```
+
+**French has 105 lessons and 109 atoms, of which NINE are grammar.** The vocabulary
+tranches were never going to move these numbers, because the gap is not lexical.
+This is the concrete form of what HL-C182 warned about in the abstract: the corpus
+has been measured on the thing it is good at.
+
+**Consequence for the plan, and it is a real one.** `completion-plan.ts` ranks
+`vocabulary` above `exam-point` for every track, because vocabulary is the biggest
+number. For French that ordering is wrong: **54 of its 74 A1 points have no
+corresponding atom in the corpus at all**, and no quantity of headwords creates
+one. `exam-point` should outrank `vocabulary` for any track whose inventory exists
+and reports a grammar-shaped gap. Not changed yet — recorded with the evidence, so
+the change is made against a measurement rather than a hunch.
+
+### Two authoring mistakes, both caught by the NUMBER being implausible
+
+1. **`probe: null` was dropped from 53 points.** A helper that omitted
+   `None`-valued keys removed the key entirely rather than writing `null`, and
+   `covered` is `point.probe !== null && …` — an absent key is `undefined`, which
+   is not `null`, so it scored COVERED. It reported **65/74 (88%)** for a track
+   with nine grammar atoms. `null` is load-bearing here; dropping it inverts the
+   measurement in the flattering direction.
+2. **The atom suffixes were guessed.** `FR-LEX-CAFE-01` exists; `FR-LEX-VERT-01`
+   does not, because the numeric suffix varies per lesson. Nine points read as
+   partial until the real ids were read out of the corpus. 16% → 27%.
+
+Both are the stale-annotation failure `exam-inventory.ts` exists to prevent,
+arriving from the AUTHORING side rather than the corpus side. **Neither was caught
+by a test** — both were caught by the number looking wrong. Now pinned by three
+tests: every point keeps its probe key, every probed atom exists in the corpus,
+and the gap stays grammar-shaped.
+
+**Two habits worth keeping:** re-read a file in the same command that wrote it,
+and read atom ids out of the corpus rather than typing them.
+
+### One point is deliberately unprobeable
+
+`pleuvoir` has no lexical atom anywhere in the track, so the weather point keeps
+`probe: null` rather than a probe that could never resolve. A probe that cannot
+succeed is worse than an honest null: it reads as a content gap when it is a data
+gap.
 ## HL-C225 — the glyph gate is BUILT, and it took three wrong probes to find the model
 
 HL-C214 specified it and declined to build it. HL-C223 upgraded it to a job after
