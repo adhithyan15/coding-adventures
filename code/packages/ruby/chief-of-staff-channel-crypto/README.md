@@ -45,6 +45,28 @@ durable_grant = CodingAdventures::ChiefOfStaffChannelCrypto.grant_serialize(gran
 
 Opening enforces the normative identity, channel, signature, X25519, HKDF, and
 AEAD validation order before returning a managed `ChannelMasterKey`.
+
+### Verifying a grant you cannot open
+
+Opening needs the receiver's private key, because unwrapping performs an X25519
+agreement. An originator holds no receiver secrets, so it cannot open the grants
+it seals — yet D18T requires it to verify the originator signature on every
+receiver's grant before a rotation candidate may be offered to key custody.
+`verify_grant_signature` is that weaker, receiver-key-free check:
+
+```ruby
+CodingAdventures::ChiefOfStaffChannelCrypto.verify_grant_signature(
+  grant, expected_originator_id, expected_receiver_id, channel_id, originator_public_key
+)
+```
+
+It proves the originator signed this exact `(originator, receiver, channel,
+epoch, ephemeral key, nonce, wrapped CMK)` tuple. It proves nothing about
+whether the wrapped CMK decrypts — only unwrapping can establish that, so a
+caller verifying grants it cannot open must not treat success as proof the
+receiver will be able to use the grant. Both entry points share one verification
+path, so they always agree on binding order and stable error codes.
+
 `ReceiverEpochKeys` retains historic keys while rejecting decreasing or
 conflicting grants, and `plan_rotation` returns a complete receiver-sorted
 prospective plan without claiming D18P durable activation. Secret containers
