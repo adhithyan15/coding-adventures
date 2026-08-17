@@ -1,5 +1,35 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.22 — 2026-08-17 — call_indirect/return_call_indirect explicit table-index text syntax (task #107)
+
+### Fixed
+
+- Both `call_indirect`/`return_call_indirect` encoder arms (flat
+  `encode_stream_instr` and folded `encode_flat_instr`) hardcoded
+  `out.push(0x00)` for the table-index immediate, never reading a
+  leading table-reference token from the WAT source at all -- the real
+  reason every `call_indirect` ran against table 0 regardless of what a
+  real module's `(call_indirect $t0 (type $t) ...)` text actually named
+  (see `wasm-execution`'s own CHANGELOG entry for the runtime side of
+  this bug). Both arms now detect an optional leading table token (a
+  bare atom before the `(type ...)`/`(param...)`/`(result...)` fields,
+  same detection shape as `table.init`/`table.copy`'s own precedent)
+  and resolve it via the existing `resolve_idx(&icx.module.table_names,
+  ...)` helper, defaulting to table 0 when absent -- fully backward
+  compatible with every existing module that never names one. No new
+  parsing infrastructure needed: the S-expr tokenizer already isn't
+  opcode-specific, and this exact `resolve_idx`/`table_names` pattern
+  is already how `table.grow`/`table.init`/`table.copy` resolve their
+  own table references.
+- Discovered while vendoring `table_init.wast`/`table_copy.wast` (task
+  #97): most modules in both files use this syntax pervasively (6 uses
+  in `table_init.wast`, 36 in `table_copy.wast`), and every module using
+  it failed to build entirely under the old hardcoded encoder, cascading
+  to `NotYetSupported` for that module's whole directive stream. Fixing
+  this dropped the aggregate `assert_return`/`assert_trap` `NotYetSupported`
+  counts from 983/1789 to 562/938 with zero regressions elsewhere (see
+  `wasm-conformance`'s own CHANGELOG entry for this version).
+
 ## 0.1.21 — 2026-08-17 — table.init/table.copy/elem.drop + passive/exprs-list elem parsing (task #97)
 
 ### Fixed

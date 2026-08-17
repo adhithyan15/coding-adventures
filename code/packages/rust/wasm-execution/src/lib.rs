@@ -2141,7 +2141,16 @@ fn convert_operand(
         DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
         DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
         DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
-        DecodedOperand::CallIndirect { type_idx, .. } => Some(Operand::Index(*type_idx as usize)),
+        // Packed exactly like `Atomic`/`Simd` above: `table_idx` in the
+        // high 32 bits, `type_idx` in the low 32 -- task #107. Previously
+        // `table_idx` (already correctly decoded, per `decode_immediates`'
+        // `["typeidx","tableidx"]` metadata) was silently dropped here,
+        // the real reason `call_indirect`/`return_call_indirect` always
+        // ran against table 0 regardless of what a real WASM module's
+        // explicit-table-index encoding named.
+        DecodedOperand::CallIndirect { type_idx, table_idx } => {
+            Some(Operand::Index(((*table_idx as usize) << 32) | (*type_idx as usize)))
+        }
         DecodedOperand::BrTable { labels, default_label } => {
             let idx = br_table_targets.len();
             let mut table: Vec<u32> = labels.clone();
@@ -2208,6 +2217,17 @@ fn unpack_bulk_memory_operand(instr: &Instruction) -> (u8, u32, u8) {
         _ => 0,
     };
     ((packed >> 32) as u8, (packed & 0xFFFF_FFFF) as u32, (packed >> 40) as u8)
+}
+
+/// Unpack `call_indirect`/`return_call_indirect`'s `(type_idx, table_idx)`
+/// from the packed `Operand::Index` `convert_operand` built above -- same
+/// shape as `unpack_atomic_operand` (task #107).
+fn unpack_call_indirect_operand(instr: &Instruction) -> (u32, u32) {
+    let packed = match &instr.operand {
+        Some(Operand::Index(i)) => *i,
+        _ => 0,
+    };
+    ((packed & 0xFFFF_FFFF) as u32, (packed >> 32) as u32)
 }
 
 // ── Helper: pop a WasmValue from the VM's typed stack ─────────────────────
@@ -4777,9 +4797,10 @@ fn register_control(vm: &mut GenericVM) {
     // call_indirect (0x11)
     vm.register_context_opcode(0x11, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let type_idx = operand_int(instr) as usize;
+        let (type_idx, table_idx) = unpack_call_indirect_operand(instr);
+        let type_idx = type_idx as usize;
         let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let table = get_table(ctx, 0)?;
+        let table = get_table(ctx, table_idx as usize)?;
         let func_index = table
             .get(elem_index as u32)
             .map_err(VMError::from)?
@@ -4850,9 +4871,10 @@ fn register_control(vm: &mut GenericVM) {
     // return_call above.
     vm.register_context_opcode(0x13, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
-        let type_idx = operand_int(instr) as usize;
+        let (type_idx, table_idx) = unpack_call_indirect_operand(instr);
+        let type_idx = type_idx as usize;
         let elem_index = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
-        let table = get_table(ctx, 0)?;
+        let table = get_table(ctx, table_idx as usize)?;
         let func_index = table
             .get(elem_index as u32)
             .map_err(VMError::from)?
@@ -7225,6 +7247,41 @@ mod tests {
         });
         engine.set_type_section(vec![func_type]);
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    #[test]
+    fn test_call_indirect_with_explicit_nonzero_table_index_calls_through_the_named_table() {
+        // Task #107: `call_indirect`'s `table_idx` immediate used to be
+        // decoded correctly but silently dropped in `convert_operand`,
+        // so every `call_indirect` ran against table 0 regardless of
+        // what the bytecode actually named. Two tables here hold
+        // DIFFERENT functions at the same slot (index 0); a
+        // `call_indirect type=0 table=1` must reach table 1's function
+        // (returning 22), not table 0's (11) -- proving the real table
+        // index is read and used, not just that decoding doesn't crash.
+        // (11/22 are single-byte signed-LEB128-safe, -64..=63; 111/222
+        // are not and would silently sign-extend to the wrong value.)
+        let code = vec![0x41, 0x00, 0x11, 0x00, 0x01, 0x0B]; // i32.const 0; call_indirect type=0 table=1; end
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let caller_body = FunctionBody { locals: vec![], code };
+        let table0_target = FunctionBody { locals: vec![], code: vec![0x41, 11, 0x0B] }; // func 1: i32.const 11
+        let table1_target = FunctionBody { locals: vec![], code: vec![0x41, 22, 0x0B] }; // func 2: i32.const 22
+        let mut table0 = Table::new(1, None);
+        table0.set(0, Some(1)).unwrap();
+        let mut table1 = Table::new(1, None);
+        table1.set(0, Some(2)).unwrap();
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: Vec::new(),
+            tables: vec![table0, table1],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type.clone(), func_type.clone(), func_type.clone()],
+            func_bodies: vec![Some(caller_body), Some(table0_target), Some(table1_target)],
+            host_functions: vec![None, None, None],
+        });
+        engine.set_type_section(vec![func_type]);
+        let result = engine.call_function(0, &[]).expect("call_indirect through table 1 should succeed");
+        assert_eq!(result, vec![WasmValue::I32(22)]);
     }
 
     // ══════════════════════════════════════════════════════════════════════
