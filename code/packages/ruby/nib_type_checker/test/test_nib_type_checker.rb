@@ -44,4 +44,20 @@ class NibTypeCheckerTest < Minitest::Test
     refute result.ok
     assert_includes result.errors.first.message, "expects 2 args"
   end
+
+  # Regression test for #11257: that PR inserted a `shift_expr` precedence
+  # level between `add_expr` and `mul_expr` in the shared nib.grammar file
+  # (`add_expr -> shift_expr -> mul_expr -> bitwise_expr`) to support `<<`/`>>`,
+  # but only updated the Rust consumers. Ruby's nib_parser reads the shared
+  # grammar at runtime, so it started wrapping every add_expr operand in a
+  # shift_expr node it didn't recognize -- `expression_rule?` filtered
+  # shift_expr out, so `expression_children` on the add_expr saw zero
+  # operands and check_add_expr inferred no type, even for a plain `a + b`
+  # with the PLUS operator (as opposed to the `+%` WRAP_ADD operator used
+  # elsewhere in this file, which happens to exercise the same bug already).
+  def test_accepts_plain_additive_expression
+    result = tc("fn add(a: u4, b: u4) -> u4 { return a + b; } fn main() -> u4 { return add(3, 4); }")
+
+    assert result.ok, result.errors.map(&:message).join("\n")
+  end
 end

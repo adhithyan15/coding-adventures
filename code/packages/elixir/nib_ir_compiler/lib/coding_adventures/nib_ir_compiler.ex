@@ -345,10 +345,20 @@ defmodule CodingAdventures.NibIrCompiler do
   defp child_nodes(%ASTNode{} = node), do: Enum.filter(node.children, &match?(%ASTNode{}, &1))
   defp child_nodes(_), do: []
 
-  defp expression_children(%ASTNode{} = node),
-    do: Enum.filter(child_nodes(node), &(&1.rule_name in ~w(expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr)))
+  # shift_expr sits between add_expr and mul_expr in the precedence cascade
+  # (PR #11257: add_expr = shift_expr { (PLUS|MINUS|...) shift_expr }; shift_expr
+  # = mul_expr { (SHL|SHR) mul_expr }). Nib's lexer doesn't tokenize SHL/SHR yet,
+  # so every shift_expr node is a transparent single-child wrapper around a
+  # mul_expr node. It must appear in this list (mirroring nib_type_checker's
+  # @expression_rules) so expression_children/1 doesn't filter it out when
+  # add_expr walks its operands, and so expression_rule?/1 recognizes it as a
+  # pass-through wrapper for emit_expr_into/3's unwrap branch.
+  @expression_rules ~w(expr or_expr and_expr eq_expr cmp_expr add_expr shift_expr mul_expr bitwise_expr unary_expr primary call_expr)
 
-  defp expression_rule?(name), do: name in ~w(expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr)
+  defp expression_children(%ASTNode{} = node),
+    do: Enum.filter(child_nodes(node), &(&1.rule_name in @expression_rules))
+
+  defp expression_rule?(name), do: name in @expression_rules
 
   defp first_rule(%ASTNode{} = node, rule_name), do: Enum.find(child_nodes(node), &(&1.rule_name == rule_name))
   defp first_rule(_, _), do: nil

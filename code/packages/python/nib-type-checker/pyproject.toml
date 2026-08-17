@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-nib-type-checker"
-version = "0.1.0"
+version = "0.1.1"
 description = "Type-checks Nib ASTs — enforces language-level invariants and annotates expression nodes with resolved NibTypes"
 requires-python = ">=3.12"
 license = "MIT"

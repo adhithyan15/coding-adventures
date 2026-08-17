@@ -3,6 +3,49 @@
 All notable changes to this package are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] — 2026-08-17
+
+### Investigated
+
+- `nib.grammar` gained a new `shift_expr` precedence level between
+  `add_expr` and `mul_expr` (task #11257, "lower shift expressions").
+  Every `add_expr` operand is now a `shift_expr` node instead of a
+  `mul_expr`/`bitwise_expr` node directly, even when the source has no
+  `<<`/`>>` operator. It was suspected this package would need the same
+  kind of fix the equivalent TypeScript `nib-ir-compiler` needed (it
+  turned out the TS one didn't either, for an analogous reason).
+- Confirmed by direct testing that **no code change is needed here**.
+  `_Compiler._compile_expr` dispatches on `node.rule_name` against a small
+  set of recognised rules (`expr`, `or_expr`, ..., `add_expr`, `primary`,
+  `call_expr`); anything else — including `mul_expr` (pre-existing) and
+  now `shift_expr` — falls through to the generic tail fallback
+  (`if node.children: return self._compile_expr(node.children[0], regs)`),
+  which correctly unwraps a single-child wrapper node regardless of its
+  `rule_name`. `_compile_add_expr` itself only walks `node.children`
+  positionally (operand/op/operand/...) and never filters by rule name, so
+  it is unaffected by what rule produced each operand node.
+- Verified with a compiled program for `let c: u4 = a + b;` (two `NAME`
+  operands, no shift/mul operator) that the emitted IR still contains a
+  single `ADD` instruction referencing both operand registers — unchanged
+  from before the grammar change.
+- Also confirmed (contrary to an initial assumption) that Python's
+  `nib-lexer` does tokenize `SHL`/`SHR`/`STAR`/`SLASH`/`PERCENT` (it loads
+  the shared `nib.tokens` file at runtime), so `shift_expr`/`mul_expr`
+  nodes are not unconditionally single-operand. Real `a << b` / `a * b`
+  currently compile *incorrectly* (the generic single-child fallback picks
+  only the left operand and silently drops the operator and the right
+  operand) — but this is a pre-existing gap for `mul_expr` dating back to
+  its introduction in #5677, not a regression introduced by the
+  `shift_expr` grammar change, and implementing real shift/multiply
+  lowering is out of scope for this fix.
+
+### Added
+
+- Regression tests `TestPlainAddVariablesRegression` in
+  `tests/test_nib_ir_compiler.py`, exercising a plain 2-operand `a + b`
+  (both `NAME` operands, no shift operator) to lock in the transparent
+  `shift_expr` pass-through behaviour above.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

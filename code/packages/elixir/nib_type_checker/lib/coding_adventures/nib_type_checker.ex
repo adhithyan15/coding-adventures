@@ -52,7 +52,17 @@ defmodule CodingAdventures.NibTypeChecker do
   # mul_expr sits between add_expr and bitwise_expr in the precedence cascade
   # (LANG-FULL N1). It must appear in this list so expression_children/1 does
   # not filter it out when add_expr walks its operands.
-  @expression_rules ~w(expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr)
+  #
+  # shift_expr was inserted between add_expr and mul_expr by the shift-expression
+  # grammar change (PR #11257): add_expr = shift_expr { (PLUS|MINUS|...) shift_expr },
+  # shift_expr = mul_expr { (SHL|SHR) mul_expr }. Nib's lexer does not tokenize
+  # SHL/SHR yet, so every shift_expr node the parser emits is a transparent
+  # single-child wrapper around a mul_expr node. Without "shift_expr" in this
+  # list, expression_children/1 filtered those wrapper nodes out entirely when
+  # add_expr walked its operands, so plain `a + b` add_expr nodes appeared to
+  # have zero expression operands and never got typed (same class of bug as
+  # the mul_expr case above).
+  @expression_rules ~w(expr or_expr and_expr eq_expr cmp_expr add_expr shift_expr mul_expr bitwise_expr unary_expr primary call_expr)
 
   @spec check(ASTNode.t()) :: TypeCheckerProtocol.TypeCheckResult.t()
   def check(%ASTNode{} = ast) do
