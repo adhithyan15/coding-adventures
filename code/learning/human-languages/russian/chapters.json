@@ -343,6 +343,28 @@
           "RU-SCRIPT-YA-NOT-R"
         ]
       }
+    },
+    {
+      "chapter": 14,
+      "title": "Eleven Letters, Sorted Into Three Kinds",
+      "label": "ch:ru-script-eleven",
+      "canDo": "I can write eleven more Cyrillic letters from memory, sort any Cyrillic letter into true friend, false friend or new shape, and explain what the soft sign does even though it makes no sound of its own.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "RU-W06-ya",
+        "kind": "writing",
+        "summary": "A letter that is a whole syllable and looks like a backwards R that it has nothing to do with — closing a chapter whose organising idea is that every Cyrillic letter sorts into one of three kinds.",
+        "assesses": [
+          "RU-SCRIPT-YA-01",
+          "RU-SCRIPT-SOFT-SIGN-01",
+          "RU-SCRIPT-SH-01",
+          "RU-SCRIPT-CH-01",
+          "RU-SCRIPT-ZH-01",
+          "RU-SCRIPT-Y-01"
+        ]
+      }
     }
   ]
 }

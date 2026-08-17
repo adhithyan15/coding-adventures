@@ -46,7 +46,7 @@ natives say *"spa-SEE-ba."* Unstressed Russian *о* almost always softens to an
 - **Бог** (*Bog*) — **"God."**
 
 Over centuries *спаси Бог* fused and shed its final consonant into today's
-*спасибo*. You are, etymologically, blessing whoever helped you.
+*спасибо*. You are, etymologically, blessing whoever helped you.
 
 This is a pattern you can now spot across languages — everyday courtesy words
 that are fossilised blessings:

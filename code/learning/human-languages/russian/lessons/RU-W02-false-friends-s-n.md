@@ -1,6 +1,7 @@
 ---
 id: RU-W02-false-friends-s-n
 chapter: 1
+delivery: script
 type: writing
 headword: "с, н"
 gloss: writing the other two false friends — с (s) and н (n)

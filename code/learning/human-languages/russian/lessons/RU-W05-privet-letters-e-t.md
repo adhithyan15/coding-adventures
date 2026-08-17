@@ -1,6 +1,7 @@
 ---
 id: RU-W05-privet-letters-e-t
 chapter: 1
+delivery: script
 type: writing
 headword: "е, т"
 gloss: writing е (ye) and т (t) — completing привет

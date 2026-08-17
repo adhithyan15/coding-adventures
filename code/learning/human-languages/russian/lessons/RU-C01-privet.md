@@ -57,7 +57,7 @@ already know in English:
 - **от-вет** (*otvét*) = "a speaking-back" → **an answer**.
 - **об-ет** (*obét*) = "a vow."
 
-So *привet* is a cousin of **Soviet** — the same "speak" root, one a friendly
+So *привет* is a cousin of **Soviet** — the same "speak" root, one a friendly
 hello, the other the most famous Russian word in English.
 
 ## Across the family

@@ -1,6 +1,7 @@
 ---
 id: RU-W04-privet-letters-p-i
 chapter: 1
+delivery: script
 type: writing
 headword: "п, и"
 gloss: writing п (p) and и (ee) — two more letters of привет

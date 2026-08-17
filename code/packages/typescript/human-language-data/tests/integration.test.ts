@@ -155,8 +155,9 @@ describe("real curriculum", () => {
       // 11 is the track's first realization of SPINE-TAKE-LEAVE (all six of the
       // node's concepts); 12 completes the family Chapter 8 gathered with mother
       // and father; 13 extends SPINE-POLITE-REQUEST-REPAIR with milk, cheese,
-      // juice and soup.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+      // juice and soup. 14 is the script chapter: eleven more Cyrillic letters,
+      // sorted into true friends, false friends and shapes with no Latin relative.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 

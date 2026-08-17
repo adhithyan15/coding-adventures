@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:666276e1d698f4d5",
+  "sourceHash": "fnv1a64:91ed0c7d13757bb9",
   "lessons": [
     {
       "id": "RU-C01-da",
@@ -715,7 +715,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8258d0d87859c9ea",
+      "sourceHash": "fnv1a64:a7b65079625fcbc6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -818,7 +818,7 @@
             },
             {
               "kind": "speech",
-              "text": "So привet is a cousin of Soviet — the same \"speak\" root, one a friendly hello, the other the most famous Russian word in English."
+              "text": "So привет (privét) is a cousin of Soviet — the same \"speak\" root, one a friendly hello, the other the most famous Russian word in English."
             }
           ]
         },
@@ -916,7 +916,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:007b0e31e887f8eb",
+      "sourceHash": "fnv1a64:4b0643a84e1f4bcb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -985,7 +985,7 @@
             },
             {
               "kind": "speech",
-              "text": "Over centuries спаси Бог fused and shed its final consonant into today's спасибo. You are, etymologically, blessing whoever helped you."
+              "text": "Over centuries спаси Бог fused and shed its final consonant into today's спасибо (spasíbo). You are, etymologically, blessing whoever helped you."
             },
             {
               "kind": "speech",
@@ -1295,7 +1295,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:e5923f38dea06429",
+      "sourceHash": "fnv1a64:c1ce748ed4860e6c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1459,7 +1459,7 @@
         "writing-type",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:e7b121151af172cc",
+      "sourceHash": "fnv1a64:1c40a3b05e3872b3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1625,7 +1625,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:5d4c98bf9e21742d",
+      "sourceHash": "fnv1a64:42fb11f174a24ce8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1788,7 +1788,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:db26ef3c1f7cfb10",
+      "sourceHash": "fnv1a64:68c6daf9d2cb5607",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1951,7 +1951,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:ae0552066fff71d5",
+      "sourceHash": "fnv1a64:7e891f4076ef4524",
       "notice": {
         "modality": "pen",
         "needs": [

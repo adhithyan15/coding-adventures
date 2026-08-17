@@ -7301,7 +7301,7 @@
     {
       "language": "russian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:666276e1d698f4d5",
+      "sourceHash": "fnv1a64:91ed0c7d13757bb9",
       "lessonIds": [
         "RU-C01-da",
         "RU-C01-net",
@@ -7320,8 +7320,8 @@
       "drivablePrefix": 0,
       "text": "russian/narration/ch01.txt",
       "json": "russian/narration/ch01.json",
-      "textHash": "fnv1a64:4d22cd074e8b4cb3",
-      "jsonHash": "fnv1a64:1cae78d2bee09d23"
+      "textHash": "fnv1a64:9768af78741c3526",
+      "jsonHash": "fnv1a64:f9c8ba1ba91d4456"
     },
     {
       "language": "russian",
@@ -7402,7 +7402,7 @@
     {
       "language": "russian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:8ced31e3df3eb956",
+      "sourceHash": "fnv1a64:9784e03d79bcfd67",
       "lessonIds": [
         "RU-C06-voda",
         "RU-C06-kofe",
@@ -7413,8 +7413,8 @@
       "drivablePrefix": 1,
       "text": "russian/narration/ch06.txt",
       "json": "russian/narration/ch06.json",
-      "textHash": "fnv1a64:4e6a00360326ec4e",
-      "jsonHash": "fnv1a64:dee781ea755dd287"
+      "textHash": "fnv1a64:f77dfccb2d4c7547",
+      "jsonHash": "fnv1a64:1d10641d31d09009"
     },
     {
       "language": "russian",
@@ -7530,6 +7530,30 @@
       "json": "russian/narration/ch13.json",
       "textHash": "fnv1a64:16920cd652723f1b",
       "jsonHash": "fnv1a64:d6590dbc47e4f2df"
+    },
+    {
+      "language": "russian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:c02b2dbbeaa0542a",
+      "lessonIds": [
+        "RU-W06-u",
+        "RU-W06-z",
+        "RU-W06-k",
+        "RU-W06-l",
+        "RU-W06-m",
+        "RU-W06-y",
+        "RU-W06-zh",
+        "RU-W06-ch",
+        "RU-W06-sh",
+        "RU-W06-soft-sign",
+        "RU-W06-ya"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "russian/narration/ch14.txt",
+      "json": "russian/narration/ch14.json",
+      "textHash": "fnv1a64:3c5c8ed9355976d1",
+      "jsonHash": "fnv1a64:c6ed43d1954823cc"
     },
     {
       "language": "sanskrit",

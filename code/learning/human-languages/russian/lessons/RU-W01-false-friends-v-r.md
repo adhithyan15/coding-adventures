@@ -1,6 +1,7 @@
 ---
 id: RU-W01-false-friends-v-r
 chapter: 1
+delivery: script
 type: writing
 headword: "в, р"
 gloss: writing the first two false friends — в (v) and р (r)

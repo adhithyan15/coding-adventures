@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Water, Coffee, Tea, and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8ced31e3df3eb956",
+  "sourceHash": "fnv1a64:9784e03d79bcfd67",
   "lessons": [
     {
       "id": "RU-C06-voda",
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:15016e61fda9cda8",
+      "sourceHash": "fnv1a64:87a38f5a0daf9d98",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -265,7 +265,7 @@
             },
             {
               "kind": "speech",
-              "text": "(Kофе is inanimate and masculine, so it takes exactly the same shape here as it does standing alone — nothing to adjust.)"
+              "text": "(Кофе is inanimate and masculine, so it takes exactly the same shape here as it does standing alone — nothing to adjust.)"
             }
           ]
         },
