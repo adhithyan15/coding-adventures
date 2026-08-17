@@ -144,9 +144,9 @@ impl Intel8086Simulator {
     /// space; pass that for full fidelity. Tests in this crate mostly
     /// pass `65536` (64 KiB) since the trivial programs they exercise
     /// never address past the first segment window — `Memory` (from
-    /// `cpu-simulator`) reads out-of-range addresses as `0` and silently
-    /// drops out-of-range writes, so a smaller size is safe as long as
-    /// no test intentionally reaches past it.
+    /// `cpu-simulator`) panics on any out-of-range access (see its
+    /// `check_address`), so a smaller size is safe only as long as no
+    /// test actually reaches past it.
     pub fn new(memory_size: usize) -> Self {
         Self {
             ax: 0,
