@@ -750,7 +750,13 @@ func (s *Store) validateAndReplay(definition channelstore.ChannelDefinition, pre
 			return err
 		}
 		if !bytesEqual(record.Body, data) {
-			return fail(ErrConflictingGrant)
+			// corrupt_record, not conflicting_grant, and the distinction is not
+			// arbitrary. putImmutable above already returns conflicting_grant
+			// when the slot genuinely holds somebody else's bytes. Reaching
+			// here means the backend handed back something different from what
+			// it had already acknowledged writing -- that is corruption, not a
+			// conflict. This matches the Rust reference.
+			return fail(ErrCorruptRecord)
 		}
 	}
 	return nil

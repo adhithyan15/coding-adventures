@@ -93,44 +93,112 @@ func TestActivationRefusesWhenAGrantIsNotRetrievable(t *testing.T) {
 		return key
 	}
 
-	t.Run("grant-body-mutated-after-write", func(t *testing.T) {
-		h := makeReady(t)
-		key := grantKeyFor(t, h)
-		record, err := h.backend.Get(channelstore.ChannelStorageNamespace, key)
-		if err != nil || record == nil {
-			t.Fatal("grant must exist after prepare")
-		}
-		h.backend.Corrupt(channelstore.StorageRecord{
-			Namespace: record.Namespace, Key: record.Key, ContentType: record.ContentType,
-			Revision: record.Revision, Body: append(append([]byte(nil), record.Body...), 0x00),
-		})
-		_, err = h.store.ActivatePreparedEpoch(h.definition, 1)
-		requireCode(t, err, ErrConflictingGrant)
+	// Each case must simulate what putImmutable structurally CANNOT observe: a
+	// grant that writes successfully and then does not read back the same way.
+	//
+	// Corrupting an already-written record is not sufficient and is in fact a
+	// vacuous test. ActivatePreparedEpoch replays through putImmutable first,
+	// whose if-absent Put conflicts, re-Gets, and returns before control ever
+	// reaches the phase-6 read-back loop. A test built that way passes even
+	// with the entire invariant-3 check deleted -- which is exactly how the
+	// first version of this test was written, and exactly what the second
+	// security-review round caught.
+	for _, testCase := range []struct {
+		name string
+		mode grantReadFault
+		code ErrorCode
+	}{
+		{"grant-not-retrievable-after-write", grantReadVanishes, ErrCorruptRecord},
+		{"grant-reads-back-different-bytes", grantReadMutatesBody, ErrCorruptRecord},
+		{"grant-reads-back-wrong-content-type", grantReadMutatesContentType, ErrCorruptRecord},
+	} {
+		t.Run(testCase.name, func(t *testing.T) {
+			h := makeReady(t)
+			faulty := &grantFaultBackend{inner: h.backend, grantKey: grantKeyFor(t, h), skipReads: 1}
+			store, err := NewStoreForTesting(faulty, h.custody, testChannelID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			// Arm the fault only AFTER prepare has written the grant cleanly,
+			// so the write genuinely succeeds and only the read-back diverges.
+			faulty.fault = testCase.mode
+			_, err = store.ActivatePreparedEpoch(h.definition, 1)
+			requireCode(t, err, testCase.code)
 
-		// And the epoch did NOT advance.
-		state, stateErr := h.store.State()
-		if stateErr != nil {
-			t.Fatal(stateErr)
-		}
-		if state.ActiveEpoch() != 0 {
-			t.Fatalf("epoch advanced to %d despite an unverifiable grant", state.ActiveEpoch())
-		}
-	})
-
-	t.Run("grant-content-type-mutated-after-write", func(t *testing.T) {
-		h := makeReady(t)
-		key := grantKeyFor(t, h)
-		record, err := h.backend.Get(channelstore.ChannelStorageNamespace, key)
-		if err != nil || record == nil {
-			t.Fatal("grant must exist after prepare")
-		}
-		h.backend.Corrupt(channelstore.StorageRecord{
-			Namespace: record.Namespace, Key: record.Key, ContentType: "application/vnd.wrong",
-			Revision: record.Revision, Body: record.Body,
+			// The epoch must not have advanced.
+			faulty.fault = grantReadHealthy
+			state, stateErr := store.State()
+			if stateErr != nil {
+				t.Fatal(stateErr)
+			}
+			if state.ActiveEpoch() != 0 {
+				t.Fatalf("epoch advanced to %d despite an unverifiable grant", state.ActiveEpoch())
+			}
 		})
-		_, err = h.store.ActivatePreparedEpoch(h.definition, 1)
-		requireCode(t, err, ErrCorruptRecord)
-	})
+	}
+}
+
+type grantReadFault int
+
+const (
+	grantReadHealthy grantReadFault = iota
+	grantReadVanishes
+	grantReadMutatesBody
+	grantReadMutatesContentType
+)
+
+// grantFaultBackend accepts writes normally but diverges on reads of one grant
+// key, modelling a write-behind or eventually-consistent backend whose echoed
+// Put result does not prove retrievability.
+type grantFaultBackend struct {
+	inner    *channelstore.MemoryChannelStorage
+	grantKey string
+	fault    grantReadFault
+
+	// skipReads leaves the first N reads of the grant key healthy.
+	//
+	// Replay writes each grant through putImmutable, whose if-absent Put
+	// conflicts on an already-present record and then re-Gets it to compare
+	// bytes. That re-Get would absorb the fault and return putImmutable's own
+	// conflicting_grant, so the phase-6 read-back loop would never be reached
+	// and the test would be measuring the wrong check. Skipping exactly that
+	// one read aims the fault at phase 6.
+	skipReads int
+}
+
+func (b *grantFaultBackend) Initialize() error { return b.inner.Initialize() }
+
+func (b *grantFaultBackend) Get(namespace, key string) (*channelstore.StorageRecord, error) {
+	record, err := b.inner.Get(namespace, key)
+	if err != nil || record == nil || key != b.grantKey {
+		return record, err
+	}
+	if b.skipReads > 0 {
+		b.skipReads--
+		return record, nil
+	}
+	switch b.fault {
+	case grantReadVanishes:
+		return nil, nil
+	case grantReadMutatesBody:
+		mutated := *record
+		mutated.Body = append(append([]byte(nil), record.Body...), 0x00)
+		return &mutated, nil
+	case grantReadMutatesContentType:
+		mutated := *record
+		mutated.ContentType = "application/vnd.wrong"
+		return &mutated, nil
+	default:
+		return record, nil
+	}
+}
+
+func (b *grantFaultBackend) Put(value channelstore.StoragePut) (channelstore.StorageRecord, error) {
+	return b.inner.Put(value)
+}
+
+func (b *grantFaultBackend) List(namespace string, options channelstore.StorageListOptions) (channelstore.StoragePage, error) {
+	return b.inner.List(namespace, options)
 }
 
 // TestGrantSignedByAnotherOriginatorIsRejected proves the D18T layer actually
