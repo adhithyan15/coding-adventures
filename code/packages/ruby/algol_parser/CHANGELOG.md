@@ -2,6 +2,12 @@
 
 All notable changes to `coding_adventures_algol_parser` will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `parse` now loads the pre-compiled `_grammar.rb` (via `GrammarTools::CompiledLoader`) instead of reading and parsing `algol60.grammar` from `code/grammars/` on every call. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
+- Regenerated `_grammar.rb` from the current `algol60.grammar` source — the previously-committed compiled file was stale (never wired up, so drift went unnoticed) and caused parse failures once actually loaded.
+
 ## [0.1.0] - 2026-04-06
 
 ### Added

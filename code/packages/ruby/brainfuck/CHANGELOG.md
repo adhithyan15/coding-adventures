@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 — 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `Lexer.tokenize`/`create_lexer` and `Parser.parse`/`create_parser` now load the pre-compiled `_token_grammar.rb`/`_parser_grammar.rb` (via `GrammarTools::CompiledLoader`, newly generated from `brainfuck.tokens`/`brainfuck.grammar`) instead of reading and parsing those files from `code/grammars/` on every call. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
+
 ## 0.3.0 — 2026-04-10
 
 ### Added

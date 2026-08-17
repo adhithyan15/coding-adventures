@@ -1,6 +1,11 @@
 # Changelog
 
-All notable changes to `coding_adventures_sql_parser` will be documented in this file.
+All notable changes to `coding_adventures_nib_parser` will be documented in this file.
+
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `create_nib_parser` now loads the pre-compiled `_grammar.rb` (via `GrammarTools::CompiledLoader`, newly generated from `nib.grammar`) instead of reading and parsing the `.grammar` file from `code/grammars/` on every call. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
 
 ## [0.1.0] - 2026-03-23
 

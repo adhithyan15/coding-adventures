@@ -55,6 +55,11 @@ module CodingAdventures
     # Same 6-level navigation as the lexer.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     TOML_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "toml", "toml.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Parse a string of TOML text into a generic AST.
     #
@@ -76,13 +81,8 @@ module CodingAdventures
       # This produces tokens including NEWLINEs (TOML is newline-sensitive).
       tokens = CodingAdventures::TomlLexer.tokenize(source)
 
-      # Step 2: Load and parse the TOML grammar.
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(TOML_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-
-      # Step 3: Parse tokens using the grammar-driven parser.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      # Step 2: Parse tokens using the grammar-driven parser.
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end

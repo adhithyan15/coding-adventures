@@ -80,11 +80,10 @@ module CodingAdventures
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     VALID_VERSIONS = %w[algol60].freeze
     ALGOL_TOKENS_PATH = File.join(GRAMMAR_DIR, "algol", "algol60.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
 
-    def self.resolve_tokens_path(version = "algol60")
-      if version.nil? || version.empty?
-        version = "algol60"
-      end
+    def self.validate_version!(version = "algol60")
+      version = "algol60" if version.nil? || version.empty?
 
       unless VALID_VERSIONS.include?(version)
         raise ArgumentError,
@@ -92,7 +91,11 @@ module CodingAdventures
           "Valid versions: #{VALID_VERSIONS.sort.join(", ")}"
       end
 
-      File.join(GRAMMAR_DIR, "algol", "#{version}.tokens")
+      version
+    end
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
     end
 
     # Tokenize a string of ALGOL 60 source text into an array of Token objects.
@@ -115,20 +118,17 @@ module CodingAdventures
     # @param source [String] ALGOL 60 source text to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source, version: "algol60")
-      # Read the algol.tokens file and parse it into a TokenGrammar.
-      # The TokenGrammar contains the regex patterns for REAL_LIT, INTEGER_LIT,
-      # STRING_LIT, IDENT, all operators and delimiters, the keyword list,
-      # and the skip rules for whitespace and comments.
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(resolve_tokens_path(version), encoding: "UTF-8")
-      )
+      # Validate the version, then use the pre-compiled TokenGrammar (embedded
+      # as native Ruby data structures in _grammar.rb) instead of reading and
+      # parsing algol60.tokens at runtime.
+      validate_version!(version)
 
       # Create a GrammarLexer instance and run it. The lexer walks through
       # the source character by character, matching patterns from the grammar
       # in priority order (first match wins). Multi-character operators like
       # := and ** are defined before their single-character prefixes (: and *)
       # so that ":=" tokenizes as ASSIGN rather than COLON + EQ.
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.tokenize
     end
   end

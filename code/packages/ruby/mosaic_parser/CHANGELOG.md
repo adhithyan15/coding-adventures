@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `parse` now loads the pre-compiled `_grammar.rb` (via `GrammarTools::CompiledLoader`, newly generated from `mosaic.grammar`) instead of reading and parsing the `.grammar` file from `code/grammars/` on every call, then applies the `slot_type`/`property_value` alternative-ordering fixes once and memoizes the corrected grammar instead of rebuilding it on every `parse`. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added

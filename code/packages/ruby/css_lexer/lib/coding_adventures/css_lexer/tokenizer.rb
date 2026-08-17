@@ -49,19 +49,22 @@ module CodingAdventures
     #       tokenizer.rb                      <-- __dir__
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     CSS_TOKENS_PATH = File.join(GRAMMAR_DIR, "css", "css.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Create a GrammarLexer configured for CSS text.
     #
-    # Reads css.tokens, parses it into a TokenGrammar, and creates
-    # a GrammarLexer ready to tokenize the given source.
+    # Uses the pre-compiled TokenGrammar (embedded as native Ruby data
+    # structures in _grammar.rb) instead of reading and parsing css.tokens
+    # at runtime.
     #
     # @param source [String] CSS source code to tokenize
     # @return [CodingAdventures::Lexer::GrammarLexer]
     def self.create_css_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(CSS_TOKENS_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
     end
 
     # Tokenize a string of CSS source code into an array of Token objects.

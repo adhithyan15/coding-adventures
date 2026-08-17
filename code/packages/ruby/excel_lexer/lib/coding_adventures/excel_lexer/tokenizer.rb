@@ -7,6 +7,11 @@ module CodingAdventures
   module ExcelLexer
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     EXCEL_TOKENS_PATH = File.join(GRAMMAR_DIR, "excel", "excel.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     def self.next_non_space_char(ctx)
       offset = 1
@@ -48,10 +53,7 @@ module CodingAdventures
     end
 
     def self.create_excel_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(EXCEL_TOKENS_PATH, encoding: "UTF-8")
-      )
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.set_on_token(EXCEL_ON_TOKEN)
       lexer
     end

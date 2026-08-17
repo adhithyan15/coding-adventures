@@ -7,12 +7,14 @@ module CodingAdventures
   module NibLexer
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     NIB_TOKENS_PATH = File.join(GRAMMAR_DIR, "nib", "nib.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     def self.create_nib_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(NIB_TOKENS_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
     end
 
     def self.tokenize_nib(source)

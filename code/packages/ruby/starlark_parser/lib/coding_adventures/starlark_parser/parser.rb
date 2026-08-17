@@ -62,6 +62,11 @@ module CodingAdventures
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     STARLARK_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "starlark", "starlark.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Parse a string of Starlark source code into a generic AST.
     #
@@ -84,18 +89,11 @@ module CodingAdventures
       # includes INDENT/DEDENT/NEWLINE tokens for block structure.
       tokens = CodingAdventures::StarlarkLexer.tokenize(source)
 
-      # Step 2: Load and parse the Starlark grammar.
-      # The grammar file uses EBNF notation to describe Starlark's
-      # syntax rules, from top-level file structure down to atoms.
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(STARLARK_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-
-      # Step 3: Parse tokens using the grammar-driven parser.
+      # Step 2: Parse tokens using the grammar-driven parser.
       # The parser uses recursive descent with backtracking to match
       # the token stream against the grammar rules, producing an AST
       # where each node records which rule produced it.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end
