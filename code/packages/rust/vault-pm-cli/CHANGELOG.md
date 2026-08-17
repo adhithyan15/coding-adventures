@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge database-credential ITEM BASE_REVISION`,
+  which retains the exact current database credential opaquely, collects the
+  password through a hidden prompt, forwards the engine and port lines verbatim
+  for application-owned closed validation, durably records host and validation
+  failures, and publishes one authored all-current-parent static credential
+  without exposing prior candidate values.
 - Added audit-required `conflict merge api-key ITEM BASE_REVISION`, which
   retains the exact current API key opaquely, collects the token through a
   hidden prompt, forwards the scope and expiry lines verbatim for
