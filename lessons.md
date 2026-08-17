@@ -4362,7 +4362,15 @@ Lessons:
    nothing."** With 40 tests passing, zero is categorically impossible as a
    real measurement — read it as a collection failure and hunt the
    infrastructure, rather than as a signal to go write tests.
-4. Verify a rename like this by checking the *consumers* build, not just the
+4. **When an unrelated package's broken *measurement* blocks real work,
+   quarantine the measurement, not the tests.** This gate was disabled (issue
+   #11859) so PR #11553's Swift ZIP work could land: `/p:Threshold=80` is
+   omitted while `/p:CollectCoverage=true` stays, so all 47 tests still run and
+   still fail the build if any breaks — verified by injecting a deliberate
+   failure and confirming exit 1 — and the coverage number stays visible in the
+   log for whoever re-arms the gate. Disabling the whole package would have
+   thrown away a working 47-test suite to silence one broken number.
+5. Verify a rename like this by checking the *consumers* build, not just the
    renamed package: `programs/fsharp/conduit-hello` references it via
    `ProjectReference`, which resolves by path and so survives an assembly
    rename — but a by-name reference would not have.
