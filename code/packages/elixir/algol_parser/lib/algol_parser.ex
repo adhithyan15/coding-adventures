@@ -58,21 +58,24 @@ defmodule CodingAdventures.AlgolParser do
   ## How It Works
 
   1. `AlgolLexer.tokenize/1` converts the source string into a token list.
-  2. `GrammarParser.parse/2` uses `algol.grammar` to drive a recursive-descent
-     parse of those tokens, building the AST bottom-up.
-  3. Both the lexer grammar and the parser grammar are cached in `persistent_term`
-     so the file reads happen only once per BEAM node lifetime.
+  2. `GrammarParser.parse/2` uses the pre-compiled `algol60.grammar` (fetched
+     from `CodingAdventures.AlgolParser.Grammar.Algol60`, generated via
+     `grammar-tools compile-grammar`) to drive a recursive-descent parse of
+     those tokens, building the AST bottom-up.
+  3. Both the lexer grammar and the parser grammar are cached in
+     `persistent_term` so the lookup happens only once per BEAM node
+     lifetime.
   """
 
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.AlgolLexer
+  alias CodingAdventures.AlgolParser.Grammar.Algol60
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
 
-  # Resolve the grammars directory at compile time relative to this source
-  # file. Walking up: lib → algol_parser → elixir → packages → code → grammars.
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
   @valid_versions ~w(algol60)
+  @parser_grammars %{
+    "algol60" => &Algol60.parser_grammar/0
+  }
 
   @doc """
   Parse ALGOL 60 source code into an AST.
@@ -108,18 +111,14 @@ defmodule CodingAdventures.AlgolParser do
   """
   @spec create_parser(String.t()) :: ParserGrammar.t()
   def create_parser(version \\ "algol60") do
-    grammar_path = resolve_grammar_path(version)
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    grammar
-  end
+    case Map.fetch(@parser_grammars, version) do
+      {:ok, grammar_fun} ->
+        grammar_fun.()
 
-  defp resolve_grammar_path(version) when version in @valid_versions do
-    Path.join([@grammars_dir, "algol", "#{version}.grammar"])
-  end
-
-  defp resolve_grammar_path(version) do
-    raise ArgumentError,
-          "Unknown ALGOL version #{inspect(version)}. Valid versions: #{Enum.join(@valid_versions, ", ")}"
+      :error ->
+        raise ArgumentError,
+              "Unknown ALGOL version #{inspect(version)}. Valid versions: #{Enum.join(@valid_versions, ", ")}"
+    end
   end
 
   # Cache the parsed ParserGrammar in a persistent_term. The grammar is
