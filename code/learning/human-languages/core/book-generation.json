@@ -5137,6 +5137,12 @@
       "chapter": 58,
       "output": "hindi/book/chapters/ch58-inside-the-house.tex",
       "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 59,
+      "output": "hindi/book/chapters/ch59-script-second-wave.tex",
+      "scriptSet": "hindi-main"
     }
   ],
   "handwritten": [

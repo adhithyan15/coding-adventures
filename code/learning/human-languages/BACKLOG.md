@@ -99,6 +99,32 @@ Same family as `git stash` not stashing untracked files (HL-C213).
 **Print `git branch --show-current` in the same command as any cross-branch
 diagnosis.** Cheap, and it would have saved the whole detour.
 
+## HL-C223b — the glyph gate caught its first defect BEFORE a push, and it was a third instance
+
+The Hindi tranche used **ɑ** (U+0251 LATIN SMALL LETTER ALPHA) in four
+romanizations — `bhɑ`, `yɑ`, `bɑ`, `ḍɑ`. Latin Modern does not have it.
+
+That is the **third** instance of this exact class:
+
+```
+ǣ  U+01E3  Latin      HL-C214   found by CI, 11 minutes after push
+ɔ  U+0254  Bengali    HL-C223   found by CI, 11 minutes after push
+ɑ  U+0251  Hindi      here      found locally, BEFORE push
+```
+
+**The pattern is now unmistakable and worth stating as a rule.** Every instance is
+a **phonetic character in a romanization**, reached for because the prose is
+describing a sound English has no letter for. That is not an occasional slip; it
+is what an etymology-and-pronunciation curriculum does several times per tranche.
+
+Latin Modern is a typesetter's font: excellent Western European coverage, and it
+holds almost none of the IPA block. Known present and safe: `ā ī ō ū ô ə`. Known
+absent: `ǣ ɔ ɑ`, and by extension most of U+0250–U+02AF.
+
+**The cheap habit that removes the whole class:** describe the sound in words
+("the vowel of English *awe*") and romanise with a character the font has. The IPA
+symbol buys precision the reader mostly cannot use and costs a CI round trip.
+
 ## HL-C222 — Bengali: same four ideas, different DEFAULT, and a letter that lies about its sound
 
 Seventh script tranche. `neverTaughtGlyphs` 48 → 39; `tracksTeachingNothing` down
