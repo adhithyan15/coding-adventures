@@ -12,9 +12,14 @@ keeps working unchanged — no frontend emits any of the new names yet.
 - `div_trunc`/`udiv_trunc` (signed/unsigned truncating division, rounds
   toward zero) are genuinely new: `runtime.rs`'s `trunc_div`/
   `utrunc_div`. Rust's own `i64`/`u64` `/` already truncates toward
-  zero, so unlike `divide`'s floor path these need no adjustment — the
-  unsigned variant exists because a `u64` ≥ 2^63 misreads as negative
-  unless reinterpreted before dividing.
+  zero, so unlike `divide`'s floor path these need no rounding
+  adjustment — the unsigned variant exists because a `u64` ≥ 2^63
+  misreads as negative unless reinterpreted before dividing.
+  `trunc_div` uses `wrapping_div`, not plain `/`: `i64::MIN / -1`
+  overflows `i64` and plain `/` panics uncatchably on that one input
+  pair (caught in security review) — `wrapping_div` wraps to `i64::MIN`
+  instead, matching this runtime's existing saturate-on-overflow
+  convention (`floor_div_i64`'s own `wrapping_rem` does the same).
 - `div_true` (always coerces to float, models Python's `/`) is also new:
   `runtime.rs`'s `true_div`.
 - All three new functions raise a typed `ZeroDivisionError` on a zero

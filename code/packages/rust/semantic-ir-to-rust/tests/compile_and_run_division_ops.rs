@@ -218,6 +218,23 @@ fn div_trunc_truncates_toward_zero() {
     }
 }
 
+/// `i64::MIN / -1` is not representable (the true quotient, `2^63`,
+/// overflows `i64`) — plain Rust `/` PANICS uncatchably on exactly this
+/// input pair. `trunc_div` must use `wrapping_div` instead, so this must
+/// NOT crash the process; it wraps to `i64::MIN` (two's-complement
+/// wraparound), matching this runtime's existing saturate-on-overflow
+/// convention for fixed-width `i64` rather than an uncatchable host panic.
+#[test]
+fn div_trunc_wraps_instead_of_panicking_on_i64_min_div_neg_one() {
+    match run(
+        &div_module(vec![print_stmt(bin("div_trunc", ilit(i64::MIN), ilit(-1)))]),
+        "trunc_overflow",
+    ) {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec![i64::MIN.to_string()]),
+        None => eprintln!("skip: no rustc/linker"),
+    }
+}
+
 #[test]
 fn udiv_trunc_matches_div_trunc_on_positive_operands() {
     match run(

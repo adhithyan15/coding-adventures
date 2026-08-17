@@ -632,15 +632,27 @@ pub const RUNTIME: &str = r##"mod __sir {
 
     /// Signed truncating division (rounds toward zero). Integer-only —
     /// matches the C backend's `tdiv`, which `div_trunc` absorbs/replaces.
-    /// Unlike `divide`'s floor path, this needs NO adjustment: Rust's own
-    /// `i64` `/` already truncates toward zero.
+    /// Unlike `divide`'s floor path, this needs NO rounding adjustment:
+    /// Rust's own `i64` `/` already truncates toward zero.
+    ///
+    /// Uses `wrapping_div`, not plain `/`: `i64::MIN / -1` is not
+    /// representable (the mathematical result, `2^63`, overflows `i64`) and
+    /// plain `/` PANICS on that one input pair, in both debug and release —
+    /// unlike the zero-divisor case, that panic is NOT a `SirError`, so it
+    /// cannot be `rescue`d (see `install_panic_hook`/`exc_from_payload`,
+    /// which deliberately let a non-`SirError` panic propagate uncaught).
+    /// `wrapping_div` sidesteps this the same way `floor_div_i64` already
+    /// does below, returning `i64::MIN` (the two's-complement wraparound
+    /// value) instead of panicking — consistent with this runtime's
+    /// existing saturate/wrap-on-overflow convention for fixed-width `i64`
+    /// (see `<<`'s saturation and `floor_div_i64`'s own `wrapping_rem`).
     pub fn trunc_div(a: Value, b: Value) -> Value {
         let x = as_i64(&a);
         let y = as_i64(&b);
         if y == 0 {
             raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
         }
-        Value::Int(x / y)
+        Value::Int(x.wrapping_div(y))
     }
 
     /// Unsigned truncating division — the twin of `trunc_div` for values
