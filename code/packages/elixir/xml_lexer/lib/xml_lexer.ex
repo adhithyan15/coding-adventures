@@ -2,9 +2,10 @@ defmodule CodingAdventures.XmlLexer do
   @moduledoc """
   XML Lexer — Tokenizes XML using pattern groups and callback hooks.
 
-  This module is the Elixir port of the Python `xml_lexer` package. It reads
-  `xml.tokens` from the shared grammars directory and uses `GrammarLexer.tokenize/3`
-  with an on-token callback to handle XML's context-sensitive lexical structure.
+  This module is the Elixir port of the Python `xml_lexer` package. It uses
+  the pre-compiled `xml.tokens` grammar (see `CodingAdventures.XmlLexer.Grammar`)
+  and `GrammarLexer.tokenize/3` with an on-token callback to handle XML's
+  context-sensitive lexical structure.
 
   ## The Problem
 
@@ -49,17 +50,7 @@ defmodule CodingAdventures.XmlLexer do
 
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  # ---------------------------------------------------------------------------
-  # Grammar File Location
-  # ---------------------------------------------------------------------------
-  #
-  # The xml.tokens file lives in code/grammars/ at the repository root.
-  # From this file's location (lib/xml_lexer.ex), we navigate:
-  #   lib/ -> xml_lexer/ -> elixir/ -> packages/ -> code/ -> grammars/
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.XmlLexer.Grammar, as: GrammarSource
 
   # ---------------------------------------------------------------------------
   # XML On-Token Callback
@@ -223,15 +214,13 @@ defmodule CodingAdventures.XmlLexer do
   end
 
   @doc """
-  Parse the xml.tokens grammar file and return the TokenGrammar.
+  Return the pre-compiled xml.tokens TokenGrammar.
 
   This is useful if you want to inspect the grammar or reuse it directly.
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "xml", "xml.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    GrammarSource.token_grammar()
   end
 
   # Cache the grammar in a persistent_term for fast repeated access.
