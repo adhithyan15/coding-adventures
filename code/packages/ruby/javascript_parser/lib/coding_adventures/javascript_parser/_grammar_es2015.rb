@@ -830,12 +830,12 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::OptionalElement.new(element: GT::RuleReference.new(name: "STAR", is_token: true)),
           GT::RuleReference.new(name: "assignment_expression", is_token: false),
         ]),
-        GT::RuleReference.new(name: "conditional_expression", is_token: false),
         GT::Sequence.new(elements: [
           GT::RuleReference.new(name: "left_hand_side_expression", is_token: false),
           GT::RuleReference.new(name: "assignment_operator", is_token: false),
           GT::RuleReference.new(name: "assignment_expression", is_token: false),
         ]),
+        GT::RuleReference.new(name: "conditional_expression", is_token: false),
       ]),
       line_number: 319,
     ),

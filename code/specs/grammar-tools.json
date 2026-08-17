@@ -3,7 +3,7 @@
   "name": "grammar-tools",
   "display_name": "Grammar Tools",
   "description": "Validate and compile .tokens and .grammar files. Reports syntax errors, duplicate definitions, undefined references, and cross-file consistency issues. Can also compile grammar files into native language representations for zero-overhead embedding, and generate downstream compiled grammar artifacts across packages.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
     "help": true,
@@ -32,6 +32,13 @@
       "short": "f",
       "description": "Skip grammar validation and compile anyway (used when patterns are known to be handled at runtime by the consuming package)",
       "type": "boolean",
+      "required": false
+    },
+    {
+      "id": "lane",
+      "long": "lane",
+      "description": "Restrict generate-compiled-grammars to one target language's _grammar files (currently only 'ruby' is supported; regenerates without needing the Go/Rust/Python/Node toolchains, so it's safe to run as a CI drift check with only a Ruby toolchain available). Defaults to regenerating every language.",
+      "type": "string",
       "required": false
     }
   ],

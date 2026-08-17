@@ -144,7 +144,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "REGEX",
-        pattern: "\\/([^\\/\\\\\\n]|\\\\.)+\\/[dgimsvy]*",
+        pattern: "\\/([^\\/\\\\\\n]|\\\\.)+\\/[dgimsuvy]*",
         is_regex: true,
         line_number: 85,
         alias_name: nil,

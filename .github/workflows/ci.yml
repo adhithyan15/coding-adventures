@@ -11,7 +11,10 @@
 #      language packages and rejects stale generated vectors.
 #   4. d18p-channel-conformance: runs the D18P durable-channel manifest through
 #      all six language packages and rejects stale generated transitions.
-#   5. build: Installs only the needed toolchains, then runs the build.
+#   5. d18q-channel-key-grant-conformance: same shape, for the D18Q manifest.
+#   6. ruby-grammar-regen-check: regenerates every Ruby _grammar.rb from its
+#      .tokens/.grammar source and rejects a stale committed file.
+#   7. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -551,7 +554,53 @@ jobs:
       - name: Run every D18Q manifest consumer and verify regeneration
         run: python3 code/scripts/validate_d18q_channel_key_grant_conformance.py
 
-  # ── Job 6: Build and test ──────────────────────────────────────
+  # ── Job 6: Ruby compiled-grammar regeneration check ─────────────
+  #
+  # Ruby lexer/parser packages ship a pre-compiled _grammar.rb (grammar
+  # data baked into native Ruby structures) instead of parsing the raw
+  # .tokens/.grammar text at runtime. That _grammar.rb is generated code,
+  # hand-committed alongside its source -- nothing enforced that the two
+  # stayed in sync, and they drifted apart more than once (see
+  # coding_adventures_ruby_parser's CHANGELOG). This job regenerates every
+  # Ruby _grammar.rb from the current .tokens/.grammar source and fails if
+  # that produces any diff, so a grammar-source change without the
+  # matching regenerated output can't merge silently. Ruby-only regen
+  # needs no Go/Rust/Python/Node toolchain (see generator.rb#run_ruby_only).
+  ruby-grammar-regen-check:
+    name: Ruby compiled-grammar regeneration check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+
+      - name: Regenerate every Ruby _grammar.rb from current .tokens/.grammar source
+        run: |
+          LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 ruby -E UTF-8 \
+            code/programs/ruby/grammar-tools/main.rb generate-compiled-grammars --lane ruby
+
+      - name: Fail if regeneration produced any diff
+        run: |
+          if ! git diff --quiet -- code/packages/ruby; then
+            echo "::error::Regenerating Ruby's compiled grammars (grammar-tools generate-compiled-grammars --lane ruby) produced changes that are not committed."
+            echo "A .tokens/.grammar source file changed without regenerating the downstream _grammar.rb file(s) that embed it."
+            echo
+            git diff --stat -- code/packages/ruby
+            echo
+            echo "Run 'code/scripts/generate-compiled-grammars.sh --lane ruby' locally and commit the result."
+            exit 1
+          fi
+          echo "All Ruby compiled grammars are up to date."
+
+  # ── Job 7: Build and test ──────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -1727,7 +1776,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, build]
+    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, ruby-grammar-regen-check, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -1739,11 +1788,12 @@ jobs:
           D18F_RESULT: ${{ needs['d18f-message-conformance'].result }}
           D18P_RESULT: ${{ needs['d18p-channel-conformance'].result }}
           D18Q_RESULT: ${{ needs['d18q-channel-key-grant-conformance'].result }}
+          RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
