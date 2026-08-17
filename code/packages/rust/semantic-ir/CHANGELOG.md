@@ -2,6 +2,20 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.25.2 — SIR21 T3b-2 Slice 1: division-split spec amendment (doc-only)
+
+No code change. `op_select.rs`'s doc comment on the `/`-exclusion note
+(`resolve_binary`) is updated for the SIR21 T3b-2 division-split arc
+(`code/specs/SIR21-type-system-and-integer-semantics.md` §E3): the arc adds
+a fourth canonical op name (`udiv_trunc`, `div_trunc`'s unsigned twin) and
+none of `div_floor`/`div_trunc`/`udiv_trunc`/`div_true` ever reach
+`resolve_binary` — every frontend that emits one already knows its exact
+rounding mode at emission time, unlike `+`/`-`/`*`, which stay genuinely
+polymorphic on operand type. `resolve_binary`'s actual behavior is
+unchanged; this is a doc-comment-accuracy update landing ahead of the rest
+of the arc (backend rollout, frontend migration, cleanup — tracked
+separately per-package).
+
 ## 0.25.1 — Doc-comment corrections: `op_select`/`type_env` are now consulted (SIR21 T3c-3)
 
 No code change. `semantic-ir-to-python` (see that crate's own changelog)
