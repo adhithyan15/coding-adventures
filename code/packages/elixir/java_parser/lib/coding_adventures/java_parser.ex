@@ -36,11 +36,23 @@ defmodule CodingAdventures.JavaParser do
   alias CodingAdventures.JavaLexer
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.JavaParser.Grammar.{V1_0, V1_1, V1_4, V5, V7, V8, V10, V14, V17, V21}
 
   @default_version "21"
   @valid_versions ~w(1.0 1.1 1.4 5 7 8 10 14 17 21)
+
+  @parser_grammars %{
+    "1.0" => &V1_0.parser_grammar/0,
+    "1.1" => &V1_1.parser_grammar/0,
+    "1.4" => &V1_4.parser_grammar/0,
+    "5" => &V5.parser_grammar/0,
+    "7" => &V7.parser_grammar/0,
+    "8" => &V8.parser_grammar/0,
+    "10" => &V10.parser_grammar/0,
+    "14" => &V14.parser_grammar/0,
+    "17" => &V17.parser_grammar/0,
+    "21" => &V21.parser_grammar/0
+  }
 
   @doc """
   Return the default Java version used when no version is specified.
@@ -150,8 +162,7 @@ defmodule CodingAdventures.JavaParser do
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
       nil ->
-        grammar_path = Path.join([@grammars_dir, "java", "java#{version}.grammar"])
-        {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
+        grammar = Map.fetch!(@parser_grammars, version).()
         :persistent_term.put({__MODULE__, :grammar, version}, grammar)
         grammar
 
