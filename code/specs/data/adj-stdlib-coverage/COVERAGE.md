@@ -8,47 +8,48 @@ exists. Semantic coverage is tracked in `code/specs/ADJ-STDLIB-COVERAGE.md`.
 
 ## Summary
 
-| Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-pinned |
+| Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-verified |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| facts | 141 | 142 | 141 (100.0%) | 141 (100.0%) | 141 (100.0%) | 0 (0.0%) |
-| formulas | 155 | 387 | 155 (100.0%) | 155 (100.0%) | 155 (100.0%) | 0 (0.0%) |
+| facts | 315 | 318 | 314 (99.7%) | 315 (100.0%) | 315 (100.0%) | 0 (0.0%) |
+| formulas | 163 | 404 | 163 (100.0%) | 163 (100.0%) | 163 (100.0%) | 0 (0.0%) |
 | medical-recall | 63 | 634 | 63 (100.0%) | 63 (100.0%) | 60 (95.2%) | 0 (0.0%) |
 
 A complete source envelope means every grounded clause has `source`,
-`locator`, and `trust`. Byte-pinned additionally requires every clause to
-have `quote ... at ... snapshot <sha256>`, which
-lets `adj-verify --snapshots` check the exact bytes rather than trust a label.
+`locator`, and `trust`. Pin syntax requires `quote ... at ... snapshot
+<sha256>` for every clause. Byte-verified additionally requires a resolved
+provenance bundle whose CAS graph proves all cited source bytes.
 
 ## Domains
 
 | Collection/domain | Libraries | Clauses | Queries | Tests | Source envelopes | Byte pins |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `facts/agriculture` | 1 | 1 | 1 | 1 | 1 | 0 |
-| `facts/anatomy` | 19 | 19 | 19 | 19 | 19 | 0 |
+| `facts/agriculture` | 5 | 5 | 5 | 5 | 5 | 0 |
+| `facts/anatomy` | 32 | 32 | 32 | 32 | 32 | 0 |
 | `facts/art` | 1 | 1 | 1 | 1 | 1 | 0 |
-| `facts/astronomy` | 5 | 5 | 5 | 5 | 5 | 0 |
-| `facts/biology` | 33 | 33 | 33 | 33 | 33 | 0 |
+| `facts/astronomy` | 18 | 18 | 18 | 18 | 18 | 0 |
+| `facts/biology` | 58 | 58 | 57 | 58 | 58 | 0 |
 | `facts/calendar` | 2 | 2 | 2 | 2 | 2 | 0 |
-| `facts/chemistry` | 16 | 16 | 16 | 16 | 16 | 0 |
-| `facts/earth-science` | 7 | 7 | 7 | 7 | 7 | 0 |
-| `facts/environment` | 1 | 1 | 1 | 1 | 1 | 0 |
-| `facts/geography` | 4 | 4 | 4 | 4 | 4 | 0 |
-| `facts/geology` | 2 | 2 | 2 | 2 | 2 | 0 |
-| `facts/geometry` | 8 | 9 | 8 | 8 | 8 | 0 |
-| `facts/language` | 5 | 5 | 5 | 5 | 5 | 0 |
+| `facts/chemistry` | 18 | 18 | 18 | 18 | 18 | 0 |
+| `facts/earth-science` | 11 | 11 | 11 | 11 | 11 | 0 |
+| `facts/environment` | 3 | 3 | 3 | 3 | 3 | 0 |
+| `facts/geography` | 12 | 12 | 12 | 12 | 12 | 0 |
+| `facts/geology` | 11 | 11 | 11 | 11 | 11 | 0 |
+| `facts/geometry` | 14 | 15 | 14 | 14 | 14 | 0 |
+| `facts/language` | 58 | 59 | 58 | 58 | 58 | 0 |
 | `facts/mathematics` | 5 | 5 | 5 | 5 | 5 | 0 |
-| `facts/meteorology` | 3 | 3 | 3 | 3 | 3 | 0 |
-| `facts/metrology` | 4 | 4 | 4 | 4 | 4 | 0 |
-| `facts/money` | 2 | 2 | 2 | 2 | 2 | 0 |
-| `facts/music` | 1 | 1 | 1 | 1 | 1 | 0 |
-| `facts/nutrition` | 1 | 1 | 1 | 1 | 1 | 0 |
+| `facts/meteorology` | 11 | 11 | 11 | 11 | 11 | 0 |
+| `facts/metrology` | 5 | 5 | 5 | 5 | 5 | 0 |
+| `facts/money` | 4 | 4 | 4 | 4 | 4 | 0 |
+| `facts/music` | 2 | 2 | 2 | 2 | 2 | 0 |
+| `facts/nutrition` | 3 | 3 | 3 | 3 | 3 | 0 |
+| `facts/oceanography` | 8 | 8 | 8 | 8 | 8 | 0 |
 | `facts/optics` | 1 | 1 | 1 | 1 | 1 | 0 |
-| `facts/physics` | 19 | 19 | 19 | 19 | 19 | 0 |
-| `facts/transportation` | 1 | 1 | 1 | 1 | 1 | 0 |
+| `facts/physics` | 31 | 32 | 31 | 31 | 31 | 0 |
+| `facts/transportation` | 2 | 2 | 2 | 2 | 2 | 0 |
 | `formulas/arithmetic` | 10 | 20 | 10 | 10 | 10 | 0 |
 | `formulas/chemistry` | 7 | 26 | 7 | 7 | 7 | 0 |
 | `formulas/clinical` | 84 | 263 | 84 | 84 | 84 | 0 |
-| `formulas/mathematics` | 1 | 4 | 1 | 1 | 1 | 0 |
+| `formulas/mathematics` | 9 | 21 | 9 | 9 | 9 | 0 |
 | `formulas/metrology` | 1 | 3 | 1 | 1 | 1 | 0 |
 | `formulas/physics` | 13 | 32 | 13 | 13 | 13 | 0 |
 | `formulas/reference` | 39 | 39 | 39 | 39 | 39 | 0 |
@@ -56,9 +57,9 @@ lets `adj-verify --snapshots` check the exact bytes rather than trust a label.
 
 ## Structural Gaps
 
-### Missing worked-query import (0)
+### Missing worked-query import (1)
 
-None.
+- `code/specs/data/adj-facts-stdlib/biology/mitosis-phase-order.adj`
 
 ### Not named by a repository test (0)
 
@@ -70,7 +71,7 @@ None.
 - `code/specs/data/mycin-2026/recall/endocrine-edges.adj`
 - `code/specs/data/mycin-2026/recall/iem-edges.adj`
 
-### Missing pinned source bytes (359)
+### Missing pinned source bytes (541)
 
 See the JSON form of this report for the complete machine-readable list.
 
@@ -78,8 +79,8 @@ See the JSON form of this report for the complete machine-readable list.
 
 - It cannot measure curriculum coverage because shipped libraries have no
   objective IDs, grade bands, prerequisites, or standards crosswalk.
-- It cannot prove quoted text came from a locator because the stdlib does not
-  currently pin source snapshots and byte offsets.
+- Pin-shaped syntax alone cannot prove quoted text came from a locator; only
+  a verified provenance bundle establishes that byte path.
 - It cannot prove a domain is complete from library count or green examples.
 - It cannot measure retrieval quality, decomposition quality, multi-hop
   composition, conflict handling, calibration, or held-out exam performance.

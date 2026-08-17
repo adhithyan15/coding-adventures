@@ -1,0 +1,78 @@
+% ============================================================================
+% farm-animal-product-use — for the farm animal product whose SAME cited
+% CFSPH span also names what it is used FOR, that use
+% (adj-facts-stdlib, AGRICULTURE).
+% ============================================================================
+% A sibling to the already-shipped `farm-animals.adj` (`farm_animal_product
+% (animal, product)`, chicken → eggs, duck → eggs, sheep → wool, rabbit →
+% wool, goat → milk), `farm-animal-secondary-product.adj`
+% (`farm_animal_secondary_product(animal, product)`), and
+% `farm-animal-product-processing.adj`
+% (`farm_animal_product_processing(animal, product, processing)`). Rabbit's
+% own per-row provenance in `farm-animals.adj` already quotes, VERBATIM, a
+% USE for its already-recorded wool -- but none of the existing tables'
+% schemas had room for it:
+%
+%   rabbit, wool → fiber_arts
+%     "Some rabbit breeds produce a very soft wool that can be harvested
+%      regularly and used for fiber arts."
+%
+% This is explicitly the SAME clause `farm-animal-secondary-product.adj`'s
+% own header already flags as NOT a second product ("rabbit's own cited
+% span states only a USE for its already-recorded wool ('used for fiber
+% arts,' not a second distinct product)") and the SAME clause
+% `farm-animal-product-processing.adj`'s own header already flags as
+% "a USE for its wool ('used for fiber arts'), not a processing method
+% applied to it" -- leaving the use itself unshipped until now. "Use"
+% (what the product is FOR) is categorically distinct from "product"
+% (what the animal GIVES) and from "processing" (how a product is
+% treated before use) -- three separate axes of the same small set of
+% CFSPH sentences. Recall is a binding query:
+%
+%     ? farm_animal_product_use(rabbit, wool, $Use)   % fiber_arts
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table -- the
+% same shape as the sibling `farm-animal-product-processing.adj`, and
+% already precedented elsewhere in this stdlib, e.g.
+% `biology/amino-acids.adj`, `geology/fossil-preservation-subtype.adj`):
+% each `row` lowers to a ground relation
+% `farm_animal_product_use(animal, product, use)` carrying the citation,
+% so the lookup above is the ordinary SLD binding query -- the engine
+% returns the use WITH its source, on the CPU, with zero model calls, and
+% abstains on every other animal/product pair `farm-animals.adj` carries,
+% since none of the other four cited spans (chicken, duck, sheep, goat)
+% states a use the way rabbit's span does -- chicken's and duck's spans
+% state only a second product (meat), sheep's states two second products
+% (meat, milk), and goat's states a processing method applied to its milk
+% ("may be pasteurized"), not a use for it. The query also runs BACKWARD --
+% bind a use and recall which animal/product pair it names:
+%
+%     ? farm_animal_product_use($Animal, $Product, fiber_arts)   % rabbit, wool
+%
+% Only ONE of `farm-animals.adj`'s five animal/product pairs has a
+% genuinely distinct use fact in the ALREADY-cited spans; this table is
+% deliberately narrow (a single row, the same shape as several other
+% already-shipped single-row siblings in this stdlib, e.g.
+% `agriculture/farm-animal-product-processing.adj`,
+% `agriculture/farm-animal-maintenance-level.adj`) rather than inventing a
+% use the source does not state.
+%
+% Provenance: reproduces, byte-for-byte, the SAME rabbit span already
+% quoted inside `farm-animals.adj`'s own per-row provenance block -- no new
+% WebFetch, only a different schema decoding the use half of that
+% already-verified quote. `trust authoritative` -- the same tier
+% `farm-animals.adj` already carries (Iowa State University CFSPH, a
+% primary university educational source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table farm_animal_product_use {
+    columns animal, product, use
+
+    row (rabbit, wool, fiber_arts)   % CFSPH: "...used for fiber arts."
+
+    source "Some rabbit breeds produce a very soft wool that can be harvested regularly and used for fiber arts."
+    locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+    trust authoritative
+}
