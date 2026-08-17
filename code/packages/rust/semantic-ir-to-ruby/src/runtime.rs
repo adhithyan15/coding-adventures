@@ -138,6 +138,19 @@ end
 def sir_tdiv(a, b) = (a - a.remainder(b)) / b
 def sir_tmod(a, b) = a.remainder(b)
 
+# SIR21 T3b-2 `div_true` — ALWAYS true-divides, even for two Integer
+# operands (`sir_true_div(6, 3) == 2.0`, not `2`).  Ruby's native `/`
+# can't be reused directly for two reasons: `Integer#/` floors instead of
+# true-dividing, and `Float#/0` silently returns `Infinity` (Ruby does
+# NOT raise there, unlike `Integer#/0`) — so a naive `a.to_f / b` would
+# let a zero divisor through as IEEE `Infinity`/`NaN` rather than the
+# typed `ZeroDivisionError` every sibling division op raises.  The
+# explicit check below closes that gap before the float divide ever runs.
+def sir_true_div(a, b)
+  raise ZeroDivisionError, "divided by 0" if b == 0
+  a.to_f / b.to_f
+end
+
 # The key is normalised with to_s so a name that arrives as a Symbol (how the
 # _init function's global_set passes it) and the same name as a String (how a
 # VarRef Global reads it) hit the same entry.

@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.23.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive-only: adds the four new division builtin names from SIR21 T3b-2
+(`code/specs/SIR21-type-system-and-integer-semantics.md` §E3) to
+`SUPPORTED_BUILTINS` (the validator allowlist gate) and `emit_builtin`'s
+match. Bare `"/"` and `tdiv`/`utdiv` keep working unchanged — no frontend
+emits any of the new names yet.
+
+- `div_floor` renders IDENTICALLY to bare `/` (a pure alias, not a new
+  code path) — Ruby's own `/` already floors ints and true-divides
+  floats. It deliberately inherits `/`'s existing float-zero-divisor
+  behavior (native Ruby `1.0 / 0` silently returns `Infinity`, unlike
+  `Integer#/0`, which raises) rather than retroactively "fixing" it here
+  — this additive slice changes zero pre-existing behavior, matching the
+  precedent set by this arc's C backend PR.
+- `div_trunc`/`udiv_trunc` reuse the pre-existing `sir_tdiv` helper —
+  identical to `tdiv`/`utdiv` today (this pair is slated to replace those
+  names in a later cleanup slice; both stay wired to the same helper in
+  the meantime, per the spec's absorbs/replaces decision). Zero-divisor
+  raises via Ruby's own native `Integer#/0` — no explicit check needed.
+- `div_true` is genuinely new: `sir_true_div`, a new runtime function.
+  Ruby's native `/` can't be reused directly for two reasons —
+  `Integer#/` floors instead of true-dividing, and `Float#/0` silently
+  returns `Infinity` rather than raising — so `sir_true_div` explicitly
+  checks for a zero divisor before the float divide runs, closing the
+  gap a naive `a.to_f / b` would leave open.
+- New `tests/division_ops_tests.rs`: real `ruby`-execution proof for all
+  four ops, including the §E3 worked example, floor-vs-truncate
+  divergence, and a zero-divisor case for every op.
+
 ## 0.22.0 — SIR28 §7: remove dead bare `print`/`puts` handling
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
