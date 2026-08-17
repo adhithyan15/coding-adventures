@@ -433,6 +433,80 @@ def test_zero_division_error_is_rescue_matchable() -> None:
         assert rescue_matches(exc, ["KeyError"]) is False  # unrelated clause misses
 
 
+# ── SIR21 T3b-2: `trunc_div` / `utrunc_div` / `true_div` ─────────────────────
+#
+# `div` above IS `div_floor` (Ruby's floor semantics) — no separate test
+# needed for that name. These three are genuinely new.
+
+
+def test_trunc_div_truncates_toward_zero() -> None:
+    # Unlike `div`'s floor semantics, every sign combination rounds toward
+    # zero (matches C's integer `/`), verified against the same worked
+    # example `div`'s own floor test uses so the divergence is explicit.
+    assert sir.trunc_div(7, 2) == 3
+    assert sir.trunc_div(-7, 2) == -3  # trunc, NOT floor's -4
+    assert sir.trunc_div(7, -2) == -3
+    assert sir.trunc_div(-7, -2) == 3
+    assert sir.trunc_div(-6, 2) == -3  # exact division: trunc == floor
+
+
+def test_trunc_div_exact_for_python_bignums() -> None:
+    # `divmod` operates on Python's arbitrary-precision int directly, so
+    # (unlike a fixed-width i64/int64 backend) there is no float-precision
+    # loss and no MIN/-1 overflow edge case to guard. Truncation toward zero
+    # is symmetric (trunc(-x / y) == -trunc(x / y) for y > 0); for a
+    # POSITIVE dividend trunc and floor agree, so the positive side is
+    # exactly `huge // 3` and the negative side must be its negation.
+    huge = 10**30 + 7  # not exactly divisible by 3 -- exercises the adjustment
+    assert huge % 3 != 0
+    assert sir.trunc_div(huge, 3) == huge // 3
+    assert sir.trunc_div(-huge, 3) == -(huge // 3)
+
+
+def test_trunc_div_by_zero_raises_typed_zero_division_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.trunc_div(1, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+    assert excinfo.value.args[0] == "divided by 0"
+
+
+def test_utrunc_div_matches_trunc_div_python_has_no_fixed_width() -> None:
+    # Python's int has no separate signed/unsigned representation, so
+    # (unlike C/Go/Rust, which reinterpret bits) this backend's udiv_trunc
+    # is identical to trunc_div — documented, not a bug.
+    assert sir.utrunc_div(7, 2) == sir.trunc_div(7, 2) == 3
+    assert sir.utrunc_div(-7, 2) == sir.trunc_div(-7, 2) == -3
+
+
+def test_utrunc_div_by_zero_raises_typed_zero_division_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.utrunc_div(1, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+
+
+def test_true_div_always_true_divides_even_on_integer_operands() -> None:
+    # `div`'s own floor test asserts `sir.div(7, 2) == 3` (an int); true_div
+    # on the SAME operands must be the float `3.5` — the entire point of
+    # having a separate always-float op.
+    assert sir.true_div(7, 2) == 3.5
+    assert sir.true_div(-7, 2) == -3.5
+    assert sir.true_div(6, 3) == 2.0
+    assert isinstance(sir.true_div(6, 3), float)
+
+
+def test_true_div_by_zero_raises_typed_zero_division_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.true_div(1, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+    assert excinfo.value.args[0] == "divided by 0"
+
+
 def test_comparisons() -> None:
     assert sir.lt(1, 2) is True
     assert sir.gt(2, 1) is True
