@@ -1,0 +1,727 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: GU-W01-aa-matra
+spine_node: SPINE-MEET-GREET
+sequence: 710
+delivery: script
+chapter: 13
+type: writing
+headword: ા
+romanization: "-ā"
+gloss: "the vowel sign that replaces the inherent a — and your first readable word"
+prerequisites: [GU-W01-ha]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01]
+introduces:
+  knowledge: [GU-SCRIPT-AA-MATRA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-ha]
+---
+# ા — the vowel sign that replaces the inherent a
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-AA-MATRA-01]; assesses=[GU-SCRIPT-HA-01] -->
+
+The inherent **a** is a default. To get a different vowel you **replace** it,
+and you replace it with a mark called a **mātrā**.
+
+Here is the first one:
+
+> ા
+
+On its own it is nothing — a vertical stroke you would never write alone. It only
+means anything **attached to a consonant**, where it swaps the inherent short *a*
+for a long **ā**, the *a* of English *father*.
+
+Put it on the consonant you just learned:
+
+> **હ** + **ા** → **હા**
+
+**hā.** And that is a word — it is **yes**, and you have been saying it since your
+first lesson in this language.
+
+Take the measure of that. You learned one consonant and one mark, and a word you
+already knew how to say became a word you can **read**. Nothing was memorised as a
+picture.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+
+- [YOU WRITE: ા]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+
+[PAUSE 3s] What does a mātrā do to the inherent vowel? (**Replaces** it.) What word did
+those two pieces make? (**હા** — *hā*, "yes".)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: GU-W01-aa
+spine_node: SPINE-MEET-GREET
+sequence: 720
+delivery: script
+chapter: 13
+type: writing
+headword: આ
+romanization: "ā"
+gloss: "the SAME vowel standing alone — and why a script needs two shapes for one sound"
+prerequisites: [GU-W01-aa-matra]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
+introduces:
+  knowledge: [GU-SCRIPT-AA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-aa-matra]
+---
+# આ — the SAME vowel standing alone
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-AA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+
+Now a distinction that trips up every beginner in every Indic script, and it is
+worth meeting deliberately rather than by accident.
+
+The mark you just learned only works **attached to a consonant**. So what do you
+write when a word **starts** with that vowel, with no consonant to hang it on?
+
+You write a different character:
+
+> આ
+
+That is **ā** as well — the same sound — but it is an **independent vowel**, a
+full letter that stands on its own at the start of a word.
+
+**These are two different characters, not two styles of one.** They look related
+because they are, and a computer, a font and this book all treat them as
+completely separate. Confusing them is the commonest spelling error in the
+script.
+
+So what decides which one you write is **position**, not sound:
+
+- **આ** begins a word.
+- **ા** rides on a consonant.
+
+You already know a word that opens with the independent one — the word for
+*thanks* — and you will be able to read the whole of it shortly.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01] -->
+
+- [YOU WRITE: આ]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01] -->
+
+[PAUSE 3s] Which of the two starts a word? (**આ**, the independent vowel.) Which one
+attaches to a consonant? (**ા**, the mātrā.) And are they the same character?
+(**No** — two separate characters for one sound.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: GU-W01-e-matra
+spine_node: SPINE-MEET-GREET
+sequence: 770
+delivery: script
+chapter: 13
+type: writing
+headword: ે
+romanization: "-e"
+gloss: "a mātrā that sits ABOVE the letter, not beside it"
+prerequisites: [GU-W01-ta]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01]
+introduces:
+  knowledge: [GU-SCRIPT-E-MATRA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-ta]
+---
+# ે — a mātrā that sits ABOVE the letter, not beside it
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-E-MATRA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01] -->
+
+A second vowel sign, and it introduces something the first one did not.
+
+> ે
+
+This is **e**, the vowel of English *bed*. And unlike the mātrā you already know,
+which stands to the **right** of its consonant, this one sits **above** it:
+
+> **ત** + **ે** → **તે**
+
+*te.* One beat, still — the mark changes the vowel, never the count.
+
+**Where a mātrā sits is not decoration.** In this family of scripts a vowel sign
+can go to the right, to the left, above, below, or even on both sides at once, and
+the position is part of the character's identity. A reader learns to look **around**
+a consonant, not just after it.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01] -->
+
+- [YOU WRITE: ે]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01] -->
+
+[PAUSE 3s] Where does this mātrā sit? (**Above** the consonant.) Does it add a beat?
+(**No** — it replaces the vowel, it does not add one.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: GU-W01-ha
+spine_node: SPINE-MEET-GREET
+sequence: 700
+delivery: script
+chapter: 13
+type: writing
+headword: હ
+romanization: "ha"
+gloss: "the consonant ha — and the vowel you get for free with it"
+prerequisites: [GU-C01-namaste]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: []
+introduces:
+  knowledge: [GU-SCRIPT-HA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-C01-namaste]
+---
+# હ — the consonant ha
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Nothing is assumed but the words you can already say. This chapter
+turns them into words you can read.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-HA-01]; assesses=[] -->
+
+Gujarati is written with an **abugida**, and that word is doing a lot of work.
+It is not an alphabet, where each letter is one sound. It is a system where **a
+consonant already carries a vowel**, and you only write a vowel when you want a
+different one.
+
+Here is the first consonant:
+
+> હ
+
+That is not *h*. It is **ha** — the consonant *h* with an **a** already inside it,
+the *a* of English *about*. Nobody wrote that vowel. It is there because a bare
+consonant in this script is understood to carry it, and this is called the
+**inherent vowel**.
+
+Look at the shape while you say it. Notice what is **not** there: no line across
+the top. Gujarati is Devanagari's sister and the two share most of their skeleton,
+but Devanagari hangs its letters from a horizontal bar and Gujarati has erased it.
+The letters float. That single missing line is how you tell the two scripts apart
+at a glance, and it is why Gujarati is sometimes called **the headless script**.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01] -->
+
+- [YOU WRITE: હ]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01] -->
+
+[PAUSE 3s] What vowel does a bare consonant carry? (**a** — the inherent vowel, unwritten.)
+And what is the one visible difference from Devanagari? (**No line across the
+top**.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: GU-W01-ma
+spine_node: SPINE-MEET-GREET
+sequence: 740
+delivery: script
+chapter: 13
+type: writing
+headword: મ
+romanization: "ma"
+gloss: "the consonant ma — the third piece of the greeting"
+prerequisites: [GU-W01-na]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01]
+introduces:
+  knowledge: [GU-SCRIPT-MA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-na]
+---
+# મ — the consonant ma
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-MA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01] -->
+
+> મ
+
+**ma**. The *m* of English *met*, with the inherent **a** riding along.
+
+Nothing new in the machinery this time — this is simply another consonant, and the
+rules you already have apply to it unchanged. Add the mātrā and you would get
+*mā*; leave it bare and it is *ma*.
+
+That is worth saying plainly, because it is the payoff of learning the system
+rather than the words. **Every consonant from here behaves exactly like the two
+you already know.** There are no new rules coming for them, only new shapes.
+
+Write it beside the two you have. Three letters, floating, no bar across the
+top.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01] -->
+
+- [YOU WRITE: મ]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01] -->
+
+[PAUSE 3s] What vowel is inside **મ** when nothing is attached? (**a**.) And what would
+**મ** plus the mātrā you know sound like? (***mā***.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+id: GU-W01-na
+spine_node: SPINE-MEET-GREET
+sequence: 730
+delivery: script
+chapter: 13
+type: writing
+headword: ન
+romanization: "na"
+gloss: "the consonant na — and the second word you can read"
+prerequisites: [GU-W01-aa]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01]
+introduces:
+  knowledge: [GU-SCRIPT-NA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-aa]
+---
+# ન — the consonant na
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-NA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01] -->
+
+> ન
+
+**na**, with the same inherent **a** inside it. The *n* of English *net*, then the
+vowel nobody wrote.
+
+Now put the mātrā on it, exactly as you did with the first consonant:
+
+> **ન** + **ા** → **ના**
+
+**nā** — and that is **no**.
+
+You now hold both answers to a yes-or-no question, and you can read them both off
+the page:
+
+> **હા** &nbsp;&nbsp; **ના**
+
+Two consonants and one mark. That is the arithmetic of an abugida: consonants and
+vowel signs multiply, so a small number of pieces reaches a large number of
+syllables very quickly.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01] -->
+
+- [YOU WRITE: ન]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01] -->
+
+[PAUSE 3s] What is **ના**? (**No**.) How many separate pieces did it take? (**Two** — a
+consonant and a mātrā.) And what does the bare consonant sound like on its own?
+(***na***, with the inherent vowel.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+id: GU-W01-namaste-read
+spine_node: SPINE-MEET-GREET
+sequence: 790
+delivery: script
+chapter: 13
+type: writing
+headword: નમસ્તે
+romanization: "namaste"
+gloss: "five pieces, all of them already yours — the greeting, read"
+prerequisites: [GU-W01-virama]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01]
+introduces:
+  knowledge: [GU-SCRIPT-NAMASTE-READ-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01, GU-SCRIPT-NAMASTE-READ-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-virama]
+---
+# નમસ્તે — five pieces, all of them already yours
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-NAMASTE-READ-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01] -->
+
+Everything in this word is something you can already write. Nothing new is
+introduced here at all.
+
+> **ન** + **મ** + **સ** + **્** + **ત** + **ે** → **નમસ્તે**
+
+Read it the way you built it:
+
+- **ન** — *na*, inherent vowel
+- **મ** — *ma*, inherent vowel
+- **સ્ત** — the conjunct: *sa* with its vowel removed, fused to *ta*
+- **ે** — the mātrā above, making that last piece *te*
+
+**na-ma-ste.** The greeting you learned in your first lesson, now decoded rather
+than recalled.
+
+Look back at what it took: **four consonants, two vowel signs, one virama, and one
+independent vowel.** With them you can read *yes*, *no*, and the greeting — and
+every consonant you meet from here obeys rules you already hold, so the next word
+costs you shapes and no new machinery.
+
+The script has around forty more letters. It does not have any more **systems**.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01, GU-SCRIPT-NAMASTE-READ-01] -->
+
+- [YOU WRITE: નમસ્તે]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01, GU-SCRIPT-NAMASTE-READ-01] -->
+
+[PAUSE 3s] How many new pieces were in this lesson? (**None**.) What is **સ્ત** made of?
+(***સ*** with its vowel removed, joined to ***ત***.) And what does the mark above
+the last letter do? (Makes it ***te*** instead of *ta*.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+id: GU-W01-sa
+spine_node: SPINE-MEET-GREET
+sequence: 750
+delivery: script
+chapter: 13
+type: writing
+headword: સ
+romanization: "sa"
+gloss: "the consonant sa"
+prerequisites: [GU-W01-ma]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01]
+introduces:
+  knowledge: [GU-SCRIPT-SA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-ma]
+---
+# સ — the consonant sa
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-SA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01] -->
+
+> સ
+
+**sa**. The *s* of English *sit*, plus the inherent vowel.
+
+You are four consonants and one mātrā into this script, and every one of them has
+behaved the same way. Say the four aloud in the order you met them, each with its
+inherent vowel:
+
+> **હ** &nbsp; **ન** &nbsp; **મ** &nbsp; **સ**
+
+*ha, na, ma, sa.* Four beats, four shapes, no bar across any of them.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01] -->
+
+- [YOU WRITE: સ]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01] -->
+
+[PAUSE 3s] Say the four consonants you now hold, each with its inherent vowel. (***ha,
+na, ma, sa***.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+id: GU-W01-ta
+spine_node: SPINE-MEET-GREET
+sequence: 760
+delivery: script
+chapter: 13
+type: writing
+headword: ત
+romanization: "ta"
+gloss: "the consonant ta — a dental t, made further forward than English's"
+prerequisites: [GU-W01-sa]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01]
+introduces:
+  knowledge: [GU-SCRIPT-TA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-sa]
+---
+# ત — the consonant ta
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-TA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01] -->
+
+> ત
+
+**ta** — and the consonant is not quite the English one.
+
+English *t* is made with the tongue on the **ridge behind** the teeth. This one is
+**dental**: the tongue touches the **back of the upper teeth themselves**, further
+forward. It sounds softer to an English ear, and getting it right is one of the
+quickest ways to stop sounding foreign.
+
+The script will make you care about this shortly, because it has a **second** t
+made even further back, and the two are different letters and different words.
+This is the forward one.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01] -->
+
+- [YOU WRITE: ત]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01] -->
+
+[PAUSE 3s] Where does the tongue go for **ત**? (Against the **back of the upper
+teeth** — dental, not on the ridge.) And is there another t in this script?
+(**Yes**, one made further back.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+id: GU-W01-virama
+spine_node: SPINE-MEET-GREET
+sequence: 780
+delivery: script
+chapter: 13
+type: writing
+headword: ્
+romanization: "(virama)"
+gloss: "the mark that DELETES the inherent vowel, and glues two consonants together"
+prerequisites: [GU-W01-e-matra]
+sounds: []
+roots: []
+etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01]
+introduces:
+  knowledge: [GU-SCRIPT-VIRAMA-01]
+practises:
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard
+reviews_of: [GU-W01-e-matra]
+---
+# ્ — the mark that DELETES the inherent vowel, and glues two consonants together
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01] -->
+
+[PAUSE 2s] Write the piece from the previous lesson before adding another.
+
+## Script
+<!-- hl-knowledge: introduces=[GU-SCRIPT-VIRAMA-01]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01] -->
+
+One piece of machinery left, and it is the one that makes the script's hardest
+shapes make sense.
+
+The inherent vowel is a nuisance when you do not want it. If a word has two
+consonants pressed together with no vowel between them, writing them plainly would
+insert an *a* that is not there.
+
+So there is a mark that **removes** it:
+
+> ્
+
+This is the **virama**. Attached under a consonant, it says: *no vowel here.*
+
+And then something happens that no European alphabet does. A consonant stripped of
+its vowel does not usually sit there bare — it **fuses** with the consonant after
+it into a single joined shape called a **conjunct**:
+
+> **સ** + **્** + **ત** → **સ્ત**
+
+*sta*, one cluster. You can still see both letters in it if you look, and that is
+the trick to reading conjuncts: they are not new characters to memorise, they are
+two you already know, joined.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01] -->
+
+- [YOU WRITE: ્]
+- [YOU READ: every piece this chapter has given you so far, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01] -->
+
+[PAUSE 3s] What does the virama do? (**Removes the inherent vowel**.) And what usually
+happens to a consonant that loses its vowel? (It **joins** the next one into a
+conjunct.)
+
+Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
+`;export{d as a,a as c,p as i,r as l,_ as n,l as o,h as r,s,y as t,t as u};
