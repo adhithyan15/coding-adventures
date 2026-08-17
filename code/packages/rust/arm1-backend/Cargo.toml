@@ -1,0 +1,17 @@
+[package]
+name = "arm1-backend"
+version = "0.1.0"
+edition = "2021"
+description = "ARM1 (ARMv1) backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into ARM1 machine code via arm1-encoder.  Emit-only -- bytes go to arm1-simulator.  Minimal viable: const_*/ret_* only, trivial single-register (r0) allocator; ret_* lowers to the arm1-simulator pseudo-halt (SWI #0x123456) rather than BX LR, since ARM1/ARMv1 predates the link-register-return convention.  Mirror of mips-r2000-backend / armv7-backend / intel8008-backend in shape and intent.  Second lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "arm1_backend"
+path = "src/lib.rs"
+
+[dependencies]
+arm1-encoder = { path = "../arm1-encoder" }
+jit-core     = { path = "../jit-core" }
+vm-core      = { path = "../vm-core" }
+
+[dev-dependencies]
+arm1-simulator = { path = "../arm1-simulator" }

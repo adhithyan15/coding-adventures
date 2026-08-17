@@ -879,6 +879,8 @@ members = [
     "ge225-backend",
     "ibm704-encoder",
     "ibm704-backend",
+    "arm1-encoder",
+    "arm1-backend",
     "aot-debug",
     "twig-to-beam",
     "twig-to-wasm",

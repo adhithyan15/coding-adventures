@@ -2,6 +2,44 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.6.0] - 2026-08-17
+
+### Added — SIR21 T3b-2 Slice 2: `truncDiv`/`trueDiv`
+
+Adds the two genuinely-new division functions from the SIR21 T3b-2
+four-way `/` split (`code/specs/SIR21-type-system-and-integer-semantics.md`
+§E3). `div` (already present) is `div_floor`'s dispatch target — see the
+note below on why that stays unchanged.
+
+- `truncDiv(a, b)` — signed/unsigned truncating division (rounds toward
+  zero, matching C's integer `/`). This is exactly what `div` already
+  computes; exported under its own correctly-scoped name (`div_trunc`/
+  `udiv_trunc` in the SIR builtin table) purely so this package exposes
+  the same four division-op names every sibling runtime does. Fully
+  correct — truncation toward zero needs no int/float distinction, so it
+  is well-defined in this package's untagged `Val` numeric model.
+- `trueDiv(a, b)` — always true-divides, even when both operands are
+  meant as Ruby Integers. Models Python's `/`. Also fully correct for the
+  same reason: unconditional float coercion needs no tagging either.
+
+### Known limitation — `div_floor` still truncates, not floors
+
+`div`'s existing truncating behavior (documented since its original
+implementation, item 2 of the module doc comment) is NOT Ruby-floor-
+faithful, and `div_floor` (the new SIR21 T3b-2 name) dispatches to it
+unchanged. Every sibling backend's `div_floor` is either a bare rename of
+already-floor-faithful logic, or (`semantic-ir-to-javascript`, the
+closest sibling) uses a boxed-float runtime tag (`SirFloat`/`isFloat`) to
+dispatch floor-vs-true-divide correctly. This package's `Val` has no such
+tag — every number, whether it came from a Ruby `Integer` or `Float`
+literal, is an indistinguishable plain JS `number` by the time it reaches
+`div` — so `div_floor` cannot be made correct without first adding
+value-level float tagging throughout this package (touching `add`/`sub`/
+`mul`/comparisons/display, not division alone). That is out of scope for
+the additive SIR21 T3b-2 rollout; see `arithmetic.ts`'s `div` doc comment
+for the full writeup. Logged as follow-up work, not silently left
+undocumented.
+
 ## [0.5.0] - 2026-08-13
 
 ### Added — APL display convention + NDArray display support

@@ -18,10 +18,19 @@ namespace into every file:
 | `eq`, `toDisplay` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
 | `write` | [SIR28](../../../specs/SIR28-syscall-primitives.md) `__sys_write__`: the general console-output primitive every frontend lowers `print`/`puts`/`console.log`/etc. to — `write(stream, terminator, unpackArrays, ...values)`, stream `"stdout"`\|`"stderr"`, terminator `"none"`\|`"per_value"`\|`"once"`. |
 | `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic numeric folds + truncating-integer `/`. `add`/`mul` are **type-polymorphic** like Ruby (dispatched on the first operand's runtime tag): `"a"+"b"`→`"ab"`, `[1]+[2]`→`[1,2]` (fresh array), `"ab"*3`→`"ababab"`, `[0]*3`→`[0,0,0]`, `[1,2]*", "`→`"1, 2"`. `*` repeat guards against oversize allocation (`Error("argument too big")`). |
+| `truncDiv`/`trueDiv` | SIR21 T3b-2's two fully-correct new division ops (`div` above is `div_floor`'s dispatch target, unchanged — see the note below). `truncDiv` always rounds toward zero (matches C's integer `/`); `trueDiv` always coerces to float and divides, even on two Integer operands (`trueDiv(6, 3) === 2`, the plain JS number — this package has no boxed-float type to re-tag the result with). Both need no int/float distinction to be correct, unlike `div_floor`. |
 | `Closure`/`apply`/`makeClosure`, global store, builtin dispatch | Uniform closure handles + SIR `Globals`. |
 
 It implements **SIR** semantics, not any one source language's — so a Ruby
 frontend today and a JavaScript or Python frontend tomorrow all reuse it.
+
+**Known limitation — `div_floor` is not Ruby-floor-faithful.** `Val` (below)
+has no boxed-float tag, so `div`/`div_floor` cannot distinguish a Ruby
+`Integer` from a Ruby `Float` at runtime and always truncates toward zero
+instead of flooring for negative operands (`div(-7, 2) === -3`, not Ruby's
+`-4`). Fixing this needs value-level float tagging throughout this package
+(mirroring the JS backend's `SirFloat`), not a division-only change — see
+`arithmetic.ts`'s `div` doc comment for the full writeup.
 
 ## How emitted code uses it
 
