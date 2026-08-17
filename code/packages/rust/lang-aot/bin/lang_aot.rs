@@ -50,6 +50,7 @@ fn main() -> ExitCode {
     //   * Arm1Bin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Mos6502Bin    → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * M68kBin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * Intel8080Bin → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
@@ -62,6 +63,7 @@ fn main() -> ExitCode {
         EmitMode::Arm1Bin => input.with_extension("bin"),
         EmitMode::Mos6502Bin => input.with_extension("bin"),
         EmitMode::M68kBin => input.with_extension("bin"),
+        EmitMode::Intel8080Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -158,6 +160,14 @@ enum EmitMode {
     /// format with no flattening step, same simplicity as MOS 6502 (for
     /// a different reason — the 6502 has no word endianness at all).
     M68kBin,
+    /// Flat `.bin` of variable-length (1/2/3-byte) Intel 8080 opcode
+    /// bytes via `intel8080-backend`.  Cross-platform.  Downstream
+    /// consumers: the in-tree `intel8080-simulator`, an external 8080
+    /// emulator, or an EPROM burner.  Third lane of the
+    /// 9-architecture expansion — the 8080 (1974) is the 8008's
+    /// direct successor and the CPU inside the Altair 8800 that
+    /// launched the personal-computer era.
+    Intel8080Bin,
 }
 
 struct CliArgs {
@@ -241,9 +251,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "arm1" | "armv1" | "arm-1" => Ok(EmitMode::Arm1Bin),
         "mos6502" | "6502" | "mos-6502" => Ok(EmitMode::Mos6502Bin),
         "m68k" | "68000" | "mc68000" | "motorola68000" => Ok(EmitMode::M68kBin),
+        "intel8080" | "i8080" | "8080" => Ok(EmitMode::Intel8080Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080"
         )),
     }
 }
@@ -345,6 +356,13 @@ Options:
                                                 — original Macintosh, Commodore
                                                 Amiga, Atari ST, early Sun
                                                 workstations, Sega Genesis)
+                             intel8080 | i8080 | 8080
+                                              → flat .bin of variable-length (1/2/3-byte)
+                                                Intel 8080 opcodes via intel8080-backend;
+                                                cross-platform; load into
+                                                intel8080-simulator or an external 8080
+                                                emulator (the 8008's direct successor;
+                                                CPU of the Altair 8800, 1974)
   -h, --help               Show this help.\
 ");
 }
@@ -446,6 +464,19 @@ fn dispatch(
     // Motorola 68000 emulator.
     if emit == EmitMode::M68kBin {
         return lang_aot::compile_file_to_m68k_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Intel 8080 .bin emission is also cross-platform — write the
+    // variable-length (1/2/3-byte) opcode bytes exactly as
+    // intel8080-backend emits them (no endianness conversion at
+    // this layer; 16-bit address/immediate operands are already
+    // little-endian within each instruction).  Third lane of the
+    // 9-architecture expansion — the 8080 (1974) is the 8008's
+    // direct successor and the CPU inside the Altair 8800.
+    // Downstream is always a simulator (in-tree
+    // `intel8080-simulator` or external) or an EPROM burner.
+    if emit == EmitMode::Intel8080Bin {
+        return lang_aot::compile_file_to_intel8080_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

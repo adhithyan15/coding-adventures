@@ -285,6 +285,32 @@ Intel 8008 (Oct's native — touched by many call sites), and RV32I
 last (largest, and the original mistake from A1+ that started this
 whole pattern).
 
+## Post-migration: 9-architecture expansion (2026-08)
+
+Having proven the CIR-via-`Backend`-trait pattern across the five
+original arches, a further expansion is bringing more historical/
+production ISAs onto the same `{arch}-encoder` + `{arch}-backend`
+split — this time starting at the correct layer from day one (no
+`iir-to-{arch}` predecessor to deprecate, unlike the five phases
+above).
+
+- **Intel 8080** — `intel8080-encoder` + `intel8080-backend` (minimal
+  viable: `const_*` + `ret_*` only, same scope decision the original
+  five phases made) + a new-from-scratch `intel8080-simulator`
+  (Rust port of the existing Python behavioral simulator) + `lang-aot`
+  wiring (`--emit=intel8080`).  Byte-for-byte parity for the trivial
+  `MVI A, 42; HLT` = `[0x3E, 0x2A, 0x76]` ROM verified against the new
+  simulator by actually executing the emitted bytes, not just
+  asserting the byte array.  The 8080 (1974) is the Intel 8008's
+  direct architectural successor — same 8-bit accumulator model, same
+  `HLT` opcode (`0x76`) — so `intel8080-backend` reuses
+  `intel8008-backend`'s exact shape, unlike ARM1's SWI pseudo-halt or
+  MIPS R2000's `JR $ra`, which needed bespoke return-mechanism
+  handling.
+
+Further lanes in this expansion each get their own entry here as they
+land.
+
 ## Non-goals
 
 - No new functional coverage — every migration preserves the byte

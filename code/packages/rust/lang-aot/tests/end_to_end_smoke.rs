@@ -2149,3 +2149,45 @@ fn end_to_end_mccarthy_42_emits_ibm704_bin_via_lang_aot() {
         "McCarthy Lisp `42` -> IBM 704: the CAR/CDR-birthplace round-trip is now closed end-to-end."
     );
 }
+
+// ===========================================================================
+// Third lane — source -> IIR -> Intel 8080 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// Cross-platform: no linker, no cfg gating.  Confirms the new
+// compile_file_to_intel8080_bin entry point runs the full source ->
+// IIR -> intel8080-backend pipeline and produces a flat .bin of
+// variable-length Intel 8080 opcode bytes.
+//
+// The 8080 is the 8008's direct architectural successor (still an
+// 8-bit accumulator machine with a real HLT opcode), so Twig `42`
+// lowers to the same canonical `const_i64 v=42; ret_i64 v` CIR
+// sequence as the intel8008 lane and produces the analogous
+// `MVI A, 42; HLT` byte pattern.
+
+#[test]
+fn end_to_end_twig_42_emits_intel8080_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    lang_aot::compile_file_to_intel8080_bin(&src, &bin, lang_aot::Language::Twig)
+        .expect("Twig `42` must compile through the intel8080-backend v0.1.0 minimal-viable scope");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(
+        bytes,
+        vec![0x3E, 0x2A, 0x76],
+        "Twig `42` should produce `MVI A, 42; HLT`; got: {bytes:02x?}"
+    );
+
+    // Byte-for-byte parity is necessary but not sufficient — genuinely
+    // execute the emitted bytes in intel8080-simulator and check the
+    // accumulator.
+    let mut sim = intel8080_simulator::Intel8080Simulator::new(65536);
+    sim.load_program(&bytes);
+    let result = sim.run_loaded_with_limit(10);
+    assert!(result.halted);
+    assert_eq!(sim.regs.a, 42);
+}
