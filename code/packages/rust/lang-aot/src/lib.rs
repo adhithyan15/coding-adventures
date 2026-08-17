@@ -1736,7 +1736,6 @@ pub fn compile_file_to_mips_r2000_bin(
     // `aot_core` + `mips-r2000-backend` (which itself returns
     // big-endian-flattened bytes), same per-function-loop pattern as
     // `compile_file_to_armv7_bin`/`compile_file_to_intel8008_bin`.
-    let _ = stem;
     let mut bytes = Vec::new();
     let empty_params: Vec<(String, String)> = Vec::new();
     for f in &module.functions {
