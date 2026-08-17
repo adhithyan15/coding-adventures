@@ -14,8 +14,8 @@
 //!
 //! No IR knowledge.  No `jit-core` dependency.  Consumed by
 //! `intel4004-backend` (Phase 4 of the historical-arch backend
-//! migration) and re-exported by the deprecated `iir-to-intel4004`
-//! for backwards compatibility.
+//! migration).  The deprecated `iir-to-intel4004` re-export was
+//! removed once the migration completed.
 //!
 //! ## Background on the architectural correction
 //!

@@ -1,5 +1,12 @@
 # iir-to-intel4004 — IIR → Intel 4004 machine code backend
 
+> ⚠ **REMOVED (2026-08-17).** The `iir-to-intel4004` crate has been
+> deleted. It lowered IIR directly to machine bytes, skipping type
+> monomorphization and the `Backend` trait; it was superseded by
+> `intel4004-encoder` + `intel4004-backend`, which lower CIR instead. See
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+> This spec is preserved as a historical record of the original design.
+
 **Status:** v0.1.0 — skeleton (A4)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A4
 **Related:** [`iir-to-intel8008`][i8008], [`iir-to-riscv`][rv], [`iir-to-armv7`][arm]

@@ -1,5 +1,12 @@
 # iir-to-armv7 — IIR → ARMv7 (A32) machine code backend
 
+> ⚠ **REMOVED (2026-08-17).** The `iir-to-armv7` crate has been
+> deleted. It lowered IIR directly to machine bytes, skipping type
+> monomorphization and the `Backend` trait; it was superseded by
+> `armv7-encoder` + `armv7-backend`, which lower CIR instead. See
+> [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md).
+> This spec is preserved as a historical record of the original design.
+
 **Status:** v0.1.0 — skeleton (A3)
 **Plan:** [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md) §A3
 **Related:** [`iir-to-riscv`][rv], [`iir-to-intel8008`][i8008]
