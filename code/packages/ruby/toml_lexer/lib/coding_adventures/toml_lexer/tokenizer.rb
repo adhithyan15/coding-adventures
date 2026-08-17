@@ -65,6 +65,11 @@ module CodingAdventures
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     TOML_TOKENS_PATH = File.join(GRAMMAR_DIR, "toml", "toml.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Tokenize a string of TOML text into an array of Token objects.
     #
@@ -85,10 +90,7 @@ module CodingAdventures
     # @param source [String] TOML text to tokenize
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(TOML_TOKENS_PATH, encoding: "UTF-8")
-      )
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.tokenize
     end
   end

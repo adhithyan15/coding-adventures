@@ -2,6 +2,12 @@
 
 All notable changes to `coding_adventures_sql_lexer` will be documented in this file.
 
+## [0.1.3] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `create_sql_lexer` now loads the pre-compiled `_grammar.rb` (via `GrammarTools::CompiledLoader`) instead of reading and parsing `sql.tokens` from `code/grammars/` on every call. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
+- Regenerated `_grammar.rb` from the current `sql.tokens` source — the previously-committed compiled file was stale (never wired up, so drift went unnoticed).
+
 ## [0.1.2] - 2026-06-02
 
 ### Fixed

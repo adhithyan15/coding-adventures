@@ -122,6 +122,11 @@ module CodingAdventures
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     DARTMOUTH_BASIC_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "dartmouth_basic", "dartmouth_basic.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Parse a string of Dartmouth BASIC 1964 source code into a generic AST.
     #
@@ -153,18 +158,13 @@ module CodingAdventures
       # REM suppression (comment text is stripped before the parser sees it).
       tokens = CodingAdventures::DartmouthBasicLexer.tokenize(source)
 
-      # Step 2: Load and parse the Dartmouth BASIC grammar.
-      # This grammar file defines all 17 statement types and the full
-      # expression precedence hierarchy.
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(DARTMOUTH_BASIC_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-
-      # Step 3: Parse tokens using the grammar-driven parser.
-      # The parser applies recursive descent with backtracking against the
-      # grammar rules, producing an ASTNode tree where each node records
-      # which grammar rule matched it.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      # Step 2: Parse tokens using the grammar-driven parser, using the
+      # pre-compiled ParserGrammar (which defines all 17 statement types
+      # and the full expression precedence hierarchy). The parser applies
+      # recursive descent with backtracking against the grammar rules,
+      # producing an ASTNode tree where each node records which grammar
+      # rule matched it.
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end

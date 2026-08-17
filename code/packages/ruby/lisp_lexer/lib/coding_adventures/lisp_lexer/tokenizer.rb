@@ -35,15 +35,17 @@ module CodingAdventures
   module LispLexer
     GRAMMAR_DIR       = File.expand_path("../../../../../../grammars", __dir__)
     LISP_TOKENS_PATH  = File.join(GRAMMAR_DIR, "lisp", "lisp.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Create a GrammarLexer configured for Lisp.
     # @param source [String] Lisp source code
     # @return [CodingAdventures::Lexer::GrammarLexer]
     def self.create_lisp_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(LISP_TOKENS_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
     end
 
     # Tokenize Lisp source code.

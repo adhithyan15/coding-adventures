@@ -2,7 +2,11 @@
 
 All notable changes to `coding_adventures_sql_parser` will be documented in this file.
 
-## Unreleased
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `create_sql_parser` now loads the pre-compiled `_grammar.rb` (via `GrammarTools::CompiledLoader`) instead of reading and parsing `sql.grammar` from `code/grammars/` on every call. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
+- Regenerated `_grammar.rb` from the current `sql.grammar` source — the previously-committed compiled file was stale (never wired up, so drift went unnoticed).
 
 ### Changed
 

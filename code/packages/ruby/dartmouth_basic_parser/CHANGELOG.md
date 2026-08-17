@@ -4,6 +4,18 @@ All notable changes to this gem will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `parse` now loads the pre-compiled
+  `_grammar.rb` (via `GrammarTools::CompiledLoader`, newly generated from
+  `dartmouth_basic.grammar`) instead of reading and parsing the `.grammar`
+  file from `code/grammars/` on every call. The old code walked out of the
+  installed gem's own directory to a monorepo-relative path that a published
+  gem does not ship, so a real `gem install` + first use would raise
+  `Errno::ENOENT`.
+
 ## [0.1.0] — 2026-04-10
 
 ### Added

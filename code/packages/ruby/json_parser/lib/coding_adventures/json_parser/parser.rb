@@ -61,6 +61,11 @@ module CodingAdventures
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     JSON_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "json", "json.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Parse a string of JSON text into a generic AST.
     #
@@ -83,18 +88,11 @@ module CodingAdventures
       # no INDENT/DEDENT/NEWLINE tokens (JSON ignores whitespace).
       tokens = CodingAdventures::JsonLexer.tokenize(source)
 
-      # Step 2: Load and parse the JSON grammar.
-      # The grammar file uses EBNF notation to describe JSON's four
-      # syntax rules: value, object, pair, and array.
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(JSON_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-
-      # Step 3: Parse tokens using the grammar-driven parser.
+      # Step 2: Parse tokens using the grammar-driven parser.
       # The parser uses recursive descent with backtracking to match
       # the token stream against the grammar rules, producing an AST
       # where each node records which rule produced it.
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end

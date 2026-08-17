@@ -78,6 +78,11 @@ module CodingAdventures
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     XML_TOKENS_PATH = File.join(GRAMMAR_DIR, "xml", "xml.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # ================================================================
     # XML On-Token Callback
@@ -185,10 +190,7 @@ module CodingAdventures
     # @param source [String] the XML text to tokenize
     # @return [CodingAdventures::Lexer::GrammarLexer] configured lexer
     def self.create_xml_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(XML_TOKENS_PATH, encoding: "UTF-8")
-      )
-      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       lexer.set_on_token(XML_ON_TOKEN)
       lexer
     end

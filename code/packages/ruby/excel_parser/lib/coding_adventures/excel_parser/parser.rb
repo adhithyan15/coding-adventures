@@ -9,6 +9,11 @@ module CodingAdventures
   module ExcelParser
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     EXCEL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "excel", "excel.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     def self.previous_significant_token(tokens, index)
       (index - 1).downto(0) do |i|
@@ -57,10 +62,7 @@ module CodingAdventures
 
     def self.create_excel_parser(source)
       tokens = CodingAdventures::ExcelLexer.tokenize(source)
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(EXCEL_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.add_pre_parse(method(:normalize_excel_reference_tokens).to_proc)
       parser
     end

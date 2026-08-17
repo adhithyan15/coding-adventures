@@ -2,6 +2,11 @@
 
 All notable changes to `coding_adventures_csharp_parser` will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `parse` now loads a pre-compiled `_grammar[_<version>].rb` per C# version (via `GrammarTools::CompiledLoader`, newly generated for all 12 supported versions from `csharp/csharp<version>.grammar`) instead of reading and parsing the `.grammar` file from `code/grammars/` on every call, mirroring the pattern already used by `java_parser`. The old code walked out of the installed gem's own directory to a monorepo-relative path that a published gem does not ship, so a real `gem install` + first use would raise `Errno::ENOENT`.
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

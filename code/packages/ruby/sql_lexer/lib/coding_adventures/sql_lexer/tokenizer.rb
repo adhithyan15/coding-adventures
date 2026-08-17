@@ -89,6 +89,11 @@ module CodingAdventures
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     SQL_TOKENS_PATH = File.join(GRAMMAR_DIR, "sql", "sql.tokens")
+    COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.token_grammar
+      @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+    end
 
     # Create a GrammarLexer configured for SQL text.
     #
@@ -110,10 +115,7 @@ module CodingAdventures
     # @return [CodingAdventures::Lexer::GrammarLexer] configured lexer
     # @raise [StandardError] if sql.tokens cannot be read or parsed
     def self.create_sql_lexer(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(SQL_TOKENS_PATH, encoding: "UTF-8")
-      )
-      CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+      CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
     end
 
     # Tokenize a string of SQL text into an array of Token objects.

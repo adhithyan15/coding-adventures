@@ -62,6 +62,11 @@ module CodingAdventures
       # So 6 levels up from __dir__ lands at code/.
       GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
       BF_TOKENS_PATH = File.join(GRAMMAR_DIR, "brainfuck", "brainfuck.tokens")
+      COMPILED_TOKENS_PATH = File.expand_path("_token_grammar.rb", __dir__)
+
+      def self.token_grammar
+        @token_grammar ||= CodingAdventures::GrammarTools.load_token_grammar(COMPILED_TOKENS_PATH)
+      end
 
       # Tokenize a Brainfuck source string into an array of Token objects.
       #
@@ -78,15 +83,10 @@ module CodingAdventures
       # @param source [String] Brainfuck source code to tokenize
       # @return [Array<CodingAdventures::Lexer::Token>] the command token stream
       def self.tokenize(source)
-        # Parse the brainfuck.tokens grammar file into a TokenGrammar struct.
-        # The TokenGrammar holds compiled regexes for RIGHT, LEFT, INC, DEC,
-        # OUTPUT, INPUT, LOOP_START, LOOP_END, and the two skip patterns
-        # (WHITESPACE and COMMENT).
-        grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-          File.read(BF_TOKENS_PATH, encoding: "UTF-8")
-        )
-
-        # Create a GrammarLexer and run it against the source.
+        # Create a GrammarLexer and run it against the source, using the
+        # pre-compiled TokenGrammar (holds compiled regexes for RIGHT, LEFT,
+        # INC, DEC, OUTPUT, INPUT, LOOP_START, LOOP_END, and the two skip
+        # patterns: WHITESPACE and COMMENT).
         # The lexer walks the source character by character, matching patterns
         # in declaration order (first match wins). When it matches a skip:
         # pattern, it advances the position without emitting a token. When it
@@ -95,7 +95,7 @@ module CodingAdventures
         #   - value:  the matched character (">", "<", "+", etc.)
         #   - line:   1-based line number
         #   - col:    1-based column number
-        lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+        lexer = CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
         lexer.tokenize
       end
 
@@ -108,10 +108,7 @@ module CodingAdventures
       # @param source [String] Brainfuck source code
       # @return [CodingAdventures::Lexer::GrammarLexer] a ready-to-run lexer
       def self.create_lexer(source)
-        grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-          File.read(BF_TOKENS_PATH, encoding: "UTF-8")
-        )
-        CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
+        CodingAdventures::Lexer::GrammarLexer.new(source, token_grammar)
       end
     end
   end

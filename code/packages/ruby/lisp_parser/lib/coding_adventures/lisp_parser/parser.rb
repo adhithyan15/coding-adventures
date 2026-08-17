@@ -34,6 +34,11 @@ module CodingAdventures
   module LispParser
     GRAMMAR_DIR       = File.expand_path("../../../../../../grammars", __dir__)
     LISP_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "lisp", "lisp.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Parse Lisp source code into a generic AST.
     #
@@ -41,10 +46,7 @@ module CodingAdventures
     # @return [CodingAdventures::Parser::ASTNode] the root AST node
     def self.parse(source)
       tokens = CodingAdventures::LispLexer.tokenize(source)
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(LISP_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end
