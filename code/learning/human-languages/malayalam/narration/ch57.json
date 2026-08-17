@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 57,
+  "title": "Five More of the Body",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d32e2ee7f86d5d1",
+  "lessons": [
+    {
+      "id": "ML-C57-neck",
+      "sequence": 1740,
+      "title": "കഴുത്ത് (kaḻuttŭ) — the neck",
+      "headword": "കഴുത്ത്",
+      "romanization": "kaḻuttŭ",
+      "gloss": "the neck",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf499bdbbe7f7629",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did pātraṁ mean, and what did peṭṭi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കഴുത്ത്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കഴുത്ത് (kaḻuttŭ) — \"the neck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil kaḻuttu, and carrying ഴ again — the third run of this book to lean on that sound, and by now your mouth should be finding it without being told."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the neck and the throat together, outside and in. A garland goes round the കഴുത്ത് (kaḻuttŭ), and so does the thin gold chain a Kerala woman is given at her wedding."
+            },
+            {
+              "kind": "speech",
+              "text": "The held tt and the closing ŭ are both here as well, which makes this word a short review of three things at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five more, and it holds the garland."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḻuttŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḻuttŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭṭi, then kaḻuttŭ, and hold the ഴ in the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭṭi*, then *kaḻuttŭ*, and hold the ഴ in the middle]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കഴുത്ത് (kaḻuttŭ) mean? (\"the neck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C57-back",
+      "sequence": 1750,
+      "title": "മുതുക് (mutukŭ) — the back",
+      "headword": "മുതുക്",
+      "romanization": "mutukŭ",
+      "gloss": "the back",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c90641032b3bd70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kaḻuttŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുതുക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുതുക് (mutukŭ) — \"the back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil mutuku, and it names the back of a body — the ridged stretch between the shoulders and the waist."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam separates that from the general idea of behindness, which it handles with a different word altogether. മുതുക് (mutukŭ) stays on the body, so it is the word for the back that aches after a day bent over a വയൽ."
+            },
+            {
+              "kind": "speech",
+              "text": "It shows up in the ordinary phrase for carrying a child astride the hip or the back, which is how most Kerala infants travel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: the neck, and what runs down from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutukŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutukŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḻuttŭ, then mutukŭ, and place each one with a hand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and place each one with a hand]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുതുക് (mutukŭ) mean? (\"the back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C57-lip",
+      "sequence": 1760,
+      "title": "ചുണ്ട് (cuṇṭŭ) — a lip",
+      "headword": "ചുണ്ട്",
+      "romanization": "cuṇṭŭ",
+      "gloss": "a lip",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73d367ede8877586",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mutukŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചുണ്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുണ്ട് (cuṇṭŭ) — \"a lip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil cuṇṭu. It is the lip of a mouth and also the beak of a bird — one shape for the pointed front edge of the face, whatever the face belongs to."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word reaches the spout of a jug, so a Malayalam pot has lips much as an English one does. That figure was arrived at twice over, on two sides of the world, from the same obvious resemblance."
+            },
+            {
+              "kind": "speech",
+              "text": "The ണ്ട cluster in the middle is the retroflex ṇ running straight into a ṭ, made with the tongue curled back, and it is worth slowing down for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this one belongs to birds as well."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuṇṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuṇṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutukŭ, then cuṇṭŭ, and curl the tongue back for the middle of the second",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutukŭ*, then *cuṇṭŭ*, and curl the tongue back for the middle of the second]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചുണ്ട് (cuṇṭŭ) mean? (\"a lip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C57-nail",
+      "sequence": 1770,
+      "title": "നഖം (nakhaṁ) — a nail, a claw",
+      "headword": "നഖം",
+      "romanization": "nakhaṁ",
+      "gloss": "a nail, a claw",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae39d647287d0394",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cuṇṭŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നഖം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നഖം (nakhaṁ) — \"a nail, a claw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit nakha — and this one has relatives much further west. It shares an ancestor with Latin unguis, with Greek onyx, and with English nail itself, which reached the same meaning down an entirely separate line of descent."
+            },
+            {
+              "kind": "speech",
+              "text": "A word for a fingernail surviving intact across that distance is worth noticing. Body-part words are among the slowest things in any language to be replaced, because everybody has one and everybody learns the word early."
+            },
+            {
+              "kind": "speech",
+              "text": "നഖം (nakhaṁ) covers the fingernail, the toenail and the claw of an animal alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one has cousins across half the world."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakhaṁ, then the English word for it, and hear how far apart they have drifted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakhaṁ*, then the English word for it, and hear how far apart they have drifted]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നഖം (nakhaṁ) mean? (\"a nail, a claw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C57-bone",
+      "sequence": 1780,
+      "title": "എല്ല് (ellŭ) — a bone",
+      "headword": "എല്ല്",
+      "romanization": "ellŭ",
+      "gloss": "a bone",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc3dc9c30a30af85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nakhaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എല്ല്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എല്ല് (ellŭ) — \"a bone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and Tamil says elumpu for the same thing — close enough to hear the shared ancestor, far enough apart to show the two languages went on working after they separated."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam shortened where Tamil kept the extra piece, which is the direction these two usually run. Set the two side by side often enough and the pattern starts to predict itself."
+            },
+            {
+              "kind": "speech",
+              "text": "The doubled ll is held, and the ŭ closes it, so the whole word is over in about the time it takes to say the English one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the frame is done: the neck, the back, a lip, a nail, a bone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — kaḻuttŭ, mutukŭ, cuṇṭŭ, nakhaṁ, ellŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *kaḻuttŭ*, *mutukŭ*, *cuṇṭŭ*, *nakhaṁ*, *ellŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എല്ല് (ellŭ) mean? (\"a bone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

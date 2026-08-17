@@ -673,6 +673,118 @@
         "ML-EXT-52-WELCOME"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-53-SKY",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ML-C53-sky",
+        "ML-C53-sun",
+        "ML-C53-moon",
+        "ML-C53-star",
+        "ML-C53-sunshine"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-53-SKY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-54-TREE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C54-tree",
+        "ML-C54-branch",
+        "ML-C54-trunk",
+        "ML-C54-root",
+        "ML-C54-seed"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-54-TREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-55-GROUND",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C55-river",
+        "ML-C55-rock",
+        "ML-C55-homeland",
+        "ML-C55-path",
+        "ML-C55-field"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-55-GROUND"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-56-HOUSE",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ML-C56-mat",
+        "ML-C56-basket",
+        "ML-C56-knife",
+        "ML-C56-vessel",
+        "ML-C56-box"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-56-HOUSE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-57-FRAME",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C57-neck",
+        "ML-C57-back",
+        "ML-C57-lip",
+        "ML-C57-nail",
+        "ML-C57-bone"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-57-FRAME"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-58-ANSWER",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ML-C58-more",
+        "ML-C58-less",
+        "ML-C58-a-little",
+        "ML-C58-no-need",
+        "ML-C58-that-will-do"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-58-ANSWER"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-59-AIR",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ML-C59-wind",
+        "ML-C59-sand",
+        "ML-C59-mud",
+        "ML-C59-smoke",
+        "ML-C59-ember"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-59-AIR"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -680,7 +792,8 @@
       "segments": [
         "ML-PATH-001",
         "ML-PATH-100",
-        "ML-PATH-52-WELCOME"
+        "ML-PATH-52-WELCOME",
+        "ML-PATH-53-SKY"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -693,7 +806,8 @@
       "segments": [
         "ML-PATH-003",
         "ML-PATH-008",
-        "ML-PATH-51-COURTESY"
+        "ML-PATH-51-COURTESY",
+        "ML-PATH-56-HOUSE"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -704,7 +818,8 @@
       "segments": [
         "ML-PATH-002",
         "ML-PATH-004",
-        "ML-PATH-49-REPLY"
+        "ML-PATH-49-REPLY",
+        "ML-PATH-58-ANSWER"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -720,7 +835,8 @@
         "ML-PATH-021",
         "ML-PATH-029",
         "ML-PATH-030",
-        "ML-PATH-48-ROLE"
+        "ML-PATH-48-ROLE",
+        "ML-PATH-54-TREE"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -734,7 +850,8 @@
         "ML-PATH-017",
         "ML-PATH-031",
         "ML-PATH-032",
-        "ML-PATH-47-BODY"
+        "ML-PATH-47-BODY",
+        "ML-PATH-57-FRAME"
       ],
       "omits": [
         "WORD-GOOD",
@@ -748,7 +865,8 @@
         "ML-PATH-019",
         "ML-PATH-033",
         "ML-PATH-034",
-        "ML-PATH-46-ASK"
+        "ML-PATH-46-ASK",
+        "ML-PATH-55-GROUND"
       ],
       "omits": [],
       "relocates": {}
@@ -756,7 +874,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "ML-PATH-010",
-        "ML-PATH-50-LEAVE"
+        "ML-PATH-50-LEAVE",
+        "ML-PATH-59-AIR"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1575,6 +1694,111 @@
         "ML-C52-kolam",
         "ML-C52-flower",
         "ML-C52-garland"
+      ]
+    },
+    {
+      "id": "ML-EXT-53-SKY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the sky and four things in it in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C53-sky",
+        "ML-C53-sun",
+        "ML-C53-moon",
+        "ML-C53-star",
+        "ML-C53-sunshine"
+      ]
+    },
+    {
+      "id": "ML-EXT-54-TREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a tree and four of its parts in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C54-tree",
+        "ML-C54-branch",
+        "ML-C54-trunk",
+        "ML-C54-root",
+        "ML-C54-seed"
+      ]
+    },
+    {
+      "id": "ML-EXT-55-GROUND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five features of the Kerala landscape in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C55-river",
+        "ML-C55-rock",
+        "ML-C55-homeland",
+        "ML-C55-path",
+        "ML-C55-field"
+      ]
+    },
+    {
+      "id": "ML-EXT-56-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five ordinary household things in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C56-mat",
+        "ML-C56-basket",
+        "ML-C56-knife",
+        "ML-C56-vessel",
+        "ML-C56-box"
+      ]
+    },
+    {
+      "id": "ML-EXT-57-FRAME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C57-neck",
+        "ML-C57-back",
+        "ML-C57-lip",
+        "ML-C57-nail",
+        "ML-C57-bone"
+      ]
+    },
+    {
+      "id": "ML-EXT-58-ANSWER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can accept, refuse and ask for more or less in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C58-more",
+        "ML-C58-less",
+        "ML-C58-a-little",
+        "ML-C58-no-need",
+        "ML-C58-that-will-do"
+      ]
+    },
+    {
+      "id": "ML-EXT-59-AIR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name wind, sand, mud, smoke and an ember in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C59-wind",
+        "ML-C59-sand",
+        "ML-C59-mud",
+        "ML-C59-smoke",
+        "ML-C59-ember"
       ]
     }
   ]

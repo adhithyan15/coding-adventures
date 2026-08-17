@@ -66,7 +66,7 @@ down to a *-g-*, whether the word is a family word or a body word.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C37-KANNU-02] -->
 
-[PAUSE 3s] Say "my nose." (*Ente mūkkŭ*.) What does Kannada's **ಮೂಗു**
+[PAUSE 3s] Say "my nose." (*Ente mūkkŭ*.) What does Kannada's **ಮೂಗು**
 (*mūgu*) show, that you already saw once before? (**The same *-k-* to
 *-g-* softening** as *makan* → *maga*.) Name the three face words so far.
 (*Kaṇṇŭ*, eye; *cevi*, ear; *mūkkŭ*, nose.) Which sister alone breaks the

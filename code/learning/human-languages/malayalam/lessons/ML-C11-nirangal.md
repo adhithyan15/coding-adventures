@@ -71,5 +71,5 @@ and red.
 
 [PAUSE 3s] Which three Malayalam colors closely match Tamil's own words?
 (**Karuppŭ, veḷḷa, cuvappŭ** — black, white, red.) Which color is a shared
-Sanskrit loan across Malayalam, Tamil, and Hindi? (**Blue** — நீല *nīla* /
+Sanskrit loan across Malayalam, Tamil, and Hindi? (**Blue** — நீல *nīla* /
 நீலம் *nīlam* / नीला *nīlā*.)

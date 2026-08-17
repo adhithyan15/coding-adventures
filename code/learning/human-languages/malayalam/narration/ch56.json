@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 56,
+  "title": "Things About the House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d4181d2efb9889d8",
+  "lessons": [
+    {
+      "id": "ML-C56-mat",
+      "sequence": 1690,
+      "title": "പായ (pāya) — a mat",
+      "headword": "പായ",
+      "romanization": "pāya",
+      "gloss": "a mat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd6290f77b185311",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did vaḻi mean, and what did vayal mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പായ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പായ (pāya) — \"a mat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil pāy, and it names the woven mat that a Kerala household spreads to sleep on and unrolls for a guest to sit on."
+            },
+            {
+              "kind": "speech",
+              "text": "The material is usually screwpine leaf or reed, split and plaited, and the making of them is a village trade with its own vocabulary. A പായ (pāya) rolls up and stands in a corner, which is why a house with few chairs can still seat twenty people."
+            },
+            {
+              "kind": "speech",
+              "text": "The mat and the chair answer the same question by different means, and the older answer is the one still in daily use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things a Kerala house keeps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayal, then pāya, and say which of the two is woven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayal*, then *pāya*, and say which of the two is woven]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പായ (pāya) mean? (\"a mat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C56-basket",
+      "sequence": 1700,
+      "title": "കൊട്ട (koṭṭa) — a basket",
+      "headword": "കൊട്ട",
+      "romanization": "koṭṭa",
+      "gloss": "a basket",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15347e9e1e41f9a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pāya mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൊട്ട",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊട്ട (koṭṭa) — \"a basket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and plaited from bamboo or palm strip like the mat before it. A കൊട്ട (koṭṭa) is the wide open basket that carries fish up from a boat, rice out of a field, or a load of pepper to market."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala sizes them by trade rather than by measure, so a fish കൊട്ട (koṭṭa) and a grain കൊട്ട (koṭṭa) are different objects under one word, and the market knows which is meant."
+            },
+            {
+              "kind": "speech",
+              "text": "The doubled ട in the middle is held, the way the doubled sound in the seed-word was. Malayalam does a great deal of work with the length of a consonant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and both of them plaited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāya, then koṭṭa, and hold the doubled sound in the second",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāya*, then *koṭṭa*, and hold the doubled sound in the second]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൊട്ട (koṭṭa) mean? (\"a basket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C56-knife",
+      "sequence": 1710,
+      "title": "കത്തി (katti) — a knife",
+      "headword": "കത്തി",
+      "romanization": "katti",
+      "gloss": "a knife",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69dc7ba3da123991",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did koṭṭa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കത്തി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കത്തി (katti) — \"a knife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil katti, and the doubled tt is held long here too — three words into this run and the pattern is doing its own teaching."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala's characteristic blade is not held in the hand at all. It is the വാക്കത്തി and the sickle-shaped cutter clamped to a board, worked by pulling the vegetable across a fixed edge while sitting on the floor. The word covers that as readily as it covers a table knife."
+            },
+            {
+              "kind": "speech",
+              "text": "A word for a tool tends to outlast the tool's shape, and this one has outlasted several."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: something to sit on, something to carry with, something to cut with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭṭa, then katti, and hear the same held sound in both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭṭa*, then *katti*, and hear the same held sound in both]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കത്തി (katti) mean? (\"a knife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C56-vessel",
+      "sequence": 1720,
+      "title": "പാത്രം (pātraṁ) — a vessel, a container",
+      "headword": "പാത്രം",
+      "romanization": "pātraṁ",
+      "gloss": "a vessel, a container",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b23a8a9fdf8cf96d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did katti mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പാത്രം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാത്രം (pātraṁ) — \"a vessel, a container\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit pātra, \"a receptacle\" — the first borrowed word in this run, and it arrived carrying a second sense that Malayalam kept."
+            },
+            {
+              "kind": "speech",
+              "text": "A പാത്രം (pātraṁ) is a cooking vessel, a pot, a dish. It is also a character in a story or a part in a play: the person is a vessel that a role is poured into. Malayalam film writing uses the word constantly in that second sense, and a reader meets both without difficulty."
+            },
+            {
+              "kind": "speech",
+              "text": "One shape holding the pot and the person is the kind of figure a language borrows whole rather than builds, and Malayalam took it as it stood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one holds a story as well as a stew."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātraṁ, and then say which of its two senses a cook means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātraṁ*, and then say which of its two senses a cook means]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പാത്രം (pātraṁ) mean? (\"a vessel, a container\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C56-box",
+      "sequence": 1730,
+      "title": "പെട്ടി (peṭṭi) — a box",
+      "headword": "പെട്ടി",
+      "romanization": "peṭṭi",
+      "gloss": "a box",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b92e19a33cb94495",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pātraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പെട്ടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പെട്ടി (peṭṭi) — \"a box\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Matching Tamil peṭṭi, and it covers the whole family of closed containers: a box, a trunk, a case, a crate."
+            },
+            {
+              "kind": "speech",
+              "text": "It is one of those words that quietly absorbs new objects. Malayalam has built the matchbox, the ballot box and the letter box on it since, each one a compound with പെട്ടി (peṭṭi) sitting on the end and an older word in front."
+            },
+            {
+              "kind": "speech",
+              "text": "A word that keeps accepting new referents without changing shape is a sign of a healthy one, and പെട്ടി (peṭṭi) has been accepting them for a long time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the house is furnished: a mat, a basket, a knife, a vessel, a box."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — pāya, koṭṭa, katti, pātraṁ, peṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *pāya*, *koṭṭa*, *katti*, *pātraṁ*, *peṭṭi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പെട്ടി (peṭṭi) mean? (\"a box\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

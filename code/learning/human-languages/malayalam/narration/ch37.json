@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Face Words",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:799dc96cb57614a6",
+  "sourceHash": "fnv1a64:7286ede620318904",
   "lessons": [
     {
       "id": "ML-C37-kannu",
@@ -273,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c93a9f727549580",
+      "sourceHash": "fnv1a64:719cb6a531250864",
       "notice": null,
       "blocks": [
         {
@@ -381,7 +381,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my nose.\" (Ente mūkkŭ.) What does Kannada's ಮೂಗു (mūgu) show, that you already saw once before? (The same -k- to -g- softening as makan becomes maga.) Name the three face words so far. (Kaṇṇŭ, eye; cevi, ear; mūkkŭ, nose.) Which sister alone breaks the family's agreement on cevi? (Kannada, kivi.)"
+              "text": "Say \"my nose.\" (Ente mūkkŭ.) What does Kannada's ಮೂಗು (mūgu) show, that you already saw once before? (The same -k- to -g- softening as makan becomes maga.) Name the three face words so far. (Kaṇṇŭ, eye; cevi, ear; mūkkŭ, nose.) Which sister alone breaks the family's agreement on cevi? (Kannada, kivi.)"
             }
           ]
         }
