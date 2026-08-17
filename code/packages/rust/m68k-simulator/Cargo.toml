@@ -1,0 +1,8 @@
+[package]
+name = "m68k-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Motorola 68000 (1979) behavioral simulator -- Rust port of code/packages/python/motorola-68000-simulator (Layer 07n). Bit-field-decoded ISA (not a flat opcode table): MOVE/MOVEA/MOVEQ, ADD/SUB/AND/OR/EOR/CMP, ADDQ/SUBQ, Scc/DBcc, BRA/BSR/Bcc, shift/rotate register forms, CLR/NEG/NOT/TST/SWAP/EXT/LEA/JSR/JMP, NOP/RTS/RTR/STOP/TRAP/LINK/UNLK. 8 of the 11 addressing-mode variants (register-indirect family + absolute + immediate); the 3 indexed/PC-relative modes are deferred. TRAP #15 is the HALT convention, ported from the pre-existing Python simulator's own test-suite idiom. Eighth lane of the 9-architecture expansion."
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }

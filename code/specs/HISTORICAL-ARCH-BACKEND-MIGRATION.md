@@ -169,6 +169,48 @@ both as a hand-derived byte array and by actually executing the
 emitted bytes in `mos6502-simulator` and asserting `A == 42` and
 `halted() == true`.
 
+**Motorola 68000** — `m68k-encoder` + `m68k-backend`, minimal viable
+(`const_*`/`ret_*` only, single-register `D0` allocator, same
+trivial-ROM scope as `mos6502-backend`/`arm1-backend`).  Eighth lane of
+the expansion.  Like MOS 6502 (and unlike ARM1, whose behavioral
+simulator pre-existed complete in-tree), the 68000 needed a brand-new
+Rust simulator alongside the encoder/backend pair — `m68k-simulator`, a
+substantial-but-bounded port of the pre-existing Python simulator
+(`code/packages/python/motorola-68000-simulator`, Layer 07n) covering
+`MOVE`/`MOVEA`/`MOVEQ`, `ADD`/`SUB`/`AND`/`OR`/`EOR`/`CMP`,
+`ADDQ`/`SUBQ`, `Scc`/`DBcc`, `BRA`/`BSR`/all 14 `Bcc`, register-form
+shift/rotate, `CLR`/`NEG`/`NOT`/`TST`/`SWAP`/`EXT`/`LEA`/`JSR`/`JMP`,
+and `NOP`/`RTS`/`RTR`/`STOP`/`TRAP`/`LINK`/`UNLK` — a genuinely useful
+subset rather than a narrow stub, though (unlike MOS 6502's full
+151-opcode port) not the complete ISA: the line-0 immediate group
+(`ORI`/`ANDI`/`SUBI`/`ADDI`/`EORI`/`CMPI`), bit ops, `DIVU`/`DIVS`,
+`MULU`/`MULS`, `ADDX`/`SUBX`/`NEGX`, and 3 of the 11 addressing-mode
+variants (the indexed and PC-relative forms, which need a second
+extension word to decode) are deferred — see `code/specs/
+m68k-backend.md` for the full ported-vs-deferred accounting.  One
+architecture-specific design decision: the 68000 (unlike ARM1) has
+*two* genuinely real halting instructions — `STOP #imm` and
+`TRAP #15` — and the *pre-existing* Python simulator's own `state.py`
+documents both as valid ("halted: True after STOP or TRAP #15
+executes"); `ret_*`/`ret_void` in `m68k-backend` lower to `TRAP #15`,
+not `STOP #imm`, because the Python original's own test suite settles
+which one is the established idiom — its `_stop()` helper (used 100+
+times) is `TRAP #15`, while `STOP #imm` appears exactly once, in a
+module-level doctest — see `code/specs/m68k-backend.md` and
+`code/specs/m68k-encoder.md` for the full rationale.  Byte-for-byte
+parity for the canonical `MOVE.L #42, D0; TRAP #15` sequence
+(`[0x20, 0x3C, 0x00, 0x00, 0x00, 0x2A, 0x4E, 0x4F]`, big-endian — the
+68000's native byte order, unlike every little-endian target above) is
+verified both as a hand-derived byte array and by actually executing
+the emitted bytes in `m68k-simulator` and asserting `D0 == 42` and
+`halted == true`.  This lane also applies, from the start, the
+termination-check fix a prior lane (Intel 8051) needed a security-review
+round to discover: `compile_to_bytes` tracks an explicit
+`terminated: bool` rather than comparing the trailing emitted byte
+against the halt sentinel's value (which would be unsound here too —
+`TRAP #15`'s low byte, `0x4F`, is also reachable as the low byte of a
+`MOVE.L #imm, D0` immediate).
+
 Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
 in parallel PRs and are not enumerated here to avoid merge
 conflicts with concurrently-landing work — see each lane's own
