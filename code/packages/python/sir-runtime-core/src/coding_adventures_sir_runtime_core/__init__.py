@@ -17,7 +17,20 @@ reuse it.  See ``code/specs/sir-runtime.md``.
 
 from __future__ import annotations
 
-from .arithmetic import add, div, ge, gt, le, lt, mul, shift_left, sub
+from .arithmetic import (
+    add,
+    div,
+    ge,
+    gt,
+    le,
+    lt,
+    mul,
+    shift_left,
+    sub,
+    true_div,
+    trunc_div,
+    utrunc_div,
+)
 from .pairs import Pair, car, cdr, cons, is_pair
 from .pairs import set_display as _set_pairs_display
 from .runtime import (
@@ -75,6 +88,9 @@ __all__ = [
     "sub",
     "mul",
     "div",
+    "trunc_div",
+    "utrunc_div",
+    "true_div",
     "lt",
     "gt",
     "le",

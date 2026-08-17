@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.14.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
+
+Additive-only: adds the four new division builtin names from SIR21 T3b-2
+(`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). Bare `"/"`
+keeps working unchanged — no frontend emits any of the new names yet, and
+these are deliberately NOT part of the `resolve_binary` type-directed
+fast path added in 0.13.0 (division is excluded there by design — see
+`op_select.rs`'s own doc comment).
+
+- `div_floor` is a bare alias for the pre-existing `_sir_divide` (Ruby's
+  `/` already floors ints and true-divides floats — zero new logic).
+- `div_trunc`/`udiv_trunc`/`div_true` route to three new functions added
+  to `coding-adventures-sir-runtime-core` (`trunc_div`/`utrunc_div`/
+  `true_div` in `arithmetic.py`, this backend's runtime lives in an
+  external package, not an inlined string). All three raise a typed
+  `SirError("ZeroDivisionError", "divided by 0")` on a zero divisor,
+  matching `div`'s own convention.
+- Python's `int` has no fixed width and no separate signed/unsigned
+  representation, so unlike C/Go/Rust's `udiv_trunc` (which must
+  reinterpret bits to avoid a `u64` ≥ 2^63 misreading as negative),
+  this backend's `udiv_trunc` is identical to `trunc_div` — documented
+  in `arithmetic.py`, not a bug.
+- New execution-proof tests in `semantic-ir-to-python/src/lib.rs`
+  (hand-built module, real `python3` execution via the existing
+  `PYTHONPATH`-discovery harness) and new unit tests in
+  `sir-runtime-core`'s own `test_core.py`.
+
 ## 0.13.0 — Wire type-directed operator selection into the emitter (SIR21 T3c-3)
 
 Wires `semantic-ir`'s `op_select::resolve_binary`/`type_env::TypeEnv`
