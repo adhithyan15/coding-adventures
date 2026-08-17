@@ -7,6 +7,35 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.11.0 — SIR21 T3b-2 Slice 5a: `/` lowers to `div_true`
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). All 7
+backends implement `div_true` (Slice 2, merged); `ruby-to-semantic-ir`
+already migrated its own `/` to `div_floor` (Slice 4); this crate is the
+first to emit `div_true`, alongside `javascript-to-semantic-ir`.
+
+**Behavior change**: the `/` operator (in `try_binary_arith`) no longer
+lowers to bare `BuiltinCall("/", args)`. It now lowers to
+`BuiltinCall("div_true", args)` — Python's `/` always true-divides (there
+is no `Integer#/`-style floor to conflate it with; Python's floor
+division is the separate `//` operator, not lowered by this arm), so this
+closes a real, previously-untested gap: `7 / 2` from Python source used
+to reach whichever bare-`/` behavior a given backend's runtime dispatch
+table happened to implement — Ruby-floor-faithful on some, wrong on
+others — rather than Python's own, unambiguous true-divide semantics.
+
+Verified with a new `sir-conformance` source-level regression test
+(`python_division_always_true_divides_from_source_on_every_backend`):
+`print(7 / 2)` from real Python source, run through every backend's real
+toolchain, prints `3.5` — not `3`, the value Ruby's floor-dividing `/`
+would give for the same literal operands.
+
+Other arithmetic builtins (`+`, `-`, `*`, `%`) are untouched — only `/`
+is in scope for this slice; Python has no `//` (floor) operator lowered
+today, so there is no floor/true conflation risk to worry about.
+
 ## 0.10.0 — SIR28 Slice 5: `print(...)` lowers to `__sys_write__`
 
 Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
