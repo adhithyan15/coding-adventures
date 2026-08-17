@@ -40,7 +40,7 @@ reviews_of: [HI-C54-goat]
 
 **सूरज** (*sūraj*) — "the sun".
 
-From Sanskrit सूर्य (*sūrya*), and behind that the reconstructed *séh₂wl̥*, which also gives Latin *sōl*, Greek *hḗlios*, and English *sun*.
+From Sanskrit सूर्य (*sūrya*), and behind that the Proto-Indo-European word for the sun, which also gives Latin *sōl*, Greek *hḗlios*, and English *sun*.
 
 That makes सूरज a cousin of *solar* and of *sun* at once — the Latin word arriving in English through scholarship, the inherited one having been there all along. Same root, two doors.
 

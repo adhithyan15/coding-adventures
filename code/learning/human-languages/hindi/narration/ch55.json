@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:559a30138d923f66",
+  "sourceHash": "fnv1a64:4d66dd8fc2787ed3",
   "lessons": [
     {
       "id": "HI-C55-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:824f97f0921dec19",
+      "sourceHash": "fnv1a64:06f455bf2f1a7bc5",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit सूर्य (sūrya), and behind that the reconstructed séh₂wl̥, which also gives Latin sōl, Greek hḗlios, and English sun."
+              "text": "From Sanskrit सूर्य (sūrya), and behind that the Proto-Indo-European word for the sun, which also gives Latin sōl, Greek hḗlios, and English sun."
             },
             {
               "kind": "speech",

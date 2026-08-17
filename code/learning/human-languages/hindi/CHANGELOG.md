@@ -55,6 +55,15 @@ fix is never a fresher number, it is to name the thing, so the seven now read
 "when the ear was named", "at the end of the welcome chapter", "when you first
 counted to five". Hindi stays at 20 and the tranche adds none.
 
+A third defect was caught by CI rather than locally, because no local gate could see
+it. The sun lesson cited the reconstructed PIE form with a combining ring below
+(U+0325), which Latin Modern has no glyph for, so XeLaTeX dropped it and the LaTeX
+warning gate failed on `missing_character`. The books compiled; the character simply
+never reached the page. The citation now names the Proto-Indo-European word without
+spelling it, keeping the *sōl* / *hḗlios* / *sun* cousins intact. There is no LaTeX
+toolchain in the authoring container, so the only check that reads a book.log runs in
+CI alone.
+
 The etymologies keep the double-inheritance thread the earlier chapters set up,
 and refuse it where it does not hold. गाय with *cow*, सूरज with *sun*, चाँद with
 *candle* and तारा with *star* are four clean PIE inheritances. Against them:
