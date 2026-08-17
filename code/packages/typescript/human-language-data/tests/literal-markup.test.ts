@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { measureLiteralMarkup, renderLiteralMarkup } from "../src/literal-markup.js";
+import { measureLiteralMarkup, renderLiteralMarkup, stripHtmlComments } from "../src/literal-markup.js";
 import { parseLesson } from "../src/parse.js";
 import { loadEverything } from "../src/loader.js";
 import { generatedBookOutputs } from "../src/book-cli.js";
@@ -128,6 +128,32 @@ describe("literal markup", () => {
     ).join("\n");
     expect(text).not.toContain("\u001b");
     expect(text).toContain("?");
+  });
+
+  it("strips comments closed with --!> as well as -->", () => {
+    // CodeQL js/bad-tag-filter: HTML ends a comment either way, and a filter that
+    // knows only one lets the other reach the reader.
+    expect(stripHtmlComments("<!-- a -->x", "remove")).toBe("x");
+    expect(stripHtmlComments("<!-- a --!>x", "remove")).toBe("x");
+  });
+
+  it("consumes the whole comment span so nothing can re-form", () => {
+    // CodeQL js/incomplete-multi-character-sanitization: a single regex pass over
+    // a malformed comment can leave fragments that re-form into a live one.
+    expect(stripHtmlComments("<!--a<!--b-->x", "remove")).toBe("x");
+    expect(stripHtmlComments("<!--a<!--b-->x", "remove")).not.toContain("<!--");
+  });
+
+  it("treats an unterminated comment as running to the end, as a browser does", () => {
+    expect(stripHtmlComments("keep <!-- forever", "remove")).toBe("keep ");
+  });
+
+  it("is linear in the number of unterminated comment openers", () => {
+    // CodeQL js/polynomial-redos: `<!--[\s\S]*?-->` rescanned to EOF from every
+    // opener — 76ms at 32KB of repeated `<!--`, a clean 4x per doubling.
+    const started = Date.now();
+    stripHtmlComments("<!--".repeat(16_000), "blank");
+    expect(Date.now() - started).toBeLessThan(500);
   });
 
   it("THE GATE: the committed corpus carries no literal markup at either layer", () => {

@@ -6,6 +6,7 @@ import type {
   ChapterCapability,
   CompiledLessonActivity,
 } from "./types.js";
+import { stripHtmlComments } from "./literal-markup.js";
 import type { ParsedLesson } from "./parse.js";
 import type { ChapterModality } from "./modality.js";
 
@@ -898,7 +899,7 @@ function renderMarkdown(
   // consumes them; everything else arrived here untouched. Stripping is done on
   // the whole string rather than per line so a comment spanning several lines --
   // which the live instance did -- goes as one unit.
-  markdown = markdown.replace(/<!--[\s\S]*?-->/g, "");
+  markdown = stripHtmlComments(markdown, "remove");
   const output: string[] = [];
   const paragraph: string[] = [];
   const quote: string[] = [];

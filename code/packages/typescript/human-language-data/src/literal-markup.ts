@@ -70,7 +70,10 @@ const SOURCE_MARKUP =
  * looks like HTML at all, and grepping the `.tex` for `&nbsp;` finds nothing.
  * That is precisely how it stayed invisible.
  */
-const RENDERED_MARKUP = /\\&(?:nbsp|amp|lt|gt|quot|apos|\#\d+|\#x[0-9A-Fa-f]+);|<!--|-->/g;
+// `--!>` closes an HTML comment as surely as `-->` does; CodeQL's js/bad-tag-filter
+// flags a filter that knows only one of them, and it is right — an authoring
+// comment ending `--!>` would have reached the reader unseen.
+const RENDERED_MARKUP = /\\&(?:nbsp|amp|lt|gt|quot|apos|\#\d+|\#x[0-9A-Fa-f]+);|<!--|--!?>/g;
 
 export interface LiteralMarkupFinding {
   /** Lesson id for a source finding, or the file path for a rendered one. */
@@ -107,10 +110,53 @@ export interface LiteralMarkupReport {
  * Replacing with spaces rather than deleting keeps every offset and newline, so
  * a reported line number still points at the right line.
  */
+/**
+ * Remove or blank every HTML comment, by a linear scan rather than a regex.
+ *
+ * `/<!--[\s\S]*?-->/g` looks obvious and has three defects, all of which CodeQL
+ * flagged and all of which are real:
+ *
+ *  - **It rescans to EOF from every unterminated `<!--`.** Quadratic: measured
+ *    0.48ms at 2KB of repeated `<!--` and 76ms at 32KB, a clean 4x per doubling.
+ *  - **It only knows `-->`.** HTML also ends a comment with `--!>`, so a comment
+ *    closed that way would survive the strip and reach the reader.
+ *  - **One pass can leave a fragment behind**, which is the incomplete-multi-
+ *    character-sanitization class: strip a well-formed comment out of a malformed
+ *    one and the leftovers can re-form.
+ *
+ * A scan fixes all three at once and is easier to read than the regex was.
+ * Consuming the WHOLE span from `<!--` to its terminator means nothing can
+ * re-form, and an unterminated comment runs to end-of-text, which is what a
+ * browser does with one.
+ */
+export function stripHtmlComments(text: string, mode: "remove" | "blank"): string {
+  let out = "";
+  let cursor = 0;
+  for (;;) {
+    const start = text.indexOf("<!--", cursor);
+    if (start === -1) {
+      out += text.slice(cursor);
+      return out;
+    }
+    out += text.slice(cursor, start);
+    const plain = text.indexOf("-->", start + 4);
+    const bang = text.indexOf("--!>", start + 4);
+    let end: number;
+    if (plain === -1 && bang === -1) end = text.length;
+    else if (bang === -1) end = plain + 3;
+    else if (plain === -1) end = bang + 4;
+    else end = plain < bang ? plain + 3 : bang + 4;
+    const span = text.slice(start, end);
+    // Blanking rather than deleting preserves offsets and newlines, so a
+    // reported line number still points at the right line.
+    out += mode === "blank" ? span.replace(/[^\n]/g, " ") : "";
+    cursor = end;
+  }
+}
+
 function blankExemptSpans(text: string): string {
   const blank = (match: string) => match.replace(/[^\n]/g, " ");
-  return text
-    .replace(/<!--[\s\S]*?-->/g, blank)
+  return stripHtmlComments(text, "blank")
     .replace(/```[\s\S]*?```/g, blank)
     .replace(/`[^`\n]*`/g, blank);
 }
