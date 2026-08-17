@@ -7,13 +7,19 @@
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
         "JA-C01-hai",
-        "JA-C01-iie"
+        "JA-C01-iie",
+        "JA-W01-i",
+        "JA-W01-ha",
+        "JA-W01-hai-read",
+        "JA-W01-e"
       ],
       "before": [],
       "inline": [
         "JA-EXT-001-HIRAGANA-MORA"
       ],
-      "after": []
+      "after": [
+        "JA-EXT-008-HIRAGANA-YES-NO"
+      ]
     },
     {
       "id": "JA-PATH-002",
@@ -21,7 +27,13 @@
       "lessons": [
         "JA-C01-konnichiwa",
         "JA-C01-nihongo",
-        "JA-C01-koohii"
+        "JA-C01-koohii",
+        "JA-W01-ko",
+        "JA-W01-n",
+        "JA-W01-ni",
+        "JA-W01-chi",
+        "JA-W01-wa",
+        "JA-W01-konnichiwa-read"
       ],
       "before": [],
       "inline": [
@@ -29,7 +41,9 @@
         "JA-EXT-003-KANJI-READINGS",
         "JA-EXT-004-KATAKANA-LOANWORDS"
       ],
-      "after": []
+      "after": [
+        "JA-EXT-009-HIRAGANA-GREETING"
+      ]
     },
     {
       "id": "JA-PATH-003",
@@ -500,6 +514,41 @@
       ],
       "lessons": [
         "JA-C01-practice"
+      ]
+    },
+    {
+      "id": "JA-EXT-008-HIRAGANA-YES-NO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write three hiragana signs from memory and read both yes-or-no answers by sounding out their signs in order, rather than recalling the words whole.",
+      "prerequisites": [
+        "JA-EXT-001-HIRAGANA-MORA"
+      ],
+      "lessons": [
+        "JA-W01-i",
+        "JA-W01-ha",
+        "JA-W01-hai-read",
+        "JA-W01-e"
+      ]
+    },
+    {
+      "id": "JA-EXT-009-HIRAGANA-GREETING",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write five more hiragana signs from memory and read the daytime greeting from them, including the sign pronounced wa because it is a topic marker rather than the sign for that sound.",
+      "prerequisites": [
+        "JA-EXT-008-HIRAGANA-YES-NO",
+        "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
+      ],
+      "lessons": [
+        "JA-W01-ko",
+        "JA-W01-n",
+        "JA-W01-ni",
+        "JA-W01-chi",
+        "JA-W01-wa",
+        "JA-W01-konnichiwa-read"
       ]
     }
   ]

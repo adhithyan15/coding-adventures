@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:565dd8aed4e69df6",
+  "sourceHash": "fnv1a64:575bcc3e232beedc",
   "summary": {
-    "totalLessons": 2813,
+    "totalLessons": 2823,
     "voice": 2024,
     "sight": 580,
-    "pen": 209,
+    "pen": 219,
     "drivableLessons": 2024,
     "drivablePercent": 72,
     "trackCount": 22,
-    "chapterCount": 900,
+    "chapterCount": 901,
     "drivablePrefixTotal": 1802,
     "fullyDrivableChapters": 588,
-    "unstartableChapters": 183,
+    "unstartableChapters": 184,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -3738,15 +3738,16 @@
     },
     {
       "language": "japanese",
-      "lessonCount": 8,
+      "lessonCount": 18,
       "voice": 1,
       "sight": 7,
-      "pen": 0,
-      "drivablePercent": 13,
+      "pen": 10,
+      "drivablePercent": 6,
       "drivablePrefixTotal": 0,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -3761,6 +3762,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "JA-C01-hai",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 2,
+          "lessonCount": 10,
+          "voice": 0,
+          "sight": 0,
+          "pen": 10,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "JA-W01-i",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -30600,6 +30616,237 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:fd0c2e1120a75440"
+    },
+    {
+      "id": "JA-W01-i",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 90,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:26298eeb3f317c1e",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-ha",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 100,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ffb69730dd67576c",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-hai-read",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 110,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0ea300047005fbe5",
+      "detachableSegments": [
+        "Script — no new sign at all"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-e",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 120,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9be9028fc8bdc7fa",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-ko",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 130,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:149060678bc7599f",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-n",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 140,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f5495df027a5bdc1",
+      "detachableSegments": [
+        "Script — the shape, and the exception"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-ni",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 150,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:07a76c17b5fc2d4d",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-chi",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 160,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:35697da6506e00f6",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-wa",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 170,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:20c37ccc88f42958",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "JA-W01-konnichiwa-read",
+      "language": "japanese",
+      "chapter": 2,
+      "sequence": 180,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1f86a56d3fc6cd89",
+      "detachableSegments": [
+        "Script — the assembly"
+      ],
+      "delivery": "script"
     },
     {
       "id": "KA-C01-namaskara",

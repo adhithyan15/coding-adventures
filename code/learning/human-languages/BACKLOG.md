@@ -13,6 +13,38 @@ record of what was *learned*; it is no longer the record of what is *next*, beca
 a hand-ordered list goes stale silently and in the flattering direction. The
 prioritization sections below are kept as history and are dated accordingly.
 
+## HL-C211 — Japanese: eight hiragana, and the sign taught late on purpose
+
+Second script tranche off the computed queue. Ten lessons, eight signs, two
+assemblies that introduce nothing. `neverTaughtGlyphs` 43 → 35;
+`tracksTeachingNoScript` 8 → **6** across the two tranches so far.
+
+**The ordering decision worth copying.** The sign for *wa* is taught LAST in the
+tranche, after the greeting is already known. The daytime greeting sounds like it
+ends in *wa* and is written with the sign read *ha*, because that sign doubles as
+the topic marker. Teaching the *wa* sign at its alphabetical or frequency position
+would have handed the reader the commonest beginner spelling error in the language
+and then corrected it later. **Glyph order is a pedagogical choice, not a
+frequency sort** — and the letter-ledger work for the Indic tracks should be read
+with that in mind.
+
+**What the Chinese tranche predicted, and what happened instead.** HL-C210 warned
+that closing `neverTaughtGlyphs` leaves `violations` untouched when the teaching
+chapter sits after the using chapter. That held: Japanese `violations` went 8 → 8.
+The ordering half of the problem is unchanged and is still HL-C210's.
+
+**Japanese chapter 1 is at 18 atoms against a budget of 12, and was already.** Not
+introduced here — the ramp report carried it before this tranche and the pin did
+not move. Recorded because the Chinese tranche hit the same number for a different
+reason (there it WAS newly introduced, and the fix was a second chapter), and the
+two should not be confused when someone comes to burn this debt down.
+
+**Scale check for the remaining script work.** This tranche cost ten lessons for
+eight glyphs. At that density the corpus's remaining 452 untaught glyphs are
+roughly 560 lessons — which is the honest figure for "introduce the script gently
+across sixteen non-Latin tracks", and it is small beside the ~10,000 vocabulary
+tranches. Script really is the finite half.
+
 ## HL-C210 — teaching a glyph and teaching it FIRST are two different fixes
 
 Found while closing Chinese's script debt, and it generalises to all sixteen

@@ -86,10 +86,15 @@ describe("the render helpers cannot be edited by their own subject", () => {
   });
 
   it("root ledger", () => {
+    // `parseLesson` refuses a hostile id since HL-C211, so it can no longer be
+    // laundered in through the frontmatter. The RENDER HELPER is this file's
+    // subject and must still hold on its own, so the id is set on the parsed
+    // object directly -- defence in depth, tested at the depth it defends.
     const lesson = parseLesson(
-      `---\nschema_version: 2\nid: ${LINE_EATER}\nsequence: 10\nchapter: 1\ntype: vocabulary\nheadword: x\ngloss: x\nroots: [${LINE_EATER}]\n---\n\n# x\n`,
+      `---\nschema_version: 2\nid: ES-C01-clean\nsequence: 10\nchapter: 1\ntype: vocabulary\nheadword: x\ngloss: x\nroots: [${LINE_EATER}]\n---\n\n# x\n`,
       "spanish",
     );
+    lesson.realization.lessonId = LINE_EATER;
     const text = renderRootLedger(buildRootLedger([lesson], 3)).join("\n");
     expect(text).toContain("EVIL");
     expect(containsControl(text)).toBe(false);
@@ -138,10 +143,16 @@ describe("the render helpers cannot be edited by their own subject", () => {
       "| nosotros | d |",
       "| vosotros | e |",
     ].join("\n");
+    // Same as the root ledger above: the id is set after parsing, because the
+    // parser now refuses it and the render helper is still what is under test.
+    // `info-dump.ts` reads the RAW frontmatter id rather than the validated
+    // `realization.lessonId`, so that is the field to poison here -- and the
+    // difference is why this helper still needs its own guard.
     const lesson = parseLesson(
-      `---\nschema_version: 2\nid: ${LINE_EATER}\nsequence: 10\nchapter: 1\ntype: vocabulary\nheadword: x\ngloss: x\n---\n\n# x\n\n${grid}\n`,
+      `---\nschema_version: 2\nid: ES-C01-clean\nsequence: 10\nchapter: 1\ntype: vocabulary\nheadword: x\ngloss: x\n---\n\n# x\n\n${grid}\n`,
       "spanish",
     );
+    (lesson.frontmatter as Record<string, unknown>).id = LINE_EATER;
     const text = renderInfoDump(measureInfoDump([lesson], 1)).join("\n");
     expect(text).toContain("EVIL");
     expect(containsControl(text)).toBe(false);

@@ -3524,6 +3524,29 @@
       "jsonHash": "fnv1a64:24c475c85fc84b70"
     },
     {
+      "language": "japanese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:3919f574889a11c5",
+      "lessonIds": [
+        "JA-W01-i",
+        "JA-W01-ha",
+        "JA-W01-hai-read",
+        "JA-W01-e",
+        "JA-W01-ko",
+        "JA-W01-n",
+        "JA-W01-ni",
+        "JA-W01-chi",
+        "JA-W01-wa",
+        "JA-W01-konnichiwa-read"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch02.txt",
+      "json": "japanese/narration/ch02.json",
+      "textHash": "fnv1a64:95efceb9a8c7485b",
+      "jsonHash": "fnv1a64:6202d375a89e8436"
+    },
+    {
       "language": "kannada",
       "chapter": 1,
       "sourceHash": "fnv1a64:dc1b0406cbf54722",

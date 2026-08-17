@@ -29,6 +29,29 @@
           "JA-DIALOGUE-DOORWAY"
         ]
       }
+    },
+    {
+      "chapter": 2,
+      "title": "Eight Signs, and Three Words You Can Read",
+      "label": "ch:ja-hiragana-eight",
+      "canDo": "I can write eight hiragana signs from memory and read the daytime greeting and both yes-or-no answers by sounding out their signs in order, including the sign that is pronounced wa because it is a topic marker.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC",
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "JA-W01-konnichiwa-read",
+        "kind": "reading",
+        "summary": "The daytime greeting assembled from five signs the reader can each write from memory, introducing nothing new — including the one read wa because it is a topic marker rather than the sign for that sound.",
+        "assesses": [
+          "JA-SCRIPT-KONNICHIWA-READ-01",
+          "JA-SCRIPT-KO-01",
+          "JA-SCRIPT-N-01",
+          "JA-SCRIPT-NI-01",
+          "JA-SCRIPT-CHI-01",
+          "JA-SCRIPT-HA-01"
+        ]
+      }
     }
   ]
 }

@@ -286,10 +286,25 @@ export function parseLesson(
   const romanization =
     str(fm.romanization) || (resolvedScript === "latin" ? headword : "");
 
+  // A lesson id is interpolated RAW into `\label{lesson:<id>}` and into the
+  // `% canonical-lessons:` header of every generated .tex. It is the sibling of
+  // the `chapters.json` label hole closed in HL-C209, found by the review of the
+  // very next tranche: an id of `X}\write18{...}{` closes the brace and emits a
+  // live control sequence into a file XeLaTeX compiles in CI. Builds run without
+  // `--shell-escape` so `\write18` is refused, but `\input` and `\openout` are
+  // not -- an arbitrary local file read into a published PDF.
+  //
+  // Same shape as `ACTIVITY_ID` in `activity.ts`, which has always been guarded.
+  // Every id in the corpus already matches; this refuses the one that would not.
+  const lessonId = str(fm.id);
+  if (lessonId !== "" && !/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(lessonId)) {
+    throw new Error(`lesson id must be a stable hyphenated token, got '${lessonId}'`);
+  }
+
   const realization: Realization = {
     concept: str(fm.concept_tag),
     language,
-    lessonId: str(fm.id),
+    lessonId,
     chapter: chapterRaw === "" ? NaN : Number(chapterRaw),
     type: str(fm.type) || "word",
     headword,
