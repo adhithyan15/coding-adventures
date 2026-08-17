@@ -7276,6 +7276,29 @@
       "jsonHash": "fnv1a64:e48facd3e87b7eb0"
     },
     {
+      "language": "punjabi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:17870ca6234b9e0b",
+      "lessonIds": [
+        "PA-W01-ha",
+        "PA-W01-aa-matra",
+        "PA-W01-bindi",
+        "PA-W01-na",
+        "PA-W01-ii-matra",
+        "PA-W01-ma",
+        "PA-W01-sa",
+        "PA-W01-ta",
+        "PA-W01-e-matra",
+        "PA-W01-namaste-read"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "punjabi/narration/ch14.txt",
+      "json": "punjabi/narration/ch14.json",
+      "textHash": "fnv1a64:b39fa86718787fc7",
+      "jsonHash": "fnv1a64:47ce567582bf4598"
+    },
+    {
       "language": "russian",
       "chapter": 1,
       "sourceHash": "fnv1a64:666276e1d698f4d5",

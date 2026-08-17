@@ -7,13 +7,25 @@
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
         "PA-C01-sat-sri-akal",
-        "PA-C01-namaste"
+        "PA-C01-namaste",
+        "PA-W01-ha",
+        "PA-W01-aa-matra",
+        "PA-W01-bindi",
+        "PA-W01-na",
+        "PA-W01-ii-matra",
+        "PA-W01-ma",
+        "PA-W01-sa",
+        "PA-W01-ta",
+        "PA-W01-e-matra",
+        "PA-W01-namaste-read"
       ],
       "before": [],
       "inline": [
         "PA-EXT-001-INLINE-SCRIPT"
       ],
-      "after": []
+      "after": [
+        "PA-EXT-016-SCRIPT-FIRST-PIECES"
+      ]
     },
     {
       "id": "PA-PATH-002",
@@ -709,6 +721,26 @@
       "lessons": [
         "PA-C13-dil",
         "PA-C13-sir"
+      ]
+    },
+    {
+      "id": "PA-EXT-016-SCRIPT-FIRST-PIECES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write nine Gurmukhi pieces from memory — four consonants, three vowel signs and the nasal bindi — and read the words for yes, no and the greeting by assembling them rather than recalling the words whole.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-W01-ha",
+        "PA-W01-aa-matra",
+        "PA-W01-bindi",
+        "PA-W01-na",
+        "PA-W01-ii-matra",
+        "PA-W01-ma",
+        "PA-W01-sa",
+        "PA-W01-ta",
+        "PA-W01-e-matra",
+        "PA-W01-namaste-read"
       ]
     }
   ]
