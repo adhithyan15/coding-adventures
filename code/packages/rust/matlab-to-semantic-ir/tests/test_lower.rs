@@ -179,7 +179,36 @@ fn scalar_backslash_division_is_supported() {
     let main = main_fn(&m);
     match &main.body.stmts[0] {
         Stmt::LetStarBinding { value, .. } => {
-            assert!(matches!(value, Expr::BuiltinCall { name, .. } if name == "/"));
+            // SIR21 T3b-2: scalar division lowers to `div_true`, not
+            // bare `/` — see `build_multiplicative`'s scalar arms.
+            assert!(matches!(value, Expr::BuiltinCall { name, .. } if name == "div_true"));
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn scalar_division_result_is_still_recognised_as_scalar_by_downstream_ops() {
+    // SIR21 T3b-2 regression: `expr_is_known_scalar_d` (the scalar/
+    // elementwise classifier) must recognise `div_true` as a
+    // scalar-preserving op, or a division subexpression's result stops
+    // being provably scalar and the OUTER `+` wrongly falls through to
+    // the elementwise-broadcast path instead of native scalar `+`.
+    // `(10 / 2) + 3`: both operands ARE scalar, so this must lower to
+    // `BuiltinCall("+", ...)`, NOT `ElementwiseOp` — the two paths are
+    // only distinguishable when BOTH sides are scalar, which is exactly
+    // why this needs its own case beyond `scalar_backslash_division_is_
+    // supported` above (that test never feeds the division result into
+    // a further operation).
+    let m = compile_ok("y = (10 / 2) + 3;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => {
+            assert!(
+                matches!(value, Expr::BuiltinCall { name, .. } if name == "+"),
+                "expected native scalar `+`, got {value:?} — the div_true \
+                 result was not recognised as scalar"
+            );
         }
         other => panic!("expected LetStarBinding, got {other:?}"),
     }

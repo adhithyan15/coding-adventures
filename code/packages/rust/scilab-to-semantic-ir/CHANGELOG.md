@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.3.0] - 2026-08-17
+
+### Changed — SIR21 T3b-2 Slice 5b: scalar `/`/`\`/`.\ ` lower to `div_true`
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). All 7
+backends implement `div_true` (Slice 2, merged); this crate migrates
+alongside `matlab-to-semantic-ir`/`idl-to-semantic-ir` (Slice 5b).
+
+**Behavior change**: `build_multiplicative`'s three scalar-division arms
+(`/` mrdivide, `./` elementwise-both-scalar, `"\\" | ".\\ "`
+reciprocal-broadcast-both-scalar) no longer lower to bare
+`BuiltinCall("/", args)`. They all now lower to `BuiltinCall("div_true",
+args)` — Scilab has no integer type (every number is an `array-runtime`
+`f64`), so scalar division always true-divides.
+
+`expr_is_known_scalar_d` is updated in the same commit to recognise
+`div_true` as scalar-preserving, alongside a new regression test
+(`scalar_division_result_is_still_recognised_as_scalar_by_downstream_ops`)
+proving `(10 / 2) + 3` still lowers to native scalar `+`, not a wrongly-
+broadcast `ElementwiseOp`.
+
+**This migration fixes a real, previously-documented bug** (`tests/
+oracle.rs`'s "Finding five", `integer_literal_division_floors_a_shared_
+backend_gap`): before this change, `1 / 3` printed `"0"` on the compiled
+side, not Scilab's own `"0.333..."`, because a decimal-point-free
+literal lowers to `Expr::IntLit` and the shared JS backend's old
+`divide()` helper floors whenever both operands are integer-valued (per
+Ruby's `Integer#/`). `div_true` never floors, so this is now fixed —
+confirmed by the oracle corpus test, which no longer skips that case's
+compiled-side assertion. Fixing it surfaced a narrower, already-cataloged
+display-convention gap ("Finding three") for an EXACT-quotient division
+specifically (`10 / 2` prints `"5.0"` instead of `"5"`, since `div_true`'s
+result is boxed through the shared Ruby-family Float display convention)
+— documented on `exact_integer_division_folds_cleanly`, not a new bug.
+
 ## [0.2.0] - 2026-08-11
 
 ### Changed — SIR28 Slice 6: `disp` lowers to `__sys_write__`

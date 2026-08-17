@@ -1,6 +1,6 @@
 [package]
 name = "matlab-to-semantic-ir"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "MATLAB CST → narrow-waist Semantic IR (SIR22 array/matrix domain). Fourth frontend for the SIR10 narrow-waist IR, first to target SIR22."
 

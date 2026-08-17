@@ -2001,7 +2001,11 @@ impl Lowerer {
                 "STAR" | "SLASH" => {
                     if acc_scalar && rhs_scalar {
                         Expr::BuiltinCall {
-                            name: if op_name == "STAR" { "*" } else { "/" }.to_string(),
+                            // SIR21 T3b-2: scalar `/` always true-divides
+                            // (IDL has no int/float distinction to
+                            // conflate it with), so it maps to
+                            // `div_true`, not bare `/`.
+                            name: if op_name == "STAR" { "*" } else { "div_true" }.to_string(),
                             args: vec![acc, rhs],
                             effects: EffectSet::PURE,
                             span,
@@ -2874,8 +2878,13 @@ fn expr_is_known_scalar(e: &Expr) -> bool {
         }
         match e {
             Expr::IntLit { .. } | Expr::FloatLit { .. } => true,
+            // SIR21 T3b-2: scalar division now lowers to `div_true`, not
+            // bare `/` — recognised here so this classifier still sees
+            // through it. `/` is kept too (harmless — this frontend no
+            // longer emits it from a division site, but leaving the old
+            // name recognised costs nothing).
             Expr::BuiltinCall { name, args, .. }
-                if matches!(name.as_str(), "+" | "-" | "*" | "/" | "neg") =>
+                if matches!(name.as_str(), "+" | "-" | "*" | "/" | "div_true" | "neg") =>
             {
                 args.iter().all(|a| go(a, depth + 1))
             }

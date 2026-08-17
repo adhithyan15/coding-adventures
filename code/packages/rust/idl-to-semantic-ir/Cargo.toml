@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-idl-to-semantic-ir"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "IDL (Interactive Data Language) CST -> narrow-waist Semantic IR (SIR22 array/matrix domain). MA-12e, the last item in IDL's Wave-6 rollout per MA12 §6; front3 of HML01."
 
