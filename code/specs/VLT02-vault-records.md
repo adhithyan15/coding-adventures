@@ -174,12 +174,19 @@ zero-dependency foundational crate and so belongs to its own change.
 ## Decoding never re-encodes
 
 The section above makes encoding fallible on purpose. This one states the
-matching rule for the other direction, and it is a stronger one:
+matching rule for the other direction:
 
-> **`decode_record` succeeds on every input the canonical decoder
-> accepts.** Nothing on the decode path may fail for a reason the decode
-> itself did not discover — in particular, not because of a size the
-> *encoder* would refuse.
+> **No decode may fail for a reason the decode did not discover.**
+> `decode_record` rejects input on exactly two grounds — the bytes are not
+> canonical CBOR, or they do not match the schema their content type
+> names. It may not fail for any third reason, and in particular not
+> because of a size the *encoder* would refuse.
+
+Note what the rule does *not* say. It does not say `decode_record`
+succeeds on everything the canonical decoder accepts: a first-party
+payload missing a required field is still `SchemaMismatch`, because a
+`Login` that is not a `Login` is a fact the decode itself discovered.
+What the rule forbids is importing a constraint from the other direction.
 
 The rule exists because the two directions are not symmetric in
 consequence. A refused encode costs one record: the operator keeps the
@@ -230,6 +237,18 @@ Three properties follow, and callers may rely on all three:
    `decode_record_as` peel the envelope through one shared routine, so
    there is a single answer to "which bytes are a record" and no input is
    accepted by one and rejected by the other.
+
+The residual, stated so the rule above is not read as more than it is:
+`SchemaMismatch` on a first-party payload reaches vault open by the same
+route the size failure used to, and denies it the same way. A peer that
+authors a structurally invalid `Login` — right content type, missing
+field — therefore still costs the whole vault rather than one item. That
+is pre-existing, is unchanged by the repair above, and is a different
+repair: the size failure could simply be removed, because the re-encode
+was never needed, whereas a payload that does not match its schema has to
+be *represented* somehow, which means deciding what a partly-unreadable
+item looks like to every ceremony that walks the catalog. It is tracked
+as follow-on work against VLT-PM05 §13.3.
 
 ## First-party record types
 

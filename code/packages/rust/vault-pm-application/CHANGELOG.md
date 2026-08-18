@@ -25,12 +25,35 @@ All notable changes to this package are documented here.
   turned process aborts into closed errors on *write* paths, where a closed
   error costs one record; on the open path a closed error is the loss.
 
-  Nothing in this crate changed. The invariant it may now rely on is stated in
-  the new VLT-PM05 §13.3: any revision whose plaintext is within
-  `MAX_PLAINTEXT_BYTES` and whose bytes are valid canonical CBOR materialises
-  into the current catalog, whatever the encoder would say about re-emitting it.
-  Open still fails closed on everything it should — corrupt frames, broken pins,
-  failed signatures, a catalog past `MAX_CATALOG_ENTRIES`.
+  The invariant this crate may now rely on is stated in the new VLT-PM05 §13.3:
+  any revision whose plaintext is within `MAX_PLAINTEXT_BYTES` and which decodes
+  materialises into the current catalog, whatever the encoder would say about
+  re-emitting it. It is narrow on purpose. Open still fails closed on everything
+  it should — corrupt frames, broken pins, failed signatures, a catalog past
+  `MAX_CATALOG_ENTRIES` — and it is about *size*, not about every per-item
+  failure: a peer-authored first-party record whose payload does not match its
+  schema still yields `SchemaMismatch` → `IntegrityFailure` and still denies
+  open. That residual is pre-existing, unchanged here, and deliberately deferred:
+  the size failure could be removed because the re-encode was never needed,
+  whereas a schema-invalid payload has to be *represented*, which means deciding
+  what a partly-unreadable item looks like to search, list, show, conflict
+  resolution, export, and restore.
+
+- `encode_any_record`'s opaque arm now routes through `map_record_encode_error`
+  like the six typed arms, instead of folding every `encode_opaque` failure into
+  `IntegrityFailure`. The wildcard was defensible while an oversized opaque
+  record could never be materialised — the arm's only reachable failure was
+  genuinely an integrity one — but the fix above makes such a record openable,
+  so the arm can now see `EncodeTooLarge` from stored bytes, most visibly on
+  `export`. Reporting that as `IntegrityFailure` tells an operator their store is
+  corrupt, which invites destructive recovery, when the store is intact and the
+  remedy is to delete one large item. That remedy is the escape hatch this
+  change exists to restore, so it must not be described in the vocabulary of
+  corruption — and `doctor`, which never calls `encode_any_record`, would have
+  reported the same vault `Healthy`, so the operator got two contradictory
+  answers. VLT-PM39's dependency is unaffected: a payload that is not valid CBOR
+  yields a non-size `CborError`, which still maps to `IntegrityFailure`, and the
+  existing fixture pins it. Found by the round-1 security review of this change.
 
   The escape hatch of §13.2 now covers the opaque case on the same terms as the
   first-party one, and both halves are pinned by test rather than inferred:

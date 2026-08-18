@@ -58,10 +58,11 @@ succeeds, one byte more fails, and no partial output is ever returned.
 
 ## Decoding is not
 
-The other direction carries a stronger rule: **`decode_record` succeeds
-on every input the canonical decoder accepts.** Nothing on the decode
-path may fail for a reason the decode itself did not discover, and in
-particular not because of a size the *encoder* would refuse.
+The other direction carries a different rule: **no decode may fail for a
+reason the decode did not discover.** `decode_record` rejects on exactly
+two grounds — the bytes are not canonical CBOR, or they do not match the
+schema their content type names — and in particular never because of a
+size the *encoder* would refuse.
 
 The asymmetry is in the consequence, not in the code. A refused encode
 costs one record — the operator keeps the vault, keeps every other item,

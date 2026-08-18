@@ -25,11 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   round trip was denying vault open outright.
 
   Spans come from the same parse that validates the input — the map reader is
-  now one function used by both decoders — so the spanned decode rejects
-  exactly what `decode` rejects, with the same error, pinned by a differential
-  test over sixteen hostile inputs. Valid CBOR that is not a map is `Ok(None)`
-  rather than an error, so no error identifier is added to the portable CBR01
-  set and the C and C++ ports need no change.
+  now one generic function used by both decoders, building whatever entry type
+  the caller asks for — so the spanned decode rejects exactly what `decode`
+  rejects, with the same error, pinned by a differential test over sixteen
+  hostile inputs. Building each entry in place also means a span is never a
+  separate collection that could fall out of step with its value: a shifted
+  pairing would hand a caller a different, valid-looking payload with no error
+  anywhere, so it is made unrepresentable rather than asserted against. Valid
+  CBOR that is not a map is `Ok(None)` rather than an error, so no error
+  identifier is added to the portable CBR01 set and the C and C++ ports need no
+  change.
+
+  `SpannedMapEntry` hand-writes `Debug` to redact its key and value and show only
+  the span. The type exists to carry somebody else's sub-document, which in this
+  stack means plaintext secrets; `CborValue` still derives `Debug`, so this is a
+  guard rail rather than a guarantee, but printing a whole map's contents should
+  not be the default thing that happens.
 - Added `try_encode` and transactional `try_encode_into` APIs with stable,
   payload-blind errors for duplicate encoded map keys, excessive nesting, and
   output beyond the 1 MiB item limit.

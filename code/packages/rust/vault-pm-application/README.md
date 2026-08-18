@@ -489,18 +489,23 @@ error is the loss rather than a report of it — so one bound is stated as an
 invariant instead:
 
 > **`open_active_vault` never fails because of an individual item's payload
-> size.** Any revision whose plaintext is within `MAX_PLAINTEXT_BYTES` and whose
-> bytes are valid canonical CBOR materialises into the current catalog, whatever
-> the encoder would say about re-emitting it.
+> size.** Any revision whose plaintext is within `MAX_PLAINTEXT_BYTES` and which
+> decodes materialises into the current catalog, whatever the encoder would say
+> about re-emitting it.
 
 `materialize_current_catalog` reads every candidate of every item, so anything
 that can fail per-item during open fails for the whole vault — and during open
 there is no session yet, hence no delete, no export, no ceremony. The one place
-this was violated was `decode_record`'s opaque arm, which re-encoded the payload
-it had just decoded; it no longer does. Open still fails closed on corrupt
-frames, broken pins, failed signatures, and a catalog past
-`MAX_CATALOG_ENTRIES`. What it may not do is fail because one item is large.
-See VLT-PM05 section 13.3 and VLT02 *Decoding never re-encodes*.
+a *size* violated this was `decode_record`'s opaque arm, which re-encoded the
+payload it had just decoded; it no longer does.
+
+The invariant is about size, and about materialisation. Open still fails closed
+on corrupt frames, broken pins, failed signatures, and a catalog past
+`MAX_CATALOG_ENTRIES` — and a revision that does not decode at all still denies
+it, which a peer-authored first-party record with a schema-invalid payload can
+still cause. That residual is pre-existing and tracked; it needs a decision
+about what a partly-unreadable item looks like to every ceremony, not a local
+fix. See VLT-PM05 section 13.3 and VLT02 *Decoding never re-encodes*.
 
 ## Verification
 

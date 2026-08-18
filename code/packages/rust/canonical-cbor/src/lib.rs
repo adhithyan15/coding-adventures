@@ -439,7 +439,7 @@ pub fn decode(bytes: &[u8]) -> Result<CborValue, CborError> {
 
 /// One entry of a map decoded by [`decode_map_spanned`]: the key, the
 /// value, and the half-open byte range the *value* occupied in the input.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct SpannedMapEntry {
     /// The decoded key.
     pub key: CborValue,
@@ -448,6 +448,25 @@ pub struct SpannedMapEntry {
     /// Where `value`'s encoded bytes sat in the input passed to
     /// [`decode_map_spanned`], as `start..end`.
     pub value_span: core::ops::Range<usize>,
+}
+
+/// Value-redacted, because the caller this type exists for is decoding
+/// somebody's secrets.
+///
+/// `CborValue` itself still derives `Debug`, so this is a guard rail
+/// rather than a guarantee; what it buys is that the type introduced for
+/// pass-through decoding does not make printing a whole map's contents
+/// the default thing that happens. The span is safe to show: it is a
+/// pair of offsets the caller already knows, and it is what a reader
+/// debugging a span problem actually needs.
+impl core::fmt::Debug for SpannedMapEntry {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("SpannedMapEntry")
+            .field("key", &"<redacted>")
+            .field("value", &"<redacted>")
+            .field("value_span", &self.value_span)
+            .finish()
+    }
 }
 
 /// Decode a single canonical CBOR **map** and report where each entry's
@@ -509,35 +528,30 @@ pub struct SpannedMapEntry {
 /// ```
 pub fn decode_map_spanned(bytes: &[u8]) -> Result<Option<Vec<SpannedMapEntry>>, CborError> {
     let mut cur = Cursor { bytes, pos: 0 };
-    // Peek the shape before committing to the map reader. A non-map item
-    // still has to prove it is valid canonical CBOR on its own before it
-    // earns `Ok(None)`, so a malformed input is never reported as a mere
-    // shape mismatch.
+    // Peek the shape before committing to the map reader. The peek only
+    // routes; `read_header` still adjudicates, so an input that is major
+    // type 5 with a malformed header (indefinite `0xBF`, a reserved info
+    // value, a non-minimal argument) is rejected exactly as `decode`
+    // rejects it. A non-map item likewise has to prove it is valid
+    // canonical CBOR on its own before it earns `Ok(None)`, so a
+    // malformed input is never reported as a mere shape mismatch.
     if bytes.first().map(|first| first >> 5) != Some(5) {
         decode(bytes)?;
         return Ok(None);
     }
     let (_major, _info, arg) = read_header(&mut cur)?;
     let count = length_within_remaining(arg, cur.remaining(), 2)?;
-    let mut spans = Vec::with_capacity(count);
-    let entries = read_map_entries(&mut cur, 0, count, Some(&mut spans))?;
+    let entries = read_map_entries(&mut cur, 0, count, |key, value, value_span| {
+        SpannedMapEntry {
+            key,
+            value,
+            value_span,
+        }
+    })?;
     if cur.pos != cur.bytes.len() {
         return Err(CborError::TrailingBytes);
     }
-    // `read_map_entries` pushes exactly one span per entry when it is given
-    // somewhere to push them, so the zip below drops nothing.
-    debug_assert_eq!(entries.len(), spans.len());
-    Ok(Some(
-        entries
-            .into_iter()
-            .zip(spans)
-            .map(|((key, value), value_span)| SpannedMapEntry {
-                key,
-                value,
-                value_span,
-            })
-            .collect(),
-    ))
+    Ok(Some(entries))
 }
 
 struct Cursor<'a> {
@@ -717,7 +731,12 @@ fn read_value(cur: &mut Cursor, depth: usize) -> Result<CborValue, CborError> {
             // header for key, one-byte header for value). So
             // `arg * 2 > remaining` ⇒ invalid.
             let count = length_within_remaining(arg, cur.remaining(), 2)?;
-            Ok(CborValue::Map(read_map_entries(cur, depth, count, None)?))
+            Ok(CborValue::Map(read_map_entries(
+                cur,
+                depth,
+                count,
+                |key, value, _span| (key, value),
+            )?))
         }
         6 => {
             let inner = read_value(cur, depth + 1)?;
@@ -755,16 +774,26 @@ fn read_value(cur: &mut Cursor, depth: usize) -> Result<CborValue, CborError> {
 /// consumed, verifying length-first canonical key order as it goes.
 ///
 /// `depth` is the *map's* own depth, so keys and values are read one level
-/// deeper. When `value_spans` is `Some`, one half-open byte range per
-/// entry is pushed onto it, recording where that entry's value sat in the
-/// input — the single source of span truth, so a spanned decode cannot
-/// drift from the ordinary one by accepting different bytes.
-fn read_map_entries(
+/// deeper. `entry` builds whatever the caller wants out of the key, the
+/// value, and the half-open byte range the value occupied — a plain pair
+/// for [`decode`], a [`SpannedMapEntry`] for [`decode_map_spanned`].
+///
+/// Two properties follow from having one reader rather than two. A
+/// spanned decode cannot drift from an ordinary one by accepting
+/// different bytes, because there is only one parser. And a span cannot
+/// be paired with the wrong value, because the two are consumed together
+/// in the same iteration and never exist as separate collections that
+/// could fall out of step. That second one is worth the generic: a
+/// shifted pairing would hand a caller a *different, valid-looking*
+/// payload with no error raised anywhere, which is the one outcome a
+/// fail-closed caller cannot defend against, so it is made
+/// unrepresentable rather than merely asserted against.
+fn read_map_entries<T>(
     cur: &mut Cursor,
     depth: usize,
     count: usize,
-    mut value_spans: Option<&mut Vec<core::ops::Range<usize>>>,
-) -> Result<Vec<(CborValue, CborValue)>, CborError> {
+    entry: impl Fn(CborValue, CborValue, core::ops::Range<usize>) -> T,
+) -> Result<Vec<T>, CborError> {
     let mut entries = Vec::with_capacity(count);
     // We track the encoded-key bytes so we can verify length-first
     // canonical order afterwards.
@@ -775,9 +804,6 @@ fn read_map_entries(
         let key_end = cur.pos;
         let value_start = cur.pos;
         let v = read_value(cur, depth + 1)?;
-        if let Some(spans) = value_spans.as_deref_mut() {
-            spans.push(value_start..cur.pos);
-        }
 
         // Compare against prev key bytes — length-first then bytewise.
         if let Some(prev) = prev_key_bytes {
@@ -787,7 +813,7 @@ fn read_map_entries(
             }
         }
         prev_key_bytes = Some(&cur.bytes[key_start..key_end]);
-        entries.push((k, v));
+        entries.push(entry(k, v, value_start..cur.pos));
     }
     Ok(entries)
 }
