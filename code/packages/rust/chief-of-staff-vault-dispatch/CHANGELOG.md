@@ -37,11 +37,26 @@ the D18 vault *runtime*: the two tools were catalogued but had no handlers, so
 
 - `vault.request_direct` returns JSON `null`. Its declared `output_schema` is
   `null` and the tool runtime validates handler output against the declared
-  schema, so the "no secret return channel" property is enforced structurally
-  rather than by handler discipline. A test registers a deliberately leaking
-  handler under the real definition and asserts the runtime rejects it — and
-  counts handler invocations, so the test cannot pass vacuously on arguments
-  that failed input validation before the handler ran.
+  schema, so for the `output` field the "no secret return channel" property is
+  enforced structurally rather than by handler discipline. A test registers a
+  deliberately leaking handler under the real definition and asserts the runtime
+  rejects it — and counts handler invocations, so the test cannot pass vacuously
+  on arguments that failed input validation before the handler ran.
+- The runtime validates `output` and only `output`. `artifact_refs` and
+  `memory_refs` are copied through unchecked, and `events` are assembled before
+  validation and published even when validation rejects the call. Both handlers
+  therefore return all three empty, with a test pinning it, and the spec and
+  docs state the boundary explicitly rather than implying the runtime covers
+  everything.
+- Leak tests assert over the whole `ToolExecutionTrace` rather than the
+  `ToolResult`, because `ToolResult` has no `events` field — a leak test built
+  on it would silently skip the one channel the runtime does not validate.
+- The trusted delivery adapter receives a `VaultDirectRequest` carrying the
+  requesting agent, session, and secret name alongside the destination. Given
+  only `(consumer, payload)` an adapter can express nothing stronger than a
+  global destination allowlist, under which a caller cleared to send one secret
+  to a consumer is equally cleared to send every secret to it — a confused
+  deputy holding the authority but not the facts.
 - Handler errors carry `&'static str` messages with nothing interpolated, and
   `details` stays JSON `null`. The one value forwarded from a lower layer is
   `LeaseError::InvalidParameter`, whose payload is itself typed `&'static str`
@@ -55,6 +70,21 @@ the D18 vault *runtime*: the two tools were catalogued but had no handlers, so
 - Duplicate argument keys resolve to the first occurrence, matching what the
   schema validator reads. Taking the last would let a caller show one value to
   validation and a different one to the vault.
+
+### Known gaps (documented, not fixed here)
+
+- There is no per-secret policy. `privilege_tier`, `allowed_agents`, and
+  `allowed_mode` are unimplemented, and the tier and capability checks are
+  per-tool and run once at registration. Any caller clearing the tool gate can
+  request any registered secret in either mode, including leasing one intended
+  to be direct-delivery only. Recorded in D18D §7.2.
+- `requesting_agent_id` is read from the execution context and is only as
+  trustworthy as whatever populated it. A binding relying on it must first
+  establish that its host attests the field.
+- A `vault_ref` is a bearer capability, and a successful lease necessarily puts
+  it into the tool output, whence the runtime copies it into the terminal event
+  payload and the execution journal. Sinks that persist journals persist live
+  capabilities.
 
 ### Specification
 

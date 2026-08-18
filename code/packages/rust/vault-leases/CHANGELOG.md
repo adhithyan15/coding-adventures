@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Security
+
+- Bound the in-memory lease table with `MAX_OUTSTANDING_LEASES` (4096).
+  `MAX_TTL_MS` bounded how *long* a lease lived and nothing bounded how *many*
+  existed, so a caller able to reach `issue` in a loop grew the table without
+  limit — and since every row holds its own clone of the plaintext, that was
+  also an unbounded number of live copies of the secret in process memory and of
+  independently redeemable bearer capabilities for it. Survivable while `issue`
+  had no agent-reachable caller; not survivable once D18D's
+  `vault.request_lease` tool was wired up, so the bound belongs at the layer
+  that owns the table.
+- `issue` now sweeps revoked and expired entries before applying the cap.
+  `expire_due` is caller-driven and a repo-wide search finds no call site
+  outside this crate, so without an inline sweep a table full of long-dead
+  entries would deny service on the strength of leases nobody can use. The cap
+  therefore means "outstanding", not "ever issued".
+
 ## [0.2.0] - 2026-08-09
 
 ### Added

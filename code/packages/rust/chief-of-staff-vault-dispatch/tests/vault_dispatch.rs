@@ -16,20 +16,27 @@ use chief_of_staff_host_runtime::{
 };
 use chief_of_staff_tool_api::{
     builtin_tool_definition, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolErrorKind,
-    ToolHandlerOutput, ToolInvocationRequest, ToolResult,
+    ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
 };
 use chief_of_staff_vault_dispatch::{
     errors, VaultToolBridge, MAX_SECRET_NAME_BYTES, VAULT_REQUEST_DIRECT_TOOL_ID,
     VAULT_REQUEST_LEASE_TOOL_ID,
 };
 use chief_of_staff_vault_runtime::{
-    ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError,
+    ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeasePayload;
 
 const SECRET_NAME: &str = "weather-api-key";
 const SECRET_BYTES: &[u8] = b"pk_live_do_not_leak_me_0123456789";
+
+/// An owned snapshot of one `VaultDirectRequest`, as the adapter saw it:
+/// `(requesting_agent_id, session_id, secret_name, consumer_agent_id)`.
+///
+/// Owned rather than borrowed because the descriptor is recorded and outlives
+/// the call that produced it.
+type SeenRequest = (Option<String>, Option<String>, String, String);
 
 // ===========================================================================
 // Fixtures
@@ -42,6 +49,9 @@ const SECRET_BYTES: &[u8] = b"pk_live_do_not_leak_me_0123456789";
 /// and separately prove the same bytes never appear on the caller-facing side.
 struct RecordingDelivery {
     received: Mutex<Vec<(String, Vec<u8>)>>,
+    /// What the adapter was told about each request, so a test can assert the
+    /// handler forwards enough context for the adapter to actually decide.
+    descriptors: Mutex<Vec<SeenRequest>>,
     outcome: Mutex<Result<(), VaultDirectDeliveryError>>,
 }
 
@@ -52,6 +62,7 @@ impl Default for RecordingDelivery {
     fn default() -> Self {
         Self {
             received: Mutex::new(Vec::new()),
+            descriptors: Mutex::new(Vec::new()),
             outcome: Mutex::new(Ok(())),
         }
     }
@@ -71,20 +82,35 @@ impl RecordingDelivery {
     fn deliveries(&self) -> Vec<(String, Vec<u8>)> {
         self.received.lock().expect("received mutex").clone()
     }
+
+    fn descriptors(&self) -> Vec<SeenRequest> {
+        self.descriptors.lock().expect("descriptors mutex").clone()
+    }
 }
 
 impl VaultDirectDelivery for RecordingDelivery {
     fn deliver(
         &self,
-        consumer_agent_id: &str,
+        request: VaultDirectRequest<'_>,
         payload: LeasePayload,
     ) -> Result<(), VaultDirectDeliveryError> {
+        // Record the descriptor even when refusing: an adapter that refuses is
+        // exercising authority, and it must have been given the facts to refuse
+        // *on*. A test that only inspected accepted deliveries would not notice
+        // a handler that forwarded context on the happy path alone.
+        self.descriptors.lock().expect("descriptors mutex").push((
+            request.requesting_agent_id.map(str::to_string),
+            request.session_id.map(str::to_string),
+            request.secret_name.to_string(),
+            request.consumer_agent_id.to_string(),
+        ));
+
         let outcome = *self.outcome.lock().expect("outcome mutex");
         outcome?;
-        self.received
-            .lock()
-            .expect("received mutex")
-            .push((consumer_agent_id.to_string(), payload.as_bytes().to_vec()));
+        self.received.lock().expect("received mutex").push((
+            request.consumer_agent_id.to_string(),
+            payload.as_bytes().to_vec(),
+        ));
         Ok(())
     }
 }
@@ -151,15 +177,29 @@ fn direct_arguments(secret_name: &str, consumer: &str) -> JsonValue {
     ])
 }
 
-/// Every byte a caller could observe from one result, flattened to one string.
+/// Every byte a caller could observe from one call, flattened to one string.
 ///
-/// Used by the leak tests. Serialising the whole `ToolResult` with `Debug` is
-/// deliberately blunt: it sweeps up `output`, `artifact_refs`, `memory_refs`,
-/// every event payload, and every field of the error, so a future field added
-/// to any of those structures is covered without anyone remembering to extend
-/// this helper.
-fn observable_text(result: &ToolResult) -> String {
-    format!("{result:?}")
+/// This takes the whole `ToolExecutionTrace`, not the `ToolResult`, and the
+/// difference is the entire point. `ToolResult` has no `events` field —
+/// `InMemoryToolRuntime::invoke` returns `invoke_with_events(..).result` and
+/// throws the trace away. A leak test built on `ToolResult` therefore covers
+/// `output`, `artifact_refs`, `memory_refs`, and the error, and silently skips
+/// the event stream, which is the one channel the runtime does *not* validate
+/// and does publish even when it rejects the call.
+///
+/// Serialising with `Debug` is deliberately blunt: a field added to any of
+/// these structures is covered without anyone remembering to extend this.
+fn observable_text(trace: &ToolExecutionTrace) -> String {
+    format!("{trace:?}")
+}
+
+/// Assert that a completed call leaked nothing through any observable channel.
+fn assert_no_secret_escaped(trace: &ToolExecutionTrace) {
+    let secret = String::from_utf8(SECRET_BYTES.to_vec()).expect("ascii fixture");
+    assert!(
+        !observable_text(trace).contains(&secret),
+        "secret bytes reached an observable channel: {trace:?}"
+    );
 }
 
 // ===========================================================================
@@ -190,31 +230,26 @@ fn lease_returns_exactly_a_reference_and_an_expiry() {
 #[test]
 fn no_secret_byte_reaches_the_lease_caller() {
     let runtime = runtime_with(RecordingDelivery::accepting());
-    let result = runtime.invoke(&request(
+    let trace = runtime.invoke_with_events(&request(
         VAULT_REQUEST_LEASE_TOOL_ID,
         lease_arguments(SECRET_NAME, 60_000),
     ));
 
-    let observable = observable_text(&result);
-    let secret = String::from_utf8(SECRET_BYTES.to_vec()).expect("ascii fixture");
-    assert!(
-        !observable.contains(&secret),
-        "secret bytes must not appear anywhere in the lease result"
-    );
+    assert_no_secret_escaped(&trace);
 }
 
 #[test]
 fn direct_returns_null_and_the_bytes_go_only_to_the_adapter() {
     let delivery = RecordingDelivery::accepting();
     let runtime = runtime_with(delivery.clone());
-    let result = runtime.invoke(&request(
+    let trace = runtime.invoke_with_events(&request(
         VAULT_REQUEST_DIRECT_TOOL_ID,
         direct_arguments(SECRET_NAME, "agent:printer"),
     ));
 
-    assert!(result.ok, "{result:?}");
+    assert!(trace.result.ok, "{trace:?}");
     assert_eq!(
-        result.output,
+        trace.result.output,
         Some(JsonValue::Null),
         "request_direct acknowledges with null; it has no payload channel"
     );
@@ -225,12 +260,104 @@ fn direct_returns_null_and_the_bytes_go_only_to_the_adapter() {
         vec![("agent:printer".to_string(), SECRET_BYTES.to_vec())]
     );
 
-    let observable = observable_text(&result);
-    let secret = String::from_utf8(SECRET_BYTES.to_vec()).expect("ascii fixture");
-    assert!(
-        !observable.contains(&secret),
-        "secret bytes must not appear anywhere in the direct result"
+    assert_no_secret_escaped(&trace);
+}
+
+/// The adapter must be told enough to refuse for a reason.
+///
+/// Handed only `(consumer, payload)`, the strongest rule an adapter can express
+/// is a global destination allowlist — under which a caller cleared to send one
+/// secret to a consumer is equally cleared to send every secret to it, because
+/// nothing in the chain can tell the two requests apart. Forwarding the
+/// requester and the secret name does not authorize anything by itself; it is
+/// the precondition for an adapter that wants to.
+#[test]
+fn the_adapter_learns_who_asked_and_what_for() {
+    let delivery = RecordingDelivery::accepting();
+    let runtime = runtime_with(delivery.clone());
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_DIRECT_TOOL_ID,
+        direct_arguments(SECRET_NAME, "agent:printer"),
+    ));
+
+    assert!(trace.result.ok, "{trace:?}");
+    assert_eq!(
+        delivery.descriptors(),
+        vec![(
+            Some("agent:weather".to_string()),
+            Some("session-vault".to_string()),
+            SECRET_NAME.to_string(),
+            "agent:printer".to_string(),
+        )],
+        "the handler must forward the execution context, not discard it"
     );
+}
+
+#[test]
+fn a_refusing_adapter_still_received_the_facts_it_refused_on() {
+    let delivery = RecordingDelivery::refusing(VaultDirectDeliveryError::Rejected);
+    let runtime = runtime_with(delivery.clone());
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_DIRECT_TOOL_ID,
+        direct_arguments(SECRET_NAME, "agent:printer"),
+    ));
+
+    assert!(!trace.result.ok, "{trace:?}");
+    let descriptors = delivery.descriptors();
+    assert_eq!(descriptors.len(), 1);
+    assert_eq!(descriptors[0].2, SECRET_NAME);
+    assert_eq!(descriptors[0].3, "agent:printer");
+    assert!(
+        delivery.deliveries().is_empty(),
+        "a refused delivery must not hand over the payload"
+    );
+}
+
+/// The three channels the runtime does *not* validate.
+///
+/// `output` is covered by the declared schema, so it is the one field a future
+/// edit cannot quietly widen. `artifact_refs`, `memory_refs`, and `events` are
+/// copied through unchecked — and `events` are assembled before validation runs,
+/// so they are published even when the runtime rejects the call. For those
+/// three, handler discipline is genuinely all there is, which is exactly why
+/// they need a test rather than a comment.
+#[test]
+fn neither_handler_uses_the_unvalidated_side_channels() {
+    for (tool_id, arguments) in [
+        (
+            VAULT_REQUEST_LEASE_TOOL_ID,
+            lease_arguments(SECRET_NAME, 60_000),
+        ),
+        (
+            VAULT_REQUEST_DIRECT_TOOL_ID,
+            direct_arguments(SECRET_NAME, "agent:printer"),
+        ),
+    ] {
+        let runtime = runtime_with(RecordingDelivery::accepting());
+        let trace = runtime.invoke_with_events(&request(tool_id, arguments));
+
+        assert!(trace.result.ok, "{trace:?}");
+        assert!(
+            trace.result.artifact_refs.is_empty(),
+            "{tool_id} must not emit artifact refs: {trace:?}"
+        );
+        assert!(
+            trace.result.memory_refs.is_empty(),
+            "{tool_id} must not emit memory refs: {trace:?}"
+        );
+
+        // The runtime frames every call with its own started/terminal events.
+        // What must be empty is the handler's own contribution, so assert on
+        // the payloads rather than on the count.
+        for event in &trace.events {
+            let rendered = format!("{event:?}");
+            assert!(
+                !rendered.contains(SECRET_NAME),
+                "{tool_id} emitted an event naming the secret: {rendered}"
+            );
+        }
+        assert_no_secret_escaped(&trace);
+    }
 }
 
 /// The load-bearing test for V1.
@@ -267,7 +394,7 @@ fn the_direct_output_schema_stops_a_handler_that_tries_to_leak() {
         })
         .expect("the leaky handler registers; the runtime is what must stop it");
 
-    let result = runtime.invoke(&request(
+    let trace = runtime.invoke_with_events(&request(
         VAULT_REQUEST_DIRECT_TOOL_ID,
         direct_arguments(SECRET_NAME, "agent:printer"),
     ));
@@ -277,21 +404,22 @@ fn the_direct_output_schema_stops_a_handler_that_tries_to_leak() {
         1,
         "the leaky handler must actually run, or this test proves nothing"
     );
-    assert!(!result.ok, "{result:?}");
-    let error = result.error.as_ref().expect("a rejection carries an error");
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a rejection carries an error");
     assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
     assert!(
-        result.output.is_none(),
-        "a failed call must not carry the handler's output: {result:?}"
+        trace.result.output.is_none(),
+        "a failed call must not carry the handler's output: {trace:?}"
     );
 
     // And the rejection must not itself become the leak: the runtime reports
-    // *that* validation failed, not what the handler tried to return.
-    let secret = String::from_utf8(SECRET_BYTES.to_vec()).expect("ascii fixture");
-    assert!(
-        !observable_text(&result).contains(&secret),
-        "the rejection path must not echo the value it rejected"
-    );
+    // *that* validation failed, not what the handler tried to return. Checked
+    // over the whole trace, because events are published on this path too.
+    assert_no_secret_escaped(&trace);
 }
 
 // ===========================================================================
@@ -701,6 +829,29 @@ fn a_host_missing_the_declared_capability_cannot_register() {
                 if capability == "vault:direct"
         ),
         "expected the missing capability to be named, got {error:?}"
+    );
+}
+
+#[test]
+fn a_rejected_registration_leaves_nothing_registered() {
+    // Registering in a plain loop would leave request_lease wired up and
+    // request_direct refused, and the caller would only learn "something
+    // failed". A half-wired vault is worse than an unwired one, because the
+    // half that registered looks healthy.
+    let mut host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID, VAULT_REQUEST_DIRECT_TOOL_ID],
+        &["vault:lease"],
+    ));
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    bridge
+        .register_into_host(&mut host)
+        .expect_err("vault:direct is missing, so the pair must be refused");
+    assert_eq!(
+        host.summary().registered_tool_count,
+        0,
+        "a refused pair must leave the host untouched, not half-wired"
     );
 }
 

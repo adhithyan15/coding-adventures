@@ -57,12 +57,25 @@
 //! the file that has to obey them.
 //!
 //! **V1 — no secret return channel.** Nothing derived from secret bytes may
-//! reach [`ToolHandlerOutput`] or [`ToolCallError`]. Note that for
-//! `request_direct` this is not merely handler discipline: the declared
-//! `output_schema` is JSON `null`, and the tool runtime validates handler
-//! output against that schema *after* the handler returns. A future edit that
-//! tried to smuggle bytes into the output would be rejected by the runtime even
-//! if it got past review. See [`the structural test`](#tests).
+//! reach [`ToolHandlerOutput`] or [`ToolCallError`].
+//!
+//! For `request_direct` the `output` field specifically is more than handler
+//! discipline: the declared `output_schema` is JSON `null`, and the tool
+//! runtime validates handler output against that schema *after* the handler
+//! returns, so an edit that smuggled bytes into `output` would be rejected even
+//! if it got past review.
+//!
+//! Be precise about how far that reaches, because a guarantee believed to be
+//! wider than it is, is worse than none. The runtime validates `output` and
+//! **only** `output`. `artifact_refs` and `memory_refs` are copied to the
+//! result unchecked; `events` are assembled *before* validation runs and are
+//! published even on the rejection path; and the check is `if let Some(schema)`
+//! against the definition passed to `register_handler`, so it is a property of
+//! that definition rather than of the tool id — another crate registering
+//! `vault.request_direct` with `output_schema: None` would get no validation at
+//! all. Both handlers here therefore return empty `artifact_refs`,
+//! `memory_refs`, and `events`, and there are tests pinning that, because for
+//! those three fields handler discipline is genuinely all there is.
 //!
 //! **V2 — bounded, secret-free errors.** Every error this crate produces
 //! carries one of a closed set of `&'static str` messages, listed in
@@ -92,15 +105,23 @@
 //!
 //! use chief_of_staff_vault_dispatch::VaultToolBridge;
 //! use chief_of_staff_vault_runtime::{
-//!     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError,
+//!     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
 //! };
 //! use coding_adventures_vault_leases::LeasePayload;
 //!
 //! // A trusted adapter that accepts deliveries and never returns bytes.
+//! // A real one would decide using `request` — which secret, asked for by
+//! // whom, bound for where — rather than accepting everything.
 //! struct Sink;
 //! impl VaultDirectDelivery for Sink {
-//!     fn deliver(&self, _to: &str, _payload: LeasePayload)
-//!         -> Result<(), VaultDirectDeliveryError> { Ok(()) }
+//!     fn deliver(&self, request: VaultDirectRequest<'_>, _payload: LeasePayload)
+//!         -> Result<(), VaultDirectDeliveryError> {
+//!         if request.consumer_agent_id == "agent:printer" {
+//!             Ok(())
+//!         } else {
+//!             Err(VaultDirectDeliveryError::Rejected)
+//!         }
+//!     }
 //! }
 //!
 //! let vault = Arc::new(ChiefVaultRuntime::new());
@@ -122,7 +143,8 @@ use chief_of_staff_tool_api::{
     ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
 };
 use chief_of_staff_vault_runtime::{
-    ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultRuntimeError,
+    ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
+    VaultRuntimeError,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeaseError;
@@ -264,6 +286,18 @@ impl VaultToolBridge {
         let definitions = Self::definitions().map_err(|_| {
             HostRuntimeError::ToolNotAllowed(VAULT_REQUEST_LEASE_TOOL_ID.to_string())
         })?;
+
+        // Pre-flight every definition before registering any of them.
+        //
+        // Registering in a bare loop would leave a host that fails the second
+        // check holding the first tool, and the caller only learns "something
+        // failed". A half-wired vault is worse than an unwired one: the tools
+        // that did register look healthy, so the failure surfaces later and
+        // somewhere else. Either both go in or neither does.
+        for definition in &definitions {
+            host.check_registration(definition)?;
+        }
+
         for definition in definitions {
             match definition.tool_id.as_str() {
                 VAULT_REQUEST_LEASE_TOOL_ID => {
@@ -323,18 +357,32 @@ impl VaultToolBridge {
     /// runtime into the trusted delivery adapter and is never observed here:
     /// `ChiefVaultRuntime::request_direct` takes the adapter and returns unit,
     /// so this handler has no binding to the bytes at any point.
+    ///
+    /// The execution context is forwarded, not discarded. An adapter told only
+    /// the destination can express nothing stronger than a global allowlist,
+    /// under which a caller cleared to send one secret to a consumer is equally
+    /// cleared to send every secret to it. Passing the requester and the secret
+    /// name is what makes a real decision possible; see [`VaultDirectRequest`].
     pub fn direct_handler(
         &self,
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
         let vault = Arc::clone(&self.vault);
         let delivery = Arc::clone(&self.delivery);
-        move |arguments, _context| {
+        move |arguments, context| {
             let secret_name = required_secret_name(&arguments)?;
             let consumer_agent_id = required_consumer_agent_id(&arguments)?;
 
             vault
-                .request_direct(&secret_name, &consumer_agent_id, delivery.as_ref())
+                .request_direct(
+                    VaultDirectRequest {
+                        requesting_agent_id: context.agent_id.as_deref(),
+                        session_id: context.session_id.as_deref(),
+                        secret_name: &secret_name,
+                        consumer_agent_id: &consumer_agent_id,
+                    },
+                    delivery.as_ref(),
+                )
                 .map_err(direct_error)?;
 
             Ok(ToolHandlerOutput::new(JsonValue::Null))
@@ -361,9 +409,16 @@ fn object_fields(value: &JsonValue) -> Result<&[(String, JsonValue)], ToolCallEr
 
 /// First occurrence of `field`, or `None`.
 ///
-/// `JsonValue::Object` preserves duplicate keys, and taking the *first* is the
-/// choice that matches what the schema validator saw. Taking the last would let
-/// a caller show one value to validation and a different one to the handler.
+/// `JsonValue::Object` preserves duplicate keys, so `{"secret_name": "a",
+/// "secret_name": "b"}` is representable and something has to choose.
+///
+/// The choice is safe for a stronger reason than "it matches the validator":
+/// `JsonSchema::validate_value_at` iterates *every* field and checks each
+/// duplicate against the property schema, so all occurrences must type-check
+/// and neither first nor last could smuggle an unvalidated value past it. First
+/// is taken because it is the stable, obvious reading — and because if anyone
+/// ever optimises the validator to stop at the first match, this side already
+/// agrees with it.
 fn field<'a>(value: &'a JsonValue, name: &str) -> Result<Option<&'a JsonValue>, ToolCallError> {
     Ok(object_fields(value)?
         .iter()
