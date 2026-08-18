@@ -167,6 +167,26 @@ type ActivationPlanEntry struct {
 	grantHash      [32]byte
 }
 
+// requireUUIDv7 checks that a channel identifier is a real UUID v7 -- version
+// nibble 7 in the high half of byte 6, and variant bits 0b10 in the top two
+// bits of byte 8 -- not merely 16 octets.
+//
+// The Rust reference, Python, Ruby, and Elixir all validate this; Go checked
+// only the length. That divergence meant a plan record with a malformed channel
+// identifier decoded here but was corrupt_record everywhere else, so two
+// conforming implementations disagreed about whether the same bytes were valid.
+// The six-language conformance gate (#11788) would have surfaced it as a CI
+// failure rather than a decision.
+func requireUUIDv7(channelID []byte) error {
+	if len(channelID) != 16 {
+		return wireFail()
+	}
+	if channelID[6]>>4 != 7 || channelID[8]&0xc0 != 0x80 {
+		return wireFail()
+	}
+	return nil
+}
+
 // NewActivationPlanEntry builds one commitment pair from 32-octet hashes.
 func NewActivationPlanEntry(receiverIDHash, grantHash []byte) (ActivationPlanEntry, error) {
 	if len(receiverIDHash) != 32 || len(grantHash) != 32 {
@@ -216,8 +236,8 @@ type ActivationPlan struct {
 // treat a collision as equal authorization, it treats it as invalid input.
 // Rejecting rather than merging is the fail-closed choice.
 func NewActivationPlan(channelID []byte, baseEpoch, newEpoch uint64, receivers []ActivationPlanEntry) (ActivationPlan, error) {
-	if len(channelID) != 16 {
-		return ActivationPlan{}, wireFail()
+	if err := requireUUIDv7(channelID); err != nil {
+		return ActivationPlan{}, err
 	}
 	if baseEpoch == MaxU64 || newEpoch != baseEpoch+1 {
 		return ActivationPlan{}, wireFail()
