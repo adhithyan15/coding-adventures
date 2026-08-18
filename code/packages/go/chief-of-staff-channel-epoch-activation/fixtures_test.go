@@ -430,6 +430,42 @@ func TestRejectsNonCanonicalPlans(t *testing.T) {
 		}
 	})
 
+	// A 16-octet channel id that is not a real UUID v7 is rejected, matching
+	// Rust, Python, Ruby, and Elixir. Accepting it would mean two conforming
+	// implementations disagreed about whether the same plan record is valid.
+	t.Run("channel-id-is-not-uuid-v7", func(t *testing.T) {
+		for _, testCase := range []struct {
+			name  string
+			index int
+			value byte
+		}{
+			{"wrong-version-nibble", 6, 0x4f},
+			{"wrong-variant-bits", 8, 0x1f},
+		} {
+			t.Run(testCase.name, func(t *testing.T) {
+				bad := append([]byte(nil), channelID...)
+				bad[testCase.index] = testCase.value
+				entry, err := NewActivationPlanEntry(repeatByte(0x01, 32), repeatByte(0x02, 32))
+				if err != nil {
+					t.Fatal(err)
+				}
+				if _, err := NewActivationPlan(bad, 0, 1, []ActivationPlanEntry{entry}); !IsCode(err, ErrCorruptRecord) {
+					t.Fatalf("expected corrupt_record, got %v", err)
+				}
+			})
+		}
+
+		// The canonical fixture identifier must still be accepted, so the check
+		// cannot be satisfied by rejecting everything.
+		entry, err := NewActivationPlanEntry(repeatByte(0x01, 32), repeatByte(0x02, 32))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := NewActivationPlan(channelID, 0, 1, []ActivationPlanEntry{entry}); err != nil {
+			t.Fatalf("the canonical channel id must remain valid: %v", err)
+		}
+	})
+
 	t.Run("empty-receiver-set", func(t *testing.T) {
 		if _, err := NewActivationPlan(channelID, 0, 1, nil); !IsCode(err, ErrCorruptRecord) {
 			t.Fatalf("expected corrupt_record, got %v", err)

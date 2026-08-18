@@ -230,6 +230,38 @@ round to discover: `compile_to_bytes` tracks an explicit
 against the halt sentinel's value (which would be unsound here too —
 `TRAP #15`'s low byte, `0x4F`, is also reachable as the low byte of a
 `MOVE.L #imm, D0` immediate).
+**Zilog Z80 (seventh lane)** — `z80-encoder` + `z80-backend`, minimal
+viable (`const_*`/`ret_*` only, mirroring `intel8080-backend`'s
+shape). The Z80 (1976) is a source/binary-compatible superset of the
+Intel 8080 (third lane) — every valid 8080 opcode is a valid Z80
+opcode with identical semantics and identical byte encoding — so this
+lane's `LD A, n` / `HALT` return convention is the exact `MVI A, n` /
+`HLT` encoding the 8080 lane already uses (`HALT` is byte-identical:
+`0x76` on both chips, kept as the halt sentinel from `MOV M,M`'s bit
+pattern). Byte-for-byte parity for the canonical `LD A, 42; HALT`
+sequence (`[0x3E, 0x2A, 0x76]`) is verified both as a hand-derived
+byte array and by actually executing the emitted bytes in the new
+`z80-simulator` and asserting `A == 42` — plus a direct
+cross-architecture assertion that this is the SAME byte sequence
+`intel8080-backend` produces for the identical trivial program (pinned
+against a literal constant rather than a live crate dependency, since
+the Intel 8080 lane's crates were not yet present in this worktree's
+snapshot of the workspace — see `code/specs/z80-backend.md` for the
+detail). Unlike ARM1 (whose 2270-line simulator already existed
+in-tree before that lane started), no Rust Z80 simulator existed
+before this lane, so it also ports a substantial subset of the
+~1800-line Python `z80-simulator` reference: the full base
+8080-compatible instruction set, the alternate register bank
+(`EX AF,AF'`/`EXX`), `CB`-prefixed bit manipulation and extended
+rotate/shift, `DJNZ`/`JR`-family relative jumps, and IX/IY basics
+(`LD IX/IY,nn`, `INC IX/IY`). The `ED`-prefix opcode space (16-bit
+`ADC`/`SBC HL,rp`, the block-transfer/compare/I-O instruction
+families, `LD A,I`/`LD A,R`, `NEG`, interrupt-mode selection) and full
+IX/IY displacement addressing are deliberately NOT ported — every
+`ED`-prefixed opcode decodes to `"undefined"` and fails closed (halts)
+rather than executing garbage; see `code/specs/z80-encoder.md` /
+`z80-backend.md` and the `z80-simulator` README for the full scope
+writeup.
 
 Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
 in parallel PRs and are not enumerated here to avoid merge
