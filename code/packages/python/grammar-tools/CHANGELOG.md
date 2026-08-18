@@ -5,7 +5,24 @@ All notable changes to the grammar-tools package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - F10 declarative lexer mode transitions
+## [0.4.1] - 2026-08-17
+
+### Fixed
+- `compile_token_grammar` joined `groups` dict entries with `",\n".join(...)`
+  even though `_compile_pattern_group` already self-terminates each entry
+  with its own trailing `,` — producing a doubled comma (`,,`) and a
+  `SyntaxError` in the generated Python file for any grammar with 2 or more
+  pattern groups. Only ever exercised in tests with a single group, so this
+  slipped through until `xml-lexer`'s migration hit it (`xml.tokens` has 5
+  groups: `tag`, `comment`, `cdata`, `pi`, `pi_body`). Fixed the join, added
+  a regression test with 2 groups asserting no doubled comma and a valid
+  round-trip.
+- Corrected `pyproject.toml`'s `version` field, which had drifted to
+  `0.1.0` while this CHANGELOG had already reached `0.3.0` (and had an
+  unreleased F10 feature on top, folded into this release as `0.4.0`
+  below).
+
+## [0.4.0] - F10 declarative lexer mode transitions
 
 ### Added
 - `ModeTransition` and `TransitionAction` dataclasses, plus `start_mode` and

@@ -2,6 +2,12 @@
 
 All notable changes to the Python Lexer package will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `create_python_lexer`/`tokenize_python` now import pre-compiled `_grammar_<version>` modules instead of reading and parsing each `pythonX.Y.tokens` file from `code/grammars/python/` on every cache miss. The old code walked out of the installed package's own directory to a monorepo-relative path that a published PyPI package does not ship, so `pip install` + first use would raise `FileNotFoundError`.
+- The pre-existing checked-in `src/python_lexer/_grammar.py` was dead code compiled from the small, generic (unversioned) `code/grammars/python.tokens` file and was never imported or wired into the tokenizer — it has been removed and replaced with six version-specific `_grammar_2_7.py` … `_grammar_3_12.py` modules compiled fresh from the actual versioned `pythonX.Y.tokens` files that `tokenize_python()` uses.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

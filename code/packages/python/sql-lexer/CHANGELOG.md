@@ -2,6 +2,20 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.27.1] - 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `create_sql_lexer` now imports a
+  pre-compiled `_grammar` module instead of reading and parsing the
+  `.tokens` file from `code/grammars/` on every call. The old code walked
+  out of the installed package's own directory to a monorepo-relative path
+  that a published PyPI package does not ship, so `pip install` + first use
+  would raise `FileNotFoundError`. The previous `_grammar.py` in this
+  package was a stray, unwired artifact (referenced only by past CHANGELOG
+  entries, never imported by `tokenizer.py`); it has been regenerated fresh
+  from `code/grammars/sql/sql.tokens` and is now actually wired in.
+
 ## [0.27.0] - 2026-05-23
 
 ### Added

@@ -1,4 +1,5 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
+# ruff: noqa: E501, F401
 # Source: excel.tokens
 # Regenerate with: grammar-tools compile-tokens <source.tokens>
 #
@@ -6,7 +7,7 @@
 # Downstream packages import TOKEN_GRAMMAR directly instead of
 # reading and parsing the .tokens file at runtime.
 
-from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar
+from grammar_tools.token_grammar import ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction
 
 # fmt: off  # noqa: E501 — generated code may have long lines
 
@@ -332,5 +333,7 @@ TOKEN_GRAMMAR = TokenGrammar(
     reserved_keywords=[],
     error_definitions=[],
     groups={},
+    start_mode=None,
+    transitions=[],
     layout_keywords=[],
 )

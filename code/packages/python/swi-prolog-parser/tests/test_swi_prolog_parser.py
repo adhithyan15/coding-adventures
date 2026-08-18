@@ -6,7 +6,6 @@ import pytest
 from logic_engine import atom, goal_as_term, logic_list, relation, solve_all, term
 
 from swi_prolog_parser import (
-    SWI_PROLOG_GRAMMAR_PATH,
     PrologParseError,
     __version__,
     create_swi_prolog_parser,
@@ -16,6 +15,7 @@ from swi_prolog_parser import (
     parse_swi_source,
     parse_swi_term,
 )
+from swi_prolog_parser._grammar import PARSER_GRAMMAR
 
 
 class TestVersion:
@@ -28,9 +28,10 @@ class TestVersion:
 class TestSwiParser:
     """The SWI parser should own its grammar and execute through lowering."""
 
-    def test_uses_swi_parser_grammar_path(self) -> None:
-        assert SWI_PROLOG_GRAMMAR_PATH.name == "swi.grammar"
-        assert SWI_PROLOG_GRAMMAR_PATH.parent.name == "prolog"
+    def test_uses_precompiled_swi_parser_grammar(self) -> None:
+        parser = create_swi_prolog_parser("parent(homer, bart).\n")
+
+        assert parser._grammar is PARSER_GRAMMAR
 
     def test_create_swi_prolog_parser(self) -> None:
         ast = create_swi_prolog_parser("parent(homer, bart).\n").parse()

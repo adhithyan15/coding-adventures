@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-xml-lexer"
-version = "0.1.1"
+version = "0.1.2"
 description = "Tokenizes XML using the grammar-driven lexer with pattern group callbacks"
 requires-python = ">=3.12"
 license = "MIT"

@@ -7,7 +7,6 @@ from logic_engine import atom, goal_as_term, logic_list, relation, solve_all, te
 from prolog_core import iso_operator_table
 
 from iso_prolog_parser import (
-    ISO_PROLOG_GRAMMAR_PATH,
     PrologParseError,
     __version__,
     create_iso_prolog_parser,
@@ -16,6 +15,7 @@ from iso_prolog_parser import (
     parse_iso_query,
     parse_iso_source,
 )
+from iso_prolog_parser._grammar import PARSER_GRAMMAR
 
 
 class TestVersion:
@@ -28,9 +28,10 @@ class TestVersion:
 class TestIsoParser:
     """The ISO/Core parser should own its grammar and execute through lowering."""
 
-    def test_uses_iso_parser_grammar_path(self) -> None:
-        assert ISO_PROLOG_GRAMMAR_PATH.name == "iso.grammar"
-        assert ISO_PROLOG_GRAMMAR_PATH.parent.name == "prolog"
+    def test_uses_precompiled_iso_parser_grammar(self) -> None:
+        parser = create_iso_prolog_parser("parent(homer, bart).\n")
+
+        assert parser._grammar is PARSER_GRAMMAR
 
     def test_create_iso_prolog_parser(self) -> None:
         ast = create_iso_prolog_parser("parent(homer, bart).\n").parse()

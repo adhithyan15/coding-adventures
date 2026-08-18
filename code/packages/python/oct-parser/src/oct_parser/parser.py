@@ -1,8 +1,8 @@
 """Oct Parser — parses Oct source text into ASTs using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarParser``. It loads
-``oct.grammar`` from the ``code/grammars/`` directory, tokenizes input using
-the Oct lexer, and produces a generic ``ASTNode`` tree.
+This module is a thin wrapper around the generic ``GrammarParser``. It uses
+a pre-compiled ``PARSER_GRAMMAR`` (see ``oct_parser._grammar``), tokenizes
+input using the Oct lexer, and produces a generic ``ASTNode`` tree.
 
 What Is Oct?
 ------------
@@ -102,22 +102,24 @@ that a value is returned when the function declares a return type.
 function bodies. The type-checker rejects this — static declarations are
 only valid at file scope. The parser is deliberately permissive; the type-
 checker is where scope rules belong.
+
+The Oct parser grammar is compiled into ``_grammar.py`` by the
+grammar-tools compiler from ``code/grammars/oct/oct.grammar``. Importing
+the pre-built ``PARSER_GRAMMAR`` constant means no file I/O at startup and
+no runtime grammar parsing overhead.
+
+To regenerate after editing ``code/grammars/oct/oct.grammar``::
+
+    grammar-tools compile-grammar code/grammars/oct/oct.grammar \\
+        > code/packages/python/oct-parser/src/oct_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from oct_lexer import tokenize_oct
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-OCT_GRAMMAR_PATH = GRAMMAR_DIR / "oct" / "oct.grammar"
+from oct_parser._grammar import PARSER_GRAMMAR
 
 
 def create_oct_parser(source: str) -> GrammarParser:
@@ -126,7 +128,7 @@ def create_oct_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the Oct lexer.
-    2. Reads and parses the ``oct.grammar`` file.
+    2. Uses the pre-compiled ``PARSER_GRAMMAR`` (from ``oct_parser._grammar``).
     3. Creates a ``GrammarParser`` with those tokens and grammar rules.
 
     The parser handles all Oct grammar features, including:
@@ -155,7 +157,6 @@ def create_oct_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the root ``ASTNode``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains characters not valid in Oct.
         GrammarParseError: If the source has syntax errors per the Oct grammar.
 
@@ -165,8 +166,7 @@ def create_oct_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_oct(source)
-    grammar = parse_parser_grammar(OCT_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_oct(source: str) -> ASTNode:
@@ -216,7 +216,6 @@ def parse_oct(source: str) -> ASTNode:
         ``rule_name`` is ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains characters not valid in Oct.
         GrammarParseError: If the source has syntax errors per the Oct grammar.
 

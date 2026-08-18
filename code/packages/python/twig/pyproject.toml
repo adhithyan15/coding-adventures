@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-twig"
-version = "0.1.0"
+version = "0.5.1"
 description = "Twig: a tiny purely-functional Lisp precursor that runs on vm-core"
 requires-python = ">=3.12"
 license = "MIT"

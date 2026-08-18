@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-iso-prolog-lexer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tokenizes ISO/Core Prolog source code using a dedicated grammar"
 requires-python = ">=3.12"
 license = "MIT"
@@ -45,6 +45,7 @@ testpaths = ["tests"]
 addopts = "--cov=iso_prolog_lexer --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 source = ["src/iso_prolog_lexer"]
 
 [tool.coverage.report]

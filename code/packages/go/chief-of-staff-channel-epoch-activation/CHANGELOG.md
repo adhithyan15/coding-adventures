@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Validate that a plan's `channel_id` is a real UUID v7 — version nibble 7 in
+  byte 6, variant bits `0b10` in byte 8 — not merely 16 octets. The Rust
+  reference, Python, Ruby, and Elixir all check this; Go checked only the
+  length, so a plan record with a malformed channel identifier decoded here but
+  was `corrupt_record` everywhere else. Two conforming implementations
+  disagreed about whether the same bytes were valid, which the six-language
+  conformance gate (#11788) would have surfaced as a CI failure rather than a
+  decision.
 - Add the Go D18T durable epoch-activation adapter, consuming the canonical
   Rust-authored manifest at `code/fixtures/chief-of-staff-channel-epoch-activation/v1/`
   directly. Go reproduces the canonical D18T plan bytes and every D18G grant

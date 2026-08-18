@@ -1,6 +1,6 @@
 [project]
 name = "coding-adventures-grammar-tools-program"
-version = "1.0.0"
+version = "2.0.1"
 description = "CLI program for validating .tokens and .grammar files"
 requires-python = ">=3.12"
 license = "MIT"

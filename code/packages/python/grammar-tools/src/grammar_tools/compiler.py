@@ -205,7 +205,7 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
         for name, group in grammar.groups.items():
             group_src = _compile_pattern_group(group, i1)
             group_entries.append(f"{_I * 2}{_repr_str(name)}: {group_src.lstrip()}")
-        groups_src = "{\n" + ",\n".join(group_entries) + f"\n{_I}}}"
+        groups_src = "{\n" + "\n".join(group_entries) + f"\n{_I}}}"
     else:
         groups_src = "{}"
 

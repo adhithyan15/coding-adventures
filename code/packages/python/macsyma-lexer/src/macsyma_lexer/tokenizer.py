@@ -1,63 +1,31 @@
 """MACSYMA Lexer — thin wrapper around the grammar-driven lexer.
 
-This module reads ``macsyma.tokens`` from the repo's ``code/grammars/``
-directory and hands it to the generic ``GrammarLexer``. Adding a new
-CAS dialect (Mathematica, Maple, etc.) means writing a new ``.tokens``
-file — not a line of lexer code.
-
-File location
--------------
-
-The grammar file lives at::
-
-    code/grammars/macsyma/macsyma.tokens
-
-relative to the repository root. This module finds it by walking up
-from its own path::
-
-    tokenizer.py
-    └── macsyma_lexer/   (parent)
-        └── src/         (parent)
-            └── macsyma-lexer/  (parent)
-                └── python/     (parent)
-                    └── packages/ (parent)
-                        └── code/ (parent)
-                            └── grammars/
-                                └── macsyma/
-                                    └── macsyma.tokens
+The MACSYMA token grammar (``code/grammars/macsyma/macsyma.tokens``) is
+pre-compiled into ``macsyma_lexer._grammar`` — see that module's header
+for regeneration instructions. Adding a new CAS dialect (Mathematica,
+Maple, etc.) means writing a new ``.tokens`` file and compiling it — not
+a line of lexer code.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# Navigate up from src/macsyma_lexer/tokenizer.py to reach code/grammars/.
-# Five .parent calls get us from the file to code/packages/python/; one
-# more parent reaches code/packages/; one more reaches code/.
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-MACSYMA_TOKENS_PATH = GRAMMAR_DIR / "macsyma" / "macsyma.tokens"
+from macsyma_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_macsyma_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for MACSYMA syntax.
 
-    Reads ``macsyma.tokens``, parses it into a ``TokenGrammar``, and
-    constructs a ``GrammarLexer`` ready to tokenize the given source.
+    Uses the pre-compiled ``TOKEN_GRAMMAR`` constant — no file I/O.
 
     Args:
         source: The MACSYMA source text to tokenize.
 
     Returns:
         A ``GrammarLexer`` instance. Call ``.tokenize()`` to get tokens.
-
-    Raises:
-        FileNotFoundError: If the ``macsyma.tokens`` file cannot be found.
     """
-    grammar = parse_token_grammar(MACSYMA_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_macsyma(source: str) -> list[Token]:

@@ -1,0 +1,12 @@
+[package]
+name = "z80-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Zilog Z80 instruction encoder.  Covers the subset of Z80 opcodes the LANG VM z80-backend uses to lower CIR to Z80 machine code -- byte-identical to intel8080-encoder for the shared 8080-legacy LD A,n / HALT encodings.  No IR knowledge.  Seventh lane of the 9-architecture expansion."
+
+[lib]
+name = "z80_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+z80-simulator = { path = "../z80-simulator" }

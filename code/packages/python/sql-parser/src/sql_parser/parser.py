@@ -1,7 +1,7 @@
 """SQL Parser — parses SQL text into ASTs using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarParser``. It loads
-the ``sql.grammar`` file from the ``code/grammars/`` directory, tokenizes
+This module is a thin wrapper around the generic ``GrammarParser``. It uses
+a pre-compiled ``PARSER_GRAMMAR`` (see ``sql_parser._grammar``), tokenizes
 the input using the SQL lexer, and produces a generic ``ASTNode`` tree.
 
 SQL (ANSI subset) is richer than JSON — it has dozens of statement forms,
@@ -47,71 +47,23 @@ Two convenience functions:
 - ``parse_sql(source)`` — the all-in-one function. Pass in SQL text, get
   back an AST.
 
-Locating the Grammar File
---------------------------
+The SQL parser grammar is compiled into ``_grammar.py`` by the grammar-tools
+compiler from ``code/grammars/sql/sql.grammar``. Importing the pre-built
+``PARSER_GRAMMAR`` constant means no file I/O at startup and no runtime
+grammar parsing overhead.
 
-The ``sql.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
+To regenerate after editing ``code/grammars/sql/sql.grammar``::
 
-    parser.py
-    └── sql_parser/       (parent)
-        └── src/           (parent)
-            └── sql-parser/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── sql.grammar
-
-The module-level variable ``_sql_grammar_path`` can be overridden in tests
-to point at an alternative path (or a non-existent path to exercise the
-error branch). When it is the empty string ``""``, the auto-discovered path
-is used.
+    grammar-tools compile-grammar code/grammars/sql/sql.grammar \\
+        > code/packages/python/sql-parser/src/sql_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from sql_lexer import tokenize_sql
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path is:
-#   src/sql_parser/parser.py -> src/sql_parser -> src -> sql-parser
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-SQL_GRAMMAR_PATH = GRAMMAR_DIR / "sql" / "sql.grammar"
-
-# Module-level override for testing. When set to a non-empty string, that
-# path is used instead of the auto-discovered SQL_GRAMMAR_PATH above.
-# Tests can monkeypatch this to trigger error paths.
-_sql_grammar_path: str = ""
-
-
-def _resolve_grammar_path() -> Path:
-    """Return the effective grammar file path.
-
-    If ``_sql_grammar_path`` has been set to a non-empty string, use it.
-    Otherwise, fall back to the auto-discovered ``SQL_GRAMMAR_PATH``.
-
-    This indirection exists so tests can exercise the error path by pointing
-    ``_sql_grammar_path`` at a non-existent file::
-
-        import sql_parser.parser as p
-        p._sql_grammar_path = "/no/such/file.grammar"
-        # Now create_sql_parser() will raise FileNotFoundError
-    """
-    if _sql_grammar_path:
-        return Path(_sql_grammar_path)
-    return SQL_GRAMMAR_PATH
+from sql_parser._grammar import PARSER_GRAMMAR
 
 
 def create_sql_parser(source: str) -> GrammarParser:
@@ -120,7 +72,7 @@ def create_sql_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the SQL lexer.
-    2. Reads and parses the ``sql.grammar`` file.
+    2. Uses the pre-compiled ``PARSER_GRAMMAR`` (from ``sql_parser._grammar``).
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     The SQL lexer normalizes all keywords to uppercase, so the grammar's
@@ -136,7 +88,6 @@ def create_sql_parser(source: str) -> GrammarParser:
         ``program`` rule (the first rule in the grammar).
 
     Raises:
-        FileNotFoundError: If the grammar file cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -144,10 +95,8 @@ def create_sql_parser(source: str) -> GrammarParser:
         parser = create_sql_parser("SELECT id FROM users")
         ast = parser.parse("program")
     """
-    grammar_path = _resolve_grammar_path()
     tokens = tokenize_sql(source)
-    grammar = parse_parser_grammar(grammar_path.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_sql(source: str) -> ASTNode:
@@ -183,7 +132,6 @@ def parse_sql(source: str) -> ASTNode:
         ``rule_name`` is ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar file cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors according
             to the SQL grammar.

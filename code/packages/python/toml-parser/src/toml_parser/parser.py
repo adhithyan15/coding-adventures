@@ -61,37 +61,30 @@ Two convenience functions:
 - ``parse_toml_ast(source)`` — the all-in-one function. Pass in TOML text,
   get back an AST.
 
-Locating the Grammar File
---------------------------
+Grammar Source
+--------------
 
-The ``toml.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
-
-    parser.py
-    └── toml_parser/       (parent)
-        └── src/           (parent)
-            └── toml-parser/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── toml.grammar
+The ``toml.grammar`` file lives in ``code/grammars/toml/`` at the
+repository root, but this package does not read it at runtime. It is
+pre-compiled into ``toml_parser._grammar`` (see that module's header for
+regeneration instructions), so parsing TOML requires no file I/O.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from toml_lexer import tokenize_toml
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
+from toml_parser._grammar import PARSER_GRAMMAR
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TOML_GRAMMAR_PATH = GRAMMAR_DIR / "toml" / "toml.grammar"
+# ---------------------------------------------------------------------------
+# Grammar Source
+# ---------------------------------------------------------------------------
+#
+# The TOML parser grammar (``code/grammars/toml/toml.grammar``) is
+# pre-compiled into ``toml_parser._grammar`` — see that module's header for
+# regeneration instructions.
+# ---------------------------------------------------------------------------
 
 
 def create_toml_parser(source: str) -> GrammarParser:
@@ -100,8 +93,8 @@ def create_toml_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the TOML lexer.
-    2. Reads and parses the ``toml.grammar`` file.
-    3. Creates a ``GrammarParser`` with those tokens and grammar.
+    2. Creates a ``GrammarParser`` with those tokens and the pre-compiled
+       TOML parser grammar.
 
     Args:
         source: The TOML text to parse.
@@ -111,7 +104,6 @@ def create_toml_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -120,8 +112,7 @@ def create_toml_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_toml(source)
-    grammar = parse_parser_grammar(TOML_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_toml_ast(source: str) -> ASTNode:
@@ -148,7 +139,6 @@ def parse_toml_ast(source: str) -> ASTNode:
         An ``ASTNode`` representing the parse tree.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors.
 

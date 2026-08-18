@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-lattice-lexer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Lattice tokenizer — tokenizes Lattice CSS superset source text"
 requires-python = ">=3.12"
 license = "MIT"

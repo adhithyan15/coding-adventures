@@ -40,37 +40,29 @@ Two convenience functions:
 - ``parse_json(source)`` — the all-in-one function. Pass in JSON text, get
   back an AST.
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-The ``json.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
+The ``json.grammar`` file is compiled ahead of time by the
+``grammar-tools`` compiler into ``json_parser/_grammar.py``, which embeds
+the ``ParserGrammar`` as native Python data structures. This module
+imports ``PARSER_GRAMMAR`` from it directly — no file I/O or grammar
+parsing happens at runtime, and the package works correctly when
+installed as a site-package (it does not depend on the
+``code/grammars/`` directory existing on disk).
 
-    parser.py
-    └── json_parser/       (parent)
-        └── src/           (parent)
-            └── json-parser/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── json.grammar
+To regenerate after editing ``code/grammars/json/json.grammar``:
+
+    grammar-tools compile-grammar code/grammars/json/json.grammar \\
+        -o code/packages/python/json-parser/src/json_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from json_lexer import tokenize_json
 from lang_parser import ASTNode, GrammarParser
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-JSON_GRAMMAR_PATH = GRAMMAR_DIR / "json" / "json.grammar"
+from json_parser._grammar import PARSER_GRAMMAR
 
 
 def create_json_parser(source: str) -> GrammarParser:
@@ -79,7 +71,7 @@ def create_json_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the JSON lexer.
-    2. Reads and parses the ``json.grammar`` file.
+    2. Looks up the pre-compiled ``PARSER_GRAMMAR``.
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Args:
@@ -90,7 +82,6 @@ def create_json_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -99,8 +90,7 @@ def create_json_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_json(source)
-    grammar = parse_parser_grammar(JSON_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_json(source: str) -> ASTNode:
@@ -128,7 +118,6 @@ def parse_json(source: str) -> ASTNode:
         ``rule_name`` is ``"value"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors according
             to the JSON grammar.

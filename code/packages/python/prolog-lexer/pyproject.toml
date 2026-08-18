@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-prolog-lexer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tokenizes Prolog source code using the grammar-driven lexer"
 requires-python = ">=3.12"
 license = "MIT"

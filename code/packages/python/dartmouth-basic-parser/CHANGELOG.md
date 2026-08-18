@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `create_dartmouth_basic_parser` now
+  imports a pre-compiled `_grammar` module instead of reading and parsing
+  the `.grammar` file from `code/grammars/` on every call. The old code
+  walked out of the installed package's own directory to a
+  monorepo-relative path that a published PyPI package does not ship, so
+  `pip install` + first use would raise `FileNotFoundError`.
+- Replaced `TestGrammarPath` (which asserted the on-disk `.grammar` file
+  existed) with `TestGrammarConstant` in `tests/test_dartmouth_basic_parser.py`,
+  since there is no longer a disk path to check.
+
 ## [0.1.0] — 2026-04-10
 
 ### Added

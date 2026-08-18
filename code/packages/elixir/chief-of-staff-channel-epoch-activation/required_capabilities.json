@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "elixir/chief-of-staff-channel-epoch-activation",
+  "capabilities": [],
+  "justification": "Pure D18T epoch-activation codecs and transitions over caller-supplied bytes, an injected public storage backend, and an injected secret-custody boundary. Opens no files and no sockets; the canonical fixture manifest is read only by tests."
+}
