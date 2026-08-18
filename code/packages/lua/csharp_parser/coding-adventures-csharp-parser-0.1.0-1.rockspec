@@ -41,5 +41,17 @@ build = {
     modules = {
         ["coding_adventures.csharp_parser"] =
             "src/coding_adventures/csharp_parser/init.lua",
+        ["coding_adventures.csharp_parser._grammar_1_0"] = "src/coding_adventures/csharp_parser/_grammar_1_0.lua",
+        ["coding_adventures.csharp_parser._grammar_2_0"] = "src/coding_adventures/csharp_parser/_grammar_2_0.lua",
+        ["coding_adventures.csharp_parser._grammar_3_0"] = "src/coding_adventures/csharp_parser/_grammar_3_0.lua",
+        ["coding_adventures.csharp_parser._grammar_4_0"] = "src/coding_adventures/csharp_parser/_grammar_4_0.lua",
+        ["coding_adventures.csharp_parser._grammar_5_0"] = "src/coding_adventures/csharp_parser/_grammar_5_0.lua",
+        ["coding_adventures.csharp_parser._grammar_6_0"] = "src/coding_adventures/csharp_parser/_grammar_6_0.lua",
+        ["coding_adventures.csharp_parser._grammar_7_0"] = "src/coding_adventures/csharp_parser/_grammar_7_0.lua",
+        ["coding_adventures.csharp_parser._grammar_8_0"] = "src/coding_adventures/csharp_parser/_grammar_8_0.lua",
+        ["coding_adventures.csharp_parser._grammar_9_0"] = "src/coding_adventures/csharp_parser/_grammar_9_0.lua",
+        ["coding_adventures.csharp_parser._grammar_10_0"] = "src/coding_adventures/csharp_parser/_grammar_10_0.lua",
+        ["coding_adventures.csharp_parser._grammar_11_0"] = "src/coding_adventures/csharp_parser/_grammar_11_0.lua",
+        ["coding_adventures.csharp_parser._grammar_12_0"] = "src/coding_adventures/csharp_parser/_grammar_12_0.lua",
     },
 }

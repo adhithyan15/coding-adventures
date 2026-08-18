@@ -73,109 +73,35 @@
 -- 3. **Parse** — construct a `GrammarParser` (from the `parser` package)
 --    and call `:parse()`.
 --
--- # Path navigation
+-- # Grammar loading
 --
--- This file lives at:
---   code/packages/lua/toml_parser/src/coding_adventures/toml_parser/init.lua
---
--- Walking 6 levels up reaches `code/`, the repo root.
---
--- Directory structure from script_dir upward:
---   toml_parser/        (1)
---   coding_adventures/  (2)
---   src/                (3)
---   toml_parser/        (4) — the package directory
---   lua/                (5)
---   packages/           (6)
---   code/               → then /grammars/toml.grammar
+-- The parser grammar is compiled ahead of time from `toml.grammar` via
+-- `grammar-tools compile-grammar` and required as native Lua data — no
+-- disk I/O at runtime.
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local toml_lexer    = require("coding_adventures.toml_lexer")
-local parser_pkg    = require("coding_adventures.parser")
+local toml_lexer = require("coding_adventures.toml_lexer")
+local parser_pkg = require("coding_adventures.parser")
 
 local M = {}
 M.VERSION = "0.1.0"
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
-
---- Return the directory portion of a file path (no trailing slash).
--- @param path string
--- @return string
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- When busted runs tests with a relative path containing ".." the
--- dirname-only approach produces a path that collapses to "." after
--- up() steps, so the grammar file cannot be found.  We resolve to an
--- absolute path via "cd <dir> && pwd" to give up() an absolute anchor.
--- @return string Absolute directory of this init.lua file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
-    src = src:gsub("\\", "/")
-    local dir = src:match("(.+)/[^/]+$") or "."
-    return dir
-end
-
---- Walk up `levels` directory levels from `path`.
--- @param path   string
--- @param levels number
--- @return string
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
+--
+-- The parser grammar is embedded as native Lua data in the pre-compiled
+-- `_grammar` module (generated ahead of time from `toml.grammar` via
+-- `grammar-tools compile-grammar`).
 
 local _grammar_cache = nil
 
---- Load and parse `toml.grammar`, with caching.
+--- Return the (cached) ParserGrammar for TOML.
 -- @return ParserGrammar
--- @error  Raises an error if the file cannot be opened or parsed.
 local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+    if not _grammar_cache then
+        _grammar_cache = require("coding_adventures.toml_parser._grammar").parser_grammar()
     end
-
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/toml/toml.grammar"
-
-    local f, open_err = io.open(grammar_path, "r")
-    if not f then
-        error(
-            "toml_parser: cannot open grammar file: " .. grammar_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
-    if not grammar then
-        error(
-            "toml_parser: failed to parse toml.grammar: " ..
-            (parse_err or "unknown error")
-        )
-    end
-
-    _grammar_cache = grammar
-    return grammar
+    return _grammar_cache
 end
 
 -- =========================================================================

@@ -47,29 +47,19 @@
 -- # Architecture
 --
 -- This module:
---   1. Locates the shared `css.tokens` grammar file in `code/grammars/`.
---   2. Reads and parses it once (cached) using `grammar_tools.parse_token_grammar`.
---   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
---   4. Returns the flat token list.
+--   1. Requires the pre-compiled `_grammar` module (once, cached).
+--   2. Constructs a `GrammarLexer` from the `lexer` package for each call.
+--   3. Returns the flat token list.
 --
--- # Path navigation
+-- # Grammar source
 --
--- The source file lives at:
---   code/packages/lua/css_lexer/src/coding_adventures/css_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/css.tokens`.
---
--- Directory structure from script_dir upward:
---   css_lexer/           (1) — module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   css_lexer/           (4) — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/css.tokens
+-- The token grammar is no longer read from `code/grammars/` at runtime.
+-- A published LuaRocks package does not ship the monorepo's `code/grammars/`
+-- directory, so walking out of the package's own directory to find it would
+-- fail after installation. Instead, `css.tokens` is pre-compiled (via
+-- `grammar-tools compile-tokens`) into `_grammar.lua`, a plain Lua module
+-- that embeds the TokenGrammar as native Lua data structures. That module
+-- ships as part of this package, so `require()` always finds it.
 --
 -- # escapes: none
 --
@@ -107,97 +97,37 @@
 --   BAD_STRING  — unclosed string: "hello
 --   BAD_URL     — unclosed url(): url(./path
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
 
 local M = {}
 M.VERSION = "0.1.0"
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
-
---- Return the directory of this source file.
--- Lua embeds the source path in chunk debug info with a leading "@".
--- Returns the directory portion of that path (may be relative when the
--- test runner uses a relative package.path like "../src/?.lua").
--- @return string Directory of this init.lua file (absolute or relative).
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
-end
-
---- Walk up `levels` directory levels from `path`.
--- Appends `/../` segments so the OS resolves the result when it is passed
--- to io.open(). Works for both absolute paths (C:/foo, /foo) and relative
--- paths (../src/foo) without needing to know the working directory.
--- The old regex-based dirname approach broke on relative paths starting
--- with `..` because the pattern "(.+)/[^/]+" does not match strings like
--- ".." that have no slash — causing repo_root to collapse to ".".
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string        Path with `levels` parent-dir jumps appended.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
 --
--- The grammar is read from disk exactly once and cached in a module-level
--- variable. Subsequent calls to `tokenize` reuse the cached grammar.
--- This avoids repeated file I/O and repeated regex compilation.
+-- The compiled grammar module is required exactly once and its
+-- `token_grammar()` result cached in a module-level variable. Subsequent
+-- calls to `tokenize` reuse the cached grammar.
 --
 -- CSS grammars are larger than most (many token types with complex ordering
 -- constraints), so caching is especially important for performance.
 
 local _grammar_cache = nil
 
---- Load and parse the `css.tokens` grammar, with caching.
--- On the first call, opens and parses the file. On subsequent calls,
--- returns the cached TokenGrammar object immediately.
--- @return TokenGrammar  The parsed CSS token grammar.
+--- Return the (cached) TokenGrammar for CSS.
+-- On the first call, requires the pre-compiled `_grammar` module and
+-- invokes `token_grammar()`. On subsequent calls, returns the cached
+-- TokenGrammar object immediately.
+-- @return TokenGrammar  The CSS token grammar.
 local function get_grammar()
     if _grammar_cache then
         return _grammar_cache
     end
 
-    -- Navigate from this file's directory up to the repo root.
-    -- init.lua is 3 dirs inside the package (src/coding_adventures/css_lexer/).
-    -- The package itself is 3 more dirs inside the repo (packages/lua/css_lexer/).
-    -- Total: 6 levels up lands us at `code/`, the repo root.
-    local script_dir  = get_script_dir()
-    local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/css/css.tokens"
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "css_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("css_lexer: failed to parse css.tokens: " .. (parse_err or "unknown error"))
-    end
-
-    _grammar_cache = grammar
-    return grammar
+    local compiled = require("coding_adventures.css_lexer._grammar")
+    _grammar_cache = compiled.token_grammar()
+    return _grammar_cache
 end
 
 -- =========================================================================

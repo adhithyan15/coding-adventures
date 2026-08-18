@@ -26,5 +26,11 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.python_lexer"] = "src/coding_adventures/python_lexer/init.lua",
+        ["coding_adventures.python_lexer._grammar_2_7"] = "src/coding_adventures/python_lexer/_grammar_2_7.lua",
+        ["coding_adventures.python_lexer._grammar_3_0"] = "src/coding_adventures/python_lexer/_grammar_3_0.lua",
+        ["coding_adventures.python_lexer._grammar_3_6"] = "src/coding_adventures/python_lexer/_grammar_3_6.lua",
+        ["coding_adventures.python_lexer._grammar_3_8"] = "src/coding_adventures/python_lexer/_grammar_3_8.lua",
+        ["coding_adventures.python_lexer._grammar_3_10"] = "src/coding_adventures/python_lexer/_grammar_3_10.lua",
+        ["coding_adventures.python_lexer._grammar_3_12"] = "src/coding_adventures/python_lexer/_grammar_3_12.lua",
     },
 }

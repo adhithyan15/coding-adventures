@@ -31,5 +31,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.xml_lexer"] = "src/coding_adventures/xml_lexer/init.lua",
+        ["coding_adventures.xml_lexer._grammar"] = "src/coding_adventures/xml_lexer/_grammar.lua",
     },
 }

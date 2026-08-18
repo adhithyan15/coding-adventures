@@ -1,0 +1,290 @@
+-- AUTO-GENERATED FILE — DO NOT EDIT
+-- Source: haskell2010.tokens
+-- Regenerate with: grammar-tools compile-tokens haskell2010.tokens
+--
+-- This file embeds a TokenGrammar as native Lua data structures.
+-- Call token_grammar() instead of reading and parsing the .tokens file.
+
+local gt = require("coding_adventures.grammar_tools")
+
+local function token_grammar()
+  local g = gt.TokenGrammar.new()
+  g.definitions = {
+        {
+          name="FLOAT",
+          pattern="[0-9]+\\.[0-9]+",
+          is_regex=true,
+          line_number=29,
+          alias="",
+        },
+        {
+          name="INTEGER",
+          pattern="[0-9]+",
+          is_regex=true,
+          line_number=30,
+          alias="",
+        },
+        {
+          name="CHARACTER",
+          pattern="'(?:[^'\\\\]|\\\\.)'",
+          is_regex=true,
+          line_number=31,
+          alias="",
+        },
+        {
+          name="STRING",
+          pattern="\"(?:[^\"\\\\]|\\\\.)*\"",
+          is_regex=true,
+          line_number=32,
+          alias="",
+        },
+        {
+          name="LAMBDA",
+          pattern="\\\\",
+          is_regex=false,
+          line_number=37,
+          alias="",
+        },
+        {
+          name="RARROW",
+          pattern="->",
+          is_regex=false,
+          line_number=38,
+          alias="",
+        },
+        {
+          name="LARROW",
+          pattern="<-",
+          is_regex=false,
+          line_number=39,
+          alias="",
+        },
+        {
+          name="DARROW",
+          pattern="=>",
+          is_regex=false,
+          line_number=40,
+          alias="",
+        },
+        {
+          name="DOUBLE_COLON",
+          pattern="::",
+          is_regex=false,
+          line_number=41,
+          alias="",
+        },
+        {
+          name="DOUBLE_DOT",
+          pattern="..",
+          is_regex=false,
+          line_number=42,
+          alias="",
+        },
+        {
+          name="EQUALS",
+          pattern="=",
+          is_regex=false,
+          line_number=43,
+          alias="",
+        },
+        {
+          name="EQ",
+          pattern="==",
+          is_regex=false,
+          line_number=44,
+          alias="",
+        },
+        {
+          name="PLUS",
+          pattern="+",
+          is_regex=false,
+          line_number=45,
+          alias="",
+        },
+        {
+          name="MINUS",
+          pattern="-",
+          is_regex=false,
+          line_number=46,
+          alias="",
+        },
+        {
+          name="STAR",
+          pattern="*",
+          is_regex=false,
+          line_number=47,
+          alias="",
+        },
+        {
+          name="SLASH",
+          pattern="/",
+          is_regex=false,
+          line_number=48,
+          alias="",
+        },
+        {
+          name="PIPE",
+          pattern="|",
+          is_regex=false,
+          line_number=49,
+          alias="",
+        },
+        {
+          name="AMPERSAND",
+          pattern="&",
+          is_regex=false,
+          line_number=50,
+          alias="",
+        },
+        {
+          name="CARET",
+          pattern="^",
+          is_regex=false,
+          line_number=51,
+          alias="",
+        },
+        {
+          name="TILDE",
+          pattern="~",
+          is_regex=false,
+          line_number=52,
+          alias="",
+        },
+        {
+          name="BANG",
+          pattern="!",
+          is_regex=false,
+          line_number=53,
+          alias="",
+        },
+        {
+          name="LESSTHAN",
+          pattern="<",
+          is_regex=false,
+          line_number=54,
+          alias="",
+        },
+        {
+          name="GREATERTHAN",
+          pattern=">",
+          is_regex=false,
+          line_number=55,
+          alias="",
+        },
+        {
+          name="COLON",
+          pattern=":",
+          is_regex=false,
+          line_number=56,
+          alias="",
+        },
+        {
+          name="COMMA",
+          pattern=",",
+          is_regex=false,
+          line_number=57,
+          alias="",
+        },
+        {
+          name="SEMICOLON",
+          pattern=";",
+          is_regex=false,
+          line_number=58,
+          alias="",
+        },
+        {
+          name="DOT",
+          pattern=".",
+          is_regex=false,
+          line_number=59,
+          alias="",
+        },
+        {
+          name="LPAREN",
+          pattern="(",
+          is_regex=false,
+          line_number=60,
+          alias="",
+        },
+        {
+          name="RPAREN",
+          pattern=")",
+          is_regex=false,
+          line_number=61,
+          alias="",
+        },
+        {
+          name="LBRACKET",
+          pattern="[",
+          is_regex=false,
+          line_number=62,
+          alias="",
+        },
+        {
+          name="RBRACKET",
+          pattern="]",
+          is_regex=false,
+          line_number=63,
+          alias="",
+        },
+        {
+          name="LBRACE",
+          pattern="{",
+          is_regex=false,
+          line_number=64,
+          alias="",
+        },
+        {
+          name="RBRACE",
+          pattern="}",
+          is_regex=false,
+          line_number=65,
+          alias="",
+        },
+        {
+          name="NAME",
+          pattern="[A-Za-z_][A-Za-z0-9_']*",
+          is_regex=true,
+          line_number=70,
+          alias="",
+        },
+      }
+  g.keywords = {"as", "case", "class", "data", "do", "else", "foreign", "if", "import", "in", "infix", "infixl", "infixr", "let", "module", "of", "then", "type", "where"}
+  g.mode = "layout"
+  g.escape_mode = ""
+  g.skip_definitions = {
+        {
+          name="LINE_COMMENT",
+          pattern="--[^\\n]*",
+          is_regex=true,
+          line_number=22,
+          alias="",
+        },
+        {
+          name="BLOCK_COMMENT",
+          pattern="\\{\\-[\\s\\S]*?\\-\\}",
+          is_regex=true,
+          line_number=23,
+          alias="",
+        },
+        {
+          name="WHITESPACE",
+          pattern="[ \\t\\r]+",
+          is_regex=true,
+          line_number=24,
+          alias="",
+        },
+      }
+  g.reserved_keywords = {}
+  g.context_keywords = {}
+  g.layout_keywords = {"let", "where", "do", "of"}
+  g.soft_keywords = {}
+  g.error_definitions = {}
+  g.groups = {}
+  g.case_sensitive = true
+  g.version = 0
+  g.case_insensitive = false
+  return g
+end
+
+return { token_grammar = token_grammar }

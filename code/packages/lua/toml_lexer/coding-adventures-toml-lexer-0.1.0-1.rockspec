@@ -29,5 +29,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.toml_lexer"] = "src/coding_adventures/toml_lexer/init.lua",
+        ["coding_adventures.toml_lexer._grammar"] = "src/coding_adventures/toml_lexer/_grammar.lua",
     },
 }

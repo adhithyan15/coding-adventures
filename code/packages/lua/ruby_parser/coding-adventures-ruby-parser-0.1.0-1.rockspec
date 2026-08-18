@@ -47,5 +47,7 @@ build = {
     modules = {
         ["coding_adventures.ruby_parser"] =
             "src/coding_adventures/ruby_parser/init.lua",
+        ["coding_adventures.ruby_parser._grammar"] =
+            "src/coding_adventures/ruby_parser/_grammar.lua",
     },
 }

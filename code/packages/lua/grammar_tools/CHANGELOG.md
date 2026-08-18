@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- `compiler.lua`'s `element_src` had no clauses for `positive_lookahead`,
+  `negative_lookahead`, `one_or_more`, or `separated_repetition` — legal
+  grammar element types already handled by the runtime parser, but
+  `compile_parser_grammar` raised `"Unknown grammar element type"` on any
+  grammar using them (e.g. `ruby.grammar`'s `!"rescue"`-style negative
+  lookahead). Added the four missing clauses, mirroring the runtime
+  parser's and other language ports' compilers.
+
 ### Added
 
 - F10 declarative lexer mode transitions (see `code/specs/F10-declarative-lexer-modes.md`):

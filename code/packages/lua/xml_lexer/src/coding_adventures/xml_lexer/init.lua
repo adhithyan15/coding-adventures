@@ -42,99 +42,26 @@
 --   PI_START                           → push("pi")
 --   PI_END                             → pop()
 --
--- # Path navigation
+-- # Grammar loading
 --
--- The source file lives at:
---   code/packages/lua/xml_lexer/src/coding_adventures/xml_lexer/init.lua
---
--- 6 directory levels up from `script_dir` reaches `code/`.
--- Then we descend into `grammars/xml/xml.tokens`.
+-- The grammar is compiled ahead of time from `xml.tokens` via
+-- `grammar-tools compile-tokens` and required as native Lua data — no
+-- disk I/O at runtime.
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
 
 local M = {}
 M.VERSION = "0.1.1"
 
--- =========================================================================
--- Path helpers
--- =========================================================================
-
---- Return the directory portion of a file path.
--- @param path string  Full file path.
--- @return string      The containing directory (no trailing slash).
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- Lua prefixes embedded source paths with "@"; we strip it.
--- @return string  Absolute directory of init.lua.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
-    src = src:gsub("\\", "/")
-    -- Extract the directory portion of the source path (may be relative
-    -- and may contain .. when busted uses ../src in package.path).
-    local dir = src:match("(.+)/[^/]+$") or "."
-    -- Resolve to an absolute normalised path. Using 'cd dir && pwd' correctly
-    -- resolves any .. components -- unlike string-based dirname traversal.
-    return dir
-end
-
---- Walk `levels` directory levels up from `path`.
--- @param path   string  Starting directory.
--- @param levels number  How many components to strip.
--- @return string        Resulting ancestor directory.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
--- Grammar loading
--- =========================================================================
-
 local _grammar_cache = nil
 
---- Load and parse the `xml.tokens` grammar, with caching.
--- @return TokenGrammar  The parsed XML token grammar.
+--- Return the (cached) TokenGrammar for XML.
+-- @return TokenGrammar  The compiled XML token grammar.
 local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+    if not _grammar_cache then
+        _grammar_cache = require("coding_adventures.xml_lexer._grammar").token_grammar()
     end
-
-    -- Navigate: xml_lexer/ (1) → coding_adventures/ (2) → src/ (3)
-    --           → xml_lexer_pkg/ (4) → lua/ (5) → packages/ (6) → code/
-    local script_dir  = get_script_dir()
-    local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/xml/xml.tokens"
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "xml_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("xml_lexer: failed to parse xml.tokens: " .. (parse_err or "unknown error"))
-    end
-
-    _grammar_cache = grammar
-    return grammar
+    return _grammar_cache
 end
 
 -- =========================================================================

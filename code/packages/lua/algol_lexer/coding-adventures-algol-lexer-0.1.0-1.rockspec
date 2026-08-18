@@ -42,5 +42,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.algol_lexer"] = "src/coding_adventures/algol_lexer/init.lua",
+        ["coding_adventures.algol_lexer._grammar"] = "src/coding_adventures/algol_lexer/_grammar.lua",
     },
 }

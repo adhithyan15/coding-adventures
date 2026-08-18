@@ -38,5 +38,7 @@ build = {
     modules = {
         ["coding_adventures.toml_parser"] =
             "src/coding_adventures/toml_parser/init.lua",
+        ["coding_adventures.toml_parser._grammar"] =
+            "src/coding_adventures/toml_parser/_grammar.lua",
     },
 }

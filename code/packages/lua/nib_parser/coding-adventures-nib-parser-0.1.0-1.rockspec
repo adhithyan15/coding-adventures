@@ -22,5 +22,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.nib_parser"] = "src/coding_adventures/nib_parser/init.lua",
+        ["coding_adventures.nib_parser._grammar"] = "src/coding_adventures/nib_parser/_grammar.lua",
     },
 }

@@ -29,5 +29,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.starlark_lexer"] = "src/coding_adventures/starlark_lexer/init.lua",
+        ["coding_adventures.starlark_lexer._grammar"] = "src/coding_adventures/starlark_lexer/_grammar.lua",
     },
 }

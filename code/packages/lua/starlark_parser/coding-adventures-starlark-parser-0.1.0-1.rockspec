@@ -14,5 +14,8 @@ dependencies = {
 }
 build = {
   type    = "builtin",
-  modules = { ["coding_adventures.starlark_parser"] = "src/coding_adventures/starlark_parser/init.lua" },
+  modules = {
+    ["coding_adventures.starlark_parser"] = "src/coding_adventures/starlark_parser/init.lua",
+    ["coding_adventures.starlark_parser._grammar"] = "src/coding_adventures/starlark_parser/_grammar.lua",
+  },
 }

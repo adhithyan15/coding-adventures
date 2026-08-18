@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## Unreleased
 
+### Fixed
+
+- Eliminated runtime grammar loading: `tokenize` now requires a pre-compiled
+  `_grammar` module instead of reading and parsing the `algol60.tokens` file
+  from `code/grammars/` on every call. The old code walked out of the
+  installed package's own directory to a monorepo-relative path that a
+  published LuaRocks package does not ship.
+
 ### Bug fixes
 
 - Fixed ALGOL 60 comment skip pattern in `code/grammars/algol/algol60.tokens`.

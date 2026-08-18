@@ -2,6 +2,34 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- Eliminated runtime grammar loading. Previously, `get_grammar(version)`
+  read `code/grammars/typescript/<version>.grammar` (or the unversioned
+  `code/grammars/typescript/typescript.grammar`) off disk at runtime using
+  a path that walked outside this package's own directory into the
+  monorepo (`debug.getinfo`-based directory walk-up). That works inside a
+  checkout of the monorepo, but a published LuaRocks package does not
+  include `code/grammars/` — installing this rock and calling `parse`
+  would raise a file-not-found error.
+- Each of the 6 supported TypeScript versions' `.grammar` file, plus the
+  generic/unversioned grammar, is now compiled ahead of time (via
+  `grammar-tools compile-grammar`) into a `_grammar_<version>.lua` sibling
+  module (`_grammar_default.lua` for the generic case) that embeds the
+  parsed `ParserGrammar` as native Lua data. Since TypeScript version
+  strings contain dots (e.g. `"ts1.0"`), the filenames/module names
+  substitute underscores for dots (e.g. `_grammar_ts1_0.lua`) while the
+  public-facing version string stays exactly `"ts1.0"`. `init.lua` now
+  `require`s the appropriate precompiled module and calls its
+  `parser_grammar()` constructor (cached per version) instead of reading
+  and parsing a `.grammar` file from disk.
+- The rockspec's `build.modules` table now lists every `_grammar_*.lua`
+  submodule explicitly so `luarocks install` actually packages them.
+- Public API (`parse`, `create_parser`, `get_grammar`), version
+  validation, and error message text are unchanged.
+
 ## [0.2.0] — 2026-04-05
 
 ### Added

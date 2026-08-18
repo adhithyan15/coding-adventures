@@ -7,6 +7,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+- Eliminated runtime grammar loading: `parse` now requires a pre-compiled
+  `_grammar` module instead of reading and parsing the
+  `dartmouth_basic.grammar` file from `code/grammars/` on every call. The
+  old code walked out of the installed package's own directory to a
+  monorepo-relative path that a published LuaRocks package does not ship.
 - The Unix and Windows standalone BUILD recipes now install the shared
   `coding-adventures-lexer` rock before `dartmouth_basic_lexer`, and the Unix
   self-install no longer consults remote dependency resolution.

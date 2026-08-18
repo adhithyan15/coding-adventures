@@ -24,5 +24,7 @@ build = {
         ["coding_adventures.brainfuck.lexer"] = "src/coding_adventures/brainfuck/lexer.lua",
         ["coding_adventures.brainfuck.parser"] = "src/coding_adventures/brainfuck/parser.lua",
         ["coding_adventures.brainfuck.lang_vm"] = "src/coding_adventures/brainfuck/lang_vm.lua",
+        ["coding_adventures.brainfuck._grammar_tokens"] = "src/coding_adventures/brainfuck/_grammar_tokens.lua",
+        ["coding_adventures.brainfuck._grammar_parser"] = "src/coding_adventures/brainfuck/_grammar_parser.lua",
     },
 }

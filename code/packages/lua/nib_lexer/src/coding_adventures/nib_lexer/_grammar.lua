@@ -1,0 +1,290 @@
+-- AUTO-GENERATED FILE — DO NOT EDIT
+-- Source: nib.tokens
+-- Regenerate with: grammar-tools compile-tokens nib.tokens
+--
+-- This file embeds a TokenGrammar as native Lua data structures.
+-- Call token_grammar() instead of reading and parsing the .tokens file.
+
+local gt = require("coding_adventures.grammar_tools")
+
+local function token_grammar()
+  local g = gt.TokenGrammar.new()
+  g.definitions = {
+        {
+          name="WRAP_ADD",
+          pattern="+%",
+          is_regex=false,
+          line_number=56,
+          alias="",
+        },
+        {
+          name="SAT_ADD",
+          pattern="+?",
+          is_regex=false,
+          line_number=63,
+          alias="",
+        },
+        {
+          name="RANGE",
+          pattern="..",
+          is_regex=false,
+          line_number=73,
+          alias="",
+        },
+        {
+          name="ARROW",
+          pattern="->",
+          is_regex=false,
+          line_number=79,
+          alias="",
+        },
+        {
+          name="EQ_EQ",
+          pattern="==",
+          is_regex=false,
+          line_number=87,
+          alias="",
+        },
+        {
+          name="NEQ",
+          pattern="!=",
+          is_regex=false,
+          line_number=93,
+          alias="",
+        },
+        {
+          name="LEQ",
+          pattern="<=",
+          is_regex=false,
+          line_number=97,
+          alias="",
+        },
+        {
+          name="GEQ",
+          pattern=">=",
+          is_regex=false,
+          line_number=101,
+          alias="",
+        },
+        {
+          name="LAND",
+          pattern="&&",
+          is_regex=false,
+          line_number=108,
+          alias="",
+        },
+        {
+          name="LOR",
+          pattern="||",
+          is_regex=false,
+          line_number=115,
+          alias="",
+        },
+        {
+          name="SHL",
+          pattern="<<",
+          is_regex=false,
+          line_number=119,
+          alias="",
+        },
+        {
+          name="SHR",
+          pattern=">>",
+          is_regex=false,
+          line_number=120,
+          alias="",
+        },
+        {
+          name="PLUS",
+          pattern="+",
+          is_regex=false,
+          line_number=128,
+          alias="",
+        },
+        {
+          name="MINUS",
+          pattern="-",
+          is_regex=false,
+          line_number=131,
+          alias="",
+        },
+        {
+          name="STAR",
+          pattern="*",
+          is_regex=false,
+          line_number=137,
+          alias="",
+        },
+        {
+          name="SLASH",
+          pattern="/",
+          is_regex=false,
+          line_number=141,
+          alias="",
+        },
+        {
+          name="PERCENT",
+          pattern="%",
+          is_regex=false,
+          line_number=146,
+          alias="",
+        },
+        {
+          name="AMP",
+          pattern="&",
+          is_regex=false,
+          line_number=154,
+          alias="",
+        },
+        {
+          name="PIPE",
+          pattern="|",
+          is_regex=false,
+          line_number=158,
+          alias="",
+        },
+        {
+          name="CARET",
+          pattern="^",
+          is_regex=false,
+          line_number=161,
+          alias="",
+        },
+        {
+          name="TILDE",
+          pattern="~",
+          is_regex=false,
+          line_number=165,
+          alias="",
+        },
+        {
+          name="BANG",
+          pattern="!",
+          is_regex=false,
+          line_number=174,
+          alias="",
+        },
+        {
+          name="LT",
+          pattern="<",
+          is_regex=false,
+          line_number=177,
+          alias="",
+        },
+        {
+          name="GT",
+          pattern=">",
+          is_regex=false,
+          line_number=180,
+          alias="",
+        },
+        {
+          name="EQ",
+          pattern="=",
+          is_regex=false,
+          line_number=190,
+          alias="",
+        },
+        {
+          name="LBRACE",
+          pattern="{",
+          is_regex=false,
+          line_number=197,
+          alias="",
+        },
+        {
+          name="RBRACE",
+          pattern="}",
+          is_regex=false,
+          line_number=198,
+          alias="",
+        },
+        {
+          name="LPAREN",
+          pattern="(",
+          is_regex=false,
+          line_number=201,
+          alias="",
+        },
+        {
+          name="RPAREN",
+          pattern=")",
+          is_regex=false,
+          line_number=202,
+          alias="",
+        },
+        {
+          name="COLON",
+          pattern=":",
+          is_regex=false,
+          line_number=206,
+          alias="",
+        },
+        {
+          name="SEMICOLON",
+          pattern=";",
+          is_regex=false,
+          line_number=211,
+          alias="",
+        },
+        {
+          name="COMMA",
+          pattern=",",
+          is_regex=false,
+          line_number=214,
+          alias="",
+        },
+        {
+          name="HEX_LIT",
+          pattern="0x[0-9A-Fa-f]+",
+          is_regex=true,
+          line_number=227,
+          alias="",
+        },
+        {
+          name="INT_LIT",
+          pattern="[0-9]+",
+          is_regex=true,
+          line_number=231,
+          alias="",
+        },
+        {
+          name="NAME",
+          pattern="[a-zA-Z_][a-zA-Z0-9_]*",
+          is_regex=true,
+          line_number=239,
+          alias="",
+        },
+      }
+  g.keywords = {"fn", "let", "static", "const", "return", "for", "while", "in", "if", "else", "true", "false"}
+  g.mode = ""
+  g.escape_mode = ""
+  g.skip_definitions = {
+        {
+          name="WHITESPACE",
+          pattern="[ \\t\\r\\n]+",
+          is_regex=true,
+          line_number=309,
+          alias="",
+        },
+        {
+          name="LINE_COMMENT",
+          pattern="\\/\\/[^\\n]*",
+          is_regex=true,
+          line_number=317,
+          alias="",
+        },
+      }
+  g.reserved_keywords = {}
+  g.context_keywords = {}
+  g.layout_keywords = {}
+  g.soft_keywords = {}
+  g.error_definitions = {}
+  g.groups = {}
+  g.case_sensitive = true
+  g.version = 0
+  g.case_insensitive = false
+  return g
+end
+
+return { token_grammar = token_grammar }

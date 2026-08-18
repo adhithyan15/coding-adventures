@@ -46,5 +46,7 @@ build = {
     modules = {
         ["coding_adventures.sql_parser"] =
             "src/coding_adventures/sql_parser/init.lua",
+        ["coding_adventures.sql_parser._grammar"] =
+            "src/coding_adventures/sql_parser/_grammar.lua",
     },
 }

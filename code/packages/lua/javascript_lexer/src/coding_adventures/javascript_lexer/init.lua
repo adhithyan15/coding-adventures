@@ -24,37 +24,18 @@
 -- # Architecture
 --
 -- This module:
---   1. Locates the correct grammar file in `code/grammars/`.
---   2. Reads and parses it once per version (cached) using
---      `grammar_tools.parse_token_grammar`.
+--   1. Selects the pre-compiled grammar module for the requested version.
+--   2. Constructs it once per version (cached) via its `token_grammar()`
+--      function — see "Compiled grammars" below.
 --   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
 --   4. Returns the flat token list.
 --
 -- # Version routing
 --
--- When `version` is nil or "" → loads `code/grammars/javascript.tokens`
--- When `version` is "es1"     → loads `code/grammars/ecmascript/es1.tokens`
--- When `version` is "es2015"  → loads `code/grammars/ecmascript/es2015.tokens`
+-- When `version` is nil or "" → uses the generic/unified grammar.
+-- When `version` is "es1"     → uses the ECMAScript 1 grammar.
+-- When `version` is "es2015"  → uses the ECMAScript 2015 grammar.
 -- ... etc.
---
--- # Path navigation
---
--- The source file lives at:
---   code/packages/lua/javascript_lexer/src/coding_adventures/javascript_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/`.
---
--- Directory structure from script_dir upward:
---   javascript_lexer/    (1) — module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   javascript_lexer/    (4) — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/...
 --
 -- # Token types produced
 --
@@ -75,8 +56,43 @@
 --   LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
 --   COMMA, COLON, SEMICOLON, DOT
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
+
+-- =========================================================================
+-- Compiled grammars
+-- =========================================================================
+--
+-- Historically this module read `.tokens` grammar files from `code/grammars/`
+-- at runtime via `io.open`, walking outside this package's own directory
+-- into the monorepo. That works when running inside the monorepo checkout,
+-- but a published LuaRocks package does not ship `code/grammars/`, so
+-- `luarocks install` + first use would raise a file-not-found error.
+--
+-- Instead, each grammar is now pre-compiled to a native Lua data structure
+-- (via `code/programs/lua/grammar-tools`) and checked in as a sibling
+-- `_grammar_<version>.lua` file, `require`d like any other module. No
+-- runtime file I/O, no path traversal outside the package.
+--
+-- Regenerate with (from code/programs/lua/grammar-tools):
+--   compile_tokens_command("../../../grammars/ecmascript/es2015.tokens", ...)
+
+local compiled_grammars = {
+    [""]       = require("coding_adventures.javascript_lexer._grammar_default"),
+    ["es1"]    = require("coding_adventures.javascript_lexer._grammar_es1"),
+    ["es3"]    = require("coding_adventures.javascript_lexer._grammar_es3"),
+    ["es5"]    = require("coding_adventures.javascript_lexer._grammar_es5"),
+    ["es2015"] = require("coding_adventures.javascript_lexer._grammar_es2015"),
+    ["es2016"] = require("coding_adventures.javascript_lexer._grammar_es2016"),
+    ["es2017"] = require("coding_adventures.javascript_lexer._grammar_es2017"),
+    ["es2018"] = require("coding_adventures.javascript_lexer._grammar_es2018"),
+    ["es2019"] = require("coding_adventures.javascript_lexer._grammar_es2019"),
+    ["es2020"] = require("coding_adventures.javascript_lexer._grammar_es2020"),
+    ["es2021"] = require("coding_adventures.javascript_lexer._grammar_es2021"),
+    ["es2022"] = require("coding_adventures.javascript_lexer._grammar_es2022"),
+    ["es2023"] = require("coding_adventures.javascript_lexer._grammar_es2023"),
+    ["es2024"] = require("coding_adventures.javascript_lexer._grammar_es2024"),
+    ["es2025"] = require("coding_adventures.javascript_lexer._grammar_es2025"),
+}
 
 local M = {}
 M.VERSION = "0.2.0"
@@ -113,75 +129,35 @@ local VALID_JS_VERSIONS = {
 }
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
-
---- Return the directory of this source file.
--- Lua embeds the source path in chunk debug info with a leading "@".
--- Returns the directory portion of that path (may be relative when the
--- test runner uses a relative package.path like "../src/?.lua").
--- @return string Directory of this init.lua file (absolute or relative).
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
-end
-
---- Walk up `levels` directory levels from `path`.
--- Appends `/../` segments so the OS resolves the result when it is passed
--- to io.open(). Works for both absolute paths (C:/foo, /foo) and relative
--- paths (../src/foo) without needing to know the working directory.
--- The old regex-based dirname approach broke on relative paths starting
--- with `..` because the pattern "(.+)/[^/]+" does not match strings like
--- ".." that have no slash — causing repo_root to collapse to ".".
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string        Path with `levels` parent-dir jumps appended.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
 --
 -- Grammars are cached per version string. The cache key is the version
--- string (or "" for generic). This avoids repeated file I/O while still
--- allowing different versions to load different grammar files.
+-- string (or "" for generic). Each compiled grammar module's
+-- `token_grammar()` constructor is only invoked once per version; the
+-- resulting TokenGrammar is memoized in `_grammar_cache`.
 
 local _grammar_cache = {}
 
---- Resolve the path to the correct .tokens grammar file for a given version.
+--- Resolve a version string to its entry in `compiled_grammars`.
 --
 -- Version routing logic:
---   - nil or ""  →  code/grammars/javascript.tokens       (generic)
---   - "es1"      →  code/grammars/ecmascript/es1.tokens
---   - "es2015"   →  code/grammars/ecmascript/es2015.tokens
+--   - nil or ""  →  generic (unified) grammar
+--   - "es1"      →  ECMAScript 1 grammar
+--   - "es2015"   →  ECMAScript 2015 grammar
 --   - ...etc.
 --
 -- If an unrecognized version string is passed, we raise an error immediately.
 --
 -- @param version string|nil  The ECMAScript version tag, or nil/empty for generic.
--- @return string             Absolute path to the grammar .tokens file.
-local function resolve_tokens_path(version)
-    local script_dir = get_script_dir()
-    local repo_root  = up(script_dir, 6)
-
+-- @return string             The resolved lookup key into `compiled_grammars`.
+local function resolve_version(version)
     -- Generic (no version specified) — use the unified grammar.
     if not version or version == "" then
-        return repo_root .. "/grammars/javascript/javascript.tokens"
+        return ""
     end
 
-    -- Validate the version string before building the path.
+    -- Validate the version string before looking it up.
     if not VALID_JS_VERSIONS[version] then
         error(
             "javascript_lexer: unknown ECMAScript version '" .. version .. "'. " ..
@@ -189,46 +165,25 @@ local function resolve_tokens_path(version)
         )
     end
 
-    return repo_root .. "/grammars/ecmascript/" .. version .. ".tokens"
+    return version
 end
 
 --- Load and parse the grammar for a specific version, with per-version caching.
 --
--- On the first call for a given version, opens the file, parses it with
--- `grammar_tools.parse_token_grammar`, and stores the result in _grammar_cache.
--- On subsequent calls for the same version, returns the cached object immediately.
+-- On the first call for a given version, invokes the compiled module's
+-- `token_grammar()` constructor and stores the result in `_grammar_cache`.
+-- On subsequent calls for the same version, returns the cached object
+-- immediately.
 --
--- @param version string|nil  The ECMAScript version tag (see resolve_tokens_path).
+-- @param version string|nil  The ECMAScript version tag (see resolve_version).
 -- @return TokenGrammar       The parsed JavaScript token grammar.
 local function get_grammar(version)
-    local key = version or ""
+    local key = resolve_version(version)
     if _grammar_cache[key] then
         return _grammar_cache[key]
     end
 
-    local tokens_path = resolve_tokens_path(version)
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "javascript_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    -- Some ECMAScript grammar files use \v and \f in whitespace patterns.
-    -- Lua's regex engine does not support these escape sequences inside
-    -- character classes, so we replace them with the actual control characters.
-    content = content:gsub("\\v", "\x0B")
-    content = content:gsub("\\f", "\x0C")
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("javascript_lexer: failed to parse grammar file: " .. (parse_err or "unknown error"))
-    end
-
+    local grammar = compiled_grammars[key].token_grammar()
     _grammar_cache[key] = grammar
     return grammar
 end

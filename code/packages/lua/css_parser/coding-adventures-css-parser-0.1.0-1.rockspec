@@ -39,5 +39,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.css_parser"] = "src/coding_adventures/css_parser/init.lua",
+        ["coding_adventures.css_parser._grammar"] = "src/coding_adventures/css_parser/_grammar.lua",
     },
 }

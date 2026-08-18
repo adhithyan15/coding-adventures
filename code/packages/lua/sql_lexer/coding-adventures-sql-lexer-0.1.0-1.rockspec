@@ -27,5 +27,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.sql_lexer"] = "src/coding_adventures/sql_lexer/init.lua",
+        ["coding_adventures.sql_lexer._grammar"] = "src/coding_adventures/sql_lexer/_grammar.lua",
     },
 }

@@ -35,5 +35,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.css_lexer"] = "src/coding_adventures/css_lexer/init.lua",
+        ["coding_adventures.css_lexer._grammar"] = "src/coding_adventures/css_lexer/_grammar.lua",
     },
 }
