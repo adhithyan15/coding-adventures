@@ -868,6 +868,20 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 7,
+      "output": "chinese/book/chapters/ch07-zaoshang.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 8,
+      "output": "chinese/book/chapters/ch08-mingzi.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"

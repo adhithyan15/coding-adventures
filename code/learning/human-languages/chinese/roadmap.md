@@ -83,13 +83,30 @@ It is also the chapter where the tone story pays off. 你好 moves, 不是 moves
 demonstration that the writing records the words and not what happens between
 them.
 
-## Names — 我 / 名字 / 什么 *(planned; blocked on a re-subset)*
+## Names — 我 / 名字 *(delivered, HL-C243; the question is still owed)*
 
-**我** *wǒ* → **名字** *míngzi* → **什么** *shénme* → the name question.
-Realises `SPINE-EXCHANGE-NAMES`. 字 (宀 roof + 子 child) is ready: both pieces are
-inventoried and both are already taught.
+**Delivered (HL-C243).** **我** *wǒ* → **名** and **字** → **名字** *míngzi* →
+**我是** + your own name. `PRONOUN-I` and `WORD-NAME` are claimed. 我 is the first
+character in the track that genuinely does *not* decompose into pieces the reader
+owns, and the lesson says so outright rather than inventing a decomposition; 名
+and 字 both do decompose, into 夕 + 口 and 宀 + 子.
 
-**名 needs care but is not blocked.** 名 itself is inventoried and has a ductus.
+**Still owed: the name QUESTION, and the reason is the font, not the pedagogy.**
+`INTRO-WHATS-YOUR-NAME`, `INTRO-MY-NAME-IS`, `INTRO-NICE-TO-MEET-YOU`,
+`QUESTION-WHAT` and the remaining pronouns stay omitted. Every natural way to ask
+someone's name needs a character the vendored subset does not contain — **叫**
+(你叫什么名字), **的** (你的名字是什么), or **姓** (你姓什么). All three were
+checked against the font's cmap directly. Asking the question with only the
+available characters would mean teaching a sentence a speaker would not say, so
+the practice lesson names the gap to the reader instead of papering over it.
+
+Unblocking it needs one `letters` entry plus a **network re-subset**, since 叫,
+的 and 姓 appear nowhere in `chinese.json` — this is the genuine re-subset case,
+unlike 夕 below. 什么 *shénme* is separately ready (什 = 亻 + 十, both already
+shown; 么 inventoried) and can carry `QUESTION-WHAT` on its own whenever it is
+worth a chapter.
+
+**名 needed care but was not blocked.** 名 itself is inventoried and has a ductus.
 **夕**, the piece above 口 that makes 名 decomposable, is *not* inventoried and
 has no ductus — but it **is typesettable today**, because the subset script
 collects every CJK codepoint appearing anywhere in
@@ -109,8 +126,8 @@ So there are two different costs, and they should not be confused:
   *nowhere* in the file.
 
 Chapter 1 promises the reader "never a character you have not been shown the
-parts of first", so 名 must show 夕 either way. The component route satisfies that
-promise at no cost.
+parts of first", so 名 had to show 夕 either way. The component route satisfied
+that promise at no cost, and is what shipped.
 
 ## Times of day *(planned)*
 

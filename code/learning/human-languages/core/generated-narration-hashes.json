@@ -978,6 +978,43 @@
       "jsonHash": "fnv1a64:ed373a3383bc170a"
     },
     {
+      "language": "chinese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:58f8967272263fe8",
+      "lessonIds": [
+        "ZH-W07-zao",
+        "ZH-W07-shang",
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch07.txt",
+      "json": "chinese/narration/ch07.json",
+      "textHash": "fnv1a64:a2e33151f6aeca02",
+      "jsonHash": "fnv1a64:ab55350196beaff9"
+    },
+    {
+      "language": "chinese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:74196f429addec86",
+      "lessonIds": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch08.txt",
+      "json": "chinese/narration/ch08.json",
+      "textHash": "fnv1a64:4a18175e16509cd1",
+      "jsonHash": "fnv1a64:6bbf81ce2f3baef5"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",

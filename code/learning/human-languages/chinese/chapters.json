@@ -144,6 +144,50 @@
           "ZH-DIALOGUE-PART"
         ]
       }
+    },
+    {
+      "chapter": 7,
+      "title": "Good Morning, and a Rule That Declines to Fire",
+      "label": "ch:zh-zaoshang",
+      "canDo": "I can write 早 and 上, greet someone with 早上好, hear a neutral-tone syllable as the absence of a tone mark rather than a mistake, and say why the third-tone rule changes 你好 but leaves 早上好 alone.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ZH-C07-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange where the reader chooses between two correct greetings rather than reciting the only one available -- and the first place all three tone behaviours in the track line up side by side, one moving and two declining to.",
+        "assesses": [
+          "ZH-SCRIPT-ZAO",
+          "ZH-SCRIPT-SHANG",
+          "ZH-LEX-ZAOSHANG",
+          "ZH-TONE-NEUTRAL",
+          "ZH-LEX-ZAOSHANGHAO",
+          "ZH-DIALOGUE-MORNING"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Saying Who You Are",
+      "label": "ch:zh-mingzi",
+      "canDo": "I can write 我, 名 and 字, introduce myself with 我是 and my own name, recognise 名字 as the word for a name, and I know that Mandarin never changes a word to show what job it is doing in a sentence.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C08-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange the reader cannot finish without supplying something of their own -- their name -- and the first place the book names a gap it is choosing not to fill, rather than teaching a sentence no speaker would say.",
+        "assesses": [
+          "ZH-SCRIPT-WO",
+          "ZH-LEX-WO",
+          "ZH-SCRIPT-MING",
+          "ZH-SCRIPT-ZI-CHAR",
+          "ZH-LEX-MINGZI",
+          "ZH-DIALOGUE-INTRODUCE"
+        ]
+      }
     }
   ]
 }

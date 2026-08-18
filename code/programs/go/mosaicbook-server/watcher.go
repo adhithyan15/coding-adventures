@@ -67,7 +67,18 @@ func (s *Server) watchFiles() {
 	}
 }
 
-// pollFiles walks the root tree looking for .mosaic and .stories.json files,
+// hasWatchedSuffix reports whether a filename is a component source that
+// should trigger a hot reload when it changes.
+func hasWatchedSuffix(name string) bool {
+	for _, ext := range []string{".mosaic", ".stories.json", ".mil", ".mll", ".msl"} {
+		if strings.HasSuffix(name, ext) {
+			return true
+		}
+	}
+	return false
+}
+
+// pollFiles walks the root tree looking for component source files,
 // comparing their mtimes to the previous snapshot.  It returns true if any
 // file was added, modified, or removed since the last call.
 //
@@ -84,7 +95,10 @@ func (s *Server) pollFiles(mtimes map[string]time.Time) bool {
 			return nil
 		}
 		name := info.Name()
-		if strings.HasSuffix(name, ".mosaic") || strings.HasSuffix(name, ".stories.json") {
+		// Three-file (UI29) components are authored as .mil/.mll/.msl; without
+		// these suffixes an edit to any real component in this repo would
+		// never trigger a reload, since no .mosaic files exist any more.
+		if hasWatchedSuffix(name) {
 			current[path] = info.ModTime()
 		}
 		return nil

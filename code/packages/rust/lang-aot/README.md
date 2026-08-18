@@ -1,8 +1,22 @@
 # lang-aot
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
-BASIC, Oct, and McCarthy Lisp** to native executables through the shared
-LANG VM chain.
+BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
+native executables through the shared LANG VM chain.
+
+> **macsyma-iir-vm.md Wave 4 — Macsyma runs on NativeAOT + LLVM + WASM + JVM + CLR (v0.228.0):**
+> `tests/macsyma_conformance.rs` proves 21 v0 arithmetic/assignment Macsyma
+> programs (`2 + 3$`, `x: 3$\nx + 1$`, exact division, unary `-`/`+`, ...)
+> compute the identical integer result on the VM interpreter and all five
+> code-gen backends — the first math language on this platform to reach any
+> backend beyond the VM. Wiring needed no new codegen (Macsyma's IIR shape is
+> byte-identical to McCarthy Lisp's, already proven on all 8 backends), but
+> running it for real surfaced two genuine bugs the wiring alone didn't
+> predict: `iir-builtin-lowering::lower_dynamic_arith` never rewrote a
+> **unary** `call_builtin "-"` (only ever saw binary arithmetic before —
+> Macsyma is the first frontend to emit a one-operand arithmetic builtin),
+> and `clr-simulator` had no dispatch case for the CIL `neg` opcode at all.
+> Both fixed; see `code/specs/macsyma-aot-backends.md`.
 
 > **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.133.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.

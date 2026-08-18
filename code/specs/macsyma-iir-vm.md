@@ -259,16 +259,21 @@ convention (CLAUDE.md rules #7/#12/#13).
   Python/Ruby/JS frontends) also ride, not something this crate pair owns.
 - **Wave 3.** Control-flow constructs (`if`/`while`/`for`/`block`) — needs a
   real evaluator loop in `macsyma-vm`, not just inert-data construction.
-- **Wave 4.** The other 6 IIR backends (NativeAOT arm64/x86_64, LLVM, WASM,
-  JVM, CLR) — this is where `iir-builtin-lowering`'s DVAL01 rename/boxing
-  passes finally become relevant, since those backends need the
-  type-directed treatment this v0 slice never touches.
-- **Wave 5.** The other SIR23 CAS languages (Wolfram, Maple, Reduce, Derive,
-  Axiom), each getting their own `<lang>-iir-compiler` (per repo convention
-  and the user's explicit choice of a dedicated-per-language frontend over a
-  generic `semantic-ir-to-iir` backend). Whether they share one generic
-  symbolic-VM crate or each get their own `<lang>-vm` is an open question to
-  resolve when Wave 5 starts, not decided here.
+- **Wave 4 — DELIVERED.** The other 6 IIR backends (NativeAOT arm64/x86_64,
+  LLVM, WASM, JVM, CLR). See
+  [`macsyma-aot-backends.md`](macsyma-aot-backends.md) for the full design,
+  the two real cross-backend bugs it surfaced and fixed
+  (`iir-builtin-lowering`'s unary-negate gap; `clr-simulator`'s missing
+  `neg` opcode), and the conformance suite that proves it
+  (`lang-aot/tests/macsyma_conformance.rs`).
+- **Wave 5 — DELIVERED.** The other SIR23 CAS languages (Wolfram, Maple,
+  Reduce, Derive, Axiom), each getting their own `<lang>-iir-compiler` (per
+  repo convention and the user's explicit choice of a dedicated-per-language
+  frontend over a generic `semantic-ir-to-iir` backend) and its own
+  dedicated `<lang>-vm` (the user's explicit choice over a shared generic
+  VM). All merged 2026-08-18 — see the sibling leaf specs
+  (`derive-iir-vm.md`, `reduce-iir-vm.md`, `maple-iir-vm.md`,
+  `axiom-iir-vm.md`, `wolfram-iir-vm.md`).
 
 ## 7. Test / oracle plan
 
