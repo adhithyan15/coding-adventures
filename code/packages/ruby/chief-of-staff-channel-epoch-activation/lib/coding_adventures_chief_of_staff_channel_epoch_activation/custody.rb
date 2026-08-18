@@ -191,16 +191,15 @@ module CodingAdventures
       module_function
 
       # Constant-time comparison. Both operands are secrets, so a
-      # length-or-content early exit would leak information about the stored
-      # key to a caller who controls the candidate.
+      # length-or-content early exit would leak information about the stored key
+      # to a caller who controls the candidate.
+      #
+      # Delegates to the repository's audited primitive rather than
+      # reimplementing the loop here -- which is what the other five D18T ports
+      # do, and what the D18T spec asks for ("MUST use the platform's
+      # constant-time primitive where one exists").
       def same_cmk?(left, right)
-        left_bytes = left.bytes
-        right_bytes = right.bytes
-        return false unless left_bytes.bytesize == right_bytes.bytesize
-
-        difference = 0
-        left_bytes.bytes.zip(right_bytes.bytes) { |a, b| difference |= a ^ b }
-        difference.zero?
+        CodingAdventures::CtCompare.ct_eq_fixed(left.bytes, right.bytes)
       end
     end
   end
