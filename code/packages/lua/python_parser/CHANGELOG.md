@@ -1,5 +1,27 @@
 # Changelog — coding-adventures-python-parser
 
+## [Unreleased]
+
+### Fixed
+
+- Eliminated runtime grammar loading. Previously, `get_grammar()` read
+  `code/grammars/python/python.grammar` off disk at runtime using a path
+  that walked outside this package's own directory into the monorepo
+  (`debug.getinfo`-based directory walk-up). That works inside a checkout
+  of the monorepo, but a published LuaRocks package does not include
+  `code/grammars/` — installing this rock and calling `parse` would raise
+  a file-not-found error.
+- The single `python.grammar` (this package is not versioned — `parse()`
+  and `create_parser()` take no version argument, unlike `python_lexer`)
+  is now compiled ahead of time (via `grammar-tools compile-grammar`) into
+  a `_grammar_default.lua` sibling module that embeds the parsed
+  `ParserGrammar` as native Lua data. `init.lua` now `require`s this
+  precompiled module and calls its `parser_grammar()` constructor (cached)
+  instead of reading and parsing `python.grammar` from disk.
+- The rockspec's `build.modules` table now lists the `_grammar_default.lua`
+  submodule explicitly so `luarocks install` actually packages it.
+- Public API (`parse`, `create_parser`, `get_grammar`) is unchanged.
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

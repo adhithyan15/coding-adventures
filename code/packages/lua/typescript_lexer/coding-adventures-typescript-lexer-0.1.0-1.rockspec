@@ -29,5 +29,12 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.typescript_lexer"] = "src/coding_adventures/typescript_lexer/init.lua",
+        ["coding_adventures.typescript_lexer._grammar_default"] = "src/coding_adventures/typescript_lexer/_grammar_default.lua",
+        ["coding_adventures.typescript_lexer._grammar_ts1_0"] = "src/coding_adventures/typescript_lexer/_grammar_ts1_0.lua",
+        ["coding_adventures.typescript_lexer._grammar_ts2_0"] = "src/coding_adventures/typescript_lexer/_grammar_ts2_0.lua",
+        ["coding_adventures.typescript_lexer._grammar_ts3_0"] = "src/coding_adventures/typescript_lexer/_grammar_ts3_0.lua",
+        ["coding_adventures.typescript_lexer._grammar_ts4_0"] = "src/coding_adventures/typescript_lexer/_grammar_ts4_0.lua",
+        ["coding_adventures.typescript_lexer._grammar_ts5_0"] = "src/coding_adventures/typescript_lexer/_grammar_ts5_0.lua",
+        ["coding_adventures.typescript_lexer._grammar_ts5_8"] = "src/coding_adventures/typescript_lexer/_grammar_ts5_8.lua",
     },
 }
