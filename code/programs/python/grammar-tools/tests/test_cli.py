@@ -149,6 +149,16 @@ class TestDispatch:
         if grammar.exists():
             assert dispatch("compile-grammar", [str(grammar)]) == 0
 
+    def test_compile_grammar_without_force_fails_on_validation_errors(self) -> None:
+        grammar = GRAMMARS_DIR / "csharp" / "csharp12.0.grammar"
+        if grammar.exists():
+            assert dispatch("compile-grammar", [str(grammar)]) == 1
+
+    def test_compile_grammar_with_force_succeeds_on_same_grammar(self) -> None:
+        grammar = GRAMMARS_DIR / "csharp" / "csharp12.0.grammar"
+        if grammar.exists():
+            assert dispatch("compile-grammar", [str(grammar)], None, True) == 0
+
 
 # ---------------------------------------------------------------------------
 # compile_tokens_command
@@ -214,6 +224,30 @@ class TestCompileGrammarCommand:
 
     def test_returns_1_on_missing_file(self) -> None:
         assert compile_grammar_command("/nonexistent/x.grammar", None) == 1
+
+    def test_returns_1_without_force_when_grammar_has_validation_error(self) -> None:
+        # csharp*.grammar has a known pre-existing "unreachable rule"
+        # validation error.
+        grammar = GRAMMARS_DIR / "csharp" / "csharp12.0.grammar"
+        if grammar.exists():
+            assert compile_grammar_command(str(grammar), None) == 1
+
+    def test_returns_0_with_force_despite_validation_error(self) -> None:
+        grammar = GRAMMARS_DIR / "csharp" / "csharp12.0.grammar"
+        if not grammar.exists():
+            return
+        with tempfile.NamedTemporaryFile(
+            suffix=".py", mode="w", delete=False
+        ) as f:
+            out_path = f.name
+        try:
+            result = compile_grammar_command(str(grammar), out_path, True)
+            assert result == 0
+            content = Path(out_path).read_text()
+            assert "PARSER_GRAMMAR" in content
+            assert "DO NOT EDIT" in content
+        finally:
+            os.unlink(out_path)
 
     def test_writes_output_file_when_path_given(self) -> None:
         grammar = GRAMMARS_DIR / "json" / "json.grammar"
