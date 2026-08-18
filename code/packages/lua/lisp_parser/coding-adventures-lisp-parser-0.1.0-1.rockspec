@@ -27,5 +27,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.lisp_parser"] = "src/coding_adventures/lisp_parser/init.lua",
+        ["coding_adventures.lisp_parser._grammar"] = "src/coding_adventures/lisp_parser/_grammar.lua",
     },
 }
