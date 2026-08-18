@@ -346,7 +346,31 @@ predecessor by hash, so the chain remains linked and a rollback remains
 detectable; what is removed is the ability to *re-open the vault through* a
 retired credential. Nothing in the product reads a non-latest generation.
 
-Two honest limits, stated rather than argued away:
+### 5.4.1 The window between install and delete
+
+Two records cannot be swapped atomically, so step 7b's install necessarily
+precedes step 7c's delete, and between them both wraps exist on disk. That
+order is not negotiable in the other direction: deleting first would leave a
+window in which *no* readable bootstrap exists, and a crash landing there would
+brick the vault outright. Install-then-delete trades a bounded exposure for the
+removal of an unbounded one.
+
+The window's size is worth being precise about, because a crash extends it past
+the end of the process. Within a running rotation it is one durable delete
+long. After a crash it lasts until the next command that opens the vault, which
+finishes the roll-forward — including the delete — before doing anything else.
+What the window is *not* is indefinite: no landing point leaves a vault whose
+old wrap survives a subsequent successful command, and the VLT-PM41 sweep
+checks exactly that by requiring that only one passphrase works once the vault
+has been used again.
+
+During the window the retired generation is already unreachable through the
+product: `load_latest` serves the pointer's target and nothing in this product
+reads a non-latest generation. Reaching the retired wrap requires filesystem
+access to the state directory, which §5.4's second limit already places outside
+this profile.
+
+Two further honest limits, stated rather than argued away:
 
 - **Ordinary backups are out of scope.** A copy of the state directory taken
   before the rotation still contains the old wrap. That is inherent to backups
