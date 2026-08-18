@@ -8452,6 +8452,132 @@
       "jsonHash": "fnv1a64:76b892b03e3615c6"
     },
     {
+      "language": "sanskrit",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:9cb75d5b51116e33",
+      "lessonIds": [
+        "SA-C38-fire",
+        "SA-C38-ash",
+        "SA-C38-stone",
+        "SA-C38-sand",
+        "SA-C38-soil"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch38.txt",
+      "json": "sanskrit/narration/ch38.json",
+      "textHash": "fnv1a64:b7be3d15efd79ec6",
+      "jsonHash": "fnv1a64:8cf3d50d33720609"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:9ddb135db7a4b884",
+      "lessonIds": [
+        "SA-C39-cow",
+        "SA-C39-bird",
+        "SA-C39-fish",
+        "SA-C39-dog",
+        "SA-C39-snake"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch39.txt",
+      "json": "sanskrit/narration/ch39.json",
+      "textHash": "fnv1a64:0de5ec6c55205e47",
+      "jsonHash": "fnv1a64:159737427184624f"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:18e3e724436b79dc",
+      "lessonIds": [
+        "SA-C40-curd",
+        "SA-C40-sugar",
+        "SA-C40-butter",
+        "SA-C40-vegetable",
+        "SA-C40-sweet"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch40.txt",
+      "json": "sanskrit/narration/ch40.json",
+      "textHash": "fnv1a64:59c7a7d98820d6c4",
+      "jsonHash": "fnv1a64:5db6074b30a051e7"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:81af0ba7ab38b05b",
+      "lessonIds": [
+        "SA-C41-wheel",
+        "SA-C41-pot",
+        "SA-C41-boat",
+        "SA-C41-mirror",
+        "SA-C41-parasol"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch41.txt",
+      "json": "sanskrit/narration/ch41.json",
+      "textHash": "fnv1a64:601f9b7f2fedfd06",
+      "jsonHash": "fnv1a64:1edb17b0e2cfca63"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:ee993f58cf13a210",
+      "lessonIds": [
+        "SA-C42-sometimes",
+        "SA-C42-suddenly",
+        "SA-C42-mostly",
+        "SA-C42-a-little",
+        "SA-C42-much"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch42.txt",
+      "json": "sanskrit/narration/ch42.json",
+      "textHash": "fnv1a64:07c8f038f60e94e5",
+      "jsonHash": "fnv1a64:ad95fdbeced99ab4"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:b47c87a5e8bee4b9",
+      "lessonIds": [
+        "SA-C43-hospitality",
+        "SA-C43-conduct",
+        "SA-C43-humility",
+        "SA-C43-trust",
+        "SA-C43-honest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch43.txt",
+      "json": "sanskrit/narration/ch43.json",
+      "textHash": "fnv1a64:881dec451883b1d1",
+      "jsonHash": "fnv1a64:0b3ba6da346e5ae7"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:6c286fb414b9813c",
+      "lessonIds": [
+        "SA-C44-white",
+        "SA-C44-dark",
+        "SA-C44-yellow",
+        "SA-C44-green",
+        "SA-C44-blue"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch44.txt",
+      "json": "sanskrit/narration/ch44.json",
+      "textHash": "fnv1a64:2ef4d97354c9491f",
+      "jsonHash": "fnv1a64:e047d7b81d4ae2e5"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:7f767862168ad0bf",

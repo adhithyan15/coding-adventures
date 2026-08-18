@@ -639,6 +639,118 @@
         "SA-EXT-37-COURTESY"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-38-EARTH",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-C38-fire",
+        "SA-C38-ash",
+        "SA-C38-stone",
+        "SA-C38-sand",
+        "SA-C38-soil"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-38-EARTH"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-39-ANIMAL",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C39-cow",
+        "SA-C39-bird",
+        "SA-C39-fish",
+        "SA-C39-dog",
+        "SA-C39-snake"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-39-ANIMAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-40-FOOD",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "SA-C40-curd",
+        "SA-C40-sugar",
+        "SA-C40-butter",
+        "SA-C40-vegetable",
+        "SA-C40-sweet"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-40-FOOD"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-41-CRAFT",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "SA-C41-wheel",
+        "SA-C41-pot",
+        "SA-C41-boat",
+        "SA-C41-mirror",
+        "SA-C41-parasol"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-41-CRAFT"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-42-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "SA-C42-sometimes",
+        "SA-C42-suddenly",
+        "SA-C42-mostly",
+        "SA-C42-a-little",
+        "SA-C42-much"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-42-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-43-COURTESY",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "SA-C43-hospitality",
+        "SA-C43-conduct",
+        "SA-C43-humility",
+        "SA-C43-trust",
+        "SA-C43-honest"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-43-COURTESY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-44-COLOUR",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "SA-C44-white",
+        "SA-C44-dark",
+        "SA-C44-yellow",
+        "SA-C44-green",
+        "SA-C44-blue"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-44-COLOUR"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -648,7 +760,8 @@
         "SA-PATH-003",
         "SA-PATH-100",
         "SA-PATH-30-WELCOME",
-        "SA-PATH-31-SKY"
+        "SA-PATH-31-SKY",
+        "SA-PATH-38-EARTH"
       ],
       "omits": [
         "GREETING-PEACE"
@@ -660,7 +773,8 @@
         "SA-PATH-002",
         "SA-PATH-007",
         "SA-PATH-29-COURTESY",
-        "SA-PATH-37-COURTESY"
+        "SA-PATH-37-COURTESY",
+        "SA-PATH-43-COURTESY"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -671,7 +785,8 @@
       "segments": [
         "SA-PATH-004",
         "SA-PATH-27-REPLY",
-        "SA-PATH-36-REPLY"
+        "SA-PATH-36-REPLY",
+        "SA-PATH-42-REPLY"
       ],
       "omits": [
         "RESPONSE-YES",
@@ -685,7 +800,8 @@
         "SA-PATH-005",
         "SA-PATH-014",
         "SA-PATH-26-ROLE",
-        "SA-PATH-32-TREE"
+        "SA-PATH-32-TREE",
+        "SA-PATH-41-CRAFT"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -698,7 +814,8 @@
         "SA-PATH-015",
         "SA-PATH-016",
         "SA-PATH-25-BODY",
-        "SA-PATH-34-LIMB"
+        "SA-PATH-34-LIMB",
+        "SA-PATH-39-ANIMAL"
       ],
       "omits": [
         "WORD-GOOD",
@@ -710,7 +827,8 @@
       "segments": [
         "SA-PATH-013",
         "SA-PATH-24-ASK",
-        "SA-PATH-35-HOUSE"
+        "SA-PATH-35-HOUSE",
+        "SA-PATH-40-FOOD"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -722,7 +840,8 @@
       "segments": [
         "SA-PATH-008",
         "SA-PATH-28-LEAVE",
-        "SA-PATH-33-LAND"
+        "SA-PATH-33-LAND",
+        "SA-PATH-44-COLOUR"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1518,6 +1637,111 @@
         "SA-C37-gracious",
         "SA-C37-congratulations",
         "SA-C37-blessing"
+      ]
+    },
+    {
+      "id": "SA-EXT-38-EARTH",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things of earth and hearth in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C38-fire",
+        "SA-C38-ash",
+        "SA-C38-stone",
+        "SA-C38-sand",
+        "SA-C38-soil"
+      ]
+    },
+    {
+      "id": "SA-EXT-39-ANIMAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five animals in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C39-cow",
+        "SA-C39-bird",
+        "SA-C39-fish",
+        "SA-C39-dog",
+        "SA-C39-snake"
+      ]
+    },
+    {
+      "id": "SA-EXT-40-FOOD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things from a kitchen in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C40-curd",
+        "SA-C40-sugar",
+        "SA-C40-butter",
+        "SA-C40-vegetable",
+        "SA-C40-sweet"
+      ]
+    },
+    {
+      "id": "SA-EXT-41-CRAFT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five made things in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C41-wheel",
+        "SA-C41-pot",
+        "SA-C41-boat",
+        "SA-C41-mirror",
+        "SA-C41-parasol"
+      ]
+    },
+    {
+      "id": "SA-EXT-42-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can give five more short replies in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C42-sometimes",
+        "SA-C42-suddenly",
+        "SA-C42-mostly",
+        "SA-C42-a-little",
+        "SA-C42-much"
+      ]
+    },
+    {
+      "id": "SA-EXT-43-COURTESY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five habits of good manners in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C43-hospitality",
+        "SA-C43-conduct",
+        "SA-C43-humility",
+        "SA-C43-trust",
+        "SA-C43-honest"
+      ]
+    },
+    {
+      "id": "SA-EXT-44-COLOUR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five colours in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C44-white",
+        "SA-C44-dark",
+        "SA-C44-yellow",
+        "SA-C44-green",
+        "SA-C44-blue"
       ]
     }
   ]
