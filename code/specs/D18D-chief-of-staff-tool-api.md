@@ -841,6 +841,20 @@ attaching any handler. A host left holding one vault tool because the second was
 refused is worse than one holding neither, since the tool that did register
 looks healthy and the failure resurfaces later and elsewhere.
 
+That rule is about *partial failure*, not about which tools a deployment
+chooses to offer. A binding may deliberately register only `vault.request_lease`
+— and must, where no trusted delivery adapter exists, because `request_direct`
+without one has nowhere to deliver. Registering it anyway against a stub that
+accepts everything would be strictly worse than leaving it unregistered: it
+would present a working direct-delivery tool to an agent while the secret went
+nowhere, or worse, somewhere unaudited.
+
+The distinction to preserve is that a deliberate subset is chosen up front and
+is complete in itself, whereas a partial registration is the residue of
+something going wrong halfway. A conforming binding therefore exposes the
+lease-only case as its own named operation rather than by catching an error
+from the pair, so the two are distinguishable in the code that calls it.
+
 Note what this gate does *not* do. It runs once, at registration, per host — it
 is not a per-call check. Per-call authorization is the policy engine's job, and
 the default policy admits everything, so a binding that wants per-call control
