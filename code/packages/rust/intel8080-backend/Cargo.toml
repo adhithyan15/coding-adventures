@@ -1,0 +1,17 @@
+[package]
+name = "intel8080-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8080 backend for jit-core / aot-core.  Lowers Vec<CIRInstr> to Intel 8080 machine code via intel8080-encoder.  Third lane of the 9-architecture expansion."
+
+[lib]
+name = "intel8080_backend"
+path = "src/lib.rs"
+
+[dependencies]
+intel8080-encoder = { path = "../intel8080-encoder" }
+jit-core          = { path = "../jit-core" }
+vm-core           = { path = "../vm-core" }
+
+[dev-dependencies]
+intel8080-simulator = { path = "../intel8080-simulator" }

@@ -50,19 +50,19 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "c<<",
     ">>",
     "u>>",
-    // Truncating division / remainder (SIR27 milestone 6) — distinct from the
-    // flooring `/`/`%` because C truncates toward zero; `u`-variants for the
-    // unsigned common type.
-    "tdiv",
+    // Truncating remainder (SIR27 milestone 6) — distinct from the flooring
+    // `%` because C truncates toward zero; `u`-variant for the unsigned
+    // common type. (The division half, `tdiv`/`utdiv`, was absorbed by
+    // `div_trunc`/`udiv_trunc` below — see SIR21 T3b-2 Slice 7 cleanup.)
     "tmod",
-    "utdiv",
     "utmod",
     // SIR21 T3b-2: the four-way division-op split. `div_floor` is a bare
     // alias for the pre-existing `/` (Ruby's own `Integer#/`/`Float#/`
     // ALREADY are floor/true-divide, respectively — no runtime helper
     // needed). `div_trunc`/`udiv_trunc` reuse the existing `sir_tdiv`
-    // helper above (same as `tdiv`/`utdiv`, which this pair will
-    // eventually replace — see the spec's "absorbs/replaces" note).
+    // helper above (formerly named `tdiv`/`utdiv` at the SIR level — those
+    // bare names are now dead and removed, Slice 7 cleanup, once
+    // `c-to-semantic-ir` — their only emitter — migrated in Slice 6).
     // `div_true` is genuinely new: see `sir_true_div`'s doc comment in
     // `runtime.rs` for why it needs an explicit zero-check (Ruby's native
     // `Float#/0` silently returns `Infinity`, unlike `Integer#/0`).
@@ -1490,10 +1490,11 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // value is a masked non-negative Integer, so `>>` is already logical
         // there (the distinction only matters for the C backend's signed int64).
         ">>" | "u>>" => format!("({} >> {})", arg(&a, 0), arg(&a, 1)),
-        // Truncating (C-style) division / remainder via the runtime helpers.
-        // The unsigned variants reuse them: a Ruby unsigned value is a
+        // Truncating (C-style) remainder via the runtime helper. The
+        // unsigned variant reuses it: a Ruby unsigned value is a
         // non-negative Integer, for which truncation and flooring coincide.
-        "tdiv" | "utdiv" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
+        // (The division half, `tdiv`/`utdiv`, was absorbed by `div_trunc`/
+        // `udiv_trunc` below — see SIR21 T3b-2 Slice 7 cleanup.)
         "tmod" | "utmod" => format!("sir_tmod({}, {})", arg(&a, 0), arg(&a, 1)),
         // SIR21 T3b-2: `div_floor` renders IDENTICALLY to bare `/` — Ruby's
         // own `/` already is `div_floor` (floors ints, true-divides
@@ -1507,10 +1508,8 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // pre-existing float-zero gap for the identical reason).
         "div_floor" => format!("({})", join_op(&a, " / ", "1")),
         // `div_trunc`/`udiv_trunc` reuse the existing `sir_tdiv` helper —
-        // identical to `tdiv`/`utdiv` today (this pair is slated to
-        // replace those names in a later cleanup slice; both stay wired
-        // to the same helper in the meantime, per the spec's
-        // absorbs/replaces decision).
+        // the old bare `"tdiv"`/`"utdiv"` names these replaced (per the
+        // spec's absorbs/replaces decision) are now dead and removed.
         "div_trunc" | "udiv_trunc" => format!("sir_tdiv({}, {})", arg(&a, 0), arg(&a, 1)),
         "div_true" => format!("sir_true_div({}, {})", arg(&a, 0), arg(&a, 1)),
         // `to_f`/`to_i`: Ruby's native `Numeric#to_f` (int → Float) and

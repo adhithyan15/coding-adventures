@@ -227,28 +227,6 @@ fn udiv_trunc_matches_div_trunc_on_positive_operands() {
     }
 }
 
-#[test]
-fn div_trunc_udiv_trunc_emit_the_same_helpers_as_tdiv_utdiv() {
-    let src = semantic_ir_to_c::compile(&div_module(vec![
-        puts(bin("tdiv", ilit(7), ilit(2))),
-        puts(bin("div_trunc", ilit(7), ilit(2))),
-        puts(bin("utdiv", ilit(7), ilit(2))),
-        puts(bin("udiv_trunc", ilit(7), ilit(2))),
-    ]))
-    .expect("compile")
-    .source;
-    assert_eq!(
-        src.matches("_sir_itdiv(_sir_int(7LL), _sir_int(2LL))").count(),
-        2,
-        "tdiv and div_trunc must emit the identical _sir_itdiv call:\n{src}"
-    );
-    assert_eq!(
-        src.matches("_sir_utdiv(_sir_int(7LL), _sir_int(2LL))").count(),
-        2,
-        "utdiv and udiv_trunc must emit the identical _sir_utdiv call:\n{src}"
-    );
-}
-
 // ── div_true: genuinely new — always coerces to float, never floors ─────
 
 #[test]

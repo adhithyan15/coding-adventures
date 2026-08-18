@@ -253,6 +253,14 @@ pub enum LangAotError {
     /// terms** value model (integers, atoms, list cells) rather than the
     /// structural uniform-reference model of WASM/JVM/CLR (LANG77 / McCarthy W9).
     BeamBackendError(String),
+    /// The Intel 8080 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `intel8080-backend` (which
+    /// already includes the failing function name and the unsupported
+    /// op/type/operand).  Third lane of the 9-architecture expansion —
+    /// the 8080 (1974) is the 8008's direct successor and the CPU inside
+    /// the Altair 8800.
+    Intel8080BackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -279,6 +287,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Arm1BackendError(m) => write!(f, "arm1: {m}"),
             LangAotError::Mos6502BackendError(m) => write!(f, "mos6502: {m}"),
             LangAotError::M68kBackendError(m) => write!(f, "m68k: {m}"),
+            LangAotError::Intel8080BackendError(m) => write!(f, "intel8080: {m}"),
         }
     }
 }
@@ -1932,6 +1941,88 @@ pub fn compile_file_to_ibm704_bin(
     // emits HTR 0 for empty CIR.
     if bytes.is_empty() {
         bytes.extend_from_slice(&ibm704_encoder::HTR_HALT_BYTES);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 8080 machine code (`.bin`) on disk.
+///
+/// Third lane of the 9-architecture expansion.  Like the other
+/// historical-arch pipelines, this does **not** link or run any
+/// toolchain — it just writes a flat `.bin` of variable-length
+/// (1/2/3-byte) Intel 8080 opcode bytes.  Downstream consumers:
+///
+/// * [`intel8080-simulator`](../intel8080-simulator) — load + execute
+///   in-process via `Intel8080Simulator::run`.
+/// * An external 8080 emulator that consumes raw byte streams.
+/// * An EPROM burner.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-agnostic.
+///
+/// # Why the Intel 8080?
+///
+/// The 8080 (1974) is the Intel 8008's direct architectural successor —
+/// still an 8-bit accumulator machine with a real `HLT` opcode, so this
+/// backend's `const → accumulator, ret → HLT` shape mirrors
+/// `intel8008-backend` almost directly.  It is also the CPU inside the
+/// Altair 8800 (1975), the machine that launched the personal-computer
+/// era; CP/M targeted it, and Microsoft was founded to write BASIC for it.
+///
+/// # Wire format
+///
+/// Intel 8080 instructions are 1, 2, or 3 bytes each, in execution
+/// order.  No endianness conversion at this layer — each byte is
+/// written exactly as `intel8080-backend` emits it.  Multi-byte
+/// instructions (`MVI`, `LXI`, `JMP`, `CALL`, `STA`/`LDA`, …) lay out as
+/// `<opcode> [<low_byte> [<high_byte>]]` per the 8080 spec (16-bit
+/// address/immediate operands are little-endian within the
+/// instruction).
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Intel8080BackendError` — the IIR contained an op or type the
+///   Intel 8080 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=intel8080 -o foo.bin
+/// # Then load foo.bin into the simulator:
+/// intel8080-simulator foo.bin
+/// ```
+pub fn compile_file_to_intel8080_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Third lane of the 9-architecture expansion: route through
+    // aot_core::infer + aot_core::specialise + intel8080_backend::compile
+    // per function, same pattern as the intel8008/mips-r2000 lanes.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = intel8080_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Intel8080BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.push(intel8080_encoder::HLT);
     }
 
     std::fs::write(out, &bytes)?;

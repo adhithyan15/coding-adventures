@@ -1,0 +1,8 @@
+[package]
+name = "intel8080-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8080 (1974) behavioral simulator -- Rust port of code/packages/python/intel8080-simulator (Layer 07i). Variable-length (1/2/3-byte) instructions, 7 named 8-bit registers + 16-bit SP/PC, 5 condition flags, flat 64Ki memory, 256 input/256 output ports. Built on the cpu-simulator crate for Memory; module split mirrors mips-r2000-simulator. Third lane of the 9-architecture expansion."
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }

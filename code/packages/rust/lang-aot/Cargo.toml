@@ -41,6 +41,8 @@ mos6502-backend       = { path = "../mos6502-backend" }
 mos6502-encoder       = { path = "../mos6502-encoder" }
 m68k-backend          = { path = "../m68k-backend" }
 m68k-encoder          = { path = "../m68k-encoder" }
+intel8080-backend     = { path = "../intel8080-backend" }
+intel8080-encoder     = { path = "../intel8080-encoder" }
 aot-core              = { path = "../aot-core" }
 jit-core              = { path = "../jit-core" }
 # JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes
@@ -55,6 +57,9 @@ path = "bin/lang_aot.rs"
 
 [dev-dependencies]
 tempfile = "3"
+# Executes the intel8080-backend e2e smoke test's emitted bytes to check
+# the actual accumulator value, not just a hand-derived byte array.
+intel8080-simulator = { path = "../intel8080-simulator" }
 # In-repo wasm module runtime — used to RUN emitted wasm in tests and assert
 # the computed result (LANG77 / McCarthy L3b-3a-2). Keeps wasm verification
 # zero-external-dep.

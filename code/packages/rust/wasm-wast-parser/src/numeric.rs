@@ -68,6 +68,25 @@ pub fn parse_i32(text: &str, pos: usize) -> Result<i32, WastParseError> {
     Ok(signed as u32 as i32)
 }
 
+/// Parse a `u32`-context integer literal -- table/memory LIMITS
+/// (`min`/`max`), decimal or `0x`-hex, `_`-separated (task #99: the real
+/// testsuite's own `table.wast` uses hex limits like `0xffff_ffff`, which
+/// `parse_limits`'s old digit-only atom filter silently dropped instead of
+/// parsing). Unlike [`parse_i32`], the WAT grammar never signs a limit (no
+/// signed/unsigned dual-spelling to resolve), so a leading `-` is a real
+/// error here, not a valid alternate encoding of a large unsigned value.
+pub fn parse_u32(text: &str, pos: usize) -> Result<u32, WastParseError> {
+    let (neg, mag) = parse_int_magnitude(text, pos)?;
+    if neg || mag > u32::MAX as u128 {
+        return Err(WastParseError::InvalidNumericLiteralForType {
+            pos,
+            text: text.to_string(),
+            ty: "u32 limit",
+        });
+    }
+    Ok(mag as u32)
+}
+
 /// As [`parse_i32`], for the 8-bit range `[-2^7, 2^8-1]`. There's no plain
 /// `i8.const` in WASM (`i32` is the smallest scalar integer type) -- this
 /// exists only for `v128.const`'s `i8x16` shape, whose 16 lane literals

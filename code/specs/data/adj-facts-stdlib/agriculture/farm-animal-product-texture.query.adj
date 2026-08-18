@@ -1,0 +1,20 @@
+% ============================================================================
+% farm-animal-product-texture.query — a worked recall over the agriculture
+% farm-animal-product-texture library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does rabbit wool
+% feel like?": it states no agriculture fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `farm_animal_product_texture` rows and returns the texture +
+% the table's source/locator/trust. An animal/product pair the cited spans
+% give no texture for abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli farm-animal-product-texture.query.adj
+% ============================================================================
+
+import "farm-animal-product-texture.adj"
+
+? farm_animal_product_texture(rabbit, wool, $Texture)             % expect soft
+? farm_animal_product_texture($Animal, $Product, soft)            % reverse bind — expect rabbit, wool
+? farm_animal_product_texture(goat, milk, $Texture)                % expect abstain — goat's own cited span states a processing method for milk, not a texture

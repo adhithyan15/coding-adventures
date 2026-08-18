@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.39.0 — SIR21 T3b-2 Slice 7: cleanup — remove dead `tdiv`/`utdiv`
+
+Part of the SIR21 T3b-2 arc's final slice. `c-to-semantic-ir` — the only
+crate that ever emitted the bare `"tdiv"`/`"utdiv"` builtin names — migrated
+to `div_trunc`/`udiv_trunc` in Slice 6 (0.3.0, merged). With that migration
+in, `"tdiv"`/`"utdiv"` are provably dead names: nothing in this repository
+constructs a `BuiltinCall` with either name anymore.
+
+Removed the three dead dispatch entries: the `variadic_helper`/binary-arity
+table's `"tdiv" => ("_sir_itdiv", 2)` / `"utdiv" => ("_sir_utdiv", 2)`
+(`emit.rs`), and the value-referenced-builtin dispatcher's matching
+`strcmp(name, "tdiv")`/`strcmp(name, "utdiv")` branches (`runtime.rs`).
+
+**What did NOT change**: the underlying `_sir_itdiv`/`_sir_utdiv` C runtime
+functions themselves — `div_trunc`/`udiv_trunc`'s own dispatch entries
+(added in Slice 2, 0.38.0) still call them, so they remain live code, just
+reachable only under their new canonical names now. `tmod`/`utmod` (modulo)
+are untouched — this arc has never touched modulo, a deliberate,
+documented asymmetry (see the spec's own forward pointer to a future,
+unnumbered milestone). Bare `"/"` also stays exactly as it was (still
+aliased to `div_floor`'s `_sir_divide` implementation) — it is `twig-to-
+semantic-ir`'s permanent fallback route (Twig's `/` is variadic and has no
+static int/float distinction to route to one of the four typed ops, so it
+can never migrate off the bare name — see the spec's own explanation).
+
+Also added a new Twig-sourced regression case to
+`tests/compile_and_run.rs`'s corpus (`twig_bare_slash_still_floors_after_
+tdiv_utdiv_removal`, `-7 / 2` → `-4`): Twig's `/` is variadic with no
+static int/float distinction, so it can never migrate to one of the four
+typed division ops — it stays on bare `"/"` permanently, and this arc's
+own dedicated cleanup slice for the *other* two names it shares a codebase
+with (`tdiv`/`utdiv`) is exactly the kind of change that could silently
+regress an unrelated, still-live dispatch path if a shared code region
+were touched carelessly. This proves it didn't.
+
+Verified via the full `semantic-ir-to-c` test suite (39 integration test
+binaries, all real-`cc`-compile-and-run, 0 failures) and the full
+`sir-conformance` suite (0 failures) — both green with these dispatch
+entries gone, confirming nothing else in the pipeline still reaches for
+`"tdiv"`/`"utdiv"` by name.
+
+`semantic-ir-to-c` 0.38.0 -> 0.39.0.
+
 ## 0.38.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive only — no frontend emits these names yet, bare `"/"`/`"tdiv"`/
