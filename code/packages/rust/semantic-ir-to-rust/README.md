@@ -298,10 +298,31 @@ backend emits — bare `"print"`/`"puts"` `BuiltinCall`s and the `print`/
 every frontend finished migrating to `__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
+**`NDArrays` / `MatrixOps` / `ArrayColumnMajor`** (SIR22 array/matrix base
+cut, Phase A Slice 2): `Expr::ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+`Transpose`/`IndexGet` and `Stmt::IndexSet` route into a new `__sir::array_*`
+sub-runtime — an inlined port of `semantic-ir-to-javascript`'s own
+already-proven `ArrayRt` sub-runtime (this backend inlines its runtime
+helpers, same as `seq_*`/`map_*`, since the generated program has no
+`Cargo.toml`/dependency graph to hang a real crate dependency off). Array
+data is stored uniformly as `f64` (mirroring the JS backend's
+`Float64Array`), so `IndexGet` on a scalar position always yields a
+`Value::Float`. `Stmt::IndexSet` mutates through the new
+`Value::NDArray(Rc<RefCell<SirNDArray>>)` handle — the same shared-mutable
+pattern `Seq`/`Map` already use, so every alias of an array binding
+observes the write. The 9-node SIR22 "APL addendum"
+(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+`IndexOf`/`Ravel`/`Catenate`) shares these same three features with the
+base cut but stays deferred to a later slice — rejected cleanly by a
+dedicated pre-emit scan (`reject_sir22_addendum` in `lib.rs`) rather than
+this capability gate, since the gate alone can't tell the two groups
+apart. See [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
-(empty whitelist in v0), `StringInterpolation`, and a stateful (non-empty
+(empty whitelist in v0), `StringInterpolation`, a stateful (non-empty
 body) `Class`/`Module` or a non-name-slot `Const` reference (rejected
-cleanly by the soundness gates).
+cleanly by the soundness gates), and the SIR22 "APL addendum" nodes above
+(rejected cleanly by `reject_sir22_addendum`, not this capability gate).
 
 ## Value model
 
@@ -316,7 +337,10 @@ enum Value {
     Seq(Rc<RefCell<Vec<Value>>>),            // SIR16 Sequences
     Map(Rc<RefCell<Vec<(Value, Value)>>>),   // SIR16 Maps (insertion-ordered)
     Instance(u64),                           // SIR17 O5 user-object handle
+    NDArray(Rc<RefCell<SirNDArray>>),        // SIR22 array/matrix base cut
 }
+
+struct SirNDArray { shape: Vec<usize>, data: Vec<f64> }  // rank <= 2, column-major
 ```
 
 - Single-threaded (`Rc`, not `Arc`).
@@ -336,6 +360,10 @@ enum Value {
 - Sequences and maps are `Rc<RefCell<…>>` so `SeqSet`/`MapSet` mutate the
   shared value in place; maps key by `value_eq` (linear lookup) and keep
   insertion order.
+- `NDArray` is `Rc<RefCell<…>>` for the identical reason: `Stmt::IndexSet`
+  must mutate the very array a caller's binding holds, visible through
+  every alias — the same requirement `Seq`/`Map` already solve, applied to
+  a new variant rather than inventing a second ownership strategy.
 
 ## `main` collision
 

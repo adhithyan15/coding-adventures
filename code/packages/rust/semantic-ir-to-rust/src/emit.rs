@@ -20,7 +20,10 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashSet;
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt};
+use semantic_ir::{
+    Block, ElementwiseOpKind, Expr, Function, Global, IndexArg, Module, Param, ParamKind, Scope,
+    Stmt,
+};
 
 use crate::runtime::RUNTIME;
 
@@ -428,12 +431,32 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         | Stmt::ModuleDef { .. }
         | Stmt::SingletonClassDef { .. }
         | Stmt::TryCatch { .. } => {}
-        // SIR22 array/matrix indexed assignment: `Feature::NDArrays` /
-        // `Feature::MatrixOps` are not in this backend's accepted-features
-        // list, so `check_module` rejects any module using `IndexSet`
-        // before it ever reaches this pure collection helper. Nothing
-        // reachable to collect.
-        Stmt::IndexSet { .. } => {}
+        // SIR22 array/matrix indexed assignment: `target`, each index
+        // argument, and `value` can each nest an `Assign` (e.g.
+        // `A(i) = (foo := 1)`), so recurse into all three — same
+        // treatment as `SeqSet`/`MapSet` above.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            collect_expr_assigned(target, out);
+            for arg in indices {
+                collect_index_arg_assigned(arg, out);
+            }
+            collect_expr_assigned(value, out);
+        }
+    }
+}
+
+/// Recurse into an `IndexArg`'s nested expression(s), if any — shared by
+/// `collect_stmt_assigned`'s `IndexSet` arm and `collect_expr_assigned`'s
+/// `IndexGet` arm.
+fn collect_index_arg_assigned(arg: &IndexArg, out: &mut HashSet<String>) {
+    match arg {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => collect_expr_assigned(e, out),
+        IndexArg::Whole => {}
     }
 }
 
@@ -510,19 +533,43 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::VarRef { .. }
         | Expr::Intrinsic { .. }
         | Expr::StrConcat { .. } => {}
-        // SIR22 array/matrix nodes (rejected before emit — see
-        // `collect_stmt_assigned`'s `IndexSet` arm): none of these carry a
-        // reachable `Assign` for THIS backend, since a validated module can
-        // never contain them in the first place.
-        Expr::ArrayLit { .. }
-        | Expr::Range { .. }
-        | Expr::MatMul { .. }
-        | Expr::ElementwiseOp { .. }
-        | Expr::Transpose { .. }
-        | Expr::IndexGet { .. }
-        // SIR22 addendum: APL primitive operators — same rationale as the
-        // base SIR22 nodes above.
-        | Expr::Reduce { .. }
+        // SIR22 array/matrix nodes (base cut) — real recursion, since this
+        // backend now accepts them: each sub-expression can nest an
+        // `Assign` the same as any other operand position.
+        Expr::ArrayLit { rows, .. } => {
+            for row in rows {
+                for item in row {
+                    collect_expr_assigned(item, out);
+                }
+            }
+        }
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            collect_expr_assigned(start, out);
+            if let Some(step) = step {
+                collect_expr_assigned(step, out);
+            }
+            collect_expr_assigned(stop, out);
+        }
+        Expr::MatMul { lhs, rhs, .. } | Expr::ElementwiseOp { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::Transpose { target, .. } => collect_expr_assigned(target, out),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            collect_expr_assigned(target, out);
+            for arg in indices {
+                collect_index_arg_assigned(arg, out);
+            }
+        }
+        // SIR22 addendum: APL primitive operators — rejected before emit
+        // (`reject_sir22_addendum` in `lib.rs`), so none of these carry a
+        // reachable `Assign` for THIS backend: a validated, accepted
+        // module can never contain them.
+        Expr::Reduce { .. }
         | Expr::Scan { .. }
         | Expr::OuterProduct { .. }
         | Expr::Shape { .. }
@@ -787,13 +834,26 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         } => {
             emit_try_catch(out, body, rescues, ensure_body, indent);
         }
-        // SIR22 array/matrix indexed assignment — `Feature::NDArrays` /
-        // `Feature::MatrixOps` are not in this backend's accepted-features
-        // list, so `check_module` rejects any module using `IndexSet`
-        // before it ever reaches emit.  Defensive panic covers internal
-        // bugs only (matches the `SingletonClassDef` arm above).
-        Stmt::IndexSet { span, .. } => {
-            panic!("rust backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet", span);
+        // ── SIR22: array/matrix indexed assignment ───────────────────
+        // `target[indices...] = value;` — mutates in place via
+        // `__sir::array_index_set` (see `runtime.rs`'s "SIR22
+        // array/matrix domain" section), matching the SIR22 spec's own
+        // note that `IndexSet` is a `Stmt`, not a pure `Expr`, for
+        // exactly this in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("__sir::array_index_set(&(");
+            emit_expr(out, target, indent);
+            out.push_str("), vec![");
+            emit_index_args(out, indices, indent);
+            out.push_str("], ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
         }
     }
 }
@@ -1116,22 +1176,93 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::KeywordArg { span, .. } => {
             panic!("rust backend reached a stand-alone keyword-arg expression at {} — indirect/closure keyword calls are out of scope for v0 (see sir-keyword-params.md)", span);
         }
-        // SIR22 array/matrix expressions (`ArrayLit`/`Range`/`MatMul`/
-        // `ElementwiseOp`/`Transpose`/`IndexGet`) — `Feature::NDArrays` /
-        // `Feature::MatrixOps` are not in this backend's accepted-features
-        // list, so `check_module` rejects any module using them before it
-        // ever reaches emit.  Defensive panic covers internal bugs only
-        // (matches the `StrConcat`/`Intrinsic` arms above).
-        Expr::ArrayLit { span, .. }
-        | Expr::Range { span, .. }
-        | Expr::MatMul { span, .. }
-        | Expr::ElementwiseOp { span, .. }
-        | Expr::Transpose { span, .. }
-        | Expr::IndexGet { span, .. }
+        // ── SIR22: array/matrix expressions (base cut) ────────────────
+        // Real codegen: calls into the inlined `__sir::array_*` sub-
+        // runtime (see `runtime.rs`'s "SIR22 array/matrix domain"
+        // section) — a Rust port of `semantic-ir-to-javascript`'s own
+        // already-proven `ArrayRt` sub-runtime, mirroring how the SIR16
+        // `Expr::SeqLit`/`Expr::SeqIndex` arms above call into
+        // `__sir::seq_*`. `rows` is row-major in the literal syntax (per
+        // the SIR22 spec); `__sir::array_from_rows` reconciles that with
+        // column-major storage, so the emitter just nests the row/element
+        // expressions unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("__sir::array_from_rows(vec![");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push_str("vec![");
+                emit_args(out, row, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `__sir::array_range(start, stop, step)` — note the argument
+        // ORDER: the SIR node's own field order is `start, step, stop`,
+        // but `array_range(start, stop, step)` (mirroring the JS
+        // reference's own `range(start, stop, step = 1)`) takes `stop`
+        // before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("__sir::array_range(");
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent),
+                None => out.push_str("__sir::Value::Int(1i64)"),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("__sir::array_matmul(&(");
+            emit_expr(out, lhs, indent);
+            out.push_str("), &(");
+            emit_expr(out, rhs, indent);
+            out.push_str("))");
+        }
+        // The op name must match `array_apply_op`'s `match` in
+        // `runtime.rs` exactly (`"Add"`, not `.name()`'s lowercase
+        // `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__sir::array_elementwise({}, &(",
+                quote_rs_string(elementwise_op_rs_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str("), &(");
+            emit_expr(out, rhs, indent);
+            out.push_str("))");
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("__sir::array_transpose(&(");
+            emit_expr(out, target, indent);
+            let _ = write!(out, "), {conjugate})");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("__sir::array_index_get(&(");
+            emit_expr(out, target, indent);
+            out.push_str("), vec![");
+            emit_index_args(out, indices, indent);
+            out.push_str("])");
+        }
         // SIR22 addendum: APL primitive operators — same deferral rationale
         // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
-        // features, not in this backend's accepted-features list either).
-        | Expr::Reduce { span, .. }
+        // features the base cut above now accepts; a dedicated pre-emit
+        // scan, `reject_sir22_addendum` in `lib.rs`, rejects a module
+        // using one of these nine BEFORE it ever reaches emit — see that
+        // function's doc for why the feature gate alone can't tell the
+        // two groups apart). Defensive panic below covers internal bugs
+        // only (matches the `StrConcat`/`Intrinsic` arms above).
+        Expr::Reduce { span, .. }
         | Expr::Scan { span, .. }
         | Expr::OuterProduct { span, .. }
         | Expr::Shape { span, .. }
@@ -1144,7 +1275,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // validated module.
         | Expr::Convert { span, .. } => {
             panic!(
-                "rust backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                "rust backend reached a deferred SIR22-addendum/SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 span
             );
@@ -1207,6 +1338,63 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
             out.push_str(", ");
         }
         emit_expr(out, a, indent);
+    }
+}
+
+/// The Rust string `__sir::array_apply_op`'s `match` switches on — exact
+/// `ElementwiseOpKind` variant names, not `.name()`'s lowercase forms
+/// (`"add"`, etc., used elsewhere for e.g. debug/display), since this
+/// string is a real runtime dispatch key, not a cosmetic label.  Mirrors
+/// `semantic-ir-to-javascript`'s own `elementwise_op_js_name` exactly.
+fn elementwise_op_rs_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
+    }
+}
+
+/// Emit one `IndexArg` as the `__sir::SirIndexArg` variant `array_index_get`/
+/// `array_index_set` expect: `Scalar(<expr>)` / `Whole` / `Range(<expr>)`.
+/// The `Range` case reuses `emit_expr` on the inner `Expr::Range` node
+/// directly — that node's own `Expr::Range` arm already emits a call into
+/// `__sir::array_range(...)`, which returns exactly the `Value::NDArray`
+/// shape `SirIndexArg::Range` expects, so no separate handling is needed
+/// here.  Mirrors `semantic-ir-to-javascript`'s own `emit_index_arg`.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("__sir::SirIndexArg::Scalar(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        IndexArg::Whole => {
+            out.push_str("__sir::SirIndexArg::Whole");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("__sir::SirIndexArg::Range(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent);
     }
 }
 
@@ -2327,11 +2515,22 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         } => {
             emit_try_catch(out, body, rescues, ensure_body, indent);
         }
-        // SIR22 array/matrix indexed assignment (inline) — see the
-        // `IndexSet` arm in `emit_stmt` above; same reasoning applies here
-        // (matches the `SingletonClassDef` (inline) arm above).
-        Stmt::IndexSet { span, .. } => {
-            panic!("rust backend (inline) reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet", span);
+        // SIR22 array/matrix indexed assignment (inline) — same
+        // `array_index_set` helper as the statement path in `emit_stmt`,
+        // with a trailing space instead of a newline.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str("{ __sir::array_index_set(&(");
+            emit_expr(out, target, indent);
+            out.push_str("), vec![");
+            emit_index_args(out, indices, indent);
+            out.push_str("], ");
+            emit_expr(out, value, indent);
+            out.push_str("); } ");
         }
     }
 }

@@ -116,6 +116,17 @@ pub const RUNTIME: &str = r##"mod __sir {
         // (`format_d`, and an identity arm in `value_eq_d`); every other
         // `match` already has a `_`/`matches!` fallback.
         Instance(u64),
+        // ── SIR22 array/matrix domain ──────────────────────────────
+        // A dense, rectangular, column-major numeric array (see the
+        // "SIR22 array/matrix domain" section further down this file for
+        // the full value-model / ownership rationale). `Rc<RefCell<…>>`
+        // is the SAME shared-mutable-handle shape `Seq`/`Map` above
+        // already use — `Stmt::IndexSet` must mutate the very array the
+        // caller's binding already holds, and two bindings that alias the
+        // same literal must see each other's writes, exactly like
+        // `SeqSet`/`MapSet`. Cloning a `Value::NDArray` clones the `Rc`,
+        // not the backing storage.
+        NDArray(Rc<RefCell<SirNDArray>>),
     }
 
     pub struct Pair {
@@ -948,6 +959,29 @@ pub const RUNTIME: &str = r##"mod __sir {
             // needed here.  A program wanting a richer form defines its
             // own `to_s`, which dispatches through `call_method` first.
             Value::Instance(id) => format!("#<{}>", instance_class(*id)),
+            // An `NDArray` prints its shape and flattened (column-major)
+            // data — a defensive rendering only: every test/consumer of
+            // this SIR22 slice reads a SCALAR back out via `IndexGet`
+            // (see `array_index_get`'s doc), so this path is not the
+            // primary display story for this domain (matching the JS/
+            // Ruby/TS backends' own base-cut slices, which likewise defer
+            // a real NDArray display convention). No cycle risk — `data`
+            // is a flat `Vec<f64>`, never another `Value` — so no
+            // `visited` handling is needed here, same as `Instance` above.
+            Value::NDArray(a) => {
+                let a = a.borrow();
+                let mut s = String::from("NDArray");
+                s.push_str(&format!("{:?}", a.shape));
+                s.push('[');
+                for (i, x) in a.data.iter().enumerate() {
+                    if i > 0 {
+                        s.push_str(", ");
+                    }
+                    s.push_str(&format_float(*x));
+                }
+                s.push(']');
+                s
+            }
         }
     }
 
@@ -1212,6 +1246,634 @@ pub const RUNTIME: &str = r##"mod __sir {
                 value
             }
             other => panic!("map-set on non-map: {}", format(other)),
+        }
+    }
+
+    // ── SIR22 array/matrix domain ────────────────────────────────────
+    //
+    // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+    // (and `Stmt::IndexSet`) lower to calls into the `array_*` helpers
+    // below — an inlined port of `semantic-ir-to-javascript`'s own
+    // already-proven `ArrayRt` sub-runtime, following this backend's
+    // existing "self-contained, no external crate" discipline (same as
+    // `seq_*`/`map_*` above).
+    //
+    // ## Value model
+    //
+    // `SirNDArray { shape: Vec<usize>, data: Vec<f64> }` — dense,
+    // rectangular, COLUMN-MAJOR storage (Fortran/MATLAB order), mirroring
+    // `array_runtime::value::Array` field-for-field. `shape == []` is a
+    // scalar, `[n]` a vector (an `n×1` column for row/column purposes),
+    // `[r, c]` a matrix — this port's whole scope, like the JS/TS/Ruby
+    // references, is rank <= 2. `data` is uniformly `f64` (mirroring the
+    // JS backend's `Float64Array`, NOT `semantic-ir-to-ruby`'s
+    // Int/Float-preserving choice) — a deliberate simplification: this
+    // backend's `Value` already distinguishes `Int`/`Float` at the SCALAR
+    // level, but threading that distinction element-by-element through an
+    // array would multiply the arithmetic-dispatch surface (every
+    // `array_apply_op` call would need `any_float`-style promotion logic)
+    // for a domain whose own spec ("Motivation") maps 1:1 onto
+    // `array_runtime::execute()`, which is itself f64-only. A value read
+    // back out of an array via `IndexGet` is always `Value::Float`,
+    // documented at `array_index_get`.
+    //
+    // ## Ownership / `IndexSet` mutation (the one place this port is
+    // genuinely harder than the other backends')
+    //
+    // `Value::NDArray(Rc<RefCell<SirNDArray>>)` reuses EXACTLY the shared-
+    // mutable-handle pattern `Value::Seq`/`Value::Map` above already
+    // establish for this backend: cloning a `Value::NDArray` clones the
+    // `Rc` (a shared handle), not the backing storage, and `Stmt::IndexSet`
+    // (`array_index_set` below) mutates through `RefCell::borrow_mut()` —
+    // exactly the same shape `seq_set`/`map_set` use for `Stmt::SeqSet`/
+    // `Stmt::MapSet`. This was a genuine design question unique to this
+    // backend (JS/Ruby have no ownership model to satisfy — every value is
+    // implicitly a shared, mutable heap reference there), but it has an
+    // exact precedent already sitting in this same file: SIR16 sequences
+    // hit the identical "must mutate the very value the caller's binding
+    // already holds, and every alias must observe the write" requirement,
+    // and `Rc<RefCell<…>>` is how this backend already answers it. No new
+    // ownership strategy was needed — just the same one, applied to a new
+    // variant.
+    //
+    // ## Security discipline
+    //
+    // Every factory below validates a shape/output size *before*
+    // allocating a `Vec` from it (via `array_checked_shape_size`, using
+    // `checked_mul` so a shape product can never silently wrap on
+    // overflow) — a compiled program's array sizes come from potentially
+    // attacker-influenced runtime values (loop counts, parsed input, …),
+    // not fixed compile-time constants. Every *position* (an index
+    // resolved from a `Value`, itself ultimately `f64`-backed for a
+    // `Float` operand) is validated by `array_assert_valid_position`
+    // BEFORE it is allowed to become a `usize` — this is the one place a
+    // literal IEEE-754 NaN could otherwise defeat a bounds check (every
+    // relational comparison with NaN is `false`, so an unguarded NaN
+    // index could make an OR-negated bounds check's every branch `false`
+    // and slip through). Note this backend gets a STRONGER guarantee than
+    // JS/Ruby's own "written defensively" AND-form checks: because
+    // `array_assert_valid_position` is the ONLY path from an arbitrary
+    // `Value`/`f64` into a `usize` position, and Rust's `usize` cannot
+    // represent NaN or a negative value at all, every downstream bounds
+    // check (`array_get`/`array_set`) is NaN-safe *by construction*, not
+    // merely by writing the comparison in AND-form — though they are
+    // still written that way (`r < nrows && c < ncols`), both for
+    // readability and so the discipline reads consistently with every
+    // other backend's port of this same runtime.
+    //
+    // The SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) is
+    // deferred — these nine share `NDArrays`/`MatrixOps`/
+    // `ArrayColumnMajor` with the base cut above, so `lib.rs`'s `compile`
+    // adds a dedicated pre-emit scan (`reject_sir22_addendum`) rejecting
+    // them cleanly, beyond the ordinary feature-flag capability check.
+
+    /// Element cap for any array/matrix allocation in this domain —
+    /// mirrors the JS/TS/Ruby backends' identical `MAX_ELEMENTS`/
+    /// `SIR_ARRAY_MAX_ELEMENTS` bound exactly, so behaviour (and the DoS
+    /// ceiling) is identical across every backend implementing this slice.
+    pub const ARRAY_MAX_ELEMENTS: usize = 1 << 26; // 67,108,864
+
+    /// Tolerance for `array_range`'s inclusive-stop boundary check — a
+    /// floating step (e.g. `1:0.1:2`) can drift a few ULPs short of `stop`
+    /// by the final iteration, and MATLAB's `a:step:b` is inclusive of `b`.
+    const ARRAY_RANGE_EPSILON: f64 = 1e-9;
+
+    /// A dense, rectangular, column-major numeric array (rank <= 2 in this
+    /// slice's scope). See this section's module doc for the full value-
+    /// model rationale.
+    #[derive(Clone, Debug)]
+    pub struct SirNDArray {
+        pub shape: Vec<usize>,
+        pub data: Vec<f64>,
+    }
+
+    /// One resolved `IndexArg`, mirroring the SIR22 spec's `IndexArg`
+    /// exactly: `Scalar(v)` / `Whole` / `Range(v)` (`v` for `Range` is the
+    /// `Value::NDArray` an `Expr::Range` sub-expression evaluates to — see
+    /// the SIR22 spec's note that an index-position `Range` reuses
+    /// `Expr::Range` rather than duplicating its operand slots). `end`-
+    /// relative indices are never seen here — per SIR10 discipline, the
+    /// frontend resolves `end` to a concrete 0-based `Scalar` index before
+    /// emitting `IndexGet`/`IndexSet`.
+    pub enum SirIndexArg {
+        Scalar(Value),
+        Whole,
+        Range(Value),
+    }
+
+    /// Raise a catchable `RuntimeError` from this domain — every array/
+    /// matrix error is reported this way (a `raise`, not a bare Rust
+    /// panic), so a malformed shape/index/operand fails with a clean,
+    /// `TryCatch`-rescuable error instead of an uncatchable process abort.
+    fn array_raise(msg: String) -> ! {
+        raise("RuntimeError", Value::Str(Rc::from(msg.as_str())))
+    }
+
+    /// Validate `shape` and return its total element count — SECURITY:
+    /// called BEFORE every allocation in this domain, using `checked_mul`
+    /// so a shape product can never silently wrap around on overflow
+    /// (mirrors the JS/Ruby backends' own `Number.isFinite`/no-overflow
+    /// checks, adapted to Rust's checked-arithmetic idiom). Unlike JS/Ruby,
+    /// there is no "negative or non-integer dimension" case to check here
+    /// — `shape: &[usize]` already rules that out at the type level.
+    fn array_checked_shape_size(shape: &[usize]) -> usize {
+        let mut n: usize = 1;
+        for &d in shape {
+            n = match n.checked_mul(d) {
+                Some(v) => v,
+                None => array_raise(format!(
+                    "array_checked_shape_size: shape {:?} overflows while computing element count",
+                    shape
+                )),
+            };
+        }
+        if n > ARRAY_MAX_ELEMENTS {
+            array_raise(format!(
+                "array_checked_shape_size: shape {:?} ({} elements) exceeds the {} element cap",
+                shape, n, ARRAY_MAX_ELEMENTS
+            ));
+        }
+        n
+    }
+
+    /// Construct a `Value::NDArray`, validating `data.len()` against
+    /// `shape`'s own implied element count.
+    fn array_ndarray(shape: Vec<usize>, data: Vec<f64>) -> Value {
+        let n = array_checked_shape_size(&shape);
+        if n != data.len() {
+            array_raise(format!(
+                "array_ndarray: shape {:?} implies {} elements, got {}",
+                shape,
+                n,
+                data.len()
+            ));
+        }
+        Value::NDArray(Rc::new(RefCell::new(SirNDArray { shape, data })))
+    }
+
+    /// `[1 2; 3 4]` — build an `NDArray` from a row-major literal (per the
+    /// SIR22 spec, `rows` is row-major in the literal syntax; this
+    /// reconciles that with column-major storage). Each element is an
+    /// already-evaluated `Value` (an `IntLit`/`FloatLit`/arithmetic
+    /// result); `as_f64` widens it, matching the well-typed-input
+    /// assumption every other numeric builtin in this file already makes.
+    pub fn array_from_rows(rows: Vec<Vec<Value>>) -> Value {
+        let nrows_in = rows.len();
+        if nrows_in == 0 {
+            return array_ndarray(vec![0, 0], vec![]);
+        }
+        let ncols_in = rows[0].len();
+        if rows.iter().any(|r| r.len() != ncols_in) {
+            array_raise("array_from_rows: ragged rows".to_string());
+        }
+        let n = array_checked_shape_size(&[nrows_in, ncols_in]);
+        let mut data = vec![0.0f64; n];
+        for (r, row) in rows.iter().enumerate() {
+            for (c, v) in row.iter().enumerate() {
+                data[c * nrows_in + r] = as_f64(v); // column-major store
+            }
+        }
+        array_ndarray(vec![nrows_in, ncols_in], data)
+    }
+
+    /// Coerce a `Value` into an owned `SirNDArray` — the "toArrayValue"
+    /// bare-scalar coercion the JS/Ruby references perform. Needed because
+    /// `matlab-to-semantic-ir`'s lowerer emits a mixed operand pair for
+    /// `.* ./ .\` and for `* /` when exactly one side is scalar (e.g.
+    /// `A .* 2`) — the *bare* scalar sub-expression is passed through
+    /// `ElementwiseOp` unwrapped (a plain `Value::Int`/`Value::Float`), not
+    /// wrapped in an `ArrayLit`/scalar-array constructor first. Every
+    /// function below that accepts an "array" operand normalizes through
+    /// this first. Clones the backing `Vec`s for an already-`NDArray`
+    /// value — a deliberate simplicity/read-path trade-off (this domain's
+    /// element cap already bounds the cost; nothing here is a hot loop).
+    fn array_coerce(v: &Value) -> SirNDArray {
+        match v {
+            Value::NDArray(a) => a.borrow().clone(),
+            other => SirNDArray {
+                shape: vec![],
+                data: vec![as_f64(other)],
+            },
+        }
+    }
+
+    fn array_is_scalar(a: &SirNDArray) -> bool {
+        a.data.len() == 1
+    }
+
+    /// Rows, treating a scalar as `1×1` and a vector `[n]` as `n×1`.
+    fn array_nrows_of(shape: &[usize]) -> usize {
+        if shape.is_empty() {
+            1
+        } else {
+            shape[0]
+        }
+    }
+
+    /// Columns, treating a scalar as `1×1` and a vector `[n]` as `n×1`.
+    fn array_ncols_of(shape: &[usize]) -> usize {
+        if shape.len() <= 1 {
+            1
+        } else {
+            shape[1]
+        }
+    }
+
+    fn array_nrows(a: &SirNDArray) -> usize {
+        array_nrows_of(&a.shape)
+    }
+
+    fn array_ncols(a: &SirNDArray) -> usize {
+        array_ncols_of(&a.shape)
+    }
+
+    /// Element `(r, c)` (column-major), or `None` if out of bounds.
+    ///
+    /// `r`/`c` are `usize` — see this section's module doc on why that
+    /// already makes this AND-form check (`r < nrows && c < ncols`)
+    /// NaN-safe by construction, not merely by comparison order.
+    fn array_get(a: &SirNDArray, r: usize, c: usize) -> Option<f64> {
+        let (nrows, ncols) = (array_nrows(a), array_ncols(a));
+        if r < nrows && c < ncols {
+            Some(a.data[c * nrows + r])
+        } else {
+            None
+        }
+    }
+
+    /// Set element `(r, c)` IN PLACE (column-major) — mutates `a.data`
+    /// directly, matching MATLAB assignment semantics (`A(i,j) = v`
+    /// rebinds one element of the existing array, it does not produce a
+    /// new one). This is why `Stmt::IndexSet` is a statement, not a pure
+    /// expression, in the SIR22 spec. Same NaN-safe-by-construction
+    /// bounds check as `array_get`.
+    fn array_set(a: &mut SirNDArray, r: usize, c: usize, value: f64) {
+        let (nrows, ncols) = (array_nrows(a), array_ncols(a));
+        if !(r < nrows && c < ncols) {
+            array_raise(format!(
+                "array_set: index ({}, {}) out of bounds for shape {:?}",
+                r, c, a.shape
+            ));
+        }
+        let idx = c * nrows + r;
+        a.data[idx] = value;
+    }
+
+    /// Comparisons follow the same APL-style boolean convention
+    /// `array_runtime::BinOp` uses: `1.0` for true, `0.0` for false (never
+    /// a native `bool`), since the result must stay a plain `f64` array
+    /// element like every other value here. `Max`/`Min` use `f64::max`/
+    /// `f64::min`, whose IEEE-754-2008 minNum/maxNum semantics return the
+    /// non-NaN operand when exactly one side is NaN — a harmless, spec-
+    /// sanctioned divergence from JS's `Math.max`/`Math.min` (which
+    /// propagate NaN), noted here rather than silently diverging.
+    fn array_apply_op(op: &str, a: f64, b: f64) -> f64 {
+        let b2f = |cond: bool| if cond { 1.0 } else { 0.0 };
+        match op {
+            "Add" => a + b,
+            "Sub" => a - b,
+            "Mul" => a * b,
+            "Div" => a / b,
+            "Pow" => a.powf(b),
+            "Max" => a.max(b),
+            "Min" => a.min(b),
+            "Eq" => b2f(a == b),
+            "Ne" => b2f(a != b),
+            "Lt" => b2f(a < b),
+            "Le" => b2f(a <= b),
+            "Ge" => b2f(a >= b),
+            "Gt" => b2f(a > b),
+            _ => array_raise(format!("array_apply_op: unrecognised ElementwiseOpKind {:?}", op)),
+        }
+    }
+
+    fn array_same_shape(a: &[usize], b: &[usize]) -> bool {
+        a == b
+    }
+
+    /// Elementwise binary op with scalar broadcasting. Either operand may
+    /// be a scalar; otherwise the shapes must match exactly (full
+    /// NumPy/MATLAB broadcasting is out of scope, same as the JS/Ruby
+    /// references). Result takes the non-scalar operand's shape (or the
+    /// scalar's, if both are).
+    pub fn array_elementwise(op: &str, a: &Value, b: &Value) -> Value {
+        let a = array_coerce(a);
+        let b = array_coerce(b);
+        let (shape, data) = if array_is_scalar(&a) {
+            (
+                b.shape.clone(),
+                b.data.iter().map(|&y| array_apply_op(op, a.data[0], y)).collect(),
+            )
+        } else if array_is_scalar(&b) {
+            (
+                a.shape.clone(),
+                a.data.iter().map(|&x| array_apply_op(op, x, b.data[0])).collect(),
+            )
+        } else {
+            if !array_same_shape(&a.shape, &b.shape) {
+                array_raise(format!(
+                    "array_elementwise: non-conformable arrays: {:?} vs {:?}",
+                    a.shape, b.shape
+                ));
+            }
+            let data = a
+                .data
+                .iter()
+                .zip(b.data.iter())
+                .map(|(&x, &y)| array_apply_op(op, x, y))
+                .collect();
+            (a.shape.clone(), data)
+        };
+        array_ndarray(shape, data)
+    }
+
+    /// Matrix product `[m, k] · [k, n] → [m, n]` (column-major
+    /// throughout). `m`/`n` come from two INDEPENDENT operands (each
+    /// individually under `ARRAY_MAX_ELEMENTS`, but their product isn't
+    /// bounded by that alone — an outer-product-shaped call could still
+    /// ask for a huge output), so `array_checked_shape_size` validates
+    /// `[m, n]` BEFORE allocating `out`, not after.
+    pub fn array_matmul(a: &Value, b: &Value) -> Value {
+        let a = array_coerce(a);
+        let b = array_coerce(b);
+        let m = array_nrows(&a);
+        let ka = array_ncols(&a);
+        let kb = array_nrows(&b);
+        let n = array_ncols(&b);
+        if ka != kb {
+            array_raise(format!(
+                "array_matmul: inner dimensions disagree ({}x{} . {}x{})",
+                m, ka, kb, n
+            ));
+        }
+        let out_len = array_checked_shape_size(&[m, n]);
+        let mut out = vec![0.0f64; out_len];
+        for j in 0..n {
+            for i in 0..m {
+                let mut acc = 0.0f64;
+                for p in 0..ka {
+                    acc += a.data[p * m + i] * b.data[j * kb + p]; // column-major indexing
+                }
+                out[j * m + i] = acc;
+            }
+        }
+        array_ndarray(vec![m, n], out)
+    }
+
+    /// Matrix transpose. `conjugate` distinguishes MATLAB `'` (`true`)
+    /// from `.'` (`false`) — this runtime has no `Complex` value type yet
+    /// (matching `array-runtime`'s own real-only scope today), so a
+    /// conjugate transpose of real data is identical to a plain
+    /// transpose; `conjugate` is accepted for call-shape parity with the
+    /// SIR spec only.
+    pub fn array_transpose(a: &Value, _conjugate: bool) -> Value {
+        let a = array_coerce(a);
+        let m = array_nrows(&a);
+        let n = array_ncols(&a);
+        let mut out = vec![0.0f64; a.data.len()];
+        for j in 0..n {
+            for i in 0..m {
+                out[i * n + j] = a.data[j * m + i];
+            }
+        }
+        array_ndarray(vec![n, m], out)
+    }
+
+    /// Materialize a MATLAB-style range `start:step:stop` (default
+    /// `step = 1`) as a `1×n` row vector — MATLAB's `:` always produces a
+    /// row, never a column. Bounded by `ARRAY_MAX_ELEMENTS` so a compiled
+    /// program's `1:1e18`-style range can't exhaust memory before this
+    /// function ever gets to materialize anything.
+    ///
+    /// SECURITY: rejects a non-finite `start`/`stop`/`step` up front — the
+    /// loop condition below is `false` on its very first check whenever a
+    /// bound is NaN (every relational comparison with NaN is `false`), so
+    /// an unguarded NaN bound would silently produce an empty range
+    /// instead of erroring, the same "NaN defeats a comparison-based
+    /// check" class `array_assert_valid_position` closes for index
+    /// resolution below.
+    pub fn array_range(start: Value, stop: Value, step: Value) -> Value {
+        let start = as_f64(&start);
+        let stop = as_f64(&stop);
+        let step = as_f64(&step);
+        if step == 0.0 {
+            array_raise("array_range: step cannot be zero".to_string());
+        }
+        if !start.is_finite() || !stop.is_finite() || !step.is_finite() {
+            array_raise(format!(
+                "array_range: start/stop/step must be finite numbers, got ({}, {}, {})",
+                start, stop, step
+            ));
+        }
+        let mut values: Vec<f64> = Vec::new();
+        let mut x = start;
+        while (step > 0.0 && x <= stop + ARRAY_RANGE_EPSILON)
+            || (step < 0.0 && x >= stop - ARRAY_RANGE_EPSILON)
+        {
+            if values.len() >= ARRAY_MAX_ELEMENTS {
+                array_raise(format!(
+                    "array_range: produces more than {} elements",
+                    ARRAY_MAX_ELEMENTS
+                ));
+            }
+            values.push(x);
+            x += step;
+        }
+        let shape = if values.is_empty() {
+            vec![1, 0]
+        } else {
+            vec![1, values.len()]
+        };
+        array_ndarray(shape, values)
+    }
+
+    /// Validate one resolved position is a real, finite, non-negative
+    /// integer, and return it as a genuine `usize`.
+    ///
+    /// SECURITY: this is the single choke point `array_resolve_positions`
+    /// (and therefore `array_index_get`/`array_index_set`) sends every
+    /// position through — an unvalidated NaN/negative/fractional value is
+    /// rejected here with a catchable `raise`, not silently coerced. Once
+    /// this returns, the position is a genuine `usize`: Rust's type system
+    /// then makes a NaN/negative position impossible to reintroduce for
+    /// every downstream bounds check (see `array_get`/`array_set`).
+    fn array_assert_valid_position(x: f64) -> usize {
+        if !x.is_finite() || x != x.trunc() || x < 0.0 {
+            array_raise(format!(
+                "array_resolve_positions: index {} is not a finite non-negative integer",
+                x
+            ));
+        }
+        x as usize
+    }
+
+    /// Resolve one `SirIndexArg` against a dimension of size `dim_size`
+    /// into a flat list of 0-based positions along that dimension.
+    fn array_resolve_positions(arg: &SirIndexArg, dim_size: usize) -> Vec<usize> {
+        match arg {
+            SirIndexArg::Scalar(v) => vec![array_assert_valid_position(as_f64(v))],
+            SirIndexArg::Whole => (0..dim_size).collect(),
+            SirIndexArg::Range(v) => {
+                let a = array_coerce(v);
+                a.data
+                    .iter()
+                    .map(|&x| array_assert_valid_position(if x.is_finite() { x.trunc() } else { x }))
+                    .collect()
+            }
+        }
+    }
+
+    /// `A(i)` / `A(i, j)` — read one element or a sub-array. Scoped to 1
+    /// or 2 index arguments (rank <= 2): a single argument indexes `a`'s
+    /// underlying column-major data linearly (MATLAB's own single-
+    /// subscript convention, which is column-major too); two arguments
+    /// index `(row, col)`. Returns `Value::Float` when every argument is
+    /// `Scalar` (a single element), otherwise a `Value::NDArray`.
+    pub fn array_index_get(target: &Value, indices: Vec<SirIndexArg>) -> Value {
+        let a = array_coerce(target);
+        match indices.len() {
+            1 => {
+                let arg = &indices[0];
+                let positions = array_resolve_positions(arg, a.data.len());
+                let read = |i: usize| -> f64 {
+                    if i >= a.data.len() {
+                        array_raise(format!("array_index_get: linear index {} out of bounds", i));
+                    }
+                    a.data[i]
+                };
+                if matches!(arg, SirIndexArg::Scalar(_)) {
+                    Value::Float(read(positions[0]))
+                } else {
+                    let data: Vec<f64> = positions.iter().map(|&i| read(i)).collect();
+                    array_ndarray(vec![1, data.len()], data)
+                }
+            }
+            2 => {
+                let row_arg = &indices[0];
+                let col_arg = &indices[1];
+                let rows = array_resolve_positions(row_arg, array_nrows(&a));
+                let cols = array_resolve_positions(col_arg, array_ncols(&a));
+                let read = |r: usize, c: usize| -> f64 {
+                    match array_get(&a, r, c) {
+                        Some(v) => v,
+                        None => array_raise(format!(
+                            "array_index_get: ({}, {}) out of bounds for shape {:?}",
+                            r, c, a.shape
+                        )),
+                    }
+                };
+                if matches!(row_arg, SirIndexArg::Scalar(_)) && matches!(col_arg, SirIndexArg::Scalar(_))
+                {
+                    Value::Float(read(rows[0], cols[0]))
+                } else {
+                    // `rows.len()`/`cols.len()` are each individually
+                    // bounded by `a`'s own dimensions (`Whole`) or by a
+                    // `Range` NDArray's own `ARRAY_MAX_ELEMENTS` cap — but
+                    // nothing bounds their PRODUCT on its own, so this is
+                    // the exact outer-product-shaped allocation
+                    // `array_matmul` guards against, one level up.
+                    // Validate before allocating, not after.
+                    let out_len = array_checked_shape_size(&[rows.len(), cols.len()]);
+                    let mut data = vec![0.0f64; out_len];
+                    for (ci, &c) in cols.iter().enumerate() {
+                        for (ri, &r) in rows.iter().enumerate() {
+                            data[ci * rows.len() + ri] = read(r, c);
+                        }
+                    }
+                    array_ndarray(vec![rows.len(), cols.len()], data)
+                }
+            }
+            n => array_raise(format!(
+                "array_index_get: only 1 or 2 index arguments are supported (rank <= 2 scope), got {}",
+                n
+            )),
+        }
+    }
+
+    /// Broadcast a scalar-or-`NDArray` right-hand side to exactly `count`
+    /// values (mirrors `array_elementwise`'s scalar-broadcast rule).
+    fn array_broadcast_values(value: &Value, count: usize) -> Vec<f64> {
+        match value {
+            Value::NDArray(h) => {
+                let a = h.borrow();
+                if a.data.len() == 1 {
+                    vec![a.data[0]; count]
+                } else if a.data.len() != count {
+                    array_raise(format!(
+                        "array_index_set: value has {} elements, expected {}",
+                        a.data.len(),
+                        count
+                    ))
+                } else {
+                    a.data.clone()
+                }
+            }
+            other => vec![as_f64(other); count],
+        }
+    }
+
+    /// `A(i) = v` / `A(i, j) = v` — write one element or a sub-array, IN
+    /// PLACE (see `array_set`'s doc comment above for why this mutates
+    /// rather than returns a new array; see this section's module doc for
+    /// why `Value::NDArray`'s `Rc<RefCell<…>>` handle is what makes this
+    /// mutation visible through every alias of `target`). `value` may be
+    /// a scalar (broadcast to every selected position) or an `NDArray`
+    /// with exactly as many elements as positions are selected.
+    ///
+    /// `target` must already be a `Value::NDArray` (an `IndexSet` whose
+    /// target is a bare scalar is malformed input from a well-typed
+    /// frontend — same "internal bug, not a DoS surface" class as
+    /// `as_i64`/`as_f64`'s own panics elsewhere in this file).
+    pub fn array_index_set(target: &Value, indices: Vec<SirIndexArg>, value: Value) {
+        let handle = match target {
+            Value::NDArray(h) => h.clone(),
+            other => panic!("array_index_set: target is not an array: {}", format(other)),
+        };
+        // Snapshot shape/length under a short shared borrow, dropped
+        // before resolving positions (which may itself coerce a `Range`
+        // index argument — no reachable re-entrancy into THIS handle
+        // today, but scoping the borrow keeps that invariant free rather
+        // than assumed, matching `map_set`'s own borrow-scoping care).
+        let (shape, data_len) = {
+            let a = handle.borrow();
+            (a.shape.clone(), a.data.len())
+        };
+        match indices.len() {
+            1 => {
+                let positions = array_resolve_positions(&indices[0], data_len);
+                let values = array_broadcast_values(&value, positions.len());
+                let mut a = handle.borrow_mut();
+                for (k, &i) in positions.iter().enumerate() {
+                    if i >= a.data.len() {
+                        array_raise(format!("array_index_set: linear index {} out of bounds", i));
+                    }
+                    a.data[i] = values[k];
+                }
+            }
+            2 => {
+                let nrows = array_nrows_of(&shape);
+                let ncols = array_ncols_of(&shape);
+                let rows = array_resolve_positions(&indices[0], nrows);
+                let cols = array_resolve_positions(&indices[1], ncols);
+                // Same product-of-two-independent-selections gap
+                // `array_index_get` closes above — validate before
+                // `array_broadcast_values` allocates.
+                let count = array_checked_shape_size(&[rows.len(), cols.len()]);
+                let values = array_broadcast_values(&value, count);
+                let mut a = handle.borrow_mut();
+                let mut k = 0;
+                for &c in &cols {
+                    for &r in &rows {
+                        array_set(&mut a, r, c, values[k]);
+                        k += 1;
+                    }
+                }
+            }
+            n => array_raise(format!(
+                "array_index_set: only 1 or 2 index arguments are supported (rank <= 2 scope), got {}",
+                n
+            )),
         }
     }
 
@@ -1533,6 +2195,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Closure(_) => "Proc".to_string(),
             Value::Instance(id) => instance_class(*id),
             Value::Missing => "Object".to_string(),
+            Value::NDArray(_) => "NDArray".to_string(),
         }
     }
 
