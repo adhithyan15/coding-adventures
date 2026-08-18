@@ -58,5 +58,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.dartmouth_basic_lexer"] = "src/coding_adventures/dartmouth_basic_lexer/init.lua",
+        ["coding_adventures.dartmouth_basic_lexer._grammar"] = "src/coding_adventures/dartmouth_basic_lexer/_grammar.lua",
     },
 }

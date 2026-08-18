@@ -77,8 +77,8 @@
 --
 -- 1. **Tokenize** — call `dartmouth_basic_lexer.tokenize(source)` to get a
 --    token list. The lexer handles line-number relabelling and REM suppression.
--- 2. **Load grammar** — call `grammar_tools.parse_parser_grammar(content)` to
---    get a `ParserGrammar` with `.rules`.
+-- 2. **Load grammar** — require the pre-compiled `_grammar` module and call
+--    its `parser_grammar()` function to get a `ParserGrammar` with `.rules`.
 -- 3. **Parse** — construct a `GrammarParser` (from the `parser` package) and
 --    call `:parse()`. The engine interprets the grammar rules against the
 --    token stream, producing an AST.
@@ -96,130 +96,29 @@
 --   node:is_leaf()   — true when the node wraps exactly one token
 --   node:token()     — the wrapped token (only valid when is_leaf() is true)
 --
--- # Path navigation
+-- # Grammar source
 --
--- This file lives at:
---   code/packages/lua/dartmouth_basic_parser/src/coding_adventures/dartmouth_basic_parser/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path (prefixed with "@").
--- Stripping the prefix and walking up 6 levels reaches `code/`, the repo root.
---
--- Directory structure from script_dir upward:
---   dartmouth_basic_parser/  (1)
---   coding_adventures/       (2)
---   src/                     (3)
---   dartmouth_basic_parser/  (4) — the package directory
---   lua/                     (5)
---   packages/                (6)
---   code/                    → then /grammars/dartmouth_basic.grammar
+-- The parser grammar is no longer read from `code/grammars/` at runtime.
+-- A published LuaRocks package does not ship the monorepo's `code/grammars/`
+-- directory, so walking out of the package's own directory to find it would
+-- fail after installation. Instead, `dartmouth_basic.grammar` is pre-compiled
+-- (via `grammar-tools compile-grammar`) into `_grammar.lua`, a plain Lua
+-- module that embeds the ParserGrammar as native Lua data structures. That
+-- module ships as part of this package, so `require()` always finds it.
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local basic_lexer   = require("coding_adventures.dartmouth_basic_lexer")
-local parser_pkg    = require("coding_adventures.parser")
+local basic_lexer = require("coding_adventures.dartmouth_basic_lexer")
+local parser_pkg  = require("coding_adventures.parser")
 
 local M = {}
 M.VERSION = "0.1.0"
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
---
--- These helpers mirror the pattern used by json_parser (which navigates to
--- json.grammar). We do the same to reach dartmouth_basic.grammar.
-
---- Return the directory portion of a file path (no trailing slash).
--- Example:  "/a/b/c/init.lua"  →  "/a/b/c"
--- @param path string
--- @return string
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- Lua prepends "@" to the source path in debug info — we strip it.
--- When busted runs tests with a relative path containing ".." the
--- dirname-only approach produces a path that collapses to "." after
--- up() steps, so the grammar file cannot be found. We resolve to an
--- absolute path via "cd <dir> && pwd" to give up() an absolute anchor.
--- @return string Absolute directory of this init.lua file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
-    src = src:gsub("\\", "/")
-    local dir = src:match("(.+)/[^/]+$") or "."
-    -- If already absolute (Unix: starts with "/"; Windows: "X:") return as-is.
-    if dir:sub(1, 1) == "/" or dir:sub(2, 2) == ":" then
-        return dir
-    end
-    -- The path is relative. Resolve to absolute by fetching the current working
-    -- directory with no arguments — we NEVER interpolate `dir` into the shell
-    -- command string, which would risk command injection if the path contained
-    -- shell metacharacters (single quotes, semicolons, backticks, etc.).
-    -- Instead we obtain the cwd cleanly and join with the relative path in Lua.
-    local is_win = package.config:sub(1, 1) == "\\"
-    local f
-    if is_win then
-        f = io.popen("cd 2>nul")          -- "cd" with no args prints cwd on Windows
-    else
-        f = io.popen("pwd 2>/dev/null")   -- "pwd" with no args is always safe
-    end
-    local cwd = f and f:read("*l")
-    if f then f:close() end
-    if cwd and cwd ~= "" then
-        cwd = cwd:gsub("\\", "/"):gsub("%c+$", "")
-        -- Combine cwd + relative dir in Lua string space (no shell involvement).
-        local combined = (dir == ".") and cwd or (cwd .. "/" .. dir)
-        -- Resolve any ".." components produced by relative requires like
-        -- "require('../src/...')". The dirname-based up() function strips one
-        -- path component at a time without understanding "..", so an unresolved
-        -- ".." counts as an extra level and shifts the grammar path sideways.
-        -- We resolve by walking parts: ".." pops the last component; "."
-        -- is ignored; everything else is accumulated.
-        local parts = {}
-        for part in combined:gmatch("[^/]+") do
-            if part == ".." then
-                table.remove(parts)     -- pop one level
-            elseif part ~= "." then
-                table.insert(parts, part)
-            end
-        end
-        -- Reconstruct the absolute path. On Windows the first part is a drive
-        -- letter like "D:" — prepending "/" would produce "/D:/..." which is
-        -- invalid. On Unix the leading "/" belongs before the first component.
-        local joined = table.concat(parts, "/")
-        if #parts > 0 and parts[1]:match("^[A-Za-z]:$") then
-            return joined          -- Windows: "D:/a/coding-adventures/..."
-        else
-            return "/" .. joined   -- Unix: "/home/runner/..."
-        end
-    end
-    return dir
-end
-
---- Walk up `levels` directory levels from `path`.
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = dirname(result)
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
 --
--- The parser grammar is loaded from disk once and cached. Repeated calls to
--- `parse()` or `create_parser()` reuse the cached grammar, avoiding repeated
--- file I/O and repeated rule compilation.
+-- The compiled grammar module is required exactly once and its
+-- `parser_grammar()` result cached in a module-level variable. Repeated
+-- calls to `parse()` or `create_parser()` reuse the cached grammar.
 --
 -- Caching matters here because the BASIC grammar has 29 rules, each of which
 -- must be compiled into the grammar engine's internal representation. Doing
@@ -227,49 +126,19 @@ end
 
 local _grammar_cache = nil
 
---- Load and parse `dartmouth_basic.grammar`, with caching.
--- On the first call, opens the file, parses it with
--- `grammar_tools.parse_parser_grammar`, and caches the result.
--- @return ParserGrammar  The parsed BASIC parser grammar.
--- @error                 Raises an error if the file cannot be opened or parsed.
+--- Return the (cached) ParserGrammar for Dartmouth BASIC.
+-- On the first call, requires the pre-compiled `_grammar` module and
+-- invokes `parser_grammar()`. On subsequent calls, returns the cached
+-- ParserGrammar object immediately.
+-- @return ParserGrammar  The Dartmouth BASIC parser grammar.
 local function get_grammar()
     if _grammar_cache then
         return _grammar_cache
     end
 
-    -- Navigate: 6 levels up from this file's directory → code/ root.
-    -- Breakdown:
-    --   init.lua lives in: .../dartmouth_basic_parser/     (1 up → coding_adventures/)
-    --                       .../coding_adventures/          (2 up → src/)
-    --                       .../src/                        (3 up → dartmouth_basic_parser/)
-    --                       .../dartmouth_basic_parser/     (4 up → lua/)
-    --                       .../lua/                        (5 up → packages/)
-    --                       .../packages/                   (6 up → code/)
-    --                       .../code/                       ← repo root
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/dartmouth_basic/dartmouth_basic.grammar"
-
-    local f, open_err = io.open(grammar_path, "r")
-    if not f then
-        error(
-            "dartmouth_basic_parser: cannot open grammar file: " .. grammar_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
-    if not grammar then
-        error(
-            "dartmouth_basic_parser: failed to parse dartmouth_basic.grammar: " ..
-            (parse_err or "unknown error")
-        )
-    end
-
-    _grammar_cache = grammar
-    return grammar
+    local compiled = require("coding_adventures.dartmouth_basic_parser._grammar")
+    _grammar_cache = compiled.parser_grammar()
+    return _grammar_cache
 end
 
 -- =========================================================================
