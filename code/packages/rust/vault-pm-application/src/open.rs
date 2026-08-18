@@ -1,23 +1,24 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    activate_audit_epoch, add_item, delete_item, import_opened_portable_snapshot,
-    merge_item_conflict, publish_audited_access, replace_item, resolve_item_conflict, restore_item,
-    AddItemRandomnessV1, AuditedAccessRandomnessV1, DeleteItemRandomnessV1,
-    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1,
+    activate_audit_epoch, add_item, attach_attachment, delete_item,
+    import_opened_portable_snapshot, merge_item_conflict, publish_audited_access, replace_item,
+    resolve_item_conflict, restore_item, AddItemRandomnessV1, AttachmentRandomnessV1,
+    AuditedAccessRandomnessV1, DeleteItemRandomnessV1, PortableImportRandomnessV1,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
     open_object, ActiveStateV1, ApplicationError, ApplicationRepository,
-    ApplicationRepositoryError, ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore,
-    BootstrapStoreError, CatalogV1, LocalSecretV1, LocalStateStore, LocalStateStoreError,
-    LocalVaultStateV1, ObjectKind, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
-    V1Keys,
+    ApplicationRepositoryError, ApplicationRepositoryFactory, AttachmentContentV1,
+    AttachmentSummaryV1, BootstrapLocator, BootstrapStore, BootstrapStoreError, CatalogV1,
+    LocalSecretV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, ObjectKind,
+    RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1, V1Keys,
 };
+use coding_adventures_vault_attachments::BlobId;
 use coding_adventures_vault_pm_audit::{AuditActionV1, AuditOutcomeV1};
 use coding_adventures_vault_pm_domain::{
-    CollectionId, ItemCandidate, ItemDocument, ItemId, ItemState, OperationId, RedactedItemView,
-    RevisionId,
+    AttachmentId, AttachmentManifestId, CollectionId, ItemCandidate, ItemDocument, ItemId,
+    ItemState, OperationId, RedactedItemView, RevisionId,
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
@@ -427,6 +428,7 @@ fn replacement_login_document(
             notes: input.notes.map(Zeroizing::into_inner),
         }),
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -863,6 +865,7 @@ fn replacement_card_document(
             billing_zip: input.billing_zip.map(Zeroizing::into_inner),
         }),
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -1002,6 +1005,7 @@ fn replacement_api_key_document(
             expires_at,
         }),
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -1133,6 +1137,7 @@ fn replacement_database_credential_document(
             expires_at: None,
         }),
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -1349,6 +1354,7 @@ fn replacement_totp_document(
             period,
         }),
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -1534,6 +1540,7 @@ fn replacement_opaque_document(
             payload_bytes: payload_bytes.into_inner(),
         },
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -1559,6 +1566,7 @@ fn replacement_secure_note_document(
             body: input.body.into_inner(),
         }),
         current.attachments().clone(),
+        current.attachment_manifests().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
 }
@@ -2924,6 +2932,41 @@ impl UnlockedVaultV1 {
         local_state_store: &dyn LocalStateStore,
         select: impl FnOnce(&AnyRecord) -> Result<T, ApplicationError>,
     ) -> Result<crate::AuditedAccessResultV1<T>, ApplicationError> {
+        self.audited_current_item_document_disclosure(
+            item_id,
+            intent,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            |document, _, _| select(document.payload()),
+        )
+    }
+
+    /// The same ceremony, with the selector given the whole live document and
+    /// the capabilities needed to follow a reference out of it.
+    ///
+    /// An attachment's bytes are not in the record — they are in objects the
+    /// document points at — so the selector needs the vault keys and the
+    /// repository as well. It still never escapes: it borrows them for the
+    /// duration of the selection and returns only what it built.
+    ///
+    /// This is the layer that owns the outcome table, and
+    /// [`Self::audited_current_item_disclosure`] delegates to it rather than
+    /// keeping a second copy, because the mapping from situation to audit
+    /// outcome *is* the security property.
+    fn audited_current_item_document_disclosure<T>(
+        self,
+        item_id: ItemId,
+        intent: SecretDisclosureIntentV1,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+        select: impl FnOnce(
+            &ItemDocument,
+            &V1Keys,
+            &dyn ApplicationRepository,
+        ) -> Result<T, ApplicationError>,
+    ) -> Result<crate::AuditedAccessResultV1<T>, ApplicationError> {
         self.require_audit_epoch()?;
         let (outcome, selected_revision, operation) = match intent.authorize() {
             Err(error) => (AuditOutcomeV1::Denied, None, Err(error)),
@@ -2942,7 +2985,8 @@ impl UnlockedVaultV1 {
                         ),
                         ItemState::Live(document) => {
                             let revision = candidate.revision_id();
-                            let operation = select(document.payload());
+                            let operation =
+                                select(document, &self._keys, self._repository.as_ref());
                             let outcome = if operation.is_ok() {
                                 AuditOutcomeV1::Succeeded
                             } else {
@@ -3234,6 +3278,144 @@ impl UnlockedVaultV1 {
                 Err(error),
             ),
         }
+    }
+
+    /// Attach one file to the sole current live revision of one item.
+    ///
+    /// Successful attachment uses the ordinary atomic mutation publication, so
+    /// every sealed chunk, the manifest, the new revision, the rebuilt
+    /// catalog, and the `ItemUpdate` event share one causal commit — which is
+    /// what makes VLT-PM41's crash matrix and VLT-PM42's recovery apply to
+    /// this ceremony without a second durable state machine (VLT-PM47 §5).
+    ///
+    /// Missing, tombstoned, and conflicted items instead publish a failed
+    /// `ItemUpdate` event before the closed operation error becomes
+    /// observable, exactly as deletion does.
+    ///
+    /// The plaintext, its chunking, and the per-attachment key never leave
+    /// this boundary; what the caller receives is the new `AttachmentId`.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_attach_attachment(
+        self,
+        item_id: ItemId,
+        name: String,
+        plaintext: &[u8],
+        wall_time_ms: u64,
+        mutation_randomness: AttachmentRandomnessV1,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<AttachmentId>, ApplicationError> {
+        self.require_audit_epoch()?;
+        // The precondition is sampled before the mutation so a failure can be
+        // audited rather than merely returned. `current_item_revision` reports
+        // `None` for both a missing and a tombstoned item, and
+        // `ConflictRequired` for a conflicted one.
+        let precondition = self
+            .current_item_revision(item_id)
+            .and_then(|revision| revision.ok_or(ApplicationError::NotFound));
+        match precondition {
+            Ok(_) => {
+                let (active, attachment_id) = attach_attachment(
+                    &self.active,
+                    &self.report,
+                    &self.current_catalog.items,
+                    &self._keys,
+                    &self._local_secret,
+                    self._repository.as_ref(),
+                    item_id,
+                    name,
+                    plaintext,
+                    wall_time_ms,
+                    mutation_randomness,
+                    local_state_store,
+                )?;
+                Ok(crate::AuditedAccessResultV1::new(active, Ok(attachment_id)))
+            }
+            Err(error) => self.finish_audited_access(
+                AuditActionV1::ItemUpdate,
+                Some(item_id),
+                None,
+                wall_time_ms,
+                failure_randomness,
+                local_state_store,
+                Err(error),
+            ),
+        }
+    }
+
+    /// List one item's attachment metadata after a durable `ItemRead` event.
+    ///
+    /// Reads the manifests and nothing else, so listing a 16 MiB attachment
+    /// costs one small object read rather than 256. No confirmation ceremony,
+    /// for the reason `item show` needs none: a name is the same class of
+    /// metadata as a title, and the content hash is a hash of plaintext the
+    /// operator can already obtain (VLT-PM47 §6.2).
+    pub fn audited_list_attachments(
+        self,
+        item_id: ItemId,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Vec<AttachmentSummaryV1>>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let (operation, selected_revision) = match self.current_catalog.items.get(&item_id) {
+            None => (Err(ApplicationError::NotFound), None),
+            Some(candidates) => match candidates.as_slice() {
+                [candidate] => match candidate.state() {
+                    ItemState::Tombstone(_) => (Err(ApplicationError::NotFound), None),
+                    ItemState::Live(document) => (
+                        list_attachment_summaries(&self._keys, self._repository.as_ref(), document),
+                        Some(candidate.revision_id()),
+                    ),
+                },
+                _ => (Err(ApplicationError::ConflictRequired), None),
+            },
+        };
+        self.finish_audited_access(
+            AuditActionV1::ItemRead,
+            Some(item_id),
+            selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
+    /// Reassemble one attachment and release it only after its `ItemRead`
+    /// event and next owner state are durable.
+    ///
+    /// This is `audited_reveal_current_item_field`'s ceremony with a different
+    /// payload: the same `ItemRead` action, the same outcome table, the same
+    /// `InteractiveReveal` intent, the same publish-before-release ordering.
+    /// VLT-PM15 §2 already classifies attachment export as an access, so it is
+    /// the full ceremony rather than a lighter one, and VLT-PM46 §3.0's reason
+    /// keeps the intent naming the *fact* of a disclosure rather than the door
+    /// it leaves by.
+    ///
+    /// Reassembly happens before publication and the bytes are held in a local
+    /// binding across it; a publication failure drops and wipes them without
+    /// the caller ever seeing them.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_export_attachment(
+        self,
+        item_id: ItemId,
+        attachment_id: AttachmentId,
+        intent: SecretDisclosureIntentV1,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<AttachmentContentV1>, ApplicationError> {
+        self.audited_current_item_document_disclosure(
+            item_id,
+            intent,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            |document, keys, repository| {
+                read_attachment_content(keys, repository, document, attachment_id)
+            },
+        )
     }
 
     /// Restore one reachable historical live revision as a new current live
@@ -4041,6 +4223,105 @@ fn materialize_current_catalog(
     })
 }
 
+/// Read and open one attachment manifest object.
+///
+/// The manifest id comes from the item revision, which the catalog pins and a
+/// signed commit covers, so this is a reference the vault vouched for. It is
+/// still opened with the kind bound into the AEAD associated data, so a frame
+/// of any other kind at that address is an integrity failure rather than a
+/// value that decodes into the wrong shape.
+fn read_attachment_manifest(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    manifest_id: AttachmentManifestId,
+) -> Result<crate::AttachmentManifestV1, ApplicationError> {
+    let object_id = ObjectId::new(*manifest_id.as_bytes());
+    let object = repository.read_object(object_id).map_err(map_repository)?;
+    if object.id() != object_id {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    let plaintext = open_object(keys, ObjectKind::AttachmentManifest, object.frame())?;
+    crate::AttachmentManifestV1::decode(&plaintext)
+}
+
+/// Project one live document's attachments into their non-secret summaries.
+fn list_attachment_summaries(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    document: &ItemDocument,
+) -> Result<Vec<AttachmentSummaryV1>, ApplicationError> {
+    let mut summaries = Vec::with_capacity(document.attachments().len());
+    // `values()` rather than `retained_values()`: a removed attachment is
+    // retained on the wire so a later merge cannot resurrect it without its
+    // reference, but it is not something the person still has.
+    for attachment_id in document.attachments().values() {
+        let manifest_id = document
+            .attachment_manifests()
+            .get(attachment_id)
+            .copied()
+            .ok_or(ApplicationError::IntegrityFailure)?;
+        let manifest = read_attachment_manifest(keys, repository, manifest_id)?;
+        if manifest.attachment_id() != *attachment_id {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        summaries.push(AttachmentSummaryV1::new(
+            *attachment_id,
+            manifest.name().to_string(),
+            manifest.total_plaintext_len(),
+            *manifest.content_sha256(),
+        ));
+    }
+    Ok(summaries)
+}
+
+/// Reassemble one named attachment of one live document.
+///
+/// Every chunk is fetched by the exact object id the manifest names and opened
+/// under the attachment-chunk kind, then handed to VLT14's decryptor in index
+/// order. The reassembler re-derives the length and the content hash, for the
+/// reason VLT-PM47 §4.4 records: VLT14 v1 does not authenticate the total
+/// length, and its documentation names verifying it as the caller's duty.
+fn read_attachment_content(
+    keys: &V1Keys,
+    repository: &dyn ApplicationRepository,
+    document: &ItemDocument,
+    attachment_id: AttachmentId,
+) -> Result<AttachmentContentV1, ApplicationError> {
+    if !document.attachments().contains(&attachment_id) {
+        return Err(ApplicationError::NotFound);
+    }
+    let manifest_id = document
+        .attachment_manifests()
+        .get(&attachment_id)
+        .copied()
+        .ok_or(ApplicationError::IntegrityFailure)?;
+    let manifest = read_attachment_manifest(keys, repository, manifest_id)?;
+    if manifest.attachment_id() != attachment_id {
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    let chunk_ids = manifest.chunks().to_vec();
+    let bytes = crate::attachment::reassemble_attachment(
+        BlobId(*attachment_id.as_bytes()),
+        Zeroizing::new(**manifest.dek()),
+        manifest.total_plaintext_len(),
+        manifest.content_sha256(),
+        chunk_ids.len(),
+        |index| {
+            let object_id = chunk_ids
+                .get(index)
+                .copied()
+                .ok_or(ApplicationError::IntegrityFailure)?;
+            let object = repository.read_object(object_id).map_err(map_repository)?;
+            if object.id() != object_id {
+                return Err(ApplicationError::IntegrityFailure);
+            }
+            let plaintext = open_object(keys, ObjectKind::AttachmentChunk, object.frame())?;
+            crate::decode_attachment_chunk(&plaintext)
+        },
+    )?;
+    Ok(AttachmentContentV1::new(manifest.name().to_string(), bytes))
+}
+
 pub(crate) fn read_candidate(
     keys: &V1Keys,
     repository: &dyn ApplicationRepository,
@@ -4760,6 +5041,7 @@ mod tests {
                 period: 30,
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap()
     }
@@ -4784,6 +5066,7 @@ mod tests {
                 notes: Some("old private notes".to_owned()),
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap()
     }
@@ -4811,6 +5094,7 @@ mod tests {
                 notes: None,
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap()
     }
@@ -4946,6 +5230,7 @@ mod tests {
                 notes: Some("private note".into()),
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         let candidate = ItemCandidate::new(
@@ -5056,6 +5341,7 @@ mod tests {
                     body: body.to_owned(),
                 }),
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             let candidate = ItemCandidate::new(
@@ -5124,6 +5410,7 @@ mod tests {
                     billing_zip: Some("12345".to_owned()),
                 }),
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             let candidate = ItemCandidate::new(
@@ -5190,6 +5477,7 @@ mod tests {
                     expires_at: Some(1_900_000_000),
                 }),
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             let candidate = ItemCandidate::new(
@@ -5260,6 +5548,7 @@ mod tests {
                     expires_at: None,
                 }),
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             let candidate = ItemCandidate::new(
@@ -5327,6 +5616,7 @@ mod tests {
                     period: 30,
                 }),
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             let candidate = ItemCandidate::new(
@@ -5401,6 +5691,7 @@ mod tests {
                     payload_bytes: payload,
                 },
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             let candidate = ItemCandidate::new(
@@ -14353,6 +14644,7 @@ mod tests {
                 notes: None,
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         assert_eq!(
@@ -15850,6 +16142,7 @@ mod tests {
                 payload_bytes: placeholder_payload,
             },
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         let candidate = ItemCandidate::new(

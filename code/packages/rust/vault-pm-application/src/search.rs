@@ -332,6 +332,7 @@ mod tests {
             ObservedSet::new(),
             record,
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         ItemCandidate::new(

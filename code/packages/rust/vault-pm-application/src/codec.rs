@@ -1,22 +1,29 @@
-use crate::{ApplicationError, ObjectKind};
+use crate::{
+    ApplicationError, ObjectKind, ATTACHMENT_CHUNK_BYTES, ATTACHMENT_DEK_BYTES,
+    MAX_ATTACHMENT_BYTES, MAX_ATTACHMENT_CHUNKS, MAX_ATTACHMENT_NAME_BYTES,
+};
 use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborError, CborValue};
+use coding_adventures_vault_attachments::{BlobId, EncryptedChunk};
 use coding_adventures_vault_pm_audit::SignedAuditEventV1;
 use coding_adventures_vault_pm_domain::{
-    AttachmentId, CollectionId, ContentType, ItemCandidate, ItemDocument, ItemId, ItemState,
-    LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
+    AttachmentId, AttachmentManifestId, CollectionId, ContentType, ItemCandidate, ItemDocument,
+    ItemId, ItemState, LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
+    MAX_OBSERVED_VALUES,
 };
-use coding_adventures_vault_pm_format::{CommitV1, DeviceCertificateV1, DeviceId, VaultId};
+use coding_adventures_vault_pm_format::{
+    CommitV1, DeviceCertificateV1, DeviceId, ObjectId, VaultId,
+};
 use coding_adventures_vault_records::{
     decode_record, encode_opaque, encode_record, AnyRecord, VaultRecordError,
 };
-use coding_adventures_zeroize::Zeroize;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
 const VERSION: u64 = 1;
 const LIVE_STATE: u64 = 1;
 const TOMBSTONE_STATE: u64 = 2;
-const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
+pub(crate) const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
 pub(crate) const MAX_CATALOG_ENTRIES: usize = 100_000;
 pub(crate) const MAX_CANDIDATES_PER_ITEM: usize = 16;
 
@@ -386,6 +393,295 @@ pub fn decode_signed_audit_event(encoded: &[u8]) -> Result<SignedAuditEventV1, A
     SignedAuditEventV1::decode(&exact).map_err(|_| ApplicationError::IntegrityFailure)
 }
 
+/// One attachment's metadata, key, and ordered chunk references.
+///
+/// VLT-PM47 §4.3. This is the object that lets an attachment of any permitted
+/// size cost the item revision a fixed forty-eight bytes.
+///
+/// The attachment id here is also the VLT14 blob id — one 128-bit value with
+/// both meanings, so the chunk AEAD's associated data binds each chunk to the
+/// attachment identity a person sees rather than to a private alias, and there
+/// is no state in which the two disagree.
+pub struct AttachmentManifestV1 {
+    attachment_id: AttachmentId,
+    dek: Zeroizing<[u8; ATTACHMENT_DEK_BYTES]>,
+    name: String,
+    total_plaintext_len: u64,
+    content_sha256: [u8; 32],
+    chunks: Vec<ObjectId>,
+    created_at_ms: u64,
+}
+
+impl AttachmentManifestV1 {
+    /// Validate and construct one complete manifest.
+    pub fn new(
+        attachment_id: AttachmentId,
+        dek: Zeroizing<[u8; ATTACHMENT_DEK_BYTES]>,
+        name: String,
+        total_plaintext_len: u64,
+        content_sha256: [u8; 32],
+        chunks: Vec<ObjectId>,
+        created_at_ms: u64,
+    ) -> Result<Self, ApplicationError> {
+        let manifest = Self {
+            attachment_id,
+            dek,
+            name,
+            total_plaintext_len,
+            content_sha256,
+            chunks,
+            created_at_ms,
+        };
+        manifest.validate()?;
+        Ok(manifest)
+    }
+
+    /// Return the attachment identity, which is also the VLT14 blob id.
+    pub const fn attachment_id(&self) -> AttachmentId {
+        self.attachment_id
+    }
+
+    /// Borrow the per-attachment VLT14 data-encryption key.
+    ///
+    /// The key is plaintext only inside this object's authenticated payload,
+    /// which the repository envelope seals under the vault's object-wrap key.
+    /// VLT-PM00 §8.1 places attachment DEKs exactly there.
+    pub const fn dek(&self) -> &Zeroizing<[u8; ATTACHMENT_DEK_BYTES]> {
+        &self.dek
+    }
+
+    /// Borrow the validated base name the file was attached under.
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    /// Return the declared plaintext length.
+    pub const fn total_plaintext_len(&self) -> u64 {
+        self.total_plaintext_len
+    }
+
+    /// Borrow the SHA-256 of the complete plaintext.
+    pub const fn content_sha256(&self) -> &[u8; 32] {
+        &self.content_sha256
+    }
+
+    /// Borrow the chunk object references in chunk-index order.
+    pub fn chunks(&self) -> &[ObjectId] {
+        &self.chunks
+    }
+
+    /// Return the advisory creation timestamp.
+    pub const fn created_at_ms(&self) -> u64 {
+        self.created_at_ms
+    }
+
+    /// Enforce every V1 bound the format itself can decide.
+    ///
+    /// The chunk count and the declared length are checked against each other
+    /// as well as against their ceilings, because a manifest whose length does
+    /// not fit its chunk count is a manifest one of whose two numbers is a
+    /// lie, and the reassembler should never have to decide which.
+    fn validate(&self) -> Result<(), ApplicationError> {
+        validate_attachment_name(&self.name)?;
+        if self.total_plaintext_len > MAX_ATTACHMENT_BYTES as u64
+            || self.chunks.len() > MAX_ATTACHMENT_CHUNKS
+        {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        if self.chunks.is_empty() {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        let expected = expected_chunk_count(self.total_plaintext_len);
+        if self.chunks.len() != expected {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        // Two identical chunk references cannot occur: every chunk carries a
+        // distinct VLT14 nonce and is sealed under a distinct random object
+        // DEK, so identical framed ciphertexts are not producible.
+        let unique = self.chunks.iter().collect::<BTreeSet<_>>();
+        if unique.len() != self.chunks.len() {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        Ok(())
+    }
+
+    /// Encode the exact closed canonical V1 application object.
+    pub fn encode(&self) -> Result<Vec<u8>, ApplicationError> {
+        self.validate()?;
+        let encoded = try_encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(
+                2,
+                CborValue::Unsigned(ObjectKind::AttachmentManifest.code()),
+            ),
+            field(3, bytes(self.attachment_id.as_bytes())),
+            field(4, bytes(self.dek.as_slice())),
+            field(5, CborValue::text(&self.name)),
+            field(6, CborValue::Unsigned(self.total_plaintext_len)),
+            field(7, bytes(&self.content_sha256)),
+            field(
+                8,
+                CborValue::Array(
+                    self.chunks
+                        .iter()
+                        .map(|chunk| bytes(chunk.as_bytes()))
+                        .collect(),
+                ),
+            ),
+            field(9, CborValue::Unsigned(self.created_at_ms)),
+        ]))
+        .map_err(map_encode_error)?;
+        check_plaintext_bound(&encoded)?;
+        Ok(encoded)
+    }
+
+    /// Strictly decode one closed canonical V1 manifest.
+    ///
+    /// Every bound is applied before a buffer is sized from a declared value.
+    /// A peer is free to author this object, so its numbers are input.
+    pub fn decode(encoded: &[u8]) -> Result<Self, ApplicationError> {
+        let mut fields = closed_fields(encoded, &[1, 2, 3, 4, 5, 6, 7, 8, 9])?;
+        check_version(take_uint(&mut fields, 1)?)?;
+        check_kind(take_uint(&mut fields, 2)?, ObjectKind::AttachmentManifest)?;
+        let attachment_id = AttachmentId::new(take_fixed(&mut fields, 3)?);
+        let dek = Zeroizing::new(take_fixed::<ATTACHMENT_DEK_BYTES>(&mut fields, 4)?);
+        let name = take_text(&mut fields, 5)?;
+        let total_plaintext_len = take_uint(&mut fields, 6)?;
+        let content_sha256 = take_fixed(&mut fields, 7)?;
+        let chunk_values = take_array(&mut fields, 8)?;
+        if chunk_values.len() > MAX_ATTACHMENT_CHUNKS {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        let mut chunks = Vec::with_capacity(chunk_values.len());
+        for chunk in chunk_values {
+            chunks.push(ObjectId::new(fixed_value(chunk)?));
+        }
+        let created_at_ms = take_uint(&mut fields, 9)?;
+        Self::new(
+            attachment_id,
+            dek,
+            name,
+            total_plaintext_len,
+            content_sha256,
+            chunks,
+            created_at_ms,
+        )
+    }
+}
+
+impl Zeroize for AttachmentManifestV1 {
+    fn zeroize(&mut self) {
+        self.dek.zeroize();
+        self.name.zeroize();
+    }
+}
+
+impl Drop for AttachmentManifestV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for AttachmentManifestV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("AttachmentManifestV1")
+            .field("attachment_id", &"<redacted>")
+            .field("dek", &"<redacted>")
+            .field("name", &"<redacted>")
+            .field("total_plaintext_len", &self.total_plaintext_len)
+            .field("chunk_count", &self.chunks.len())
+            .finish()
+    }
+}
+
+/// Return how many 64 KiB chunks a plaintext of `length` bytes occupies.
+///
+/// Zero-length attachments are refused at ingest, so every legal length is at
+/// least one chunk; the `max(1)` exists so the relation this function states
+/// is total rather than conditional.
+pub(crate) fn expected_chunk_count(length: u64) -> usize {
+    let chunks = length.div_ceil(ATTACHMENT_CHUNK_BYTES as u64).max(1);
+    usize::try_from(chunks).unwrap_or(usize::MAX)
+}
+
+/// Validate one attachment base name.
+///
+/// Rejected rather than repaired, for VLT-PM47 §4.5's reason: a sanitiser is a
+/// function whose output the author did not choose, and the interesting inputs
+/// to one are exactly the hostile ones. Nothing in this product turns a stored
+/// name into a filesystem path (§4.6), so this is a well-formedness check and
+/// not the traversal defence.
+pub(crate) fn validate_attachment_name(name: &str) -> Result<(), ApplicationError> {
+    if name.is_empty() || name.len() > MAX_ATTACHMENT_NAME_BYTES {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if name == "." || name == ".." {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if name
+        .chars()
+        .any(|character| character.is_control() || character == '/' || character == '\\')
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    Ok(())
+}
+
+/// Encode one VLT14 sealed chunk as a canonical application object.
+///
+/// The encoded value is about 65,600 bytes and cannot grow with the file,
+/// which is the entire reason attachments are chunked: canonical-CBOR refuses
+/// to emit any single value past 1 MiB (VLT-PM47 §3).
+pub fn encode_attachment_chunk(chunk: &EncryptedChunk) -> Result<Vec<u8>, ApplicationError> {
+    if chunk.ciphertext.len() > ATTACHMENT_CHUNK_BYTES
+        || chunk.index as usize >= MAX_ATTACHMENT_CHUNKS
+    {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let encoded = try_encode(&CborValue::Map(vec![
+        field(1, CborValue::Unsigned(VERSION)),
+        field(2, CborValue::Unsigned(ObjectKind::AttachmentChunk.code())),
+        field(3, bytes(chunk.blob_id.as_bytes())),
+        field(4, CborValue::Unsigned(u64::from(chunk.index))),
+        field(5, CborValue::Bool(chunk.is_final)),
+        field(6, bytes(&chunk.ciphertext)),
+        field(7, bytes(&chunk.tag)),
+    ]))
+    .map_err(map_encode_error)?;
+    check_plaintext_bound(&encoded)?;
+    Ok(encoded)
+}
+
+/// Strictly decode one canonical application object into a VLT14 chunk.
+///
+/// The bounds here mirror the encoder's rather than trusting it: this object
+/// can be authored by a synchronising peer, and VLT14's decryptor is the next
+/// gate rather than the first one.
+pub fn decode_attachment_chunk(encoded: &[u8]) -> Result<EncryptedChunk, ApplicationError> {
+    let mut fields = closed_fields(encoded, &[1, 2, 3, 4, 5, 6, 7])?;
+    check_version(take_uint(&mut fields, 1)?)?;
+    check_kind(take_uint(&mut fields, 2)?, ObjectKind::AttachmentChunk)?;
+    let blob_id = BlobId(take_fixed(&mut fields, 3)?);
+    let index = take_uint(&mut fields, 4)?;
+    if index >= MAX_ATTACHMENT_CHUNKS as u64 {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let is_final = take_bool(&mut fields, 5)?;
+    let ciphertext = take_bytes(&mut fields, 6)?;
+    if ciphertext.len() > ATTACHMENT_CHUNK_BYTES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let tag = take_fixed(&mut fields, 7)?;
+    Ok(EncryptedChunk {
+        blob_id,
+        index: u32::try_from(index).map_err(|_| ApplicationError::BoundExceeded)?,
+        is_final,
+        ciphertext,
+        tag,
+    })
+}
+
 fn encode_signed_object(kind: ObjectKind, exact: Vec<u8>) -> Result<Vec<u8>, ApplicationError> {
     // `exact` is a caller-supplied encoded object, so its length is not
     // statically bounded by anything tighter than the 16 MiB plaintext
@@ -411,9 +707,24 @@ fn decode_signed_object(
     take_bytes(&mut fields, 3)
 }
 
+/// Encode one live item document.
+///
+/// # The tenth field
+///
+/// Key `10` carries the manifest object reference for every retained
+/// attachment, and it is emitted **only** when there is at least one. That
+/// conditional is the whole compatibility story of VLT-PM47 §4.7: an item with
+/// no attachments encodes exactly the nine keys this function emitted before
+/// attachments existed, byte for byte, so every revision written by every
+/// earlier version of this product still decodes and every revision this
+/// product writes for an unattached item is unchanged.
+///
+/// The reference list is *derived* from `document.attachment_manifests()`,
+/// which VLT-PM03 already forces to have exactly the key set of
+/// `attachments.retained_values()`. There is no encoding of a disagreement.
 fn encode_live(document: &ItemDocument) -> Result<CborValue, ApplicationError> {
     let record = encode_any_record(document.payload())?;
-    Ok(CborValue::Map(vec![
+    let mut entries = vec![
         field(1, bytes(document.id().as_bytes())),
         field(2, CborValue::text(document.schema().as_str())),
         field(3, CborValue::Unsigned(document.created_at_ms())),
@@ -430,11 +741,36 @@ fn encode_live(document: &ItemDocument) -> Result<CborValue, ApplicationError> {
         field(7, encode_observed(document.tags())),
         field(8, CborValue::Bytes(record)),
         field(9, encode_observed(document.attachments())),
-    ]))
+    ];
+    if !document.attachment_manifests().is_empty() {
+        entries.push(field(
+            10,
+            CborValue::Array(
+                document
+                    .attachment_manifests()
+                    .iter()
+                    .map(|(attachment, manifest)| {
+                        CborValue::Map(vec![
+                            field(1, bytes(attachment.as_bytes())),
+                            field(2, bytes(manifest.as_bytes())),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ));
+    }
+    Ok(CborValue::Map(entries))
 }
 
 fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
-    let mut fields = value_fields(value, &[1, 2, 3, 4, 5, 6, 7, 8, 9])?;
+    // Nine keys is the pre-attachment shape and ten is the attachment shape.
+    // Any other arity, an unknown key, or a duplicate is still refused: this
+    // is a closed decoder with two accepted key sets, not an open one.
+    let expected: &[u64] = match &value {
+        CborValue::Map(entries) if entries.len() == 10 => &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        _ => &[1, 2, 3, 4, 5, 6, 7, 8, 9],
+    };
+    let mut fields = value_fields(value, expected)?;
     let id = ItemId::new(take_fixed(&mut fields, 1)?);
     let schema = ContentType::new(take_text(&mut fields, 2)?).map_err(map_domain)?;
     let created_at_ms = take_uint(&mut fields, 3)?;
@@ -467,6 +803,10 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
             .remove(&9)
             .ok_or(ApplicationError::IntegrityFailure)?,
     )?;
+    let attachment_manifests = match fields.remove(&10) {
+        None => BTreeMap::new(),
+        Some(value) => decode_attachment_manifest_references(value)?,
+    };
     ItemDocument::new(
         id,
         schema,
@@ -477,8 +817,46 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
         tags,
         payload,
         attachments,
+        attachment_manifests,
     )
     .map_err(map_domain)
+}
+
+/// Decode the tenth live-state field's attachment-to-manifest references.
+///
+/// Bounded before anything is built, ascending and unique on the wire, and
+/// checked for the key-set equality VLT-PM03 enforces — the domain
+/// constructor would catch the last of those anyway, but reaching it requires
+/// building the map first, and a peer-authored list is exactly the input that
+/// should be refused before it is materialised.
+fn decode_attachment_manifest_references(
+    value: CborValue,
+) -> Result<BTreeMap<AttachmentId, AttachmentManifestId>, ApplicationError> {
+    let entries = match value {
+        CborValue::Array(entries) => entries,
+        _ => return Err(ApplicationError::IntegrityFailure),
+    };
+    if entries.is_empty() {
+        // Absence is encoded by omitting the field, so an empty array is a
+        // second spelling of the same state and canonical encodings have one.
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    if entries.len() > MAX_OBSERVED_VALUES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let mut references = BTreeMap::new();
+    let mut previous: Option<AttachmentId> = None;
+    for entry in entries {
+        let mut fields = value_fields(entry, &[1, 2])?;
+        let attachment = AttachmentId::new(take_fixed(&mut fields, 1)?);
+        if previous.is_some_and(|prior| prior >= attachment) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        previous = Some(attachment);
+        let manifest = AttachmentManifestId::new(take_fixed(&mut fields, 2)?);
+        references.insert(attachment, manifest);
+    }
+    Ok(references)
 }
 
 trait ObservedValue: Ord + Clone {
@@ -858,6 +1236,13 @@ mod tests {
         attachments
             .add(AttachmentId::new([0x41; 16]), op(4))
             .unwrap();
+        // This fixture carries an attachment, so the round trip through this
+        // module exercises the tenth live-state field rather than only the
+        // nine-key shape.
+        let manifests = BTreeMap::from([(
+            AttachmentId::new([0x41; 16]),
+            AttachmentManifestId::new([0x61; 32]),
+        )]);
 
         let document = ItemDocument::new(
             ItemId::new([0x21; 16]),
@@ -875,6 +1260,7 @@ mod tests {
                 notes: Some("private".to_string()),
             }),
             attachments,
+            manifests,
         )
         .unwrap();
         ItemCandidate::new(
@@ -959,6 +1345,7 @@ mod tests {
                 notes: None,
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         ItemCandidate::new(

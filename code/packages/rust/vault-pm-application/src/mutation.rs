@@ -6,9 +6,11 @@ use crate::{
     ObjectRandomness, PublicationJournalV1, V1Keys,
 };
 use coding_adventures_ed25519::{generate_keypair, sign};
+use coding_adventures_vault_attachments::BlobId;
 use coding_adventures_vault_pm_audit::{AuditActionV1, AuditEventV1, AuditOutcomeV1};
 use coding_adventures_vault_pm_domain::{
-    ItemCandidate, ItemDocument, ItemId, ItemState, OperationId, RevisionId, Tombstone,
+    AttachmentId, AttachmentManifestId, ItemCandidate, ItemDocument, ItemId, ItemState,
+    OperationId, RevisionId, Tombstone,
 };
 use coding_adventures_vault_pm_format::{
     AnnouncementV1, CommitV1, ObjectFrameV1, ObjectId, Signature,
@@ -155,6 +157,109 @@ impl Drop for PortableImportRandomnessV1 {
 impl Debug for PortableImportRandomnessV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("PortableImportRandomnessV1(<redacted>)")
+    }
+}
+
+/// Return the exact caller-CSPRNG byte count required to attach a file of
+/// `plaintext_len` bytes.
+///
+/// The layout, in the order it is consumed, is VLT-PM47 §6.4's:
+///
+/// ```text
+/// attachment / blob id      16
+/// blob DEK                  32
+/// per chunk object          80 x chunk_count
+/// manifest object           80
+/// revision, catalog, commit 80 x 3
+/// trace id                  32
+/// audit-event object        80
+/// ```
+///
+/// One `AttachmentId` value serves as both the attachment identity and the
+/// VLT14 blob id, so there is one 16-byte draw rather than two (§4.3).
+///
+/// This is the only place the arithmetic appears. Sizes that would not fit one
+/// atomic publication are refused here, before any entropy is accepted — which
+/// is also why the attach ceremony never needs a resumable protocol.
+pub fn attachment_random_bytes(plaintext_len: u64) -> Result<usize, ApplicationError> {
+    if plaintext_len == 0 {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if plaintext_len > crate::MAX_ATTACHMENT_BYTES as u64 {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let chunk_count = crate::codec::expected_chunk_count(plaintext_len);
+    // Revision, catalog, manifest, every chunk, and the audit event all land
+    // in one commit, so the publication bound is a bound on the file.
+    if chunk_count
+        .checked_add(4)
+        .is_none_or(|object_count| object_count > MAX_PUBLICATION_OBJECTS)
+    {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    OBJECT_RANDOM_BYTES
+        .checked_mul(
+            chunk_count
+                .checked_add(1)
+                .ok_or(ApplicationError::BoundExceeded)?,
+        )
+        .and_then(|chunk_bytes| chunk_bytes.checked_add(ATTACHMENT_IDENTITY_BYTES))
+        .and_then(|bytes| bytes.checked_add(REPLACE_ITEM_RANDOM_BYTES))
+        .ok_or(ApplicationError::BoundExceeded)
+}
+
+const ATTACHMENT_IDENTITY_BYTES: usize = 16 + 32;
+
+/// Owned wipe-on-drop entropy for one complete attachment write.
+///
+/// Variable-length for the same reason [`PortableImportRandomnessV1`] is: the
+/// requirement depends on the input. It is validated against
+/// [`attachment_random_bytes`] at construction, so a short or long block is an
+/// `InvalidInput` before the vault is touched rather than a partition that
+/// silently reads the wrong offsets.
+pub struct AttachmentRandomnessV1 {
+    bytes: Vec<u8>,
+    chunk_count: usize,
+}
+
+impl AttachmentRandomnessV1 {
+    /// Validate and take the exact host-CSPRNG bytes a `plaintext_len`-byte
+    /// attachment requires.
+    pub fn new(mut bytes: Vec<u8>, plaintext_len: u64) -> Result<Self, ApplicationError> {
+        let expected = match attachment_random_bytes(plaintext_len) {
+            Ok(expected) => expected,
+            Err(error) => {
+                bytes.zeroize();
+                return Err(error);
+            }
+        };
+        if bytes.len() != expected {
+            bytes.zeroize();
+            return Err(ApplicationError::InvalidInput);
+        }
+        Ok(Self {
+            bytes,
+            chunk_count: crate::codec::expected_chunk_count(plaintext_len),
+        })
+    }
+}
+
+impl Zeroize for AttachmentRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+        self.chunk_count = 0;
+    }
+}
+
+impl Drop for AttachmentRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for AttachmentRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AttachmentRandomnessV1(<redacted>)")
     }
 }
 
@@ -649,6 +754,187 @@ pub(crate) fn replace_item(
         &randomness.bytes,
     )?;
     publish_mutation(active, repository, publication, local_state_store)
+}
+
+/// Attach one file to one live item, as a single ordinary mutation.
+///
+/// # Why there is no upload protocol here
+///
+/// Everything this function seals — every chunk, the manifest, the new
+/// revision, the rebuilt catalog, the audit event, the commit, the
+/// announcement — goes into one [`PublicationJournalV1`] and through the same
+/// [`publish_mutation`] compare-exchange pair every other mutation uses. So
+/// VLT-PM41's crash matrix and VLT-PM42's pending-publication recovery cover
+/// this ceremony with no new argument: a crash before the first exchange
+/// leaves the vault byte-identical, a crash after it leaves the exact frames
+/// on disk for the next ordinary command to republish unchanged, and a crash
+/// during publication leaves unreachable immutable objects of the kind
+/// VLT-PM00 §10.4 already describes.
+///
+/// The alternative — writing chunks across several commits and tracking
+/// progress — would have added a durable state the matrix does not cover, a
+/// second recovery path, and a genuinely orphanable partial blob, to buy the
+/// ability to attach a file larger than one publication can carry.
+/// [`attachment_random_bytes`] sets the ceiling below that point on purpose.
+///
+/// The audit action is `ItemUpdate`, because attaching a file *is* an update
+/// of the item document and VLT-PM15 §2's registry names user-visible
+/// operations at item granularity rather than one code per field.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn attach_attachment(
+    active: &ActiveStateV1,
+    report: &OpenReport,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    item_id: ItemId,
+    name: String,
+    plaintext: &[u8],
+    wall_time_ms: u64,
+    randomness: AttachmentRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<(ActiveStateV1, AttachmentId), ApplicationError> {
+    if report.heads() != active.pinned_heads() {
+        return Err(ApplicationError::ConcurrentHost);
+    }
+    if randomness.chunk_count != crate::codec::expected_chunk_count(plaintext.len() as u64) {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let candidates = current_items
+        .get(&item_id)
+        .ok_or(ApplicationError::NotFound)?;
+    let [candidate] = candidates.as_slice() else {
+        return Err(ApplicationError::ConflictRequired);
+    };
+    let ItemState::Live(current) = candidate.state() else {
+        return Err(ApplicationError::NotFound);
+    };
+    let expected_revision = candidate.revision_id();
+
+    // The identity draw comes first so the two values that must never repeat
+    // together — the blob id and its DEK — are the first thing spent, and so
+    // the attachment id a person will see is fixed before anything is sealed.
+    let mut offset = 0;
+    let attachment_id = AttachmentId::new(take_slice::<16>(&randomness.bytes, &mut offset));
+    let blob_dek = Zeroizing::new(take_slice::<{ crate::ATTACHMENT_DEK_BYTES }>(
+        &randomness.bytes,
+        &mut offset,
+    ));
+    let chunked = crate::attachment::chunk_attachment(
+        plaintext,
+        BlobId(*attachment_id.as_bytes()),
+        blob_dek,
+    )?;
+    if chunked.chunks.len() != randomness.chunk_count {
+        return Err(ApplicationError::InternalInvariant);
+    }
+
+    let mut content_objects = Vec::with_capacity(chunked.chunks.len() + 1);
+    let mut chunk_ids = Vec::with_capacity(chunked.chunks.len());
+    for chunk in &chunked.chunks {
+        let plaintext = Zeroizing::new(crate::encode_attachment_chunk(chunk)?);
+        let chunk_randomness = take_object_randomness_slice(&randomness.bytes, &mut offset);
+        let frame = seal_object(
+            keys,
+            ObjectKind::AttachmentChunk,
+            &plaintext,
+            &chunk_randomness,
+        )?;
+        chunk_ids.push(
+            frame
+                .id()
+                .map_err(|_| ApplicationError::InternalInvariant)?,
+        );
+        content_objects.push(frame);
+    }
+
+    let manifest = crate::AttachmentManifestV1::new(
+        attachment_id,
+        // The DEK is re-derived from the same partition rather than kept alive
+        // across the chunking loop, so the only long-lived copy is the one
+        // inside the manifest object about to be sealed.
+        Zeroizing::new(
+            randomness.bytes[16..16 + crate::ATTACHMENT_DEK_BYTES]
+                .try_into()
+                .map_err(|_| ApplicationError::InternalInvariant)?,
+        ),
+        name,
+        chunked.total_plaintext_len,
+        chunked.content_sha256,
+        chunk_ids,
+        wall_time_ms,
+    )?;
+    let manifest_plaintext = Zeroizing::new(manifest.encode()?);
+    let manifest_randomness = take_object_randomness_slice(&randomness.bytes, &mut offset);
+    let manifest_frame = seal_object(
+        keys,
+        ObjectKind::AttachmentManifest,
+        &manifest_plaintext,
+        &manifest_randomness,
+    )?;
+    let manifest_id = manifest_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    content_objects.push(manifest_frame);
+
+    // The add operation reuses the trace identity the audit event will carry,
+    // which is drawn from the tail partition this function does not consume.
+    let operation = OperationId::new(
+        randomness.bytes[offset + 3 * OBJECT_RANDOM_BYTES..][..TRACE_ID_BYTES]
+            .try_into()
+            .map_err(|_| ApplicationError::InternalInvariant)?,
+    );
+    let mut attachments = current.attachments().clone();
+    attachments
+        .add(attachment_id, operation)
+        .map_err(|_| ApplicationError::BoundExceeded)?;
+    let mut manifests = current.attachment_manifests().clone();
+    if manifests
+        .insert(
+            attachment_id,
+            AttachmentManifestId::new(*manifest_id.as_bytes()),
+        )
+        .is_some()
+    {
+        // A fresh 128-bit identity that already exists is not a user error.
+        return Err(ApplicationError::InternalInvariant);
+    }
+    let document = ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        wall_time_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        current.payload().clone(),
+        attachments,
+        manifests,
+    )
+    .map_err(|error| match error {
+        coding_adventures_vault_pm_domain::DomainError::BoundExceeded => {
+            ApplicationError::BoundExceeded
+        }
+        _ => ApplicationError::InvalidInput,
+    })?;
+
+    let publication = prepare_item_publication_with_objects(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        item_id,
+        ItemState::Live(Box::new(document)),
+        &BTreeSet::from([expected_revision]),
+        AuditActionV1::ItemUpdate,
+        Some(expected_revision),
+        wall_time_ms,
+        content_objects,
+        &randomness.bytes[offset..],
+    )?;
+    let next = publish_mutation(active, repository, publication, local_state_store)?;
+    Ok((next, attachment_id))
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1188,17 +1474,73 @@ fn prepare_item_publication(
     wall_time_ms: u64,
     randomness: &[u8; REPLACE_ITEM_RANDOM_BYTES],
 ) -> Result<PublicationJournalV1, ApplicationError> {
+    prepare_item_publication_with_objects(
+        active,
+        current_items,
+        keys,
+        local_secret,
+        item_id,
+        item_state,
+        causal_parents,
+        audit_action,
+        selected_revision,
+        wall_time_ms,
+        Vec::new(),
+        randomness,
+    )
+}
+
+/// The one item-mutation publication builder, with room for content objects
+/// that the new revision references but does not contain.
+///
+/// `content_objects` exists for VLT-PM47 attachments and is the whole reason
+/// an attachment write needs no durable machinery of its own: the sealed chunk
+/// and manifest frames are simply more objects in the *same* journal, the same
+/// commit, and the same `publish_mutation` compare-exchange pair. They are
+/// sealed by the caller, because only the caller knows how many there are.
+///
+/// `randomness` is a slice rather than a fixed array for the same reason: an
+/// attachment's entropy requirement depends on its chunk count. Every caller's
+/// partition is still exact, and the assertion at the end of the partition is
+/// what says so.
+#[allow(clippy::too_many_arguments)]
+fn prepare_item_publication_with_objects(
+    active: &ActiveStateV1,
+    current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    item_id: ItemId,
+    item_state: ItemState,
+    causal_parents: &BTreeSet<RevisionId>,
+    audit_action: AuditActionV1,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    content_objects: Vec<ObjectFrameV1>,
+    randomness: &[u8],
+) -> Result<PublicationJournalV1, ApplicationError> {
     let device_counter = active
         .last_device_counter()
         .checked_add(1)
         .ok_or(ApplicationError::BoundExceeded)?;
+    if randomness.len() != REPLACE_ITEM_RANDOM_BYTES {
+        return Err(ApplicationError::InternalInvariant);
+    }
     let mut offset = 0;
-    let revision_randomness = take_object_randomness(randomness, &mut offset);
-    let catalog_randomness = take_object_randomness(randomness, &mut offset);
-    let commit_randomness = take_object_randomness(randomness, &mut offset);
-    let trace_id = OperationId::new(take(randomness, &mut offset));
-    let audit_randomness = take_object_randomness(randomness, &mut offset);
+    let revision_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let catalog_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let commit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let trace_id = OperationId::new(take_slice(randomness, &mut offset));
+    let audit_randomness = take_object_randomness_slice(randomness, &mut offset);
     debug_assert_eq!(offset, REPLACE_ITEM_RANDOM_BYTES);
+
+    let mut content_object_ids = Vec::with_capacity(content_objects.len());
+    for frame in &content_objects {
+        content_object_ids.push(
+            frame
+                .id()
+                .map_err(|_| ApplicationError::InternalInvariant)?,
+        );
+    }
 
     let revision_plaintext = Zeroizing::new(encode_item_revision(causal_parents, &item_state)?);
     let revision_frame = seal_object(
@@ -1251,12 +1593,16 @@ fn prepare_item_publication(
         &audit_randomness,
     )?;
     let mut added_objects = vec![revision_object_id, catalog_id];
+    added_objects.extend_from_slice(&content_object_ids);
     if let Some((_, audit_id)) = &audit_event {
         added_objects.push(*audit_id);
     }
     added_objects.sort_unstable();
     added_objects.dedup();
-    let expected_object_count = 2 + usize::from(audit_event.is_some());
+    // Deduplication must not have removed anything: every id here names a
+    // distinct freshly sealed frame, so a collision would mean two frames were
+    // sealed with the same randomness. That is a fault, not a saving.
+    let expected_object_count = 2 + content_object_ids.len() + usize::from(audit_event.is_some());
     if added_objects.len() != expected_object_count {
         return Err(ApplicationError::InternalInvariant);
     }
@@ -1313,6 +1659,7 @@ fn prepare_item_publication(
         PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
 
     let mut objects = vec![revision_frame, catalog_frame];
+    objects.extend(content_objects);
     let audit_event_head = audit_event.map(|(frame, id)| {
         objects.push(frame);
         id
@@ -1378,32 +1725,12 @@ fn prepare_mutation_audit_event(
     Ok(Some((frame, id)))
 }
 
-fn take_object_randomness(
-    bytes: &[u8; REPLACE_ITEM_RANDOM_BYTES],
-    offset: &mut usize,
-) -> ObjectRandomness {
-    ObjectRandomness::new(
-        take(bytes, offset),
-        take(bytes, offset),
-        take(bytes, offset),
-    )
-}
-
 fn take_object_randomness_slice(bytes: &[u8], offset: &mut usize) -> ObjectRandomness {
     ObjectRandomness::new(
         take_slice(bytes, offset),
         take_slice(bytes, offset),
         take_slice(bytes, offset),
     )
-}
-
-fn take<const N: usize>(bytes: &[u8; REPLACE_ITEM_RANDOM_BYTES], offset: &mut usize) -> [u8; N] {
-    let end = *offset + N;
-    let value = bytes[*offset..end]
-        .try_into()
-        .expect("add-item partition lengths are constant");
-    *offset = end;
-    value
 }
 
 fn take_slice<const N: usize>(bytes: &[u8], offset: &mut usize) -> [u8; N] {
