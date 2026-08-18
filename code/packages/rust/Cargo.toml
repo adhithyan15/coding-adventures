@@ -273,6 +273,8 @@ members = [
     "derive-runtime",
     "derive-repl",
     "derive-to-semantic-ir",
+    "derive-iir-compiler",
+    "derive-vm",
     "apl-lexer",
     "apl-parser",
     "apl-runtime",
