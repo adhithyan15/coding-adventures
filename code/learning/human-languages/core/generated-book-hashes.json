@@ -627,6 +627,17 @@
       "tex": "chinese/book/chapters/ch10-xiexie.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:efeb50daae8dbbb0",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "tex": "chinese/book/chapters/ch11-qing.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

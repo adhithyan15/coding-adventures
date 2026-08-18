@@ -180,6 +180,21 @@
         "ZH-EXT-027-PREDICT-SANDHI"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-010",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-028-PHONETIC-COMPONENT",
+        "ZH-EXT-029-QING-INVITES"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -242,9 +257,10 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-010"
+      ],
       "omits": [
-        "COURTESY-PLEASE",
         "COURTESY-SORRY"
       ],
       "relocates": {}
@@ -939,6 +955,33 @@
       "lessons": [
         "ZH-C10-buxie",
         "ZH-C10-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-028-PHONETIC-COMPONENT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 请, and I know a character half can point at the SOUND rather than the meaning -- 青 is qing and 请 is qing -- so meeting an unknown character I can find a half I recognise and ask which job it is doing.",
+      "prerequisites": [
+        "ZH-EXT-027-PREDICT-SANDHI"
+      ],
+      "lessons": [
+        "ZH-W11-qing",
+        "ZH-C11-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-029-QING-INVITES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "pragmatics",
+      "canDo": "I can say 请 on its own to mean after you, and I know it invites rather than softens -- so Mandarin uses it far less often than English uses please, and leaving it out is not rude.",
+      "prerequisites": [
+        "ZH-EXT-028-PHONETIC-COMPONENT"
+      ],
+      "lessons": [
+        "ZH-C11-qing"
       ]
     }
   ]
