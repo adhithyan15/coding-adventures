@@ -277,12 +277,15 @@ is lowered as a `Stmt`-position operation (like `Assign`), not a value-producing
   inlines its runtime helpers, unlike the TS backend's imported-package
   model) for the base cut (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
   `Transpose`/`IndexGet`/`IndexSet`). `NDArrays`/`MatrixOps`/
-  `ArrayColumnMajor` are in `ACCEPTED_FEATURES`. The SIR22 "APL addendum"
-  nodes below share these same three features but remain deferred — this
-  backend adds a dedicated tree-walk check inside `compile()` (beyond the
-  ordinary feature-flag capability check) so a module using one of the
-  nine still fails cleanly rather than reaching an emit-time panic; see
-  that crate's `find_unimplemented_sir22_addendum_node`.
+  `ArrayColumnMajor` are in `ACCEPTED_FEATURES`. **Update, since
+  superseded:** the SIR22 "APL addendum" nodes (`Reduce`/`Scan`/
+  `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
+  `Catenate`) originally shared these same three features but stayed
+  deferred behind a dedicated tree-walk rejection check
+  (`find_unimplemented_sir22_addendum_node`) — real codegen for all nine
+  landed in a later PR and that check was removed once it became dead
+  code (see `compiles_reduce_node_instead_of_rejecting_it`-style
+  regression tests in `semantic-ir-to-javascript/src/lib.rs`).
 - **TS** (`semantic-ir-to-typescript`) — **done**: new `match` arms emit
   calls into the *imported* `@coding-adventures/sir-runtime-array` package
   (`import * as __SirArray from "@coding-adventures/sir-runtime-array"`,
@@ -324,10 +327,24 @@ is lowered as a `Stmt`-position operation (like `Assign`), not a value-producing
   hands it a bare number (fixed in `sir-runtime-array` 0.4.0, reusing the
   `elementwise.ts` module's existing `toArrayValue` bare-scalar
   normaliser rather than re-solving the same problem a third time).
-- **Rust/Go/Python backends**: not required to support this in the first
-  wave; they reject modules declaring `NDArrays`/`MatrixOps` per the existing
-  capability-rejection path. No code changes required to these backends for
-  this spec to land safely.
+- **C/Go/Rust/Python/Ruby backends** — **second wave, planned**: the
+  original text here named only Rust/Go/Python as declining this domain
+  "in the first wave... no code changes required" — C and Ruby decline
+  identically today (same capability-rejection path, same panic-stub
+  match arms forced by Rust's exhaustiveness checking) but were never
+  actually named, an omission fixed here since all five behave the same
+  way. This is now a planned second wave, not a permanent scope boundary:
+  **C/Go/Rust/Ruby** will
+  follow JS's *inlined* runtime-port model (new source text ported from
+  `semantic-ir-to-javascript`'s own `ArrayRt` sub-runtime, appended to
+  each backend's own `RUNTIME` constant); **Python** will follow TS's
+  *imported-package* model (a new `code/packages/python/sir-runtime-array`
+  pip package, ported from `code/packages/typescript/sir-runtime-array`,
+  wired via Python's existing gated-import pattern). The base cut
+  (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
+  `IndexSet`) and the nine-node APL addendum are separate rollout slices
+  on each backend, mirroring how JS/TS themselves shipped the addendum
+  as a later, separate PR rather than bundled with the base cut.
 
 ## Versioning
 
