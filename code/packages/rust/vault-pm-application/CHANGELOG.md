@@ -53,7 +53,17 @@ All notable changes to this package are documented here.
   reported the same vault `Healthy`, so the operator got two contradictory
   answers. VLT-PM39's dependency is unaffected: a payload that is not valid CBOR
   yields a non-size `CborError`, which still maps to `IntegrityFailure`, and the
-  existing fixture pins it. Found by the round-1 security review of this change.
+  existing fixture pins it — `encode_opaque` decodes the stored payload before it
+  encodes the envelope, so the two size variants are unreachable unless the
+  payload was already valid canonical CBOR, and a corrupt-but-large payload
+  cannot be laundered into a size error. Found by the round-1 security review of
+  this change.
+
+  One user-visible consequence: `vault-pm` exits 2 (`InvalidCommand`) rather than
+  6 (`Integrity`) when a command is refused for an oversized opaque record. That
+  is the exit code the six typed arms have produced since the preceding change,
+  so this makes the seventh consistent with them rather than introducing a new
+  behaviour. Stderr remains fixed and payload-blind.
 
   The escape hatch of §13.2 now covers the opaque case on the same terms as the
   first-party one, and both halves are pinned by test rather than inferred:
