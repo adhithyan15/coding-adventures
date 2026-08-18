@@ -276,6 +276,16 @@ TESTSUITE_FILES = [
     # already-implemented i16x8.add/i32x4.eq entries (both matched
     # exactly), same discipline as every prior addition.
     "simd_i16x8_cmp.wast",
+    # SIMD widen PR7 (task #137-140): simd_i8x16_cmp.wast -- i8x16's own
+    # comparison family (eq/ne/lt_s/lt_u/gt_s/gt_u/le_s/le_u/ge_s/ge_u),
+    # closing the same gap PR6 closed for i16x8: i8x16.add/sub/neg landed
+    # (PR4) without a comparison family. Same boolean-mask convention and
+    # signed/unsigned split as i16x8's and i32x4's own comparison
+    # families, just at the narrowest lane width. Each sub-opcode byte
+    # fetched live from BinarySIMD.md and cross-checked against the
+    # already-implemented i8x16.add/i16x8.eq entries (both matched
+    # exactly), same discipline as every prior addition.
+    "simd_i8x16_cmp.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.21] - 2026-08-18 (task #137-140 — SIMD: i8x16 comparison family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i8x16`'s own comparison
+  family: `Eq | Ne | ... | GeUI16x8` arm extended to also cover
+  `EqI8x16 | NeI8x16 | LtSI8x16 | LtUI8x16 | GtSI8x16 | GtUI8x16 |
+  LeSI8x16 | LeUI8x16 | GeSI8x16 | GeUI8x16` (same pop-two-push-one
+  `v128` shape -- WASM's SIMD comparison convention keeps the RESULT a
+  `v128` boolean mask, not a plain `i32`, same as `i16x8`'s and
+  `i32x4`'s own comparison families).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.20] - 2026-08-18 (task #133-136 — SIMD: i16x8 comparison family type rules)
 
 ### Added

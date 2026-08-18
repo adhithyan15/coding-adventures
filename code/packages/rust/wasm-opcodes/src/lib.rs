@@ -939,6 +939,31 @@ pub enum SimdOpKind {
     GeSI16x8,
     /// `i16x8.ge_u` -- lane-wise unsigned greater-than-or-equal, boolean-mask convention.
     GeUI16x8,
+    /// `i8x16.eq` -- lane-wise equality over 16 `i8` lanes; each lane
+    /// becomes all-1s if equal, all-0s otherwise (same boolean-mask
+    /// convention as `i16x8`'s own comparison family, closing the same
+    /// gap for `i8x16`, which had arith but no comparison family until
+    /// now).
+    EqI8x16,
+    /// `i8x16.ne` -- lane-wise inequality, same boolean-mask convention as
+    /// [`Self::EqI8x16`].
+    NeI8x16,
+    /// `i8x16.lt_s` -- lane-wise signed less-than, boolean-mask convention.
+    LtSI8x16,
+    /// `i8x16.lt_u` -- lane-wise unsigned less-than, boolean-mask convention.
+    LtUI8x16,
+    /// `i8x16.gt_s` -- lane-wise signed greater-than, boolean-mask convention.
+    GtSI8x16,
+    /// `i8x16.gt_u` -- lane-wise unsigned greater-than, boolean-mask convention.
+    GtUI8x16,
+    /// `i8x16.le_s` -- lane-wise signed less-than-or-equal, boolean-mask convention.
+    LeSI8x16,
+    /// `i8x16.le_u` -- lane-wise unsigned less-than-or-equal, boolean-mask convention.
+    LeUI8x16,
+    /// `i8x16.ge_s` -- lane-wise signed greater-than-or-equal, boolean-mask convention.
+    GeSI8x16,
+    /// `i8x16.ge_u` -- lane-wise unsigned greater-than-or-equal, boolean-mask convention.
+    GeUI8x16,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1000,6 +1025,14 @@ pub struct SimdOpInfo {
 /// live from `BinarySIMD.md` and cross-checked against the already-
 /// implemented `i16x8.add` (`0x8E`)/`i32x4.eq` (`0x37`) entries (both
 /// matched exactly).
+/// `i8x16.eq`/`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/`le_u`/`ge_s`/`ge_u`
+/// close the same gap for `i8x16` -- it had arith (`add`/`sub`/`neg`) but
+/// no comparison family until now, mirroring `i16x8`'s own pre-widening
+/// state. Same boolean-mask convention and signed/unsigned split, just
+/// at `i8x16`'s narrower lane width. Each sub-opcode byte fetched live
+/// from `BinarySIMD.md` and cross-checked against the already-
+/// implemented `i8x16.add` (`0x6E`)/`i16x8.eq` (`0x2D`) entries (both
+/// matched exactly).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1047,6 +1080,16 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i16x8.le_u", sub_opcode: 0x34, kind: SimdOpKind::LeUI16x8 },
     SimdOpInfo { name: "i16x8.ge_s", sub_opcode: 0x35, kind: SimdOpKind::GeSI16x8 },
     SimdOpInfo { name: "i16x8.ge_u", sub_opcode: 0x36, kind: SimdOpKind::GeUI16x8 },
+    SimdOpInfo { name: "i8x16.eq", sub_opcode: 0x23, kind: SimdOpKind::EqI8x16 },
+    SimdOpInfo { name: "i8x16.ne", sub_opcode: 0x24, kind: SimdOpKind::NeI8x16 },
+    SimdOpInfo { name: "i8x16.lt_s", sub_opcode: 0x25, kind: SimdOpKind::LtSI8x16 },
+    SimdOpInfo { name: "i8x16.lt_u", sub_opcode: 0x26, kind: SimdOpKind::LtUI8x16 },
+    SimdOpInfo { name: "i8x16.gt_s", sub_opcode: 0x27, kind: SimdOpKind::GtSI8x16 },
+    SimdOpInfo { name: "i8x16.gt_u", sub_opcode: 0x28, kind: SimdOpKind::GtUI8x16 },
+    SimdOpInfo { name: "i8x16.le_s", sub_opcode: 0x29, kind: SimdOpKind::LeSI8x16 },
+    SimdOpInfo { name: "i8x16.le_u", sub_opcode: 0x2A, kind: SimdOpKind::LeUI8x16 },
+    SimdOpInfo { name: "i8x16.ge_s", sub_opcode: 0x2B, kind: SimdOpKind::GeSI8x16 },
+    SimdOpInfo { name: "i8x16.ge_u", sub_opcode: 0x2C, kind: SimdOpKind::GeUI8x16 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1465,8 +1508,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_46_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 46);
+    fn simd_ops_table_has_the_expected_56_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 56);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1649,6 +1692,33 @@ mod tests {
             ("i16x8.le_u", 0x34, SimdOpKind::LeUI16x8),
             ("i16x8.ge_s", 0x35, SimdOpKind::GeSI16x8),
             ("i16x8.ge_u", 0x36, SimdOpKind::GeUI16x8),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i8x16_cmp_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i8x16.add (0x6E)/i16x8.eq (0x2D) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. Closes the same gap for i8x16 that i16x8.eq/ne/etc.
+        // (task #133-136) just closed for i16x8: i8x16 had arith
+        // (add/sub/neg) but no comparison family until now.
+        for (name, sub_opcode, kind) in [
+            ("i8x16.eq", 0x23, SimdOpKind::EqI8x16),
+            ("i8x16.ne", 0x24, SimdOpKind::NeI8x16),
+            ("i8x16.lt_s", 0x25, SimdOpKind::LtSI8x16),
+            ("i8x16.lt_u", 0x26, SimdOpKind::LtUI8x16),
+            ("i8x16.gt_s", 0x27, SimdOpKind::GtSI8x16),
+            ("i8x16.gt_u", 0x28, SimdOpKind::GtUI8x16),
+            ("i8x16.le_s", 0x29, SimdOpKind::LeSI8x16),
+            ("i8x16.le_u", 0x2A, SimdOpKind::LeUI8x16),
+            ("i8x16.ge_s", 0x2B, SimdOpKind::GeSI8x16),
+            ("i8x16.ge_u", 0x2C, SimdOpKind::GeUI8x16),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

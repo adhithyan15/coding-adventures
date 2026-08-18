@@ -744,6 +744,27 @@ fn valid_i16x8_cmp_family() {
 }
 
 #[test]
+fn valid_i8x16_cmp_family() {
+    // SIMD widen PR7: i8x16's own comparison family (v128,v128->v128,
+    // result is a boolean mask v128, same shape as i16x8's/i32x4's own
+    // eq/ne/lt_s/etc.) -- closes the same gap for i8x16 that i16x8.eq/
+    // ne/etc. just closed for i16x8.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i8x16.eq (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.lt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.lt_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.gt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.gt_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.le_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.le_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.ge_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.ge_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree
