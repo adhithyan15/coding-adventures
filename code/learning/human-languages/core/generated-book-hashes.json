@@ -563,6 +563,18 @@
       "tex": "chinese/book/chapters/ch05-shi.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:ff7b30998c3daca4",
+      "lessonIds": [
+        "ZH-W06-zai",
+        "ZH-W06-jian",
+        "ZH-C06-zaijian",
+        "ZH-C06-practice"
+      ],
+      "tex": "chinese/book/chapters/ch06-zaijian.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

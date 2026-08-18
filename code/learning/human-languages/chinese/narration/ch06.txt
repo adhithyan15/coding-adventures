@@ -1,0 +1,145 @@
+Mandarin Chinese, chapter 6: See You Again.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 4.
+再 (zài) — a bar, a frame, and a line that closes it.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 是. Nine strokes, and the sun on top finished first.
+
+Script — the shape.
+再 (zài).
+Six strokes. Fewer than the last one, and the structure is easier to see: a horizontal bar across the top, a frame hanging underneath it, and a long horizontal closing the whole thing at the bottom.
+the top horizontal, left to right.
+the left side, coming straight down.
+the frame: start again at the upper left, cross to the right, turn down the right side, and hook left at the base — all without lifting.
+the central vertical, down through the middle.
+the inner horizontal, left to right.
+the long bottom horizontal, left to right, wider than everything above it.
+Five pen lifts.
+Stroke 3 is the one to watch. It is a single stroke that changes direction twice — across, down, then a hook to the left. You have met most of it before: the outer wall of a box is always one turning stroke, never two or three. Compare it with the frame you drew in 日 — the same across-and-down turn, with a hook added at the end.
+And the closing bar is last. The box is not sealed until the end — the same rule that made you draw the middle bar of 日 before its bottom bar. Chinese stroke order keeps re-using a small set of habits, and this is one you now know well enough to expect.
+
+Guided Practice.
+[once you have stopped driving — write: 再 (zài) — bar, left side, then the turning frame in one movement]
+[once you have stopped driving — write: 再 (zài) again, and count the lifts. There are five.]
+[your turn — say: zài — falling, from high to low]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which stroke of 再 (zài) is drawn last? (The long bottom bar.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 10 seconds]
+The frame's top, right side and hook are drawn how -- as three strokes, or as one?
+
+
+Lesson 2 of 4.
+见 (jiàn) — an eye on two legs.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 人. Two strokes, left before right, a figure on two legs.
+
+Script — the shape.
+见 (jiàn).
+Four strokes, and after the last two characters that will feel like a rest.
+It is built in two parts, top and bottom:
+on top, a frame — a narrow box, which the traditional reading takes to be an eye.
+underneath, two legs, written 儿 — which is what 人 becomes when it has to stand underneath something.
+The legs have changed a little in this position. The left one still falls away to the lower left exactly as it did. The right one no longer just presses down: it descends, bends right along the base, and finishes with a hook upward. That is what a leg does when it has to carry a frame above it.
+The order:
+the frame's left side, coming down.
+the frame's top, turning down the right side — one stroke, no lift, and this one is exactly the turn you drew in 日, hook and all absent.
+the left leg, falling to the lower left.
+the right leg: down, bend right, hook up — one stroke, no lift.
+Three pen lifts. Two of the four strokes turn, and neither of them is allowed to be broken into pieces.
+A frame over a person, and the word means "to see." That is a memory hook, not a proof — but it is the kind of hook this book has been giving you in place of a shared ancestor with English, and this one is unusually easy to hold.
+
+Guided Practice.
+[once you have stopped driving — write: 人, then 见 (jiàn) — and find the legs in the second one]
+[once you have stopped driving — write: 见 (jiàn), stopping after stroke 2 to check the frame is closed on three sides]
+[your turn — say: jiàn — falling]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+How does the last stroke finish? (With a hook, upward.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 12 seconds]
+What sits underneath the frame in this character, and where have you seen it before?
+
+
+Lesson 3 of 4.
+再见 (zàijiàn) — the word that says what it means.
+
+Warm-up.
+[pause 2 seconds]
+Write 再 (zài), then 见 (jiàn). Six strokes, then four.
+
+The word, taken apart.
+再见 (zàijiàn).
+再见 zàijiàn — goodbye. Two characters, one word, and you can already write both of them.
+Now the meanings, which have been held back until you had the shapes:
+再 zài means again.
+见 jiàn means see.
+So the word is "see again." That is not a hook, not a mnemonic, not a traditional gloss offered with a warning attached. It is what the two characters say, and it is what the word means.
+Every earlier component gave you a hook — 亻 at the left of 你, 女 beside 子 in 好 — labelled a memory aid rather than history. Here the parts add up. Chinese does this often. Start expecting it.
+
+Sounds you'll need — two falls, not one.
+Both syllables are fourth tone. Both fall.
+Say it slowly: zài falls, then jiàn falls. Two separate drops. The common mistake is to run them into one long slide. Reset your pitch upward between them.
+[repeat that twice]
+And no rule moves. Neither of the two tone rules you have been taught applies to two fourth tones, so 再见 (zàijiàn) is said with the tones it is written with. A native speaker does clip that first fall a little short — but that is a shading of the same tone, not a different one, and neither the characters nor the pinyin change. Which is the point: the shadings live in the mouth.
+
+Why it's said this way — a thought other languages reach for too.
+If you know any German: auf Wiedersehen is "on seeing again" — the same two pieces, in the same order. A coincidence of thinking, not of ancestry; Chinese and German share no common ancestor. But parting by promising to meet again is an idea many languages reach for on their own, and that makes 再见 (zàijiàn) far easier to hold than a shape memorised cold.
+
+Guided Practice.
+[your turn — say: zàijiàn — two falls, resetting the pitch between them]
+[pause 8 seconds for the answer]
+[your turn — read: 再见 (zàijiàn) — give its literal reading before its translation]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Does either tone move in 再见 (zàijiàn)? (No — both fall, and nothing changes.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+Read the goodbye word literally, character by character. What do the two characters say?
+
+
+Lesson 4 of 4.
+Practice — a conversation that ends.
+
+Warm-up.
+[pause 2 seconds]
+Say zàijiàn. Two falls, with the pitch reset between them.
+
+The exchange.
+Everything below is a character you have written yourself. Read it straight through:
+A: 你好 ní hǎo — hello. B: 你好 ní hǎo — hello. A: 是 shì — is it? B: 不是 bú shì — no. A: 再见 zàijiàn — goodbye. B: 再见 zàijiàn — goodbye.
+That is a conversation with a beginning, a middle and an end. It is short, and it is real: two people meet, one asks something, the other declines it, and both leave properly. Nothing in it is a phrase you memorised whole. You built every line from characters and rules.
+
+What you've built — and what stays invisible.
+Read the exchange out loud once more, and count the places where your mouth does something the page does not record:
+你好 is written with two low dipping tones and spoken ní hǎo — the first one rises.
+不是 is written with a falling 不 and spoken bú shì — the 不 rises.
+再见 (zàijiàn) is written with two falls and spoken with two falls. No rule moves.
+Two out of three. That ratio is not a fluke, and it is the single most useful thing to know about reading Mandarin aloud: the writing records the words, not the way the words meet each other. From here on, whenever two pieces sit side by side, ask what happens between them.
+
+Guided Practice.
+[your turn — say: the whole exchange, both parts, without stopping]
+[pause 8 seconds for the answer]
+[your turn — say: it again, taking B's side, and answer 是 instead of 不是]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 再见 (zàijiàn) — six strokes, then four]
+
+Wrap-up Recall.
+In this exchange, how many of the three expressions are spoken exactly as written? (One — 再见 (zàijiàn).)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 10 seconds]
+You have opened an exchange, answered inside it, and closed it. Which line closes it, in pinyin?
