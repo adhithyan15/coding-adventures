@@ -164,6 +164,33 @@ Chapter 1 promises the reader "never a character you have not been shown the
 parts of first", so 名 had to show 夕 either way. The component route satisfied
 that promise at no cost, and is what shipped.
 
+## Please, and the half that carries the sound *(delivered, HL-C246)*
+
+**请** *qǐng*. Realises `SPINE-POLITE-REQUEST-REPAIR` in part, claiming
+`COURTESY-PLEASE`. `COURTESY-SORRY` stays omitted — every Mandarin apology needs
+characters the vendored subset does not contain.
+
+The chapter carries the track's most important reading idea. 请 is 讠 + 青, and
+**青 is *qīng* while 请 is *qǐng*** — same consonant, same vowel, different tone.
+That is a phonetic component the reader can actually hear, which 尔 in 你 was
+not, and it lets the writing system stop looking like thousands of unrelated
+pictures: a character can carry **two hints at once**, one half for what it means
+and one for how it sounds. From here a reader meeting an unknown character has
+something to do besides look it up.
+
+It also corrects an over-translation before it sets. 请 is glossed *please*, but
+it **invites** rather than softens — it opens a sentence and hands the action
+over, where English *please* is bolted on and floats anywhere. The practical
+consequence is stated plainly: **Mandarin uses 请 far less than English uses
+please**, and omitting it is not rude.
+
+**Still owed on this node.** 请 + a verb is the polite-request frame, and the
+reader has no verbs yet. 请再说 — *please say it again*, which would let the blunt
+bare 什么? of the question-word chapter end with a remedy — needs **说**, which is
+in the font but has **no `letters` entry and no ductus**. That is the one
+genuinely blocked next step in this corner of the track, and it costs a
+hand-authored, font-checked ductus rather than a re-subset.
+
 ## Times of day *(planned)*
 
 **早上好** *zǎoshang hǎo*, reusing 好 in the productive `X + 好` greeting frame.

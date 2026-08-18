@@ -1050,6 +1050,22 @@
       "jsonHash": "fnv1a64:3b71f2f96558b9da"
     },
     {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:c7ab8831685e842a",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch11.txt",
+      "json": "chinese/narration/ch11.json",
+      "textHash": "fnv1a64:9908219fa0f4a1e5",
+      "jsonHash": "fnv1a64:69420c4dcd858702"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",
