@@ -125,6 +125,16 @@ that the vault behind the surviving passphrase is the whole vault, by requiring
 the fixture's item still to be listed. See
 `code/specs/VLT-PM43-cli-passphrase-rotation.md` §7 gate 5.
 
+That sweep builds a private vault per cell and runs under `sweep`, unlike the
+snapshot-restoring sweeps around it. The reason is cost. A rotation has 48
+landing points and each cell pays up to five production Argon2id derivations in
+a debug build, so serially it is ~240 KDF runs — enough to make this package the
+slowest unit in the repository's CI. A snapshot cannot be restored into a
+*different* path (the client configuration records the resolved object root),
+so the only way to parallelize is to let each cell build its own fixture. That
+costs a little more total work and buys back the worker count in wall clock:
+508s to 117s locally, coverage unchanged.
+
 ## Verification
 
 ```bash

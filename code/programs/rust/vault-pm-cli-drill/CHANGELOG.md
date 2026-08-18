@@ -24,6 +24,20 @@ All notable changes to this package are documented here.
   Each cell then confirms that the vault behind the surviving passphrase is the
   whole vault, by requiring the fixture's item to still be listed.
 
+  The sweep runs **in parallel**, with a private vault per cell, and that is a
+  cost decision rather than a stylistic one. A rotation has 48 landing points
+  and each cell pays up to five *production* Argon2id derivations in a debug
+  build — the killed rotation's own unlock, root unwrap, and re-wrap, plus one
+  per passphrase probe. Serially that is roughly 240 KDF runs, which made this
+  package the single slowest unit of the repository's CI at 1182s on a hosted
+  macOS runner, ahead of every application build. Every other multi-point sweep
+  here either starts from nothing or restores a captured tree into *the same
+  absolute path* — the client configuration records the resolved object root —
+  and that constraint is exactly what forces a snapshot-restoring sweep to be
+  serial. Building a fixture per cell instead trades a little more total work
+  for the worker count in wall clock: 508s to 117s locally, with the same 48
+  landing points and the same assertions.
+
 ## [0.2.0] - 2026-08-18
 
 ### Changed

@@ -55,18 +55,6 @@ POSIX `rename(2)` is atomic with respect to concurrent readers.
 A best-effort `fsync` of the parent directory is performed for
 durability on filesystems that need it.
 
-`delete` performs that same parent-directory `fsync`, and the
-reason is worth stating: `remove_file` returning `Ok` — and every
-later `get` agreeing the record is gone — proves only that the
-entry has left the page cache, not that its disappearance is
-committed. A power cut can resurrect a record every reader had
-already agreed was deleted. That is tolerable when a delete means
-"stop referencing this"; it is not when a caller deletes a record
-because its *contents* must stop existing. A caller with that
-requirement should still not rely on the unlink alone: overwrite
-the record through `put` first, which is durable by the paragraph
-above, and then delete it.
-
 `initialize()` cleans up any stranded `.tmp` files and seeds the
 in-memory revision counter from the highest revision on disk so
 monotonic numbering survives process restart.

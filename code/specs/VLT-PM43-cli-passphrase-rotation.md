@@ -405,9 +405,18 @@ So `supersede_generation` destroys the wrap with a *write* before it unlinks
 anything: the retired record's body is replaced with nothing through the same
 write-`fsync`-`rename` path that makes every other step durable, and only then
 is the entry removed. After that write returns, the wrap is gone from the file
-whether or not the unlink survives. The unlink still happens, and the filesystem
-adapter's `delete` now `fsync`s the containing directory the way its writes do;
-the overwrite is what makes the guarantee not depend on that.
+whether or not the unlink survives. The unlink still happens; the point is that
+the guarantee does not depend on it.
+
+That is deliberately the whole of the requirement this contract places on a
+storage backend. Making `delete` itself as durable as a write — an `fsync` of
+the containing directory, mirroring what `write_record_atomic` already does
+after its `rename` — is a reasonable improvement to `storage-fs` on its own
+merits, and it is *not* required here: after the overwrite there is no wrap left
+in the file for a lost unlink to resurrect. It is left to a separate change,
+where a cross-cutting edit to a crate this much of the repository depends on can
+be reviewed for its own blast radius rather than as a side effect of a
+password-manager feature.
 
 #### 5.4.2 The window between install and delete
 
@@ -522,6 +531,13 @@ needs its own evidence.
    supersession — the vault must come back openable by exactly one passphrase,
    never by both and never by neither, with `status` and `doctor` reporting a
    state the next ordinary command finishes.
+
+   As implemented the gate is met exhaustively rather than at the minimum: all
+   48 landing points are swept. That is affordable only because the sweep runs
+   in parallel with a private vault per cell — a rotation cell pays up to five
+   production Argon2id derivations, and serially the sweep was the slowest unit
+   in the repository's CI. A future change that makes cells cheaper should
+   spend the saving on coverage, not on wall clock.
 
 6. **The unit layer covers the roll-forward recovery directly**, including
    replay idempotence and the refusal to delete the live generation.

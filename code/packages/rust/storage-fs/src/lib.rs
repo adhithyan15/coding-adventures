@@ -590,20 +590,7 @@ impl StorageBackend for FsStorageBackend {
             _ => {}
         }
         match fs::remove_file(&path) {
-            Ok(()) => {
-                // Same step 4 `write_record_atomic` performs, and for the same
-                // reason: an unlink that is merely visible through the page
-                // cache is not committed. A caller deleting a record because
-                // its *contents* must stop existing — not merely stop being
-                // referenced — needs the directory entry's removal to survive a
-                // power cut, not just the next `get`.
-                if let Some(parent) = path.parent() {
-                    if let Ok(d) = File::open(parent) {
-                        let _ = d.sync_all();
-                    }
-                }
-                Ok(())
-            }
+            Ok(()) => Ok(()),
             Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(()),
             Err(e) => Err(io_to_storage(e)),
         }

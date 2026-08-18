@@ -1299,14 +1299,18 @@ fn opens_with(home: &TestHome, passphrase: &'static [u8]) -> Outcome {
     )
 }
 
-/// VLT-PM43 §7 gate 5, swept exhaustively rather than sampled.
+/// VLT-PM43 §7 gate 5, swept exhaustively — and in parallel, because the
+/// serial form was the most expensive thing in this repository's CI.
+///
+/// # The property
 ///
 /// A rotation is the one ceremony where a crash could plausibly leave a vault
 /// that *neither* passphrase opens: it moves one durable fact across two
 /// independent stores, and the owner state's bootstrap pin is checked
 /// absolutely on every open. The property under test is therefore stronger
-/// than "clean or resumable" — it is **exactly one passphrase works**, at every
-/// landing point, with no cell where both do and no cell where neither does.
+/// than this file's usual "clean or resumable" — it is **exactly one passphrase
+/// works**, at every landing point, with no cell where both do and no cell
+/// where neither does.
 ///
 /// The two probes are run old-first deliberately. A `PendingRotation` is rolled
 /// forward by whichever command opens the vault next, so the old-passphrase
@@ -1314,16 +1318,40 @@ fn opens_with(home: &TestHome, passphrase: &'static [u8]) -> Outcome {
 /// attempt that follows sees a settled, fully rotated vault. Both orders would
 /// pass the exclusivity assertion, but this one also exercises the case a real
 /// person is most likely to produce.
+///
+/// # Why this one builds a vault per cell instead of restoring a snapshot
+///
+/// Every other multi-point sweep here either starts from nothing
+/// (generation zero) or restores a captured tree into *the same absolute path*,
+/// because the client configuration records the resolved object root and the
+/// CLI refuses a vault whose configured location is not the prepared one. That
+/// constraint is what forces a snapshot-restoring sweep to be serial: one
+/// path, one cell at a time.
+///
+/// Serial is affordable for a ceremony whose cell costs one unlock. It is not
+/// affordable here. A rotation has 48 landing points and each cell pays up to
+/// five *production* Argon2id derivations — the killed rotation's own unlock,
+/// root unwrap, and re-wrap, plus one per passphrase probe — in a debug build.
+/// That is roughly 240 KDF runs end to end, and it made this package the
+/// single slowest unit of the repository's CI, ahead of every application
+/// build. Sweeping it under [`sweep`] with a private vault per cell trades a
+/// little more total work (each cell builds its own fixture) for the worker
+/// count in wall-clock, which is the number that actually gates a pull request.
+///
+/// Coverage is unchanged: every landing point still gets the full
+/// exactly-one-passphrase proof.
 #[test]
 fn every_passphrase_rotation_landing_point_leaves_exactly_one_working_passphrase() {
-    let (home, item) = initialized_vault("rotate");
-    let snapshot = Snapshot::capture(&home);
-    let total = count_landing_points(&home, Some(&snapshot), rotate);
+    let (probe, _item) = initialized_vault("rotate-probe");
+    let total = count_landing_points(&probe, None, rotate);
+    drop(probe);
 
-    let mut kept_old = 0_u64;
-    let mut took_new = 0_u64;
-    for point in 1..=total {
-        snapshot.restore(&home);
+    // Each cell reports which side of the commit point it landed on, so the
+    // whole sweep can still assert that both outcomes were actually observed
+    // rather than that one of them happened 48 times.
+    let took_new = AtomicU64::new(0);
+    sweep(total, |point| {
+        let (home, item) = initialized_vault(&format!("rotate-{point}"));
         rotate(
             &home,
             Injection {
@@ -1354,12 +1382,9 @@ fn every_passphrase_rotation_landing_point_leaves_exactly_one_working_passphrase
         let old = opens_with(&home, b"crash matrix correct horse battery staple\n");
         let new = opens_with(&home, b"crash matrix rotated passphrase\n");
         let opened = match (old.status.success(), new.status.success()) {
-            (true, false) => {
-                kept_old += 1;
-                &old
-            }
+            (true, false) => &old,
             (false, true) => {
-                took_new += 1;
+                took_new.fetch_add(1, Ordering::Relaxed);
                 &new
             }
             (true, true) => panic!(
@@ -1378,17 +1403,23 @@ fn every_passphrase_rotation_landing_point_leaves_exactly_one_working_passphrase
         );
         assert_eq!(status(&home), "locked", "landing point {point}");
         assert_tree_excludes_secrets(home.path());
-    }
+    });
 
-    assert!(kept_old > 0, "some landing point must roll back cleanly");
+    // Both sides of the commit point must actually occur. A sweep where every
+    // cell rolled back — or every cell rolled forward — would pass every
+    // assertion above while testing only half the ceremony.
+    let took_new = took_new.load(Ordering::Relaxed);
     assert!(
         took_new > 0,
         "some landing point must commit to the new passphrase"
     );
-    assert_eq!(kept_old + took_new, total);
+    assert!(
+        took_new < total,
+        "some landing point must roll back cleanly"
+    );
 
-    // And an uninjured rotation still works after the whole sweep.
-    snapshot.restore(&home);
+    // And an uninjured rotation still works.
+    let (home, _item) = initialized_vault("rotate-clean");
     rotate(&home, Injection::default()).assert_succeeded("rotation after drill");
     assert!(opens_with(&home, b"crash matrix rotated passphrase\n")
         .status
