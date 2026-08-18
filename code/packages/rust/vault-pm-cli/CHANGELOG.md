@@ -23,6 +23,12 @@
   resolves features per package and naming it even in `dev-dependencies` would
   let `cargo build --all-targets` uplift an instrumented binary to
   `target/release/vault-pm`.
+- Added `CRASH_INJECTION_COMPILED`, a public `const` a composition root can
+  assert on to turn "this build must not contain crash injection" into a
+  compile error. Declaring no feature is necessary and not sufficient: cargo's
+  `--features <dep>/<feature>` syntax reaches a direct dependency's features
+  even when the root package declares none of its own, so the product
+  executable asserts on this constant as well.
 - Added `vault-pm [--vault NAME] shell`, the foreground interactive session
   host specified by `VLT-PM40-cli-interactive-shell.md`. It adds no capability:
   every command inside a session runs through the same parser, the same

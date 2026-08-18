@@ -162,11 +162,21 @@ is the drill's whole purpose.
 
 The path is treated as untrusted even though only something that already
 controls the process environment can set it. It must be absolute, so a working
-directory cannot redirect it. It is opened with `O_NOFOLLOW`, so a symlink at
-the final component is refused rather than followed. It is created `0600`, and
-an *existing* file is refused unless it is a regular file, owned by this user,
-and already owner-only — because a creation mode says nothing about a file that
-already exists. The executable never reads the ledger back.
+directory cannot redirect it. It is opened with `O_NOFOLLOW | O_NONBLOCK`: the
+first refuses a symlink at the final component, the second refuses a
+reader-less FIFO, which `O_NOFOLLOW` says nothing about and which would
+otherwise block the open forever — making the "not a regular file" check
+unreachable, since the open would never return to run it. It is created `0600`,
+and an *existing* file is refused unless it is a regular file, owned by this
+user, and already owner-only, because a creation mode says nothing about a file
+that already exists. Ownership is checked by `fstat` on the open descriptor,
+not by a second path lookup, so there is no window between the check and the
+write. The executable never reads the ledger back.
+
+What none of that does is confine *where* the ledger may be: any absolute path
+naming an existing private regular file this user owns is accepted, including
+one inside their own vault state. That authority is declared in the drill
+crate's capability manifest rather than argued away.
 
 ### 4.5 The drill derives the matrix from the code
 
@@ -199,9 +209,22 @@ invocation order. A password manager would ship an environment-variable kill
 switch that fires between durable writes.
 
 So the drill does not share a crate with the product. The shipped executable at
-`code/programs/rust/vault-pm-cli` **never names the feature in any section**,
-which makes an instrumented `vault-pm` unreachable by construction rather than
-by convention. The instrumented twin lives at
+`code/programs/rust/vault-pm-cli` **never names the feature in any section**.
+
+That is necessary and *not sufficient*, and the difference is worth stating
+because it is easy to stop one step early. Cargo's `--features <dep>/<feature>`
+syntax reaches a direct dependency's features even when the root package
+declares none of its own, so `cargo build --release --features
+coding_adventures_vault_pm_cli/crash-injection` would still produce an
+instrumented `target/release/vault-pm`. The product's `main.rs` therefore also
+carries
+
+```rust
+const _: () = assert!(!coding_adventures_vault_pm_cli::CRASH_INJECTION_COMPILED);
+```
+
+so such a build is a **compile error**, not a binary somebody has to remember
+to inspect. The instrumented twin lives at
 `code/programs/rust/vault-pm-cli-drill`, is byte-identical in composition,
 enables the feature as an ordinary dependency feature, and produces a binary
 called `vault-pm-drill` that cannot be mistaken for the product. The two are
@@ -212,18 +235,21 @@ product — it adds `env: read` for the two injection variables, `proc: signal`
 for removing its own process, and `fs: create` for the ledger — so the extra
 authority is visible in a manifest rather than implied.
 
-Three checks hold this down:
+Four checks hold this down:
 
+- The `const` assertion above: a product build with the feature active does not
+  compile, under any invocation, with no test needing to have run.
 - `the_shipped_executable_contains_no_crash_injection`, in the *product*
   crate's own suite, reads the binary that crate produced and fails if either
   variable name appears in it. It runs in a build that has dev-dependencies
-  resolved, which is exactly the configuration the mistake shows up in.
+  resolved, which is one of the configurations the mistake shows up in.
 - `the_released_binary_shape_is_the_only_thing_the_drill_changes`, in the
   drill, asserts that an uninstrumented process writes no ledger and behaves
   as the end-to-end suite observes it.
 - Manual verification across `cargo build`, `cargo build --release`,
-  `cargo install --path .`, `--all-features`, and `--release --all-targets`:
-  the shipped binary contains neither string in any of them.
+  `cargo install --path .`, `--all-features`, `--release --all-targets`, and
+  `--features coding_adventures_vault_pm_cli/crash-injection`: the shipped
+  binary contains neither string, and the last one fails to build.
 
 ## 5. Pass criteria
 
@@ -427,10 +453,12 @@ collection is VLT-PM00 §19.4 and Phase 2 work; this is one more input to it.
 1. The instrumentation package builds, is `deny(missing_docs)` clean, and its
    own tests cover the step vocabulary, the ledger format, ordinal allocation,
    the before/after bracketing, and read pass-through.
-2. A released binary contains neither environment-variable name, asserted by
-   the product crate's own suite in a build with dev-dependencies resolved.
-   The instrumented twin is a separate crate producing a differently named
-   binary, and the product crate names the feature in no section.
+2. A product build with the feature active does not compile, and a released
+   binary contains neither environment-variable name — the first held by a
+   `const` assertion in the product's `main.rs`, the second asserted by the
+   product crate's own suite in a build with dev-dependencies resolved. The
+   instrumented twin is a separate crate and workspace producing a differently
+   named binary, and the product crate names the feature in no section.
 3. An uninstrumented process writes no ledger and behaves exactly as
    `local_cli_e2e.rs` observes it.
 4. Every ledger is dense from ordinal one, alternates `before`/`after`, pairs
@@ -447,9 +475,12 @@ collection is VLT-PM00 §19.4 and Phase 2 work; this is one more input to it.
 9. A portable export publishes no artifact before its single artifact write
    completes.
 10. No cell leaves any drill secret readable under the platform home.
-11. The drill never hangs: every prompt wait is bounded, a wait that expires
-    kills the child and fails the test, and a `kill(2)` that a sandbox refuses
-    falls back to `abort` rather than to a spin.
+11. The drill never hangs. Every prompt wait is bounded and a wait that
+    expires kills the child and fails the test. A `kill(2)` a sandbox refuses
+    falls back to `abort`, as does a `kill(2)` that succeeds but whose signal
+    the kernel discards — which is what happens to a process that is PID 1 in
+    its own namespace. A reader-less FIFO named as the ledger is refused
+    rather than blocked on.
 12. The whole file runs in the same process-per-command, pseudo-terminal style
     as `local_cli_e2e.rs`, with the same stdin-injection negative control.
 

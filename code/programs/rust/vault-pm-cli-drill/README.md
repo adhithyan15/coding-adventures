@@ -27,14 +27,22 @@ it did would depend on which cargo command ran last.
 
 So the product crate never names the feature in any section, and this crate
 exists to hold it. The two are separate cargo workspaces, so their feature
-resolution never meets. `local_cli_e2e.rs` carries a guard rail —
-`the_shipped_executable_contains_no_crash_injection` — that reads the product
-binary and fails if either injection variable name appears in it.
+resolution never meets.
+
+Naming no feature is necessary and not sufficient, because
+`--features <dep>/<feature>` reaches a direct dependency's features regardless
+of what the root package declares. The product's `main.rs` therefore also
+carries a `const` assertion on `CRASH_INJECTION_COMPILED`, so a `vault-pm` with
+the instrumentation in it does not compile; and `local_cli_e2e.rs` carries a
+guard rail, `the_shipped_executable_contains_no_crash_injection`, that reads
+the product binary and fails if either injection variable name appears in it.
 
 The twin also declares a larger capability profile than the product: it adds
 `env: read` for the two injection variables, `proc: signal` for removing its
-own process, and `fs: create` for the durable-step ledger. The extra authority
-is visible in a manifest rather than implied.
+own process, and `fs: create` plus `fs: write` for the durable-step ledger.
+That last pair matters — the ledger path is not confined to the vault roots, so
+any absolute path naming an existing private regular file this user owns is
+accepted. The extra authority is visible in a manifest rather than implied.
 
 `src/main.rs` is twelve lines copied from the product's. The duplication is the
 price of the guarantee.

@@ -396,8 +396,14 @@ RUSTDOCFLAGS="-D warnings" cargo doc -p coding_adventures_vault_pm_cli --no-deps
 
 The real-process crash drill lives in
 `code/programs/rust/vault-pm-cli-drill`, because only there is there a process
-to remove — and because keeping it out of the product crate is what makes the
+to remove - and because keeping it out of the product crate is what makes the
 "never in a released binary" claim structural rather than conventional. Cargo
 resolves features per package, so a product crate that named
 `crash-injection` even in `dev-dependencies` would hand
 `cargo build --all-targets` an instrumented `target/release/vault-pm`.
+
+Naming no feature is necessary and not sufficient, since
+`--features <dep>/<feature>` reaches a direct dependency's features regardless.
+This crate therefore also exports `CRASH_INJECTION_COMPILED`, and the product
+executable asserts on it in a `const` block, so a `vault-pm` with the
+instrumentation in it does not compile.

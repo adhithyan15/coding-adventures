@@ -19,9 +19,13 @@ coding_adventures_vault_pm_storage_storage_core = { path = "../vault-pm-storage-
 coding_adventures_zeroize = { path = "../zeroize" }
 
 [features]
-# Test-only real-process crash injection (VLT-PM41). Never enabled for a
-# released binary: the executable turns it on through its dev-dependencies, so
-# it exists in `cargo test` builds and nowhere else.
+# Test-only real-process crash injection (VLT-PM41). Only
+# `code/programs/rust/vault-pm-cli-drill` enables it. The product executable
+# `code/programs/rust/vault-pm-cli` names it in no section AND fails to
+# compile when it is active, via a `const` assertion on
+# `CRASH_INJECTION_COMPILED` - declaring no feature is not enough on its own,
+# because cargo's `--features <dep>/<feature>` syntax reaches a direct
+# dependency's features regardless.
 crash-injection = ["dep:coding_adventures_vault_pm_crash_injection"]
 
 [dev-dependencies]

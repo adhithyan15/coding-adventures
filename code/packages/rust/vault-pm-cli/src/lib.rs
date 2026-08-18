@@ -7,6 +7,21 @@ pub mod shell;
 
 mod crash;
 
+/// Whether VLT-PM41 crash injection is compiled into this build.
+///
+/// A composition root that must never ship a kill switch can turn this into a
+/// *compile* error rather than a test:
+///
+/// ```
+/// const _: () = assert!(!coding_adventures_vault_pm_cli::CRASH_INJECTION_COMPILED);
+/// ```
+///
+/// That matters because cargo's `--features <dep>/<feature>` syntax reaches a
+/// direct dependency's features even when the root package declares none of
+/// its own. Declaring no feature is therefore not enough on its own to keep
+/// the instrumentation out of a product binary; refusing to compile with it is.
+pub const CRASH_INJECTION_COMPILED: bool = cfg!(feature = "crash-injection");
+
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
     prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,

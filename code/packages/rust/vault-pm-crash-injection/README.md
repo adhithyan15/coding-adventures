@@ -105,12 +105,20 @@ because the ledger exists only when a drill names it, and counting those writes
 is the drill's whole purpose.
 
 The path is treated as untrusted even though only something that already
-controls this process's environment can set it. It must be absolute, is opened
-with `O_NOFOLLOW` so a symlink at the final component is refused rather than
-followed, is created `0600`, and is refused outright if it already exists as
-anything other than a regular file this user owns privately — a creation mode
-says nothing about a file that is already there. The executable never reads the
-ledger back.
+controls this process's environment can set it. It must be absolute. It is
+opened with `O_NOFOLLOW | O_NONBLOCK`: the first refuses a symlink at the final
+component, the second refuses a reader-less FIFO, which `O_NOFOLLOW` says
+nothing about and which would otherwise block the open forever. It is created
+`0600`, and is refused outright if it already exists as anything other than a
+regular file this user owns privately — a creation mode says nothing about a
+file that is already there. Ownership is checked by `fstat` on the open
+descriptor rather than by a second path lookup, so nothing can be swapped in
+between the check and the write. The executable never reads the ledger back.
+
+What none of that does is confine *where* the ledger may be. Any absolute path
+naming an existing private regular file this user owns is accepted, including
+one inside their own vault state. That authority is declared in the drill
+crate's capability manifest rather than argued away.
 
 ## How it stays out of a release
 
@@ -129,12 +137,17 @@ switch would depend on which cargo command ran last.
 So the product crate `code/programs/rust/vault-pm-cli` names the feature in no
 section at all, and the instrumented twin lives in its own crate and its own
 workspace — `code/programs/rust/vault-pm-cli-drill`, producing a binary called
-`vault-pm-drill`. An instrumented `vault-pm` is unreachable by construction
-rather than by convention, and
-`the_shipped_executable_contains_no_crash_injection` in the product crate's own
-suite reads the binary that crate produced and fails if either variable name
-appears in it — running, deliberately, in a build that *does* have
-dev-dependencies resolved.
+`vault-pm-drill`.
+
+Naming no feature is necessary and not sufficient. Cargo's
+`--features <dep>/<feature>` syntax reaches a direct dependency's features even
+when the root package declares none of its own, so the product's `main.rs` also
+carries `const _: () = assert!(!CRASH_INJECTION_COMPILED);` and a build with
+the feature active is a *compile error* rather than a binary somebody has to
+remember to inspect. `the_shipped_executable_contains_no_crash_injection` in
+the product crate's own suite then reads the binary that crate produced and
+fails if either variable name appears in it — running, deliberately, in a build
+that *does* have dev-dependencies resolved.
 
 ## Relationship to `FaultInjectingObjectStore`
 
@@ -149,10 +162,10 @@ other.
 
 ## Verification
 
-Eleven unit tests cover the step vocabulary and its distinctness, the ledger
-line format, owner-only append behavior, refusal of a relative path, refusal of
-a symlinked path, refusal of an existing world-readable file, ordinal
-allocation and monotonicity, the before/action/after bracketing order, write
+Twelve unit tests cover the step vocabulary and its distinctness, the ledger
+line format, owner-only append behavior, refusal of a relative path, of a
+symlinked path, of a reader-less FIFO without blocking on it, and of an
+existing world-readable file, ordinal allocation and monotonicity, the before/action/after bracketing order, write
 wrapping and read pass-through over the in-memory backend, wrapper accessors,
 and the production-shaped path where no policy is configured. The kill itself
 is exercised by

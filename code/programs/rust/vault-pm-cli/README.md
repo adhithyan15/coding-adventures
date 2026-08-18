@@ -131,8 +131,14 @@ way to get one — enabling it through this crate's `dev-dependencies` — is a
 trap. Cargo resolves features per package across a build graph, so
 `cargo build --release --all-targets` pulls dev-dependencies in and uplifts the
 instrumented binary to `target/release/vault-pm`, the exact path a packaging
-step copies from. This crate therefore names that feature in no section, the
-instrumented twin is `vault-pm-drill` in its own workspace, and
+step copies from. This crate therefore names that feature in no section, and
+the instrumented twin is `vault-pm-drill` in its own workspace.
+
+Naming no feature is necessary and *not sufficient*, because
+`--features <dep>/<feature>` reaches a direct dependency's features regardless
+of what the root package declares. So `src/main.rs` also carries a `const`
+assertion on `CRASH_INJECTION_COMPILED` — a `vault-pm` with the instrumentation
+in it does not compile — and
 `the_shipped_executable_contains_no_crash_injection` reads the binary this
 crate produced and fails if either injection variable name appears in it.
 

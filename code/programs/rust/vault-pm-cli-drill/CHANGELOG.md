@@ -15,12 +15,17 @@ All notable changes to this package are documented here.
   the product crate's `dev-dependencies` would let `cargo build --all-targets`
   uplift an instrumented binary to `target/release/vault-pm` — the path a
   packaging step copies from. The product crate therefore names the feature in
-  no section, and its own suite carries a guard rail that reads the binary and
-  fails if either injection variable name appears in it.
-- A capability manifest declaring the three authorities the twin has and the
-  product does not: `env: read` for `VAULT_PM_CRASH_AT` and
-  `VAULT_PM_CRASH_TRACE`, `proc: signal` for removing its own process, and
-  `fs: create` for the metadata-only durable-step ledger.
+  no section, its `main.rs` fails to compile when the feature is active (naming
+  no feature is not enough on its own, since `--features <dep>/<feature>`
+  reaches a direct dependency's features regardless), and its own suite carries
+  a guard rail that reads the binary and fails if either injection variable
+  name appears in it.
+- A capability manifest declaring the authorities the twin has and the product
+  does not: `env: read` for `VAULT_PM_CRASH_AT` and `VAULT_PM_CRASH_TRACE`,
+  `proc: signal` for removing its own process, and `fs: create` plus
+  `fs: write` for the metadata-only durable-step ledger. The ledger path is not
+  confined to the vault roots, so the write authority is declared rather than
+  argued away.
 - `tests/crash_fault_matrix.rs`, the VLT-PM41 crash/fault matrix and local
   restore drill: twelve tests that kill a real process with `SIGKILL` at a
   deterministically chosen durable write and then ask the next real process

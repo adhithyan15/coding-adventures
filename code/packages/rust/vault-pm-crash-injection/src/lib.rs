@@ -18,11 +18,16 @@
 //!
 //! This package closes that gap. It is **test-only scaffolding**, reachable
 //! only through `coding_adventures_vault_pm_cli`'s non-default
-//! `crash-injection` feature, which only `vault-pm-cli-drill` enables. The
-//! product executable `code/programs/rust/vault-pm-cli` names that feature in
-//! no manifest section, so no cargo invocation can build a `vault-pm` that
-//! contains this code — and its own test suite reads the binary it produced
-//! and fails if it ever does.
+//! `crash-injection` feature, which only `vault-pm-cli-drill` enables.
+//!
+//! The product executable `code/programs/rust/vault-pm-cli` names that feature
+//! in no manifest section — which is necessary and *not sufficient*, because
+//! cargo's `--features <dep>/<feature>` syntax reaches a direct dependency's
+//! features even when the root package declares none of its own. So the
+//! product's `main.rs` also carries a `const` assertion on
+//! `CRASH_INJECTION_COMPILED`: a `vault-pm` with this code in it does not
+//! compile, and its test suite additionally reads the binary it produced and
+//! fails if either variable name appears there.
 //!
 //! # The model: a durable step is a countable event
 //!
@@ -108,8 +113,15 @@
 //! and the drill's whole purpose is to count those writes.
 //!
 //! The file must be an absolute path, is created owner-only, is opened with
-//! `O_NOFOLLOW`, and is refused outright if it already exists as something
-//! other than a regular file this user owns privately.
+//! `O_NOFOLLOW | O_NONBLOCK` so neither a symlink nor a reader-less FIFO can
+//! divert or stall it, and is refused outright if it already exists as
+//! something other than a regular file this user owns privately.
+//!
+//! What that does *not* do is confine where the ledger may be. Any absolute
+//! path naming an existing private regular file this user owns is accepted and
+//! appended to, including one inside their own vault state. The authority is
+//! declared in `vault-pm-cli-drill`'s capability manifest rather than argued
+//! away: whoever can set the variable already controls this process.
 
 #![deny(missing_docs)]
 
@@ -296,7 +308,15 @@ fn append_ledger_line(path: &Path, ordinal: u64, step: DurableStep, phase: Phase
     #[cfg(unix)]
     {
         use std::os::unix::fs::OpenOptionsExt;
-        options.mode(0o600).custom_flags(libc::O_NOFOLLOW);
+        // `O_NOFOLLOW` refuses a symlink at the final component. `O_NONBLOCK`
+        // is what refuses a *FIFO*: `O_NOFOLLOW` says nothing about one, and
+        // opening a reader-less FIFO for writing blocks forever — so without
+        // this flag the "not a regular file" check two blocks below would be
+        // unreachable, because the open would never return to run it. On a
+        // regular file `O_NONBLOCK` has no effect at all.
+        options
+            .mode(0o600)
+            .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
     }
     // A ledger that cannot be written is a broken drill, not a degraded one:
     // a silent failure here would make a sweep believe an operation performs
@@ -358,12 +378,18 @@ fn crash_now() -> ! {
             // difference rather than a hang.
             std::process::abort();
         }
-        // The kernel has already scheduled this process for death. Park rather
-        // than spin, so the few instructions before it lands cost nothing; the
-        // loop exists only so the function's `!` return type is honest.
-        loop {
-            std::thread::park();
-        }
+        // The kernel has normally scheduled this process for death by now, so
+        // park rather than spin: the handful of instructions before it lands
+        // should cost nothing.
+        //
+        // "Normally" is doing work there. A process that is PID 1 in its own
+        // PID namespace — a bare `docker run` with no init — has `SIGKILL`
+        // from inside the namespace *discarded* by the kernel, and `kill`
+        // still returns success. Parking forever on that would be a quieter
+        // hang than spinning forever, not a better one, so give the signal a
+        // bounded moment to land and then terminate loudly instead.
+        std::thread::park_timeout(std::time::Duration::from_secs(1));
+        std::process::abort()
     }
     #[cfg(not(unix))]
     {
@@ -595,6 +621,22 @@ mod tests {
 
     #[cfg(unix)]
     #[test]
+    #[should_panic(expected = "could not be opened")]
+    fn a_fifo_ledger_path_is_refused_without_blocking() {
+        // `O_NOFOLLOW` says nothing about a FIFO, and opening a reader-less
+        // one for writing blocks forever. Without `O_NONBLOCK` this test would
+        // hang instead of failing, which is exactly the failure mode a drill
+        // must never have.
+        let path = scratch_path("fifo-ledger");
+        let name = std::ffi::CString::new(path.to_str().unwrap()).unwrap();
+        // SAFETY: `mkfifo` takes a valid NUL-terminated path and a mode; it
+        // touches no memory the compiler knows about.
+        assert_eq!(unsafe { libc::mkfifo(name.as_ptr(), 0o600) }, 0);
+        append_ledger_line(&path, 1, DurableStep::StoragePut, Phase::Before);
+    }
+
+    #[cfg(unix)]
+    #[test]
     #[should_panic(expected = "readable or writable by somebody else")]
     fn a_world_readable_ledger_is_refused() {
         // `mode(0o600)` only applies at creation, so an existing loose file
@@ -672,6 +714,12 @@ mod tests {
 
     #[test]
     fn an_unset_policy_neither_traces_nor_crashes() {
+        // This test allocates ordinals, so it must hold `COUNTER` like every
+        // other test that touches `NEXT_STEP` — even though it asserts nothing
+        // about them. Without the lock its eight `record` calls interleave
+        // with the three tests that *do* assert exact ordinal deltas, and
+        // those fail perhaps one run in three.
+        let _guard = COUNTER.lock().unwrap();
         // The package's own test process sets neither variable, so this is the
         // production-shaped path: recording is a counter bump and nothing more.
         let policy = policy();

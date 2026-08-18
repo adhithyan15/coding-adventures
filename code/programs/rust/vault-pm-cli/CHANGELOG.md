@@ -15,6 +15,15 @@
   reads the binary this crate produced — in a build that does have
   dev-dependencies resolved — and fails if either injection variable name
   appears anywhere in it.
+- Added a `const` assertion in `src/main.rs` on
+  `coding_adventures_vault_pm_cli::CRASH_INJECTION_COMPILED`. Naming no feature
+  is necessary and *not sufficient*: cargo's `--features <dep>/<feature>`
+  syntax reaches a direct dependency's features even when the root package
+  declares none of its own, so
+  `cargo build --release --features coding_adventures_vault_pm_cli/crash-injection`
+  would otherwise still have produced an instrumented
+  `target/release/vault-pm`. It is now a compile error, which needs no test to
+  have been run.
 - **Found by the VLT-PM41 drill, not fixed here:** an interrupted mutation
   leaves a vault this command surface cannot repair. The tree is never torn,
   the durable `PendingPublication` journal is exact, and both read-only

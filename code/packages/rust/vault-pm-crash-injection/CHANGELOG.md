@@ -37,11 +37,18 @@ All notable changes to this package are documented here.
   `0600`, and is refused outright if it already exists as anything other than a
   regular file this user owns privately - a creation mode says nothing about a
   file that is already there.
-- A `kill(2)` fallback. A sandbox that filters the syscall must not turn a
-  crash drill into a process that spins forever, so a failed `kill` falls back
-  to `abort`, and the post-kill loop parks rather than spinning.
-- Eleven unit tests covering vocabulary distinctness, the ledger format,
-  owner-only append, refusal of relative, symlinked, and world-readable ledger
-  paths, ordinal monotonicity, bracketing order, write wrapping versus read
+- `O_NONBLOCK` alongside `O_NOFOLLOW`. A symlink at the final component is
+  refused by the first flag; a reader-less FIFO is refused by the second.
+  Without it, opening a FIFO for writing blocks forever and the "not a regular
+  file" check is unreachable, because the open never returns to run it.
+- A `kill(2)` fallback in both directions. A sandbox that filters the syscall
+  must not turn a crash drill into a process that spins forever, so a failed
+  `kill` falls back to `abort`; and a `kill` that *succeeds* but whose signal
+  the kernel discards - which is what happens to a process that is PID 1 in
+  its own namespace, since `SIGKILL` cannot have a handler - now falls back to
+  `abort` after a bounded wait rather than parking forever.
+- Twelve unit tests covering vocabulary distinctness, the ledger format,
+  owner-only append, refusal of relative, symlinked, FIFO, and world-readable
+  ledger paths, ordinal monotonicity, bracketing order, write wrapping versus read
   pass-through, the wrapper accessors, and the production-shaped path where no
   policy is configured.
