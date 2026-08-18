@@ -12,9 +12,11 @@
 #   4. d18p-channel-conformance: runs the D18P durable-channel manifest through
 #      all six language packages and rejects stale generated transitions.
 #   5. d18q-channel-key-grant-conformance: same shape, for the D18Q manifest.
-#   6. ruby-grammar-regen-check: regenerates every Ruby _grammar.rb from its
+#   6. d18t-durable-epoch-activation-conformance: same shape, for the D18T
+#      manifest -- the epoch-activation transaction all six languages share.
+#   7. ruby-grammar-regen-check: regenerates every Ruby _grammar.rb from its
 #      .tokens/.grammar source and rejects a stale committed file.
-#   7. build: Installs only the needed toolchains, then runs the build.
+#   8. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -111,6 +113,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18f_message_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18p_channel_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_d18q_channel_key_grant_conformance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_d18t_durable_epoch_activation_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_manifest.py'
           ADJ_CGROUP_ORIGINAL=$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)
@@ -554,7 +557,65 @@ jobs:
       - name: Run every D18Q manifest consumer and verify regeneration
         run: python3 code/scripts/validate_d18q_channel_key_grant_conformance.py
 
-  # ── Job 6: Ruby compiled-grammar regeneration check ─────────────
+  # ── Job 6: D18T six-language durable epoch-activation conformance ────
+  #
+  # D18T is the transaction that makes a rotated channel key current. Six
+  # languages implement it against one Rust-authored manifest, and this job is
+  # what makes their agreement enforced rather than asserted: it validates the
+  # shared contract, proves the generator has not drifted from its output,
+  # runs every package's own BUILD front door, and regenerates the manifest
+  # byte for byte.
+  d18t-durable-epoch-activation-conformance:
+    name: D18T durable epoch-activation conformance
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          allow-prereleases: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.1'
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18.4'
+          otp-version: '27.3.4.11'
+          version-type: strict
+
+      - name: Run every D18T manifest consumer and verify regeneration
+        run: python3 code/scripts/validate_d18t_durable_epoch_activation_conformance.py
+
+  # ── Job 7: Ruby compiled-grammar regeneration check ─────────────
   #
   # Ruby lexer/parser packages ship a pre-compiled _grammar.rb (grammar
   # data baked into native Ruby structures) instead of parsing the raw
@@ -1776,7 +1837,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, ruby-grammar-regen-check, build]
+    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -1788,12 +1849,13 @@ jobs:
           D18F_RESULT: ${{ needs['d18f-message-conformance'].result }}
           D18P_RESULT: ${{ needs['d18p-channel-conformance'].result }}
           D18Q_RESULT: ${{ needs['d18q-channel-key-grant-conformance'].result }}
+          D18T_RESULT: ${{ needs['d18t-durable-epoch-activation-conformance'].result }}
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
