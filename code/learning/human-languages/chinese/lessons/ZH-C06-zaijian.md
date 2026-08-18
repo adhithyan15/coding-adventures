@@ -7,7 +7,7 @@ chapter: 6
 type: word
 headword: 再见
 romanization: zàijiàn
-gloss: goodbye — and the first word in this book you can read literally
+gloss: goodbye — two characters whose meanings genuinely add up
 concept_tag: FAREWELL
 prerequisites: [ZH-W06-jian]
 sounds: [tone-4]
@@ -53,33 +53,33 @@ So the word is **"see again."** That is not a hook, not a mnemonic, not a
 traditional gloss offered with a warning attached. It is what the two characters
 say, and it is what the word means.
 
-Every earlier component in this book gave you a *hook* — 亻 at the left of 你
-because the word is about a person, 女 beside 子 in 好 — honestly labelled as a
-memory aid rather than history. **再见 is different: the parts add up.** Chinese
-does this often. Start expecting it.
+Every earlier component gave you a *hook* — 亻 at the left of 你, 女 beside 子 in
+好 — labelled a memory aid rather than history. **Here the parts add up.**
+Chinese does this often. Start expecting it.
 
 ## Sounds you'll need — two falls, not one
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZAIJIAN] -->
 
 Both syllables are **fourth tone**. Both fall.
 
-Say it slowly: *zài* falls, then *jiàn* falls. Two separate drops, each starting
-high again. The common mistake is to run them into one long slide, which turns
-two syllables into a mumble. Reset your pitch upward between them. [REPEAT x2]
+Say it slowly: *zài* falls, then *jiàn* falls. Two separate drops. The common
+mistake is to run them into one long slide. Reset your pitch upward between
+them. [REPEAT x2]
 
-And nothing moves. Neither tone rule you have been taught applies to two fourth
-tones, so **再见 is said exactly as it is written.**
+And no *rule* moves. Neither of the two tone rules you have been taught applies
+to two fourth tones, so **再见 is said with the tones it is written with.** A
+native speaker does clip that first fall a little short — but that is a shading
+of the same tone, not a different one, and neither the characters nor the pinyin
+change. Which is the point: the shadings live in the mouth.
 
 ## Why it's said this way — a thought other languages reach for too
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZAIJIAN] -->
 
 If you know any German: *auf Wiedersehen* is "on seeing again" — the same two
-pieces, in the same order.
-
-That is a coincidence of thinking, not of ancestry; **Chinese and German share no
-common ancestor.** But parting by promising to meet again is an idea many
-languages reach for on their own, and that makes 再见 far easier to hold than a
-shape memorised cold.
+pieces, in the same order. A coincidence of thinking, not of ancestry;
+**Chinese and German share no common ancestor.** But parting by promising to
+meet again is an idea many languages reach for on their own, and that makes
+再见 far easier to hold than a shape memorised cold.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZAIJIAN, ZH-SCRIPT-ZAI, ZH-SCRIPT-JIAN] -->

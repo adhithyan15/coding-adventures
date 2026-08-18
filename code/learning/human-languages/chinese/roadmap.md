@@ -66,11 +66,17 @@ divergence worth its own lesson.
 *adiós*, *au revoir* and *auf Wiedersehen*. The time-specific partings remain
 omitted.
 
-This is the first word in the track whose two components combine into a
-transparent, honest literal reading, and the lessons make that the point: every
-earlier component gloss was labelled a **memory hook**, offered in place of the
-cousin web this track cannot have. 再 "again" + 见 "see" is not a hook. The parts
+It is the first word in the track whose two components are each a **taught
+character carrying an independent meaning that survives into the compound**, and
+the lessons make that the point. Every earlier *component* gloss was labelled a
+memory hook, offered in place of the cousin web this track cannot have — 亻 at
+the left of 你, 女 beside 子 in 好. 再 "again" + 见 "see" is not a hook. The parts
 add up, and the reader is told to start expecting that.
+
+The claim is scoped to sub-character components deliberately. 不是 in the
+previous chapter is also read literally, 不 in front of 是; what is new here is
+that both halves are characters the reader has written, each with a meaning of
+its own outside this word.
 
 It is also the chapter where the tone story pays off. 你好 moves, 不是 moves,
 再见 does not — two falls, written as two falls — which is the cleanest available

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "See You Again",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d61449521b478335",
+  "sourceHash": "fnv1a64:e13cc96d46eb5e01",
   "lessons": [
     {
       "id": "ZH-W06-zai",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8bc2586aff54ec68",
+      "sourceHash": "fnv1a64:94eddd4412aa6108",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke 3 is the one to watch. It is a single stroke that changes direction twice — across, down, then a hook to the left. You have met this before: the outer wall of a box is always one turning stroke, never two or three. Compare it with the frame you drew in 日 and it is the same hand movement."
+              "text": "Stroke 3 is the one to watch. It is a single stroke that changes direction twice — across, down, then a hook to the left. You have met most of it before: the outer wall of a box is always one turning stroke, never two or three. Compare it with the frame you drew in 日 — the same across-and-down turn, with a hook added at the end."
             },
             {
               "kind": "speech",
@@ -189,7 +189,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:49024400f170cb48",
+      "sourceHash": "fnv1a64:aaff03a235e7f3ce",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -243,7 +243,7 @@
             },
             {
               "kind": "speech",
-              "text": "underneath, two legs — and they are the legs of 人, the walking figure you wrote first of all."
+              "text": "underneath, two legs, written 儿 — which is what 人 becomes when it has to stand underneath something."
             },
             {
               "kind": "speech",
@@ -259,7 +259,7 @@
             },
             {
               "kind": "speech",
-              "text": "the frame's top, turning down the right side — one stroke, no lift."
+              "text": "the frame's top, turning down the right side — one stroke, no lift, and this one is exactly the turn you drew in 日, hook and all absent."
             },
             {
               "kind": "speech",
@@ -358,14 +358,14 @@
       "title": "再见 (zàijiàn) — the word that says what it means",
       "headword": "再见",
       "romanization": "zàijiàn",
-      "gloss": "goodbye — and the first word in this book you can read literally",
+      "gloss": "goodbye — two characters whose meanings genuinely add up",
       "script": "chinese",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86b9777ae55142d3",
+      "sourceHash": "fnv1a64:3c9b07a2290b14e2",
       "notice": null,
       "blocks": [
         {
@@ -416,7 +416,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every earlier component in this book gave you a hook — 亻 at the left of 你 because the word is about a person, 女 beside 子 in 好 — honestly labelled as a memory aid rather than history. 再见 (zàijiàn) is different: the parts add up. Chinese does this often. Start expecting it."
+              "text": "Every earlier component gave you a hook — 亻 at the left of 你, 女 beside 子 in 好 — labelled a memory aid rather than history. Here the parts add up. Chinese does this often. Start expecting it."
             }
           ]
         },
@@ -431,7 +431,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it slowly: zài falls, then jiàn falls. Two separate drops, each starting high again. The common mistake is to run them into one long slide, which turns two syllables into a mumble. Reset your pitch upward between them."
+              "text": "Say it slowly: zài falls, then jiàn falls. Two separate drops. The common mistake is to run them into one long slide. Reset your pitch upward between them."
             },
             {
               "kind": "repeat",
@@ -440,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "And nothing moves. Neither tone rule you have been taught applies to two fourth tones, so 再见 (zàijiàn) is said exactly as it is written."
+              "text": "And no rule moves. Neither of the two tone rules you have been taught applies to two fourth tones, so 再见 (zàijiàn) is said with the tones it is written with. A native speaker does clip that first fall a little short — but that is a shading of the same tone, not a different one, and neither the characters nor the pinyin change. Which is the point: the shadings live in the mouth."
             }
           ]
         },
@@ -451,11 +451,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "If you know any German: auf Wiedersehen is \"on seeing again\" — the same two pieces, in the same order."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a coincidence of thinking, not of ancestry; Chinese and German share no common ancestor. But parting by promising to meet again is an idea many languages reach for on their own, and that makes 再见 (zàijiàn) far easier to hold than a shape memorised cold."
+              "text": "If you know any German: auf Wiedersehen is \"on seeing again\" — the same two pieces, in the same order. A coincidence of thinking, not of ancestry; Chinese and German share no common ancestor. But parting by promising to meet again is an idea many languages reach for on their own, and that makes 再见 (zàijiàn) far easier to hold than a shape memorised cold."
             }
           ]
         },
@@ -535,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cddc70e89526055c",
+      "sourceHash": "fnv1a64:16da26941dafaebc",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +589,7 @@
             },
             {
               "kind": "speech",
-              "text": "再见 (zàijiàn) is written with two falls and spoken with two falls. Nothing moves."
+              "text": "再见 (zàijiàn) is written with two falls and spoken with two falls. No rule moves."
             },
             {
               "kind": "speech",

@@ -56,9 +56,10 @@ horizontal closing the whole thing at the bottom.
 Five pen lifts.
 
 Stroke 3 is the one to watch. It is a **single stroke that changes direction
-twice** — across, down, then a hook to the left. You have met this before: the
-outer wall of a box is always one turning stroke, never two or three. Compare it
-with the frame you drew in 日 and it is the same hand movement.
+twice** — across, down, then a hook to the left. You have met most of it before:
+the outer wall of a box is always one turning stroke, never two or three.
+Compare it with the frame you drew in 日 — the same across-and-down turn, with a
+hook added at the end.
 
 And the closing bar is last. **The box is not sealed until the end** — the same
 rule that made you draw the middle bar of 日 before its bottom bar. Chinese

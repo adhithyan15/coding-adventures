@@ -80,7 +80,7 @@ something the page does not record:
 - **你好** is written with two low dipping tones and spoken *ní hǎo* — the first
   one rises.
 - **不是** is written with a falling 不 and spoken *bú shì* — the 不 rises.
-- **再见** is written with two falls and spoken with two falls. Nothing moves.
+- **再见** is written with two falls and spoken with two falls. No rule moves.
 
 Two out of three. That ratio is not a fluke, and it is the single most useful
 thing to know about reading Mandarin aloud: **the writing records the words, not

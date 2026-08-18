@@ -47,8 +47,8 @@ It is built in two parts, top and bottom:
 
 - on top, a **frame** — a narrow box, which the traditional reading takes to be
   an **eye**
-- underneath, **two legs** — and they are the legs of 人, the walking figure you
-  wrote first of all
+- underneath, **two legs**, written **儿** — which is what 人 becomes when it has
+  to stand underneath something
 
 The legs have changed a little in this position. The left one still falls away
 to the lower left exactly as it did. The right one no longer just presses down:
@@ -58,7 +58,8 @@ That is what a leg does when it has to carry a frame above it.
 The order:
 
 1. the frame's **left side**, coming down
-2. the frame's **top**, turning down the **right side** — one stroke, no lift
+2. the frame's **top**, turning down the **right side** — one stroke, no lift,
+   and this one is exactly the turn you drew in 日, hook and all absent
 3. the **left leg**, falling to the lower left
 4. the **right leg**: down, bend right, hook up — one stroke, no lift
 

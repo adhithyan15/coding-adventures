@@ -21,7 +21,7 @@ the central vertical, down through the middle.
 the inner horizontal, left to right.
 the long bottom horizontal, left to right, wider than everything above it.
 Five pen lifts.
-Stroke 3 is the one to watch. It is a single stroke that changes direction twice — across, down, then a hook to the left. You have met this before: the outer wall of a box is always one turning stroke, never two or three. Compare it with the frame you drew in 日 and it is the same hand movement.
+Stroke 3 is the one to watch. It is a single stroke that changes direction twice — across, down, then a hook to the left. You have met most of it before: the outer wall of a box is always one turning stroke, never two or three. Compare it with the frame you drew in 日 — the same across-and-down turn, with a hook added at the end.
 And the closing bar is last. The box is not sealed until the end — the same rule that made you draw the middle bar of 日 before its bottom bar. Chinese stroke order keeps re-using a small set of habits, and this is one you now know well enough to expect.
 
 Guided Practice.
@@ -51,11 +51,11 @@ Script — the shape.
 Four strokes, and after the last two characters that will feel like a rest.
 It is built in two parts, top and bottom:
 on top, a frame — a narrow box, which the traditional reading takes to be an eye.
-underneath, two legs — and they are the legs of 人, the walking figure you wrote first of all.
+underneath, two legs, written 儿 — which is what 人 becomes when it has to stand underneath something.
 The legs have changed a little in this position. The left one still falls away to the lower left exactly as it did. The right one no longer just presses down: it descends, bends right along the base, and finishes with a hook upward. That is what a leg does when it has to carry a frame above it.
 The order:
 the frame's left side, coming down.
-the frame's top, turning down the right side — one stroke, no lift.
+the frame's top, turning down the right side — one stroke, no lift, and this one is exactly the turn you drew in 日, hook and all absent.
 the left leg, falling to the lower left.
 the right leg: down, bend right, hook up — one stroke, no lift.
 Three pen lifts. Two of the four strokes turn, and neither of them is allowed to be broken into pieces.
@@ -88,17 +88,16 @@ Now the meanings, which have been held back until you had the shapes:
 再 zài means again.
 见 jiàn means see.
 So the word is "see again." That is not a hook, not a mnemonic, not a traditional gloss offered with a warning attached. It is what the two characters say, and it is what the word means.
-Every earlier component in this book gave you a hook — 亻 at the left of 你 because the word is about a person, 女 beside 子 in 好 — honestly labelled as a memory aid rather than history. 再见 (zàijiàn) is different: the parts add up. Chinese does this often. Start expecting it.
+Every earlier component gave you a hook — 亻 at the left of 你, 女 beside 子 in 好 — labelled a memory aid rather than history. Here the parts add up. Chinese does this often. Start expecting it.
 
 Sounds you'll need — two falls, not one.
 Both syllables are fourth tone. Both fall.
-Say it slowly: zài falls, then jiàn falls. Two separate drops, each starting high again. The common mistake is to run them into one long slide, which turns two syllables into a mumble. Reset your pitch upward between them.
+Say it slowly: zài falls, then jiàn falls. Two separate drops. The common mistake is to run them into one long slide. Reset your pitch upward between them.
 [repeat that twice]
-And nothing moves. Neither tone rule you have been taught applies to two fourth tones, so 再见 (zàijiàn) is said exactly as it is written.
+And no rule moves. Neither of the two tone rules you have been taught applies to two fourth tones, so 再见 (zàijiàn) is said with the tones it is written with. A native speaker does clip that first fall a little short — but that is a shading of the same tone, not a different one, and neither the characters nor the pinyin change. Which is the point: the shadings live in the mouth.
 
 Why it's said this way — a thought other languages reach for too.
-If you know any German: auf Wiedersehen is "on seeing again" — the same two pieces, in the same order.
-That is a coincidence of thinking, not of ancestry; Chinese and German share no common ancestor. But parting by promising to meet again is an idea many languages reach for on their own, and that makes 再见 (zàijiàn) far easier to hold than a shape memorised cold.
+If you know any German: auf Wiedersehen is "on seeing again" — the same two pieces, in the same order. A coincidence of thinking, not of ancestry; Chinese and German share no common ancestor. But parting by promising to meet again is an idea many languages reach for on their own, and that makes 再见 (zàijiàn) far easier to hold than a shape memorised cold.
 
 Guided Practice.
 [your turn — say: zàijiàn — two falls, resetting the pitch between them]
@@ -129,7 +128,7 @@ What you've built — and what stays invisible.
 Read the exchange out loud once more, and count the places where your mouth does something the page does not record:
 你好 is written with two low dipping tones and spoken ní hǎo — the first one rises.
 不是 is written with a falling 不 and spoken bú shì — the 不 rises.
-再见 (zàijiàn) is written with two falls and spoken with two falls. Nothing moves.
+再见 (zàijiàn) is written with two falls and spoken with two falls. No rule moves.
 Two out of three. That ratio is not a fluke, and it is the single most useful thing to know about reading Mandarin aloud: the writing records the words, not the way the words meet each other. From here on, whenever two pieces sit side by side, ask what happens between them.
 
 Guided Practice.
