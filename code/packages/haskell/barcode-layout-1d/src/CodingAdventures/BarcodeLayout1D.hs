@@ -444,6 +444,8 @@ renderRuns config quietZone = reverse . snd . foldl renderRun (quietZone, [])
             , prW = fromIntegral (runModules run) * configModuleWidth config
             , prH = configBarHeight config
             , prFill = configForeground config
+            , prStroke = ""
+            , prStrokeWidth = 0
             , prMeta = Map.fromList
                 [ ("sourceLabel", toJSON (runSourceLabel run))
                 , ("sourceIndex", toJSON (runSourceIndex run))

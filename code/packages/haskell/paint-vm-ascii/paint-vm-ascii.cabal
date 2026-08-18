@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          paint-vm-ascii
-version:       0.1.0
+version:       0.2.0
 synopsis:      Terminal renderer for backend-neutral paint scenes
 description:   Pure terminal rendering of PaintInstructions scenes with configurable character-cell scaling.
 category:      Graphics
@@ -15,6 +15,7 @@ extra-doc-files:
 library
     exposed-modules:  CodingAdventures.PaintVmAscii
     build-depends:    base >=4.14 && <5
+                    , containers >=0.6
                     , paint-instructions >=0.1 && <0.2
     hs-source-dirs:   src
     ghc-options:      -Wall

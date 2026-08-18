@@ -3,6 +3,31 @@
 All notable changes to this package are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- `PaintInstruction` gains five new constructors, bringing the ADT up to the
+  set the `paint-vm-ascii` backend needs to implement the full
+  `P2D02-paint-vm-ascii.md` contract (this Haskell port previously only had
+  `PaintRect`/`PaintPath`, unlike every other language's `paint-instructions`):
+  - `PaintGlyphRun` — pre-positioned glyphs (`PaintGlyphPlacement`), plus the
+    new `PaintGlyphPlacement` record itself.
+  - `PaintLine` — a stroked line segment between two points.
+  - `PaintGroup` — a child list with an optional `Transform2D` and opacity.
+  - `PaintClip` — a rectangular clip region wrapping a child list.
+  - `PaintLayer` — a child list with a filter flag, blend mode, opacity, and
+    transform (simplified from the general filter-effect union: this repo's
+    Haskell backend has no filter-rendering path, so only whether filters
+    are present matters).
+- `PaintRect` gains `prStroke` and `prStrokeWidth` fields, so rectangles can
+  be stroked (box-drawing outline) as well as filled.
+- New `Transform2D` record and `identityTransform` constant.
+- New builder helpers: `makeGlyphRun`, `makeLine`, `makeGroup`, `makeClip`,
+  `makeLayer` (mirroring the existing `makeRect`/`makePath` convention).
+- This package is now consumed by the Haskell `cowsay` port (see
+  `code/specs/cowsay-paintvm-pipeline.md`).
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

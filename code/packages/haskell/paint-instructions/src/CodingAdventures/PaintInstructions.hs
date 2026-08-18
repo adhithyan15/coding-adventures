@@ -46,6 +46,13 @@ module CodingAdventures.PaintInstructions
   ( -- * PathCommand
     PathCommand (..)
 
+    -- * Transform2D
+  , Transform2D (..)
+  , identityTransform
+
+    -- * PaintGlyphPlacement
+  , PaintGlyphPlacement (..)
+
     -- * PaintInstruction
   , PaintInstruction (..)
 
@@ -56,6 +63,11 @@ module CodingAdventures.PaintInstructions
   , emptyScene
   , makeRect
   , makePath
+  , makeGlyphRun
+  , makeLine
+  , makeGroup
+  , makeClip
+  , makeLayer
   , addInstruction
   ) where
 
@@ -158,6 +170,10 @@ data PaintInstruction
         -- ^ Height in scene units. Must be ≥ 0.
       , prFill :: String
         -- ^ CSS fill color.  @\"#000000\"@ = black, @\"\"@ = no fill.
+      , prStroke :: String
+        -- ^ CSS stroke color.  @\"\"@ = no stroke.
+      , prStrokeWidth :: Double
+        -- ^ Stroke width in scene units. Ignored when 'prStroke' is empty.
       , prMeta :: Map String Value
         -- ^ Optional metadata; ignored by the renderer.
       }
@@ -169,7 +185,117 @@ data PaintInstruction
       , ppMeta     :: Map String Value
         -- ^ Optional metadata; ignored by the renderer.
       }
+  | PaintGlyphRun
+      { pgGlyphs   :: [PaintGlyphPlacement]
+        -- ^ Pre-positioned glyphs, each already placed in scene coordinates.
+      , pgFontRef  :: String
+        -- ^ Opaque font identifier. Text-mode backends ignore this.
+      , pgFontSize :: Double
+        -- ^ Font size in scene units. Text-mode backends ignore this.
+      , pgFill     :: String
+        -- ^ CSS color of the glyphs. Text-mode backends ignore this.
+      , pgMeta     :: Map String Value
+        -- ^ Optional metadata; ignored by the renderer.
+      }
+  | PaintLine
+      { plX1 :: Double
+        -- ^ Start point x.
+      , plY1 :: Double
+        -- ^ Start point y.
+      , plX2 :: Double
+        -- ^ End point x.
+      , plY2 :: Double
+        -- ^ End point y.
+      , plStroke :: String
+        -- ^ CSS stroke color. Required — a line with no stroke is invisible.
+      , plStrokeWidth :: Double
+        -- ^ Stroke width in scene units.
+      , plMeta :: Map String Value
+        -- ^ Optional metadata; ignored by the renderer.
+      }
+  | PaintGroup
+      { pgrChildren  :: [PaintInstruction]
+        -- ^ Instructions inside this group, rendered back-to-front.
+      , pgrTransform :: Maybe Transform2D
+        -- ^ Optional affine transform applied to all children.
+        --   'Nothing' or 'identityTransform' means no transform.
+      , pgrOpacity   :: Maybe Double
+        -- ^ Optional group-level compositing opacity (0.0–1.0).
+        --   'Nothing' or @Just 1.0@ means fully opaque.
+      , pgrMeta      :: Map String Value
+        -- ^ Optional metadata; ignored by the renderer.
+      }
+  | PaintClip
+      { pclX        :: Double
+        -- ^ Clip rectangle top-left x.
+      , pclY        :: Double
+        -- ^ Clip rectangle top-left y.
+      , pclW        :: Double
+        -- ^ Clip rectangle width.
+      , pclH        :: Double
+        -- ^ Clip rectangle height.
+      , pclChildren :: [PaintInstruction]
+        -- ^ Instructions rendered inside the clip region.
+      , pclMeta     :: Map String Value
+        -- ^ Optional metadata; ignored by the renderer.
+      }
+  | PaintLayer
+      { plyChildren   :: [PaintInstruction]
+        -- ^ Instructions rendered into the (conceptual) offscreen buffer.
+      , plyHasFilters :: Bool
+        -- ^ Whether any pixel-level filter (blur, drop shadow, etc.) is
+        --   attached. Kept as a simple flag rather than the full filter
+        --   union — no backend in this repo's Haskell port implements
+        --   filters, so all that matters is whether to reject the layer.
+      , plyBlendMode  :: Maybe String
+        -- ^ Optional blend mode name. 'Nothing' or @Just \"normal\"@ means
+        --   standard alpha compositing (no special blending).
+      , plyOpacity    :: Maybe Double
+        -- ^ Optional layer-level opacity (0.0–1.0).
+      , plyTransform  :: Maybe Transform2D
+        -- ^ Optional affine transform applied to the layer as a whole.
+      , plyMeta       :: Map String Value
+        -- ^ Optional metadata; ignored by the renderer.
+      }
   deriving (Show, Eq)
+
+-- ---------------------------------------------------------------------------
+-- Transform2D
+-- ---------------------------------------------------------------------------
+
+-- | A six-value affine transform, matching the Canvas/SVG convention:
+--
+-- @
+--   x' = a*x + c*y + e
+--   y' = b*x + d*y + f
+-- @
+data Transform2D = Transform2D
+  { t2dA :: Double
+  , t2dB :: Double
+  , t2dC :: Double
+  , t2dD :: Double
+  , t2dE :: Double
+  , t2dF :: Double
+  } deriving (Show, Eq)
+
+-- | The identity transform — no rotation, scale, or translation.
+identityTransform :: Transform2D
+identityTransform = Transform2D 1 0 0 1 0 0
+
+-- ---------------------------------------------------------------------------
+-- PaintGlyphPlacement
+-- ---------------------------------------------------------------------------
+
+-- | One glyph's position within a 'PaintGlyphRun'.
+--
+-- 'pgpGlyphId' is a font-internal glyph index in the general contract, but
+-- text-mode (\"ascii\") backends relax this to a literal Unicode code point
+-- — see @P2D02-paint-vm-ascii.md@ §\"Glyph runs\" for the rationale.
+data PaintGlyphPlacement = PaintGlyphPlacement
+  { pgpGlyphId :: Int
+  , pgpX       :: Double
+  , pgpY       :: Double
+  } deriving (Show, Eq)
 
 -- ---------------------------------------------------------------------------
 -- PaintScene
@@ -259,6 +385,8 @@ makeRect x y w h fill = PaintRect
   , prW    = w
   , prH    = h
   , prFill = fill
+  , prStroke = ""
+  , prStrokeWidth = 0
   , prMeta = Map.empty
   }
 
@@ -277,6 +405,72 @@ makePath cmds fill = PaintPath
   { ppCommands = cmds
   , ppFill     = fill
   , ppMeta     = Map.empty
+  }
+
+-- | Build a 'PaintGlyphRun' instruction with no metadata.
+makeGlyphRun
+  :: [PaintGlyphPlacement]  -- ^ Pre-positioned glyphs
+  -> String                 -- ^ Font ref (opaque; text-mode backends ignore it)
+  -> Double                 -- ^ Font size (text-mode backends ignore it)
+  -> String                 -- ^ Fill color (CSS; text-mode backends ignore it)
+  -> PaintInstruction
+makeGlyphRun glyphs fontRef fontSize fill = PaintGlyphRun
+  { pgGlyphs   = glyphs
+  , pgFontRef  = fontRef
+  , pgFontSize = fontSize
+  , pgFill     = fill
+  , pgMeta     = Map.empty
+  }
+
+-- | Build a 'PaintLine' instruction with no metadata.
+makeLine
+  :: Double  -- ^ x1
+  -> Double  -- ^ y1
+  -> Double  -- ^ x2
+  -> Double  -- ^ y2
+  -> String  -- ^ Stroke color (CSS)
+  -> Double  -- ^ Stroke width
+  -> PaintInstruction
+makeLine x1 y1 x2 y2 stroke strokeWidth = PaintLine
+  { plX1 = x1, plY1 = y1, plX2 = x2, plY2 = y2
+  , plStroke = stroke
+  , plStrokeWidth = strokeWidth
+  , plMeta = Map.empty
+  }
+
+-- | Build a plain (untransformed, fully opaque) 'PaintGroup' with no metadata.
+makeGroup :: [PaintInstruction] -> PaintInstruction
+makeGroup children = PaintGroup
+  { pgrChildren = children
+  , pgrTransform = Nothing
+  , pgrOpacity = Nothing
+  , pgrMeta = Map.empty
+  }
+
+-- | Build a 'PaintClip' instruction with no metadata.
+makeClip
+  :: Double            -- ^ x
+  -> Double            -- ^ y
+  -> Double            -- ^ width
+  -> Double            -- ^ height
+  -> [PaintInstruction] -- ^ Children rendered inside the clip region
+  -> PaintInstruction
+makeClip x y w h children = PaintClip
+  { pclX = x, pclY = y, pclW = w, pclH = h
+  , pclChildren = children
+  , pclMeta = Map.empty
+  }
+
+-- | Build a plain (untransformed, unfiltered, fully opaque, normal-blend)
+-- 'PaintLayer' with no metadata.
+makeLayer :: [PaintInstruction] -> PaintInstruction
+makeLayer children = PaintLayer
+  { plyChildren = children
+  , plyHasFilters = False
+  , plyBlendMode = Nothing
+  , plyOpacity = Nothing
+  , plyTransform = Nothing
+  , plyMeta = Map.empty
   }
 
 -- | Append an instruction to an existing 'PaintScene'.
