@@ -1,0 +1,630 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 9,
+  "title": "What?",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:6afc07226f1a9596",
+  "lessons": [
+    {
+      "id": "ZH-W09-shen",
+      "sequence": 560,
+      "title": "什 (shén) — both halves are old news",
+      "headword": "什",
+      "romanization": "shén",
+      "gloss": "four strokes, and you have met both halves already",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:368bc1762cecc6a3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 亻, the standing person — two strokes, at the left edge of a block."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "什 (shén)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes, and after 我 that will feel like a rest."
+            },
+            {
+              "kind": "speech",
+              "text": "什 (shén) is 亻 beside 十, and you have met both:"
+            },
+            {
+              "kind": "speech",
+              "text": "亻 you wrote in the very first word of this book, standing at the left of 你."
+            },
+            {
+              "kind": "speech",
+              "text": "十 you drew inside 早, underneath the sun."
+            },
+            {
+              "kind": "speech",
+              "text": "亻's falling stroke, from the upper centre down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "亻's vertical, straight down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "十's horizontal, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "十's vertical, down through that horizontal."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pen lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "Finish 亻 before starting 十 — left before right, the oldest habit you have. And inside 十, horizontal before vertical, because the two cross."
+            },
+            {
+              "kind": "speech",
+              "text": "A note on 十, since this is the second time it has turned up without being taught. It is the character for ten, and you still do not need to write it on its own. When it eventually arrives as a character in its own right, you will already have drawn it twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "亻 alone, then 什 (shén) — the second half is two strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 亻 alone, then 什 — the second half is two strokes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "什 (shén) again, saying \"person, then ten\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 什 again, saying \"person, then ten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shén — rising",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shén** — rising]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which stroke of 十 comes first? (The horizontal — the two cross.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W09-shen-halves",
+              "prompt": "Name the two pieces of this character, left first.",
+              "assesses": [
+                "ZH-SCRIPT-SHEN"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the person radical, then ten",
+                "亻 and 十",
+                "person and ten",
+                "the person, then ten",
+                "ren radical and shi"
+              ],
+              "feedback": {
+                "correct": "亻 the standing person, then 十 -- both already met.",
+                "incorrect": "亻 on the LEFT, then 十 on the right."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W09-me",
+      "sequence": 570,
+      "title": "么 (me) — three strokes, and one of them turns",
+      "headword": "么",
+      "romanization": "me",
+      "gloss": "three strokes, and no tone mark to write",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:461dfa665fb77817",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 什 (shén). Person on the left, ten on the right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "么 (me)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes, and the middle one does the work:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short falling stroke at the top, down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a second falling stroke down-left that turns without lifting and sweeps right along the base."
+            },
+            {
+              "kind": "speech",
+              "text": "a dot, pressed down-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pen lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke 2 is one movement, not two: down-left, then a turn, then out to the right. Lift in the middle of it and you have written something else. You have handled this before — the frame of 再, the leg of 见 — and the instinct is the same: the pen turns, the stroke does not end."
+            },
+            {
+              "kind": "speech",
+              "text": "The dot goes last, as it did in 我."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need — a character with no tone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "么 is me — and that is the whole pronunciation. No tone mark, because it has no tone."
+            },
+            {
+              "kind": "speech",
+              "text": "You met neutral syllables inside words, where 上 and 字 gave their tones up. 么 is different: it is neutral in the dictionary, standing alone. Some characters simply never carry a tone, and this is your first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "么 (me) — and keep stroke 2 unbroken through its turn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 么 — and keep stroke 2 unbroken through its turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me — short, light, flat, no shape to it at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **me** — short, light, flat, no shape to it at all]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Why does this character have no tone mark? (Because it has no tone.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W09-me-turn",
+              "prompt": "The middle stroke goes down-left and then sweeps right. Is that one stroke or two?",
+              "assesses": [
+                "ZH-SCRIPT-ME"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "one",
+                "1",
+                "one stroke",
+                "a single stroke",
+                "one, unbroken"
+              ],
+              "feedback": {
+                "correct": "One -- the pen turns without lifting.",
+                "incorrect": "ONE stroke. The pen turns; it does not stop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C09-shenme",
+      "sequence": 580,
+      "title": "什么 (shénme) — what",
+      "headword": "什么",
+      "romanization": "shénme",
+      "gloss": "what — the first question word in this book",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d63b464a95fb10c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say me. Short and flat, no tone at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "什么 shénme — what."
+            },
+            {
+              "kind": "speech",
+              "text": "shén rises; me is light and toneless behind it. Both characters are ones you have just written."
+            },
+            {
+              "kind": "speech",
+              "text": "This one is different in kind from everything before it. 你好, 是, 不是, 再见, 早上好, 我是 — every one of those gives something. 什么 (shénme) asks. It is the first word in this book whose job is to get something back from the other person."
+            },
+            {
+              "kind": "speech",
+              "text": "Here the honest note this book owes you: the two halves of 什么 (shénme) do not add up the way 再见's did. 再 and 见 each brought their meaning into the word. 什 and 么 bring only their sound — 什 is standing in for how this word is pronounced, not for anything it means."
+            },
+            {
+              "kind": "speech",
+              "text": "And keep the levels apart. The pieces you drew inside 什 (shén) — the person and the ten — belong to that character, not to this word. \"Person plus ten\" explains nothing about what. Some words are built; some are just words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — 什么 on its own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "什么 (shénme)? by itself means \"What?\" — the thing you say when you did not catch what someone said. That is real, everyday Mandarin and it is the most useful thing you can do with this word today."
+            },
+            {
+              "kind": "speech",
+              "text": "One caution, because register matters and this book would rather tell you than let you find out. A bare 什么 (shénme)? is blunt — closer to English \"What?\" than to \"Sorry?\". Between friends it is unremarkable. To a stranger, or to anyone you would be careful with, it lands harder than you intend, and Mandarin has gentler ways to ask for a repeat that need words you do not have yet."
+            },
+            {
+              "kind": "speech",
+              "text": "So: use it, and know what it weighs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shénme — rising, then light",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shénme** — rising, then light]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shénme? as a question, as though you missed something",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shénme?** as a question, as though you missed something]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "什么 (shénme)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 什么]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do the two halves of 什么 (shénme) add up to its meaning? (No — they are there for sound.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C09-shenme-job",
+              "prompt": "Every earlier expression in this book gave something to the listener. What does this word do instead?",
+              "assesses": [
+                "ZH-LEX-SHENME"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it asks",
+                "asks",
+                "it asks a question",
+                "asks for something back",
+                "it gets something back"
+              ],
+              "feedback": {
+                "correct": "It asks -- the first word here whose job is to get something back.",
+                "incorrect": "It ASKS. 什么 is this book's first question word."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C09-practice",
+      "sequence": 590,
+      "title": "Practice — when you did not catch it",
+      "headword": "什么",
+      "romanization": "shénme",
+      "gloss": "an exchange that goes wrong, and gets repaired",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8e10f6c3e57e6ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say shénme — rising, then light."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two people meet. One of them mishears. Fill both gaps with real names."
+            },
+            {
+              "kind": "speech",
+              "text": "A: 早上好 zǎoshang hǎo — good morning. B: 早上好 zǎoshang hǎo — good morning. A: 我是 … wǒ shì … — I am … B: 什么? shénme? — what? A: 我是 … wǒ shì … — I am … (said again, slower) B: 再见 zàijiàn — goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "That fourth line is the point of the chapter. Until now every exchange in this book has gone perfectly, which is not what conversations do. B did not catch it, said so, and got it repeated. That is a repair, and being able to make one is worth more than another memorised phrase — it is what keeps a conversation alive when your Mandarin runs out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — and the question you still cannot ask",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can greet by the hour, say who you are, ask for a repeat when you miss something, and leave."
+            },
+            {
+              "kind": "speech",
+              "text": "The gap named last chapter is still open, and it is worth being precise about what changed. You now have 什么 (shénme), the what of \"what is your name?\" — but not yet the rest of that sentence. Both halves of the question exist in Mandarin; this book has handed you one of them. The other needs a character the font in this book cannot yet print, which is a dull reason, and a true one."
+            },
+            {
+              "kind": "speech",
+              "text": "So the honest position: 什么 (shénme) is a question word you can use today in the ways above, and a piece of a question you will finish later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts, including the mishearing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts, including the mishearing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shénme? twice — once flat and clipped, once softened and drawn out on the rise. Same word; the second is the one you would risk on a stranger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shénme?** twice — once flat and clipped, once softened and drawn out on the rise. Same word; the second is the one you would risk on a stranger]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is a bare 什么 (shénme)? gentle or blunt? (Blunt — fine with friends, heavy with strangers.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C09-practice-repair",
+              "prompt": "You did not catch what someone just said. In pinyin, what one word gets it repeated?",
+              "assesses": [
+                "ZH-DIALOGUE-ASK"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "shénme",
+                "shenme",
+                "shén me",
+                "shen2 me",
+                "什么"
+              ],
+              "feedback": {
+                "correct": "什么 -- blunt, but it works, and it keeps the conversation going.",
+                "incorrect": "shénme, 什么 -- 'what?'"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
