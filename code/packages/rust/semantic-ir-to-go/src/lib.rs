@@ -178,6 +178,23 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // nothing emits it yet, so this declares acceptance ahead of any
     // frontend using it.
     Feature::ConsoleIO,
+    // ── SIR22 array/matrix base cut (second-wave backend rollout) ────
+    // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+    // (+ `Stmt::IndexSet`) route into `_sir_ndarray_*` helpers, an
+    // inlined port of the already-proven `semantic-ir-to-javascript`
+    // `ArrayRt` sub-runtime (see `runtime.rs`'s "SIR22 array/matrix
+    // domain" section). The SIR22 "APL addendum" nodes (`Reduce`/`Scan`/
+    // `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+    // `Ravel`/`Catenate`) share these same three features but stay
+    // deferred to a later slice — rejected by `check_exception_soundness`
+    // below (extended for this PR to also cover SIR22, despite its
+    // E3-era name — see that function's doc comment), NOT this
+    // capability gate, since the gate alone can no longer distinguish
+    // the base cut from the addendum once these three flags are
+    // accepted.
+    Feature::NDArrays,
+    Feature::MatrixOps,
+    Feature::ArrayColumnMajor,
 ];
 
 impl Backend for GoBackend {
@@ -330,6 +347,29 @@ fn check_no_keyword_rest_mix(module: &Module, errs: &mut Vec<BackendError>) {
 /// `InstanceVars`/`ClassVars`, which this backend does not accept), so this
 /// gate need only cover the const/module surface that `Classes`/`Constants`
 /// acceptance newly admits.
+///
+/// **Second job, added for the SIR22 second-wave backend rollout (still
+/// under this E3-era name — renaming was judged unnecessary churn for a
+/// crate-private function, but is flagged here for a future reader):**
+/// this same walk ALSO rejects the SIR22 "APL addendum" nodes (`Reduce`/
+/// `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+/// `Ravel`/`Catenate`).  Those nine share `Feature::NDArrays`/
+/// `Feature::MatrixOps`/`Feature::ArrayColumnMajor` with the SIR22 BASE
+/// cut this backend now implements (`ArrayLit`/`Range`/`MatMul`/
+/// `ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet`) — the SIR22
+/// addendum spec gives them no feature flag of their own — so the
+/// ordinary `accepts_features()` capability check can no longer tell a
+/// module using only the base cut (real codegen, safe) from one that
+/// also uses these nine (still deferred in `emit`, would panic) now that
+/// `ACCEPTED_FEATURES` declares those three flags.  Reusing THIS
+/// existing recursive walk (rather than adding a second, separate
+/// tree-walk mechanism the way `semantic-ir-to-javascript`'s now-removed
+/// `find_unimplemented_sir22_addendum_node` or
+/// `semantic-ir-to-ruby`'s `ScanHit::Sir22AddendumNode` each did) follows
+/// this backend's OWN pre-existing idiom: one shared structural
+/// soundness gate, called once from `compile()` right beside the
+/// manifest gate, before any emission — see the doc comment above for
+/// the original (E3) rationale, which applies identically here.
 fn check_exception_soundness(module: &Module, errs: &mut Vec<BackendError>) {
     for f in &module.functions {
         for s in &f.body.stmts {
@@ -448,19 +488,35 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
             }
         }
         // ── SIR22 (array/matrix IR) ──────────────────────────────────
-        // `IndexSet` (`A(i, j) = v`) observes `Feature::NDArrays` /
-        // `Feature::MatrixOps`, neither of which this backend accepts (see
-        // `ACCEPTED_FEATURES`), so the SIR10 capability gate
-        // (`Backend::check_module`) rejects any module containing it before
-        // `check_soundness_stmt` (called only on already-gated modules) ever
-        // sees one.  Reaching this arm would be an internal bug, not a user
-        // error — mirror the `Stmt::Assign` unsupported-scope arm above.
-        Stmt::IndexSet { span, .. } => {
-            panic!(
-                "go backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
-                span
-            );
+        // `IndexSet` (`A(i, j) = v`) is now a REAL, supported statement
+        // (see `ACCEPTED_FEATURES`'s `NDArrays`/`MatrixOps`/
+        // `ArrayColumnMajor` entries and `emit.rs`'s `Stmt::IndexSet`
+        // arm) — recurse into its three sub-positions for the same
+        // residual const/addendum-node checks every other statement gets,
+        // mirroring `Stmt::SeqSet`/`Stmt::MapSet` immediately above.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            check_soundness_expr(target, errs);
+            for idx in indices {
+                check_soundness_index_arg(idx, errs);
+            }
+            check_soundness_expr(value, errs);
         }
+    }
+}
+
+/// Recurse into one `IndexArg`'s inner expression, if it has one
+/// (`Scalar`/`Range` each wrap an `Expr`; `Whole` carries none). Shared
+/// by `Stmt::IndexSet` above and `Expr::IndexGet` below.
+fn check_soundness_index_arg(arg: &semantic_ir::IndexArg, errs: &mut Vec<BackendError>) {
+    use semantic_ir::IndexArg;
+    match arg {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => check_soundness_expr(e, errs),
+        IndexArg::Whole => {}
     }
 }
 
@@ -549,9 +605,81 @@ fn check_soundness_expr(e: &semantic_ir::Expr, errs: &mut Vec<BackendError>) {
             check_soundness_expr(key, errs);
         }
         Expr::KeywordArg { value, .. } => check_soundness_expr(value, errs),
+        // ── SIR22 base cut: real, supported nodes — recurse into their
+        // sub-expressions for the same residual checks (nested `Const`
+        // usage, a nested addendum node, ...) every other composite
+        // expression gets above.
+        Expr::ArrayLit { rows, .. } => {
+            for row in rows {
+                for e in row {
+                    check_soundness_expr(e, errs);
+                }
+            }
+        }
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            check_soundness_expr(start, errs);
+            if let Some(step) = step {
+                check_soundness_expr(step, errs);
+            }
+            check_soundness_expr(stop, errs);
+        }
+        Expr::MatMul { lhs, rhs, .. } | Expr::ElementwiseOp { lhs, rhs, .. } => {
+            check_soundness_expr(lhs, errs);
+            check_soundness_expr(rhs, errs);
+        }
+        Expr::Transpose { target, .. } => check_soundness_expr(target, errs),
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            check_soundness_expr(target, errs);
+            for idx in indices {
+                check_soundness_index_arg(idx, errs);
+            }
+        }
+        // ── SIR22 "APL addendum": still deferred — see
+        // `check_exception_soundness`'s doc comment (this function's
+        // caller) for the full "why here, why this mechanism" rationale.
+        // These nine share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with
+        // the base cut above, so only a dedicated structural check (not
+        // the plain capability gate) can tell them apart.
+        Expr::Reduce { span, .. } => errs.push(unsupported_sir22_addendum("Reduce", span.clone())),
+        Expr::Scan { span, .. } => errs.push(unsupported_sir22_addendum("Scan", span.clone())),
+        Expr::OuterProduct { span, .. } => {
+            errs.push(unsupported_sir22_addendum("OuterProduct", span.clone()))
+        }
+        Expr::Shape { span, .. } => errs.push(unsupported_sir22_addendum("Shape", span.clone())),
+        Expr::Reshape { span, .. } => {
+            errs.push(unsupported_sir22_addendum("Reshape", span.clone()))
+        }
+        Expr::IndexGenerator { span, .. } => {
+            errs.push(unsupported_sir22_addendum("IndexGenerator", span.clone()))
+        }
+        Expr::IndexOf { span, .. } => {
+            errs.push(unsupported_sir22_addendum("IndexOf", span.clone()))
+        }
+        Expr::Ravel { span, .. } => errs.push(unsupported_sir22_addendum("Ravel", span.clone())),
+        Expr::Catenate { span, .. } => {
+            errs.push(unsupported_sir22_addendum("Catenate", span.clone()))
+        }
         // Leaves / nodes with no sub-exprs of interest.
         _ => {}
     }
+}
+
+/// One `BackendError` for a SIR22 "APL addendum" node — see
+/// `check_exception_soundness`'s doc comment for the full rationale.
+fn unsupported_sir22_addendum(kind: &str, span: semantic_ir::Span) -> BackendError {
+    unsupported(
+        &format!(
+            "go backend does not yet implement the SIR22 addendum node `{kind}` (deferred to \
+             a later slice; it shares Feature::NDArrays/MatrixOps/ArrayColumnMajor with the \
+             SIR22 base cut this backend now accepts, so the feature-flag capability gate \
+             alone cannot reject it — this dedicated structural check does instead)"
+        ),
+        span,
+    )
 }
 
 fn check_soundness_block(b: &semantic_ir::Block, errs: &mut Vec<BackendError>) {

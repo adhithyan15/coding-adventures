@@ -4743,6 +4743,623 @@ func _sir_call_super(method string, cls string, args ...Value) Value {
 	return nil
 }
 
+// ── SIR22 array/matrix domain (base cut, second-wave backend rollout) ──
+//
+// Ported from `semantic-ir-to-javascript`'s own already-proven `ArrayRt`
+// IIFE (see that crate's `runtime.rs`, "SIR22 array/matrix base cut"
+// section) — the BASE CUT only (`ArrayLit`/`Range`/`MatMul`/
+// `ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet`), NOT the
+// 9-node "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+// `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) — see the
+// SIR22 spec's "Backend impact" section for why the addendum is a
+// separate, later slice; `lib.rs`'s `check_exception_soundness` rejects
+// those nine cleanly before this backend's emit is ever reached.
+//
+// Naming: every helper below is prefixed `_sir_ndarray_`, NOT
+// `_sir_array_` — this backend's pre-existing Ruby-Array(`*Seq`)-method-
+// dispatch catalog (see `_sir_array_method`/`_sir_array_responds`/
+// `_sir_array_block_method` above, C5) already owns the `_sir_array_*`
+// prefix for an entirely unrelated domain (Ruby's `Array` == this
+// runtime's `*Seq`, not a SIR22 numeric matrix). Reusing that prefix
+// here would either collide outright or, worse, silently shadow/confuse
+// two unrelated concepts that both happen to be called "array" in their
+// respective source languages. `_sir_ndarray_*` (matching the SIR22
+// spec's own `SirType::NDArray`) keeps the two domains textually
+// distinct.
+//
+// Value representation: an `*NDArray` — shared + mutable via a pointer
+// handle, exactly like `*Seq`/`*Map` above (`Stmt::IndexSet`, i.e.
+// `A(i,j) = v`, must mutate the very array a caller's binding already
+// holds — MATLAB assignment semantics — so the same pointer-handle
+// pattern this runtime already uses for `Seq`/`Map` applies here too).
+//
+// Storage: dense, COLUMN-MAJOR (Fortran/MATLAB order — `Feature::
+// ArrayColumnMajor`), every element a `float64`, uniformly. This is a
+// DELIBERATE divergence from the sibling Ruby backend's SIR22 port,
+// which preserves native Ruby Integer/Float propagation (Div/Pow force
+// Float; Add/Sub/Mul don't) — worth calling out explicitly since the
+// brief for this rollout flagged it as a design decision to make
+// consciously, not copy blindly. MATLAB's OWN numeric model is "every
+// array is a matrix of doubles" by default (there is no separate
+// integer-array type in the MATLAB subset this repo's frontends target)
+// — so uniform float64 storage is not a Go-specific compromise, it is
+// the semantically faithful choice, and it is exactly what the JS
+// reference this file ports from already does (`Float64Array`
+// throughout). Go's own numeric tower (`int64`/`float64` boxed
+// `Value`s, see `_sir_as_float` above) has no "array of numbers"
+// precedent of its own to preserve the way Ruby's native `Integer`
+// class does, so there is no reason to introduce a Go-specific
+// int/float split the JS reference doesn't have; this port stays
+// byte-for-byte equivalent to the JS reference's uniform-double model.
+//
+// SECURITY: every factory below validates a shape/output size BEFORE
+// allocating a `[]float64` from it — shape sizes here can be
+// attacker/input-influenced runtime values (loop counts, index-range
+// widths, ...), not fixed compile-time constants, so an unbounded or
+// malformed shape must fail with a controlled `panic` (crashing the
+// program cleanly with a message, or caught by the nearest `recover` in
+// a `TryCatch`) rather than let `make([]float64, n)` attempt a huge or
+// negative-wrapped allocation. Mirrors `semantic-ir-to-javascript`'s
+// `MAX_ELEMENTS` bound exactly.
+const _sirNdarrayMaxElements = 1 << 26 // 67,108,864
+
+type NDArray struct {
+	Shape []int
+	Data  []float64
+}
+
+// One resolved `IndexArg` (see the SIR22 spec's `IndexArg` — `Scalar` /
+// `Whole` / `Range`), mirroring the JS reference's
+// `{kind, value/indices}` tagged object as a small Go struct instead.
+// `end`-relative indices are never seen here — per SIR10 discipline the
+// frontend resolves `end` to a concrete 0-based `scalar` index before
+// emitting `IndexGet`/`IndexSet` (see `nodes.rs`'s `Expr::IndexGet` doc).
+type _sirIndexArg struct {
+	Kind    string // "scalar" | "whole" | "range"
+	Value   float64
+	Indices *NDArray
+}
+
+// _sir_ndarray_checked_shape_size validates `shape` (every dimension
+// must be >= 0) and returns the total element count, panicking if any
+// dimension is negative or if the product exceeds
+// `_sirNdarrayMaxElements`.
+//
+// SECURITY: the running product is checked for overflow ONE
+// multiplication at a time (`acc > _sirNdarrayMaxElements/d` BEFORE
+// `acc *= d`), not after the fact. This matters more here than in the
+// JS reference: a JS `Number` cannot silently wrap on overflow (only
+// lose precision past 2^53, which the `Number.isFinite`-style check
+// there still catches), but Go's `int` is a fixed-width two's-complement
+// type — `acc *= d` for a sufficiently large shape CAN wrap around to a
+// small or even negative `int`, which would then slip straight past a
+// naive post-hoc `acc > cap` check. Validating before every multiply
+// closes that gap; `make([]float64, n)` is never reached with an
+// unvalidated `n`.
+func _sir_ndarray_checked_shape_size(shape []int) int {
+	acc := 1
+	for _, d := range shape {
+		if d < 0 {
+			panic(fmt.Sprintf("checkedShapeSize: shape %v has a negative dimension", shape))
+		}
+		if d != 0 && acc > _sirNdarrayMaxElements/d {
+			panic(fmt.Sprintf("checkedShapeSize: shape %v exceeds the %d-element cap", shape, _sirNdarrayMaxElements))
+		}
+		acc *= d
+	}
+	if acc > _sirNdarrayMaxElements {
+		panic(fmt.Sprintf("checkedShapeSize: shape %v (%d elements) exceeds the %d-element cap", shape, acc, _sirNdarrayMaxElements))
+	}
+	return acc
+}
+
+// _sir_ndarray_new is the base constructor: validates `shape` (via
+// `_sir_ndarray_checked_shape_size`) and that `data` has exactly the
+// implied element count, BEFORE returning the handle.
+func _sir_ndarray_new(shape []int, data []float64) *NDArray {
+	n := _sir_ndarray_checked_shape_size(shape)
+	if n != len(data) {
+		panic(fmt.Sprintf("ndarray: shape %v implies %d elements, got %d", shape, n, len(data)))
+	}
+	return &NDArray{Shape: shape, Data: data}
+}
+
+// `[1 2; 3 4]` — build an `*NDArray` from row-major literal syntax
+// (`rows[r][c]`), storing it column-major (`data[c*nrowsIn+r]`) per
+// `Feature::ArrayColumnMajor`. Each element is coerced through
+// `_sir_as_float` (this backend's existing int64/float64 numeric-tower
+// coercion, see above) since an `ArrayLit` element can be any numeric
+// `Value` the ordinary emit path produces (an `IntLit`, a `FloatLit`, or
+// an arbitrary arithmetic sub-expression's result).
+func _sir_ndarray_from_rows(rows [][]Value) *NDArray {
+	nrowsIn := len(rows)
+	if nrowsIn == 0 {
+		return _sir_ndarray_new([]int{0, 0}, []float64{})
+	}
+	ncolsIn := len(rows[0])
+	for _, r := range rows {
+		if len(r) != ncolsIn {
+			panic("fromRows: ragged rows")
+		}
+	}
+	n := _sir_ndarray_checked_shape_size([]int{nrowsIn, ncolsIn})
+	data := make([]float64, n)
+	for r := 0; r < nrowsIn; r++ {
+		for c := 0; c < ncolsIn; c++ {
+			data[c*nrowsIn+r] = _sir_as_float(rows[r][c]) // column-major store
+		}
+	}
+	return _sir_ndarray_new([]int{nrowsIn, ncolsIn}, data)
+}
+
+// Coerce a bare numeric `Value` into a rank-0 (scalar) `*NDArray`; an
+// already-`*NDArray` value passes through unchanged. Needed because
+// `matlab-to-semantic-ir`'s lowerer emits a MIXED operand pair for
+// `.* ./ .\` and for `* /` when exactly one side is scalar (e.g.
+// `A .* 2`) — the bare scalar sub-expression is passed through
+// `ElementwiseOp`/`MatMul` unwrapped (a plain numeric `Value`, not
+// wrapped in an `ArrayLit`/scalar-array constructor first). Every
+// function below that accepts an "array-or-scalar" operand normalizes
+// through this first, mirroring the JS reference's `toArrayValue` fix
+// exactly (a prior regression there: reading `.shape` off an
+// un-normalized number threw before this coercion was added).
+func _sir_ndarray_to_array_value(v Value) *NDArray {
+	if a, ok := v.(*NDArray); ok {
+		return a
+	}
+	return _sir_ndarray_new([]int{}, []float64{_sir_as_float(v)})
+}
+
+// Strict variant of the coercion above: asserts `v` is ALREADY an
+// `*NDArray`, panicking with a clean message otherwise, rather than
+// coercing a bare scalar. Used exactly where the JS reference's own
+// `transpose`/`indexGet`/`indexSet` do NOT call `toArrayValue` (their
+// `target` operand is always already an array by construction — a
+// MATLAB frontend never transposes/indexes a provably-scalar
+// expression) — kept as a dedicated function (rather than an inline
+// type assertion at each call site) purely so the failure message is
+// controlled and readable, matching this runtime's existing
+// `_sir_seq_index`/`_sir_map_get`-style "panic with a formatted message
+// on the wrong dynamic type" discipline instead of a raw, less legible
+// Go interface-conversion panic.
+func _sir_ndarray_as_ndarray(v Value) *NDArray {
+	a, ok := v.(*NDArray)
+	if !ok {
+		panic(fmt.Sprintf("expected an array, got %T", v))
+	}
+	return a
+}
+
+func _sir_ndarray_is_scalar(a *NDArray) bool { return len(a.Data) == 1 }
+
+// Rows, treating a scalar as `1×1` and a vector `[n]` as `n×1`.
+func _sir_ndarray_nrows(a *NDArray) int {
+	if len(a.Shape) == 0 {
+		return 1
+	}
+	return a.Shape[0]
+}
+
+// Columns, treating a scalar as `1×1` and a vector `[n]` as `n×1`.
+func _sir_ndarray_ncols(a *NDArray) int {
+	if len(a.Shape) <= 1 {
+		return 1
+	}
+	return a.Shape[1]
+}
+
+// Element `(r, c)` (column-major); the second return is `false` when out
+// of bounds (mirrors the JS reference's `undefined` sentinel without
+// needing a separate sentinel value in Go's numeric tower).
+func _sir_ndarray_get(a *NDArray, r int, c int) (float64, bool) {
+	if r >= 0 && c >= 0 && r < _sir_ndarray_nrows(a) && c < _sir_ndarray_ncols(a) {
+		return a.Data[c*_sir_ndarray_nrows(a)+r], true
+	}
+	return 0, false
+}
+
+// Set element `(r, c)` in place (column-major) — mutates `a.Data`
+// directly, matching MATLAB assignment semantics (`A(i,j) = v` rebinds
+// one element of the EXISTING array, it does not produce a new one).
+// This is why `Stmt::IndexSet` is a statement, not a pure expression,
+// in the SIR22 spec.
+//
+// SECURITY: written as the AND-form `r >= 0 && c >= 0 && r < nrows &&
+// c < ncols`, negated once (`!(...)`), NOT as a De Morgan'd OR-form
+// (`r < 0 || c < 0 || ...`) — this mirrors the JS reference's own `set`
+// exactly, whose doc comment explains the IEEE-754 hazard this form
+// avoids (a NaN in an OR-form check silently defeats every branch, so
+// the "out of bounds" guard never fires). `r`/`c` here are already
+// validated, truncated `int`s (see `_sir_ndarray_assert_valid_position`
+// below) by the time they reach this function, so the NaN hazard itself
+// cannot recur at THIS call site in Go the way it can in JS — but the
+// AND-form is kept anyway, both for exact structural parity with the
+// ported reference and because `_sir_ndarray_set` is part of this
+// file's own re-usable surface, not something every future caller
+// should have to re-derive the invariant for.
+func _sir_ndarray_set(a *NDArray, r int, c int, value float64) {
+	if !(r >= 0 && c >= 0 && r < _sir_ndarray_nrows(a) && c < _sir_ndarray_ncols(a)) {
+		panic(fmt.Sprintf("set: index (%d, %d) out of bounds for shape %v", r, c, a.Shape))
+	}
+	a.Data[c*_sir_ndarray_nrows(a)+r] = value
+}
+
+// ── elementwise binary ops ──────────────────────────────────────
+// Comparisons follow the same APL-style boolean convention
+// `array_runtime::BinOp` uses (and the JS reference mirrors): `1.0` for
+// true, `0.0` for false (never a native Go `bool`), since the result
+// must stay a plain `float64` array element like every other value here.
+func _sir_ndarray_apply_op(op string, a float64, b float64) float64 {
+	b2f := func(cond bool) float64 {
+		if cond {
+			return 1
+		}
+		return 0
+	}
+	switch op {
+	case "Add":
+		return a + b
+	case "Sub":
+		return a - b
+	case "Mul":
+		return a * b
+	case "Div":
+		return a / b
+	case "Pow":
+		return math.Pow(a, b)
+	case "Max":
+		return math.Max(a, b)
+	case "Min":
+		return math.Min(a, b)
+	case "Eq":
+		return b2f(a == b)
+	case "Ne":
+		return b2f(a != b)
+	case "Lt":
+		return b2f(a < b)
+	case "Le":
+		return b2f(a <= b)
+	case "Ge":
+		return b2f(a >= b)
+	case "Gt":
+		return b2f(a > b)
+	default:
+		// An unrecognised `op` string crosses an emitter/runtime boundary
+		// the emitter itself can't enforce at the call site — fail loudly
+		// here rather than silently falling through to a zero value.
+		panic(fmt.Sprintf("applyOp: unrecognised ElementwiseOpKind %q", op))
+	}
+}
+
+func _sir_ndarray_same_shape(a []int, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Elementwise binary op with scalar broadcasting. Either operand may be
+// a scalar; otherwise the shapes must match exactly (full NumPy/MATLAB
+// broadcasting is out of scope, same as the Rust `array-runtime`
+// reference). Result takes the non-scalar operand's shape (or the
+// scalar's, if both are).
+func _sir_ndarray_elementwise(op string, av Value, bv Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	b := _sir_ndarray_to_array_value(bv)
+	var data []float64
+	var shape []int
+	switch {
+	case _sir_ndarray_is_scalar(a):
+		data = make([]float64, len(b.Data))
+		for i, y := range b.Data {
+			data[i] = _sir_ndarray_apply_op(op, a.Data[0], y)
+		}
+		shape = b.Shape
+	case _sir_ndarray_is_scalar(b):
+		data = make([]float64, len(a.Data))
+		for i, x := range a.Data {
+			data[i] = _sir_ndarray_apply_op(op, x, b.Data[0])
+		}
+		shape = a.Shape
+	default:
+		if !_sir_ndarray_same_shape(a.Shape, b.Shape) {
+			panic(fmt.Sprintf("elementwise: non-conformable arrays: %v vs %v", a.Shape, b.Shape))
+		}
+		data = make([]float64, len(a.Data))
+		for i := range data {
+			data[i] = _sir_ndarray_apply_op(op, a.Data[i], b.Data[i])
+		}
+		shape = a.Shape
+	}
+	return _sir_ndarray_new(shape, data)
+}
+
+// Matrix product `[m, k] · [k, n] → [m, n]` (column-major throughout).
+// `m` and `n` come from two INDEPENDENT operands (each individually
+// under `_sirNdarrayMaxElements`, but their product isn't bounded by
+// that alone), so `_sir_ndarray_checked_shape_size` validates `[m, n]`
+// BEFORE allocating `out`, not after.
+//
+// Like `_sir_ndarray_elementwise`, normalizes both operands through
+// `_sir_ndarray_to_array_value` first: a provably-scalar `x * y` between
+// two non-literal operands can still lower to `Expr::MatMul` (the
+// frontend's scalar/array disambiguation heuristic can't see through a
+// bare variable reference), so a bare boxed number can reach here on
+// either side.
+func _sir_ndarray_matmul(av Value, bv Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	b := _sir_ndarray_to_array_value(bv)
+	m := _sir_ndarray_nrows(a)
+	ka := _sir_ndarray_ncols(a)
+	kb := _sir_ndarray_nrows(b)
+	n := _sir_ndarray_ncols(b)
+	if ka != kb {
+		panic(fmt.Sprintf("matmul: inner dimensions disagree (%dx%d . %dx%d)", m, ka, kb, n))
+	}
+	outLen := _sir_ndarray_checked_shape_size([]int{m, n})
+	out := make([]float64, outLen)
+	for j := 0; j < n; j++ {
+		for i := 0; i < m; i++ {
+			acc := 0.0
+			for p := 0; p < ka; p++ {
+				acc += a.Data[p*m+i] * b.Data[j*kb+p] // column-major indexing
+			}
+			out[j*m+i] = acc
+		}
+	}
+	return _sir_ndarray_new([]int{m, n}, out)
+}
+
+// Matrix transpose. `conjugate` distinguishes MATLAB `'` (`true`) from
+// `.'` (`false`) — this runtime has no `Complex` value type yet
+// (matching `array-runtime`'s own real-only scope today, and the JS
+// reference's identical stance), so a conjugate transpose of real data
+// is identical to a plain transpose; `conjugate` is accepted for
+// call-shape parity with the SIR spec only.
+//
+// Deliberately does NOT coerce `av` through `_sir_ndarray_to_array_value`
+// — mirrors the JS reference's `transpose` exactly, which also takes its
+// operand un-coerced (a MATLAB frontend never transposes a
+// provably-scalar expression). Uses the strict `_sir_ndarray_as_ndarray`
+// instead, so a genuinely-wrong-typed operand still fails with a clean
+// message rather than a raw Go interface-conversion panic.
+func _sir_ndarray_transpose(av Value, conjugate bool) *NDArray {
+	_ = conjugate
+	a := _sir_ndarray_as_ndarray(av)
+	m := _sir_ndarray_nrows(a)
+	n := _sir_ndarray_ncols(a)
+	out := make([]float64, len(a.Data))
+	for j := 0; j < n; j++ {
+		for i := 0; i < m; i++ {
+			out[i*n+j] = a.Data[j*m+i]
+		}
+	}
+	return _sir_ndarray_new([]int{n, m}, out)
+}
+
+// Tolerance for the inclusive-stop boundary check, matching
+// `matlab-runtime`'s own `eval_colon` (and the JS reference's
+// `RANGE_EPSILON`) exactly — a floating step (e.g. `1:0.1:2`) can drift
+// a few ULPs short of `stop` by the final iteration, and MATLAB's
+// `a:step:b` is inclusive of `b`.
+const _sirNdarrayRangeEpsilon = 1e-9
+
+// Materialize a MATLAB-style range `start:step:stop` (default `step =
+// 1`) as a `1×n` row vector — MATLAB's `:` always produces a row, never
+// a column. Bounded by `_sirNdarrayMaxElements` so a compiled program's
+// `1:1e18`-style range can't exhaust memory before this function ever
+// gets to materialize anything.
+func _sir_ndarray_range(startV Value, stopV Value, stepV Value) *NDArray {
+	start := _sir_as_float(startV)
+	stop := _sir_as_float(stopV)
+	step := _sir_as_float(stepV)
+	if step == 0 {
+		panic("range: step cannot be zero")
+	}
+	// SECURITY: the loop condition below would be false on its very
+	// first check whenever start/stop/step is NaN (every relational
+	// comparison with NaN is false) or +-Inf drives it there — an
+	// unguarded non-finite bound would silently produce an empty range
+	// instead of erroring. Reject non-finite bounds up front instead of
+	// letting them fall through to a quietly-wrong empty result.
+	if math.IsNaN(start) || math.IsInf(start, 0) ||
+		math.IsNaN(stop) || math.IsInf(stop, 0) ||
+		math.IsNaN(step) || math.IsInf(step, 0) {
+		panic(fmt.Sprintf("range: start/stop/step must be finite numbers, got (%v, %v, %v)", start, stop, step))
+	}
+	var values []float64
+	x := start
+	for (step > 0 && x <= stop+_sirNdarrayRangeEpsilon) || (step < 0 && x >= stop-_sirNdarrayRangeEpsilon) {
+		if len(values) >= _sirNdarrayMaxElements {
+			panic(fmt.Sprintf("range: produces more than %d elements", _sirNdarrayMaxElements))
+		}
+		values = append(values, x)
+		x += step
+	}
+	if len(values) == 0 {
+		return _sir_ndarray_new([]int{1, 0}, []float64{})
+	}
+	return _sir_ndarray_new([]int{1, len(values)}, values)
+}
+
+// ── indexing ────────────────────────────────────────────────────
+// One MATLAB-style index-position argument, mirroring the SIR22 spec's
+// `IndexArg` exactly via `_sirIndexArg{Kind: "scalar"|"whole"|"range",
+// ...}` — see that type's doc comment above.
+
+// Validate that `x` is a finite integer (after truncation for the
+// "range" case — see `_sir_ndarray_resolve_positions`), returning it as
+// an `int` position.
+//
+// SECURITY: mirrors the JS reference's `assertValidPosition` exactly —
+// under IEEE-754, `NaN`/`+-Inf` fail or defeat naive relational bounds
+// checks downstream (`i < 0 || i >= len` lets a NaN through both
+// branches, since every NaN comparison is false), so a malformed index
+// must be rejected at THIS single choke point — the one place both
+// `_sir_ndarray_index_get` and `_sir_ndarray_index_set` resolve every
+// position through (via `_sir_ndarray_resolve_positions`) — rather than
+// re-deriving a NaN-safe bounds check at every call site.
+func _sir_ndarray_assert_valid_position(x float64) int {
+	if math.IsNaN(x) || math.IsInf(x, 0) || x != math.Trunc(x) {
+		panic(fmt.Sprintf("resolvePositions: index %v is not a finite integer", x))
+	}
+	return int(x)
+}
+
+// Resolve one `_sirIndexArg` against a dimension of size `dimSize` into
+// a flat list of 0-based positions along that dimension.
+func _sir_ndarray_resolve_positions(arg _sirIndexArg, dimSize int) []int {
+	switch arg.Kind {
+	case "scalar":
+		return []int{_sir_ndarray_assert_valid_position(arg.Value)}
+	case "whole":
+		out := make([]int, dimSize)
+		for i := range out {
+			out[i] = i
+		}
+		return out
+	case "range":
+		out := make([]int, len(arg.Indices.Data))
+		for i, x := range arg.Indices.Data {
+			out[i] = _sir_ndarray_assert_valid_position(math.Trunc(x))
+		}
+		return out
+	default:
+		// Emitted code crosses a Go runtime boundary the emitter can't
+		// enforce at the actual call site — a malformed `Kind` must fail
+		// cleanly here, not fall through to a zero-value slice.
+		panic(fmt.Sprintf("resolvePositions: unrecognised IndexArg kind %q", arg.Kind))
+	}
+}
+
+// `A(i)` / `A(i, j)` — read one element or a sub-array. Scoped to 1 or 2
+// index arguments (rank <= 2): a single argument indexes `a`'s
+// underlying column-major data linearly (MATLAB's own single-subscript
+// convention, which is column-major too); two arguments index `(row,
+// col)`. Returns a bare `float64` (boxed into the returned `Value`) when
+// every argument is `"scalar"` (a single element), otherwise an
+// `*NDArray`.
+func _sir_ndarray_index_get(av Value, indices []_sirIndexArg) Value {
+	a := _sir_ndarray_as_ndarray(av)
+	switch len(indices) {
+	case 1:
+		arg := indices[0]
+		positions := _sir_ndarray_resolve_positions(arg, len(a.Data))
+		read := func(i int) float64 {
+			if i < 0 || i >= len(a.Data) {
+				panic(fmt.Sprintf("indexGet: linear index %d out of bounds", i))
+			}
+			return a.Data[i]
+		}
+		if arg.Kind == "scalar" {
+			return read(positions[0])
+		}
+		out := make([]float64, len(positions))
+		for i, p := range positions {
+			out[i] = read(p)
+		}
+		return _sir_ndarray_new([]int{1, len(positions)}, out)
+	case 2:
+		rowArg, colArg := indices[0], indices[1]
+		rows := _sir_ndarray_resolve_positions(rowArg, _sir_ndarray_nrows(a))
+		cols := _sir_ndarray_resolve_positions(colArg, _sir_ndarray_ncols(a))
+		read := func(r int, c int) float64 {
+			v, ok := _sir_ndarray_get(a, r, c)
+			if !ok {
+				panic(fmt.Sprintf("indexGet: (%d, %d) out of bounds for shape %v", r, c, a.Shape))
+			}
+			return v
+		}
+		if rowArg.Kind == "scalar" && colArg.Kind == "scalar" {
+			return read(rows[0], cols[0])
+		}
+		// `len(rows)`/`len(cols)` are each individually bounded by `a`'s
+		// own dimensions (`"whole"`) or by a `"range"` NDArray's own
+		// `_sirNdarrayMaxElements` cap — but nothing bounds their PRODUCT
+		// on its own, so this is the exact outer-product-shaped
+		// allocation `_sir_ndarray_matmul` guards against, one level up.
+		// Validate before allocating, not after.
+		outLen := _sir_ndarray_checked_shape_size([]int{len(rows), len(cols)})
+		data := make([]float64, outLen)
+		for ci, c := range cols {
+			for ri, r := range rows {
+				data[ci*len(rows)+ri] = read(r, c)
+			}
+		}
+		return _sir_ndarray_new([]int{len(rows), len(cols)}, data)
+	default:
+		panic(fmt.Sprintf("indexGet: only 1 or 2 index arguments are supported (rank <= 2 scope), got %d", len(indices)))
+	}
+}
+
+// Broadcast a scalar-or-`*NDArray` right-hand side to exactly `count`
+// values (mirrors `_sir_ndarray_elementwise`'s scalar-broadcast rule).
+func _sir_ndarray_broadcast_values(value Value, count int) []float64 {
+	if a, ok := value.(*NDArray); ok {
+		if len(a.Data) == 1 {
+			out := make([]float64, count)
+			for i := range out {
+				out[i] = a.Data[0]
+			}
+			return out
+		}
+		if len(a.Data) != count {
+			panic(fmt.Sprintf("indexSet: value has %d elements, expected %d", len(a.Data), count))
+		}
+		return a.Data
+	}
+	f := _sir_as_float(value)
+	out := make([]float64, count)
+	for i := range out {
+		out[i] = f
+	}
+	return out
+}
+
+// `A(i) = v` / `A(i, j) = v` — write one element or a sub-array, IN
+// PLACE (see `_sir_ndarray_set`'s doc comment above for why this
+// mutates rather than returns a new array). `value` may be a scalar
+// (broadcast to every selected position) or an `*NDArray` with exactly
+// as many elements as positions are selected.
+func _sir_ndarray_index_set(av Value, indices []_sirIndexArg, value Value) {
+	a := _sir_ndarray_as_ndarray(av)
+	switch len(indices) {
+	case 1:
+		arg := indices[0]
+		positions := _sir_ndarray_resolve_positions(arg, len(a.Data))
+		values := _sir_ndarray_broadcast_values(value, len(positions))
+		for k, i := range positions {
+			if i < 0 || i >= len(a.Data) {
+				panic(fmt.Sprintf("indexSet: linear index %d out of bounds", i))
+			}
+			a.Data[i] = values[k]
+		}
+	case 2:
+		rowArg, colArg := indices[0], indices[1]
+		rows := _sir_ndarray_resolve_positions(rowArg, _sir_ndarray_nrows(a))
+		cols := _sir_ndarray_resolve_positions(colArg, _sir_ndarray_ncols(a))
+		// Same product-of-two-independent-selections gap
+		// `_sir_ndarray_index_get` closes above — validate before
+		// `_sir_ndarray_broadcast_values` allocates.
+		count := _sir_ndarray_checked_shape_size([]int{len(rows), len(cols)})
+		values := _sir_ndarray_broadcast_values(value, count)
+		k := 0
+		for _, c := range cols {
+			for _, r := range rows {
+				_sir_ndarray_set(a, r, c, values[k])
+				k++
+			}
+		}
+	default:
+		panic(fmt.Sprintf("indexSet: only 1 or 2 index arguments are supported (rank <= 2 scope), got %d", len(indices)))
+	}
+}
+
 "##;
 
 #[cfg(test)]

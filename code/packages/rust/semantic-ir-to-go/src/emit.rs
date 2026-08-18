@@ -18,7 +18,9 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, ParamKind, Scope, Stmt};
+use semantic_ir::{
+    Block, ElementwiseOpKind, Expr, Function, Global, IndexArg, Module, ParamKind, Scope, Stmt,
+};
 // `RescueClause` is referenced by name in `emit_try_catch`'s signature.
 use semantic_ir::RescueClause;
 
@@ -527,13 +529,84 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_try_catch(out, body, rescues, ensure_body.as_deref(), indent);
         }
         // ── SIR22 (array/matrix IR) ──────────────────────────────────
-        // `IndexSet` observes `Feature::NDArrays`/`Feature::MatrixOps`,
-        // neither of which `ACCEPTED_FEATURES` declares, so the capability
-        // gate rejects any module using it before emit is ever reached.
-        // Mirrors the `Stmt::Assign` unsupported-scope panic above.
-        Stmt::IndexSet { span, .. } => {
-            panic!("go backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet", span);
+        // `target[indices...] = value` — mutates in place via
+        // `_sir_ndarray_index_set` (see `runtime.rs`'s "SIR22 array/matrix
+        // domain" section), matching the SIR22 spec's own note that
+        // `IndexSet` is a `Stmt`, not a pure `Expr`, for exactly this
+        // in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("_sir_ndarray_index_set(");
+            emit_expr(out, target, indent);
+            out.push_str(", []_sirIndexArg{");
+            emit_index_args(out, indices, indent);
+            out.push_str("}, ");
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
         }
+    }
+}
+
+/// The Go string `_sir_ndarray_apply_op`'s switch dispatches on — exact
+/// `ElementwiseOpKind` variant names, not `.name()`'s lowercase forms
+/// (`"add"`, etc.), since this string is a real runtime dispatch key.
+/// Mirrors `semantic-ir-to-javascript`'s `elementwise_op_js_name`.
+fn elementwise_op_go_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
+    }
+}
+
+/// Emit one `IndexArg` as the `_sirIndexArg{Kind: ..., ...}` struct
+/// literal `_sir_ndarray_index_get`/`index_set` expect (see
+/// `runtime.rs`'s `_sirIndexArg` doc comment). The `Range` case wraps its
+/// inner expression in `_sir_ndarray_as_ndarray(...)` rather than relying
+/// on the emitted expression's own static Go type already being
+/// `*NDArray` — that inner expression is only "typically" an
+/// `Expr::Range` node per the SIR22 spec's own doc comment on
+/// `IndexArg::Range`, not guaranteed to be one structurally, so a strict
+/// runtime assertion is safer than an implicit static-type assumption.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("_sirIndexArg{Kind: \"scalar\", Value: _sir_as_float(");
+            emit_expr(out, e, indent);
+            out.push_str(")}");
+        }
+        IndexArg::Whole => {
+            out.push_str("_sirIndexArg{Kind: \"whole\"}");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("_sirIndexArg{Kind: \"range\", Indices: _sir_ndarray_as_ndarray(");
+            emit_expr(out, e, indent);
+            out.push_str(")}");
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent);
     }
 }
 
@@ -837,24 +910,93 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::KeywordArg { span, .. } => {
             panic!("go backend reached a keyword argument outside a DirectCall at {} — indirect/closure keyword calls are deferred for the Go backend (KW6, spec §Out of scope); frontends do not emit them", span);
         }
-        // ── SIR22 (array/matrix IR) ──────────────────────────────────
-        // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
-        // all observe `Feature::NDArrays` and/or `Feature::MatrixOps`,
-        // neither of which `ACCEPTED_FEATURES` declares, so the SIR10
-        // capability gate (`Backend::check_module`) rejects any module
-        // using one of these nodes before it ever reaches emit.  Mirrors
-        // the `Expr::StrConcat`/`Expr::KeywordArg` deferred-node panics
-        // above.
-        Expr::ArrayLit { .. }
-        | Expr::Range { .. }
-        | Expr::MatMul { .. }
-        | Expr::ElementwiseOp { .. }
-        | Expr::Transpose { .. }
-        | Expr::IndexGet { .. }
-        // SIR22 addendum: APL primitive operators — same deferral rationale
-        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
-        // features, which `ACCEPTED_FEATURES` still doesn't declare).
-        | Expr::Reduce { .. }
+        // ── SIR22 (array/matrix IR) — base cut: real codegen ──────────
+        // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
+        // `IndexGet` all observe `Feature::NDArrays`/`Feature::MatrixOps`/
+        // `Feature::ArrayColumnMajor`, all three now in `ACCEPTED_FEATURES`
+        // — each lowers to a call into the `_sir_ndarray_*` sub-runtime
+        // (see `runtime.rs`'s "SIR22 array/matrix domain" section). `rows`
+        // is row-major in the literal syntax (per the SIR22 spec);
+        // `_sir_ndarray_from_rows` reconciles that with column-major
+        // storage, so the emitter just nests the row/element expressions
+        // unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("_sir_ndarray_from_rows([][]Value{");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('{');
+                emit_args(out, row, indent);
+                out.push('}');
+            }
+            out.push_str("})");
+        }
+        // `_sir_ndarray_range(start, stop, step)` — note the argument
+        // ORDER: the SIR node's own field order is `start, step, stop`,
+        // but `_sir_ndarray_range(startV, stopV, stepV)` takes `stop`
+        // before `step` (mirrors the JS reference's identical reordering).
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("_sir_ndarray_range(");
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent),
+                None => out.push('1'),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("_sir_ndarray_matmul(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // The op name must match `_sir_ndarray_apply_op`'s switch in
+        // `runtime.rs` exactly (`"Add"`, not `.name()`'s lowercase `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "_sir_ndarray_elementwise({}, ",
+                quote_go_string(elementwise_op_go_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("_sir_ndarray_transpose(");
+            emit_expr(out, target, indent);
+            let _ = write!(out, ", {conjugate})");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("_sir_ndarray_index_get(");
+            emit_expr(out, target, indent);
+            out.push_str(", []_sirIndexArg{");
+            emit_index_args(out, indices, indent);
+            out.push_str("})");
+        }
+        // ── SIR22 addendum: APL primitive operators (still deferred) ──
+        // These nine share `Feature::NDArrays`/`MatrixOps`/
+        // `ArrayColumnMajor` with the base cut just above, so the SIR10
+        // capability gate alone can no longer reject them now that this
+        // backend accepts those three features — `lib.rs`'s
+        // `check_exception_soundness` (a dedicated structural soundness
+        // gate; see its doc comment) is what actually rejects a module
+        // using one of these, with a clean `Err`, BEFORE `compile` ever
+        // calls `emit_module`. Reaching this arm at runtime would mean
+        // that gate has a bug, not a user error.
+        Expr::Reduce { .. }
         | Expr::Scan { .. }
         | Expr::OuterProduct { .. }
         | Expr::Shape { .. }
@@ -863,11 +1005,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         | Expr::IndexOf { .. }
         | Expr::Ravel { .. }
         | Expr::Catenate { .. }
-        // SIR26 `Convert` — this backend does not accept `Conversions`, so a
-        // validated module never reaches here (capability check rejects it).
+        // SIR26 `Convert` — unrelated to SIR22; this backend still does
+        // not accept `Feature::Conversions`, so the ordinary SIR10
+        // capability gate (not the SIR22-specific soundness gate above)
+        // rejects any module using it before emit is ever reached —
+        // unaffected by this PR.
         | Expr::Convert { .. } => {
             panic!(
-                "go backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                "go backend reached a deferred SIR22-addendum/SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );
