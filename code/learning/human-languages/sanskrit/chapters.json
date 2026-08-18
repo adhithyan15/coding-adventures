@@ -781,6 +781,153 @@
           "SA-LEX-C37-COURTESY-05"
         ]
       }
+    },
+    {
+      "chapter": 38,
+      "title": "Fire and Stone",
+      "label": "ch:sa-fire-and-stone",
+      "canDo": "I can name fire, ash, a stone, sand and soil in Sanskrit.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "SA-C38-soil",
+        "kind": "production",
+        "summary": "Complete SA-C38-soil and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C38-EARTH-01",
+          "SA-LEX-C38-EARTH-02",
+          "SA-LEX-C38-EARTH-03",
+          "SA-LEX-C38-EARTH-04",
+          "SA-LEX-C38-EARTH-05"
+        ]
+      }
+    },
+    {
+      "chapter": 39,
+      "title": "Animals",
+      "label": "ch:sa-animals",
+      "canDo": "I can name a cow, a bird, a fish, a dog and a snake in Sanskrit.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "SA-C39-snake",
+        "kind": "production",
+        "summary": "Complete SA-C39-snake and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C39-ANIMAL-01",
+          "SA-LEX-C39-ANIMAL-02",
+          "SA-LEX-C39-ANIMAL-03",
+          "SA-LEX-C39-ANIMAL-04",
+          "SA-LEX-C39-ANIMAL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 40,
+      "title": "In the Kitchen",
+      "label": "ch:sa-in-the-kitchen",
+      "canDo": "I can name curd, sugar, fresh butter, a vegetable and a sweet in Sanskrit.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "SA-C40-sweet",
+        "kind": "production",
+        "summary": "Complete SA-C40-sweet and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C40-FOOD-01",
+          "SA-LEX-C40-FOOD-02",
+          "SA-LEX-C40-FOOD-03",
+          "SA-LEX-C40-FOOD-04",
+          "SA-LEX-C40-FOOD-05"
+        ]
+      }
+    },
+    {
+      "chapter": 41,
+      "title": "Things People Make",
+      "label": "ch:sa-things-people-make",
+      "canDo": "I can name a wheel, a water-pot, a boat, a mirror and a parasol in Sanskrit.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "SA-C41-parasol",
+        "kind": "production",
+        "summary": "Complete SA-C41-parasol and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C41-CRAFT-01",
+          "SA-LEX-C41-CRAFT-02",
+          "SA-LEX-C41-CRAFT-03",
+          "SA-LEX-C41-CRAFT-04",
+          "SA-LEX-C41-CRAFT-05"
+        ]
+      }
+    },
+    {
+      "chapter": 42,
+      "title": "Five More Replies",
+      "label": "ch:sa-replies-third",
+      "canDo": "I can say sometimes, suddenly, mostly, a little and much in Sanskrit, and use any of the five on its own as a reply.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "SA-C42-much",
+        "kind": "production",
+        "summary": "Complete SA-C42-much and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C42-REPLY-01",
+          "SA-LEX-C42-REPLY-02",
+          "SA-LEX-C42-REPLY-03",
+          "SA-LEX-C42-REPLY-04",
+          "SA-LEX-C42-REPLY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 43,
+      "title": "Good Manners",
+      "label": "ch:sa-good-manners",
+      "canDo": "I can name hospitality, good conduct, humility, trust and plain dealing in Sanskrit.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "SA-C43-honest",
+        "kind": "production",
+        "summary": "Complete SA-C43-honest and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C43-COURTESY-01",
+          "SA-LEX-C43-COURTESY-02",
+          "SA-LEX-C43-COURTESY-03",
+          "SA-LEX-C43-COURTESY-04",
+          "SA-LEX-C43-COURTESY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 44,
+      "title": "Colours",
+      "label": "ch:sa-colours",
+      "canDo": "I can say white, dark, yellow, green and blue in Sanskrit.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "SA-C44-blue",
+        "kind": "production",
+        "summary": "Complete SA-C44-blue and demonstrate the chapter promise.",
+        "assesses": [
+          "SA-LEX-C44-COLOUR-01",
+          "SA-LEX-C44-COLOUR-02",
+          "SA-LEX-C44-COLOUR-03",
+          "SA-LEX-C44-COLOUR-04",
+          "SA-LEX-C44-COLOUR-05"
+        ]
+      }
     }
   ]
 }

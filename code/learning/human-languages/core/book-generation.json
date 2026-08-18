@@ -2940,6 +2940,55 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 38,
+      "output": "sanskrit/book/chapters/ch38-fire-and-stone.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 39,
+      "output": "sanskrit/book/chapters/ch39-animals.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 40,
+      "output": "sanskrit/book/chapters/ch40-in-the-kitchen.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 41,
+      "output": "sanskrit/book/chapters/ch41-things-people-make.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 42,
+      "output": "sanskrit/book/chapters/ch42-more-replies.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 43,
+      "output": "sanskrit/book/chapters/ch43-good-manners.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 44,
+      "output": "sanskrit/book/chapters/ch44-colours.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "output": "spanish/book/chapters/ch01-first-words.tex"

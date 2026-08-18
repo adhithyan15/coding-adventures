@@ -4811,6 +4811,97 @@
       "tex": "sanskrit/book/chapters/ch37-more-courtesy.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:8a942f358928e554",
+      "lessonIds": [
+        "SA-C38-fire",
+        "SA-C38-ash",
+        "SA-C38-stone",
+        "SA-C38-sand",
+        "SA-C38-soil"
+      ],
+      "tex": "sanskrit/book/chapters/ch38-fire-and-stone.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:37b5e75e31eaf90c",
+      "lessonIds": [
+        "SA-C39-cow",
+        "SA-C39-bird",
+        "SA-C39-fish",
+        "SA-C39-dog",
+        "SA-C39-snake"
+      ],
+      "tex": "sanskrit/book/chapters/ch39-animals.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:47f83f7ab3111b57",
+      "lessonIds": [
+        "SA-C40-curd",
+        "SA-C40-sugar",
+        "SA-C40-butter",
+        "SA-C40-vegetable",
+        "SA-C40-sweet"
+      ],
+      "tex": "sanskrit/book/chapters/ch40-in-the-kitchen.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:76e843ab21232bbf",
+      "lessonIds": [
+        "SA-C41-wheel",
+        "SA-C41-pot",
+        "SA-C41-boat",
+        "SA-C41-mirror",
+        "SA-C41-parasol"
+      ],
+      "tex": "sanskrit/book/chapters/ch41-things-people-make.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:7fddcb8f756c2788",
+      "lessonIds": [
+        "SA-C42-sometimes",
+        "SA-C42-suddenly",
+        "SA-C42-mostly",
+        "SA-C42-a-little",
+        "SA-C42-much"
+      ],
+      "tex": "sanskrit/book/chapters/ch42-more-replies.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:986f9ae08bb71f41",
+      "lessonIds": [
+        "SA-C43-hospitality",
+        "SA-C43-conduct",
+        "SA-C43-humility",
+        "SA-C43-trust",
+        "SA-C43-honest"
+      ],
+      "tex": "sanskrit/book/chapters/ch43-good-manners.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:1140a884d6c930f7",
+      "lessonIds": [
+        "SA-C44-white",
+        "SA-C44-dark",
+        "SA-C44-yellow",
+        "SA-C44-green",
+        "SA-C44-blue"
+      ],
+      "tex": "sanskrit/book/chapters/ch44-colours.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:55f690de8a10e9cb",

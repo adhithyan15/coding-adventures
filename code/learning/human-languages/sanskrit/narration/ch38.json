@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 38,
+  "title": "Fire and Stone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9cb75d5b51116e33",
+  "lessons": [
+    {
+      "id": "SA-C38-fire",
+      "sequence": 1830,
+      "title": "अग्निः (agniḥ) — fire",
+      "headword": "अग्निः",
+      "romanization": "agniḥ",
+      "gloss": "fire",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50958c0d02ee661d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did āśīrvādaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अग्निः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अग्निः (agniḥ) — \"fire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अग्निः (agniḥ) is fire itself — the flame on a hearth, and the fire an offering is poured into."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had the doing-word for a while: दहति, \"burns\". अग्निः (agniḥ) is the thing that does it."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ignis is the very same word, and English carries it in ignite and igneous; Russian ogon' is another of its brothers. It went west almost unchanged, and in Sanskrit it stands as the first word of the oldest hymn there is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fire, named as a thing rather than as an action."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agniḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agniḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśīrvādaḥ, then agniḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśīrvādaḥ*, then *agniḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अग्निः (agniḥ) mean? (\"fire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C38-ash",
+      "sequence": 1840,
+      "title": "भस्म (bhasma) — ash",
+      "headword": "भस्म",
+      "romanization": "bhasma",
+      "gloss": "ash",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49c10f2d89b6ae42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did agniḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भस्म",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भस्म (bhasma) — \"ash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भस्म (bhasma) is what अग्निः (agniḥ) leaves behind — ash, and the grey line of it drawn across a forehead."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands on bhas, \"to chew, to grind small\", so ash is the ground-down thing: what is left when fire has finished eating."
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi and Marathi keep bhasm with the meaning untouched."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fire, and what fire leaves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhasma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhasma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agniḥ, then bhasma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agniḥ*, then *bhasma*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भस्म (bhasma) mean? (\"ash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C38-stone",
+      "sequence": 1850,
+      "title": "शिला (śilā) — a stone, a slab of rock",
+      "headword": "शिला",
+      "romanization": "śilā",
+      "gloss": "a stone, a slab of rock",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9dae239006cf295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did bhasma mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिला (śilā) — \"a stone, a slab of rock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शिला (śilā) is a stone large enough to sit on: a slab, a flat rock, the piece a step is cut from."
+            },
+            {
+              "kind": "speech",
+              "text": "Beside पर्वतः, which is the whole raised land, शिला (śilā) is one piece of it you can put a hand on."
+            },
+            {
+              "kind": "speech",
+              "text": "Its history outside India is unsettled — nobody has agreed a cousin for it, the way nobody has for केशः or माला. Feminine, ending in -आ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One piece of the mountain, small enough to touch."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhasma, then śilā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhasma*, then *śilā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिला (śilā) mean? (\"a stone, a slab of rock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C38-sand",
+      "sequence": 1860,
+      "title": "सिकता (sikatā) — sand",
+      "headword": "सिकता",
+      "romanization": "sikatā",
+      "gloss": "sand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3e6c1ccb2fefc07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did śilā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिकता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिकता (sikatā) — \"sand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सिकता (sikatā) is sand — the grit of a bank, and the bank itself where it piles up."
+            },
+            {
+              "kind": "speech",
+              "text": "It has long been tied to sic, \"to pour, to sprinkle\": sand is the stuff that pours."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside नदी and you have the two halves of a bank — the water, and what the water leaves at its edge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What a river puts down at its edge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikatā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikatā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilā, then sikatā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilā*, then *sikatā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिकता (sikatā) mean? (\"sand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C38-soil",
+      "sequence": 1870,
+      "title": "मृत्तिका (mṛttikā) — soil",
+      "headword": "मृत्तिका",
+      "romanization": "mṛttikā",
+      "gloss": "soil",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e06c06b19c67af63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of the chapter: what did śilā mean, and what did sikatā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मृत्तिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मृत्तिका (mṛttikā) — \"soil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मृत्तिका (mṛttikā) is soil — damp, workable, the stuff a potter digs and a wall is plastered with."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands on mṛd, and Latin mordēre, \"to bite\", is its cousin: the sense underneath both is pressing something soft until it gives. English took mordant from that Latin side."
+            },
+            {
+              "kind": "speech",
+              "text": "Eastward it wore down into Hindi miṭṭī, still the ordinary word for the ground you dig."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things underfoot and in the hearth: fire, ash, stone, sand, soil."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mṛttikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mṛttikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then agniḥ and mṛttikā together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *agniḥ* and *mṛttikā* together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मृत्तिका (mṛttikā) mean? (\"soil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

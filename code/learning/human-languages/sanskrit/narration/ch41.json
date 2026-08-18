@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 41,
+  "title": "Things People Make",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:81af0ba7ab38b05b",
+  "lessons": [
+    {
+      "id": "SA-C41-wheel",
+      "sequence": 1980,
+      "title": "चक्रम् (cakram) — a wheel",
+      "headword": "चक्रम्",
+      "romanization": "cakram",
+      "gloss": "a wheel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b31adede7a12295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did modakaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चक्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चक्रम् (cakram) — \"a wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चक्रम् (cakram) is a wheel, a disc, a circle of anything."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an old root for turning, kʷel-, said twice — and the same doubling gives Greek kuklos, which English keeps in cycle and cyclone. English wheel is the same word by the Germanic road."
+            },
+            {
+              "kind": "speech",
+              "text": "English later borrowed the Sanskrit itself, unworn, as chakra, so the word now sits in the language twice over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A wheel, and a root that turns in three languages at once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modakaḥ, then cakram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modakaḥ*, then *cakram*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चक्रम् (cakram) mean? (\"a wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C41-pot",
+      "sequence": 1990,
+      "title": "कलशः (kalaśaḥ) — a water-pot",
+      "headword": "कलशः",
+      "romanization": "kalaśaḥ",
+      "gloss": "a water-pot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:731a7fd9f29f3666",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did cakram mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कलशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कलशः (kalaśaḥ) — \"a water-pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कलशः (kalaśaḥ) is the round-bellied water-pot — the one set at a द्वारम् with leaves and a coconut on top, and any pot of that shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Fill it with पानीयम् and it is doing its everyday job; put it at a doorway and it is doing its other one."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek kalux, a husk or a cup, has been offered as a cousin, and Latin calix, which English keeps in chalice, names the same swelling shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pot that holds water and welcomes people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalaśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalaśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cakram, then kalaśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cakram*, then *kalaśaḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कलशः (kalaśaḥ) mean? (\"a water-pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C41-boat",
+      "sequence": 2000,
+      "title": "प्लवः (plavaḥ) — a boat, a raft",
+      "headword": "प्लवः",
+      "romanization": "plavaḥ",
+      "gloss": "a boat, a raft",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e09628876cce9df3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did kalaśaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्लवः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्लवः (plavaḥ) — \"a boat, a raft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्लवः (plavaḥ) is a boat, and more exactly a float — a raft, a hull, anything that swims rather than sinks."
+            },
+            {
+              "kind": "speech",
+              "text": "From plu, \"to float, to swim\", and the family is enormous: Greek plein, \"to sail\", Latin pluere, \"to rain\", English flow, float and fleet."
+            },
+            {
+              "kind": "speech",
+              "text": "Where there is no सेतुः across the नदी, there is a प्लवः (plavaḥ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What carries you over when there is no bridge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plavaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plavaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalaśaḥ, then plavaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalaśaḥ*, then *plavaḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्लवः (plavaḥ) mean? (\"a boat, a raft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C41-mirror",
+      "sequence": 2010,
+      "title": "दर्पणः (darpaṇaḥ) — a mirror",
+      "headword": "दर्पणः",
+      "romanization": "darpaṇaḥ",
+      "gloss": "a mirror",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e42823d630d409c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did plavaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दर्पणः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्पणः (darpaṇaḥ) — \"a mirror\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दर्पणः (darpaṇaḥ) is a mirror — a disc of metal polished bright, centuries before glass could do the job."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands on dṛp, \"to be proud\", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke three thousand years old."
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi darpaṇ is the same word, unchanged."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A mirror, named for vanity rather than for glass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darpaṇaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darpaṇaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plavaḥ, then darpaṇaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plavaḥ*, then *darpaṇaḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दर्पणः (darpaṇaḥ) mean? (\"a mirror\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C41-parasol",
+      "sequence": 2020,
+      "title": "छत्रम् (chatram) — a parasol",
+      "headword": "छत्रम्",
+      "romanization": "chatram",
+      "gloss": "a parasol",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74fe07b35b4420ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of the chapter: what did plavaḥ mean, and what did darpaṇaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छत्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छत्रम् (chatram) — \"a parasol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छत्रम् (chatram) is a parasol: the shade held over a rājā, and the umbrella carried in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "From chad, \"to cover\". The covering is the whole of it — what the छत्रम् (chatram) covers you from, sun or water, the word does not say."
+            },
+            {
+              "kind": "speech",
+              "text": "It went east as well as up in the world: Hindi chātā, the umbrella anyone carries, is this word worn smooth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things made by hand: a wheel, a pot, a boat, a mirror, a parasol."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chatram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chatram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then cakram and chatram together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *cakram* and *chatram* together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छत्रम् (chatram) mean? (\"a parasol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
