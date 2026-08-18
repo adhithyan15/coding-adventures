@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Water, Tea, Milk, Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:404672bf9b8f91e1",
+  "sourceHash": "fnv1a64:e9210dac6052faaf",
   "lessons": [
     {
       "id": "UR-C12-pani",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fe7ad4ec6aa386c2",
+      "sourceHash": "fnv1a64:2e7a8df8a1a0d160",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -212,7 +212,7 @@
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — the same road as خدا and حافظ",
+          "title": "The word, taken apart — the same road as خدا and حافظ (hāfiz)",
           "segments": [
             {
               "kind": "speech",

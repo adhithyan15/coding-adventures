@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8f31aa85f30163fb",
+  "sourceHash": "fnv1a64:e22e97c39f8b3a48",
   "lessons": [
     {
       "id": "TE-C48-teacher",
@@ -392,7 +392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50fec0361dfbb03f",
+      "sourceHash": "fnv1a64:d8f002c8510516bb",
       "notice": null,
       "blocks": [
         {
@@ -427,7 +427,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is a second arrival from the north-west, after రోజు and పుస్తకం. The words that travel are the words that follow paperwork and trade."
+              "text": "That is a second arrival from the north-west, after రోజు (rōju) and పుస్తకం. The words that travel are the words that follow paperwork and trade."
             }
           ]
         },

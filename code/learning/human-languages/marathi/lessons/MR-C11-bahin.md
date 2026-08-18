@@ -65,8 +65,8 @@ perfectly are, underneath, unrelated.
 
 | word | kind | route |
 |---|---|---|
-| मित्र, कुटुंब | tatsama | taken up whole from Sanskrit |
-| भाऊ, बहीण | tadbhava | worn down by Prakrit sound change |
+| मित्र, कुटुंब (*mitra, kuṭumb*) | tatsama | taken up whole from Sanskrit |
+| भाऊ, बहीण (*bhāū, bahīṇ*) | tadbhava | worn down by Prakrit sound change |
 
 Notice, too, how each pair *looks*: **मित्र** and **कुटुंब** carry conjuncts
 and marks a learner has to stop for; **भाऊ** and **बहीण** do not — plain

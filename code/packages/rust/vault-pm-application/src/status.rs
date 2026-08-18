@@ -109,9 +109,13 @@ pub(crate) fn status(
             let state = match LocalVaultStateV1::decode(&encoded)? {
                 LocalVaultStateV1::PreparedInit(_) => VaultStatusStateV1::Prepared,
                 LocalVaultStateV1::Active(_) => VaultStatusStateV1::Locked,
-                LocalVaultStateV1::PendingPublication { .. } => {
-                    VaultStatusStateV1::RecoveryRequired
-                }
+                // Both journals mean the same thing to a locked reader: a
+                // durable, exact record of work an interrupted process left
+                // for the next command to finish. Distinguishing them here
+                // would leak which ceremony was interrupted into a projection
+                // whose whole contract is to say as little as possible.
+                LocalVaultStateV1::PendingPublication { .. }
+                | LocalVaultStateV1::PendingRotation(_) => VaultStatusStateV1::RecoveryRequired,
             };
             Ok(VaultStatusV1::without_counts(state))
         }

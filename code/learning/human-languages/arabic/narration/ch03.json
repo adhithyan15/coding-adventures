@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7520b462f31cab77",
+  "sourceHash": "fnv1a64:00cc06864fba2d3d",
   "lessons": [
     {
       "id": "AR-W07-hook-family-ha-kha",
@@ -1315,7 +1315,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a84e2262a220a4e9",
+      "sourceHash": "fnv1a64:ba0898bc3feaa45b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1340,7 +1340,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 1 let you greet. Chapter 2 let you introduce yourself. This chapter closes the loop: you can now ask after someone and answer back."
+              "text": "Chapter 1 let you greet. Chapter 2 let you introduce yourself. This chapter closes the loop: you can ask after someone and answer back."
             }
           ]
         },
@@ -1359,16 +1359,16 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "A. Arabic: السلام عليكم. literally: peace [be] upon you.",
-                "B. Arabic: وعليكم السلام. literally: and upon you, peace.",
-                "A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki). literally: how [is] your state?",
-                "B. Arabic: الحمد لله (al-ḥamdu lillāh)، بخير (bi-khayr). literally: the praise [is] to God — in goodness.",
-                "B. Arabic: وأنت؟ ما اسمك؟. literally: and you? what [is] your name?"
+                "A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.",
+                "B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.",
+                "A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) (kayfa ḥāluka?) literally: how [is] your state?",
+                "B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.",
+                "B. Arabic: وأنت؟ ما اسمك؟ (wa-anta? mā ismuka?) literally: and you? what [is] your name?"
               ]
             },
             {
               "kind": "speech",
-              "text": "Read down the right-hand column. Not one line contains a verb \"to be.\" Arabic joins things by putting them next to each other."
+              "text": "Read down the right-hand column. Not one line contains a verb \"to be.\" Arabic just puts the two things next to each other."
             }
           ]
         },
@@ -1394,7 +1394,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three tiny attaching pieces — al-, bi-, li- — and two suffixes, -ī and -ka/-ki. That is most of the chapter."
+              "text": "Three attaching pieces — al-, bi-, li- — and two suffixes, -ī and -ka/-ki. That is most of the chapter."
             }
           ]
         },
@@ -1405,7 +1405,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every \"you\" in this chapter splits. Say the pair aloud:"
+              "text": "Every \"you\" here splits. Say the pair aloud:"
             },
             {
               "kind": "table",
@@ -1423,7 +1423,7 @@
             },
             {
               "kind": "speech",
-              "text": "One vowel mark decides — the fatḥa / kasra pair from the writing set."
+              "text": "One vowel mark decides — the fatḥa / kasra pair."
             }
           ]
         },

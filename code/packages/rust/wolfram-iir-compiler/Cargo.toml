@@ -1,0 +1,23 @@
+[package]
+name = "wolfram-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers a Wolfram CST (coding-adventures-wolfram-parser's GrammarASTNode) into an IIRModule, per wolfram-iir-vm.md's v0 scope: literal integer arithmetic (+ - * /, unary), assignment, and unevaluated symbolic expressions. A retarget of wolfram-runtime's/wolfram-to-semantic-ir's CST dispatch, following macsyma-iir-compiler's precedent, deliberately cut narrower than Wolfram's own full grammar (no pattern matching/rules/pure functions in v0). Emits IIR over the dynval-runtime value model so the module runs end-to-end on wolfram-vm."
+
+[lib]
+name = "wolfram_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-wolfram-parser = { path = "../wolfram-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+wolfram-vm = { path = "../wolfram-vm" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Oracle ground truth (tests/oracle.rs) + the shared renderer used to
+# format both the ground truth and the compiled-side read-back result.
+coding-adventures-wolfram-runtime = { path = "../wolfram-runtime" }

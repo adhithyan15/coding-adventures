@@ -91,25 +91,58 @@ KiB`, `p ≥ 1`.
 
 ## `TotpAuthenticator` (gate-mode)
 
-RFC 6238 — HMAC-SHA-1 HOTP under a time-based counter.
+RFC 6238 — HOTP under a time-based counter, with the HMAC hash
+selected per RFC 6238 §1.2.
 
 ```rust
-TotpAuthenticator::new(secret, period_sec, digits, window)
+TotpAuthenticator::new(secret, algorithm, period_sec, digits, window)
 ```
 
-Defaults match the universal authenticator-app baseline:
-`period = 30`, `digits = 6`, `window = 1`. SHA-1 is the RFC 6238
-default and what every Google-Authenticator-clone expects;
-SHA-256 / SHA-512 variants are a parameterisation away in a
-follow-up.
+`algorithm` is `TotpAlgorithm::{Sha1, Sha256, Sha512}` and is
+**required**, with no `Default`. SHA-1 remains what every
+Google-Authenticator-clone expects, but a provisioned seed carries
+its own algorithm with it, and a type that assumed SHA-1 would
+produce six plausible, wrong digits for the other two — which is
+indistinguishable from six right ones until a site rejects them.
+The other parameters keep the universal baseline: `period = 30`,
+`digits = 6`, `window = 1`.
+
+### Verifier and generator
 
 `verify(credential)` uses `SystemTime::now()`. `verify_at_time(
 code, unix_time)` is the testable / replay-cache-integrating
 variant — it returns the matched step counter, so callers can
 pin "last-used step ≥ N" and reject replays.
 
-Tested against the published RFC 6238 Appendix B vectors
-(T=59 → 287082, T=1111111109 → 081804, T=1111111111 → 050471).
+The same type is also the **generator**, which is what a password
+manager displaying the current code for a stored seed needs
+(`VLT-PM45-cli-totp-code.md`):
+
+- `code_at(unix_time)` — the code as an integer;
+- `formatted_code_at(unix_time)` — the code as the decimal string a
+  person types, zero-padded to `digits`, in a `Zeroizing<String>`;
+- `remaining_seconds(unix_time)` — seconds until the step ends, in
+  `1..=period`, never `0`.
+
+The `window` parameter is a *verifier's* tolerance and takes no part
+in generation: there is exactly one current step, and offering a
+neighbouring one would offer a code that is spent or not yet live.
+
+### Conformance
+
+Tested against **every** published RFC 6238 Appendix B vector — all
+six timestamps against all three algorithms, each with its own
+published seed (20, 32, and 64 ASCII bytes of repeating
+`1234567890`), at the published 8-digit width and at the 6-digit
+truncation. Using each algorithm's own seed is what makes the table
+a test of the algorithm selector rather than of one hash three
+times.
+
+Dynamic truncation (RFC 4226 §5.3) takes its offset nibble from the
+*last* byte of the tag, not from a hard-wired byte 19, so it is
+correct for the 32- and 64-byte tags of the wider hashes. The
+`10^digits` modulus is computed in `u64`, because `digits` is legal
+up to 10 and `10^10` exceeds `u32::MAX`.
 
 ## Threat model & test coverage
 

@@ -36,6 +36,13 @@ pub enum AuditActionV1 {
     VaultDiagnose,
     /// Access the redacted operation-audit history itself.
     AuditRead,
+    /// Re-wrap the vault root key under a newly collected master passphrase.
+    ///
+    /// The event is vault-scoped and deliberately carries nothing about the
+    /// key material it concerns: no salt, no KDF parameters, no generation
+    /// number, and no bootstrap identifier. An audit chain records that a
+    /// rotation happened, not the shape of the credential it produced.
+    PassphraseRotate,
     /// Create one item.
     ItemCreate,
     /// List redacted current items.
@@ -73,6 +80,7 @@ impl AuditActionV1 {
             Self::VaultVerify => "vault_verify",
             Self::VaultDiagnose => "vault_diagnose",
             Self::AuditRead => "audit_read",
+            Self::PassphraseRotate => "passphrase_rotate",
             Self::ItemCreate => "item_create",
             Self::ItemList => "item_list",
             Self::ItemRead => "item_read",
@@ -96,6 +104,7 @@ impl AuditActionV1 {
             Self::VaultVerify => 3,
             Self::VaultDiagnose => 4,
             Self::AuditRead => 5,
+            Self::PassphraseRotate => 6,
             Self::ItemCreate => 10,
             Self::ItemList => 11,
             Self::ItemRead => 12,
@@ -119,6 +128,7 @@ impl AuditActionV1 {
             3 => Ok(Self::VaultVerify),
             4 => Ok(Self::VaultDiagnose),
             5 => Ok(Self::AuditRead),
+            6 => Ok(Self::PassphraseRotate),
             10 => Ok(Self::ItemCreate),
             11 => Ok(Self::ItemList),
             12 => Ok(Self::ItemRead),
@@ -743,6 +753,7 @@ mod tests {
             (AuditActionV1::VaultVerify, "vault_verify"),
             (AuditActionV1::VaultDiagnose, "vault_diagnose"),
             (AuditActionV1::AuditRead, "audit_read"),
+            (AuditActionV1::PassphraseRotate, "passphrase_rotate"),
             (AuditActionV1::ItemCreate, "item_create"),
             (AuditActionV1::ItemList, "item_list"),
             (AuditActionV1::ItemRead, "item_read"),

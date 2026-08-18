@@ -38,7 +38,32 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                i16x8 first primary-lane-width slice, same pinned commit,
                no re-pin),
                extended 2026-08-18 (task #133-136 -- simd_i16x8_cmp.wast,
-               i16x8 comparison family, same pinned commit, no re-pin)
+               i16x8 comparison family, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #137-140 -- simd_i8x16_cmp.wast,
+               i8x16 comparison family, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #141-143 -- simd_i8x16_arith2.wast,
+               i8x16 abs/popcnt/min/max/avgr_u family, same pinned
+               commit, no re-pin),
+               extended 2026-08-18 (task #144-146 -- simd_i16x8_arith2.wast,
+               i16x8 abs/min/max/avgr_u family, same pinned commit, no
+               re-pin),
+               extended 2026-08-18 (task #147-149 --
+               simd_i16x8_extadd_pairwise_i8x16.wast/
+               simd_i16x8_extmul_i8x16.wast, i16x8-from-i8x16 widening,
+               same pinned commit, no re-pin),
+               extended 2026-08-18 (task #150-152 -- simd_bitwise.wast,
+               v128.not/and/andnot/or/xor/bitselect bitwise family, same
+               pinned commit, no re-pin),
+               extended 2026-08-18 (task #153-155 -- simd_boolean.wast,
+               v128.any_true + ixNxM.all_true/bitmask boolean-reduction
+               family, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #156-158 -- simd_i64x2_arith.wast/
+               simd_i64x2_arith2.wast/simd_i64x2_cmp.wast, i64x2's first
+               real arithmetic family, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #159-161 -- simd_bit_shift.wast,
+               ixNxM.shl/shr_s/shr_u across all 4 lane widths, the first
+               mixed-type binary SIMD op family, same pinned commit, no
+               re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -217,6 +242,139 @@ small "combination" tail references `v128.load` (not yet implemented),
 so 1 module and 13 assert_return directives grade `NotYetSupported`,
 the same lazy-grading discipline already established for
 `simd_i32x4_cmp.wast`'s own `trunc_sat`-dependent tail.
+
+`simd_i8x16_cmp.wast` (task #137-140) closes the same gap PR6 closed for
+`i16x8`, but for `i8x16`: `i8x16.add`/`sub`/`neg` landed (PR4) without a
+comparison family. `i8x16.eq`/`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/
+`le_u`/`ge_s`/`ge_u` use the same boolean-mask convention and
+signed/unsigned split as `i16x8`'s and `i32x4`'s own comparison
+families, just at the narrowest lane width. Each sub-opcode byte
+fetched live from `BinarySIMD.md` and cross-checked against the
+already-implemented `i8x16.add`/`i16x8.eq` entries, same discipline as
+every prior addition. 100% pass on every GRADEABLE directive (400/400
+assert_return); the file's own small "combination" tail references
+`v128.load` (not yet implemented), so 1 module and 13 assert_return
+directives grade `NotYetSupported`, the same lazy-grading discipline
+already established for `simd_i16x8_cmp.wast`'s own tail.
+
+`simd_i8x16_arith2.wast` (task #141-143) is the direct follow-up: it
+mirrors `i32x4`'s own `abs`/`min_s`/`min_u`/`max_s`/`max_u` widening
+(PR2), plus two op SHAPES with no `i32x4`/`i16x8` precedent in this
+interpreter -- `popcnt` (lane-wise Hamming weight) and `avgr_u`
+(lane-wise unsigned rounding average, `(a + b + 1) >> 1`). WASM SIMD
+only defines `popcnt`/`avgr_u` for `i8x16` (`avgr_u` is also defined
+for `i16x8`, but not `i32x4`). Each sub-opcode byte fetched live from
+`BinarySIMD.md` and cross-checked against the already-implemented
+`i8x16.add`/`i8x16.neg`/`i8x16.sub` entries (all three matched
+exactly), same discipline as every prior addition. 100% pass on EVERY
+directive kind (2/2 modules, 184/184 assert_return, 19/19
+assert_invalid, 6/6 assert_malformed) -- no `NotYetSupported` tail this
+time, unlike `simd_i8x16_cmp.wast`'s own `v128.load`-dependent one.
+
+`simd_i16x8_arith2.wast` (task #144-146) closes the same "arith2" gap
+for `i16x8` that PR8 just closed for `i8x16` (no `i16x8.popcnt` --
+WASM SIMD only defines `popcnt` for `i8x16`). `i16x8.abs`/`min_s`/
+`min_u`/`max_s`/`max_u`/`avgr_u` use the same conventions as `i8x16`'s
+own arith2 family, just at `i16x8`'s wider lane width. Each sub-opcode
+byte fetched live from `BinarySIMD.md` and cross-checked against the
+already-implemented `i16x8.neg`/`add`/`sub`/`mul` entries (all four
+matched exactly), same discipline as every prior addition. 100% pass
+on EVERY directive kind (2/2 modules, 151/151 assert_return, 17/17
+assert_invalid, 2/2 assert_malformed).
+
+`simd_i16x8_extadd_pairwise_i8x16.wast`/`simd_i16x8_extmul_i8x16.wast`
+(task #147-149) mirror the already-implemented `i32x4`-from-`i16x8`
+widening family one lane width down -- closing the last remaining gap
+between `i16x8` and `i8x16`'s coverage. `extadd_pairwise_i8x16_s`/`_u`
+pairwise-add adjacent `i8` lanes after sign-/zero-extending to `i16`;
+`extmul_low`/`high_i8x16_s`/`_u` take only the low/high 8 `i8` lanes
+of each operand, sign-/zero-extend to `i16`, and multiply lane-wise
+(no summation). Unlike the `i32x4`-from-`i16x8` family, there is no
+`i16x8.dot_i8x16_s` -- WASM SIMD does not define a dot-product for
+this pair. Each sub-opcode byte fetched live from `BinarySIMD.md` and
+cross-checked against the already-implemented `i8x16.add`/
+`i16x8.mul`/`i16x8.avgr_u`/`i32x4.dot_i16x8_s`/`i8x16.popcnt`/
+`i32x4.extadd_pairwise_i16x8_s` entries (all six matched exactly),
+same discipline as every prior addition. 100% pass on EVERY directive
+kind across both files (2/2 modules, 120/120 assert_return, 16/16
+assert_invalid).
+
+`simd_bitwise.wast` (task #150-152) covers `v128.not`/`and`/`andnot`/
+`or`/`xor`/`bitselect` -- the lane-width-agnostic raw-byte bitwise
+family, unlike every prior `simd_*` file which was scoped to one lane
+width. Represents a strategic pivot from "widen the next narrow
+per-lane-width family" (the pattern used in every prior SIMD PR) to
+"close the highest-real-world-impact remaining gap", identified via a
+broader prioritization survey now that `i8x16`/`i16x8`/`i32x4` all have
+complete arith+cmp+arith2+widening coverage relative to each other.
+`bitselect` is the first TERNARY SIMD op implemented in this
+interpreter (pops three `v128`s, pushes one): `(a AND c) OR (b AND
+(NOT c))`, i.e. select bits from `a` where the corresponding `c` bit is
+1, else from `b`. Each sub-opcode byte fetched live from `BinarySIMD.md`
+and cross-checked against the already-implemented `i8x16.add`/
+`i32x4.add` entries, same discipline as every prior addition. 100%
+pass on every gradeable directive kind (1/1 modules, 126/126
+assert_return, 28/28 assert_invalid; 13 assert_return directives grade
+`NotYetSupported` because they depend on `v128.load`, not a real
+failure).
+
+`simd_boolean.wast` (task #153-155) covers `v128.any_true` (one op,
+exported under `i8x16.any_true`/`i16x8.any_true`/`i32x4.any_true` in
+the corpus purely for test naming -- there is only one real
+`v128.any_true` sub-opcode, lane-width-agnostic) plus `ixNxM.all_true`/
+`bitmask` across all 4 lane widths (`i8x16`/`i16x8`/`i32x4`/`i64x2`).
+The first `v128`-in/`i32`-out reduction shape besides `extract_lane`
+(no lane-index immediate -- these reduce over ALL lanes), and the
+first opcodes in this interpreter to read the operand as 8-byte
+(`i64`) lanes. Chosen over shift-op and i64x2-arithmetic candidates in
+a fresh prioritization survey: highest opcode count (9) behind a
+single new operand shape and one 72KB corpus file, and unlocks real
+use of the comparison families from earlier PRs (a `v128` mask result
+is otherwise inert without a reduction op to consume it). Each
+sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+against the already-implemented `v128.bitselect`/`i8x16.popcnt`/
+`i16x8.abs`/`neg`/`i32x4.abs`/`neg` entries, same discipline as every
+prior addition. 100% pass on every directive kind (2/2 modules,
+259/259 assert_return, 12/12 assert_invalid, 4/4 assert_malformed).
+
+`simd_i64x2_arith.wast`/`simd_i64x2_arith2.wast`/`simd_i64x2_cmp.wast`
+(task #156-158) cover `i64x2.abs`/`neg`/`add`/`sub`/`mul`/`eq`/`ne`/
+`lt_s`/`gt_s`/`le_s`/`ge_s` -- i64x2's first REAL ARITHMETIC family
+(task #153-155 only added the `all_true`/`bitmask` reduction ops, no
+computation). No `lt_u`/`gt_u`/`le_u`/`ge_u` -- the SIMD proposal never
+defines unsigned `i64x2` comparisons, unlike every narrower lane
+width. Reuses the existing `v128,v128->v128`/`v128->v128` shapes
+already implemented for i8x16/i16x8/i32x4 -- this closes a lane-width
+coverage gap, not a new operand shape. Each sub-opcode byte fetched
+live from `BinarySIMD.md` and cross-checked against the
+already-implemented `i64x2.all_true`/`bitmask` entries plus the
+identical `abs`/`neg`/`[gap]`/`all_true`/`bitmask` cluster layout
+already confirmed for i8x16/i16x8/i32x4. 100% pass on every directive
+kind across all three files (5/5 modules, 310/310 assert_return, 23/23
+assert_invalid). Implementing real i64x2 arithmetic also unblocked 22
+previously-`NotYetSupported` `assert_return` directives in the
+UNRELATED, already-vendored `simd_const.wast` (its i64x2 `v128.const`
+round-trip cases needed a real i64x2 op to observe the result through)
+-- a legitimate ripple effect, not a regression.
+
+`simd_bit_shift.wast` (task #159-161) covers `ixNxM.shl`/`shr_s`/
+`shr_u` across all 4 lane widths (`i8x16`/`i16x8`/`i32x4`/`i64x2`) --
+the FIRST mixed-type binary SIMD op family in this interpreter: pops
+a scalar `i32` shift amount (pushed last, so popped first) then a
+`v128`, pushes one `v128`; every prior binary op popped two `v128`s or
+one `v128`, never a mix of both types. Per the SIMD spec, the shift
+amount is taken MODULO the lane's bit width before shifting (8/16/32/
+64 respectively for `i8x16`/`i16x8`/`i32x4`/`i64x2`) -- both
+spec-mandated and required for Rust safety, since shifting a
+primitive by >= its bit width panics. Each sub-opcode byte fetched
+live from `BinarySIMD.md` and cross-checked against the
+already-implemented per-width `add` entries (every width's
+`shl`/`shr_s`/`shr_u` triple sits immediately before that width's own
+`add` sub-opcode -- e.g. `i8x16.shl`=`0x6B`/`shr_s`=`0x6C`/
+`shr_u`=`0x6D`, then `i8x16.add`=`0x6E`). 100% pass on every gradeable
+directive kind (1/1 modules, 187/187 assert_return, 24/24
+assert_invalid, 15/15 assert_malformed; 24 assert_return directives
+grade `NotYetSupported`).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

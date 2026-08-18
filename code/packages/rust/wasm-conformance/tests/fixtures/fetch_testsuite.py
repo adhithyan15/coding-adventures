@@ -276,6 +276,106 @@ TESTSUITE_FILES = [
     # already-implemented i16x8.add/i32x4.eq entries (both matched
     # exactly), same discipline as every prior addition.
     "simd_i16x8_cmp.wast",
+    # SIMD widen PR7 (task #137-140): simd_i8x16_cmp.wast -- i8x16's own
+    # comparison family (eq/ne/lt_s/lt_u/gt_s/gt_u/le_s/le_u/ge_s/ge_u),
+    # closing the same gap PR6 closed for i16x8: i8x16.add/sub/neg landed
+    # (PR4) without a comparison family. Same boolean-mask convention and
+    # signed/unsigned split as i16x8's and i32x4's own comparison
+    # families, just at the narrowest lane width. Each sub-opcode byte
+    # fetched live from BinarySIMD.md and cross-checked against the
+    # already-implemented i8x16.add/i16x8.eq entries (both matched
+    # exactly), same discipline as every prior addition.
+    "simd_i8x16_cmp.wast",
+    # SIMD widen PR8 (task #141-143): simd_i8x16_arith2.wast -- i8x16's
+    # own abs/popcnt/min_s/min_u/max_s/max_u/avgr_u family, mirroring
+    # i32x4's own abs/min_s/min_u/max_s/max_u widening (PR2), plus two op
+    # SHAPES with no i32x4/i16x8 precedent in this interpreter: popcnt
+    # (lane-wise Hamming weight) and avgr_u (lane-wise unsigned rounding
+    # average, (a+b+1)>>1) -- WASM SIMD only defines popcnt/avgr_u for
+    # i8x16 (avgr_u is also defined for i16x8, but not i32x4). Each
+    # sub-opcode byte fetched live from BinarySIMD.md and cross-checked
+    # against the already-implemented i8x16.add/i8x16.neg/i8x16.sub
+    # entries (all three matched exactly), same discipline as every
+    # prior addition.
+    "simd_i8x16_arith2.wast",
+    # SIMD widen PR9 (task #144-146): simd_i16x8_arith2.wast -- i16x8's
+    # own abs/min_s/min_u/max_s/max_u/avgr_u family, closing the same
+    # "arith2" gap PR8 just closed for i8x16 (no i16x8.popcnt -- WASM
+    # SIMD only defines popcnt for i8x16). Each sub-opcode byte fetched
+    # live from BinarySIMD.md and cross-checked against the
+    # already-implemented i16x8.neg/add/sub/mul entries (all four
+    # matched exactly), same discipline as every prior addition.
+    "simd_i16x8_arith2.wast",
+    # SIMD widen PR10 (task #147-149): simd_i16x8_extadd_pairwise_i8x16.
+    # wast/simd_i16x8_extmul_i8x16.wast -- i16x8-from-i8x16 widening
+    # family (extadd_pairwise_i8x16_s/u, extmul_low/high_i8x16_s/u),
+    # mirroring the already-implemented i32x4-from-i16x8 widening
+    # family one lane width down. No i16x8.dot_i8x16_s -- WASM SIMD
+    # does not define a dot-product for this pair. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against
+    # the already-implemented i8x16.add/i16x8.mul/i16x8.avgr_u/
+    # i32x4.dot_i16x8_s/i8x16.popcnt/i32x4.extadd_pairwise_i16x8_s
+    # entries (all six matched exactly), same discipline as every
+    # prior addition.
+    "simd_i16x8_extadd_pairwise_i8x16.wast",
+    "simd_i16x8_extmul_i8x16.wast",
+    # SIMD widen PR11 (task #150-152): simd_bitwise.wast -- v128.not/
+    # and/andnot/or/xor/bitselect, the lane-width-agnostic raw-byte
+    # bitwise family. A strategic pivot from "widen the next narrow
+    # per-lane-width family" (PR1-PR10's pattern) to "close the
+    # highest-real-world-impact remaining gap", identified via a
+    # broader prioritization survey now that i8x16/i16x8/i32x4 all
+    # have complete arith+cmp+arith2+widening coverage. bitselect is
+    # the first TERNARY SIMD op in this interpreter. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against
+    # the already-implemented i8x16.add/i32x4.add entries, same
+    # discipline as every prior addition.
+    "simd_bitwise.wast",
+    # SIMD widen PR12 (task #153-155): simd_boolean.wast -- v128.any_true
+    # + ixNxM.all_true/bitmask across all 4 lane widths (i8x16/i16x8/
+    # i32x4/i64x2). The first v128-in/i32-out reduction shape besides
+    # extract_lane (no lane-index immediate -- reduces over ALL lanes),
+    # and the first opcodes in this interpreter to read the operand as
+    # 8-byte (i64) lanes. Chosen over the shift-op and i64x2-arithmetic
+    # candidates in a broader prioritization survey: highest opcode
+    # count (9) behind a single new operand shape and a single 72KB
+    # corpus file, and unlocks real use of the comparison families from
+    # PR1/PR6/PR7 (a v128 mask result is otherwise inert without a
+    # reduction op to consume it). Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-
+    # implemented v128.bitselect/i8x16.popcnt/i16x8.abs/neg/i32x4.abs/
+    # neg entries, same discipline as every prior addition.
+    "simd_boolean.wast",
+    # SIMD widen PR13 (task #156-158): simd_i64x2_arith.wast/
+    # simd_i64x2_arith2.wast/simd_i64x2_cmp.wast -- i64x2.abs/neg/add/
+    # sub/mul/eq/ne/lt_s/gt_s/le_s/ge_s, i64x2's first REAL ARITHMETIC
+    # family (PR12 only added the all_true/bitmask reduction ops). No
+    # lt_u/gt_u/le_u/ge_u -- the SIMD proposal never defines unsigned
+    # i64x2 comparisons, unlike every narrower lane width. Reuses the
+    # existing v128,v128->v128 / v128->v128 shapes already implemented
+    # for every other lane width -- this closes a lane-width coverage
+    # gap, not a new operand shape. Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-
+    # implemented i64x2.all_true/bitmask entries plus the identical
+    # abs/neg/[gap]/all_true/bitmask cluster layout already confirmed
+    # for i8x16/i16x8/i32x4.
+    "simd_i64x2_arith.wast",
+    "simd_i64x2_arith2.wast",
+    "simd_i64x2_cmp.wast",
+    # SIMD widen PR14 (task #159-161): simd_bit_shift.wast --
+    # ixNxM.shl/shr_s/shr_u across all 4 lane widths (i8x16/i16x8/
+    # i32x4/i64x2). The FIRST mixed-type binary SIMD op family: pops a
+    # scalar i32 shift amount (pushed last, so popped first) then a
+    # v128, pushes one v128 -- every prior binary op popped two v128s
+    # or one v128, never a mix. Per the SIMD spec, the shift amount is
+    # taken MODULO the lane's bit width before shifting (8/16/32/64
+    # respectively) -- both spec-mandated and required for Rust safety
+    # (shifting a primitive by >= its bit width panics). Each
+    # sub-opcode byte fetched live from BinarySIMD.md and cross-checked
+    # against the already-implemented per-width `add` entries (every
+    # width's shl/shr_s/shr_u triple sits immediately before that
+    # width's own `add` sub-opcode).
+    "simd_bit_shift.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

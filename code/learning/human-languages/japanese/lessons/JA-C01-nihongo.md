@@ -34,7 +34,7 @@ reviews_of: [JA-C01-konnichiwa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA] -->
 
-[PAUSE 2s] Say **こんにちは**. Its history hid two characters, 今日, that
+[PAUSE 2s] Say **こんにちは** (*konnichiwa*). Its history hid two characters, 今日, that
 hiragana cannot show you. This lesson opens that second system by naming the
 language itself.
 

@@ -35,7 +35,8 @@ reviews_of: [RU-C11-spokoynoy-nochi, RU-C08-semya]
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPOKOYNOY-NOCHI, RU-LEX-DO-VSTRECHI] -->
 
 [PAUSE 2s] Say good night, say see-you-later, and now a new chapter — back
-to *семья* to fill it in, one person at a time, starting with a word that
+to **семья** (*sem'yá*) to fill it in, one person at a time, starting with a word
+that
 looks like a cousin of English and, on close inspection, is not really one
 at all.
 

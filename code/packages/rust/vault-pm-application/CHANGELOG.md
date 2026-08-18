@@ -2,6 +2,212 @@
 
 All notable changes to this package are documented here.
 
+## [0.64.0] - 2026-08-18
+
+### Added
+
+- **Current TOTP code computation**, the second of `VLT-PM00` §23 item 11.
+  Specified by `VLT-PM45-cli-totp-code.md`.
+
+  - `UnlockedVaultV1::audited_current_item_totp_code` reads the sole current
+    live revision of a `TOTP_SEED_V1` item and returns the current RFC 6238
+    code. It publishes the same `ItemRead` event, with the same
+    `Denied`/`Failed`/`Succeeded` outcomes and the same publish-before-release
+    ordering, as `audited_reveal_current_item_field` — because `VLT-PM15` §2
+    already names "TOTP display" in its list of accesses. A six-digit code
+    lives about thirty seconds and does not let its holder produce the next
+    one, which makes its blast radius smaller than the seed's; it does not
+    make the read less of a read.
+
+  - The computation happens *inside* this crate, so the decoded seed never
+    crosses the boundary. That is the whole reason the new `totp` module
+    exists rather than the CLI reusing the existing seed reveal and computing
+    for itself: a command whose purpose is to avoid showing anyone the seed
+    should not materialize the seed in the process's outermost layer.
+
+  - `TotpCodeV1` carries the zero-padded digits and the seconds they remain
+    valid. It implements no `Debug`, `Display`, or `Clone` — a `Debug` derive
+    would put a valid second factor into every future `{:?}` of anything
+    containing one — and wipes the code on drop. The countdown is readable
+    through an ordinary accessor because it is a function of the clock and the
+    stored period, reproducible by anyone with a watch, and therefore safe to
+    print to ordinary standard output.
+
+  - The instant is a caller-supplied `code_time_ms`, deliberately separate from
+    the `wall_time_ms` reserved for the audit event. `VLT-PM45` §4.1: an
+    Argon2id unlock and a human typing `yes` sit between the pre-authentication
+    reservation and the computation, so the reserved reading is stale by
+    construction and a whole period is easily reachable in the gap. One reading
+    used for both would routinely return the *previous* code — six digits,
+    correct-looking, and rejected by the site.
+
+  - Stored parameters this build cannot compute fail closed as `Unsupported`
+    with a `Failed` event: an unrecognized or differently-spelled algorithm, a
+    digit count the engine cannot render, a zero period, an empty secret. The
+    codec does not validate these (only `VLT-PM29`'s CLI input boundary does),
+    so a portable import can carry them. There is no fallback to SHA-1 and no
+    clamped digit count, because six wrong digits are indistinguishable from
+    six right ones until a login fails.
+
+  - The RFC 6238 engine is `coding_adventures_vault_auth`, a new dependency,
+    reused per `VLT-PM00` §6's reuse map rather than reimplemented here.
+
+### Changed
+
+- The current-item disclosure ceremony is now one generic code path shared by
+  the secret-field and TOTP-code boundaries. The mapping from situation to
+  audit outcome *is* the security property, and a second copy of it would be a
+  second thing to keep correct — with "an access that happened and left no
+  trace" as the failure mode.
+
+## [0.63.0] - 2026-08-18
+
+### Added
+
+- **Passphrase rotation**, closing `VLT-PM00` §14.8's "password rotation
+  rewraps the VRK without re-encrypting every item body" and §23 item 10b.
+  Specified by `VLT-PM43-cli-passphrase-rotation.md`.
+
+  The new `rotate` module is a workflow, not a new cryptographic capability.
+  The passphrase already protected exactly one thing — the 32 bytes of
+  `BootstrapV1.passphrase_root_wrap` that hold the vault root key — so a
+  rotation is one Argon2id derivation, one AEAD open, and one AEAD seal on
+  those 32 bytes, plus a re-signature by the unchanged vault authority.
+  Nothing below the root key is read, opened, or rewritten.
+
+  - `prepare_passphrase_rotation` is pure and performs no external write. It
+    takes the current passphrase a second time, because an `UnlockedVaultV1`
+    deliberately retains derived subkeys and not the root: rotation is the one
+    operation that needs the root, so it is the one operation that pays for it,
+    rather than every session holding it longer. It then proves the unwrapped
+    root is the session's root by opening `ActiveStateV1::local_secret` with
+    keys derived from it and requiring the identical owner secret — a binding
+    check that compares no key bytes.
+  - `commit_passphrase_rotation` and `recover_pending_rotation` perform the
+    durable half through a new `LocalVaultStateV1::PendingRotation` journal.
+  - `UnlockedVaultV1::rotate_passphrase`,
+    `::audited_rotate_passphrase`, and
+    `::record_audited_passphrase_rotation_host_failure` are the session
+    boundaries, with the audited one publishing its event *before* the effect
+    through the existing audit-only publication path.
+
+- `BootstrapStore::supersede_generation`, a **required** trait method.
+  Advancing the latest pointer is not enough to retire a passphrase: the
+  superseded generation still wraps the *same, unchanged* root key under the
+  *old* passphrase-derived key, so anyone who later obtained a copy of the
+  state directory and the retired passphrase could open the vault through it.
+  Implementations must refuse to remove the generation the latest pointer names
+  — deleting the live bootstrap would leave a vault no passphrase opens — and
+  must treat an already-absent record as success, because recovery replays the
+  call.
+
+- `PendingRotationV1` and the `LocalVaultStateV1::PendingRotation` variant
+  (state tag 4). It holds the last stable owner state and the exact signed next
+  bootstrap; the intended next state is *derived* rather than stored, so the
+  journal cannot disagree with itself. `UnlockRecoveryV1` gains
+  `RecoveredPendingRotation`, and both read-only projections report the new
+  state as `recovery_required` without distinguishing which journal it is.
+
+### Changed
+
+- `VaultAccessV1::unlock_recovering_pending_publication` now finishes an
+  interrupted *rotation* as well. Its name is kept because the contract is
+  unchanged from a caller's point of view — finish whatever an interrupted
+  process left, then open — but the two journals are finished differently, and
+  the difference is the point: **a rotation roll-forward consumes no
+  passphrase.** Every step after the journal is a pure function of the journal,
+  so a person who types the pre-crash passphrase still gets their vault
+  repaired, and then an honest `AuthenticationFailed` from the open that
+  follows, which names the state the vault is actually in.
+
+  Rolling *back* was considered and rejected: it would have to decide without a
+  passphrase whether the person still knows the old one, un-install an
+  immutable generation record, and explain why someone who just confirmed a new
+  passphrase twice ended up with the old one.
+
+### Security
+
+- The KEK derived from the *retired* passphrase is wiped inside
+  `unwrap_root_key` before the new one is derived, and the root key exists only
+  between that unwrap and the re-wrap. The prepared rotation value carries the
+  next bootstrap's public signed bytes and no live secret, which is why it is
+  safe to journal.
+- A rotation is floored at the vault's existing Argon2id memory and iteration
+  cost. It may raise the cost and may never lower it: without the floor, the
+  same parameter path that lets someone rotating on a faster machine get
+  stronger parameters would also let a caller hand them a *weaker* credential
+  than the one they already had, in the ceremony they ran to improve their
+  security. The shipped CLI passes a fixed production policy; this guards
+  embedders and any future host that calibrates at run time.
+- `generate_keypair` returns the Ed25519 secret **by value**, and `[u8; 64]` is
+  `Copy`, so wrapping it in `Zeroizing` silently left the original array on the
+  stack un-wiped. The authority secret is now bound mutably and the original
+  wiped once the owned copy exists.
+- The rotation roll-forward **never** undoes anything, and the reason is now
+  stated where it can be checked. A partial roll-back — withdrawing the journal
+  when the store refused the install and still served the generation the
+  rotation meant to retire — was written, reviewed, and removed. It reads like
+  proof that nothing happened and it is not: `put_generation` installs the
+  generation record *before* it advances the latest pointer, and, decisively,
+  the observation reads the bootstrap store while the withdrawal writes the
+  local state store, with nothing making those atomic together. A second host
+  finishing the rotation inside that window would find the first committing
+  `Active(old)` on top of an already-retired generation — a vault pinning a
+  bootstrap the provider no longer has, openable by *no* passphrase, with no
+  journal left to say so. What makes concurrent and repeated recovery safe is
+  convergence: every host performs the same writes in the same order. A store
+  that has moved somewhere the journal did not put it is a tampered or forked
+  provider, fails closed as `IntegrityFailure` with the journal intact, and
+  leaves the file-level backup restore VLT-PM41 §5 proves available.
+
+## [0.62.0] - 2026-08-18
+
+### Added
+
+- `VaultAccessV1::unlock_recovering_pending_publication` and the closed
+  `UnlockRecoveryV1` outcome it returns (`AlreadyActive` or
+  `RecoveredPendingPublication`). This is the second half of
+  `VLT-PM05-application.md` §8 step 2 — "resume a prepared initialization or
+  **pending publication** when present" — which had been specified from the
+  beginning and never wired to anything.
+
+  `recover_pending_publication` was already here, already correct, and already
+  covered: it replays an exact durable journal idempotently and advances the
+  owner state only after the repository returns the heads that journal
+  expected. Nothing called it. `VLT-PM41-cli-crash-fault-matrix.md` §8 measured
+  what that cost by killing a real process: a vault interrupted mid-publication
+  was intact, exactly journalled, correctly diagnosed as `recovery_required` by
+  both read-only projections — and refused by every command that opened it,
+  because `open_active_vault` accepts only `Active`. That refusal surfaced as
+  the invalid-input class, so a person whose machine died mid-write was told
+  their *command* was wrong, indefinitely.
+
+  The new entry point replays the journal and then performs the ordinary strict
+  `open_active_vault` against the repaired durable state, discarding the
+  `ActiveStateV1` the recovery returned. That is deliberate: every check a
+  later, uninvolved process would perform — bootstrap signature, root-wrap
+  authentication, seed-to-pinned-identity reproduction, repository open against
+  non-empty pins — runs on the repaired bytes. A repair that produced a session
+  only the repairing process could reproduce would be worth less than no repair.
+
+  It costs one extra Argon2id derivation, and only when a repair happens: the
+  recovery and the reopen each consume a passphrase by value. Since `Zeroizing`
+  implements neither `Clone` nor `Debug` on purpose, the recovering branch
+  constructs its duplicate by name; both copies are wiped on drop, including
+  while unwinding.
+
+### Unchanged, deliberately
+
+- `VaultAccessV1::unlock` still accepts only `Active` and still refuses a
+  `PendingPublication` with the invalid-input class, so a host that wants a
+  crash refused rather than repaired keeps exactly that. The recovering unlock
+  is a second named door, not a change of behavior behind the existing one.
+- `open_active_vault` and `recover_pending_publication` are untouched. This
+  release composes them; it does not modify either.
+- A `PreparedInit` owner state is still refused by the recovering unlock. It
+  belongs to initialization, which is the only caller that knows a vault is
+  being created.
+
 ## [0.61.2] - 2026-08-17
 
 ### Fixed

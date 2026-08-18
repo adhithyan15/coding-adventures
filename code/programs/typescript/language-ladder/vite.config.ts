@@ -63,12 +63,18 @@ export default defineConfig({
               // One chunk per track's authored plan, all of them lazy (see the
               // note on CURRICULUM_LOADERS in src/curriculum.ts).
               //
-              // Grouping all 22 into a single `curriculum-plans` chunk is what
-              // put half a megabyte on the first-paint path and made every
-              // corpus commit invalidate all of it at once. Per-track, a
-              // tranche of Telugu words re-downloads Telugu's plan alone, and
-              // no amount of corpus growth can push any of it back into the
-              // eager budget, because none of it is eagerly imported.
+              // This SUPERSEDES the `maxSize: 250_000` briefly put on the old
+              // single `curriculum-plans` group. That cap did satisfy the gate
+              // -- it measures the LARGEST eager chunk -- but the browser went
+              // on downloading the same ~500 kB before first paint, now as four
+              // chunks instead of one, and the total kept growing every day.
+              // HL-C110 wrote that trade down in advance as gaming the metric:
+              // the fix has to remove bytes from the preload set. These are
+              // gone from it entirely.
+              //
+              // Per-track is the other half: a tranche of Telugu words
+              // re-downloads Telugu's plan alone, instead of invalidating one
+              // shared half-megabyte blob on every corpus commit.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
                 const match = /human-languages\/([^/]+)\/curriculum\.json$/.exec(normalized);

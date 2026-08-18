@@ -34,7 +34,8 @@ reviews_of: [MR-C10-paani]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAANI, MR-PHRASE-KRUPAYA] -->
 
-[PAUSE 2s] **पाणी, कृपया** — water, please. Say it once more, then ask for
+[PAUSE 2s] **पाणी, कृपया** (*pāṇī, kṛpayā*) — water, please. Say it once more,
+then ask for
 something that is not water at all.
 
 ## You'll want to know: चहा

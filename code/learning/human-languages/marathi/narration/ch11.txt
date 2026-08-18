@@ -133,8 +133,8 @@ The word, taken apart — not sister's cousin.
 
 Grammar Lens: the chapter's whole shape, in two pairs.
 [a table of 2 rows, read aloud]
-word: मित्र (mitra), कुटुंब (kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.
-word: भाऊ (bhāū), बहीण (bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change.
+word: मित्र, कुटुंब (mitra, kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.
+word: भाऊ, बहीण (bhāū, bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change.
 Notice, too, how each pair looks: मित्र (mitra) and कुटुंब (kuṭumb) carry conjuncts and marks a learner has to stop for; भाऊ (bhāū) and बहीण (bahīṇ) do not — plain consonants and vowels, the shape sound change tends to leave behind. And of the tadbhava pair, only भाऊ (bhāū) is a secure English cousin; बहीण (bahīṇ) is not.
 
 Guided Practice.

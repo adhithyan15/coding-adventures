@@ -230,6 +230,26 @@
         "RU-EXT-015-MORE-FOOD-DRINK"
       ],
       "after": []
+    },
+    {
+      "id": "RU-PATH-016",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "RU-EXT-021-SCRIPT-EIGHT"
+      ]
     }
   ],
   "spine": {
@@ -256,7 +276,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "RU-PATH-005"
+        "RU-PATH-005",
+        "RU-PATH-016"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -780,6 +801,27 @@
         "RU-W06-sh",
         "RU-W06-soft-sign",
         "RU-W06-ya"
+      ]
+    },
+    {
+      "id": "RU-EXT-021-SCRIPT-EIGHT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write eight more Cyrillic letters from memory, sort each into true friend, false friend or new shape, and read an unstressed о as the a sound it actually carries.",
+      "prerequisites": [
+        "RU-EXT-020-SCRIPT-ELEVEN"
+      ],
+      "lessons": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
       ]
     }
   ]

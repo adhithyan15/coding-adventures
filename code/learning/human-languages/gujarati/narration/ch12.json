@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dd6356418ad747f7",
+  "sourceHash": "fnv1a64:b4450287fa203285",
   "lessons": [
     {
       "id": "GU-C12-aankh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bd4ab774acbdc9cc",
+      "sourceHash": "fnv1a64:908a428d5d9ba832",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "બહેન closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about."
+              "text": "બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about."
             }
           ]
         },
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:211a5716175a85c3",
+      "sourceHash": "fnv1a64:d21dd2c664d5e91f",
       "notice": {
         "modality": "sight",
         "needs": [

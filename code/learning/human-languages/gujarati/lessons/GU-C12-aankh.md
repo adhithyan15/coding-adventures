@@ -34,7 +34,7 @@ reviews_of: [GU-C11-bahen, GU-C08-vanchvun]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-BAHEN] -->
 
-[PAUSE 2s] **બહેન** closed a chapter about people. This chapter checks on how
+[PAUSE 2s] **બહેન** (*bahen*) closed a chapter about people. This chapter checks on how
 someone is — starting with the parts of the body a friend might actually ask
 about.
 

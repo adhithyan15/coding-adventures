@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Eye, Hand, Foot, Tongue",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ae02ea595fd16e54",
+  "sourceHash": "fnv1a64:8f4fa561dca27999",
   "lessons": [
     {
       "id": "FA-C11-cheshm",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0073b3f04ec27b6",
+      "sourceHash": "fnv1a64:5e58e15e9a9b069e",
       "notice": null,
       "blocks": [
         {

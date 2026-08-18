@@ -10,8 +10,23 @@ license = "MIT"
 [dependencies]
 coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli" }
 
+# This crate must never name `coding_adventures_vault_pm_cli`'s
+# `crash-injection` feature, in any section. Cargo resolves features per
+# package across a build graph, so naming it even in `dev-dependencies` would
+# let `cargo build --all-targets` uplift an instrumented binary to
+# `target/release/vault-pm` — the path a packaging step copies from. The
+# VLT-PM41 drill therefore lives in a separate crate,
+# `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
 [dev-dependencies]
 libc = "0.2"
+# VLT-PM45 gate 11. The real-process TOTP test cannot hard-code an expected
+# code, because the real executable reads the real clock. It recomputes the
+# code for the step the process must have been in — from the same VLT05 engine
+# the product uses, which is itself proven against the full RFC 6238 Appendix B
+# table in its own crate — and checks the executable agrees. That closes the
+# wiring question this test exists to answer: right seed, right algorithm,
+# right period, right digits, real clock, all the way through a real PTY.
+coding_adventures_vault_auth = { path = "../../../packages/rust/vault-auth" }
 
 [[bin]]
 name = "vault-pm"

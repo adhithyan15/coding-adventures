@@ -59,7 +59,7 @@ the same puff first heard closing **नमस्ते**.
 ## The word, taken apart — no agreed parent
 <!-- hl-knowledge: introduces=[SA-ETYMON-KARNA-DISPUTED]; assesses=[SA-LEX-AKSHI-EYE, SA-ETYMON-OKW-EYE] -->
 
-Where अक्षि's ancestry runs clean back to PIE, कर्णः's does not run anywhere
+Where अक्षि (*akṣi*)'s ancestry runs clean back to PIE, कर्णः's does not run anywhere
 agreed. Proposed roots mean "a defect," "a point," "a handle," and "to
 hear" — and no single account has won out over the others.
 

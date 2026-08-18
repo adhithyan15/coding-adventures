@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7659bc3fb13be5ff",
+  "sourceHash": "fnv1a64:2852b0149e1a2626",
   "summary": {
-    "totalLessons": 3077,
-    "voice": 2196,
-    "sight": 584,
-    "pen": 297,
-    "drivableLessons": 2196,
+    "totalLessons": 3120,
+    "voice": 2204,
+    "sight": 588,
+    "pen": 328,
+    "drivableLessons": 2204,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 942,
+    "chapterCount": 948,
     "drivablePrefixTotal": 1967,
     "fullyDrivableChapters": 619,
-    "unstartableChapters": 192,
+    "unstartableChapters": 198,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -867,11 +867,11 @@
     },
     {
       "language": "chinese",
-      "lessonCount": 25,
-      "voice": 10,
-      "sight": 3,
-      "pen": 12,
-      "drivablePercent": 40,
+      "lessonCount": 40,
+      "voice": 18,
+      "sight": 4,
+      "pen": 18,
+      "drivablePercent": 45,
       "drivablePrefixTotal": 1,
       "modalities": [
         "voice",
@@ -924,6 +924,54 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ZH-W03-yi",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 4,
+          "lessonCount": 7,
+          "voice": 3,
+          "sight": 1,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W04-kou",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 5,
+          "lessonCount": 4,
+          "voice": 3,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W05-shi",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 6,
+          "lessonCount": 4,
+          "voice": 2,
+          "sight": 0,
+          "pen": 2,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W06-zai",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -7067,15 +7115,16 @@
     },
     {
       "language": "persian",
-      "lessonCount": 59,
+      "lessonCount": 69,
       "voice": 57,
-      "sight": 2,
-      "pen": 0,
-      "drivablePercent": 97,
+      "sight": 3,
+      "pen": 9,
+      "drivablePercent": 83,
       "drivablePrefixTotal": 52,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -7340,6 +7389,21 @@
             "FA-C14-zan",
             "FA-C14-dust"
           ]
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 10,
+          "voice": 0,
+          "sight": 1,
+          "pen": 9,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "FA-W15-alef",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -8059,11 +8123,11 @@
     },
     {
       "language": "russian",
-      "lessonCount": 75,
+      "lessonCount": 84,
       "voice": 46,
-      "sight": 13,
-      "pen": 16,
-      "drivablePercent": 61,
+      "sight": 14,
+      "pen": 24,
+      "drivablePercent": 55,
       "drivablePrefixTotal": 36,
       "modalities": [
         "voice",
@@ -8318,6 +8382,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "RU-W06-u",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 9,
+          "voice": 0,
+          "sight": 1,
+          "pen": 8,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "RU-W07-a",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -16336,15 +16415,16 @@
     },
     {
       "language": "urdu",
-      "lessonCount": 59,
+      "lessonCount": 68,
       "voice": 41,
-      "sight": 18,
-      "pen": 0,
-      "drivablePercent": 69,
+      "sight": 19,
+      "pen": 8,
+      "drivablePercent": 60,
       "drivablePrefixTotal": 30,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -16605,6 +16685,21 @@
             "UR-C15-dhoop",
             "UR-C15-hawa"
           ]
+        },
+        {
+          "chapter": 16,
+          "lessonCount": 9,
+          "voice": 0,
+          "sight": 1,
+          "pen": 8,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "UR-W16-alef",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     }
@@ -17294,7 +17389,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a84e2262a220a4e9"
+      "sourceHash": "fnv1a64:ba0898bc3feaa45b"
     },
     {
       "id": "AR-W10-ayn",
@@ -17458,7 +17553,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:05c5e1b72f8cf5f3"
+      "sourceHash": "fnv1a64:dc8602c69aa3d525"
     },
     {
       "id": "AR-C05-naam",
@@ -19618,7 +19713,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e3696b8355f72cb",
+      "sourceHash": "fnv1a64:572bd690f1dfa551",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -19660,7 +19755,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d222701aedec1af",
+      "sourceHash": "fnv1a64:52d0908b20971d13",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -20732,6 +20827,306 @@
       "detachableSegments": [
         "Script — the same five, shuffled"
       ]
+    },
+    {
+      "id": "ZH-W04-kou",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 300,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5e22de3c623cdf5e",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C04-kou",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 310,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:52e816fdf4546142"
+    },
+    {
+      "id": "ZH-W04-ri",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 320,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e785aae0f783305b",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C04-ri",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3eaa51bf1251abeb"
+    },
+    {
+      "id": "ZH-W04-bu",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 340,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4fb9f9f4171b1cad",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C04-bu",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:90d32de54cfd2ac9"
+    },
+    {
+      "id": "ZH-C04-practice",
+      "language": "chinese",
+      "chapter": 4,
+      "sequence": 360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:80fd961985ee743e"
+    },
+    {
+      "id": "ZH-W05-shi",
+      "language": "chinese",
+      "chapter": 5,
+      "sequence": 370,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9b2c30a9607e826b",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C05-shi",
+      "language": "chinese",
+      "chapter": 5,
+      "sequence": 380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:df836738edd547ca"
+    },
+    {
+      "id": "ZH-C05-bushi",
+      "language": "chinese",
+      "chapter": 5,
+      "sequence": 390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e4c90d8496c3c06f"
+    },
+    {
+      "id": "ZH-C05-practice",
+      "language": "chinese",
+      "chapter": 5,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:00c0944790750cb0"
+    },
+    {
+      "id": "ZH-W06-zai",
+      "language": "chinese",
+      "chapter": 6,
+      "sequence": 410,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:94eddd4412aa6108",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W06-jian",
+      "language": "chinese",
+      "chapter": 6,
+      "sequence": 420,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:aaff03a235e7f3ce",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C06-zaijian",
+      "language": "chinese",
+      "chapter": 6,
+      "sequence": 430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3c9b07a2290b14e2"
+    },
+    {
+      "id": "ZH-C06-practice",
+      "language": "chinese",
+      "chapter": 6,
+      "sequence": 440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:16da26941dafaebc"
     },
     {
       "id": "FR-C01-bien",
@@ -25764,7 +26159,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c39f2e29b360abd1",
+      "sourceHash": "fnv1a64:f359800e0ad34bc1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25785,7 +26180,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d350bffe10b8cc4",
+      "sourceHash": "fnv1a64:4704038cd28045da",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25827,7 +26222,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bd4ab774acbdc9cc",
+      "sourceHash": "fnv1a64:908a428d5d9ba832",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25869,7 +26264,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:211a5716175a85c3",
+      "sourceHash": "fnv1a64:d21dd2c664d5e91f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28512,7 +28907,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ece8edc0c8ff0a94",
+      "sourceHash": "fnv1a64:bf4ccc0cb3c4a4b6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -32422,7 +32817,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f23a1be663b2b64",
+      "sourceHash": "fnv1a64:30364ffdc03370b8",
       "detachableSegments": [
         "Script — kanji, and the readings problem"
       ]
@@ -33871,7 +34266,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:35ace1cd966ef652"
+      "sourceHash": "fnv1a64:a85c6449433ef6c2"
     },
     {
       "id": "KA-S04-vowel-sign-i",
@@ -40276,7 +40671,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5e5d3423d223860c"
+      "sourceHash": "fnv1a64:d7efb9f6cdc7e7e2"
     },
     {
       "id": "ML-S116-letter-u",
@@ -43230,7 +43625,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:151eaa22ab083bf1"
+      "sourceHash": "fnv1a64:8d27ba5b3b1cc3b1"
     },
     {
       "id": "MR-C02-naav",
@@ -43269,7 +43664,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc477000accbb398"
+      "sourceHash": "fnv1a64:fb1c703edb1e5e9e"
     },
     {
       "id": "MR-C02-tu-tumhi",
@@ -43308,7 +43703,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7762eea32e74fd3b"
+      "sourceHash": "fnv1a64:ccc4ebc2a946857f"
     },
     {
       "id": "MR-C03-kaahi-harkat-nahi",
@@ -43404,7 +43799,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eb7818167410db6b"
+      "sourceHash": "fnv1a64:70dd374d59aaf09d"
     },
     {
       "id": "MR-C03-tumhi-kase-aahat",
@@ -43482,7 +43877,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b2f49ee8ecb088f8"
+      "sourceHash": "fnv1a64:b3595cc3593d4eb2"
     },
     {
       "id": "MR-C04-punha",
@@ -43620,7 +44015,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:360f39186883773c"
+      "sourceHash": "fnv1a64:73fed83793c9bc8c"
     },
     {
       "id": "MR-C05-rahne",
@@ -43993,7 +44388,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f3e23b1f18f70d7b",
+      "sourceHash": "fnv1a64:77a677b7040d48c7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44077,7 +44472,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b132b3080165bb37",
+      "sourceHash": "fnv1a64:e9c3e5e20a44ff01",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44119,7 +44514,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bc4a5ecff53ff890",
+      "sourceHash": "fnv1a64:b11d2c0417823984",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44140,7 +44535,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:316673ce1d6b6d28",
+      "sourceHash": "fnv1a64:ed891e7565994bd2",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44161,7 +44556,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:441ee4d94874fd25",
+      "sourceHash": "fnv1a64:545dd0be7cf4e68d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44203,7 +44598,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:11066afc3792d53d",
+      "sourceHash": "fnv1a64:a983124140410927",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -45114,7 +45509,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:38ba1bbde851847b"
+      "sourceHash": "fnv1a64:f26a069106bfc347"
     },
     {
       "id": "FA-C09-chay",
@@ -45132,7 +45527,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a26e57f7adf3801e"
+      "sourceHash": "fnv1a64:13e89f0266a2ee3c"
     },
     {
       "id": "FA-C09-kelid",
@@ -45258,7 +45653,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a0073b3f04ec27b6"
+      "sourceHash": "fnv1a64:5e58e15e9a9b069e"
     },
     {
       "id": "FA-C11-pa",
@@ -45330,7 +45725,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2a338a6b464d934"
+      "sourceHash": "fnv1a64:d9f09ab490244f86"
     },
     {
       "id": "FA-C12-dar",
@@ -45384,7 +45779,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6d992ea29e7bfb60"
+      "sourceHash": "fnv1a64:d1dee18370dc6a76"
     },
     {
       "id": "FA-C13-khorshid",
@@ -45402,7 +45797,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:251ffdeba61e505b"
+      "sourceHash": "fnv1a64:8055697d9d545edf"
     },
     {
       "id": "FA-C13-mah",
@@ -45420,7 +45815,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0e4d867ef70e34a1"
+      "sourceHash": "fnv1a64:89ff5e82aad2582f"
     },
     {
       "id": "FA-C13-setare",
@@ -45456,7 +45851,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:514ee9899221b7ba"
+      "sourceHash": "fnv1a64:569219c452011a28"
     },
     {
       "id": "FA-C14-khahar",
@@ -45510,7 +45905,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0acfe919b99ffa5f"
+      "sourceHash": "fnv1a64:878a7d36dcd4cf57"
     },
     {
       "id": "FA-C14-zan",
@@ -45546,7 +45941,240 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2159ff3d4b5fda4a"
+      "sourceHash": "fnv1a64:6dab3630555d9c86"
+    },
+    {
+      "id": "FA-W15-alef",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 600,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6eb5695e68168b06",
+      "detachableSegments": [
+        "Script — first, which way the page runs",
+        "Script — the letter itself"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-lam",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5f853460147480f3",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-sin",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 620,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f668a6c5ce9c19d6",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-mim",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 630,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4384eb8737ce76cf",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-joining",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 640,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c0c6ae412657a75c",
+      "detachableSegments": [
+        "Script — the running line",
+        "Script — and the letters that refuse"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-be",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 650,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3d0182adae51d79b",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-te-nun",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 660,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:bab7255f58c28193",
+      "detachableSegments": [
+        "Script — two dots above",
+        "Script — one dot above, and a deeper bowl"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-he",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 670,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:10b541048ae022c0",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-vav",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 680,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d0ae3266514de889",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-C15-practice",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 690,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:48ce29e4d15814a3",
+      "detachableSegments": [
+        "Script — the words come back"
+      ]
     },
     {
       "id": "PT-C01-bom",
@@ -48333,7 +48961,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:edc886bfb095835d",
+      "sourceHash": "fnv1a64:ac3e35f497e92e49",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -49102,7 +49730,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:01a9d848c5acbb2f"
+      "sourceHash": "fnv1a64:953e87b3df5651af"
     },
     {
       "id": "RU-C02-ochen-priyatno",
@@ -49357,7 +49985,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cda6615170c3f19a"
+      "sourceHash": "fnv1a64:b3f937939c7db162"
     },
     {
       "id": "RU-C05-sprashivat",
@@ -49543,7 +50171,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:adc14663fd5e418d"
+      "sourceHash": "fnv1a64:8b86380bc8f593e7"
     },
     {
       "id": "RU-C07-sestra",
@@ -49561,7 +50189,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7bb2afa35ab80406"
+      "sourceHash": "fnv1a64:92abfa643c1d6c0c"
     },
     {
       "id": "RU-C08-semya",
@@ -49798,7 +50426,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ec96d9b13421a7d1"
+      "sourceHash": "fnv1a64:546f4d0fc49f83d9"
     },
     {
       "id": "RU-C12-papa",
@@ -49888,7 +50516,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6a0dd3d7e96613ef"
+      "sourceHash": "fnv1a64:727d159efe18e5df"
     },
     {
       "id": "RU-C13-sok",
@@ -49924,7 +50552,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7f57478fc076953b"
+      "sourceHash": "fnv1a64:094d82b7f6aa3c65"
     },
     {
       "id": "RU-W06-u",
@@ -50178,6 +50806,211 @@
         "Script"
       ],
       "delivery": "script"
+    },
+    {
+      "id": "RU-W07-a",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 710,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9b3f03f7ef5246ea",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-o",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 720,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:adc50bdfdfa7468e",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-g",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 730,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d9ae162c44116b57",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-kh",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 740,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:444622f1294f8e8e",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-f",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 750,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9bc90e53af46a44e",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-ts",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 760,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1ca4f9d2ec9421d5",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-y-short",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 770,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8aff4e98bcba2ce4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-yu",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 780,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3054826dce87f1ac",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-C15-practice",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 790,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cf03ed58ffee7d69",
+      "detachableSegments": [
+        "Script — the three kinds, one more time"
+      ]
     },
     {
       "id": "SA-C01-namaste",
@@ -51481,7 +52314,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:06be3f898bcc6470",
+      "sourceHash": "fnv1a64:65afbb8a807510b4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -52759,7 +53592,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cdf0549300c973c1"
+      "sourceHash": "fnv1a64:575f1f3418a0e14d"
     },
     {
       "id": "SA-C25-foot",
@@ -72269,7 +73102,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:50fec0361dfbb03f"
+      "sourceHash": "fnv1a64:d8f002c8510516bb"
     },
     {
       "id": "TE-C48-guest",
@@ -72449,7 +73282,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5498826f1751796e"
+      "sourceHash": "fnv1a64:c0f84523cc3f570c"
     },
     {
       "id": "TE-C50-farewell",
@@ -74585,7 +75418,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5db80ac0bcb513ca"
+      "sourceHash": "fnv1a64:735012b737d6b7ac"
     },
     {
       "id": "UR-C09-khandan",
@@ -74738,7 +75571,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe7ad4ec6aa386c2",
+      "sourceHash": "fnv1a64:2e7a8df8a1a0d160",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -75024,6 +75857,213 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:3d53dbd9a31d4ac8"
+    },
+    {
+      "id": "UR-W16-alef",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 730,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:49036a413ae4f56d",
+      "detachableSegments": [
+        "Script — first, which way the page runs",
+        "Script — the letter itself"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-lam",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 740,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:18ae7677c23db513",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-sin",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 750,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:24536d78bfd859fe",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-mim",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 760,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fee66baedad4ebd3",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-joining",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 770,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a3a7822d903608a3",
+      "detachableSegments": [
+        "Script — the running, falling line",
+        "Script — and the letter that refuses"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-kaf",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 780,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d91094b7c500bfac",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-nun",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 790,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4f1674d0c3eaaa54",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-W16-ye",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 800,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:404ae5af4cb2bc37",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "UR-C16-practice",
+      "language": "urdu",
+      "chapter": 16,
+      "sequence": 810,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2c01c6fc64c47ad8",
+      "detachableSegments": [
+        "Script — the words come back"
+      ]
     }
   ],
   "findings": []

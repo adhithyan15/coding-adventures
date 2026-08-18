@@ -40,7 +40,7 @@ reviews_of: [SA-C24-lamp]
 
 **हस्तः** (*hastaḥ*) — "hand".
 
-You have अक्षि, कर्णः, मुखम्, नासिका and हृदयम्. **हस्तः** adds the hand.
+You have अक्षि, कर्णः, मुखम्, नासिका and हृदयम् (*akṣi, karṇaḥ, mukham, nāsikā, hṛdayam*). **हस्तः** adds the hand.
 
 Its cousins run west rather than into Europe: Avestan *zasta*, Old Persian *dasta*, and modern Persian *dast*, all "hand". Latin went its own way with *manus* and shares nothing with this word at all — a reminder that the family tree branches, and that two languages can both be cousins of Sanskrit without being cousins of each other in any given word.
 

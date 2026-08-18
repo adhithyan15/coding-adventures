@@ -128,7 +128,7 @@ Warm-up.
 Now assemble the three atoms you just met into your first full sentence about yourself.
 
 The phrase, assembled.
-माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mira āhe) — "my name is Mira."
+माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — "my name is Mira."
 Notice the shape:
 माझं is neuter, agreeing with the neuter नाव.
 The verb आहे comes last — "my name Mira is."
@@ -139,7 +139,7 @@ Marathi drops nothing and reorders everything to English eyes: possessor, thing,
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "mājhaṁ nāv Mira āhe" — my name is Mira]
+[your turn — say: "mājhaṁ nāv Mīrā āhe" — my name is Mira]
 [pause 8 seconds for the answer]
 [your turn — say: it with your own name in the blank]
 [pause 8 seconds for the answer]
@@ -188,10 +188,10 @@ Run the whole first exchange, atom by atom, then whole.
 
 The whole exchange.
 [a table of 4 rows, read aloud]
-माझं नाव मीरा आहे. means My name is Mira.
-तुमचं नाव काय आहे? means What's your name?
-माझं नाव अरुण आहे. means My name is Arun.
-भेटून आनंद झाला. means Pleased to meet you.
+Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.
+Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?
+Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.
+Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you.
 
 Atoms banked this chapter.
 नाव (nāv) — name; Sanskrit nāman becomes English name (the m softened to v in Marathi).
@@ -258,7 +258,7 @@ The "your" mirrors the "my" set you learned:
 माझं (mājhaṁ) — my.
 तुमचं (tumchaṁ) — your (respectful, from tumhī).
 तुझं (tujhaṁ) — your (familiar, from tū).
-All three are shown here in the neuter, agreeing with the neuter नाव.
+All three are shown here in the neuter, agreeing with the neuter नाव (nāv).
 
 Why it's said this way.
 To a friend you would say तुझं नाव काय आहे? (tujhaṁ nāv kāy āhe?), swapping the respectful tumchaṁ for the familiar tujhaṁ — the same tū / tumhī choice of respect, now on the possessive.

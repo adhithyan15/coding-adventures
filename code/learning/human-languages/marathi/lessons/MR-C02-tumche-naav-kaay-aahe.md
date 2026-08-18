@@ -29,7 +29,8 @@ The "your" mirrors the "my" set you learned:
 - **तुमचं** (*tumchaṁ*) — your (respectful, from *tumhī*)
 - **तुझं** (*tujhaṁ*) — your (familiar, from *tū*)
 
-All three are shown here in the neuter, agreeing with the neuter **नाव**.
+All three are shown here in the neuter, agreeing with the neuter **नाव**
+(*nāv*).
 
 ## Why it's said this way
 

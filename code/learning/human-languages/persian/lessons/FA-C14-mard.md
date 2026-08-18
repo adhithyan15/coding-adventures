@@ -34,7 +34,7 @@ reviews_of: [FA-C14-pesar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-PESAR, FA-ETYMON-PESAR] -->
 
-[PAUSE 2s] Say **پسر**, and the Sanskrit word it shares a root with. This
+[PAUSE 2s] Say **پسر** (*pesar*), and the Sanskrit word it shares a root with. This
 lesson's word looks like it should be an easy English cousin. It is not.
 
 ## You'll want to know first — one word

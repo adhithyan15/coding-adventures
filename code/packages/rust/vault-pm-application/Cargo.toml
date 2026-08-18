@@ -12,6 +12,9 @@ coding_adventures_ct_compare = { path = "../ct-compare" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_hkdf = { path = "../hkdf" }
 coding_adventures_sha256 = { path = "../sha256" }
+# VLT-PM45 §7. The RFC 6238 engine is reused from VLT05 rather than rewritten
+# here; VLT-PM00 §6's reuse map already assigns TOTP factors to that package.
+coding_adventures_vault_auth = { path = "../vault-auth" }
 coding_adventures_vault_pm_audit = { path = "../vault-pm-audit" }
 coding_adventures_vault_pm_domain = { path = "../vault-pm-domain" }
 coding_adventures_vault_pm_format = { path = "../vault-pm-format" }

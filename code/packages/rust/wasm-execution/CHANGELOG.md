@@ -2,6 +2,178 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.26] - 2026-08-18 (task #159-161 — SIMD: shift family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms (one per lane width)
+  for the FIRST mixed-type binary SIMD op family:
+  `ShlI8x16 | ShrSI8x16 | ShrUI8x16`, `ShlI16x8 | ShrSI16x8 |
+  ShrUI16x8`, `ShlI32x4 | ShrSI32x4 | ShrUI32x4`, and `ShlI64x2 |
+  ShrSI64x2 | ShrUI64x2`. Each pops the scalar `i32` shift amount
+  FIRST (it's pushed LAST per `(ixNxM.shl (v128 $a) (i32 $amount))`,
+  so it's on top of stack), then the `v128` operand, and masks the
+  shift amount MODULO the lane's bit width (8/16/32/64 respectively)
+  before shifting -- both spec-mandated and required for Rust safety,
+  since shifting a primitive by >= its bit width panics. `shl` is a
+  plain logical left shift (signedness-independent); `shr_s` reads
+  each lane as its signed type before shifting (sign-extending);
+  `shr_u` reads each lane as its unsigned type (zero-extending).
+  Verified with dedicated tests proving the shift amount is correctly
+  masked (shifting by exactly the lane's bit width, or bit-width + k,
+  must behave identically to shifting by 0, or k, not panic) and that
+  `shr_s`/`shr_u` disagree on sign extension across all 4 lane widths
+  (an operand with the sign bit set, shifted right by 1, keeps
+  propagating the sign bit under `shr_s` but shifts in a zero under
+  `shr_u`).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.25] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms for i64x2's first REAL
+  ARITHMETIC family: `SimdOpKind::AbsI64x2` (UNARY, `wrapping_abs` so
+  `i64::MIN` maps to itself, not a panic), `NegI64x2` (UNARY,
+  `wrapping_neg`), `AddI64x2 | SubI64x2 | MulI64x2` (BINARY, wrapping
+  arithmetic over 2 `i64` lanes), and `EqI64x2 | NeI64x2 | LtSI64x2 |
+  GtSI64x2 | LeSI64x2 | GeSI64x2` (BINARY, boolean-mask-per-lane,
+  `-1i64`/`0i64` -- SIGNED ONLY, since the SIMD proposal never defines
+  unsigned `i64x2` comparisons). Verified with dedicated tests proving
+  `abs`/`neg` wrap `i64::MIN` instead of panicking,
+  `add`/`sub`/`mul` wrap on overflow (`i64::MAX + 1` -> `i64::MIN`),
+  and the comparison family reads lanes as SIGNED (using `i64::MIN` vs
+  a small positive value, where an unsigned mix-up would flip the
+  result since `i64::MIN`'s bit pattern is the largest unsigned
+  value).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.24] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family)
+
+### Added
+
+- `register_simd` gains three new dispatch arms: `SimdOpKind::AnyTrue`
+  (pops one v128, pushes i32 `1` if ANY of the 128 bits is set, else
+  `0` -- reduces over the WHOLE operand, no lane interpretation
+  needed), `AllTrueI8x16 | AllTrueI16x8 | AllTrueI32x4 | AllTrueI64x2`
+  (pops one v128, pushes i32 `1` only if EVERY lane at that width is
+  nonzero -- chunks the 16 raw bytes into 1/2/4/8-byte lanes and
+  checks each chunk for any nonzero byte), and `BitmaskI8x16 |
+  BitmaskI16x8 | BitmaskI32x4 | BitmaskI64x2` (pops one v128, pushes
+  an i32 whose bit `i` is the sign bit of lane `i`, packed low-to-high
+  -- a lane's sign bit is the MSB of its last, most-significant,
+  little-endian byte). `i64x2`'s two variants are the first opcodes in
+  this crate to read the operand as 8-byte lanes. Verified with
+  dedicated tests proving `any_true` distinguishes all-zero from a
+  single nonzero byte anywhere, `all_true` flips to false when exactly
+  one lane (at that op's own width) is zeroed out even though the
+  surrounding bytes are nonzero, and `bitmask` packs an alternating
+  sign-bit pattern correctly at every width.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.23] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family)
+
+### Added
+
+- `register_simd` gains three new dispatch arms for the
+  lane-width-agnostic raw-byte bitwise family: `SimdOpKind::Not`
+  (UNARY -- flips every bit of the popped v128), `And | AndNot | Or |
+  Xor` (BINARY -- pops rhs then lhs, computes the bytewise operation
+  lane-by-lane over all 16 bytes, `AndNot` being `lhs & !rhs`), and
+  `Bitselect` (TERNARY -- the first three-operand SIMD op in this
+  interpreter: pops `c` then `b` then `a`, computes `(a[i] & c[i]) |
+  (b[i] & !c[i])` per byte, i.e. select bits from `a` where the
+  corresponding `c` bit is 1, else from `b`). Every handler resolves
+  its `v128_heap` handle(s) via `.get(...).ok_or_else(...)` --
+  never raw indexing -- so a malformed handle produces a clean typed
+  `VMError`, not a panic. Verified with dedicated tests covering
+  `not`'s full-bit-flip, each of `and`/`andnot`/`or`/`xor`'s real
+  boundary-value semantics, and `bitselect` selecting an exact mask
+  pattern from two maximally-different operands.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.22] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms mirroring the
+  already-implemented `i32x4`-from-`i16x8` widening family one lane
+  width down: `ExtaddPairwiseI8x16S | ExtaddPairwiseI8x16U` (UNARY --
+  reinterpret the popped v128 as 16 `i8` lanes, pairwise-add adjacent
+  lanes after sign-/zero-extending each to `i16`, producing an 8-lane
+  `i16x8` result) and `ExtmulLowI8x16S | ExtmulHighI8x16S |
+  ExtmulLowI8x16U | ExtmulHighI8x16U` (BINARY -- take only the low
+  (indices 0-7) or high (indices 8-15) 8 `i8` lanes of each operand,
+  sign-/zero-extend to `i16`, and multiply lane-wise, no summation).
+  No `i16x8.dot_i8x16_s` handler -- WASM SIMD does not define a
+  dot-product for this pair. Verified with dedicated tests proving
+  the low/high halves are read independently (distinct operand values
+  in each half produce distinct results) and that `_s`/`_u` disagree
+  on `-1 * 1` the same way every other signed/unsigned pair in this
+  interpreter does.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.21] - 2026-08-18 (task #144-146 — SIMD: i16x8 abs/min/max/avgr_u family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for `i16x8`'s own
+  "arith2" family: `AbsI16x8` (UNARY, same shape as `i16x8.neg`/
+  `i8x16.abs`) and `MinSI16x8 | MinUI16x8 | MaxSI16x8 | MaxUI16x8 |
+  AvgrUI16x8` (BINARY, same shape as `i8x16`'s own `min_s`/`min_u`/
+  `max_s`/`max_u`/`avgr_u`, just at `i16x8`'s wider lane width). `abs`
+  uses the same two's-complement wrapping discipline `i8x16.abs`'s own
+  test already established (`i16::MIN.wrapping_abs() == i16::MIN`).
+  `avgr_u` computes `(a + b + 1) >> 1` widened to `u32` so the `+1`
+  cannot overflow the lane width. Verified with a dedicated test
+  proving `avgr_u(0xFFFF, 0)` rounds UP to `32768`, not down to
+  `32767` -- the one case that would silently hide a missing `+1`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.20] - 2026-08-18 (task #141-143 — SIMD: i8x16 abs/popcnt/min/max/avgr_u family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for `i8x16`'s own
+  "arith2" family: `AbsI8x16 | PopcntI8x16` (UNARY, same shape as
+  `i8x16.neg`/`i32x4.abs`) and `MinSI8x16 | MinUI8x16 | MaxSI8x16 |
+  MaxUI8x16 | AvgrUI8x16` (BINARY, same shape as `i32x4`'s own
+  `min_s`/`min_u`/`max_s`/`max_u`). `abs` uses the same
+  two's-complement wrapping discipline `i32x4.abs`'s own test already
+  established (`i8::MIN.wrapping_abs() == i8::MIN`). `popcnt` and
+  `avgr_u` are genuinely NEW op shapes with no `i32x4`/`i16x8`
+  precedent in this interpreter: `popcnt` counts set bits per lane
+  (Hamming weight, bit-pattern-only -- no signed/unsigned split
+  needed); `avgr_u` computes `(a + b + 1) >> 1` widened to `u16` so
+  the `+1` cannot overflow the lane width. Verified with a dedicated
+  test proving `avgr_u(0xFF, 0)` rounds UP to `128`, not down to
+  `127` -- the one case that would silently hide a missing `+1`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.19] - 2026-08-18 (task #137-140 — SIMD: i8x16 comparison family)
+
+### Added
+
+- `register_simd` gains a new dispatch arm for `i8x16`'s own comparison
+  family (`EqI8x16 | NeI8x16 | LtSI8x16 | LtUI8x16 | GtSI8x16 |
+  GtUI8x16 | LeSI8x16 | LeUI8x16 | GeSI8x16 | GeUI8x16`): same
+  lane-wise BINARY shape and boolean-mask convention as `i16x8`'s and
+  `i32x4`'s own comparison families, but over all 16 `i8` lanes -- each
+  lane becomes all-1s (`-1i8`, i.e. `0xFF`) if true, all-0s otherwise.
+  Verified with a dedicated test proving `-1 <_s 1` (true, signed) and
+  `-1 <_u 1` i.e. `0xFF <_u 1` (false, unsigned) actually disagree --
+  the same signed/unsigned discipline `i16x8`'s own comparison test
+  already established.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.18] - 2026-08-18 (task #133-136 — SIMD: i16x8 comparison family)
 
 ### Added

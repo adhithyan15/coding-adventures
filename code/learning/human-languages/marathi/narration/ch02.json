@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d7d34ac586baf0bb",
+  "sourceHash": "fnv1a64:76482a70a494ffaa",
   "lessons": [
     {
       "id": "MR-C02-aahe",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:151eaa22ab083bf1",
+      "sourceHash": "fnv1a64:8d27ba5b3b1cc3b1",
       "notice": null,
       "blocks": [
         {
@@ -537,7 +537,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mira āhe) — \"my name is Mira.\""
+              "text": "माझं (mājhaṁ, my) + नाव (nāv, name) + [your name] + आहे (āhe, is) becomes माझं नाव मीरा आहे (mājhaṁ nāv Mīrā āhe) — \"my name is Mira.\""
             },
             {
               "kind": "speech",
@@ -582,11 +582,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"mājhaṁ nāv Mira āhe\" — my name is Mira",
+              "instruction": "\"mājhaṁ nāv Mīrā āhe\" — my name is Mira",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"mājhaṁ nāv Mira āhe\" — my name is Mira]"
+              "source": "[YOU SAY: \"mājhaṁ nāv Mīrā āhe\" — my name is Mira]"
             },
             {
               "kind": "prompt",
@@ -756,7 +756,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc477000accbb398",
+      "sourceHash": "fnv1a64:fb1c703edb1e5e9e",
       "notice": null,
       "blocks": [
         {
@@ -785,15 +785,16 @@
               "kind": "table",
               "headers": [
                 "Marathi",
+                "Say it",
                 "English"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "माझं नाव मीरा आहे. means My name is Mira.",
-                "तुमचं नाव काय आहे? means What's your name?",
-                "माझं नाव अरुण आहे. means My name is Arun.",
-                "भेटून आनंद झाला. means Pleased to meet you."
+                "Marathi: माझं नाव मीरा आहे. Say it: mājhaṁ nāv Mīrā āhe. English: My name is Mira.",
+                "Marathi: तुमचं नाव काय आहे? Say it: tumchaṁ nāv kāy āhe? English: What's your name?",
+                "Marathi: माझं नाव अरुण आहे. Say it: mājhaṁ nāv Aruṇ āhe. English: My name is Arun.",
+                "Marathi: भेटून आनंद झाला. Say it: bheṭūn ānand jhālā. English: Pleased to meet you."
               ]
             }
           ]
@@ -1025,7 +1026,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7762eea32e74fd3b",
+      "sourceHash": "fnv1a64:ccc4ebc2a946857f",
       "notice": null,
       "blocks": [
         {
@@ -1072,7 +1073,7 @@
             },
             {
               "kind": "speech",
-              "text": "All three are shown here in the neuter, agreeing with the neuter नाव."
+              "text": "All three are shown here in the neuter, agreeing with the neuter नाव (nāv)."
             }
           ]
         },

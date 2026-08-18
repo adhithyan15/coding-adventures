@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:698a7e2e82e9ad58",
+  "sourceHash": "fnv1a64:58a4518fd27913b8",
   "lessons": [
     {
       "id": "MR-C04-bhetu",
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2f49ee8ecb088f8",
+      "sourceHash": "fnv1a64:b3595cc3593d4eb2",
       "notice": null,
       "blocks": [
         {
@@ -298,15 +298,16 @@
               "kind": "table",
               "headers": [
                 "Marathi",
+                "Say it",
                 "English"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "येतो / येते. means I'll be going. (\"I come again\").",
-                "पुन्हा भेटू. means See you again.",
-                "उद्या भेटू. means See you tomorrow.",
-                "काळजी घ्या. means Take care."
+                "Marathi: येतो / येते. Say it: yeto / yete. English: I'll be going. (\"I come again\").",
+                "Marathi: पुन्हा भेटू. Say it: punhā bheṭū. English: See you again.",
+                "Marathi: उद्या भेटू. Say it: udyā bheṭū. English: See you tomorrow.",
+                "Marathi: काळजी घ्या. Say it: kāḷjī ghyā. English: Take care."
               ]
             }
           ]

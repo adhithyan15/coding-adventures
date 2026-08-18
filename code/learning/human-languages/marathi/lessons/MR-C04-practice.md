@@ -20,12 +20,12 @@ reviews_of: [MR-C04-punha, MR-C04-bhetu, MR-C04-punha-bhetu, MR-C04-udya-bhetu, 
 
 ## The farewells
 
-| Marathi | English |
-|---|---|
-| येतो / येते. | I'll be going. ("I come again") |
-| पुन्हा भेटू. | See you again. |
-| उद्या भेटू. | See you tomorrow. |
-| काळजी घ्या. | Take care. |
+| Marathi | Say it | English |
+|---|---|---|
+| येतो / येते. | *yeto / yete.* | I'll be going. ("I come again") |
+| पुन्हा भेटू. | *punhā bheṭū.* | See you again. |
+| उद्या भेटू. | *udyā bheṭū.* | See you tomorrow. |
+| काळजी घ्या. | *kāḷjī ghyā.* | Take care. |
 
 ## Atoms banked this chapter
 

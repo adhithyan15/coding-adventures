@@ -71,7 +71,7 @@ sound, no shared meaning — a family accent, not a family.
 - [YOU SAY: "брат" — hard final t, brother]
 - [YOU SAY: the minimal pair — "брат, брать" — one soft sign apart]
 - [YOU SAY: "brother, frāter, bhrātar" — the same word, three languages]
-- [YOU SAY: the chapter so far — "друг, подруга, брат"]
+- [YOU SAY: the chapter so far — "друг, подруга, брат" (*drug, podrúga, brat*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER, RU-LEX-BRAT, RU-ETYMON-BRAT-BEAR, RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR, RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A] -->

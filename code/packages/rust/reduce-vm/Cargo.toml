@@ -1,0 +1,15 @@
+[package]
+name = "reduce-vm"
+version = "0.1.0"
+edition = "2021"
+description = "A tiny interpreter for the Reduce v0 arithmetic/assignment IIR subset, built directly on dynval-runtime. Deliberately independent of twig-vm/mccarthy-lisp-vm/macsyma-vm/derive-vm (each language's own VM); shares only the dynval-runtime foundation."
+
+[lib]
+name = "reduce_vm"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Provides `RuntimeError`, the error type dynval-runtime's builtins return.
+lang-runtime-core = { path = "../lang-runtime-core" }

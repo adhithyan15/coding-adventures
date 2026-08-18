@@ -21,13 +21,16 @@ anyway). Which tracks are *offered* still resolves synchronously, from
 `MAPPED_LANGUAGE_IDS` — the glob's KEYS are file paths, not file contents, so
 that question costs no plan bytes.
 
-**Largest eager chunk: 502,251 → 286,481 bytes**, and the ceiling stops being a
+**Largest eager chunk: 502,251 → 287,353 bytes**, and the ceiling stops being a
 countdown: no `curriculum.json` byte is eagerly imported any more, so the daily
 tranche of lessons cannot walk it back up. Per-track chunking also means a
 Telugu tranche re-downloads Telugu's plan alone instead of invalidating one
 shared half-megabyte blob. This is the fix HL-C110 named as the next candidate,
 done the way it insisted — the bytes left the preload set, rather than being
-split across two eager chunks to satisfy a gate that measures the largest one.
+split across several eager chunks to satisfy a gate that measures the largest
+one. It supersedes the `maxSize: 250_000` briefly placed on the old
+`curriculum-plans` group, which turned one 502 kB eager chunk into four smaller
+ones the browser still downloaded in full before first paint.
 
 Two things the eager import got for free and the lazy one has to earn, both
 handled here. Failure is **not** memoised — caching a rejected promise would
@@ -41,8 +44,8 @@ picker and resolve to nothing.
 Behaviour unchanged, verified in a browser and not only in tests: 22 lazy
 `curriculum-*` chunks fetch on load with no console errors, Learn shows all 22
 frontier steps with their per-track lesson counts, the language picker still
-reports 2,991 mapped micro-lessons and 841 extensions, Lessons and Concepts
-render the full 3,077-lesson corpus, and a seeded `learn-progress` blob still
+reports 3,034 mapped micro-lessons and 851 extensions, Lessons and Concepts
+render the full 3,120-lesson corpus, and a seeded `learn-progress` blob still
 restores and advances the Spanish frontier.
 
 ## Unreleased — handwriting moves into a package

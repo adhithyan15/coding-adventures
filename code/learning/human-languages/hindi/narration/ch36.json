@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6b415dff491322be",
+  "sourceHash": "fnv1a64:21e94bfc2692c481",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ece8edc0c8ff0a94",
+      "sourceHash": "fnv1a64:bf4ccc0cb3c4a4b6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -249,7 +249,7 @@
             },
             {
               "kind": "speech",
-              "text": "घर ends in a consonant and is masculine too — so a consonant ending tells you nothing at all. That one you simply learn."
+              "text": "घर (ghar) ends in a consonant and is masculine too — so a consonant ending tells you nothing at all. That one you simply learn."
             }
           ]
         },

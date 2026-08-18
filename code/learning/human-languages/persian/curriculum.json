@@ -227,6 +227,27 @@
         "FA-EXT-022-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "FA-PATH-016",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "FA-EXT-023-SCRIPT-NINE"
+      ]
     }
   ],
   "spine": {
@@ -253,7 +274,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "FA-PATH-003"
+        "FA-PATH-003",
+        "FA-PATH-016"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -879,6 +901,26 @@
         "FA-C14-mard",
         "FA-C14-zan",
         "FA-C14-dust"
+      ]
+    },
+    {
+      "id": "FA-EXT-023-SCRIPT-NINE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write nine Perso-Arabic letters from memory, read seven words the book taught me by ear, and explain why a gap can appear inside a Persian word.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
       ]
     }
   ]

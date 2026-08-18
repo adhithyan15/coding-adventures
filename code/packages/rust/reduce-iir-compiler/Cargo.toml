@@ -1,0 +1,23 @@
+[package]
+name = "reduce-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers a Reduce CST (coding-adventures-reduce-parser's GrammarASTNode) into an IIRModule, per reduce-iir-vm.md's v0 scope: literal integer arithmetic (+ - * /, unary), assignment, and unevaluated symbolic expressions. A retarget of reduce-runtime's/reduce-to-semantic-ir's CST dispatch, following macsyma-iir-compiler's precedent. Emits IIR over the dynval-runtime value model so the module runs end-to-end on reduce-vm."
+
+[lib]
+name = "reduce_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-reduce-parser = { path = "../reduce-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+reduce-vm = { path = "../reduce-vm" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Oracle ground truth (tests/oracle.rs) + the shared renderer used to
+# format both the ground truth and the compiled-side read-back result.
+coding-adventures-reduce-runtime = { path = "../reduce-runtime" }

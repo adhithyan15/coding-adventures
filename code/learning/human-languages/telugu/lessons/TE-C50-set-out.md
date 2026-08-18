@@ -42,7 +42,7 @@ reviews_of: [TE-C50-journey]
 
 Native, and a picture rather than an abstraction. బయలు is open ground, the outside; దేరు is to rise, to come forth. To set out is to come out into the open.
 
-Set it beside ప్రయాణం and you have two languages building the same idea from opposite ends: Sanskrit from the going, Telugu from the doorstep.
+Set it beside ప్రయాణం (*prayāṇaṁ*) and you have two languages building the same idea from opposite ends: Sanskrit from the going, Telugu from the doorstep.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

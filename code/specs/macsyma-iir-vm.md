@@ -97,10 +97,33 @@ that shape everything below:
 | `Symbol`, bound (assigned earlier in program order) | substitute the register already holding its value |
 | `Symbol`, free/unbound | `const %v, Var(name) : "symbol"` — interned tagged symbol |
 | `x: expr` (assignment) | lower `expr`; bind `name → register` in the lowering environment; the statement's own value is `expr`'s value (matches the REPL echo) |
-| `Add`/`Sub`/`Mul`/`Div`/`Neg`, every operand already concrete | `call_builtin "+"/"-"/"*"/"/",  [a, b]` — genuinely executed by the VM at run time, proving real opcode execution, not frontend-folded |
-| `Apply(head, args)` otherwise — any symbolic operand, or any head outside `{Add,Sub,Mul,Div,Neg}` (`Pow`, comparisons, `and`/`or`/`not`, a user call) | inert cons-chain via `call_builtin "cons"`, mirroring `lower_quote` (§2) |
+| `Add`/`Sub`/`Mul`, every operand already concrete | `call_builtin "+"/"-"/"*",  [a, b]` — genuinely executed by the VM at run time, proving real opcode execution, not frontend-folded |
+| `Add`/`Sub`/`Mul`, any operand symbolic | inert cons-chain via `call_builtin "cons"`, mirroring `lower_quote` (§2) — matches `macsyma-runtime` leaving e.g. `x+y` unevaluated |
+| `Div`, both operands **direct literal integers** dividing evenly | `call_builtin "/", [a, b]` — the narrower exactness rule below |
+| `Div`, any operand symbolic | inert cons-chain (matches `macsyma-runtime` leaving `x/y` unevaluated) |
+| `Div`, any other shape (non-exact literal division, or a concrete-but-non-literal operand on either side) | **rejected — explicit `MacsymaIirError`** (neither evaluating nor building inert data is verifiably correct — see below) |
+| `Neg`, operand concrete | `call_builtin "-", [a]` (unary) |
+| `Neg`, operand symbolic | inert cons-chain |
+| `Pow`, comparisons (`=`/`#`/`<`/`>`/`<=`/`>=`), `and`/`or`/`not`, a user call `f(x)` | **rejected outright — explicit `MacsymaIirError`**, no inert-data fallback (see below) |
 | `Rational`, `Float`, `Str` | **rejected — explicit `MacsymaIirError`** (substrate gap, not scope choice) |
-| `if`/`elseif`/`else`, `while`, `for`, `block(...)`, `return(...)`, `[...]` (list), comparisons, `and`/`or`/`not`, `:=` (function def), a postfix call `f(x)` | **rejected — explicit `MacsymaIirError`, "construct not supported in v0"** |
+| `if`/`elseif`/`else`, `while`, `for`, `block(...)`, `return(...)`, `[...]` (list), `:=` (function def) | **rejected — explicit `MacsymaIirError`, "construct not supported in v0"** |
+
+**Why `Pow`/comparisons/`and`/`or`/`not`/calls are rejected outright, unlike
+`Add`/`Sub`/`Mul`/`Div`:** `symbolic-vm`'s handler table — the real evaluator
+`macsyma-runtime` runs — has genuine handlers for `Pow`/comparison/logical
+heads (`pow_handler`, the `LESS`/`GREATER`/… handlers, `and_handler`,
+`or_handler`) that *numerically evaluate* a concrete pair of operands
+(`2^3` → `8`, `3<5` → `true`), unlike leaving them symbolic. Building inert
+data for a *concrete* instance of one of these would therefore silently
+disagree with `macsyma-runtime`'s own ground truth — the same mis-lowering
+risk control-flow forms have (below), not a mere scope gap. `Add`/`Sub`/`Mul`
+never have this hazard (integer arithmetic is always exact, so their real
+handlers and "stay symbolic when not fully concrete" behavior coincide
+exactly with the inert-data fallback). `Div` has a narrower version of the
+same hazard — Macsyma's exact `Rational` result for a non-exact division
+isn't representable in v0 at all — resolved by the literal-only exactness
+rule above rather than blanket rejection, since the common case (`20/4`)
+would otherwise be needlessly unavailable.
 
 **Why control-flow forms are rejected outright, not built as inert data like
 Apply nodes:** `macsyma-to-semantic-ir/src/lower.rs`'s own module doc
@@ -130,18 +153,26 @@ Of Macsyma's 24 grammar rules (`code/grammars/macsyma/macsyma.grammar`, the
 same set `macsyma-to-semantic-ir` covers in full):
 
 **Accepted:** literal integers; `+ - * /` (binary chains and unary
-`-`/`+`); assignment (`x: expr`); free-symbol references; any other
-construct reachable only as an *unevaluated* `Apply` (e.g. `x^y`,
-`sin(x)`, `x+y` where `x`,`y` are free) — represented as inert data, never
-evaluated.
+`-`/`+`); assignment (`x: expr`); free-symbol references; `+`/`-`/`*`
+(and `/`, within its exactness rule) applied to any symbolic operand —
+represented as inert data, never evaluated (e.g. `x+y`, `2*x` where `x`,
+`y` are free).
 
-**Rejected, with an explicit error:** `Rational`/`Float`/`Str` literals;
-`:=` (function definition); `if`/`elseif`/`else`; `while`; `for ... in ...
-do` / `for ... thru/while/unless ... do`; `block(...)`; `return(...)`;
-`[...]` (list literals); comparisons (`= # < > <= >=`); `and`/`or`/`not`;
-any postfix function call `f(x)` (since applying an unknown head requires
-either evaluation semantics v0 doesn't have, or a bound-function lookup v0
-doesn't have either).
+**Rejected, with an explicit error, in every shape (concrete or
+symbolic):** `Rational`/`Float`/`Str` literals; `:=` (function
+definition); `if`/`elseif`/`else`; `while`; `for ... in ... do` / `for
+... thru/while/unless ... do`; `block(...)`; `return(...)`; `[...]`
+(list literals); `^`/`**` (power); comparisons (`= # < > <= >=`);
+`and`/`or`/`not`; any postfix function call `f(x)`. Power, comparisons,
+and logical operators are rejected even when every operand is a free
+symbol (e.g. `x^y`, `x and y`) — unlike `+`/`-`/`*`/`/`, they get no
+inert-data fallback at all, since `macsyma-runtime`'s real handlers for
+these heads evaluate a *concrete* instance rather than leaving it
+symbolic, and a per-operand-shape carve-out would be more complexity than
+this v0 slice warrants (§3 explains the underlying hazard). A function
+call is rejected outright too: applying an unknown head requires either
+evaluation semantics v0 doesn't have, or a bound-function lookup v0
+doesn't have either.
 
 This mirrors the disclosed-subset convention every `<lang>-to-semantic-ir`
 v0.1.0 already follows (HML01 §3's `matlab-to-semantic-ir` precedent:
@@ -159,22 +190,33 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Macs
 
 `lower.rs`'s rule-name dispatch is structurally copied from
 `macsyma-to-semantic-ir/src/lower.rs` — same `unwrap_single`/`child_nodes`/
-`as_token` CST-walking helpers, same `MAX_EXPR_DEPTH = 256` recursion guard
-and the same four chain-length guards (`check_chain_length`,
-`check_postfix_chain_length`, `check_if_chain_length`,
-`check_apply_arg_count`) and the iterative `measure_depth_iterative`/
-`drop_iterative` pair — since it walks the identical CST and inherits the
-identical stack-overflow risk profile that crate's own security-review
-history (four confirmed rounds, documented in its `CHANGELOG.md`) already
-hardened against. Every non-v0 rule arm returns `Err` instead of lowering.
+`as_token` CST-walking helpers and the same `MAX_EXPR_DEPTH = 256`
+recursion guard plus `check_chain_length` (the flat additive/multiplicative
+chain guard). v0's much narrower accepted grammar doesn't reach
+`macsyma-to-semantic-ir`'s other three guards — `check_postfix_chain_length`
+guards chained calls, `check_if_chain_length` guards an `elseif` chain, and
+`check_apply_arg_count` guards an arglist, and all three constructs are
+rejected outright in v0 (§4), so there is no path that builds the deep
+structure those guards defend against. The same is true of the iterative
+`measure_depth_iterative`/`drop_iterative` pair: that machinery exists in
+`macsyma-to-semantic-ir` because it builds a separate `Expr` tree that a
+*later* pass walks again, recursively, across nested `(...)` boundaries the
+per-node guards don't compose across; `macsyma-iir-compiler` instead emits
+flat `IIRInstr`s directly during the one CST-walking recursion `MAX_EXPR_DEPTH`
+already bounds, so there is no second recursive walk to guard — the same
+reasoning `mccarthy-lisp-iir-compiler` (which also has no iterative
+measure/drop pass) already establishes for this crate shape. Every non-v0
+rule arm returns `Err` instead of lowering.
 
 Dependencies: `coding-adventures-macsyma-parser`, `interpreter-ir`, `parser`,
 `lexer`, `symbolic-ir` (for the canonical `Add`/`Sub`/`Mul`/`Div`/`Neg` head
 name constants, keeping this frontend in lockstep with
-`macsyma-to-semantic-ir`). Dev-dependencies: `macsyma-vm`, `dynval-runtime`,
-`coding-adventures-macsyma-runtime` (oracle ground truth), `cas-pretty-printer`
-(oracle text diff) — mirrors `mccarthy-lisp-iir-compiler/Cargo.toml`'s own
-dev-dependency shape exactly.
+`macsyma-to-semantic-ir`). Dev-dependencies: `macsyma-vm`, `dynval-runtime`
+— enough for this crate's own unit tests (every accepted construct
+round-tripped through `macsyma-vm`, every rejected construct's explicit-error
+path). `coding-adventures-macsyma-runtime` and `cas-pretty-printer` (oracle
+ground truth + text diff) are added later, in the oracle-test PR (§8 PR 4)
+— pulling them in here would be dead weight until that harness exists.
 
 ### `code/packages/rust/macsyma-vm`
 
@@ -187,10 +229,17 @@ built directly on `dynval-runtime`" — mirroring `mccarthy-lisp-vm`'s own
 description, "deliberately independent" of `twig-vm`/`mccarthy-lisp-vm`
 (sharing only the `dynval-runtime` foundation). The dispatch loop only needs
 `const`/`call_builtin`/`ret` (v0 has no branches or closures) — trimmed
-further than `mccarthy-lisp-vm`'s own loop. Every `call_builtin` routes
-through `LispyBinding::resolve_builtin` — no new runtime logic, only an
-`Operand → LispyValue` reader copied from `mccarthy-lisp-vm`'s
-`read_operand`/`konst_value`.
+further than `mccarthy-lisp-vm`'s own loop. Every `call_builtin` dispatches
+through a small local `resolve_builtin` match table calling
+`dynval_runtime::builtins::{add,sub,mul,div,cons,car,cdr}` directly —
+mirroring `mccarthy-lisp-vm`'s own `resolve_builtin`, which likewise hand-
+rolls a per-language table over the shared `builtins::*` functions rather
+than going through the generic `LangBinding`/`LispyBinding` trait (that
+trait's `resolve_builtin` exists for the native-codegen backends'
+type-directed dispatch, per `dynval-runtime/src/binding.rs`, and no
+existing VM interpreter — Twig's or McCarthy Lisp's — uses it). No new
+runtime logic either way; only an `Operand → LispyValue` reader copied from
+`mccarthy-lisp-vm`'s `read_operand`/`konst_value`.
 
 Dependencies: `interpreter-ir`, `dynval-runtime`, `lang-runtime-core` (for
 `RuntimeError`) — identical to `mccarthy-lisp-vm/Cargo.toml`.
@@ -241,10 +290,14 @@ target instead of `node`:
   reassignment threading (`x: 3$ x: x+1$ x`); free-symbol symbolic results
   (`x+y`, `2*x`, `x-y+z`); exact-division cases only (`20/4`).
 - **Explicit-error unit tests** (separate from the diffed corpus, each
-  asserting a specific `Err` variant): `1.5`, `7/2`, `x := f(x)`, `if x>0
-  then 1 else 0`, `while x<5 do x`, `[1,2,3]`, `sin(x)` as a *call*
-  (distinct from `sin(x)` appearing only as unevaluated data, which is
-  accepted per §4), `x=y`, `x and y`.
+  asserting a specific `Err` variant): `1.5`, `7/2`, `x: 6$ x/2` (concrete
+  but non-literal division), `x := f(x)`, `if x>0 then 1 else 0`, `while
+  x<5 do x`, `[1,2,3]`, `sin(x)` (a function call — always rejected, not
+  just when applied, per §4's correction), `x=y`, `x and y`, `x^2`. These
+  already exist as `macsyma-iir-compiler`'s own crate-local unit tests
+  (shipped in the crate-skeleton/lowering PR, §8 PR 2); the oracle-test PR
+  (§8 PR 4) reuses the same case list against the cross-checked harness
+  rather than re-deriving it.
 - **`known_bug`:** expected empty for v0's corpus — excluded constructs are
   cleanly rejected and unit-tested separately, not silently-mismatching
   diffed entries.
@@ -252,20 +305,27 @@ target instead of `node`:
 ## 8. PR sequencing
 
 1. **Spec only** (this document). No code.
-2. **Crate skeletons** — both crates created with `BUILD`/README/CHANGELOG,
-   workspace-registered, smallest working slice (`const`/`ret` only,
-   mirroring `mccarthy-lisp-vm`'s own minimal doc-comment example) proving
-   the plumbing before the real dispatch table lands.
-3. **Working lowering + VM dispatch** — the full v0 rule-dispatch table
-   (§3/§4), `macsyma-vm`'s `call_builtin` routing through
-   `LispyBinding::resolve_builtin`, all explicit-error paths, crate-local
-   unit tests.
-4. **Oracle test** — `macsyma-iir-compiler/tests/oracle.rs` per §7, CI green.
-5. **Spec-sync follow-up** (CLAUDE.md rule #9) — reconcile any divergence
-   found during PR 3 back into this spec, called out explicitly in that
-   commit message.
+2. **Crate skeletons + working lowering + VM dispatch** — both crates
+   created with `BUILD`/README/CHANGELOG, workspace-registered; the full v0
+   rule-dispatch table (§3/§4) and `macsyma-vm`'s dispatch loop, with every
+   accepted and rejected construct crate-locally unit-tested. Originally
+   planned as two PRs (an inert `const`/`ret`-only skeleton, then the real
+   dispatch table); consolidated into one once building it showed v0's own
+   accepted grammar is already narrow enough that a meaningfully smaller
+   "just prove the plumbing" cut didn't exist — the two PRs would have
+   differed mostly in the presence of the arithmetic `combine`/`/`-exactness
+   logic, not in scale.
+3. **Oracle test** — `macsyma-iir-compiler/tests/oracle.rs` per §7, CI green.
+4. **Spec-sync follow-up** (CLAUDE.md rule #9) — this document was corrected
+   in step 2 itself (not deferred) once implementation surfaced a real
+   inconsistency in the original draft: §3's value-representation table and
+   §4's scope list disagreed about whether `Pow`/comparisons/`and`/`or`/`not`
+   ever get an inert-data fallback. They don't, in any shape — resolved in
+   favor of correctness (§3's "why rejected outright" explanation) since
+   `macsyma-runtime`'s real handlers evaluate concrete instances of those
+   heads, so inert data would have silently disagreed with ground truth.
 
-`/security-review` before pushing PR 3 and PR 4. Before PR 3: confirm
+`/security-review` before pushing PR 2 and PR 3. Before PR 2: confirm
 whether `code/scripts/miri-twig-vm.sh`'s scope already covers
 `mccarthy-lisp-vm`-shaped crates (`grep -n mccarthy
 code/scripts/miri-twig-vm.sh`) — this plan makes zero changes to
