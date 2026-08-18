@@ -775,11 +775,11 @@ pub fn get_atomic_op_by_name(name: &str) -> Option<&'static AtomicOpInfo> {
 // (`[0xAE, 0x01]`) -- a `u8` field, as `AtomicOpInfo::sub_opcode` uses,
 // cannot represent it at all.
 
-/// What this first-slice `SimdOpInfo` entry does at execution time. This
-/// intentionally covers only the 5 opcodes this slice implements; expect
-/// this to grow real shape (lane width, arithmetic op, comparison
-/// predicate, etc.) as later PRs add more of the ~230-opcode family --
-/// see `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan.
+/// What this `SimdOpInfo` entry does at execution time. This intentionally
+/// covers only the `i32x4` lane width plus `v128.const`; expect this to
+/// grow real shape (other lane widths, more arithmetic ops, shuffles,
+/// etc.) as later PRs add more of the ~230-opcode family -- see
+/// `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SimdOpKind {
     /// `v128.const` -- push a 16-byte immediate constant.
@@ -792,6 +792,34 @@ pub enum SimdOpKind {
     /// if equal, all-0s (`0`) otherwise (WASM's boolean-mask convention
     /// for SIMD comparisons).
     Eq,
+    /// `i32x4.ne` -- lane-wise inequality, same boolean-mask convention as `Eq`.
+    Ne,
+    /// `i32x4.lt_s` -- lane-wise signed less-than, boolean-mask convention.
+    LtS,
+    /// `i32x4.lt_u` -- lane-wise unsigned less-than, boolean-mask convention.
+    LtU,
+    /// `i32x4.gt_s` -- lane-wise signed greater-than, boolean-mask convention.
+    GtS,
+    /// `i32x4.gt_u` -- lane-wise unsigned greater-than, boolean-mask convention.
+    GtU,
+    /// `i32x4.le_s` -- lane-wise signed less-than-or-equal, boolean-mask convention.
+    LeS,
+    /// `i32x4.le_u` -- lane-wise unsigned less-than-or-equal, boolean-mask convention.
+    LeU,
+    /// `i32x4.ge_s` -- lane-wise signed greater-than-or-equal, boolean-mask convention.
+    GeS,
+    /// `i32x4.ge_u` -- lane-wise unsigned greater-than-or-equal, boolean-mask convention.
+    GeU,
+    /// `i32x4.sub` -- lane-wise wrapping subtraction.
+    Sub,
+    /// `i32x4.mul` -- lane-wise wrapping multiplication.
+    Mul,
+    /// `i32x4.neg` -- lane-wise arithmetic negation. UNARY, unlike every
+    /// other kind above (`Add`/`Sub`/`Mul`/`Eq`/`Ne`/comparisons all pop
+    /// TWO `v128`s and push one; `Neg` pops exactly ONE `v128` and pushes
+    /// one) -- see this module's own execution-handler dispatch, which
+    /// funnels `Neg` through a separate arm from the binary lane-wise ops.
+    Neg,
     /// `i32x4.extract_lane` -- read one `i32` lane back out of a `v128`,
     /// selected by a lane-index immediate (0-3). Not in the spec's
     /// original 4-opcode minimal slice, but genuinely required to make
@@ -816,19 +844,38 @@ pub struct SimdOpInfo {
     pub kind: SimdOpKind,
 }
 
-/// The 5 SIMD opcodes this first slice implements, verified against
-/// authoritative sources (the SIMD proposal's `BinarySIMD.md`, cross-
-/// checked against the W3C core spec for the first 4) -- not guessed or
-/// reconstructed from memory. `i32x4.extract_lane` is the one addition
-/// beyond the original 4-opcode spec scope, added because it's the only
-/// way to observe a `v128` result as a plain scalar -- see
-/// `SimdOpKind::ExtractLane`'s own doc comment.
+/// The SIMD opcodes this repo implements, verified against authoritative
+/// sources (the SIMD proposal's `BinarySIMD.md`, cross-checked against
+/// the W3C core spec for the first 4) -- not guessed or reconstructed
+/// from memory. `i32x4.extract_lane` is the one addition beyond the
+/// original 4-opcode spec scope, added because it's the only way to
+/// observe a `v128` result as a plain scalar -- see
+/// `SimdOpKind::ExtractLane`'s own doc comment. The `i32x4.mul`/`neg`/
+/// `sub` and full comparison family (`ne`/`lt_s`/`lt_u`/`le_s`/`le_u`/
+/// `gt_s`/`gt_u`/`ge_s`/`ge_u`) widen this first slice to unblock the
+/// real, pinned-commit `simd_i32x4_arith.wast`/`simd_i32x4_cmp.wast`
+/// corpus files -- their exact sub-opcode bytes were fetched live from
+/// `BinarySIMD.md` and cross-checked against the already-implemented
+/// `i32x4.eq`/`i32x4.add` entries below (both matched exactly), same
+/// verification discipline as the original 5.
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
     SimdOpInfo { name: "i32x4.splat", sub_opcode: 0x11, kind: SimdOpKind::Splat },
     SimdOpInfo { name: "i32x4.eq", sub_opcode: 0x37, kind: SimdOpKind::Eq },
+    SimdOpInfo { name: "i32x4.ne", sub_opcode: 0x38, kind: SimdOpKind::Ne },
+    SimdOpInfo { name: "i32x4.lt_s", sub_opcode: 0x39, kind: SimdOpKind::LtS },
+    SimdOpInfo { name: "i32x4.lt_u", sub_opcode: 0x3A, kind: SimdOpKind::LtU },
+    SimdOpInfo { name: "i32x4.gt_s", sub_opcode: 0x3B, kind: SimdOpKind::GtS },
+    SimdOpInfo { name: "i32x4.gt_u", sub_opcode: 0x3C, kind: SimdOpKind::GtU },
+    SimdOpInfo { name: "i32x4.le_s", sub_opcode: 0x3D, kind: SimdOpKind::LeS },
+    SimdOpInfo { name: "i32x4.le_u", sub_opcode: 0x3E, kind: SimdOpKind::LeU },
+    SimdOpInfo { name: "i32x4.ge_s", sub_opcode: 0x3F, kind: SimdOpKind::GeS },
+    SimdOpInfo { name: "i32x4.ge_u", sub_opcode: 0x40, kind: SimdOpKind::GeU },
+    SimdOpInfo { name: "i32x4.neg", sub_opcode: 0xA1, kind: SimdOpKind::Neg },
     SimdOpInfo { name: "i32x4.add", sub_opcode: 0xAE, kind: SimdOpKind::Add },
+    SimdOpInfo { name: "i32x4.sub", sub_opcode: 0xB1, kind: SimdOpKind::Sub },
+    SimdOpInfo { name: "i32x4.mul", sub_opcode: 0xB5, kind: SimdOpKind::Mul },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1247,8 +1294,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_5_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 5);
+    fn simd_ops_table_has_the_expected_17_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 17);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1295,5 +1342,32 @@ mod tests {
     fn simd_op_unknown_sub_opcode_returns_none() {
         assert!(get_simd_op(0xFFFF).is_none());
         assert!(get_simd_op_by_name("i8x16.shuffle").is_none(), "not yet implemented in this first slice");
+    }
+
+    #[test]
+    fn simd_i32x4_arith_and_cmp_widening_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from the SIMD proposal's BinarySIMD.md, cross-
+        // checked against the already-implemented i32x4.eq (0x37) and
+        // i32x4.add (0xAE) entries (both matched exactly) -- see this
+        // package's own CHANGELOG entry for the widening PR.
+        for (name, sub_opcode, kind) in [
+            ("i32x4.ne", 0x38, SimdOpKind::Ne),
+            ("i32x4.lt_s", 0x39, SimdOpKind::LtS),
+            ("i32x4.lt_u", 0x3A, SimdOpKind::LtU),
+            ("i32x4.gt_s", 0x3B, SimdOpKind::GtS),
+            ("i32x4.gt_u", 0x3C, SimdOpKind::GtU),
+            ("i32x4.le_s", 0x3D, SimdOpKind::LeS),
+            ("i32x4.le_u", 0x3E, SimdOpKind::LeU),
+            ("i32x4.ge_s", 0x3F, SimdOpKind::GeS),
+            ("i32x4.ge_u", 0x40, SimdOpKind::GeU),
+            ("i32x4.neg", 0xA1, SimdOpKind::Neg),
+            ("i32x4.sub", 0xB1, SimdOpKind::Sub),
+            ("i32x4.mul", 0xB5, SimdOpKind::Mul),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
     }
 }

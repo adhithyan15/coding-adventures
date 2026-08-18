@@ -1,5 +1,20 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.25 — 2026-08-18 — SIMD widening: i32x4 arithmetic + comparison family text-form (task #113-117)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover `i32x4.sub`/`mul`/`neg` and the
+  full comparison family (`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/`le_u`/
+  `ge_s`/`ge_u`) -- same "no immediate beyond the opcode byte itself"
+  shape `splat`/`add`/`eq` already had, so no new parsing logic, just a
+  wider match-arm pattern list. `i32x4.neg` takes exactly one folded
+  operand (unlike every binary op in this family), verified by a
+  dedicated test.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.24 — 2026-08-17 — real multi-memory memarg leading token (task #92/#110)
 
 ### Added
