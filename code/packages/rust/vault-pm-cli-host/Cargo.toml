@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 coding_adventures_csprng = { path = "../csprng" }
 coding_adventures_ct_compare = { path = "../ct-compare" }
+coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_zeroize = { path = "../zeroize" }
 
 [target.'cfg(unix)'.dependencies]

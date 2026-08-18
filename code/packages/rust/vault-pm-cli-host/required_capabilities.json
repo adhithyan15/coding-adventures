@@ -38,7 +38,55 @@
       "action": "call",
       "target": "operating-system cryptographic random source via rust/csprng",
       "justification": "Fills caller-owned initialization and encryption randomness without a user-space or deterministic fallback."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "DISPLAY, WAYLAND_DISPLAY",
+      "justification": "Detects which desktop clipboard family this session has, so a headless host fails closed instead of silently succeeding. Nothing is spawned and no clipboard is read during detection."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "/usr/bin/{pbcopy,pbpaste,wl-copy,wl-paste,xclip,xsel}, /bin/{pbcopy,pbpaste,wl-copy,wl-paste,xclip,xsel}",
+      "justification": "Probes for a clipboard utility in two root-owned directories only. PATH is never consulted, so a caller-controlled directory cannot supply the program a secret is written to."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "pbcopy, pbpaste, wl-copy, wl-paste, xclip, xsel",
+      "justification": "Writes, reads back, and clears the platform clipboard through pre-installed utilities with fixed compile-time argument vectors. The secret is written to the utility's standard input and never appears in argv, where ps would publish it to every account on the host."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "this same executable, via std::env::current_exe",
+      "justification": "Re-executes the running binary as a detached process that performs the configured timed clipboard clear, which a one-shot CLI cannot otherwise outlive. It receives a delay, a random salt, and a SHA-256 commitment on a pipe, never the copied value and never an argument."
+    },
+    {
+      "category": "proc",
+      "action": "fork",
+      "target": "the detached clipboard clearer",
+      "justification": "A second fork orphans the clearer to init and setsid detaches it from the terminal session, so a long-lived interactive shell accumulates no zombies and closing the terminal window does not cancel a pending clear."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "the detached clipboard clearer and spawned clipboard utilities",
+      "justification": "Arms alarm(delay + 30) in the clearer and kills any clipboard utility that exceeds a five-second bound, so no clipboard path can hang a terminal or leave a resident process."
+    },
+    {
+      "category": "stdin",
+      "action": "read",
+      "target": "the 73-byte clipboard-clear parameter block",
+      "justification": "Only the detached clearer reads standard input, and only a fixed-length block of a delay, a salt, and a commitment. No passphrase, record secret, or copied value is ever read from standard input; VLT-PM08's rule is unchanged."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "clipboard_clear_seconds, 1 through 3600",
+      "justification": "The detached clearer waits the configured timeout before verifying and clearing the clipboard."
     }
   ],
-  "justification": "CLI-only host boundary for non-redirectable bounded terminal input, fresh operating-system entropy, and create-new persistence of an already-encrypted portable artifact; it performs no configuration, provider, network, environment, or process access."
+  "justification": "CLI-only host boundary for non-redirectable bounded terminal input, fresh operating-system entropy, create-new persistence of an already-encrypted portable artifact, and clipboard delivery with a verified timed clear. Clipboard access spawns only pre-installed platform utilities with fixed argument vectors and this same executable, always passing secret-derived material on a pipe rather than in argv; it performs no configuration, provider, or network access."
 }

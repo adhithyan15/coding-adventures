@@ -52,6 +52,13 @@ Each vault table contains exactly:
 - `auto_lock_seconds`: 1 through 86,400; and
 - `clipboard_clear_seconds`: 1 through 3,600.
 
+`clipboard_clear_seconds` gained a reader in `VLT-PM46-cli-clipboard.md`: it is
+how long `--copy` waits before verifying that the clipboard still holds the
+value this product wrote, and clearing it if so. Until then it was a validated
+value with nothing behind it. Its range is restated at the process boundary
+that carries it to the detached clearer (VLT-PM46 §4.3), because a boundary
+that trusts its input is not a boundary.
+
 The default vault must exist.
 
 Each storage table contains exactly:

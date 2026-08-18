@@ -2,6 +2,58 @@
 
 ## Unreleased
 
+- **`--copy` now works** on `password generate` and `totp code`, the third
+  piece of `VLT-PM00` §23 item 11. Specified by `VLT-PM46-cli-clipboard.md`.
+  Both commands have parsed `--copy` and then refused it with the unsupported
+  class since they shipped, because no clipboard adapter existed anywhere in
+  the product. The adapter is `coding_adventures_vault_pm_cli_host::clipboard`;
+  this crate is the wiring.
+
+  **`--copy` is not a new disclosure path.** Every step of both ceremonies
+  happens in the same order with the same audit consequences; only the final
+  delivery differs. `totp code --copy` still reserves its audit inputs before
+  authentication, still unlocks, still reads the clock a second time, and still
+  publishes one `ItemRead` event before releasing anything, with VLT-PM45 §3.1's
+  outcome table unchanged. Its non-secret validity line still goes to standard
+  output. `password generate --copy` still publishes nothing, because minting a
+  password no vault stores is not a vault access.
+
+  **The confirmation prompt is new text**, because the old one would be a false
+  statement: "Copy secret to this system's clipboard?" rather than "Reveal
+  secret on this terminal?". A consent ceremony that misdescribes what it is
+  consenting to is worse than none, since it manufactures a record of an
+  agreement nobody made.
+
+  **Clipboard availability is checked first**, before any prompt, unlock, clock
+  reading, entropy reservation, or audit event — exactly where the old blanket
+  refusal sat, and for the same reason. Only the condition narrowed, from
+  "always" to "when this host has no clipboard", so a headless runner still
+  gets `unsupported` (exit 8) without being asked for a passphrase first.
+
+  **Which timeout is used differs by command, and that is forced rather than
+  chosen.** `totp code` opens a vault, so the selected vault's
+  `clipboard_clear_seconds` is already in hand and is used. `password generate`
+  may not read config at all — VLT-PM44 §1 requires it to resolve no platform
+  layout and to work where `init` has never run — so it uses the product
+  default of 30. VLT-PM46 §6 states the consequence rather than hiding it.
+- **Added `vault-pm clipboard clear`**, the detached half of `--copy`: the
+  process `vault-pm` re-executes itself as so that a clear scheduled thirty
+  seconds out survives the exit of a one-shot process. It is listed in `USAGE`
+  rather than hidden, because a closed grammar with a secret verb in it is not
+  a closed grammar. It opens no vault, resolves no platform layout, takes no
+  writer lock, prompts for nothing, and publishes no audit event; typed by hand
+  it reads zero bytes and exits 2. Its parameters arrive on standard input
+  precisely because argv is world-readable through `ps`. An interactive session
+  refuses the verb: a shell's standard input is a person's terminal, not the
+  pipe a parent wrote.
+- Added `CliHost::confirm_secret_copy`, `CliHost::ensure_clipboard_available`,
+  `CliHost::copy_revealed_text`, and `CliHost::run_scheduled_clipboard_clear`,
+  so every clipboard effect crosses one injected seam and the CLI-level tests
+  need no display server.
+- Factored `authenticated_access` into `open_authenticated_access`, which also
+  returns the selected vault's `clipboard_clear_seconds`. The twenty-nine
+  existing call sites are unchanged.
+
 - **Added `vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)`**, the
   second of `VLT-PM00` §23 item 11. Specified by
   `VLT-PM45-cli-totp-code.md`.

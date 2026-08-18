@@ -17,7 +17,73 @@ auditable adapters:
   without following or replacing an existing final path, synchronizes the
   bytes, and requests owner-only mode on Unix; and
 - `read_portable_export` reads one non-empty regular artifact under an exact
-  metadata and streaming byte ceiling before application authentication.
+  metadata and streaming byte ceiling before application authentication; and
+- `clipboard` delivers one already-authorized secret to the platform clipboard
+  and schedules a **verified** clear of it (VLT-PM46).
+
+## The clipboard adapter
+
+The clipboard is not reachable from portable Rust, `vault-pm` is a one-shot
+process with nothing for a thirty-second timer to live in, and the clipboard is
+a shared bus that other things write to. The module answers those three,
+in order, with a pre-installed platform utility, a detached re-execution of this
+same binary, and a clear that verifies before it wipes.
+
+**The secret goes on a pipe, never in an argument.** `ps` and
+`/proc/<pid>/cmdline` publish one process's command line to every account on the
+host, and a commitment to a six-digit TOTP code is brute-forceable in
+microseconds — so the value is written to the utility's standard input and the
+clearer's delay, salt, and digest are written to a pipe. Every argument vector
+in the module is a compile-time `&'static [&'static str]`, so there is no type
+here a secret could be interpolated into.
+
+**Utilities are resolved from `/usr/bin` and `/bin` only.** `PATH` is never
+consulted, because it is caller-controlled: resolving through it would hand a
+live credential to the standard input of a program chosen by whoever could
+prepend a directory. `/usr/local/bin` is excluded deliberately — it is where
+locally-installed software lives and is group- or user-writable on a meaningful
+fraction of real machines. A utility installed elsewhere is not found and
+`--copy` fails closed.
+
+| Session | Write | Read | Clear |
+|---|---|---|---|
+| macOS | `pbcopy` | `pbpaste` | `pbcopy`, empty input |
+| Wayland | `wl-copy` | `wl-paste --no-newline` | `wl-copy --clear` |
+| X11 + `xclip` | `xclip -selection clipboard` | `… -o` | `…`, empty input |
+| X11 + `xsel` | `xsel --clipboard --input` | `--output` | `--delete` |
+| headless, Windows, anything else | — | — | — |
+
+Wayland is chosen ahead of X11, because a Wayland session commonly also exports
+`DISPLAY` for XWayland. A family is chosen only when all of its programs are
+present, so `wl-copy` without `wl-paste` falls through rather than copying
+something whose clear could never be verified. Windows fails closed: it ships
+`clip.exe` but no console-mode clipboard *reader*, and this contract will not
+perform a clear it cannot verify.
+
+**The clear is verified, never unconditional.** The clearer reads the
+clipboard, recomputes `SHA-256(salt || value)`, constant-time compares, and
+wipes only on a match. An unconditional timed clear eats the paragraph a person
+copied thirty seconds later, and does it in a way nobody would attribute to
+their password manager. Two pending clears therefore need no coordination.
+
+**The clearer is this same binary, re-executed and detached.** It receives the
+delay, a fresh salt, and the commitment — never the value. It forks a second
+time so it is orphaned to `init` and a long-lived interactive shell accumulates
+no zombies, calls `setsid` so closing the terminal cannot cancel it, discards
+its output, and arms `alarm(delay + 30)` so a wedged utility cannot leave it
+resident. If the copy succeeds but the clearer cannot be spawned, the clipboard
+is cleared immediately and the failure reported.
+
+Every utility wait is bounded at five seconds, every read at 4 KiB. Values must
+be non-empty printable ASCII with no space, at most 1,024 bytes: that is what
+makes the round trip a byte comparison, since whitespace and multi-byte
+sequences are exactly what the read tools disagree about.
+
+Tests drive tool selection, trusted-directory resolution, the value contract,
+the parameter block, and the verified clear against an in-memory clipboard
+double, so all of it runs on a headless CI runner. The real platform round trip
+is opt-in behind `VAULT_PM_CLIPBOARD_E2E=1`, because running it would overwrite
+the developer's own clipboard.
 
 Secret input never comes from process stdin, argv, an environment variable, a
 configuration value, or a URL. Redirecting stdin therefore cannot inject a

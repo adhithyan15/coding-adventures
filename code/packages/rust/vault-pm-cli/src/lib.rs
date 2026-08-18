@@ -42,6 +42,9 @@ use coding_adventures_vault_pm_application::{
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
+use coding_adventures_vault_pm_cli_host::clipboard::{
+    copy_and_schedule_clear, read_clear_request_from_stdin, run_scheduled_clear, PlatformClipboard,
+};
 use coding_adventures_vault_pm_cli_host::{
     read_portable_export, write_portable_export, CliHostError, ControllingTerminal, OsEntropy,
     SecretPrompt, TextPrompt,
@@ -81,7 +84,16 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+
+/// The verb this binary re-executes itself with to perform a timed clear.
+///
+/// It is a `&'static` slice of `&'static str` on purpose. The detached clearer
+/// is spawned with exactly these arguments and nothing else, so there is no
+/// place in the spawn for a secret, a salt, or a commitment to appear —
+/// everything sensitive travels on the child's standard input, because argv is
+/// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
+const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -274,8 +286,39 @@ pub trait CliHost {
     /// Require explicit interactive confirmation before revealing a secret.
     fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
 
+    /// Require explicit interactive confirmation before a clipboard copy.
+    ///
+    /// Separate from [`Self::confirm_secret_reveal`] because the two prompts
+    /// describe different consequences (VLT-PM46 §3.1). The ceremony around
+    /// them — exact lowercase `yes`, `Denied` on refusal or host failure — is
+    /// identical.
+    fn confirm_secret_copy(&self) -> Result<bool, HostError>;
+
     /// Deliver one audited UTF-8 secret directly to the controlling terminal.
     fn write_revealed_text(&self, value: &str) -> Result<(), HostError>;
+
+    /// Answer whether this host can perform a clipboard delivery at all.
+    ///
+    /// Called *before* any prompt, unlock, clock reading, entropy reservation,
+    /// or audit event, so a person on a headless host learns that `--copy` is
+    /// impossible without first typing their master passphrase. It spawns
+    /// nothing and reads no clipboard.
+    fn ensure_clipboard_available(&self) -> Result<(), HostError>;
+
+    /// Deliver one audited UTF-8 secret to the clipboard and arm its clear.
+    ///
+    /// `clear_after_seconds` is VLT-PM07's `clipboard_clear_seconds`. The
+    /// delivery is complete only when the verified clear has also been
+    /// scheduled: an adapter that copied and failed to schedule must undo the
+    /// copy rather than report success (VLT-PM46 §5.4).
+    fn copy_revealed_text(&self, value: &str, clear_after_seconds: u32) -> Result<(), HostError>;
+
+    /// Perform the detached half of a `--copy`: wait, verify, clear.
+    ///
+    /// Runs only in the process `vault-pm` spawned on itself. Its parameters
+    /// arrive on standard input, never in argv, because argv is world-readable
+    /// through `ps`.
+    fn run_scheduled_clipboard_clear(&self) -> Result<(), HostError>;
 
     /// Collect and confirm a distinct portable-export passphrase without echo.
     fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
@@ -533,10 +576,32 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
+    fn confirm_secret_copy(&self) -> Result<bool, HostError> {
+        ControllingTerminal
+            .confirm_secret_copy()
+            .map_err(map_native_cli_host)
+    }
+
     fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
         ControllingTerminal
             .write_revealed_text(value)
             .map_err(map_native_cli_host)
+    }
+
+    fn ensure_clipboard_available(&self) -> Result<(), HostError> {
+        PlatformClipboard::detect()
+            .map(|_| ())
+            .map_err(map_native_cli_host)
+    }
+
+    fn copy_revealed_text(&self, value: &str, clear_after_seconds: u32) -> Result<(), HostError> {
+        copy_and_schedule_clear(value, clear_after_seconds, CLIPBOARD_CLEAR_ARGUMENTS)
+            .map_err(map_native_cli_host)
+    }
+
+    fn run_scheduled_clipboard_clear(&self) -> Result<(), HostError> {
+        let request = read_clear_request_from_stdin().map_err(map_native_cli_host)?;
+        run_scheduled_clear(&request).map_err(map_native_cli_host)
     }
 
     fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
@@ -637,6 +702,18 @@ where
             Err(error) => CliOutput::failure(error),
         };
     }
+    // VLT-PM46 §2.1. Dispatched here for the same reason `password generate`
+    // is: the detached clearer touches no vault. It must not resolve the
+    // platform layout and must not take the cross-process writer lock — a
+    // process that sleeps for the configured timeout while holding the writer
+    // lock would block every other `vault-pm` invocation for that whole window,
+    // which is the one thing a background helper must never do.
+    if matches!(invocation.command, Command::ClipboardClear) {
+        return match host.run_scheduled_clipboard_clear() {
+            Ok(()) => CliOutput::success(""),
+            Err(error) => CliOutput::failure(map_host(error)),
+        };
+    }
     // The shell is dispatched before `execute` because `execute` acquires the
     // cross-process writer lock for the whole command. A shell must not hold
     // that lock while it waits at a prompt, and its own per-command
@@ -695,6 +772,15 @@ enum Command {
         /// Where the one secret this command produces is delivered.
         output: SecretOutputMode,
     },
+    /// Perform the detached half of a `--copy` delivery (VLT-PM46 §2.1).
+    ///
+    /// This is not a command for people, and the usage text lists it anyway: a
+    /// closed grammar with a secret verb in it is not a closed grammar. It is
+    /// what `vault-pm` re-executes itself as, so that a clear scheduled thirty
+    /// seconds out survives the exit of a one-shot process. It opens no vault,
+    /// resolves no platform layout, takes no writer lock, prompts for nothing,
+    /// and publishes no audit event; its parameters arrive on standard input.
+    ClipboardClear,
     PortableExport {
         destination: PathBuf,
     },
@@ -799,7 +885,13 @@ enum Command {
 enum SecretOutputMode {
     /// Confirm on the controlling terminal, then write there and nowhere else.
     Reveal,
-    /// Reserved by VLT-PM00 §14.4; refused until a clipboard adapter exists.
+    /// Confirm on the controlling terminal, then write to the system clipboard
+    /// and schedule a verified clear (VLT-PM46).
+    ///
+    /// The confirmation, the audit event, and their ordering are identical to
+    /// [`Self::Reveal`]; only the final delivery differs. `--copy` is a change
+    /// of channel, not a new disclosure path, and the ceremony above it is what
+    /// makes that true.
     Copy,
 }
 
@@ -887,6 +979,7 @@ where
         "passphrase" => parse_passphrase(tail),
         "password" => parse_password(tail),
         "totp" => parse_totp(tail),
+        "clipboard" => parse_clipboard(tail),
         "export" => parse_export(tail),
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
@@ -908,6 +1001,7 @@ where
                 | Command::VaultCreate { .. }
                 | Command::Help
                 | Command::PasswordGenerate { .. }
+                | Command::ClipboardClear
         )
     {
         return Err(CliFailure::InvalidCommand);
@@ -1273,6 +1367,29 @@ fn parse_password(arguments: &[String]) -> Result<Command, CliFailure> {
 /// gave for the generator and VLT-PM45 §2.2 repeats: the interesting half of
 /// this command's output is a live second factor, and a default that printed it
 /// would put it into shell history the first time anyone redirected the command.
+/// Parse the `clipboard` noun.
+///
+/// Exactly `clipboard clear`, and nothing else. There is no delay flag, no
+/// salt flag, and no digest flag — not as an omission but as the point: those
+/// three values are precisely what must never appear in an argument vector,
+/// since `ps` and `/proc/<pid>/cmdline` publish one process's arguments to
+/// every account on the machine. They arrive on standard input instead
+/// (VLT-PM46 §2.2).
+///
+/// | Input | Result |
+/// |---|---|
+/// | `clipboard clear` | the command |
+/// | `clipboard clear 30` | invalid; there are no parameters here |
+/// | `clipboard` | invalid |
+/// | `clipboard wipe` | invalid; the verb is closed |
+/// | `--vault work clipboard clear` | invalid; it opens no vault |
+fn parse_clipboard(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action] if action == "clear" => Ok(Command::ClipboardClear),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
 fn parse_totp(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [action, item, flag] if action == "code" => Ok(Command::TotpCode {
@@ -1311,9 +1428,19 @@ fn parse_password_length(value: &str) -> Result<usize, CliFailure> {
 /// The order of the four steps below is the contract from VLT-PM44 §5, not an
 /// implementation detail.
 ///
-/// `--copy` is refused *first*, before any prompt, because a person who typed
-/// it asked for a delivery this build cannot perform; confirming a reveal they
-/// did not ask for and then failing would be worse than failing immediately.
+/// **Clipboard availability is checked *first*, before any prompt.** This is
+/// the position VLT-PM44 §2.3's blanket `--copy` refusal used to occupy, kept
+/// for the same reason and with a narrower condition: a person who asked for a
+/// delivery this host cannot perform should be told immediately, not after
+/// confirming a reveal they did not ask for. Only the condition changed, from
+/// "always" to "when this host has no clipboard" (VLT-PM46 §3.2).
+///
+/// The clear delay is the **product default**, not a configured value, and
+/// that is forced by this command's own contract rather than chosen: §1 above
+/// says it resolves no platform layout and works where `init` has never run, so
+/// there is no config file it is allowed to open. VLT-PM46 §6 records the
+/// consequence — a person who configured 120 seconds for their vault gets 30
+/// for a generated password.
 ///
 /// Confirmation comes *before* generation. VLT-PM00 §14.6 requires an
 /// interactive confirmation before any reveal, and putting it first buys a
@@ -1333,18 +1460,46 @@ fn password_generate(
     output: SecretOutputMode,
 ) -> Result<CliOutput, CliFailure> {
     if matches!(output, SecretOutputMode::Copy) {
-        return Err(CliFailure::Unsupported);
+        host.ensure_clipboard_available().map_err(map_host)?;
     }
-    if !host.confirm_secret_reveal().map_err(map_host)? {
+    let confirmed = match output {
+        SecretOutputMode::Reveal => host.confirm_secret_reveal(),
+        SecretOutputMode::Copy => host.confirm_secret_copy(),
+    }
+    .map_err(map_host)?;
+    if !confirmed {
         return Err(CliFailure::InvalidCommand);
     }
     let mut reserve = Zeroizing::new(vec![0_u8; policy.required_entropy_bytes()]);
     host.fill_entropy(reserve.as_mut_slice())
         .map_err(map_host)?;
     let password = generate_password(policy, &reserve).map_err(map_password_policy)?;
-    host.write_revealed_text(password.as_str())
-        .map_err(map_host)?;
+    deliver_one_secret(
+        host,
+        output,
+        password.as_str(),
+        DEFAULT_CLIPBOARD_CLEAR_SECONDS,
+    )?;
     Ok(CliOutput::success(""))
+}
+
+/// Hand one already-authorized secret to the channel the person chose.
+///
+/// This function is the *entire* difference between `--reveal` and `--copy`.
+/// Everything above it — grammar, unlock, confirmation, audit publication — has
+/// already happened identically for both, which is what makes `--copy` a change
+/// of channel rather than a second, quieter way to get a secret out.
+fn deliver_one_secret(
+    host: &dyn CliHost,
+    output: SecretOutputMode,
+    value: &str,
+    clear_after_seconds: u32,
+) -> Result<(), CliFailure> {
+    match output {
+        SecretOutputMode::Reveal => host.write_revealed_text(value),
+        SecretOutputMode::Copy => host.copy_revealed_text(value, clear_after_seconds),
+    }
+    .map_err(map_host)
 }
 
 fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
@@ -1591,24 +1746,57 @@ fn dispatch(
             item_id,
             base_revision,
         } => conflict_merge_opaque(host, paths, writer, selected_vault, item_id, base_revision),
-        Command::Help | Command::Shell | Command::PasswordGenerate { .. } => {
-            unreachable!("help, shell, and password generate return before writer acquisition")
+        Command::Help
+        | Command::Shell
+        | Command::PasswordGenerate { .. }
+        | Command::ClipboardClear => {
+            unreachable!(
+                "help, shell, password generate, and clipboard clear return before writer acquisition"
+            )
         }
     }
 }
 
+/// One unlocked vault, plus the policy values the ceremony above it may need.
+///
+/// `clipboard_clear_seconds` is carried here rather than re-read at delivery
+/// time because the config was already loaded and the selected vault already
+/// resolved to get this far. Loading it a second time would be a second durable
+/// read inside a command whose durable-write ordering VLT-PM41 pins down, and
+/// an observation about a command must not move the command.
+struct AuthenticatedAccess {
+    access: VaultAccessV1,
+    store: StorageCoreApplicationStore<LocalBackend>,
+    clipboard_clear_seconds: u32,
+}
+
+/// Unlock and return only what the twenty-nine existing call sites want.
+///
+/// A thin wrapper over [`open_authenticated_access`] so that adding a policy
+/// value to the opened result did not become a twenty-nine-file edit.
 fn authenticated_access(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
     selected_vault: Option<&ConfigName>,
 ) -> Result<(VaultAccessV1, StorageCoreApplicationStore<LocalBackend>), CliFailure> {
+    let opened = open_authenticated_access(host, paths, writer, selected_vault)?;
+    Ok((opened.access, opened.store))
+}
+
+fn open_authenticated_access(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<AuthenticatedAccess, CliFailure> {
     let exact_config = writer
         .load_config()
         .map_err(map_local_host)?
         .ok_or(CliFailure::InvalidCommand)?;
     let config = decode_config(&exact_config)?;
     let vault = configured_vault(paths, &config, selected_vault)?;
+    let clipboard_clear_seconds = vault.clipboard_clear_seconds();
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
     let repository_factory = configured_repository_factory(&config, vault)?;
@@ -1627,7 +1815,11 @@ fn authenticated_access(
             &repository_factory,
         )
         .map_err(map_application)?;
-    Ok((access, application_store))
+    Ok(AuthenticatedAccess {
+        access,
+        store: application_store,
+        clipboard_clear_seconds,
+    })
 }
 
 fn audited_access_inputs(
@@ -2862,12 +3054,20 @@ fn item_reveal(
 /// The step order is VLT-PM45 §3.2, §4.1, and §5.3, not an implementation
 /// detail, and three of the steps are where they are on purpose.
 ///
-/// **`--copy` is refused first**, before the audit reservation and before the
-/// passphrase prompt. A person who typed it asked for a delivery this build
-/// cannot perform; making them unlock the vault and confirm a reveal before
-/// telling them so would be worse than telling them immediately. This matches
-/// `password_generate`, and when a clipboard adapter lands both stop refusing
-/// on the same day.
+/// **`--copy`'s clipboard is checked first**, before the audit reservation and
+/// before the passphrase prompt. That is exactly where VLT-PM45 §2.3's blanket
+/// refusal used to sit, and it stays there for the same reason: making someone
+/// unlock the vault and confirm a disclosure before telling them the delivery
+/// is impossible would be worse than telling them immediately. Only the
+/// condition narrowed, from "always" to "when this host has no clipboard"
+/// (VLT-PM46 §3.2). The check spawns nothing, reads no clipboard, and publishes
+/// no audit event, so a host without one costs a person nothing.
+///
+/// **Everything between the check and the delivery is unchanged.** The audit
+/// event, its ordering, its outcomes, and the second clock reading are the same
+/// for both output modes; `--copy` alters the last step and nothing else. The
+/// confirmation prompt is the one visible difference, because it has to
+/// describe a clipboard rather than this terminal (VLT-PM46 §3.1).
 ///
 /// **The audit inputs are reserved before authentication**, unchanged from
 /// `item_reveal`: VLT-PM15's ceremony requires the complete advisory time and
@@ -2898,11 +3098,19 @@ fn totp_code(
     output: SecretOutputMode,
 ) -> Result<CliOutput, CliFailure> {
     if matches!(output, SecretOutputMode::Copy) {
-        return Err(CliFailure::Unsupported);
+        host.ensure_clipboard_available().map_err(map_host)?;
     }
     let (wall_time_ms, randomness) = audited_access_inputs(host)?;
-    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
-    let (confirmed, confirmation_error) = match host.confirm_secret_reveal() {
+    let AuthenticatedAccess {
+        access,
+        store: application_store,
+        clipboard_clear_seconds,
+    } = open_authenticated_access(host, paths, writer, selected_vault)?;
+    let confirmation = match output {
+        SecretOutputMode::Reveal => host.confirm_secret_reveal(),
+        SecretOutputMode::Copy => host.confirm_secret_copy(),
+    };
+    let (confirmed, confirmation_error) = match confirmation {
         Ok(confirmed) => (confirmed, None),
         Err(error) => (false, Some(error)),
     };
@@ -2946,7 +3154,7 @@ fn totp_code(
         return Err(map_host(error));
     }
     let code = computed.map_err(map_application)?;
-    host.write_revealed_text(code.code()).map_err(map_host)?;
+    deliver_one_secret(host, output, code.code(), clipboard_clear_seconds)?;
     let remaining = code.remaining_seconds();
     drop(code);
     Ok(CliOutput::success(format!(
@@ -4794,7 +5002,18 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::ExportDestinationExists
         | CliHostError::InvalidImportSource
         | CliHostError::InvalidEntropyRequest => HostError::Invalid,
-        CliHostError::UnsupportedPlatform => HostError::Unsupported,
+        CliHostError::InvalidClipboardClearRequest => HostError::Invalid,
+        // A host with no clipboard session, and a value this adapter cannot
+        // round-trip, are both absent *capabilities* rather than broken
+        // providers: nothing failed, the thing was never there. Exit 8.
+        CliHostError::UnsupportedPlatform
+        | CliHostError::ClipboardUnavailable
+        | CliHostError::ClipboardValueUnsupported => HostError::Unsupported,
+        // A clipboard utility that was there and then failed, was killed, or
+        // could not be spawned is a provider failure. Exit 7.
+        CliHostError::ClipboardWriteFailed
+        | CliHostError::ClipboardReadFailed
+        | CliHostError::ClipboardClearScheduleFailed => HostError::Unavailable,
         CliHostError::TerminalUnavailable
         | CliHostError::TerminalAccessFailed
         | CliHostError::TerminalModeFailed
@@ -4830,7 +5049,7 @@ mod tests {
     use std::collections::VecDeque;
     use std::fs;
     use std::path::PathBuf;
-    use std::sync::atomic::{AtomicU64, Ordering};
+    use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
     use std::sync::Mutex;
 
     static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
@@ -4914,6 +5133,16 @@ mod tests {
         /// through*, which is the only way to reach an ordering bug that a
         /// wholly-broken clock would hide behind an earlier failure.
         clock_reads_before_failure: Option<u64>,
+        /// Whether this host claims to have a usable clipboard.
+        ///
+        /// Interior mutability so a test can take the clipboard away without a
+        /// new constructor — which matters because "there is no clipboard" is
+        /// exactly the CI runner's situation and has to be reachable from any
+        /// scripted host.
+        clipboard_available: AtomicBool,
+        /// Every `(value, clear_after_seconds)` pair this host was asked to
+        /// copy, in order.
+        copied: Mutex<Vec<(Zeroizing<Vec<u8>>, u32)>>,
     }
 
     impl TestHost {
@@ -5008,6 +5237,8 @@ mod tests {
                 clock_step_ms,
                 clock_reads: AtomicU64::new(0),
                 clock_reads_before_failure: None,
+                clipboard_available: AtomicBool::new(true),
+                copied: Mutex::new(Vec::new()),
             }
         }
 
@@ -5084,6 +5315,23 @@ mod tests {
             let revealed = self.revealed.lock().unwrap();
             assert_eq!(revealed.len(), 1, "expected exactly one revealed value");
             revealed[0].as_slice().to_vec()
+        }
+
+        /// Take this host's clipboard away, as a headless runner does.
+        fn without_clipboard(self) -> Self {
+            self.clipboard_available.store(false, Ordering::Relaxed);
+            self
+        }
+
+        /// The one value this host was asked to copy, and its clear delay.
+        fn copied_only(&self) -> (Vec<u8>, u32) {
+            let copied = self.copied.lock().unwrap();
+            assert_eq!(copied.len(), 1, "expected exactly one copied value");
+            (copied[0].0.as_slice().to_vec(), copied[0].1)
+        }
+
+        fn copied_count(&self) -> usize {
+            self.copied.lock().unwrap().len()
         }
     }
 
@@ -5253,12 +5501,46 @@ mod tests {
             self.text().map(|answer| answer.as_str() == "yes")
         }
 
+        fn confirm_secret_copy(&self) -> Result<bool, HostError> {
+            self.text().map(|answer| answer.as_str() == "yes")
+        }
+
         fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
             self.revealed
                 .lock()
                 .unwrap()
                 .push(Zeroizing::new(value.as_bytes().to_vec()));
             Ok(())
+        }
+
+        fn ensure_clipboard_available(&self) -> Result<(), HostError> {
+            if self.clipboard_available.load(Ordering::Relaxed) {
+                Ok(())
+            } else {
+                Err(HostError::Unsupported)
+            }
+        }
+
+        fn copy_revealed_text(
+            &self,
+            value: &str,
+            clear_after_seconds: u32,
+        ) -> Result<(), HostError> {
+            if !self.clipboard_available.load(Ordering::Relaxed) {
+                return Err(HostError::Unsupported);
+            }
+            self.copied.lock().unwrap().push((
+                Zeroizing::new(value.as_bytes().to_vec()),
+                clear_after_seconds,
+            ));
+            Ok(())
+        }
+
+        fn run_scheduled_clipboard_clear(&self) -> Result<(), HostError> {
+            // No detached process in a unit test: the scheduled clear's own
+            // behaviour is proved in `vault-pm-cli-host`, against a clipboard
+            // test double, where it can be checked without a display server.
+            Err(HostError::Invalid)
         }
 
         fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
@@ -9969,9 +10251,35 @@ mod tests {
             Ok(true)
         }
 
+        fn confirm_secret_copy(&self) -> Result<bool, HostError> {
+            self.record("confirm_secret_copy");
+            Ok(true)
+        }
+
         fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
             assert_eq!(value, "revealed");
             self.record("write_revealed_text");
+            Ok(())
+        }
+
+        fn ensure_clipboard_available(&self) -> Result<(), HostError> {
+            self.record("ensure_clipboard_available");
+            Ok(())
+        }
+
+        fn copy_revealed_text(
+            &self,
+            value: &str,
+            clear_after_seconds: u32,
+        ) -> Result<(), HostError> {
+            assert_eq!(value, "revealed");
+            assert_eq!(clear_after_seconds, DEFAULT_CLIPBOARD_CLEAR_SECONDS);
+            self.record("copy_revealed_text");
+            Ok(())
+        }
+
+        fn run_scheduled_clipboard_clear(&self) -> Result<(), HostError> {
+            self.record("run_scheduled_clipboard_clear");
             Ok(())
         }
 
@@ -10407,18 +10715,60 @@ mod tests {
         assert_eq!(silent.revealed_count(), 0);
     }
 
+    /// `--copy` on a host with no clipboard fails where the old blanket
+    /// refusal did: before the prompt.
+    ///
+    /// This is VLT-PM46 §3.2 and it is also the exact CI situation — a Linux
+    /// runner with neither display variable set. The scripted `yes` going
+    /// unconsumed is the evidence: nothing asked a person to authorize a
+    /// delivery that could not happen.
     #[test]
-    fn password_generate_copy_is_recognized_and_refused_before_any_prompt() {
+    fn password_generate_copy_fails_before_any_prompt_without_a_clipboard() {
         let root = TestRoot::new();
-        let host = confirming_host(&root, 1);
+        let host = confirming_host(&root, 1).without_clipboard();
         let refused = run(["password", "generate", "--copy"], &host);
         assert_eq!(refused.exit_code(), ExitCode::Unsupported);
         assert_eq!(refused.stderr(), "vault-pm: unsupported capability\n");
         assert!(refused.stdout().is_empty());
         assert_eq!(host.revealed_count(), 0);
-        // The scripted confirmation was never consumed: `--copy` fails before
-        // asking a person to authorize a delivery this build cannot perform.
+        assert_eq!(host.copied_count(), 0);
         assert_eq!(host.texts.lock().unwrap().len(), 1);
+    }
+
+    /// `--copy` delivers to the clipboard, to the terminal never, and uses the
+    /// product default delay because this command may not read config.
+    #[test]
+    fn password_generate_copy_delivers_to_the_clipboard_and_nowhere_else() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        let copied = run(["password", "generate", "--copy"], &host);
+        assert_eq!(copied.exit_code(), ExitCode::Success, "{copied:?}");
+        // Standard output and standard error stay empty: the whole result of
+        // this command is a secret, and it went to the clipboard.
+        assert!(copied.stdout().is_empty());
+        assert!(copied.stderr().is_empty());
+        // Nothing reached the terminal reveal path.
+        assert_eq!(host.revealed_count(), 0);
+        let (value, seconds) = host.copied_only();
+        assert_eq!(value.len(), DEFAULT_PASSWORD_LENGTH);
+        assert!(value.iter().all(u8::is_ascii_graphic));
+        // VLT-PM46 §6: no vault is open, so the product default is used.
+        assert_eq!(seconds, DEFAULT_CLIPBOARD_CLEAR_SECONDS);
+        assert_eq!(seconds, 30);
+    }
+
+    /// Refusing at the `--copy` prompt copies nothing.
+    #[test]
+    fn password_generate_copy_refusal_copies_nothing() {
+        let root = TestRoot::new();
+        for answer in ["no", "YES", "y", ""] {
+            let host =
+                TestHost::with_texts_and_entropy_seed(root.paths(), [], [answer.to_owned()], 1);
+            let refused = run(["password", "generate", "--copy"], &host);
+            assert_eq!(refused.exit_code(), ExitCode::InvalidInput);
+            assert_eq!(host.copied_count(), 0);
+            assert_eq!(host.revealed_count(), 0);
+        }
     }
 
     #[test]
@@ -10449,6 +10799,68 @@ mod tests {
         // And no passphrase was ever asked for: the scripted secret queue is
         // empty, and a command that prompted would have failed instead.
         assert_eq!(host.revealed_count(), 1);
+    }
+
+    /// The `clipboard clear` verb is closed, documented, and vault-free.
+    #[test]
+    fn clipboard_clear_grammar_is_closed_and_documented() {
+        assert_eq!(
+            parse(["clipboard", "clear"]),
+            default_invocation(Command::ClipboardClear)
+        );
+        // Listed rather than hidden: a closed grammar with a secret verb in it
+        // is not a closed grammar (VLT-PM46 §2.1).
+        assert!(USAGE.contains("vault-pm clipboard clear\n"));
+        for rejected in [
+            vec!["clipboard"],
+            vec!["clipboard", "wipe"],
+            vec!["clipboard", "clear", "30"],
+            vec!["clipboard", "clear", "--now"],
+            vec!["clipboard", "Clear"],
+            // It opens no vault, so a selector would be a statement with no
+            // referent.
+            vec!["--vault", "work", "clipboard", "clear"],
+        ] {
+            assert!(parse(rejected.clone()).is_err(), "{rejected:?}");
+        }
+        // A session refuses it: a shell's standard input is a person's
+        // terminal, not the pipe a parent wrote the parameter block into.
+        assert!(shell::is_refused("clipboard"));
+    }
+
+    /// The detached clearer is spawned with exactly the grammar's own verb and
+    /// nothing else.
+    ///
+    /// This is the argv gate from VLT-PM46 §9. It is stated as a round trip —
+    /// the spawn arguments parse back to exactly `ClipboardClear` — so that a
+    /// future edit which appends a delay, a salt, or a digest to the vector
+    /// fails here rather than quietly publishing a commitment to every account
+    /// on the machine through `ps`.
+    #[test]
+    fn the_detached_clearer_is_spawned_with_no_parameters_in_argv() {
+        assert_eq!(CLIPBOARD_CLEAR_ARGUMENTS, &["clipboard", "clear"]);
+        assert_eq!(CLIPBOARD_CLEAR_ARGUMENTS.len(), 2);
+        assert_eq!(
+            parse(CLIPBOARD_CLEAR_ARGUMENTS.iter().copied()),
+            default_invocation(Command::ClipboardClear)
+        );
+    }
+
+    /// `clipboard clear` resolves no layout and takes no writer lock.
+    ///
+    /// A background process that slept for the configured timeout while
+    /// holding the cross-process writer lock would block every other
+    /// `vault-pm` invocation for that whole window.
+    #[test]
+    fn clipboard_clear_opens_no_vault_and_fails_on_an_empty_parameter_block() {
+        let root = TestRoot::new();
+        let host = TestHost::new(root.paths(), []);
+        let failed = run(["clipboard", "clear"], &host);
+        assert_eq!(failed.exit_code(), ExitCode::InvalidInput, "{failed:?}");
+        assert!(failed.stdout().is_empty());
+        assert!(!root.0.join("config").exists());
+        assert_eq!(host.revealed_count(), 0);
+        assert_eq!(host.copied_count(), 0);
     }
 
     #[test]
@@ -10668,7 +11080,7 @@ mod tests {
     }
 
     #[test]
-    fn totp_code_copy_is_recognized_and_refused_before_any_prompt() {
+    fn totp_code_copy_fails_before_any_prompt_without_a_clipboard() {
         let root = TestRoot::new();
         let paths = root.paths();
         let passphrase = b"totp copy passphrase".to_vec();
@@ -10684,12 +11096,124 @@ mod tests {
 
         // No passphrase and no confirmation are scripted. A command that
         // prompted for either would fail with a different class, so the
-        // `Unsupported` result is itself the evidence that neither happened.
-        let host = TestHost::new(paths, []);
+        // `Unsupported` result is itself the evidence that neither happened —
+        // and the audit chain below proves no attempt was recorded either.
+        let host = TestHost::new(paths.clone(), []).without_clipboard();
         let output = run(["totp", "code", &item, "--copy"], &host);
         assert_eq!(output.exit_code(), ExitCode::Unsupported, "{output:?}");
         assert!(output.stdout().is_empty());
         assert_eq!(host.revealed_count(), 0);
+        assert_eq!(host.copied_count(), 0);
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 109),
+        );
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read"))
+                .count(),
+            0,
+            "a delivery that never happened must leave no access row: {audit:?}"
+        );
+    }
+
+    /// `--copy` is the same ceremony as `--reveal` with a different last step.
+    ///
+    /// The interesting assertions are the ones about what did *not* change:
+    /// one `ItemRead` `Succeeded` row is still published, the non-secret
+    /// validity line is still on standard output, and the code is still absent
+    /// from every public channel. VLT-PM46 §3.
+    #[test]
+    fn totp_code_copy_keeps_the_whole_audit_ceremony_and_changes_only_delivery() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp clipboard passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            101,
+        );
+        let output = run(["totp", "code", &item, "--copy"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        // The code went to the clipboard and not to the terminal.
+        assert_eq!(host.revealed_count(), 0);
+        let (value, seconds) = host.copied_only();
+        assert_eq!(value, b"921300".to_vec());
+        // VLT-PM46 §6: this command opened a vault, so its configured value is
+        // the one used.
+        assert_eq!(seconds, DEFAULT_CLIPBOARD_CLEAR_SECONDS);
+        // The non-secret half of the output is unchanged.
+        assert_eq!(output.stdout(), "Code valid for 10 more seconds\n");
+        assert!(!output.stdout().contains("921300"));
+        assert_eq!(output.stderr(), "");
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 103),
+        );
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=succeeded"))
+                .count(),
+            1,
+            "{audit:?}"
+        );
+        assert!(!audit.stdout().contains("921300"));
+    }
+
+    /// Refusing at the `--copy` prompt publishes `Denied` and copies nothing.
+    #[test]
+    fn totp_code_copy_refusal_copies_nothing_and_still_audits() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp clipboard refusal passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let host = TestHost::with_texts(paths.clone(), [passphrase.clone()], ["no".to_owned()]);
+        let refused = run(["totp", "code", &item, "--copy"], &host);
+        assert_eq!(refused.exit_code(), ExitCode::InvalidInput, "{refused:?}");
+        assert_eq!(host.copied_count(), 0);
+        assert_eq!(host.revealed_count(), 0);
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 111),
+        );
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=denied"))
+                .count(),
+            1,
+            "{audit:?}"
+        );
     }
 
     #[test]

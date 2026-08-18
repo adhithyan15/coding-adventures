@@ -131,6 +131,16 @@ deserves "not yet", not "invalid command". When the clipboard ceremony lands,
 this refusal becomes a delivery path and nothing else about this document
 changes.
 
+**Amended by `VLT-PM46-cli-clipboard.md`.** The clipboard ceremony has landed
+and `--copy` is a delivery path, exactly as the paragraph above predicted:
+nothing else in this document changed. The refusal did not disappear, it
+narrowed — the check still happens in the same place, before any prompt, and
+still returns `unsupported` (exit 8), but its condition is now "this host has
+no clipboard" rather than "always". The delivery uses the product default
+`clipboard_clear_seconds` of 30 rather than a configured value, because §1 of
+this document forbids this command from resolving the platform layout or
+opening a config file; VLT-PM46 §6 records that consequence.
+
 ## 3. Character classes and the alphabet
 
 Four classes are selected by default. Each `--no-*` flag removes one. Removing
