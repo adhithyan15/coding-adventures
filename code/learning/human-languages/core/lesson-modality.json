@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:6a4561aab0fdc840",
+  "sourceHash": "fnv1a64:0cae75939088bc41",
   "summary": {
-    "totalLessons": 3051,
+    "totalLessons": 3061,
     "voice": 2161,
-    "sight": 585,
-    "pen": 305,
+    "sight": 586,
+    "pen": 314,
     "drivableLessons": 2161,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 936,
+    "chapterCount": 937,
     "drivablePrefixTotal": 1932,
     "fullyDrivableChapters": 612,
-    "unstartableChapters": 193,
+    "unstartableChapters": 194,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7067,15 +7067,16 @@
     },
     {
       "language": "persian",
-      "lessonCount": 59,
+      "lessonCount": 69,
       "voice": 57,
-      "sight": 2,
-      "pen": 0,
-      "drivablePercent": 97,
+      "sight": 3,
+      "pen": 9,
+      "drivablePercent": 83,
       "drivablePrefixTotal": 52,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -7340,6 +7341,21 @@
             "FA-C14-zan",
             "FA-C14-dust"
           ]
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 10,
+          "voice": 0,
+          "sight": 1,
+          "pen": 9,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "FA-W15-alef",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
@@ -45422,6 +45438,239 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:2159ff3d4b5fda4a"
+    },
+    {
+      "id": "FA-W15-alef",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 600,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6eb5695e68168b06",
+      "detachableSegments": [
+        "Script — first, which way the page runs",
+        "Script — the letter itself"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-lam",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5f853460147480f3",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-sin",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 620,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f668a6c5ce9c19d6",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-mim",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 630,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4384eb8737ce76cf",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-joining",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 640,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c0c6ae412657a75c",
+      "detachableSegments": [
+        "Script — the running line",
+        "Script — and the letters that refuse"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-be",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 650,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3d0182adae51d79b",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-te-nun",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 660,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:bab7255f58c28193",
+      "detachableSegments": [
+        "Script — two dots above",
+        "Script — one dot above, and a deeper bowl"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-he",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 670,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:10b541048ae022c0",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-W15-vav",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 680,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d0ae3266514de889",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "FA-C15-practice",
+      "language": "persian",
+      "chapter": 15,
+      "sequence": 690,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:48ce29e4d15814a3",
+      "detachableSegments": [
+        "Script — the words come back"
+      ]
     },
     {
       "id": "PT-C01-bom",

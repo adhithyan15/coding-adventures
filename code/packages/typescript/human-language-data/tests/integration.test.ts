@@ -119,7 +119,9 @@ describe("real curriculum", () => {
       // Chapter 12 adds nâm, del, dar, ketâb onto SPINE-EXCHANGE-NAMES; Chapter 13 adds
       // âsemân, khorshid, mâh, setâre, bârân onto SPINE-CHECK-WELLBEING; Chapter 14 adds
       // khâhar, pesar, mard, zan, dust onto SPINE-EXCHANGE-NAMES, closing the tranche.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+      // 14 -> 15: HL-C233, the track's first script chapter. Persian taught no letters
+      // at all before it, in 59 lessons across 14 chapters.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -1095,6 +1097,16 @@ describe("real curriculum", () => {
       "FA-C14-mard-meaning",
       "FA-C14-pesar-meaning",
       "FA-C14-zan-meaning",
+      "FA-C15-practice-vowels",
+      "FA-W15-alef-direction",
+      "FA-W15-be-dot",
+      "FA-W15-he-final",
+      "FA-W15-joining-break",
+      "FA-W15-lam-vs-alef",
+      "FA-W15-mim-tail",
+      "FA-W15-sin-teeth",
+      "FA-W15-te-nun-dots",
+      "FA-W15-vav-join",
       "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",

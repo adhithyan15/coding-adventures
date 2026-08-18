@@ -3879,6 +3879,24 @@
       "tex": "persian/book/chapters/ch14-people-words.tex"
     },
     {
+      "language": "persian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d0838dab3dd89a51",
+      "lessonIds": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "tex": "persian/book/chapters/ch15-script-nine.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b0efef039678335d",

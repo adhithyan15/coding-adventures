@@ -2455,6 +2455,13 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 15,
+      "output": "persian/book/chapters/ch15-script-nine.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "output": "portuguese/book/chapters/ch02-how-are-you.tex"
