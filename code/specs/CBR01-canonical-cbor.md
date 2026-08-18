@@ -66,6 +66,44 @@ and result types:
 - A legacy infallible convenience wrapper may remain for source compatibility,
   but it must delegate to the checked encoder and must never emit bytes for an
   invalid value.
+- A span-reporting map decoder, when offered, accepts exactly what `decode`
+  accepts and additionally reports, for each entry, where that entry's value
+  sat in the input. See *Value spans* below.
+
+## Value spans
+
+An implementation may offer a decoder that reports the byte range each map
+entry's value occupied in the input. It is optional: it changes no wire
+behavior, adds no error identifier to the table below, and an implementation
+without it is fully conformant.
+
+What makes such a decoder well-defined is the profile itself. Every rule the
+encoder applies is also enforced by the decoder — smallest-form arguments,
+definite lengths only, length-first key order with no duplicates — so an input
+that decodes has exactly one legal spelling, and that spelling is the one the
+encoder emits. For any value `v` decoded from a span `s` of input `b`:
+
+```text
+    b[s] == encode_checked(v)      whenever encode_checked(v) succeeds
+```
+
+The qualifier matters and is the reason the operation is worth offering. The
+decoder has no input-length bound; `max_encoded_bytes` bounds the *encoder*
+only. Inputs therefore exist that decode and will not re-encode, and for those
+`b[s]` is the value's canonical bytes even though `encode_checked` reports
+`encode-too-large`. A caller that passes an unrecognised sub-document through —
+holding it now, re-emitting it later without interpreting it — must take the
+span rather than re-encode the value, because the span cannot fail on any input
+that decoded at all.
+
+Two obligations on an implementation that offers it:
+
+- The spans must come from the same parse that validates the input, not from a
+  second, more permissive scanner. A span-reporting decode must reject exactly
+  what `decode` rejects, with the same identifier.
+- Input that is valid canonical CBOR but is not a map is a shape mismatch to be
+  reported in the host language's own vocabulary (an absent result, a distinct
+  status), not a profile violation. Only profile violations are errors.
 
 ## Portable resource limits
 

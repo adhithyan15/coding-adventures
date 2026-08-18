@@ -2,6 +2,82 @@
 
 All notable changes to this package are documented here.
 
+## [0.61.2] - 2026-08-17
+
+### Fixed
+
+- `open_active_vault` no longer fails because of one item's payload size. The
+  repair itself is in `vault-records` — `decode_record`'s opaque arm no longer
+  re-encodes the payload it just decoded — but the damage landed here, and this
+  is where it is pinned.
+
+  An opaque payload between canonical-CBOR's 1 MiB encode ceiling and this
+  crate's 16 MiB plaintext gate decoded fine and then failed `EncodeTooLarge`
+  on the re-encode. The error rose through `decode_item_revision` (as
+  `IntegrityFailure`), `read_candidate`, and `materialize_current_catalog` to
+  deny `open_active_vault`. Since `materialize_current_catalog` reads every
+  candidate of every item, one poisoned revision anywhere in the catalog denied
+  the whole vault — and because the failure is *during* open, there was no
+  session to delete the item from, no export to evacuate through, and no
+  ceremony of any kind. Recovery meant deleting local state or editing the store
+  by hand outside the product. This was the residual exposure recorded in
+  VLT-PM05 §13.2 as worse than anything the two preceding changes fixed: those
+  turned process aborts into closed errors on *write* paths, where a closed
+  error costs one record; on the open path a closed error is the loss.
+
+  The invariant this crate may now rely on is stated in the new VLT-PM05 §13.3:
+  any revision whose plaintext is within `MAX_PLAINTEXT_BYTES` and which decodes
+  materialises into the current catalog, whatever the encoder would say about
+  re-emitting it. It is narrow on purpose. Open still fails closed on everything
+  it should — corrupt frames, broken pins, failed signatures, a catalog past
+  `MAX_CATALOG_ENTRIES` — and it is about *size*, not about every per-item
+  failure: a peer-authored first-party record whose payload does not match its
+  schema still yields `SchemaMismatch` → `IntegrityFailure` and still denies
+  open. That residual is pre-existing, unchanged here, and deliberately deferred:
+  the size failure could be removed because the re-encode was never needed,
+  whereas a schema-invalid payload has to be *represented*, which means deciding
+  what a partly-unreadable item looks like to search, list, show, conflict
+  resolution, export, and restore.
+
+- `encode_any_record`'s opaque arm now routes through `map_record_encode_error`
+  like the six typed arms, instead of folding every `encode_opaque` failure into
+  `IntegrityFailure`. The wildcard was defensible while an oversized opaque
+  record could never be materialised — the arm's only reachable failure was
+  genuinely an integrity one — but the fix above makes such a record openable,
+  so the arm can now see `EncodeTooLarge` from stored bytes, most visibly on
+  `export`. Reporting that as `IntegrityFailure` tells an operator their store is
+  corrupt, which invites destructive recovery, when the store is intact and the
+  remedy is to delete one large item. That remedy is the escape hatch this
+  change exists to restore, so it must not be described in the vocabulary of
+  corruption — and `doctor`, which never calls `encode_any_record`, would have
+  reported the same vault `Healthy`, so the operator got two contradictory
+  answers. VLT-PM39's dependency is unaffected: a payload that is not valid CBOR
+  yields a non-size `CborError`, which still maps to `IntegrityFailure`, and the
+  existing fixture pins it — `encode_opaque` decodes the stored payload before it
+  encodes the envelope, so the two size variants are unreachable unless the
+  payload was already valid canonical CBOR, and a corrupt-but-large payload
+  cannot be laundered into a size error. Found by the round-1 security review of
+  this change.
+
+  One user-visible consequence: `vault-pm` exits 2 (`InvalidCommand`) rather than
+  6 (`Integrity`) when a command is refused for an oversized opaque record. That
+  is the exit code the six typed arms have produced since the preceding change,
+  so this makes the seventh consistent with them rather than introducing a new
+  behaviour. Stderr remains fixed and payload-blind.
+
+  The escape hatch of §13.2 now covers the opaque case on the same terms as the
+  first-party one, and both halves are pinned by test rather than inferred:
+  `a_synced_oversized_opaque_record_leaves_the_vault_openable` and
+  `a_synced_oversized_opaque_item_can_be_deleted` drive a real 1.5 MiB opaque
+  record delivered the only way such a record can arrive — published straight
+  into the shared object store by a device with a larger framing budget, since
+  the local mutation path stages the whole publication journal in local state
+  and will not write a 1.5 MiB frame. A sub-ceiling control
+  (`a_synced_opaque_record_under_the_encode_ceiling_opens`) uses the identical
+  fixture and delivery, so a failure is attributable to the size band rather
+  than to how the record was authored, and both regression tests were confirmed
+  red against the unfixed opaque arm before the fix landed.
+
 ## [0.61.1] - 2026-08-17
 
 ### Fixed

@@ -611,10 +611,27 @@ fn decode_operations(value: CborValue) -> Result<Vec<OperationId>, ApplicationEr
 ///
 /// `BoundExceeded` rather than `IntegrityFailure` because the record is
 /// not corrupt — it is merely larger than a fixed serialisation bound
-/// allows, which is precisely what `BoundExceeded` names. The opaque
-/// arm keeps `IntegrityFailure`: its dominant failure is genuinely one,
-/// namely stored payload bytes that are not valid CBOR at all, and
-/// VLT-PM39 depends on that mapping.
+/// allows, which is precisely what `BoundExceeded` names.
+///
+/// Every arm, the opaque one included, routes through
+/// [`map_record_encode_error`], so the size and integrity faults stay
+/// distinct on all seven. The opaque arm used to fold every
+/// `encode_opaque` failure into `IntegrityFailure` on the grounds that
+/// its dominant failure is genuinely one — stored payload bytes that are
+/// not valid CBOR at all — and while that reasoning still holds for the
+/// dominant case, the size case is no longer unreachable. Before
+/// `decode_record`'s opaque arm stopped re-encoding, an oversized opaque
+/// record could never be materialised, so this arm could never see
+/// `EncodeTooLarge` from stored bytes. Now that such a record opens, it
+/// can, and reporting it as `IntegrityFailure` would tell an operator
+/// their store is corrupt — inviting destructive recovery — when the
+/// remedy is to delete one large item. That remedy *is* the escape hatch
+/// VLT-PM05 §13.3 exists to restore, so it must not be described in the
+/// vocabulary of corruption.
+///
+/// VLT-PM39's dependency is unaffected: a payload that is not valid CBOR
+/// yields a non-size `CborError`, which `map_record_encode_error` still
+/// routes to `IntegrityFailure`.
 fn encode_any_record(record: &AnyRecord) -> Result<Vec<u8>, ApplicationError> {
     match record {
         AnyRecord::Login(value) => encode_record(value).map_err(map_record_encode_error),
@@ -628,8 +645,7 @@ fn encode_any_record(record: &AnyRecord) -> Result<Vec<u8>, ApplicationError> {
         AnyRecord::Opaque {
             content_type,
             payload_bytes,
-        } => encode_opaque(content_type, payload_bytes)
-            .map_err(|_| ApplicationError::IntegrityFailure),
+        } => encode_opaque(content_type, payload_bytes).map_err(map_record_encode_error),
     }
 }
 
@@ -1550,6 +1566,29 @@ mod tests {
         assert_eq!(
             encode_any_record(&invalid),
             Err(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn an_oversized_opaque_record_is_a_bound_not_an_integrity_fault() {
+        use coding_adventures_canonical_cbor::MAX_ENCODED_SIZE;
+
+        // Newly reachable: such a record could not be materialised until
+        // `decode_record`'s opaque arm stopped re-encoding, so this arm
+        // could not previously see a size failure from stored bytes. It
+        // must not be reported in the vocabulary of corruption -- the
+        // remedy is to delete one large item, which is the escape hatch of
+        // VLT-PM05 13.3, not to rebuild a store that is perfectly intact.
+        let mut payload = vec![0x5a_u8];
+        payload.extend_from_slice(&(MAX_ENCODED_SIZE as u32).to_be_bytes());
+        payload.extend(std::iter::repeat_n(0x5a_u8, MAX_ENCODED_SIZE));
+        let oversized = AnyRecord::Opaque {
+            content_type: "example/custom/v1".to_string(),
+            payload_bytes: payload,
+        };
+        assert_eq!(
+            encode_any_record(&oversized),
+            Err(ApplicationError::BoundExceeded)
         );
     }
 

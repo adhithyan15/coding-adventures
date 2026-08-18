@@ -772,10 +772,14 @@ would tell an operator their store is corrupt when in fact one record
 is merely too big. `check_plaintext_bound` remains in place after each
 encode; it is now the *outer* of two bounds rather than the only one.
 
-The pre-existing opaque arm of `encode_any_record` continues to fold
-all `encode_opaque` failures into `IntegrityFailure`, because its
-dominant failure is a genuine one — stored opaque payload bytes that
-are not valid CBOR — and that mapping is relied on by VLT-PM39.
+The opaque arm of `encode_any_record` originally folded all
+`encode_opaque` failures into `IntegrityFailure`, because while an
+oversized opaque record could not be materialised its only reachable
+failure was a genuine one — stored opaque payload bytes that are not
+valid CBOR. That premise no longer holds; see §13.3. The arm now routes
+through the same mapping as the six typed arms, which keeps VLT-PM39's
+dependency intact because a payload that is not valid CBOR still yields a
+non-size error.
 
 The guarantee this restores is VLT-PM00's fail-closed contract, on the
 paths that re-serialise an already-stored record: `item edit`, the
@@ -826,18 +830,125 @@ because the two it does not cover are worse, not better:
   candidate and returns `ConflictRequired` otherwise, so an oversized
   record on an item that is *also* conflicted cannot be deleted by the
   ordinary path at all.
-- **It requires a first-party record.** An oversized *opaque* record is
-  not merely unwritable, it is undecodable: `decode_record`'s opaque arm
-  re-encodes the payload to canonicalise it, so the failure lands during
-  `decode_item_revision` — that is, during vault *open*. No session is
-  ever established, and deletion needs one. Such a record denies the
-  whole vault rather than one item.
+- **It requires a first-party record.** An oversized *opaque* record used
+  to be not merely unwritable but undecodable, which denied the whole
+  vault rather than one item. **This one is now fixed**; §13.3 states the
+  repair and the invariant it establishes. The remaining exclusion is the
+  conflicted-item case above.
 
-Both are pre-existing and neither is reachable through anything this
-product will author, since the encode ceiling now refuses to produce
-such a record in the first place; they need a peer with a larger
-framing budget. They are tracked as follow-on work alongside the two
-repairs above, against this section.
+The conflicted-item exclusion is pre-existing and is not reachable
+through anything this product will author, since the encode ceiling
+refuses to produce such a record in the first place; it needs a peer with
+a larger framing budget. It is tracked as follow-on work alongside the
+two repairs above, against this section.
+
+### 13.3 Vault open never fails because of one item's payload size
+
+§13.2 named an oversized *opaque* record as the worst of the three
+residual exposures, and it was worse in kind rather than in degree. The
+other two degrade a working vault: one command is refused, or export is,
+and the operator still holds a session and can delete the offending item.
+This one removed the session itself.
+
+The mechanism was a single re-encode. `decode_record`'s opaque arm
+canonicalised the payload by re-encoding the value it had just decoded,
+so an opaque payload between 1 MiB and 16 MiB decoded and then failed
+`EncodeTooLarge`. That error rose without ever being softened:
+
+```text
+    decode_record            EncodeTooLarge
+      └─ decode_item_revision  IntegrityFailure
+           └─ read_candidate
+                └─ materialize_current_catalog
+                     └─ open_active_vault      Err
+```
+
+`materialize_current_catalog` reads every candidate of every item, so one
+poisoned revision anywhere in the catalog aborted the whole
+materialisation. And because it happens *during* open, there is no
+session to act from: no delete, no export, no conflict ceremony, no
+history walk. The vault is simply gone until the local store is deleted
+or hand-edited outside the product. One synced record, no attacker
+sophistication beyond delivering it once.
+
+The repair is in VLT02 (*Decoding never re-encodes*): the opaque arm
+returns the payload's own bytes rather than re-encoding them, which
+cannot fail on any input that decoded. This layer's behaviour is
+unchanged except that the failure no longer occurs, so no error mapping,
+no bound, and no ceremony in this spec changes.
+
+The invariant it establishes, which this layer now depends on:
+
+> **`open_active_vault` never fails because of an individual item's
+> payload size.** Any revision whose plaintext is within
+> `MAX_PLAINTEXT_BYTES` and which decodes materialises into the current
+> catalog, whatever the encoder would say about re-emitting it.
+
+The invariant is deliberately narrow in two directions, and reading it as
+wider than it is would repeat the mistake this section was written to
+correct.
+
+It is about *materialisation*, not about the whole open. Open still fails
+closed on the things it should: a corrupt frame, a broken pin, a failed
+signature, a catalog with more entries than `MAX_CATALOG_ENTRIES`.
+
+And it is about *size*, not about every per-item failure. A revision that
+does not decode still denies open, and one case of that is reachable from
+the same threat model: a peer authoring a first-party record whose
+payload does not match the schema its content type names — a `Login`
+missing a required field — yields `SchemaMismatch`, which
+`decode_live` maps to `IntegrityFailure`, which travels the same path
+shown above. That residual is pre-existing, is unchanged by this change,
+and is deliberately not repaired here. The size failure could be *removed*
+because the re-encode was never needed; a payload that does not match its
+schema has to be represented somehow instead, which means deciding what a
+partly-unreadable item looks like to search, list, show, conflict
+resolution, export, and restore — a design question, not a local fix. It
+is tracked as follow-on work against this section, alongside the two
+repairs named in §13.2.
+
+Also newly reachable, and fixed here rather than deferred: `encode_any_record`'s
+opaque arm folded every `encode_opaque` failure into `IntegrityFailure`.
+That was defensible while an oversized opaque record could never be
+materialised, since the arm's only reachable failure was genuinely an
+integrity one. Now that such a record opens, the arm can see
+`EncodeTooLarge` from stored bytes — on `export`, for instance — and
+`IntegrityFailure` would tell an operator their store is corrupt, which
+invites destructive recovery, when the remedy is to delete one large
+item. That remedy is the escape hatch this section exists to restore, so
+it may not be described in the vocabulary of corruption. The arm now
+routes through `map_record_encode_error` like the six typed arms, so size
+and integrity faults stay distinct on all seven. VLT-PM39's dependency is
+unaffected: a payload that is not valid CBOR yields a non-size
+`CborError`, which still maps to `IntegrityFailure`.
+
+The escape hatch of §13.2 therefore now covers the opaque case on the
+same terms as the first-party one: the vault opens, the poisoned item
+appears in the catalog and in `list`, and `delete_current_item` removes
+it, because a tombstone revision carries only the item id and a timestamp
+and never reaches `encode_any_record`. Both halves are pinned by test —
+`a_synced_oversized_opaque_record_leaves_the_vault_openable` and
+`a_synced_oversized_opaque_item_can_be_deleted` — each driving a real
+1.5 MiB record delivered through the shared object store, with a
+sub-ceiling control alongside them so a failure is attributable to the
+size band rather than to the fixture.
+
+**How this relates to the two changes before it.** The three form one
+progression over the same asymmetry, moving outward from where the
+damage lands:
+
+| Change | Where the ceiling was hit | What was lost |
+|---|---|---|
+| `encode_opaque`, `decode_record`'s opaque arm made fallible | writing an opaque record | the process (abort → closed error) |
+| `encode_record`, `encode_item_revision`, catalog/export/local-state encodes made fallible | writing any record | the process (abort → closed error) |
+| this change | *reading* an opaque record | the vault (closed error → no failure at all) |
+
+The first two converted aborts into errors, which is the right answer on
+a write path: the operator keeps the vault and is told which operation
+was declined. The third could not be answered that way, because on the
+open path a closed error *is* the loss. Fixing it meant removing the
+failure rather than reporting it — which was available, because the
+re-encode was never needed in the first place.
 
 ## 14. Required verification
 

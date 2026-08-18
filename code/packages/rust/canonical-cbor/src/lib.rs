@@ -437,6 +437,123 @@ pub fn decode(bytes: &[u8]) -> Result<CborValue, CborError> {
     Ok(v)
 }
 
+/// One entry of a map decoded by [`decode_map_spanned`]: the key, the
+/// value, and the half-open byte range the *value* occupied in the input.
+#[derive(Clone, PartialEq, Eq)]
+pub struct SpannedMapEntry {
+    /// The decoded key.
+    pub key: CborValue,
+    /// The decoded value.
+    pub value: CborValue,
+    /// Where `value`'s encoded bytes sat in the input passed to
+    /// [`decode_map_spanned`], as `start..end`.
+    pub value_span: core::ops::Range<usize>,
+}
+
+/// Value-redacted, because the caller this type exists for is decoding
+/// somebody's secrets.
+///
+/// `CborValue` itself still derives `Debug`, so this is a guard rail
+/// rather than a guarantee; what it buys is that the type introduced for
+/// pass-through decoding does not make printing a whole map's contents
+/// the default thing that happens. The span is safe to show: it is a
+/// pair of offsets the caller already knows, and it is what a reader
+/// debugging a span problem actually needs.
+impl core::fmt::Debug for SpannedMapEntry {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("SpannedMapEntry")
+            .field("key", &"<redacted>")
+            .field("value", &"<redacted>")
+            .field("value_span", &self.value_span)
+            .finish()
+    }
+}
+
+/// Decode a single canonical CBOR **map** and report where each entry's
+/// value sat in `bytes`.
+///
+/// Accepts exactly what [`decode`] accepts: the same smallest-form rule,
+/// the same length-first key order, the same depth cap, the same
+/// rejection of trailing bytes. Input that is valid canonical CBOR but
+/// not a map is `Ok(None)` rather than an error — being the wrong shape
+/// is a fact about the document, which the caller names in its own
+/// vocabulary, not a violation of this profile. Only profile violations
+/// are `Err`, which is why this function adds no error identifier to the
+/// portable set in CBR01.
+///
+/// # Why a caller would want the span
+///
+/// The bytes in `value_span` are, by the canonical profile's own
+/// guarantee, **exactly** `encode(&entry.value)`:
+///
+/// ```text
+///   canonical bytes  ──decode──▶  value  ──encode──▶  the same bytes
+/// ```
+///
+/// The decoder enforces every rule the encoder applies — smallest-form
+/// integers and lengths, definite lengths only, length-first key order
+/// with no duplicates — so an input that decodes has only one legal
+/// spelling, and that spelling is the one the encoder would emit.
+///
+/// A caller that wants to *pass a sub-document through* — hold it now,
+/// re-emit it later, without understanding it — can therefore take the
+/// bytes instead of re-encoding the value, and the two are
+/// indistinguishable. Taking the bytes is strictly better in one way that
+/// matters: it cannot fail. [`try_encode`] is bounded by
+/// [`MAX_ENCODED_SIZE`], which is a denial-of-service bound on the
+/// *encoder*, whereas [`decode`] has no matching input-length bound. So
+/// there are inputs that decode and will not re-encode, and for those a
+/// round trip turns a readable document into an error. Slicing does not.
+///
+/// # Example
+///
+/// ```
+/// use coding_adventures_canonical_cbor::{decode_map_spanned, encode, CborValue};
+///
+/// let bytes = encode(&CborValue::Map(vec![
+///     (CborValue::text("d"), CborValue::bytes(vec![1, 2, 3])),
+///     (CborValue::text("t"), CborValue::text("example/v1")),
+/// ]));
+/// let entries = decode_map_spanned(&bytes).unwrap().unwrap();
+///
+/// // Length-first key order puts the two one-character keys in lex order.
+/// assert_eq!(entries[0].key, CborValue::text("d"));
+/// assert_eq!(
+///     &bytes[entries[0].value_span.clone()],
+///     encode(&CborValue::bytes(vec![1, 2, 3])).as_slice(),
+/// );
+///
+/// // Valid CBOR that is not a map is a shape mismatch, not an error.
+/// assert_eq!(decode_map_spanned(&encode(&CborValue::Unsigned(7))), Ok(None));
+/// ```
+pub fn decode_map_spanned(bytes: &[u8]) -> Result<Option<Vec<SpannedMapEntry>>, CborError> {
+    let mut cur = Cursor { bytes, pos: 0 };
+    // Peek the shape before committing to the map reader. The peek only
+    // routes; `read_header` still adjudicates, so an input that is major
+    // type 5 with a malformed header (indefinite `0xBF`, a reserved info
+    // value, a non-minimal argument) is rejected exactly as `decode`
+    // rejects it. A non-map item likewise has to prove it is valid
+    // canonical CBOR on its own before it earns `Ok(None)`, so a
+    // malformed input is never reported as a mere shape mismatch.
+    if bytes.first().map(|first| first >> 5) != Some(5) {
+        decode(bytes)?;
+        return Ok(None);
+    }
+    let (_major, _info, arg) = read_header(&mut cur)?;
+    let count = length_within_remaining(arg, cur.remaining(), 2)?;
+    let entries = read_map_entries(&mut cur, 0, count, |key, value, value_span| {
+        SpannedMapEntry {
+            key,
+            value,
+            value_span,
+        }
+    })?;
+    if cur.pos != cur.bytes.len() {
+        return Err(CborError::TrailingBytes);
+    }
+    Ok(Some(entries))
+}
+
 struct Cursor<'a> {
     bytes: &'a [u8],
     pos: usize,
@@ -614,27 +731,12 @@ fn read_value(cur: &mut Cursor, depth: usize) -> Result<CborValue, CborError> {
             // header for key, one-byte header for value). So
             // `arg * 2 > remaining` ⇒ invalid.
             let count = length_within_remaining(arg, cur.remaining(), 2)?;
-            let mut entries = Vec::with_capacity(count);
-            // We track the encoded-key bytes so we can verify
-            // length-first canonical order afterwards.
-            let mut prev_key_bytes: Option<&[u8]> = None;
-            for _ in 0..count {
-                let key_start = cur.pos;
-                let k = read_value(cur, depth + 1)?;
-                let key_end = cur.pos;
-                let v = read_value(cur, depth + 1)?;
-
-                // Compare against prev key bytes — length-first then bytewise.
-                if let Some(prev) = prev_key_bytes {
-                    let cur_key = &cur.bytes[key_start..key_end];
-                    if !key_strictly_less(prev, cur_key) {
-                        return Err(CborError::NonCanonicalMapOrder);
-                    }
-                }
-                prev_key_bytes = Some(&cur.bytes[key_start..key_end]);
-                entries.push((k, v));
-            }
-            Ok(CborValue::Map(entries))
+            Ok(CborValue::Map(read_map_entries(
+                cur,
+                depth,
+                count,
+                |key, value, _span| (key, value),
+            )?))
         }
         6 => {
             let inner = read_value(cur, depth + 1)?;
@@ -666,6 +768,54 @@ fn read_value(cur: &mut Cursor, depth: usize) -> Result<CborValue, CborError> {
         }
         _ => unreachable!(), // major is 3 bits, 0..=7
     }
+}
+
+/// Read the `count` entries of a map whose header the caller has already
+/// consumed, verifying length-first canonical key order as it goes.
+///
+/// `depth` is the *map's* own depth, so keys and values are read one level
+/// deeper. `entry` builds whatever the caller wants out of the key, the
+/// value, and the half-open byte range the value occupied — a plain pair
+/// for [`decode`], a [`SpannedMapEntry`] for [`decode_map_spanned`].
+///
+/// Two properties follow from having one reader rather than two. A
+/// spanned decode cannot drift from an ordinary one by accepting
+/// different bytes, because there is only one parser. And a span cannot
+/// be paired with the wrong value, because the two are consumed together
+/// in the same iteration and never exist as separate collections that
+/// could fall out of step. That second one is worth the generic: a
+/// shifted pairing would hand a caller a *different, valid-looking*
+/// payload with no error raised anywhere, which is the one outcome a
+/// fail-closed caller cannot defend against, so it is made
+/// unrepresentable rather than merely asserted against.
+fn read_map_entries<T>(
+    cur: &mut Cursor,
+    depth: usize,
+    count: usize,
+    entry: impl Fn(CborValue, CborValue, core::ops::Range<usize>) -> T,
+) -> Result<Vec<T>, CborError> {
+    let mut entries = Vec::with_capacity(count);
+    // We track the encoded-key bytes so we can verify length-first
+    // canonical order afterwards.
+    let mut prev_key_bytes: Option<&[u8]> = None;
+    for _ in 0..count {
+        let key_start = cur.pos;
+        let k = read_value(cur, depth + 1)?;
+        let key_end = cur.pos;
+        let value_start = cur.pos;
+        let v = read_value(cur, depth + 1)?;
+
+        // Compare against prev key bytes — length-first then bytewise.
+        if let Some(prev) = prev_key_bytes {
+            let cur_key = &cur.bytes[key_start..key_end];
+            if !key_strictly_less(prev, cur_key) {
+                return Err(CborError::NonCanonicalMapOrder);
+            }
+        }
+        prev_key_bytes = Some(&cur.bytes[key_start..key_end]);
+        entries.push(entry(k, v, value_start..cur.pos));
+    }
+    Ok(entries)
 }
 
 /// Strict length-first then bytewise-lex `<` on key encodings.
@@ -1240,5 +1390,169 @@ mod tests {
         for msg in &err_msgs {
             assert!(msg.starts_with("canonical-cbor:"));
         }
+    }
+
+    // --- Spanned map decoding ---
+    //
+    // The contract these pin is the one a pass-through caller relies on:
+    // the bytes a span points at are *exactly* what re-encoding the value
+    // would have produced, so slicing and re-encoding are interchangeable
+    // — except that slicing cannot fail.
+
+    /// A spread of values wide enough to cover every encoder branch:
+    /// every integer header width, both string types, nesting, tags, and
+    /// the three simple values.
+    fn span_corpus() -> Vec<CborValue> {
+        vec![
+            CborValue::Unsigned(0),
+            CborValue::Unsigned(23),
+            CborValue::Unsigned(24),
+            CborValue::Unsigned(256),
+            CborValue::Unsigned(70_000),
+            CborValue::Unsigned(u64::MAX),
+            CborValue::Negative(0),
+            CborValue::Negative(u64::MAX),
+            CborValue::Bytes(Vec::new()),
+            CborValue::Bytes(vec![0xff; 300]),
+            CborValue::text(""),
+            CborValue::text("a longer piece of text with non-ascii: ø"),
+            CborValue::Array(Vec::new()),
+            CborValue::Array(vec![CborValue::Unsigned(1), CborValue::Null]),
+            CborValue::Map(Vec::new()),
+            CborValue::Map(vec![
+                (CborValue::text("zz"), CborValue::Bool(true)),
+                (CborValue::text("a"), CborValue::Unsigned(9)),
+            ]),
+            CborValue::Tag(42, Box::new(CborValue::text("tagged"))),
+            CborValue::Bool(false),
+            CborValue::Bool(true),
+            CborValue::Null,
+        ]
+    }
+
+    #[test]
+    fn every_span_is_exactly_the_canonical_encoding_of_its_value() {
+        // The whole point of the API: what the span points at and what the
+        // encoder would emit are the same bytes, for every value shape.
+        let entries = span_corpus()
+            .into_iter()
+            .enumerate()
+            .map(|(index, value)| (CborValue::Unsigned(index as u64), value))
+            .collect::<Vec<_>>();
+        let bytes = encode(&CborValue::Map(entries));
+        let decoded = decode_map_spanned(&bytes).unwrap().unwrap();
+
+        assert_eq!(decoded.len(), span_corpus().len());
+        for entry in &decoded {
+            assert_eq!(
+                &bytes[entry.value_span.clone()],
+                encode(&entry.value).as_slice(),
+                "span must equal the re-encoding of {:?}",
+                entry.value,
+            );
+        }
+    }
+
+    #[test]
+    fn spans_do_not_overlap_and_cover_the_map_body() {
+        // A span that was one byte off would still decode to the right
+        // value in some shapes, so pin the geometry too: keys and values
+        // tile the input end to end with nothing left over.
+        let bytes = encode(&CborValue::Map(vec![
+            (CborValue::text("a"), CborValue::Bytes(vec![7; 40])),
+            (
+                CborValue::text("bb"),
+                CborValue::Array(vec![CborValue::Null]),
+            ),
+            (CborValue::text("ccc"), CborValue::Unsigned(70_000)),
+        ]));
+        let decoded = decode_map_spanned(&bytes).unwrap().unwrap();
+
+        let mut cursor = 1; // one map header byte for a three-entry map
+        for entry in &decoded {
+            let key_bytes = encode(&entry.key);
+            assert_eq!(
+                &bytes[cursor..cursor + key_bytes.len()],
+                key_bytes.as_slice()
+            );
+            cursor += key_bytes.len();
+            assert_eq!(entry.value_span.start, cursor);
+            cursor = entry.value_span.end;
+        }
+        assert_eq!(cursor, bytes.len());
+    }
+
+    #[test]
+    fn valid_non_map_input_is_a_shape_mismatch_rather_than_an_error() {
+        for value in span_corpus() {
+            if matches!(value, CborValue::Map(_)) {
+                continue;
+            }
+            assert_eq!(decode_map_spanned(&encode(&value)), Ok(None));
+        }
+    }
+
+    #[test]
+    fn spanned_decoding_rejects_exactly_what_ordinary_decoding_rejects() {
+        // The spanned reader must not be a second, laxer parser. Every
+        // hostile input the strict decoder refuses has to be refused here
+        // with the identical error — including the ones that are not maps,
+        // which must not slip through as a benign shape mismatch.
+        let mut deep = vec![0x81_u8; MAX_DECODE_DEPTH + 10];
+        deep.push(0x00);
+        let hostile: Vec<Vec<u8>> = vec![
+            Vec::new(),                                                       // empty
+            vec![0xa1],                                     // map header, no entry
+            vec![0xa1, 0x61, b'a'],                         // key without value
+            vec![0xa2, 0x61, b'b', 0x00, 0x61, b'a', 0x00], // out of order
+            vec![0xa2, 0x61, b'a', 0x00, 0x61, b'a', 0x01], // duplicate key
+            vec![0xa1, 0x18, 0x05, 0x00],                   // non-minimal key
+            vec![0xa1, 0x61, b'a', 0x00, 0x00],             // trailing bytes
+            vec![0xbf, 0x61, b'a', 0x00, 0xff],             // indefinite map
+            vec![0xa1, 0x61, b'a', 0xf7],                   // undefined value
+            vec![0xa1, 0x61, b'a', 0xfa, 0, 0, 0, 0],       // float value
+            vec![0xa1, 0x61, b'a', 0x1c],                   // reserved info
+            vec![0xa1, 0x62, 0xff, 0xfe, 0x00],             // invalid utf-8 key
+            vec![0xa1, 0x5b, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff], // hostile length
+            vec![0x00, 0x00],                               // trailing bytes, not a map
+            vec![0x62, b'a'],                               // truncated text, not a map
+            deep,                                           // deeper than the cap
+        ];
+        for bytes in hostile {
+            let strict = decode(&bytes);
+            let spanned = decode_map_spanned(&bytes);
+            assert!(strict.is_err(), "fixture must be rejected: {bytes:?}");
+            assert_eq!(
+                spanned.err(),
+                strict.err(),
+                "spanned decoding must agree with strict decoding on {bytes:?}",
+            );
+        }
+    }
+
+    #[test]
+    fn a_map_too_large_to_re_encode_still_yields_its_spans() {
+        // The reason the API exists. The decoder has no input-length bound
+        // and the checked encoder has a 1 MiB one, so this map reads back
+        // fine and cannot be re-encoded. Slicing works anyway.
+        let payload = vec![0x5a_u8; MAX_ENCODED_SIZE];
+        let mut bytes = vec![0xa2, 0x61, b'd', 0x5a];
+        bytes.extend_from_slice(&(MAX_ENCODED_SIZE as u32).to_be_bytes());
+        bytes.extend_from_slice(&payload);
+        bytes.extend_from_slice(&[0x61, b't', 0x63]);
+        bytes.extend_from_slice(b"big");
+
+        let decoded = decode_map_spanned(&bytes).unwrap().unwrap();
+        assert_eq!(decoded.len(), 2);
+        assert_eq!(decoded[0].key, CborValue::text("d"));
+        assert_eq!(decoded[0].value, CborValue::Bytes(payload));
+        assert_eq!(
+            try_encode(&decoded[0].value),
+            Err(CborError::EncodeTooLarge),
+            "the value is exactly the kind the encoder refuses",
+        );
+        // ... and yet its bytes are right there.
+        assert_eq!(decoded[0].value_span, 3..bytes.len() - 6);
+        assert_eq!(decoded[1].value, CborValue::text("big"));
     }
 }

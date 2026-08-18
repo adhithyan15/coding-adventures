@@ -171,6 +171,85 @@ actually make. Closing it properly means making canonical-CBOR
 zeroize-aware end to end, which adds a dependency to a deliberately
 zero-dependency foundational crate and so belongs to its own change.
 
+## Decoding never re-encodes
+
+The section above makes encoding fallible on purpose. This one states the
+matching rule for the other direction:
+
+> **No decode may fail for a reason the decode did not discover.**
+> `decode_record` rejects input on exactly two grounds — the bytes are not
+> canonical CBOR, or they do not match the schema their content type
+> names. It may not fail for any third reason, and in particular not
+> because of a size the *encoder* would refuse.
+
+Note what the rule does *not* say. It does not say `decode_record`
+succeeds on everything the canonical decoder accepts: a first-party
+payload missing a required field is still `SchemaMismatch`, because a
+`Login` that is not a `Login` is a fact the decode itself discovered.
+What the rule forbids is importing a constraint from the other direction.
+
+The rule exists because the two directions are not symmetric in
+consequence. A refused encode costs one record: the operator keeps the
+vault, keeps every other item, and is told which operation was declined.
+A refused decode can cost the whole vault, because `decode_record` runs
+underneath `decode_item_revision`, which runs during vault *open*
+(VLT-PM05 §8). A record that will not decode is not an item the operator
+can work around; it is an item that stops the operator from having a
+session at all — no delete, no export, no ceremony of any kind, since all
+of those require an unlocked vault. Recovery would mean editing the store
+by hand outside the product.
+
+The opaque arm was the one place this rule was broken. Decoding an
+unknown content type yielded `AnyRecord::Opaque { content_type,
+payload_bytes }`, and `payload_bytes` was produced by *re-encoding* the
+payload that had just been decoded. Any opaque payload in the 1 MiB–16
+MiB band therefore decoded and then failed `EncodeTooLarge`, which
+propagated to `open_active_vault`. One such record, arriving from a peer
+with a larger framing budget, denied the vault permanently.
+
+The repair is that the arm does not re-encode. It returns the payload's
+own bytes, sliced out of the input using the span the canonical decoder
+reports (CBR01 *Value spans*). The two are the same bytes wherever the
+re-encode was possible at all:
+
+```text
+    wire bytes ──decode──▶ payload ──encode──▶ the same wire bytes
+```
+
+because the strict decoder enforces every rule the encoder applies, so a
+payload that decoded has exactly one legal spelling and the input already
+carries it. What changes is only the failure mode: slicing a range the
+parser itself measured cannot fail on any input that decoded.
+
+Three properties follow, and callers may rely on all three:
+
+1. **Byte-stability is unchanged.** `encode_opaque(content_type,
+   payload_bytes)` reproduces the original record bytes exactly, so the
+   round trip `decode_record` → `encode_opaque` is still the identity on
+   the wire. VLT-PM39's authored opaque merge checks its input against
+   this property and is unaffected.
+2. **The write ceiling stays.** An oversized opaque record is still
+   refused by `encode_opaque` and `encode_record` with `EncodeTooLarge`.
+   The band of records that are legal to hold and illegal to encode is
+   not narrowed; what changes is that such a record is now *readable*, so
+   the refusal costs one record instead of the vault.
+3. **Typed and opaque paths agree.** `decode_record` and
+   `decode_record_as` peel the envelope through one shared routine, so
+   there is a single answer to "which bytes are a record" and no input is
+   accepted by one and rejected by the other.
+
+The residual, stated so the rule above is not read as more than it is:
+`SchemaMismatch` on a first-party payload reaches vault open by the same
+route the size failure used to, and denies it the same way. A peer that
+authors a structurally invalid `Login` — right content type, missing
+field — therefore still costs the whole vault rather than one item. That
+is pre-existing, is unchanged by the repair above, and is a different
+repair: the size failure could simply be removed, because the re-encode
+was never needed, whereas a payload that does not match its schema has to
+be *represented* somehow, which means deciding what a partly-unreadable
+item looks like to every ceremony that walks the catalog. It is tracked
+as follow-on work against VLT-PM05 §13.3.
+
 ## First-party record types
 
 | Type                  | Content type              | Use case                                   |
