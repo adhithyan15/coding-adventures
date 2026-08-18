@@ -1741,7 +1741,10 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::ExtmulLowI16x8S
             | wasm_opcodes::SimdOpKind::ExtmulHighI16x8S
             | wasm_opcodes::SimdOpKind::ExtmulLowI16x8U
-            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U => {
+            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U
+            | wasm_opcodes::SimdOpKind::AddI8x16
+            | wasm_opcodes::SimdOpKind::SubI8x16
+            | wasm_opcodes::SimdOpKind::NegI8x16 => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -2327,7 +2330,10 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::ExtmulLowI16x8S
             | wasm_opcodes::SimdOpKind::ExtmulHighI16x8S
             | wasm_opcodes::SimdOpKind::ExtmulLowI16x8U
-            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U => {
+            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U
+            | wasm_opcodes::SimdOpKind::AddI8x16
+            | wasm_opcodes::SimdOpKind::SubI8x16
+            | wasm_opcodes::SimdOpKind::NegI8x16 => {
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -4762,6 +4768,26 @@ mod tests {
         assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0xBD, 0x01]), "i32x4.extmul_high_i16x8_s: {:?}", code_of(&m, 4));
         assert!(code_of(&m, 5).windows(3).any(|w| w == [0xFD, 0xBE, 0x01]), "i32x4.extmul_low_i16x8_u: {:?}", code_of(&m, 5));
         assert!(code_of(&m, 6).windows(3).any(|w| w == [0xFD, 0xBF, 0x01]), "i32x4.extmul_high_i16x8_u: {:?}", code_of(&m, 6));
+    }
+
+    #[test]
+    fn simd_i8x16_first_slice_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR4: i8x16.add/sub/neg -- this lane width's first
+        // slice. All three sub-opcodes are < 128, so single-byte LEB128
+        // (no continuation byte), same as i32x4.extadd_pairwise_i16x8_s/_u
+        // above -- unlike i32x4.add's own (0xAE, needs a continuation
+        // byte). Each real sub-opcode verified against wasm-opcodes' own
+        // CHANGELOG entry.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 v128) (result v128) (i8x16.add (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.sub (local.get 0) (local.get 1)))
+                 (func (param v128) (result v128) (i8x16.neg (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x6E]), "i8x16.add: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x71]), "i8x16.sub: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x61]), "i8x16.neg: {:?}", code_of(&m, 2));
     }
 
     #[test]

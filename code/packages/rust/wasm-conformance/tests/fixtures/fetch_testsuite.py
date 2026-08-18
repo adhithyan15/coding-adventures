@@ -246,6 +246,15 @@ TESTSUITE_FILES = [
     "simd_i32x4_extadd_pairwise_i16x8.wast",
     "simd_i32x4_dot_i16x8.wast",
     "simd_i32x4_extmul_i16x8.wast",
+    # SIMD widen PR4 (task #125-128): simd_i8x16_arith.wast -- the first
+    # `i8x16` lane-width slice (add/sub/neg only, no mul since the spec
+    # defines none, no splat/extract_lane since v128.const i8x16 already
+    # covers this file's own operand construction and result comparison).
+    # Each sub-opcode byte fetched live from BinarySIMD.md and cross-
+    # checked against the already-implemented i32x4.add/i32x4.abs
+    # entries (both matched exactly), same discipline as every prior
+    # addition.
+    "simd_i8x16_arith.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
