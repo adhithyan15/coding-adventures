@@ -25,6 +25,11 @@
   leading `--vault` are refused inside a session. Command lines are read from
   the controlling terminal, never from process standard input, so a redirected
   stdin can supply neither a secret nor a command.
+- Added the `shell` module's public surface: `ShellTerminal`, the injected
+  boundary a session reads command lines from and renders results to;
+  `NativeShellTerminal`, the production adapter that reads `/dev/tty` and
+  writes the process standard streams; and `run_with_terminal`, which is `run`
+  with that boundary supplied so a session can be driven by a test script.
 
 - Added audit-required `conflict merge opaque ITEM BASE_REVISION`, the last
   authored merge ceremony, which retains the exact current opaque record
