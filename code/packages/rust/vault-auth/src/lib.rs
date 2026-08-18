@@ -42,11 +42,14 @@
 //!   the key contribution; verify() compares constant-time against
 //!   a stored Argon2id-derived verifier.
 //! - `TotpAuthenticator` (gate-mode) — RFC 6238 (HOTP under
-//!   HMAC-SHA-1, time-based counter), 6 digits, 30-second period
-//!   default. Verify accepts the current step ± 1 by default;
-//!   replay-rejection cache is the caller's responsibility (we
-//!   provide `verify_at_step` so upper layers can pin the
-//!   accepted step into a per-secret last-used record).
+//!   HMAC-SHA-1/SHA-256/SHA-512, time-based counter), 6 digits,
+//!   30-second period default. Verify accepts the current step ± 1
+//!   by default; replay-rejection cache is the caller's
+//!   responsibility (we provide `verify_at_time` so upper layers can
+//!   pin the accepted step into a per-secret last-used record).
+//!   `code_at`/`formatted_code_at` also make it usable as a
+//!   *generator*, which is what a password manager displaying a
+//!   stored seed's current code needs.
 //! - `combine_key_contributions(vault_id, factors)` —
 //!   HKDF-Extract(salt = vault_id, ikm = ordered concat of bind-
 //!   mode factor outputs, info = "VLT05/key/v1") → 32-byte unlock
@@ -58,7 +61,7 @@
 use coding_adventures_argon2id::{argon2id, Options as ArgonOptions};
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_hkdf::{hkdf, HashAlgorithm};
-use coding_adventures_hmac::hmac_sha1;
+use coding_adventures_hmac::{hmac_sha1, hmac_sha256, hmac_sha512};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 
 // ─────────────────────────────────────────────────────────────────────
@@ -451,16 +454,70 @@ impl Authenticator for PasswordAuthenticator {
 // 3. TotpAuthenticator (RFC 6238)
 // ─────────────────────────────────────────────────────────────────────
 //
-// HOTP per RFC 4226: code = truncate(HMAC-SHA-1(secret, counter)) mod 10^digits
+// HOTP per RFC 4226: code = truncate(HMAC-H(secret, counter)) mod 10^digits
 // TOTP per RFC 6238: counter = floor((unix_time - T0) / period)
 //
-// We use SHA-1 (the RFC 6238 default) because every authenticator
-// app on the planet expects it. SHA-256 / SHA-512 variants are
-// trivially added later by parameterising `algorithm`.
+// RFC 6238 §1.2 names three HMAC variants — SHA-1, SHA-256, and
+// SHA-512 — and its Appendix B publishes test vectors for all
+// three. SHA-1 is what every authenticator app on the planet
+// defaults to, but "default" is not "only": a stored seed carries
+// its algorithm with it, so a verifier or generator that assumed
+// SHA-1 would silently produce plausible, wrong digits for the
+// other two. `TotpAlgorithm` therefore has no `Default` impl and
+// the constructor takes it explicitly.
+
+/// HMAC hash underlying one TOTP secret, per RFC 6238 §1.2.
+///
+/// There is deliberately no `Default`. Six wrong digits look exactly
+/// like six right ones, so the one parameter that decides which is
+/// which is never chosen on a caller's behalf.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TotpAlgorithm {
+    /// HMAC-SHA-1. The RFC 6238 default and the near-universal choice.
+    Sha1,
+    /// HMAC-SHA-256.
+    Sha256,
+    /// HMAC-SHA-512.
+    Sha512,
+}
+
+impl TotpAlgorithm {
+    /// Compute the HMAC of `message` under `key` for this algorithm.
+    ///
+    /// The three hashes have different output widths (20, 32, and 64
+    /// bytes), so the tag is returned as a `Vec` and the dynamic
+    /// truncation below indexes it by its actual length rather than
+    /// by a hard-wired 20.
+    ///
+    /// Each arm copies the fixed-size array into the returned
+    /// `Zeroizing` buffer and then wipes the array. Writing this as
+    /// `hmac_sha1(...)?.into()` would be shorter and would leave a
+    /// live authentication tag on the stack: `into()` *copies* into a
+    /// fresh allocation, so the `Zeroizing` wrapper would own the
+    /// second copy while the first went out of scope untouched. From
+    /// a TOTP tag an observer reads the code directly, so the copy
+    /// that nobody wipes is the one that matters.
+    fn mac(self, key: &[u8], message: &[u8]) -> Result<Zeroizing<Vec<u8>>, AuthError> {
+        fn take<const N: usize>(tag: Result<[u8; N], impl Sized>) -> Result<Vec<u8>, AuthError> {
+            let mut tag = tag.map_err(|_| AuthError::Crypto)?;
+            let owned = tag.to_vec();
+            tag.zeroize();
+            Ok(owned)
+        }
+        let tag = match self {
+            Self::Sha1 => take(hmac_sha1(key, message))?,
+            Self::Sha256 => take(hmac_sha256(key, message))?,
+            Self::Sha512 => take(hmac_sha512(key, message))?,
+        };
+        Ok(Zeroizing::new(tag))
+    }
+}
 
 /// RFC 6238 TOTP authenticator. Gate-mode (no key contribution).
 pub struct TotpAuthenticator {
     secret: Zeroizing<Vec<u8>>,
+    /// HMAC hash the seed was provisioned under.
+    algorithm: TotpAlgorithm,
     /// Time step in seconds (RFC 6238 default 30).
     period: u64,
     /// Number of digits in the code (typically 6 or 8).
@@ -474,6 +531,7 @@ impl TotpAuthenticator {
     /// Build a TOTP authenticator. `digits` must be in 4..=10.
     pub fn new(
         secret: impl Into<Vec<u8>>,
+        algorithm: TotpAlgorithm,
         period: u64,
         digits: u32,
         window: u32,
@@ -496,10 +554,16 @@ impl TotpAuthenticator {
         }
         Ok(Self {
             secret,
+            algorithm,
             period,
             digits,
             window,
         })
+    }
+
+    /// Number of digits this authenticator's codes are rendered in.
+    pub const fn digits(&self) -> u32 {
+        self.digits
     }
 
     /// Compute the TOTP code at the given UNIX time (seconds).
@@ -509,17 +573,70 @@ impl TotpAuthenticator {
         self.code_at_counter(counter)
     }
 
+    /// Render the TOTP code at the given UNIX time as the decimal
+    /// string a person actually types, zero-padded to `digits`.
+    ///
+    /// Padding is not cosmetic. Roughly one code in ten has a leading
+    /// zero, and `042311` and `42311` are different strings to paste;
+    /// only one of them is the code. Returning the integer and
+    /// letting each caller remember to pad is an invitation for one
+    /// of them to forget, so the padding lives here.
+    ///
+    /// The result is wipe-on-drop because it is a live credential.
+    pub fn formatted_code_at(&self, unix_time_sec: u64) -> Result<Zeroizing<String>, AuthError> {
+        let code = self.code_at(unix_time_sec)?;
+        Ok(Zeroizing::new(format!(
+            "{code:0width$}",
+            width = self.digits as usize
+        )))
+    }
+
+    /// Seconds until the step containing `unix_time_sec` ends.
+    ///
+    /// Always in `1..=period`: at the first second of a step the
+    /// answer is the whole period, and it is never `0`, because a
+    /// code with zero seconds left has already been replaced by the
+    /// next one — "0 seconds remaining" would describe a code this
+    /// function's caller was never given.
+    pub const fn remaining_seconds(&self, unix_time_sec: u64) -> u64 {
+        self.period - (unix_time_sec % self.period)
+    }
+
     fn code_at_counter(&self, counter: u64) -> Result<u32, AuthError> {
         let counter_be = counter.to_be_bytes();
-        let mac = hmac_sha1(&self.secret, &counter_be).map_err(|_| AuthError::Crypto)?;
-        // Dynamic truncation — RFC 4226 §5.3.
-        let offset = (mac[19] & 0x0F) as usize;
-        let bin = ((mac[offset] as u32 & 0x7F) << 24)
-            | ((mac[offset + 1] as u32) << 16)
-            | ((mac[offset + 2] as u32) << 8)
-            | (mac[offset + 3] as u32);
-        let modulus = 10u32.pow(self.digits);
-        Ok(bin % modulus)
+        let mac = self.algorithm.mac(&self.secret, &counter_be)?;
+        // Dynamic truncation — RFC 4226 §5.3. The offset comes from
+        // the low nibble of the *last* byte, which is byte 19 for
+        // SHA-1 and 31/63 for the wider hashes; RFC 6238's reference
+        // implementation indexes from the end for exactly this
+        // reason, so the four bytes it selects always exist.
+        //
+        // Both lookups are checked rather than indexed. A nibble is
+        // at most 15, and the narrowest tag here is 20 bytes, so a
+        // panic is unreachable today — but "unreachable" rests on a
+        // fact about three hash functions declared in another crate,
+        // and this function cannot see it. A `Crypto` error costs
+        // nothing and turns a future 4-byte digest from a panic in a
+        // password manager into a refusal.
+        let last = *mac.last().ok_or(AuthError::Crypto)?;
+        let offset = (last & 0x0F) as usize;
+        let window: [u8; 4] = mac
+            .get(offset..offset + 4)
+            .ok_or(AuthError::Crypto)?
+            .try_into()
+            .map_err(|_| AuthError::Crypto)?;
+        let bin = ((window[0] as u32 & 0x7F) << 24)
+            | ((window[1] as u32) << 16)
+            | ((window[2] as u32) << 8)
+            | (window[3] as u32);
+        // The modulus is computed in u64, not u32. `digits` is
+        // permitted up to 10 and 10^10 is 10_000_000_000, which
+        // exceeds u32::MAX — `10u32.pow(10)` panics in a debug build
+        // and wraps in a release one. `bin` is only 31 bits, so for
+        // digits 10 the modulus is a no-op, which is the correct
+        // answer and now also a reachable one.
+        let modulus = 10u64.pow(self.digits);
+        Ok((u64::from(bin) % modulus) as u32)
     }
 
     /// Verify a code at a specific UNIX time, applying the
@@ -632,11 +749,7 @@ mod tests {
             Err(AuthError::InvalidCredential) => {}
             other => panic!(
                 "expected InvalidCredential, got {}",
-                if other.is_ok() {
-                    "Ok"
-                } else {
-                    "different Err"
-                }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -648,11 +761,7 @@ mod tests {
             Err(AuthError::MalformedCredential) => {}
             other => panic!(
                 "expected MalformedCredential, got {}",
-                if other.is_ok() {
-                    "Ok"
-                } else {
-                    "different Err"
-                }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -663,11 +772,7 @@ mod tests {
             Err(AuthError::InvalidParameter { .. }) => {}
             other => panic!(
                 "expected InvalidParameter, got {}",
-                if other.is_ok() {
-                    "Ok"
-                } else {
-                    "different Err"
-                }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
@@ -687,32 +792,187 @@ mod tests {
 
     // --- TOTP — RFC 6238 known vectors ---
 
-    /// RFC 6238 Appendix B test vectors, SHA-1, T0=0, T=30, 8 digits.
-    /// We use the 6-digit truncation since most apps render 6.
-    /// The shared 20-byte secret is ASCII "12345678901234567890".
+    /// The three RFC 6238 Appendix B seeds.
+    ///
+    /// The RFC's table is often quoted as if one 20-byte secret
+    /// produced all eighteen codes. It does not: the reference
+    /// implementation in Appendix A defines `seed`, `seed32`, and
+    /// `seed64`, and each is the ASCII string "1234567890" repeated
+    /// until it fills the hash's block-friendly width. Testing all
+    /// three against one secret is the classic way to "prove" a
+    /// SHA-256 implementation that is quietly still SHA-1.
     fn rfc6238_secret() -> Vec<u8> {
         b"12345678901234567890".to_vec()
     }
 
+    fn rfc6238_secret_sha256() -> Vec<u8> {
+        b"12345678901234567890123456789012".to_vec()
+    }
+
+    fn rfc6238_secret_sha512() -> Vec<u8> {
+        b"1234567890123456789012345678901234567890123456789012345678901234".to_vec()
+    }
+
+    /// RFC 6238 Appendix B, in full: every published timestamp
+    /// against every published algorithm, at the published 8-digit
+    /// width, with T0 = 0 and X = 30.
+    ///
+    /// | T (sec) | SHA-1 | SHA-256 | SHA-512 |
+    /// |---:|---:|---:|---:|
+    /// | 59 | 94287082 | 46119246 | 90693936 |
+    /// | 1111111109 | 07081804 | 68084774 | 25091201 |
+    /// | 1111111111 | 14050471 | 67062674 | 99943326 |
+    /// | 1234567890 | 89005924 | 91819424 | 93441116 |
+    /// | 2000000000 | 69279037 | 90698825 | 38618901 |
+    /// | 20000000000 | 65353130 | 77737706 | 47863826 |
+    ///
+    /// Note the leading zero in the SHA-1 row for T=1111111109. That
+    /// row is the reason `formatted_code_at` exists and the reason
+    /// this table is compared as *strings*: as an integer the code is
+    /// 7081804, which is not what a person types.
     #[test]
-    fn totp_rfc6238_vectors_sha1_8digit_subset() {
-        // T = 59 → step 1 → 8-digit code 94287082 → 6-digit "287082".
-        let auth = TotpAuthenticator::new(rfc6238_secret(), 30, 6, 1).unwrap();
-        let code = auth.code_at(59).unwrap();
-        assert_eq!(code, 287082);
+    fn totp_reproduces_every_rfc6238_appendix_b_vector() {
+        let vectors: [(u64, [&str; 3]); 6] = [
+            (59, ["94287082", "46119246", "90693936"]),
+            (1_111_111_109, ["07081804", "68084774", "25091201"]),
+            (1_111_111_111, ["14050471", "67062674", "99943326"]),
+            (1_234_567_890, ["89005924", "91819424", "93441116"]),
+            (2_000_000_000, ["69279037", "90698825", "38618901"]),
+            (20_000_000_000, ["65353130", "77737706", "47863826"]),
+        ];
+        let algorithms = [
+            (TotpAlgorithm::Sha1, rfc6238_secret()),
+            (TotpAlgorithm::Sha256, rfc6238_secret_sha256()),
+            (TotpAlgorithm::Sha512, rfc6238_secret_sha512()),
+        ];
+        for (index, (algorithm, secret)) in algorithms.into_iter().enumerate() {
+            let auth = TotpAuthenticator::new(secret, algorithm, 30, 8, 1).unwrap();
+            for (unix_time_sec, expected) in vectors {
+                assert_eq!(
+                    auth.formatted_code_at(unix_time_sec).unwrap().as_str(),
+                    expected[index],
+                    "RFC 6238 Appendix B, {algorithm:?} at T={unix_time_sec}"
+                );
+            }
+        }
+    }
 
-        // T = 1111111109 → step 37037036 → 8-digit 07081804 → 6-digit "081804".
-        let code = auth.code_at(1_111_111_109).unwrap();
-        assert_eq!(code, 81804);
+    /// The same vectors truncated to six digits, which is what a
+    /// password manager actually renders.
+    ///
+    /// Six digits is the last six of the eight, because the modulus
+    /// is applied to one 31-bit integer rather than to a decimal
+    /// string — so this test also pins the fact that narrowing the
+    /// width does not re-derive anything.
+    #[test]
+    fn totp_six_digit_rendering_is_the_low_six_of_the_published_eight() {
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
+        for (unix_time_sec, eight) in [
+            (59_u64, "94287082"),
+            (1_111_111_109, "07081804"),
+            (1_111_111_111, "14050471"),
+            (1_234_567_890, "89005924"),
+            (2_000_000_000, "69279037"),
+            (20_000_000_000, "65353130"),
+        ] {
+            assert_eq!(
+                auth.formatted_code_at(unix_time_sec).unwrap().as_str(),
+                &eight[2..]
+            );
+        }
+    }
 
-        // T = 1111111111 → 8-digit 14050471 → 6-digit "050471".
-        let code = auth.code_at(1_111_111_111).unwrap();
-        assert_eq!(code, 50471);
+    /// One algorithm's seed under another algorithm must not produce
+    /// that algorithm's published answer.
+    ///
+    /// Without this, an implementation that ignored the selector and
+    /// always called SHA-1 would still pass the table above for its
+    /// SHA-1 row and fail loudly for the others — but an
+    /// implementation that mixed *seeds* up could pass by accident.
+    #[test]
+    fn totp_algorithm_selector_actually_changes_the_hash() {
+        let secret = rfc6238_secret();
+        let sha1 = TotpAuthenticator::new(secret.clone(), TotpAlgorithm::Sha1, 30, 8, 1).unwrap();
+        let sha256 =
+            TotpAuthenticator::new(secret.clone(), TotpAlgorithm::Sha256, 30, 8, 1).unwrap();
+        let sha512 = TotpAuthenticator::new(secret, TotpAlgorithm::Sha512, 30, 8, 1).unwrap();
+        let a = sha1.code_at(59).unwrap();
+        let b = sha256.code_at(59).unwrap();
+        let c = sha512.code_at(59).unwrap();
+        assert_ne!(a, b);
+        assert_ne!(b, c);
+        assert_ne!(a, c);
+    }
+
+    /// The code is constant across a step and changes exactly at the
+    /// boundary — not one second early, not one second late.
+    #[test]
+    fn totp_changes_exactly_at_the_period_boundary() {
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
+        // 1111111110 is 37037037 * 30 exactly: the first second of a
+        // step. Its predecessor belongs to the previous step.
+        let boundary = 1_111_111_110_u64;
+        assert_eq!(boundary % 30, 0);
+        let before = auth.code_at(boundary - 1).unwrap();
+        let at = auth.code_at(boundary).unwrap();
+        assert_ne!(before, at, "code must change at the boundary");
+        assert_eq!(auth.code_at(boundary - 2).unwrap(), before);
+        assert_eq!(auth.code_at(boundary + 1).unwrap(), at);
+        // Constant for the whole step, and only for the whole step.
+        for offset in 0..30 {
+            assert_eq!(auth.code_at(boundary + offset).unwrap(), at);
+        }
+        assert_ne!(auth.code_at(boundary + 30).unwrap(), at);
+    }
+
+    /// Remaining validity is `period - (t mod period)`: never 0,
+    /// never more than the period, and stepping down by one each
+    /// second.
+    #[test]
+    fn totp_remaining_seconds_walks_the_whole_period() {
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
+        let boundary = 1_111_111_110_u64;
+        for offset in 0..30 {
+            let remaining = auth.remaining_seconds(boundary + offset);
+            assert_eq!(remaining, 30 - offset);
+            assert!((1..=30).contains(&remaining));
+        }
+        assert_eq!(auth.remaining_seconds(boundary + 30), 30);
+    }
+
+    /// A ten-digit authenticator used to panic in debug builds and
+    /// wrap in release ones, because the modulus was `10u32.pow(10)`
+    /// and 10^10 exceeds `u32::MAX`. Ten digits is legal per this
+    /// constructor, so it must compute.
+    #[test]
+    fn totp_ten_digits_does_not_overflow_the_modulus() {
+        let auth =
+            TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 10, 1).unwrap();
+        // RFC 4226 dynamic truncation yields a 31-bit value, so at
+        // ten digits the modulus cannot bite and the code is the
+        // truncation itself, left-padded to width ten.
+        let rendered = auth.formatted_code_at(59).unwrap();
+        assert_eq!(rendered.len(), 10);
+        assert_eq!(rendered.parse::<u32>().unwrap(), auth.code_at(59).unwrap());
+        assert!(auth.code_at(59).unwrap() <= 0x7FFF_FFFF);
+    }
+
+    /// A step whose truncation is short must still render at full
+    /// width. Nine digits over a 31-bit truncation reaches this
+    /// often enough to pin it without searching.
+    #[test]
+    fn totp_rendering_is_zero_padded_to_the_configured_width() {
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 8, 1).unwrap();
+        // The published SHA-1 vector at T=1111111109 is 07081804.
+        let rendered = auth.formatted_code_at(1_111_111_109).unwrap();
+        assert_eq!(rendered.as_str(), "07081804");
+        assert_eq!(rendered.len(), 8);
+        assert_eq!(auth.code_at(1_111_111_109).unwrap(), 7_081_804);
     }
 
     #[test]
     fn totp_verify_at_time_accepts_window() {
-        let auth = TotpAuthenticator::new(rfc6238_secret(), 30, 6, 1).unwrap();
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
         // Code at step k must be accepted at step k, k-1, k+1.
         let now = 1_111_111_109;
         let center = now / 30;
@@ -726,7 +986,7 @@ mod tests {
 
     #[test]
     fn totp_verify_at_time_rejects_outside_window() {
-        let auth = TotpAuthenticator::new(rfc6238_secret(), 30, 6, 1).unwrap();
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
         let now = 1_111_111_109;
         let center = now / 30;
         // Code from step center-2 should NOT be accepted with window=1.
@@ -735,26 +995,22 @@ mod tests {
             Err(AuthError::InvalidCredential) => {}
             other => panic!(
                 "expected InvalidCredential outside window, got {}",
-                if other.is_ok() {
-                    "Ok"
-                } else {
-                    "different Err"
-                }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
     }
 
     #[test]
     fn totp_invalid_parameters_rejected() {
-        match TotpAuthenticator::new(Vec::<u8>::new(), 30, 6, 1) {
+        match TotpAuthenticator::new(Vec::<u8>::new(), TotpAlgorithm::Sha1, 30, 6, 1) {
             Err(AuthError::InvalidParameter { .. }) => {}
             _ => panic!("expected InvalidParameter for empty secret"),
         }
-        match TotpAuthenticator::new(b"x".to_vec(), 0, 6, 1) {
+        match TotpAuthenticator::new(b"x".to_vec(), TotpAlgorithm::Sha1, 0, 6, 1) {
             Err(AuthError::InvalidParameter { .. }) => {}
             _ => panic!("expected InvalidParameter for period 0"),
         }
-        match TotpAuthenticator::new(b"x".to_vec(), 30, 11, 1) {
+        match TotpAuthenticator::new(b"x".to_vec(), TotpAlgorithm::Sha1, 30, 11, 1) {
             Err(AuthError::InvalidParameter { .. }) => {}
             _ => panic!("expected InvalidParameter for digits 11"),
         }
@@ -762,7 +1018,7 @@ mod tests {
 
     #[test]
     fn totp_malformed_credential_rejected() {
-        let auth = TotpAuthenticator::new(rfc6238_secret(), 30, 6, 1).unwrap();
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
         // Wrong digit count.
         match auth.verify(b"1234") {
             Err(AuthError::MalformedCredential) => {}
@@ -779,7 +1035,7 @@ mod tests {
     fn totp_assertion_has_no_key_contribution() {
         // Build a small verify_at_time path so we don't depend on
         // wall clock matching a specific code.
-        let auth = TotpAuthenticator::new(rfc6238_secret(), 30, 6, 1).unwrap();
+        let auth = TotpAuthenticator::new(rfc6238_secret(), TotpAlgorithm::Sha1, 30, 6, 1).unwrap();
         let code = auth.code_at(1_111_111_109).unwrap();
         let step = auth.verify_at_time(code, 1_111_111_109).unwrap();
         assert_eq!(step, 1_111_111_109 / 30);

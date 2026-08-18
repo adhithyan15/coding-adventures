@@ -2846,6 +2846,84 @@ impl UnlockedVaultV1 {
         randomness: AuditedAccessRandomnessV1,
         local_state_store: &dyn LocalStateStore,
     ) -> Result<crate::AuditedAccessResultV1<RevealedSecretV1>, ApplicationError> {
+        self.audited_current_item_disclosure(
+            item_id,
+            intent,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            |record| crate::disclosure::select_secret(record, field),
+        )
+    }
+
+    /// Compute and disclose the current RFC 6238 code for one stored TOTP item
+    /// only after its item-read event and next owner state are durable.
+    ///
+    /// This is the same ceremony as [`Self::audited_reveal_current_item_field`]
+    /// — the same `ItemRead` action, the same `Denied`/`Failed`/`Succeeded`
+    /// outcomes, the same publish-before-release ordering — because VLT-PM15 §2
+    /// classifies TOTP display as an access alongside every other reveal. A
+    /// six-digit code lives about thirty seconds and does not let its holder
+    /// produce the next one, which makes its blast radius smaller than the
+    /// seed's; it does not make the read less of a read. See VLT-PM45 §3.
+    ///
+    /// `code_time_ms` is a *second, fresh* clock reading, deliberately not the
+    /// `wall_time_ms` reserved for the audit event. VLT-PM45 §4.1: an Argon2id
+    /// unlock and a human typing `yes` sit between the pre-authentication
+    /// reservation and this call, so the reserved reading is stale by
+    /// construction and a whole period is easily reachable in the gap.
+    ///
+    /// The decoded seed never leaves this boundary. What the caller receives is
+    /// the finished code and its remaining window.
+    pub fn audited_current_item_totp_code(
+        self,
+        item_id: ItemId,
+        intent: SecretDisclosureIntentV1,
+        code_time_ms: u64,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<crate::TotpCodeV1>, ApplicationError> {
+        self.audited_current_item_disclosure(
+            item_id,
+            intent,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            |record| crate::totp::current_code(record, code_time_ms),
+        )
+    }
+
+    /// The one copy of the current-item disclosure ceremony.
+    ///
+    /// Every audited disclosure from the sole current live revision — a secret
+    /// field, a TOTP code, and whatever the next one turns out to be — shares
+    /// this control flow, and it is shared rather than copied on purpose. The
+    /// mapping from situation to audit outcome *is* the security property:
+    ///
+    /// | Situation | Outcome | Revision bound |
+    /// |---|---|---|
+    /// | disclosure ceremony refused | `Denied` | none |
+    /// | no such item | `Failed` | none |
+    /// | tombstoned | `Failed` | none |
+    /// | more than one current candidate | `Failed` | none |
+    /// | selection failed on a live revision | `Failed` | exact current |
+    /// | selection succeeded | `Succeeded` | exact current |
+    ///
+    /// A second copy of that table would be a second thing to keep correct, and
+    /// the failure mode of getting it subtly wrong is an access that happened
+    /// and left no trace. The current revision capability never escapes: the
+    /// selector sees the decrypted payload and nothing else, and returns only
+    /// what it built from it.
+    fn audited_current_item_disclosure<T>(
+        self,
+        item_id: ItemId,
+        intent: SecretDisclosureIntentV1,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+        select: impl FnOnce(&AnyRecord) -> Result<T, ApplicationError>,
+    ) -> Result<crate::AuditedAccessResultV1<T>, ApplicationError> {
         self.require_audit_epoch()?;
         let (outcome, selected_revision, operation) = match intent.authorize() {
             Err(error) => (AuditOutcomeV1::Denied, None, Err(error)),
@@ -2864,8 +2942,7 @@ impl UnlockedVaultV1 {
                         ),
                         ItemState::Live(document) => {
                             let revision = candidate.revision_id();
-                            let operation =
-                                crate::disclosure::select_secret(document.payload(), field);
+                            let operation = select(document.payload());
                             let outcome = if operation.is_ok() {
                                 AuditOutcomeV1::Succeeded
                             } else {
@@ -4258,7 +4335,9 @@ mod tests {
         FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreOperation,
         VaultObjectStore,
     };
-    use coding_adventures_vault_records::{AnyRecord, Login, SecureNote, LOGIN_V1, SECURE_NOTE_V1};
+    use coding_adventures_vault_records::{
+        AnyRecord, Login, SecureNote, TotpSeed, LOGIN_V1, SECURE_NOTE_V1, TOTP_SEED_V1,
+    };
     use coding_adventures_zeroize::Zeroize;
     use std::sync::{
         atomic::{AtomicBool, AtomicUsize, Ordering},
@@ -4659,6 +4738,30 @@ mod tests {
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
         login_document_with_times(item_id, title, password, 300, 300)
+    }
+
+    /// A TOTP item carrying the RFC 6238 Appendix B SHA-1 seed, so the code
+    /// this vault produces has a published right answer.
+    fn new_totp_document(item_id: ItemId, algorithm: &str, digits: u8) -> ItemDocument {
+        ItemDocument::new(
+            item_id,
+            ContentType::new(TOTP_SEED_V1).unwrap(),
+            300,
+            300,
+            LwwRegister::new(false, 300, OperationId::new([0x72; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::TotpSeed(TotpSeed {
+                label: "GitHub ada@example.test".to_owned(),
+                issuer: Some("GitHub".to_owned()),
+                secret: b"12345678901234567890".to_vec(),
+                algorithm: algorithm.to_owned(),
+                digits,
+                period: 30,
+            }),
+            ObservedSet::new(),
+        )
+        .unwrap()
     }
 
     fn rich_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
@@ -7313,6 +7416,381 @@ mod tests {
                 AuditOutcomeV1::Failed,
                 Some(item_id),
                 None,
+            )
+        );
+    }
+
+    /// VLT-PM45 §3. Displaying a code is an access, so it walks the whole
+    /// `ItemRead` ceremony — `Denied` on refusal, `Failed` on a wrong record
+    /// kind or a missing item, `Succeeded` bound to the exact current revision
+    /// — and the published RFC 6238 answer comes back only on the last one.
+    #[test]
+    fn audited_totp_code_publishes_the_full_item_read_ceremony() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x81);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_totp_document(item_id, "SHA1", 6),
+            760,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_revision = session.current_catalog.items[&item_id][0].revision_id();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            761,
+            None,
+            None,
+            [0x82; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+
+        // Refusal: no code, and a `Denied` row that names the item without
+        // binding a revision, because nothing was traversed.
+        let denied = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .audited_current_item_totp_code(
+            item_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed: false },
+            59_000,
+            762,
+            audited_access_randomness(0x83),
+            &local,
+        )
+        .unwrap();
+        assert!(matches!(
+            denied.into_operation(),
+            Err(ApplicationError::InvalidInput)
+        ));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Denied,
+                Some(item_id),
+                None,
+            )
+        );
+
+        // Success: the published Appendix B answer for T = 59, six digits.
+        // The audit timestamp (763) and the code time (59_000 ms) are
+        // deliberately unrelated numbers here — that is the whole point of
+        // VLT-PM45 §4.1, and a boundary that quietly used one for the other
+        // would return a code for 1970-01-01T00:00:00.763 instead.
+        let code = session
+            .audited_current_item_totp_code(
+                item_id,
+                SecretDisclosureIntentV1::InteractiveReveal { confirmed: true },
+                59_000,
+                763,
+                audited_access_randomness(0x84),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+        assert_eq!(code.code(), "287082");
+        assert_eq!(code.remaining_seconds(), 1);
+        assert_eq!(code.period_seconds(), 30);
+        drop(code);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(exact_revision),
+            )
+        );
+
+        // A missing item fails without binding a revision.
+        let missing = ItemId::new([0x85; 16]);
+        let missing_result = session
+            .audited_current_item_totp_code(
+                missing,
+                SecretDisclosureIntentV1::InteractiveReveal { confirmed: true },
+                59_000,
+                764,
+                audited_access_randomness(0x86),
+                &local,
+            )
+            .unwrap();
+        assert!(matches!(
+            missing_result.into_operation(),
+            Err(ApplicationError::NotFound)
+        ));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(missing),
+                None,
+            )
+        );
+
+        // A tombstoned item fails without binding a revision either.
+        session
+            .delete_current_item(item_id, 765, 765, delete_item_randomness(0x87), &local)
+            .unwrap();
+        let tombstoned = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .audited_current_item_totp_code(
+            item_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed: true },
+            59_000,
+            766,
+            audited_access_randomness(0x88),
+            &local,
+        )
+        .unwrap();
+        assert!(matches!(
+            tombstoned.into_operation(),
+            Err(ApplicationError::NotFound)
+        ));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    /// Asking a login for a TOTP code is a `Failed` access, not a silent
+    /// nothing: the item was found and read, and the read must show up.
+    #[test]
+    fn audited_totp_code_on_a_non_totp_item_fails_bound_to_the_revision() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x89);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Not a TOTP item", "password"),
+            770,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_revision = session.current_catalog.items[&item_id][0].revision_id();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            771,
+            None,
+            None,
+            [0x8a; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+
+        let wrong_kind = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .audited_current_item_totp_code(
+            item_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed: true },
+            59_000,
+            772,
+            audited_access_randomness(0x8b),
+            &local,
+        )
+        .unwrap();
+        assert!(matches!(
+            wrong_kind.into_operation(),
+            Err(ApplicationError::InvalidInput)
+        ));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                Some(exact_revision),
+            )
+        );
+    }
+
+    /// A stored algorithm this build cannot compute is `Unsupported`, and it
+    /// still leaves an audit row — the item was decrypted to find out.
+    #[test]
+    fn audited_totp_code_refuses_uncomputable_stored_parameters() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x8c);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_totp_document(item_id, "SHA3-256", 6),
+            780,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_revision = session.current_catalog.items[&item_id][0].revision_id();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            781,
+            None,
+            None,
+            [0x8d; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+
+        let refused = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .audited_current_item_totp_code(
+            item_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed: true },
+            59_000,
+            782,
+            audited_access_randomness(0x8e),
+            &local,
+        )
+        .unwrap();
+        assert!(matches!(
+            refused.into_operation(),
+            Err(ApplicationError::Unsupported)
+        ));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                Some(exact_revision),
             )
         );
     }

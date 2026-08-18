@@ -11,6 +11,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Built-in versus extension factor counts and gate/bind contribution
   consistency helpers on `AuthAssertionSetSummary`.
+- `TotpAlgorithm` — `Sha1`, `Sha256`, or `Sha512`, per RFC 6238 §1.2.
+  Deliberately has no `Default`: six wrong digits look exactly like six
+  right ones, so the parameter that decides which is which is never
+  chosen on a caller's behalf.
+- `TotpAuthenticator::formatted_code_at` — the code as the decimal
+  string a person types, zero-padded to the configured width and held
+  in a `Zeroizing<String>`. Roughly one code in ten has a leading zero,
+  and `042311` is not `42311`; returning the integer and asking every
+  caller to remember the padding is an invitation for one of them to
+  forget.
+- `TotpAuthenticator::remaining_seconds` — seconds until the current
+  step ends, in `1..=period`. Never `0`, because a code with zero
+  seconds left has already been replaced by the next one.
+- `TotpAuthenticator::digits` accessor.
+- The full RFC 6238 Appendix B table as tests: all six published
+  timestamps against all three algorithms, each with its own published
+  seed (20/32/64 bytes), at the published 8-digit width and at the
+  6-digit truncation. Plus period-boundary behaviour (constant across a
+  step, different across the transition, identical one period later),
+  zero-padding, and a cross-algorithm test proving the selector
+  actually changes the hash rather than being ignored.
+
+### Changed
+
+- **Breaking.** `TotpAuthenticator::new` now takes the algorithm as its
+  second argument: `new(secret, algorithm, period, digits, window)`.
+  The type was hard-wired to HMAC-SHA-1; a stored seed carries its own
+  algorithm, so a generator or verifier that assumed SHA-1 would
+  silently produce plausible, wrong digits for the other two. This
+  crate had no external callers at the time of the change.
+
+### Fixed
+
+- Ten-digit codes no longer overflow the modulus. It was computed as
+  `10u32.pow(digits)` while `digits` is permitted up to 10, and `10^10`
+  exceeds `u32::MAX` — so a legal argument panicked in debug builds and
+  wrapped in release ones. The modulus is now computed in `u64`. RFC
+  4226 dynamic truncation yields only 31 bits, so at ten digits the
+  modulus is correctly a no-op.
+- Dynamic truncation indexes the offset nibble from the *last* byte of
+  the tag rather than from a hard-wired byte 19, which is what makes it
+  correct for the 32- and 64-byte tags of the wider hashes.
+- The HMAC tag no longer escapes its wipe-on-drop wrapper. `TotpAlgorithm::mac`
+  copies each fixed-size tag into the returned buffer and then zeroizes the
+  array; the shorter `hmac_sha1(...)?.into()` would have left the *first* copy
+  on the stack untouched while `Zeroizing` owned the second. A TOTP tag is not
+  merely secret-adjacent — the code is read straight out of it.
+- Dynamic truncation now uses checked lookups (`last()` and `get(o..o+4)`)
+  returning `Crypto` instead of indexing. The panic was unreachable — a nibble
+  is at most 15 and the narrowest tag is 20 bytes — but "unreachable" rested on
+  a fact about three hash functions declared in another crate, which this
+  function cannot see. A refusal is a better answer than a panic in a password
+  manager.
 
 ## [0.1.0] — 2026-05-04
 

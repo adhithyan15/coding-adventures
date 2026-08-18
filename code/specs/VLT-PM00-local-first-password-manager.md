@@ -892,7 +892,7 @@ vault-pm history restore ITEM REV
 vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
                            [--no-digits] [--no-symbols] [--exclude-ambiguous]
                            (--reveal|--copy)
-vault-pm totp code ITEM [--copy|--reveal]
+vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
 
 vault-pm attachment add ITEM PATH
 vault-pm attachment list ITEM
@@ -930,6 +930,19 @@ operating-system CSPRNG, refuses a policy below an 80-bit entropy floor, and
 delivers the result only through the §14.6 reveal path. Its `--copy` mode is
 recognized and refused with the unsupported class until item 11's clipboard
 ceremony provides an adapter.
+
+`totp code` has since shipped as the second of item 11, specified by
+`VLT-PM45-cli-totp-code.md`. It reads the current live revision of one stored
+`TOTP_SEED_V1` item, computes the current RFC 6238 code inside the application
+boundary — the decoded seed never crosses into CLI orchestration — and delivers
+it only through the §14.6 reveal path after the VLT-PM25 confirmation ceremony
+and a durable `ItemRead` event, because VLT-PM15 §2 names TOTP display as an
+access. Ordinary standard output carries only the non-secret remaining-validity
+line. Its `--copy` mode is recognized and refused exactly as the generator's
+is. Both entries in this table now write their output flag as a required
+`(--reveal|--copy)` choice rather than an optional pair, for the reason
+VLT-PM44 §2 records: a default that printed a live credential would put it into
+shell history and scrollback the first time anyone redirected it.
 
 ### 14.5 Unlock experience
 
@@ -1797,10 +1810,23 @@ changelog, focused build, and downstream validation.
       no vault, requires no unlock, and publishes no audit event, for the
       reasons that document's §1 records. That closes the half of §14.4 that
       named a signature without naming a strength.
-      TOTP display, clipboard delivery, and attachments remain open. The
-      generator's `--copy` mode is recognized and refused with the unsupported
-      class until the clipboard ceremony lands, since no clipboard adapter
-      exists in this product yet.
+      **TOTP display has shipped**, as `VLT-PM45-cli-totp-code.md`:
+      `vault-pm totp code ITEM --reveal` computes the current RFC 6238 code for
+      one stored `TOTP_SEED_V1` item and delivers it only to the confirmed
+      controlling terminal, after a durable `ItemRead` event — VLT-PM15 §2
+      already classified TOTP display as an access, so this is the full reveal
+      ceremony rather than a lighter one. The RFC 6238 engine is reused from
+      `vault-auth` (VLT05) rather than rewritten; that package gained explicit
+      SHA-1/SHA-256/SHA-512 selection to serve the parameters VLT-PM29 stores.
+      The command is one-shot: it prints the current code and the non-secret
+      number of seconds it remains valid, and returns. A live refreshing
+      display is deferred by that document's §8, which records what it would
+      have to decide about idle-lock, per-redraw audit events, and terminal
+      raw-mode handling.
+      Clipboard delivery and attachments remain open. Both shipped commands'
+      `--copy` modes are recognized and refused with the unsupported class
+      until the clipboard ceremony lands, since no clipboard adapter exists in
+      this product yet.
 12. local agent/IPC and auto-lock.
 13. Bitwarden/KDBX/browser CSV import adapters.
 14. removable/synced-folder mode and mirror decorator.

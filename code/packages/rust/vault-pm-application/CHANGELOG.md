@@ -2,6 +2,64 @@
 
 All notable changes to this package are documented here.
 
+## [0.64.0] - 2026-08-18
+
+### Added
+
+- **Current TOTP code computation**, the second of `VLT-PM00` §23 item 11.
+  Specified by `VLT-PM45-cli-totp-code.md`.
+
+  - `UnlockedVaultV1::audited_current_item_totp_code` reads the sole current
+    live revision of a `TOTP_SEED_V1` item and returns the current RFC 6238
+    code. It publishes the same `ItemRead` event, with the same
+    `Denied`/`Failed`/`Succeeded` outcomes and the same publish-before-release
+    ordering, as `audited_reveal_current_item_field` — because `VLT-PM15` §2
+    already names "TOTP display" in its list of accesses. A six-digit code
+    lives about thirty seconds and does not let its holder produce the next
+    one, which makes its blast radius smaller than the seed's; it does not
+    make the read less of a read.
+
+  - The computation happens *inside* this crate, so the decoded seed never
+    crosses the boundary. That is the whole reason the new `totp` module
+    exists rather than the CLI reusing the existing seed reveal and computing
+    for itself: a command whose purpose is to avoid showing anyone the seed
+    should not materialize the seed in the process's outermost layer.
+
+  - `TotpCodeV1` carries the zero-padded digits and the seconds they remain
+    valid. It implements no `Debug`, `Display`, or `Clone` — a `Debug` derive
+    would put a valid second factor into every future `{:?}` of anything
+    containing one — and wipes the code on drop. The countdown is readable
+    through an ordinary accessor because it is a function of the clock and the
+    stored period, reproducible by anyone with a watch, and therefore safe to
+    print to ordinary standard output.
+
+  - The instant is a caller-supplied `code_time_ms`, deliberately separate from
+    the `wall_time_ms` reserved for the audit event. `VLT-PM45` §4.1: an
+    Argon2id unlock and a human typing `yes` sit between the pre-authentication
+    reservation and the computation, so the reserved reading is stale by
+    construction and a whole period is easily reachable in the gap. One reading
+    used for both would routinely return the *previous* code — six digits,
+    correct-looking, and rejected by the site.
+
+  - Stored parameters this build cannot compute fail closed as `Unsupported`
+    with a `Failed` event: an unrecognized or differently-spelled algorithm, a
+    digit count the engine cannot render, a zero period, an empty secret. The
+    codec does not validate these (only `VLT-PM29`'s CLI input boundary does),
+    so a portable import can carry them. There is no fallback to SHA-1 and no
+    clamped digit count, because six wrong digits are indistinguishable from
+    six right ones until a login fails.
+
+  - The RFC 6238 engine is `coding_adventures_vault_auth`, a new dependency,
+    reused per `VLT-PM00` §6's reuse map rather than reimplemented here.
+
+### Changed
+
+- The current-item disclosure ceremony is now one generic code path shared by
+  the secret-field and TOTP-code boundaries. The mapping from situation to
+  audit outcome *is* the security property, and a second copy of it would be a
+  second thing to keep correct — with "an access that happened and left no
+  trace" as the failure mode.
+
 ## [0.63.0] - 2026-08-18
 
 ### Added

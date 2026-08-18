@@ -9,6 +9,10 @@ coding_adventures_md5 = { path = "../md5" }
 coding_adventures_sha1 = { path = "../sha1" }
 coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_sha512 = { path = "../sha512" }
+# Every key-derived intermediate inside `hmac()` is `K'` in lightly disguised
+# form — `K' XOR ipad` is recovered by XORing 0x36 back out — so the buffers
+# holding them are wipe-on-drop rather than merely dropped.
+coding_adventures_zeroize = { path = "../zeroize" }
 # subtle provides guaranteed constant-time comparison primitives.
 # A hand-rolled XOR accumulator in Rust is not sufficient: LLVM can and does
 # optimize away "dead" loop iterations once the accumulator is provably
