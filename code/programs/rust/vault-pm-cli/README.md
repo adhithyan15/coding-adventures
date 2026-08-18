@@ -43,6 +43,7 @@ vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION
+vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION
 ```
 
 `init` and every authenticated command require a controlling terminal even
@@ -59,8 +60,8 @@ process, proves candidate-reveal denial and unconflicted failure advance the
 audit chain without entering stdout or disclosing a secret, proves an
 unconflicted authored-login merge fails before form collection and advances
 the merge audit action, repeats that gate for authored secure-note,
-payment-card, API-key, database-credential, and TOTP merges before their secret
-forms, deletes to a causal
+payment-card, API-key, database-credential, TOTP, and opaque-record merges
+before their secret forms, deletes to a causal
 tombstone, restores an exact live ancestor into a new revision, activates the
 signed audit epoch, forces an invalid edit prompt in
 a later process, verify that failure event from another process, inspect the

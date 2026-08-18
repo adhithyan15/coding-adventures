@@ -11,16 +11,16 @@ use coding_adventures_vault_pm_application::{
     AuditedAccessRandomnessV1, AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore,
     BootstrapStoreError, CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1,
     DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
-    LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, PortableExportPolicyV1,
-    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
-    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
-    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
-    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
-    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
-    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
-    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
-    PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES,
-    RESTORE_ITEM_RANDOM_BYTES,
+    LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
+    PortableExportPolicyV1, PortableExportRandomnessV1, PortableImportRandomnessV1,
+    PortableOpenPolicyV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1, RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1,
+    SecretFieldV1, SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1,
+    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
+    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
+    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
+    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -56,7 +56,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -224,6 +224,10 @@ pub trait CliHost {
     fn read_totp_digits(&self) -> Result<Zeroizing<String>, HostError>;
     /// Collect a TOTP period in seconds.
     fn read_totp_period(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an opaque record's whole canonical-CBOR payload as lowercase
+    /// hexadecimal, with terminal echo disabled.
+    fn read_opaque_payload(&self) -> Result<Zeroizing<String>, HostError>;
 
     /// Require explicit interactive confirmation before revealing a secret.
     fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
@@ -477,6 +481,10 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
+    fn read_opaque_payload(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::OpaquePayload)
+    }
+
     fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
         ControllingTerminal
             .confirm_secret_reveal()
@@ -666,6 +674,10 @@ enum Command {
         base_revision: RevisionId,
     },
     ConflictMergeTotp {
+        item_id: ItemId,
+        base_revision: RevisionId,
+    },
+    ConflictMergeOpaque {
         item_id: ItemId,
         base_revision: RevisionId,
     },
@@ -912,6 +924,13 @@ fn parse_conflict(arguments: &[String]) -> Result<Command, CliFailure> {
         }
         [action, kind, item, revision] if action == "merge" && kind == "totp" => {
             Ok(Command::ConflictMergeTotp {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                base_revision: RevisionId::from_user_string(revision)
+                    .map_err(|_| CliFailure::InvalidCommand)?,
+            })
+        }
+        [action, kind, item, revision] if action == "merge" && kind == "opaque" => {
+            Ok(Command::ConflictMergeOpaque {
                 item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
                 base_revision: RevisionId::from_user_string(revision)
                     .map_err(|_| CliFailure::InvalidCommand)?,
@@ -1168,6 +1187,17 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_id,
             base_revision,
         } => conflict_merge_totp(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            item_id,
+            base_revision,
+        ),
+        Command::ConflictMergeOpaque {
+            item_id,
+            base_revision,
+        } => conflict_merge_opaque(
             host,
             prepared.paths(),
             &writer,
@@ -3041,6 +3071,66 @@ fn conflict_merge_totp(
     )))
 }
 
+fn conflict_merge_opaque(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    base_revision: RevisionId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let preparation = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .prepare_audited_opaque_conflict_merge(
+            item_id,
+            base_revision,
+            wall_time_ms,
+            failure_randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_preparation()
+        .map_err(map_application)?;
+    // One hidden prompt is the whole form: an opaque record has no schema this
+    // product can turn into a field list, and the content type it will keep is
+    // the base's rather than anything the terminal could offer. The line
+    // travels to the application exactly as typed, so the audited preparation
+    // decodes it and an invalid payload is recorded before its error returns.
+    let input = host.read_opaque_payload();
+    let input = match input {
+        Ok(payload) => OpaqueConflictMergeInputV1::new(payload),
+        Err(error) => {
+            preparation
+                .record_audited_host_failure(&application_store)
+                .map_err(map_application)?;
+            return Err(map_host(error));
+        }
+    };
+    let mut mutation_random = [0_u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES];
+    if let Err(error) = host.fill_entropy(&mut mutation_random) {
+        preparation
+            .record_audited_host_failure(&application_store)
+            .map_err(map_application)?;
+        return Err(map_host(error));
+    }
+    preparation
+        .complete_audited(
+            input,
+            ResolveItemConflictRandomnessV1::new(mutation_random),
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Conflict merged: {}\n",
+        item_id.to_user_string()
+    )))
+}
+
 fn history_restore(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -4360,6 +4450,12 @@ mod tests {
             self.text()
         }
 
+        fn read_opaque_payload(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
+        }
+
         fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
             self.text().map(|answer| answer.as_str() == "yes")
         }
@@ -5013,6 +5109,37 @@ mod tests {
             parse([
                 "conflict",
                 "merge",
+                "opaque",
+                item.as_str(),
+                revision.as_str()
+            ]),
+            default_invocation(Command::ConflictMergeOpaque {
+                item_id,
+                base_revision: revision_id,
+            })
+        );
+        assert_eq!(
+            parse([
+                "--vault",
+                "work",
+                "conflict",
+                "merge",
+                "opaque",
+                item.as_str(),
+                revision.as_str(),
+            ]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ConflictMergeOpaque {
+                    item_id,
+                    base_revision: revision_id,
+                },
+            })
+        );
+        assert_eq!(
+            parse([
+                "conflict",
+                "merge",
                 "login",
                 item.as_str(),
                 revision.to_lowercase().as_str(),
@@ -5085,6 +5212,28 @@ mod tests {
         // The TOTP selector is closed too: neither the record name nor a
         // longer spelling stands in for it.
         for alias in ["totp-seed", "otp", "TOTP"] {
+            assert_eq!(
+                parse(["conflict", "merge", alias, item.as_str(), revision.as_str()]),
+                Err(CliFailure::InvalidCommand)
+            );
+        }
+        assert_eq!(
+            parse([
+                "conflict",
+                "merge",
+                "opaque",
+                item.as_str(),
+                revision.to_lowercase().as_str(),
+            ]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["conflict", "merge", "opaque", item.as_str()]),
+            Err(CliFailure::InvalidCommand)
+        );
+        // So is the opaque selector. "custom" and "unknown" describe the same
+        // records but are not the accepted spelling.
+        for alias in ["custom", "unknown", "Opaque"] {
             assert_eq!(
                 parse(["conflict", "merge", alias, item.as_str(), revision.as_str()]),
                 Err(CliFailure::InvalidCommand)
@@ -7602,6 +7751,22 @@ mod tests {
             "{totp_merged:?}"
         );
         assert!(totp_merged.stdout().is_empty());
+
+        // So must the authored opaque-record merge, before its hidden payload
+        // prompt. Nothing about the ceremony changes because the record has no
+        // schema: the precondition is checked first either way.
+        let opaque_merge_host =
+            TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 131);
+        let opaque_merged = run(
+            ["conflict", "merge", "opaque", item, revision.as_str()],
+            &opaque_merge_host,
+        );
+        assert_eq!(
+            opaque_merged.exit_code(),
+            ExitCode::Conflict,
+            "{opaque_merged:?}"
+        );
+        assert!(opaque_merged.stdout().is_empty());
 
         let choose_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 127);
         let chosen = run(

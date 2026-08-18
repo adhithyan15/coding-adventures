@@ -95,7 +95,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use coding_adventures_canonical_cbor::{decode, encode, CborError, CborValue};
+use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborError, CborValue};
 use coding_adventures_zeroize::Zeroize;
 
 // ─────────────────────────────────────────────────────────────────────
@@ -577,6 +577,13 @@ impl Zeroize for AnyRecord {
 /// Re-encode an [`AnyRecord::Opaque`] back to its full
 /// envelope-wrapped canonical CBOR bytes. Useful for forwarding a
 /// record of unknown type without losing it.
+///
+/// Wrapping costs one level of nesting, so a payload that decodes at
+/// exactly the decoder's depth limit is one level too deep to encode
+/// inside the envelope. That is reported through this function's
+/// existing error channel rather than by panicking: `payload_bytes`
+/// can come from a caller that authored it, not only from the wire,
+/// and no input should be able to abort the process.
 pub fn encode_opaque(
     content_type: &str,
     payload_bytes: &[u8],
@@ -589,7 +596,7 @@ pub fn encode_opaque(
         ),
         (CborValue::text("d"), payload),
     ]);
-    Ok(encode(&envelope))
+    Ok(try_encode(&envelope)?)
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -1739,6 +1746,29 @@ mod tests {
         };
         let bytes2 = encode_opaque(&ct, &payload).unwrap();
         assert_eq!(bytes, bytes2);
+    }
+
+    #[test]
+    fn encode_opaque_reports_an_undepictable_payload_instead_of_panicking() {
+        use coding_adventures_canonical_cbor::MAX_DECODE_DEPTH;
+
+        // `0x81` is a one-element array header, so a run of them is a chain of
+        // singleton arrays around the final `0x00`. A chain exactly as deep as
+        // the decoder allows still decodes on its own, but the envelope adds
+        // one more level, which the encoder does not allow.
+        let mut deepest_decodable = vec![0x81_u8; MAX_DECODE_DEPTH];
+        deepest_decodable.push(0x00);
+        assert!(decode(&deepest_decodable).is_ok());
+        assert!(matches!(
+            encode_opaque("vault/custom-app/v1", &deepest_decodable),
+            Err(VaultRecordError::Cbor(CborError::EncodeTooDeep))
+        ));
+
+        // One level shallower leaves exactly enough room for the envelope, so
+        // the boundary is proven from both sides.
+        let mut deepest_wrappable = vec![0x81_u8; MAX_DECODE_DEPTH - 1];
+        deepest_wrappable.push(0x00);
+        assert!(encode_opaque("vault/custom-app/v1", &deepest_wrappable).is_ok());
     }
 
     // --- Schema mismatch rejection ---

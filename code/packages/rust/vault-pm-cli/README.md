@@ -249,6 +249,20 @@ over from the base candidate. The base and every former candidate value remain
 opaque, success names all current candidates as parents, and ordinary output
 contains only the merged item selector.
 
+`conflict merge opaque ITEM BASE_REVISION` closes the family with the one record
+type that has no schema. There is no field list to fill in, so the form is a
+single hidden prompt for the complete canonical-CBOR payload as lowercase
+hexadecimal; it is hidden because an unknown schema offers no way to show that
+any part of the payload is not a secret. The line is forwarded verbatim so its
+closed shape is decoded and validated inside the application-owned preparation
+and invalid payloads are audited before their closed error. The content type is
+inherited from the base rather than authored, since an item's schema is
+immutable across its history. Choosing one existing candidate unchanged remains
+`conflict choose ITEM REVISION`, which already works for any schema. The base
+and every former candidate value remain opaque, success names all current
+candidates as parents, and ordinary output contains only the merged item
+selector.
+
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
 schema-specific selectors. It reserves time and audit entropy before
 unlock, then requires exact `yes` through a fixed controlling-terminal prompt.

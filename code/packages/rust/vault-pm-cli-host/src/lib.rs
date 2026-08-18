@@ -258,6 +258,14 @@ pub enum SecretPrompt {
     DatabasePassword,
     /// Collect a TOTP seed in canonical Base32 without terminal echo.
     TotpSecret,
+    /// Collect an opaque record's whole canonical-CBOR payload, as lowercase
+    /// hexadecimal, without terminal echo.
+    ///
+    /// An opaque record's schema is unknown to this product, so no part of its
+    /// payload can be shown to be non-secret. It is therefore collected with
+    /// the same hidden ceremony as a password or a seed rather than with the
+    /// echoed text prompts used for named metadata fields.
+    OpaquePayload,
 }
 
 impl SecretPrompt {
@@ -277,6 +285,7 @@ impl SecretPrompt {
             Self::ApiKeyToken => "Token: ",
             Self::DatabasePassword => "Password: ",
             Self::TotpSecret => "Secret (Base32): ",
+            Self::OpaquePayload => "Payload (hex): ",
         }
     }
 }
@@ -546,6 +555,7 @@ mod tests {
         assert_eq!(SecretPrompt::ApiKeyToken.message(), "Token: ");
         assert_eq!(SecretPrompt::DatabasePassword.message(), "Password: ");
         assert_eq!(SecretPrompt::TotpSecret.message(), "Secret (Base32): ");
+        assert_eq!(SecretPrompt::OpaquePayload.message(), "Payload (hex): ");
         assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
         assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
         assert_eq!(TextPrompt::CardTitle.message(), "Title: ");

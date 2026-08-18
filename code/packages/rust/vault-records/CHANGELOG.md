@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- `encode_opaque` now reports an envelope that is one level too deep to encode
+  through its existing `Result`, instead of panicking. Wrapping a payload in the
+  `{t, d}` envelope costs one level of nesting, so a payload nested exactly as
+  deep as the decoder permits used to abort the process on the way back out.
+  That was unreachable while every payload came off the wire, and becomes
+  reachable as soon as a caller authors one.
+
 ### Added
 
 - `VaultRecordKind`, `VaultRecordSummary`, `AnyRecord::kind()`, and

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Exposed audited authored opaque-record conflict merge with a single hidden
+  hexadecimal payload prompt, opaque base retention, an inherited content type,
+  closed hexadecimal and CBOR-canonicality validation, and all-current-parent
+  publication. Every record type this product can hold now has an authored
+  merge.
 - Exposed audited authored TOTP conflict merge with a hidden Base32 seed
   prompt, opaque base retention, closed seed/algorithm/digit/period validation,
   and all-current-parent publication.
