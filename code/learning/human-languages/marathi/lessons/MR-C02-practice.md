@@ -20,12 +20,12 @@ reviews_of: [MR-C02-naav, MR-C02-majhe, MR-C02-aahe, MR-C02-majhe-naav-aahe, MR-
 
 ## The whole exchange
 
-| Marathi | English |
-|---|---|
-| माझं नाव मीरा आहे. | My name is Mira. |
-| तुमचं नाव काय आहे? | What's your name? |
-| माझं नाव अरुण आहे. | My name is Arun. |
-| भेटून आनंद झाला. | Pleased to meet you. |
+| Marathi | Say it | English |
+|---|---|---|
+| माझं नाव मीरा आहे. | *mājhaṁ nāv Mīrā āhe.* | My name is Mira. |
+| तुमचं नाव काय आहे? | *tumchaṁ nāv kāy āhe?* | What's your name? |
+| माझं नाव अरुण आहे. | *mājhaṁ nāv Aruṇ āhe.* | My name is Arun. |
+| भेटून आनंद झाला. | *bheṭūn ānand jhālā.* | Pleased to meet you. |
 
 ## Atoms banked this chapter
 

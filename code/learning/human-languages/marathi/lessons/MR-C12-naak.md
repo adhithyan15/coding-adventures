@@ -34,7 +34,8 @@ reviews_of: [MR-C12-tond, MR-C12-kaan, MR-C12-dola, MR-C07-pahne]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DOLA, MR-LEX-KAAN, MR-LEX-TOND] -->
 
-[PAUSE 2s] **डोळा, कान, तोंड** — say them. One face part left, and it is the
+[PAUSE 2s] **डोळा, कान, तोंड** (*ḍoḷā, kān, tõḍ*) — say them. One face part
+left, and it is the
 one with the plainest history of the four.
 
 ## You'll want to know: नाक

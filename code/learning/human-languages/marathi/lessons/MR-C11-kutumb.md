@@ -34,7 +34,8 @@ reviews_of: [MR-C11-mitra]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MITRA, MR-GRAMMAR-TATSAMA-BORROWING] -->
 
-[PAUSE 2s] **मित्र** was taken up whole from Sanskrit, not worn down. This
+[PAUSE 2s] **मित्र** (*mitra*) was taken up whole from Sanskrit, not worn down.
+This
 next word was too — and it names the group your friend belongs to as well.
 
 ## You'll want to know: कुटुंब

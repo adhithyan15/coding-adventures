@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:b0d1a06938bf1c09",
+  "sourceHash": "fnv1a64:4f0ac653117531c5",
   "summary": {
     "totalLessons": 3070,
     "voice": 2161,
@@ -43137,7 +43137,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:151eaa22ab083bf1"
+      "sourceHash": "fnv1a64:8d27ba5b3b1cc3b1"
     },
     {
       "id": "MR-C02-naav",
@@ -43176,7 +43176,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc477000accbb398"
+      "sourceHash": "fnv1a64:fb1c703edb1e5e9e"
     },
     {
       "id": "MR-C02-tu-tumhi",
@@ -43215,7 +43215,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7762eea32e74fd3b"
+      "sourceHash": "fnv1a64:ccc4ebc2a946857f"
     },
     {
       "id": "MR-C03-kaahi-harkat-nahi",
@@ -43311,7 +43311,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eb7818167410db6b"
+      "sourceHash": "fnv1a64:70dd374d59aaf09d"
     },
     {
       "id": "MR-C03-tumhi-kase-aahat",
@@ -43389,7 +43389,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b2f49ee8ecb088f8"
+      "sourceHash": "fnv1a64:b3595cc3593d4eb2"
     },
     {
       "id": "MR-C04-punha",
@@ -43527,7 +43527,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:360f39186883773c"
+      "sourceHash": "fnv1a64:73fed83793c9bc8c"
     },
     {
       "id": "MR-C05-rahne",
@@ -43900,7 +43900,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f3e23b1f18f70d7b",
+      "sourceHash": "fnv1a64:77a677b7040d48c7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -43984,7 +43984,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b132b3080165bb37",
+      "sourceHash": "fnv1a64:e9c3e5e20a44ff01",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44026,7 +44026,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bc4a5ecff53ff890",
+      "sourceHash": "fnv1a64:b11d2c0417823984",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44047,7 +44047,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:316673ce1d6b6d28",
+      "sourceHash": "fnv1a64:ed891e7565994bd2",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44068,7 +44068,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:441ee4d94874fd25",
+      "sourceHash": "fnv1a64:545dd0be7cf4e68d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -44110,7 +44110,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:11066afc3792d53d",
+      "sourceHash": "fnv1a64:a983124140410927",
       "detachableSegments": [
         "The letters in this word"
       ]

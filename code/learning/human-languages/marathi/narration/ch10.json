@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Tea, Milk, and Bhakri",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:507c5abe2c6c17d2",
+  "sourceHash": "fnv1a64:8f01d3226aec18e1",
   "lessons": [
     {
       "id": "MR-C10-paani",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f3e23b1f18f70d7b",
+      "sourceHash": "fnv1a64:77a677b7040d48c7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -197,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "पाणी (pāṇī), कृपया — water, please. Say it once more, then ask for something that is not water at all."
+              "text": "पाणी, कृपया (pāṇī, kṛpayā) — water, please. Say it once more, then ask for something that is not water at all."
             }
           ]
         },

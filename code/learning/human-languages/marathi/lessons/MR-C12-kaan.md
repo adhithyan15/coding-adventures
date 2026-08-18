@@ -34,7 +34,8 @@ reviews_of: [MR-C12-dola, MR-C06-number-differences]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA] -->
 
-[PAUSE 2s] **डोळा**'s own root turned out to be a surprise — a swing, not the
+[PAUSE 2s] **डोळा** (*ḍoḷā*) — its own root turned out to be a surprise, a
+swing, not the
 old eye-word. This next word has a different kind of surprise: not what it
 meant, but how its middle got simpler.
 
