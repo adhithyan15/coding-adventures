@@ -1935,6 +1935,142 @@ impl UnlockedVaultV1 {
         Ok(audited.into_parts().0)
     }
 
+    /// Re-wrap the vault root key under a newly collected master passphrase.
+    ///
+    /// VLT-PM43. This is the whole of §14.8's "password rotation rewraps the
+    /// VRK without re-encrypting every item body": it reads no item, opens no
+    /// catalog, and publishes no repository object. It replaces one 32-byte
+    /// ciphertext in one signed bootstrap record and moves the owner state's
+    /// pin to it.
+    ///
+    /// The session is consumed because its `bootstrap_id` pin is stale the
+    /// moment the rotation is durable. Its *keys* remain perfectly valid — the
+    /// root key did not change — which is exactly why the operation is
+    /// constant-time in the size of the vault.
+    ///
+    /// `current_passphrase` must be the one this session was opened with; see
+    /// [`crate::prepare_passphrase_rotation`] for why it is collected again
+    /// rather than retained. A vault whose audit epoch is active must use
+    /// [`Self::audited_rotate_passphrase`] instead, so that the event is
+    /// durable before the effect.
+    #[allow(clippy::too_many_arguments)]
+    pub fn rotate_passphrase(
+        self,
+        exact_bootstrap: &[u8],
+        current_passphrase: &Zeroizing<Vec<u8>>,
+        new_passphrase: &Zeroizing<Vec<u8>>,
+        policy: crate::PassphraseRotationPolicyV1,
+        randomness: crate::PassphraseRotationRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+        bootstrap_store: &dyn BootstrapStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let prepared = crate::rotate::prepare_passphrase_rotation(
+            &self.active,
+            exact_bootstrap,
+            current_passphrase,
+            new_passphrase,
+            policy,
+            &randomness,
+            &self._local_secret,
+        )?;
+        crate::rotate::commit_passphrase_rotation(
+            &self.active,
+            prepared,
+            local_state_store,
+            bootstrap_store,
+        )
+    }
+
+    /// Rotate the master passphrase only after the rotation event is durable.
+    ///
+    /// # Ordering
+    ///
+    /// ```text
+    ///   prepare (pure)  ──▶  publish audit event  ──▶  durable rotation
+    /// ```
+    ///
+    /// The audit event is published *before* the effect, per VLT-PM00 §3.9, and
+    /// through the same crash-resumable audit-only journal every other audited
+    /// ceremony uses. A preparation failure — a mismatched root key, an
+    /// out-of-bounds Argon2id policy — is recorded as a failed attempt and then
+    /// returned. An audit-publication failure supersedes and withholds the
+    /// original error, because an unaudited rotation is worse than a reported
+    /// one.
+    ///
+    /// The audit publication advances the owner state, so the durable rotation
+    /// below is committed against *that* state rather than the one this session
+    /// was opened with. [`crate::PreparedPassphraseRotationV1`] carries no
+    /// owner state precisely so that this rebasing needs no special handling.
+    ///
+    /// The event carries no item, revision, salt, KDF parameter, generation
+    /// number, or bootstrap identifier.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_rotate_passphrase(
+        self,
+        exact_bootstrap: &[u8],
+        current_passphrase: &Zeroizing<Vec<u8>>,
+        new_passphrase: &Zeroizing<Vec<u8>>,
+        policy: crate::PassphraseRotationPolicyV1,
+        randomness: crate::PassphraseRotationRandomnessV1,
+        wall_time_ms: u64,
+        audit_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+        bootstrap_store: &dyn BootstrapStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let prepared = crate::rotate::prepare_passphrase_rotation(
+            &self.active,
+            exact_bootstrap,
+            current_passphrase,
+            new_passphrase,
+            policy,
+            &randomness,
+            &self._local_secret,
+        );
+        let (audited_active, prepared) = self
+            .finish_audited_access(
+                AuditActionV1::PassphraseRotate,
+                None,
+                None,
+                wall_time_ms,
+                audit_randomness,
+                local_state_store,
+                prepared,
+            )?
+            .into_parts();
+        crate::rotate::commit_passphrase_rotation(
+            &audited_active,
+            prepared?,
+            local_state_store,
+            bootstrap_store,
+        )
+    }
+
+    /// Durably record a host-side passphrase-rotation input failure.
+    ///
+    /// The caller reserves the wall time and complete audit randomness before
+    /// authentication, then uses this boundary if collecting or confirming the
+    /// new passphrase fails outside the application. No partial passphrase and
+    /// no confirmation state crosses into the event.
+    pub fn record_audited_passphrase_rotation_host_failure(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let audited = self.finish_audited_access(
+            AuditActionV1::PassphraseRotate,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            Err::<(), _>(ApplicationError::InvalidInput),
+        )?;
+        Ok(audited.into_parts().0)
+    }
+
     /// Durably record a host-side portable-import input failure.
     ///
     /// This boundary is used after an active-epoch target unlock when artifact
@@ -4100,9 +4236,11 @@ mod tests {
         complete_generation_zero, decode_signed_audit_event, encode_item_revision,
         encode_signed_commit, prepare_generation_zero, seal_object, AuditedAccessRandomnessV1,
         CatalogV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ObjectKind, ObjectRandomness,
+        PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PendingRotationV1,
         PublicationJournalV1, V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES,
         AUDITED_ACCESS_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES,
-        REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+        PASSPHRASE_ROTATION_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+        RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_canonical_cbor::{
         decode as decode_cbor, encode as encode_cbor, CborValue,
@@ -4113,9 +4251,12 @@ mod tests {
         ContentType, ItemDocument, ItemState, LwwRegister, ObservedSet, OperationId,
         RedactedRecordView, Tombstone,
     };
-    use coding_adventures_vault_pm_format::{AnnouncementV1, BootstrapId, CommitV1, Signature};
+    use coding_adventures_vault_pm_format::{
+        AnnouncementV1, BootstrapId, BootstrapV1, CommitV1, Signature,
+    };
     use coding_adventures_vault_pm_storage::{
         FaultAction, FaultEffect, FaultInjectingObjectStore, InMemoryObjectStore, StoreOperation,
+        VaultObjectStore,
     };
     use coding_adventures_vault_records::{AnyRecord, Login, SecureNote, LOGIN_V1, SECURE_NOTE_V1};
     use coding_adventures_zeroize::Zeroize;
@@ -4255,15 +4396,43 @@ mod tests {
         }
     }
 
+    /// An in-memory bootstrap store that keeps a real generation chain.
+    ///
+    /// The single-slot fixture this replaced could not express the state a
+    /// passphrase rotation actually produces — two generations installed, one
+    /// of them retired — so it could not have caught a rotation that left the
+    /// retired wrap behind. `retired` retains superseded records exactly the
+    /// way a filesystem adapter would, so a test can assert that
+    /// `supersede_generation` really removed one.
     #[derive(Default)]
-    struct MemoryBootstrapStore(Mutex<Option<Vec<u8>>>);
+    struct MemoryBootstrapStore {
+        latest: Mutex<Option<Vec<u8>>>,
+        retired: Mutex<Vec<Vec<u8>>>,
+    }
+
+    impl MemoryBootstrapStore {
+        fn with_latest(bytes: Vec<u8>) -> Self {
+            Self {
+                latest: Mutex::new(Some(bytes)),
+                retired: Mutex::new(Vec::new()),
+            }
+        }
+
+        fn latest_bytes(&self) -> Option<Vec<u8>> {
+            self.latest.lock().unwrap().clone()
+        }
+
+        fn retired_bytes(&self) -> Vec<Vec<u8>> {
+            self.retired.lock().unwrap().clone()
+        }
+    }
 
     impl BootstrapStore for MemoryBootstrapStore {
         fn load_latest(
             &self,
             _locator: BootstrapLocator,
         ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
-            Ok(self.0.lock().unwrap().clone())
+            Ok(self.latest_bytes())
         }
 
         fn put_generation(
@@ -4272,18 +4441,61 @@ mod tests {
             expected_previous: Option<BootstrapId>,
             exact_bootstrap: &[u8],
         ) -> Result<(), BootstrapStoreError> {
-            if expected_previous.is_some() {
+            let intended = coding_adventures_vault_pm_format::BootstrapV1::decode(exact_bootstrap)
+                .map_err(|_| BootstrapStoreError::Corruption)?;
+            if intended.previous_bootstrap != expected_previous {
                 return Err(BootstrapStoreError::Conflict);
             }
-            let mut stored = self.0.lock().unwrap();
-            match &*stored {
-                Some(existing) if existing == exact_bootstrap => Ok(()),
-                Some(_) => Err(BootstrapStoreError::Conflict),
+            let mut latest = self.latest.lock().unwrap();
+            match latest.as_ref() {
+                Some(current) if current == exact_bootstrap => return Ok(()),
+                Some(current) => {
+                    let current = coding_adventures_vault_pm_format::BootstrapV1::decode(current)
+                        .map_err(|_| BootstrapStoreError::Corruption)?;
+                    let current_id = current.id().map_err(|_| BootstrapStoreError::Corruption)?;
+                    if expected_previous != Some(current_id)
+                        || intended.generation != current.generation + 1
+                        || intended.vault_id != current.vault_id
+                    {
+                        return Err(BootstrapStoreError::Conflict);
+                    }
+                    self.retired.lock().unwrap().push(
+                        current
+                            .encode()
+                            .map_err(|_| BootstrapStoreError::Corruption)?,
+                    );
+                }
                 None => {
-                    *stored = Some(exact_bootstrap.to_vec());
-                    Ok(())
+                    if expected_previous.is_some() || intended.generation != 0 {
+                        return Err(BootstrapStoreError::Conflict);
+                    }
                 }
             }
+            *latest = Some(exact_bootstrap.to_vec());
+            Ok(())
+        }
+
+        fn supersede_generation(
+            &self,
+            _locator: BootstrapLocator,
+            superseded: BootstrapId,
+        ) -> Result<(), BootstrapStoreError> {
+            if let Some(current) = self.latest_bytes() {
+                if coding_adventures_vault_pm_format::BootstrapV1::decode(&current)
+                    .ok()
+                    .and_then(|bootstrap| bootstrap.id().ok())
+                    == Some(superseded)
+                {
+                    return Err(BootstrapStoreError::Conflict);
+                }
+            }
+            self.retired.lock().unwrap().retain(|bytes| {
+                coding_adventures_vault_pm_format::BootstrapV1::decode(bytes)
+                    .ok()
+                    .and_then(|bootstrap| bootstrap.id().ok())
+                    != Some(superseded)
+            });
+            Ok(())
         }
     }
 
@@ -6500,7 +6712,7 @@ mod tests {
     #[test]
     fn audited_verification_diagnostics_and_export_form_one_exact_chain() {
         let (locator, local, bootstrap, factory) = initialized();
-        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
         let session = open_active_vault(
             Zeroizing::new(b"active passphrase".to_vec()),
             locator,
@@ -7624,7 +7836,7 @@ mod tests {
             &factory,
         )
         .unwrap();
-        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
         let policy = crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap();
         let export_randomness = [0x5b; crate::PORTABLE_EXPORT_RANDOM_BYTES];
         let artifact = session
@@ -7864,7 +8076,7 @@ mod tests {
             &factory,
         )
         .unwrap();
-        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
         let policy = crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap();
         let randomness =
             || crate::PortableExportRandomnessV1::new([0x6c; crate::PORTABLE_EXPORT_RANDOM_BYTES]);
@@ -8023,7 +8235,7 @@ mod tests {
         )
         .unwrap();
         assert_eq!(session.conflicted_item_count(), 1);
-        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
         let artifact = session
             .export_portable_with_passphrase(
                 &exact_bootstrap,
@@ -8177,7 +8389,7 @@ mod tests {
             .flatten()
             .map(ItemCandidate::revision_id)
             .collect::<BTreeSet<_>>();
-        let exact_source_bootstrap = source_bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_source_bootstrap = source_bootstrap.latest_bytes().unwrap();
         let artifact = source_session
             .export_portable_with_passphrase(
                 &exact_source_bootstrap,
@@ -8443,7 +8655,7 @@ mod tests {
             &source_factory,
         )
         .unwrap();
-        let exact_source_bootstrap = source_bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_source_bootstrap = source_bootstrap.latest_bytes().unwrap();
         let artifact = source_session
             .export_portable_with_passphrase(
                 &exact_source_bootstrap,
@@ -8796,6 +9008,14 @@ mod tests {
             ) -> Result<(), BootstrapStoreError> {
                 Err(self.0)
             }
+
+            fn supersede_generation(
+                &self,
+                _locator: BootstrapLocator,
+                _superseded: BootstrapId,
+            ) -> Result<(), BootstrapStoreError> {
+                Err(self.0)
+            }
         }
 
         let locator = BootstrapLocator::new([0x94; 32]);
@@ -8856,7 +9076,7 @@ mod tests {
         );
         assert_eq!(
             access
-                .doctor(&local, &MemoryBootstrapStore(Mutex::new(Some(vec![0xff]))),)
+                .doctor(&local, &MemoryBootstrapStore::with_latest(vec![0xff]),)
                 .state(),
             crate::VaultDoctorStateV1::IntegrityFailure
         );
@@ -8870,8 +9090,8 @@ mod tests {
         );
 
         let unsupported_bootstrap =
-            replace_top_level_version(bootstrap.0.lock().unwrap().as_deref().unwrap(), 2);
-        let unsupported_bootstrap = MemoryBootstrapStore(Mutex::new(Some(unsupported_bootstrap)));
+            replace_top_level_version(&bootstrap.latest_bytes().unwrap(), 2);
+        let unsupported_bootstrap = MemoryBootstrapStore::with_latest(unsupported_bootstrap);
         assert_eq!(
             access.doctor(&local, &unsupported_bootstrap).state(),
             crate::VaultDoctorStateV1::UnsupportedCapability
@@ -13004,7 +13224,7 @@ mod tests {
             Some(ApplicationError::AuthenticationFailed)
         );
 
-        bootstrap.0.lock().unwrap().as_mut().unwrap()[0] ^= 1;
+        bootstrap.latest.lock().unwrap().as_mut().unwrap()[0] ^= 1;
         assert_eq!(
             open_active_vault(
                 Zeroizing::new(b"active passphrase".to_vec()),
@@ -15023,7 +15243,7 @@ mod tests {
         }
 
         let session = active_session(locator, &local, &bootstrap, &factory);
-        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
         assert_eq!(
             session
                 .export_portable_with_passphrase(
@@ -15198,7 +15418,7 @@ mod tests {
             panic!("fixture must be active")
         };
         assert_eq!(active.bootstrap_locator(), locator);
-        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let exact_bootstrap = bootstrap.latest_bytes().unwrap();
         let material = unlock_active_material(
             Zeroizing::new(b"active passphrase".to_vec()),
             &active,
@@ -15360,5 +15580,832 @@ mod tests {
         let candidates = &session.current_catalog.items[&item_id];
         assert_eq!(candidates.len(), 1);
         assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    // ---------------------------------------------------------------------
+    // VLT-PM43 — passphrase rotation
+    // ---------------------------------------------------------------------
+
+    const OLD_PASSPHRASE: &[u8] = b"active passphrase";
+    const NEW_PASSPHRASE: &[u8] = b"rotated passphrase, deliberately different";
+
+    fn rotation_policy() -> PassphraseRotationPolicyV1 {
+        PassphraseRotationPolicyV1::new(8 * 1024, 1, 1).unwrap()
+    }
+
+    fn rotation_randomness(seed: u8) -> PassphraseRotationRandomnessV1 {
+        let mut bytes = [0; PASSPHRASE_ROTATION_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(53).wrapping_add(seed);
+        }
+        PassphraseRotationRandomnessV1::new(bytes)
+    }
+
+    /// The vault root key the generation-zero fixture drew.
+    ///
+    /// Reconstructed from the same deterministic block `initialized_with`
+    /// feeds the preparation, at the offset `prepare_generation_zero` reads it
+    /// from: 32 locator bytes, then 16 vault-ID bytes, then the root key.
+    fn fixture_root_key() -> [u8; 32] {
+        generation_zero_bytes()[48..80].try_into().unwrap()
+    }
+
+    fn fixture_local_secret(active: &ActiveStateV1) -> LocalSecretV1 {
+        let keys = V1Keys::derive(active.vault_id(), &fixture_root_key()).unwrap();
+        crate::open_local_secret(&keys, active.local_secret()).unwrap()
+    }
+
+    /// One initialized vault holding one login, with the backend shared so a
+    /// test can watch the repository's complete change feed.
+    fn vault_with_one_item() -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        Arc<InMemoryObjectStore>,
+        ItemId,
+    ) {
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            GenerationZeroRandomness::new(generation_zero_bytes()),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let backend = Arc::new(InMemoryObjectStore::new());
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+        complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
+
+        let randomness = add_item_randomness(0x21);
+        let item_id = randomness.item_id();
+        active_session(locator, &local, &bootstrap, &factory)
+            .add_item(
+                new_login_document(item_id, "rotation fixture", "fixture password"),
+                400,
+                randomness,
+                &local,
+            )
+            .unwrap();
+        (locator, local, bootstrap, factory, backend, item_id)
+    }
+
+    /// Every object this repository has ever been asked to write, in order.
+    ///
+    /// This is the measurement behind §14.8's "without re-encrypting every item
+    /// body". Comparing object *counts* would only show that the number of
+    /// objects stayed the same; comparing the whole change feed shows that no
+    /// write happened at all, which is the actual claim.
+    fn repository_change_feed(backend: &InMemoryObjectStore) -> Vec<(u64, String)> {
+        backend
+            .changes(None)
+            .unwrap()
+            .map(|page| {
+                page.events
+                    .into_iter()
+                    .map(|event| (event.sequence, format!("{:?}", event.object)))
+                    .collect()
+            })
+            .unwrap_or_default()
+    }
+
+    fn exact_bootstrap(bootstrap: &MemoryBootstrapStore) -> Vec<u8> {
+        bootstrap.latest_bytes().unwrap()
+    }
+
+    fn durable_active(local: &MemoryLocalStateStore) -> ActiveStateV1 {
+        let encoded = local.0.lock().unwrap().clone().unwrap();
+        match LocalVaultStateV1::decode(&encoded).unwrap() {
+            LocalVaultStateV1::Active(active) => active,
+            _ => panic!("fixture must be active"),
+        }
+    }
+
+    fn prepared_rotation(
+        local: &MemoryLocalStateStore,
+        bootstrap: &MemoryBootstrapStore,
+        seed: u8,
+    ) -> crate::PreparedPassphraseRotationV1 {
+        let active = durable_active(local);
+        let local_secret = fixture_local_secret(&active);
+        crate::prepare_passphrase_rotation(
+            &active,
+            &exact_bootstrap(bootstrap),
+            &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+            &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+            rotation_policy(),
+            &rotation_randomness(seed),
+            &local_secret,
+        )
+        .unwrap()
+    }
+
+    fn install_pending_rotation(
+        local: &MemoryLocalStateStore,
+        bootstrap: &MemoryBootstrapStore,
+        seed: u8,
+    ) {
+        let prepared = prepared_rotation(local, bootstrap, seed);
+        let journal =
+            PendingRotationV1::new(durable_active(local), prepared.bootstrap().to_vec()).unwrap();
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::PendingRotation(journal)
+                .encode()
+                .unwrap(),
+        );
+    }
+
+    #[test]
+    fn rotation_rewraps_the_root_key_and_writes_no_repository_object() {
+        let (locator, local, bootstrap, factory, backend, item_id) = vault_with_one_item();
+        let before_feed = repository_change_feed(&backend);
+        assert!(
+            !before_feed.is_empty(),
+            "the fixture must have written objects"
+        );
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+
+        active_session(locator, &local, &bootstrap, &factory)
+            .rotate_passphrase(
+                &before_bootstrap,
+                &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                rotation_policy(),
+                rotation_randomness(0x31),
+                &local,
+                &bootstrap,
+            )
+            .unwrap();
+
+        // The whole of the O(1) claim: not one repository object was written,
+        // so no item body, catalog, commit, or certificate was re-encrypted.
+        assert_eq!(repository_change_feed(&backend), before_feed);
+
+        // The new bootstrap is a successor of the old one, under the same
+        // authority and vault, with a different salt and a different wrap.
+        let after_bootstrap = exact_bootstrap(&bootstrap);
+        let before = BootstrapV1::decode(&before_bootstrap).unwrap();
+        let after = BootstrapV1::decode(&after_bootstrap).unwrap();
+        assert_eq!(after.generation, before.generation + 1);
+        assert_eq!(after.previous_bootstrap, Some(before.id().unwrap()));
+        assert_eq!(after.vault_id, before.vault_id);
+        assert_eq!(after.authority_public_key, before.authority_public_key);
+        assert_ne!(after.kdf.salt, before.kdf.salt);
+        assert_ne!(
+            after.passphrase_root_wrap.ciphertext,
+            before.passphrase_root_wrap.ciphertext
+        );
+        assert_ne!(
+            after.passphrase_root_wrap.nonce,
+            before.passphrase_root_wrap.nonce
+        );
+
+        // The old passphrase is gone; the new one opens the same vault, with
+        // the same item, decrypted by the same unchanged root key.
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+        let reopened = open_active_vault(
+            Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.item_count(), 1);
+        assert!(reopened.get_item(item_id).unwrap().is_some());
+    }
+
+    #[test]
+    fn rotation_durably_removes_the_retired_wrap() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+
+        active_session(locator, &local, &bootstrap, &factory)
+            .rotate_passphrase(
+                &before_bootstrap,
+                &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                rotation_policy(),
+                rotation_randomness(0x37),
+                &local,
+                &bootstrap,
+            )
+            .unwrap();
+
+        // Advancing the pointer is not enough: the retired record still wraps
+        // the same unchanged root key under the old passphrase, so leaving it
+        // behind would make the rotation ceremonial.
+        assert!(bootstrap.retired_bytes().is_empty());
+    }
+
+    #[test]
+    fn a_wrong_current_passphrase_rotates_nothing() {
+        let (locator, local, bootstrap, factory, backend, _) = vault_with_one_item();
+        let before_feed = repository_change_feed(&backend);
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+        let before_state = local.0.lock().unwrap().clone();
+        let active = durable_active(&local);
+        let local_secret = fixture_local_secret(&active);
+
+        assert_eq!(
+            crate::prepare_passphrase_rotation(
+                &active,
+                &before_bootstrap,
+                &Zeroizing::new(b"not the current passphrase".to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                rotation_policy(),
+                &rotation_randomness(0x41),
+                &local_secret,
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+
+        assert_eq!(*local.0.lock().unwrap(), before_state);
+        assert_eq!(exact_bootstrap(&bootstrap), before_bootstrap);
+        assert_eq!(repository_change_feed(&backend), before_feed);
+        assert!(open_active_vault(
+            Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .is_ok());
+    }
+
+    #[test]
+    fn a_rotation_bound_to_a_different_root_key_fails_closed() {
+        let (_locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+        let active = durable_active(&local);
+        let mut foreign = *fixture_local_secret(&active).authority_seed();
+        foreign[0] ^= 1;
+        let foreign_secret = LocalSecretV1::new(
+            active.vault_id(),
+            active.device_id(),
+            foreign,
+            [0x11; 32],
+            [0x22; 32],
+        );
+
+        assert_eq!(
+            crate::prepare_passphrase_rotation(
+                &active,
+                &exact_bootstrap(&bootstrap),
+                &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                rotation_policy(),
+                &rotation_randomness(0x43),
+                &foreign_secret,
+            )
+            .err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+    }
+
+    #[test]
+    fn a_rotation_that_reaches_the_journal_rolls_forward_without_a_passphrase() {
+        let (locator, local, bootstrap, factory, _backend, item_id) = vault_with_one_item();
+        install_pending_rotation(&local, &bootstrap, 0x47);
+
+        // A locked reader sees a state the next command finishes, and says so
+        // without asking for anything.
+        assert_eq!(
+            crate::VaultAccessV1::locked(locator)
+                .status(&local)
+                .unwrap()
+                .state(),
+            crate::VaultStatusStateV1::RecoveryRequired
+        );
+        assert_eq!(
+            crate::VaultAccessV1::locked(locator)
+                .doctor(&local, &bootstrap)
+                .state(),
+            crate::VaultDoctorStateV1::RecoveryRequired
+        );
+
+        // No passphrase reaches the roll-forward.
+        crate::recover_pending_rotation(locator, &local, &bootstrap).unwrap();
+
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+        let reopened = open_active_vault(
+            Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert!(reopened.get_item(item_id).unwrap().is_some());
+        assert!(bootstrap.retired_bytes().is_empty());
+    }
+
+    #[test]
+    fn a_replayed_roll_forward_reaches_the_same_state_it_already_installed() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        install_pending_rotation(&local, &bootstrap, 0x4b);
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+
+        let first = crate::recover_pending_rotation(locator, &local, &bootstrap).unwrap();
+        let settled = local.0.lock().unwrap().clone().unwrap();
+
+        // Replaying an already-finished rotation is not an error path a person
+        // can reach — the state is `Active` again — so the honest assertion is
+        // that the journal is gone and the finished state is the one the first
+        // call returned.
+        assert_eq!(
+            crate::recover_pending_rotation(locator, &local, &bootstrap).err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_ne!(settled, exact_pending);
+        assert_eq!(settled, LocalVaultStateV1::Active(first).encode().unwrap());
+
+        // And re-running the *interrupted* half twice is sound: reinstall the
+        // journal and finish it again against the already-advanced store.
+        *local.0.lock().unwrap() = Some(exact_pending);
+        crate::recover_pending_rotation(locator, &local, &bootstrap).unwrap();
+        assert_eq!(local.0.lock().unwrap().clone().unwrap(), settled);
+        assert!(open_active_vault(
+            Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .is_ok());
+    }
+
+    #[test]
+    fn an_interrupted_rotation_is_finished_by_an_ordinary_recovering_unlock() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        install_pending_rotation(&local, &bootstrap, 0x53);
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert_eq!(
+            access
+                .unlock_recovering_pending_publication(
+                    Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                    &local,
+                    &bootstrap,
+                    &factory,
+                )
+                .unwrap(),
+            crate::UnlockRecoveryV1::RecoveredPendingRotation
+        );
+        assert!(access.is_unlocked());
+    }
+
+    #[test]
+    fn the_old_passphrase_still_finishes_an_interrupted_rotation_then_is_refused() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        install_pending_rotation(&local, &bootstrap, 0x59);
+
+        // The roll-forward consumes no passphrase, so a person who types the
+        // one they had before the crash still gets their vault repaired — and
+        // then an honest refusal from the open that follows, naming the state
+        // the vault is now actually in.
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert_eq!(
+            access
+                .unlock_recovering_pending_publication(
+                    Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                    &local,
+                    &bootstrap,
+                    &factory,
+                )
+                .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+        assert!(access.is_locked());
+        assert_eq!(
+            crate::VaultAccessV1::locked(locator)
+                .status(&local)
+                .unwrap()
+                .state(),
+            crate::VaultStatusStateV1::Locked
+        );
+
+        // Nothing is left to recover, and the new passphrase simply works.
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert_eq!(
+            access
+                .unlock_recovering_pending_publication(
+                    Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                    &local,
+                    &bootstrap,
+                    &factory,
+                )
+                .unwrap(),
+            crate::UnlockRecoveryV1::AlreadyActive
+        );
+        assert!(access.is_unlocked());
+    }
+
+    #[test]
+    fn an_audited_rotation_publishes_its_event_before_the_effect() {
+        let (locator, local, bootstrap, factory, backend, _) = vault_with_one_item();
+        active_session(locator, &local, &bootstrap, &factory)
+            .activate_audit_epoch(500, audited_access_randomness(0x61), &local)
+            .unwrap();
+        let before_feed = repository_change_feed(&backend);
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+
+        active_session(locator, &local, &bootstrap, &factory)
+            .audited_rotate_passphrase(
+                &before_bootstrap,
+                &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                rotation_policy(),
+                rotation_randomness(0x67),
+                600,
+                audited_access_randomness(0x6b),
+                &local,
+                &bootstrap,
+            )
+            .unwrap();
+
+        // An audited rotation does write to the repository — one audit-only
+        // commit — and that is the only thing it adds. Every object written
+        // before it is still there, unchanged and in the same order.
+        let after_feed = repository_change_feed(&backend);
+        assert_eq!(after_feed[..before_feed.len()], before_feed[..]);
+        assert!(after_feed.len() > before_feed.len());
+
+        let reopened = open_active_vault(
+            Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::PassphraseRotate,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None
+            )
+        );
+        assert!(reopened.audit_verify().unwrap().integrity_verified());
+    }
+
+    #[test]
+    fn a_failed_audited_rotation_is_recorded_and_changes_no_wrap() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        active_session(locator, &local, &bootstrap, &factory)
+            .activate_audit_epoch(500, audited_access_randomness(0x71), &local)
+            .unwrap();
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+
+        assert_eq!(
+            active_session(locator, &local, &bootstrap, &factory)
+                .audited_rotate_passphrase(
+                    &before_bootstrap,
+                    &Zeroizing::new(b"wrong current passphrase".to_vec()),
+                    &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                    rotation_policy(),
+                    rotation_randomness(0x73),
+                    600,
+                    audited_access_randomness(0x77),
+                    &local,
+                    &bootstrap,
+                )
+                .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+        assert_eq!(exact_bootstrap(&bootstrap), before_bootstrap);
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::PassphraseRotate,
+                AuditOutcomeV1::Failed,
+                None,
+                None
+            )
+        );
+    }
+
+    #[test]
+    fn a_host_failure_between_the_two_prompts_is_audited_without_rotating() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        active_session(locator, &local, &bootstrap, &factory)
+            .activate_audit_epoch(500, audited_access_randomness(0x81), &local)
+            .unwrap();
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+
+        active_session(locator, &local, &bootstrap, &factory)
+            .record_audited_passphrase_rotation_host_failure(
+                600,
+                audited_access_randomness(0x83),
+                &local,
+            )
+            .unwrap();
+
+        assert_eq!(exact_bootstrap(&bootstrap), before_bootstrap);
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::PassphraseRotate,
+                AuditOutcomeV1::Failed,
+                None,
+                None
+            )
+        );
+    }
+
+    #[test]
+    fn a_pre_audit_vault_refuses_the_audited_rotation_boundary() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+        assert_eq!(
+            active_session(locator, &local, &bootstrap, &factory)
+                .audited_rotate_passphrase(
+                    &before_bootstrap,
+                    &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                    &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                    rotation_policy(),
+                    rotation_randomness(0x87),
+                    600,
+                    audited_access_randomness(0x89),
+                    &local,
+                    &bootstrap,
+                )
+                .err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        assert_eq!(exact_bootstrap(&bootstrap), before_bootstrap);
+    }
+
+    #[test]
+    fn rotation_inputs_are_bounded_and_redacted() {
+        assert_eq!(
+            PassphraseRotationPolicyV1::new(1, 1, 1).err(),
+            Some(ApplicationError::InvalidInput)
+        );
+        let policy = rotation_policy();
+        assert_eq!(policy.memory_kib(), 8 * 1024);
+        assert_eq!(policy.iterations(), 1);
+        assert_eq!(policy.lanes(), 1);
+        assert_eq!(
+            format!("{policy:?}"),
+            "PassphraseRotationPolicyV1 { memory_kib: 8192, iterations: 1, lanes: 1 }"
+        );
+        let randomness = rotation_randomness(0x91);
+        assert_eq!(
+            format!("{randomness:?}"),
+            "PassphraseRotationRandomnessV1(<redacted>)"
+        );
+    }
+
+    #[test]
+    fn a_rotation_journal_round_trips_and_refuses_a_non_successor() {
+        let (_locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+        let active = durable_active(&local);
+
+        // Generation zero is not a successor of itself, and arbitrary bytes are
+        // not a bootstrap.
+        assert_eq!(
+            PendingRotationV1::new(active.clone(), before_bootstrap.clone()).err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+        assert_eq!(
+            PendingRotationV1::new(active.clone(), b"not a bootstrap".to_vec()).err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+
+        let prepared = prepared_rotation(&local, &bootstrap, 0x97);
+        let journal = PendingRotationV1::new(active, prepared.bootstrap().to_vec()).unwrap();
+        let encoded = LocalVaultStateV1::PendingRotation(journal.clone())
+            .encode()
+            .unwrap();
+        assert_eq!(
+            LocalVaultStateV1::decode(&encoded).unwrap(),
+            LocalVaultStateV1::PendingRotation(journal.clone())
+        );
+        assert_eq!(
+            format!("{:?}", LocalVaultStateV1::PendingRotation(journal.clone())),
+            "LocalVaultStateV1::PendingRotation"
+        );
+        assert!(format!("{journal:?}").starts_with("PendingRotationV1 { bootstrap_bytes: "));
+        assert!(format!("{prepared:?}").starts_with("PreparedPassphraseRotationV1 {"));
+        assert_ne!(
+            journal.next_bootstrap_id().unwrap(),
+            journal.superseded_bootstrap_id()
+        );
+        assert_eq!(
+            journal.intended_active().unwrap().bootstrap_id(),
+            journal.next_bootstrap_id().unwrap()
+        );
+        assert_eq!(
+            journal.active().bootstrap_id(),
+            journal.superseded_bootstrap_id()
+        );
+    }
+
+    /// A rotation may raise the KDF cost and may never lower it.
+    ///
+    /// The fixture vault is created at the V1 floor, so this raises it first
+    /// and then tries to come back down: a rotation run specifically to improve
+    /// a person's security must not be the thing that weakens it.
+    #[test]
+    fn a_rotation_refuses_to_weaken_the_key_derivation() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        active_session(locator, &local, &bootstrap, &factory)
+            .rotate_passphrase(
+                &exact_bootstrap(&bootstrap),
+                &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                PassphraseRotationPolicyV1::new(16 * 1024, 2, 1).unwrap(),
+                rotation_randomness(0xa1),
+                &local,
+                &bootstrap,
+            )
+            .unwrap();
+        let raised = exact_bootstrap(&bootstrap);
+        assert_eq!(
+            BootstrapV1::decode(&raised).unwrap().kdf.memory_kib,
+            16 * 1024
+        );
+
+        for weaker in [
+            PassphraseRotationPolicyV1::new(8 * 1024, 2, 1).unwrap(),
+            PassphraseRotationPolicyV1::new(16 * 1024, 1, 1).unwrap(),
+        ] {
+            let session = open_active_vault(
+                Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            assert_eq!(
+                session
+                    .rotate_passphrase(
+                        &raised,
+                        &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                        &Zeroizing::new(b"a third passphrase".to_vec()),
+                        weaker,
+                        rotation_randomness(0xa7),
+                        &local,
+                        &bootstrap,
+                    )
+                    .err(),
+                Some(ApplicationError::InvalidInput)
+            );
+            assert_eq!(exact_bootstrap(&bootstrap), raised);
+        }
+    }
+
+    /// A bootstrap store whose latest pointer has moved somewhere this journal
+    /// did not put it.
+    ///
+    /// The only realistic cause is a tampered or forked provider, and treating
+    /// it as one is the point of the test below.
+    struct ForeignLatestStore;
+
+    impl BootstrapStore for ForeignLatestStore {
+        fn load_latest(
+            &self,
+            _locator: BootstrapLocator,
+        ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
+            Ok(Some(b"a bootstrap this journal never signed".to_vec()))
+        }
+
+        fn put_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _expected_previous: Option<BootstrapId>,
+            _exact_bootstrap: &[u8],
+        ) -> Result<(), BootstrapStoreError> {
+            Err(BootstrapStoreError::Conflict)
+        }
+
+        fn supersede_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _superseded: BootstrapId,
+        ) -> Result<(), BootstrapStoreError> {
+            panic!("a rotation that could not install must never retire anything")
+        }
+    }
+
+    /// A store that can be neither read nor written.
+    struct BlindRefusingStore;
+
+    impl BootstrapStore for BlindRefusingStore {
+        fn load_latest(
+            &self,
+            _locator: BootstrapLocator,
+        ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
+            Err(BootstrapStoreError::Unavailable)
+        }
+
+        fn put_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _expected_previous: Option<BootstrapId>,
+            _exact_bootstrap: &[u8],
+        ) -> Result<(), BootstrapStoreError> {
+            Err(BootstrapStoreError::Unavailable)
+        }
+
+        fn supersede_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _superseded: BootstrapId,
+        ) -> Result<(), BootstrapStoreError> {
+            unreachable!()
+        }
+    }
+
+    /// A refused roll-forward fails closed and undoes nothing.
+    ///
+    /// Undoing is the tempting answer and the wrong one. Every host replaying
+    /// this journal performs the same writes in the same order, which is what
+    /// makes concurrent and repeated recovery safe. A host that unilaterally
+    /// withdrew the journal would break that convergence: it reads the
+    /// bootstrap store and writes the local state store, nothing makes those
+    /// two atomic together, and a second host that finished the rotation inside
+    /// the window would find the first committing `Active(old)` on top of an
+    /// already-retired generation — a vault pinning a bootstrap the provider no
+    /// longer has, openable by no passphrase at all.
+    ///
+    /// So the journal survives every failure, and both read-only diagnostics
+    /// keep describing the vault without touching it, which is what keeps the
+    /// file-level backup restore VLT-PM41 §5 proves available.
+    #[test]
+    fn a_refused_roll_forward_fails_closed_with_the_journal_intact() {
+        for (store, expected) in [
+            (
+                &ForeignLatestStore as &dyn BootstrapStore,
+                ApplicationError::IntegrityFailure,
+            ),
+            (&BlindRefusingStore, ApplicationError::StorageUnavailable),
+        ] {
+            let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+            install_pending_rotation(&local, &bootstrap, 0xb7);
+            let exact_pending = local.0.lock().unwrap().clone().unwrap();
+
+            assert_eq!(
+                crate::recover_pending_rotation(locator, &local, store).err(),
+                Some(expected)
+            );
+            assert_eq!(local.0.lock().unwrap().clone().unwrap(), exact_pending);
+            assert_eq!(
+                crate::VaultAccessV1::locked(locator)
+                    .status(&local)
+                    .unwrap()
+                    .state(),
+                crate::VaultStatusStateV1::RecoveryRequired
+            );
+            assert_eq!(
+                crate::VaultAccessV1::locked(locator)
+                    .doctor(&local, &bootstrap)
+                    .state(),
+                crate::VaultDoctorStateV1::RecoveryRequired
+            );
+        }
+    }
+
+    #[test]
+    fn a_generation_that_is_still_live_cannot_be_superseded() {
+        let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+        let live = BootstrapV1::decode(&exact_bootstrap(&bootstrap))
+            .unwrap()
+            .id()
+            .unwrap();
+        assert_eq!(
+            bootstrap.supersede_generation(locator, live),
+            Err(BootstrapStoreError::Conflict)
+        );
+        assert!(local.0.lock().unwrap().is_some());
     }
 }

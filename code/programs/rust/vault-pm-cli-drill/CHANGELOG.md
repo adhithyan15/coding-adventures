@@ -2,6 +2,42 @@
 
 All notable changes to this package are documented here.
 
+## [0.3.0] - 2026-08-18
+
+### Added
+
+- `every_passphrase_rotation_landing_point_leaves_exactly_one_working_passphrase`,
+  an exhaustive sweep of `vault-pm passphrase rotate` for
+  `VLT-PM43-cli-passphrase-rotation.md` §7 gate 5. VLT-PM41 §6.3 anticipated
+  needing rows like this; a rotation is the ceremony that most needed one.
+
+  The property under test is stronger than this file's usual "clean or
+  resumable", because a rotation is the one ceremony whose failure modes are
+  *asymmetric*. It moves a single durable fact — which signed bootstrap the
+  owner state accepts — across two independent stores, and the pin is checked
+  absolutely on every open. So every landing point must leave **exactly one**
+  working passphrase: a cell where both work would mean the retired wrap
+  survived, and a cell where neither works would mean the vault was bricked.
+  Both are named as explicit panics rather than left to a generic assertion,
+  so a regression says which of the two failures it is.
+
+  Each cell then confirms that the vault behind the surviving passphrase is the
+  whole vault, by requiring the fixture's item to still be listed.
+
+  The sweep runs **in parallel**, with a private vault per cell, and that is a
+  cost decision rather than a stylistic one. A rotation has 48 landing points
+  and each cell pays up to five *production* Argon2id derivations in a debug
+  build — the killed rotation's own unlock, root unwrap, and re-wrap, plus one
+  per passphrase probe. Serially that is roughly 240 KDF runs, which made this
+  package the single slowest unit of the repository's CI at 1182s on a hosted
+  macOS runner, ahead of every application build. Every other multi-point sweep
+  here either starts from nothing or restores a captured tree into *the same
+  absolute path* — the client configuration records the resolved object root —
+  and that constraint is exactly what forces a snapshot-restoring sweep to be
+  serial. Building a fixture per cell instead trades a little more total work
+  for the worker count in wall clock: 508s to 117s locally, with the same 48
+  landing points and the same assertions.
+
 ## [0.2.0] - 2026-08-18
 
 ### Changed

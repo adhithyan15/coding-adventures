@@ -602,8 +602,18 @@ fn classify(line: &str) -> ShellCommand {
 /// authenticator somewhere the user never authenticated against. A nested
 /// `shell` would open a second session over the same terminal with its own
 /// retained authenticator.
+///
+/// `passphrase` is refused for a sharper reason, and VLT-PM43 §3.1 states it: a
+/// session's whole premise is that the authenticator it collected once still
+/// opens the vault, and a successful rotation is precisely the event that makes
+/// that false. Allowing it would leave two bad options — keep using a
+/// passphrase that no longer works, turning every later command into an
+/// authentication failure the person cannot explain, or silently adopt the new
+/// one, which is a retained secret this session never prompted for and cannot
+/// re-confirm. A rotation belongs to a one-shot invocation, which collects and
+/// discards its own secrets.
 pub(crate) fn is_refused(verb: &str) -> bool {
-    matches!(verb, "init" | "vault" | "shell" | "--vault")
+    matches!(verb, "init" | "vault" | "shell" | "passphrase" | "--vault")
 }
 
 /// Split one command line into the closed shell token grammar.

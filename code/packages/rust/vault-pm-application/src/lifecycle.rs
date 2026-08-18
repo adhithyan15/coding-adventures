@@ -1,7 +1,7 @@
 use crate::{
-    open_active_vault, recover_pending_publication, ApplicationError, ApplicationRepositoryFactory,
-    BootstrapLocator, BootstrapStore, LocalStateStore, UnlockedVaultV1, VaultStatusStateV1,
-    VaultStatusV1,
+    open_active_vault, recover_pending_publication, recover_pending_rotation, ApplicationError,
+    ApplicationRepositoryFactory, BootstrapLocator, BootstrapStore, LocalStateStore,
+    LocalStateStoreError, LocalVaultStateV1, UnlockedVaultV1, VaultStatusStateV1, VaultStatusV1,
 };
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
@@ -47,6 +47,9 @@ pub enum UnlockRecoveryV1 {
     /// One exact `PendingPublication` journal was replayed to completion
     /// before the vault was opened.
     RecoveredPendingPublication,
+    /// One exact `PendingRotation` journal was rolled forward to completion
+    /// before the vault was opened, so the vault is now genuinely rotated.
+    RecoveredPendingRotation,
 }
 
 /// Explicit host lifecycle boundary for a locked or unlocked vault.
@@ -206,6 +209,18 @@ impl VaultAccessV1 {
     /// `PreparedInit` state is refused: it belongs to `init`. Any failure
     /// leaves this boundary locked, and repeating the whole call is always
     /// sound because the recovery is idempotent.
+    ///
+    /// # Rotation
+    ///
+    /// VLT-PM43 added a second journal to the same door. A `PendingRotation`
+    /// is rolled forward here too, and the name of this method is kept because
+    /// the contract is unchanged from a caller's point of view: *finish
+    /// whatever an interrupted process left, then open*. The rotation
+    /// roll-forward consumes no passphrase, so the `Zeroizing` duplicate above
+    /// is constructed only on the publication branch. A caller that supplies
+    /// the pre-rotation passphrase therefore still gets the rotation finished,
+    /// and then an honest `AuthenticationFailed` from the open — which names
+    /// the state the vault is actually in.
     pub fn unlock_recovering_pending_publication(
         &mut self,
         passphrase: Zeroizing<Vec<u8>>,
@@ -218,21 +233,41 @@ impl VaultAccessV1 {
         };
         let locator = locked.locator();
         // The same read-only projection `status` exposes to a locked host, so
-        // there is exactly one place in this crate that decides which durable
-        // owner states mean "recovery required".
+        // there is exactly one place in this crate that decides *whether* a
+        // durable owner state means "recovery required". Only once that has
+        // said yes is the state read a second time to learn *which* journal it
+        // is, because the two are finished by different functions:
+        // a publication replay needs the passphrase, a rotation roll-forward
+        // deliberately does not.
         let recovery_required = matches!(
             self.status(local_state_store)?.state(),
             VaultStatusStateV1::RecoveryRequired
         );
         let outcome = if recovery_required {
-            recover_pending_publication(
-                Zeroizing::new(passphrase.to_vec()),
-                locator,
-                local_state_store,
-                bootstrap_store,
-                repository_factory,
-            )?;
-            UnlockRecoveryV1::RecoveredPendingPublication
+            let exact_state = local_state_store
+                .load(locator)
+                .map_err(map_local_state_store)?
+                .ok_or(ApplicationError::NotInitialized)?;
+            match LocalVaultStateV1::decode(&exact_state)? {
+                LocalVaultStateV1::PendingRotation(_) => {
+                    recover_pending_rotation(locator, local_state_store, bootstrap_store)?;
+                    UnlockRecoveryV1::RecoveredPendingRotation
+                }
+                LocalVaultStateV1::PendingPublication { .. } => {
+                    recover_pending_publication(
+                        Zeroizing::new(passphrase.to_vec()),
+                        locator,
+                        local_state_store,
+                        bootstrap_store,
+                        repository_factory,
+                    )?;
+                    UnlockRecoveryV1::RecoveredPendingPublication
+                }
+                // `status` already classified this state as recoverable, so
+                // any other variant means the store changed underneath the two
+                // reads. Nothing here may guess; the caller retries.
+                _ => return Err(ApplicationError::ConcurrentHost),
+            }
         } else {
             UnlockRecoveryV1::AlreadyActive
         };
@@ -257,6 +292,14 @@ impl VaultAccessV1 {
         };
         let unlocked = core::mem::replace(self, Self::locked(locator));
         drop(unlocked);
+    }
+}
+
+fn map_local_state_store(error: LocalStateStoreError) -> ApplicationError {
+    match error {
+        LocalStateStoreError::Unavailable => ApplicationError::StorageUnavailable,
+        LocalStateStoreError::ConcurrentHost => ApplicationError::ConcurrentHost,
+        LocalStateStoreError::Corruption => ApplicationError::IntegrityFailure,
     }
 }
 

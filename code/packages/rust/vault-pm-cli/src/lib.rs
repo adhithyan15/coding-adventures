@@ -30,14 +30,15 @@ use coding_adventures_vault_pm_application::{
     BootstrapStoreError, CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1,
     DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
     LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
-    PortableExportPolicyV1, PortableExportRandomnessV1, PortableImportRandomnessV1,
-    PortableOpenPolicyV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1, RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1,
-    SecretFieldV1, SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1,
-    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
-    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
-    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableExportPolicyV1,
+    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
+    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
+    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    PASSPHRASE_ROTATION_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
@@ -76,7 +77,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -666,6 +667,8 @@ enum Command {
     Doctor {
         unlock: bool,
     },
+    /// Re-wrap the vault root key under a newly collected master passphrase.
+    PassphraseRotate,
     PortableExport {
         destination: PathBuf,
     },
@@ -832,6 +835,7 @@ where
         "shell" if tail.is_empty() => Ok(Command::Shell),
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
+        "passphrase" => parse_passphrase(tail),
         "export" => parse_export(tail),
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
@@ -1090,6 +1094,19 @@ fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+/// Parse the `passphrase` noun.
+///
+/// `rotate` is the only verb, and it takes no arguments at all: VLT-PM00 §14.5
+/// forbids a passphrase reaching this process through argv, an environment
+/// variable, command history, a URL, or config, and a flag that named a file or
+/// a policy would be the first step toward one that named a secret.
+fn parse_passphrase(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [verb] if verb == "rotate" => Ok(Command::PassphraseRotate),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
 fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
@@ -1234,6 +1251,7 @@ fn dispatch(
             audit_show(host, paths, writer, selected_vault, trace_id)
         }
         Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
+        Command::PassphraseRotate => passphrase_rotate(host, paths, writer, selected_vault),
         Command::PortableExport { destination } => {
             portable_export(host, paths, writer, selected_vault, &destination)
         }
@@ -3575,8 +3593,9 @@ fn resume_init(
     let LocalVaultStateV1::PreparedInit(_) = state else {
         return match state {
             LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
-            LocalVaultStateV1::PendingPublication { .. } => {
-                resume_pending_publication(host, &config, vault, locator, &application_store)
+            LocalVaultStateV1::PendingPublication { .. }
+            | LocalVaultStateV1::PendingRotation(_) => {
+                resume_interrupted_write(host, &config, vault, locator, &application_store)
             }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
         };
@@ -3594,7 +3613,7 @@ fn resume_init(
     Ok(CliOutput::success("Vault initialized.\n"))
 }
 
-/// Finish an interrupted mutation publication found by a resume path.
+/// Finish an interrupted durable write found by a resume path.
 ///
 /// VLT-PM42. `init` and `vault create` both mean "finish whatever was
 /// interrupted here", and both used to refuse a `PendingPublication` with the
@@ -3604,10 +3623,16 @@ fn resume_init(
 /// publication is the same promise one generation on, and these are the verbs
 /// a stuck person retries.
 ///
+/// VLT-PM43 adds the second journal, an interrupted passphrase rotation, to the
+/// same sentence. The passphrase collected below is used only by the unlock
+/// that follows the repair: a rotation roll-forward consumes none, so a person
+/// who reaches here after an interrupted rotation must type the *new*
+/// passphrase — the one they had just confirmed when the machine stopped.
+///
 /// The repaired vault is opened before success is reported, so "recovered"
 /// means a real authenticated open of the repaired durable bytes succeeded,
 /// not merely that a write returned.
-fn resume_pending_publication(
+fn resume_interrupted_write(
     host: &dyn CliHost,
     config: &VaultPmConfigV1,
     vault: &VaultConfigV1,
@@ -3735,8 +3760,9 @@ fn resume_vault_create(
     let LocalVaultStateV1::PreparedInit(_) = state else {
         return match state {
             LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
-            LocalVaultStateV1::PendingPublication { .. } => {
-                resume_pending_publication(host, config, vault, locator, &application_store)
+            LocalVaultStateV1::PendingPublication { .. }
+            | LocalVaultStateV1::PendingRotation(_) => {
+                resume_interrupted_write(host, config, vault, locator, &application_store)
             }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
         };
@@ -3777,6 +3803,118 @@ fn status(
         VaultStatusStateV1::RecoveryRequired => "recovery_required",
     };
     Ok(render_status_label(label, json))
+}
+
+/// Collect a new master passphrase and re-wrap the vault root key under it.
+///
+/// VLT-PM43. The order of the two prompts is the whole safety argument. The
+/// *current* passphrase comes first, because it is the authentication, and
+/// because a person who cannot produce it must be told so before being asked to
+/// invent a replacement. The *new* one is collected and confirmed second,
+/// against an already unlocked vault, so a typo is caught while the old
+/// passphrase is still the only one that means anything.
+///
+/// Nothing durable happens until both are in hand and the next bootstrap is
+/// built and signed. Every failure up to that point leaves a vault the current
+/// passphrase still opens.
+fn passphrase_rotate(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
+
+    // Reserved before authentication, exactly as `export` reserves its audit
+    // inputs, so that a failure to collect the new passphrase can still be
+    // recorded without asking the host for anything new at the worst moment.
+    let (wall_time_ms, audit_randomness) = audited_access_inputs(host)?;
+    let mut rotation_random = [0_u8; PASSPHRASE_ROTATION_RANDOM_BYTES];
+    host.fill_entropy(&mut rotation_random).map_err(map_host)?;
+    let (memory_kib, iterations, lanes) = host.generation_zero_kdf();
+    let policy =
+        PassphraseRotationPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
+
+    let current_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let mut access = VaultAccessV1::locked(locator);
+    // VLT-PM42. A rotation must describe a settled vault: the bootstrap it
+    // signs pins the state an interrupted publication may still be moving.
+    access
+        .unlock_recovering_pending_publication(
+            Zeroizing::new(current_passphrase.to_vec()),
+            &application_store,
+            &application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    // Read after the recovering unlock, never before: a replay can advance the
+    // durable bootstrap, and signing a successor to a stale one would be
+    // refused by the store at the worst possible moment.
+    let exact_bootstrap = application_store
+        .load_latest(locator)
+        .map_err(map_bootstrap_store)?
+        .ok_or(CliFailure::Integrity)?;
+    let audit_enabled = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled();
+
+    let new_passphrase = match host.read_new_passphrase() {
+        Ok(passphrase) => passphrase,
+        Err(error) => {
+            if audit_enabled {
+                access
+                    .into_unlocked()
+                    .map_err(map_application)?
+                    .record_audited_passphrase_rotation_host_failure(
+                        wall_time_ms,
+                        audit_randomness,
+                        &application_store,
+                    )
+                    .map_err(map_application)?;
+            }
+            return Err(map_host(error));
+        }
+    };
+    let randomness = PassphraseRotationRandomnessV1::new(rotation_random);
+
+    let unlocked = access.into_unlocked().map_err(map_application)?;
+    if audit_enabled {
+        unlocked
+            .audited_rotate_passphrase(
+                &exact_bootstrap,
+                &current_passphrase,
+                &new_passphrase,
+                policy,
+                randomness,
+                wall_time_ms,
+                audit_randomness,
+                &application_store,
+                &application_store,
+            )
+            .map_err(map_application)?;
+    } else {
+        unlocked
+            .rotate_passphrase(
+                &exact_bootstrap,
+                &current_passphrase,
+                &new_passphrase,
+                policy,
+                randomness,
+                &application_store,
+                &application_store,
+            )
+            .map_err(map_application)?;
+    }
+    Ok(CliOutput::success("Vault passphrase rotated.\n"))
 }
 
 fn audit_enable(
@@ -8581,6 +8719,231 @@ mod tests {
         assert!(!root.0.join("config").exists());
     }
 
+    /// Recursively collect every encrypted repository object as `(path, bytes)`.
+    ///
+    /// VLT-PM43 §7 gate 1. The rotation claim is not "the same number of
+    /// objects survived" but "not one byte of any of them changed", so the
+    /// comparison is over the whole tree.
+    fn object_tree(root: &std::path::Path) -> BTreeMap<PathBuf, Vec<u8>> {
+        let mut tree = BTreeMap::new();
+        let Ok(entries) = fs::read_dir(root) else {
+            return tree;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                tree.extend(object_tree(&path));
+            } else if let Ok(bytes) = fs::read(&path) {
+                tree.insert(path, bytes);
+            }
+        }
+        tree
+    }
+
+    #[test]
+    fn passphrase_rotate_parser_takes_one_verb_and_no_arguments() {
+        for arguments in [
+            vec!["passphrase"],
+            vec!["passphrase", "change"],
+            vec!["passphrase", "rotate", "extra"],
+            vec!["passphrase", "rotate", "--force"],
+        ] {
+            let root = TestRoot::new();
+            let host = TestHost::new(root.paths(), []);
+            assert_eq!(
+                run(arguments.clone(), &host).exit_code(),
+                ExitCode::InvalidInput,
+                "{arguments:?}"
+            );
+        }
+        assert!(USAGE.contains("passphrase rotate"));
+    }
+
+    /// The measurement §14.8 actually asks for, at the composition root.
+    ///
+    /// Every CLI vault is audit-first from generation zero (VLT-PM21), so there
+    /// is no such thing here as a rotation with a zero repository footprint:
+    /// the ceremony publishes its own audit-only commit, and that commit is
+    /// three new objects. The honest statement of "without re-encrypting every
+    /// item body" is therefore *append-only*: every object that existed before
+    /// the rotation is still present and byte-for-byte unchanged.
+    ///
+    /// That is not a weaker claim than it sounds. Re-encrypting a body would
+    /// necessarily change an existing object's bytes or replace it with a new
+    /// identity, and either would fail the loop below. The stricter
+    /// "not one write at all" form of the claim is measured on a pre-audit
+    /// vault by `vault-pm-application`'s `rotation_rewraps_the_root_key_and_
+    /// writes_no_repository_object`, which watches the object store's complete
+    /// change feed.
+    #[test]
+    fn rotation_leaves_every_encrypted_object_byte_identical() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation original passphrase".to_vec();
+        let new = b"cli rotation replacement passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [
+                old.clone(),
+                b"rotation item password".to_vec(),
+                b"rotation item notes".to_vec(),
+            ],
+            [
+                "Rotation Fixture".to_owned(),
+                "person@example.test".to_owned(),
+                "1".to_owned(),
+                "https://rotation.example.test".to_owned(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+
+        let before = object_tree(paths.object_root());
+        assert!(!before.is_empty(), "the fixture must have written objects");
+
+        let rotate_host = TestHost::new(paths.clone(), [old.clone(), new.clone()]);
+        let rotated = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(rotated.exit_code(), ExitCode::Success, "{rotated:?}");
+        assert_eq!(rotated.stdout(), "Vault passphrase rotated.\n");
+        assert!(rotated.stderr().is_empty());
+
+        // Every object that existed before the rotation is still there, and
+        // every one of them is byte-for-byte what it was. The rotation only
+        // *appends*, and what it appends is its own audit-only commit -- see
+        // the doc comment above for why appending is the honest ceiling here.
+        let after = object_tree(paths.object_root());
+        for (path, bytes) in &before {
+            assert_eq!(after.get(path), Some(bytes), "{path:?} changed");
+        }
+        assert!(after.len() > before.len());
+
+        // The old passphrase is refused, the new one lists the same item, and
+        // neither passphrase is anywhere in the tree.
+        let stale_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(
+            run(["item", "list"], &stale_host).exit_code(),
+            ExitCode::Locked
+        );
+        let fresh_host = TestHost::new(paths.clone(), [new]);
+        let listed = run(["item", "list"], &fresh_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("Rotation Fixture"));
+        assert!(!object_tree(&root.0)
+            .values()
+            .any(|bytes| bytes.windows(old.len()).any(|window| window == old)));
+    }
+
+    #[test]
+    fn a_wrong_current_passphrase_rotates_nothing() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation refusal passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let before = object_tree(&root.0);
+
+        let rotate_host = TestHost::new(
+            paths.clone(),
+            [
+                b"not the current passphrase".to_vec(),
+                b"a replacement nobody will ever need".to_vec(),
+            ],
+        );
+        let refused = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(refused.exit_code(), ExitCode::Locked, "{refused:?}");
+        assert!(refused.stdout().is_empty());
+
+        // Nothing durable moved, and the original passphrase still works.
+        assert_eq!(object_tree(&root.0), before);
+        let still_open = TestHost::new(paths, [old]);
+        assert_eq!(
+            run(["item", "list"], &still_open).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    #[test]
+    fn a_mismatched_new_passphrase_is_refused_before_anything_rotates() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation confirm passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        assert_eq!(
+            run(
+                ["audit", "enable"],
+                &TestHost::new(paths.clone(), [old.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let before = object_tree(paths.object_root());
+
+        // The host is asked for the new passphrase and cannot supply one, which
+        // is the same boundary a confirmation mismatch reaches.
+        let rotate_host = TestHost::new(paths.clone(), [old.clone()]);
+        let refused = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(refused.exit_code(), ExitCode::Provider, "{refused:?}");
+
+        // The failed attempt is durable — the audit epoch grew — but no wrap
+        // moved, so the current passphrase is still the current passphrase.
+        assert_ne!(object_tree(paths.object_root()), before);
+        let audit_host = TestHost::new(paths.clone(), [old.clone()]);
+        let listed = run(["audit", "list"], &audit_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=passphrase_rotate\toutcome=failed"));
+        assert_eq!(
+            run(["item", "list"], &TestHost::new(paths, [old])).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    #[test]
+    fn an_audited_rotation_records_the_event_before_the_wrap_moves() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli audited rotation passphrase".to_vec();
+        let new = b"cli audited rotation replacement".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        assert_eq!(
+            run(
+                ["audit", "enable"],
+                &TestHost::new(paths.clone(), [old.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let rotate_host = TestHost::new(paths.clone(), [old.clone(), new.clone()]);
+        assert_eq!(
+            run(["passphrase", "rotate"], &rotate_host).exit_code(),
+            ExitCode::Success
+        );
+
+        // The event is readable only under the new passphrase, which is itself
+        // proof that the event was durable before the wrap moved: an audit
+        // chain the rotation did not carry forward would not verify.
+        let audit_host = TestHost::new(paths.clone(), [new.clone()]);
+        let listed = run(["audit", "list"], &audit_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=passphrase_rotate\toutcome=succeeded"));
+        let verified = run(["audit", "verify"], &TestHost::new(paths, [new]));
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
     /// A scripted stand-in for the controlling terminal a real session reads.
     ///
     /// It answers command lines from a queue and records what the shell chose
@@ -8847,6 +9210,10 @@ mod tests {
             "init",
             "vault create work",
             "shell",
+            // VLT-PM43 §3.1. A session's premise is that the authenticator it
+            // collected once still opens the vault, and a rotation is exactly
+            // the event that makes that false.
+            "passphrase rotate",
             "--vault work item list",
             "\"unterminated",
             "a b c d e f g h i",
@@ -8855,10 +9222,10 @@ mod tests {
         let output = run_with_terminal(["shell"], &host, &terminal);
 
         assert_eq!(output.exit_code(), ExitCode::Success);
-        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 6]);
+        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 7]);
         assert_eq!(
             terminal.transcript(),
-            "vault-pm: invalid command\n".repeat(6)
+            "vault-pm: invalid command\n".repeat(7)
         );
         // No passphrase was ever collected, so nothing was retained to wipe.
         assert_eq!(host.remaining_secrets(), 0);

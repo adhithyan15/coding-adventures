@@ -415,7 +415,61 @@ announcing a repair on a vault that is still wedged would be worse than saying
 nothing at all. Both ends fail toward silence. Standard output and every exit
 class are unchanged.
 
-See `code/specs/VLT-PM42-cli-pending-publication-recovery.md`.
+A `PendingRotation` — the second journal, added by VLT-PM43 — takes the same
+door, with one difference that matters: **the roll-forward consumes no
+passphrase.** Everything left to do after that journal is durable is a pure
+function of the journal, and asking for a secret would create a worse problem
+than it solved, because at that point *which* passphrase is correct depends on
+how far the interrupted process got — precisely the ambiguity the journal
+exists to remove. So a person who types the passphrase they had before the
+crash still gets their vault repaired, and then an honest
+`authentication required` from the open that follows.
+
+See `code/specs/VLT-PM42-cli-pending-publication-recovery.md` and
+`code/specs/VLT-PM43-cli-passphrase-rotation.md`.
+
+## Changing the master passphrase
+
+```text
+vault-pm [--vault NAME] passphrase rotate
+```
+
+The verb takes no arguments. §14.5 forbids a passphrase reaching this process
+through argv, an environment variable, command history, a URL, or config, and a
+flag naming a file or a policy would be the first step toward one that named a
+secret.
+
+Two prompts, in an order that is the whole safety argument:
+
+```text
+Vault passphrase:          the current one -- this is the authentication
+New vault passphrase:      collected against an already unlocked vault
+Confirm vault passphrase:  constant-time compared, same boundary `init` uses
+```
+
+Current first, because someone who cannot produce it must be told so before
+being asked to invent a replacement. New second, so a typo is caught while the
+old passphrase is still the only one that means anything. Nothing durable
+happens until both are in hand and the next bootstrap is built and signed.
+
+What the rotation costs is fixed, and that is the point of it. The passphrase
+protects exactly one thing on disk — the 32 bytes of
+`BootstrapV1.passphrase_root_wrap` that hold the vault root key — so changing
+it is one Argon2id derivation, one AEAD open, one AEAD seal, and a re-signature
+by the unchanged vault authority. No item body, DEK, catalog, commit, or
+certificate is read or rewritten, whether the vault holds three logins or
+thirty thousand.
+
+The retired generation is **deleted**, not merely unpointed-at: it wraps the
+same unchanged root key under the old passphrase-derived key, so leaving it on
+disk would make the rotation ceremonial against exactly the adversary a person
+rotates because of. Two limits are worth stating rather than arguing away — a
+backup taken before the rotation still contains the old wrap, and the delete
+unlinks a file rather than overwriting media.
+
+`shell` refuses the verb. A session's entire premise is that the authenticator
+it collected once still opens the vault, and a rotation is the event that makes
+that false.
 
 ## The durable-write seam
 
