@@ -34,7 +34,7 @@ reviews_of: [FA-C14-zan, FA-C05-khodahafez, FA-C05-hafez, FA-C09-chay, FA-C09-ke
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-MARD, FA-LEX-ZAN] -->
 
-[PAUSE 2s] Say **مرد، زن** — man, woman. One more person word closes the
+[PAUSE 2s] Say **مرد، زن** (*mard, zan*) — man, woman. One more person word closes the
 tranche, and it is a word this track has half-taught already.
 
 ## You'll want to know first — one word, already half-known

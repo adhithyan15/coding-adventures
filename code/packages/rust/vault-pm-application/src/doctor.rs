@@ -92,9 +92,10 @@ pub(crate) fn doctor(
         (LocalVaultStateV1::PreparedInit(_), VaultAccessV1::Locked(_)) => {
             return VaultDoctorReportV1::new(VaultDoctorStateV1::InitializationRequired)
         }
-        (LocalVaultStateV1::PendingPublication { .. }, VaultAccessV1::Locked(_)) => {
-            return VaultDoctorReportV1::new(VaultDoctorStateV1::RecoveryRequired)
-        }
+        (
+            LocalVaultStateV1::PendingPublication { .. } | LocalVaultStateV1::PendingRotation(_),
+            VaultAccessV1::Locked(_),
+        ) => return VaultDoctorReportV1::new(VaultDoctorStateV1::RecoveryRequired),
         (LocalVaultStateV1::Active(active), VaultAccessV1::Locked(_)) => active,
         (LocalVaultStateV1::Active(active), VaultAccessV1::Unlocked(session))
             if active == session.active_state() =>

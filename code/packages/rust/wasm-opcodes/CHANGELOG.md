@@ -2,6 +2,227 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.19] - 2026-08-18 - SIMD: shift family (task #159-161)
+
+### Added
+
+- 12 new `SIMD_OPS` entries -- the FIRST mixed-type binary SIMD op
+  family: `ixNxM.shl`/`shr_s`/`shr_u` across all 4 lane widths --
+  `i8x16.shl` (`0x6B`), `shr_s` (`0x6C`), `shr_u` (`0x6D`), `i16x8.shl`
+  (`0x8B`), `shr_s` (`0x8C`), `shr_u` (`0x8D`), `i32x4.shl` (`0xAB`),
+  `shr_s` (`0xAC`), `shr_u` (`0xAD`), `i64x2.shl` (`0xCB`), `shr_s`
+  (`0xCC`), `shr_u` (`0xCD`) -- 113 SIMD opcodes total, up from 101.
+  Chosen over closing any remaining narrower per-lane-width gap:
+  shifts are load-bearing in nearly all real SIMD code (packing,
+  masking, bit-manipulation) and every prior 101 opcodes are pure
+  `v128`-to-`v128`/`v128`-to-`i32` -- none pop a MIX of both types.
+  Every width's `shl`/`shr_s`/`shr_u` triple sits immediately BEFORE
+  that width's already-implemented `add` sub-opcode (e.g.
+  `i8x16.add`=`0x6E`, `i16x8.add`=`0x8E`, `i32x4.add`=`0xAE`,
+  `i64x2.add`=`0xCE`), the same regular numbering scheme already
+  confirmed for every other family in this table. Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against those already-implemented `add` entries.
+- `SimdOpKind::ShlI8x16`/`ShrSI8x16`/`ShrUI8x16`/`ShlI16x8`/
+  `ShrSI16x8`/`ShrUI16x8`/`ShlI32x4`/`ShrSI32x4`/`ShrUI32x4`/
+  `ShlI64x2`/`ShrSI64x2`/`ShrUI64x2`. Per the SIMD spec, the shift
+  amount is taken MODULO the lane's bit width (8/16/32/64
+  respectively) before shifting -- both spec-mandated and required
+  for Rust safety, since shifting a primitive by >= its bit width
+  panics.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_bit_shift.wast` and the resulting baseline delta.
+
+## [0.2.18] - 2026-08-18 - SIMD: i64x2 arith+cmp family (task #156-158)
+
+### Added
+
+- 11 new `SIMD_OPS` entries -- i64x2's first REAL ARITHMETIC family
+  (task #153-155 only added the `all_true`/`bitmask` reduction ops, no
+  computation): `i64x2.abs` (`0xC0`), `neg` (`0xC1`), `add` (`0xCE`),
+  `sub` (`0xD1`), `mul` (`0xD5`), `eq` (`0xD6`), `ne` (`0xD7`), `lt_s`
+  (`0xD8`), `gt_s` (`0xD9`), `le_s` (`0xDA`), `ge_s` (`0xDB`) -- 101
+  SIMD opcodes total, up from 90. No `lt_u`/`gt_u`/`le_u`/`ge_u` -- the
+  SIMD proposal never defines unsigned `i64x2` comparisons, unlike
+  every narrower lane width. `abs`/`neg` fill the gap left by the
+  already-implemented `all_true` (`0xC3`)/`bitmask` (`0xC4`), matching
+  the identical `abs`/`neg`/`[gap]`/`all_true`/`bitmask` cluster layout
+  already confirmed for `i8x16` (`0x60`/`0x61`/../`0x63`/`0x64`),
+  `i16x8` (`0x80`/`0x81`/../`0x83`/`0x84`), and `i32x4`
+  (`0xA0`/`0xA1`/../`0xA3`/`0xA4`). `eq`..`ge_s` form one contiguous
+  `0xD5-0xDB` run, matching the contiguous cmp blocks of every other
+  lane width. Each sub-opcode byte fetched live from the SIMD
+  proposal's own `BinarySIMD.md` (twice, identical both times) and
+  cross-checked against the already-implemented `i64x2.all_true`/
+  `bitmask` entries.
+- `SimdOpKind::AbsI64x2`/`NegI64x2`/`AddI64x2`/`SubI64x2`/`MulI64x2`/
+  `EqI64x2`/`NeI64x2`/`LtSI64x2`/`GtSI64x2`/`LeSI64x2`/`GeSI64x2`.
+  Reuses the existing `v128,v128->v128`/`v128->v128` shapes already
+  used everywhere else -- this closes a lane-width coverage gap, not a
+  new operand shape.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i64x2_arith.wast`/`simd_i64x2_arith2.wast`/`simd_i64x2_cmp.wast`
+and the resulting baseline delta.
+
+## [0.2.17] - 2026-08-18 - SIMD: boolean-reduction/bitmask family (task #153-155)
+
+### Added
+
+- 9 new `SIMD_OPS` entries -- `v128.any_true` (`0x53`) plus
+  `ixNxM.all_true`/`bitmask` across all 4 lane widths: `i8x16.all_true`
+  (`0x63`), `i8x16.bitmask` (`0x64`), `i16x8.all_true` (`0x83`),
+  `i16x8.bitmask` (`0x84`), `i32x4.all_true` (`0xA3`), `i32x4.bitmask`
+  (`0xA4`), `i64x2.all_true` (`0xC3`), `i64x2.bitmask` (`0xC4`) -- 90
+  SIMD opcodes total, up from 81. `i64x2.all_true`/`bitmask` are the
+  first `i64x2` opcodes in this table. Chosen over shift-op and
+  i64x2-arithmetic candidates in a fresh prioritization survey: highest
+  opcode count (9) behind a single new operand shape and one 72KB
+  corpus file, and unlocks real use of the comparison families from
+  earlier PRs (a `v128` mask result is otherwise inert without a
+  reduction op to consume it). Each sub-opcode byte fetched live from
+  the SIMD proposal's own `BinarySIMD.md` and cross-checked against the
+  already-implemented `v128.bitselect` (`0x52`)/`i8x16.popcnt`
+  (`0x62`)/`i16x8.abs` (`0x80`)/`neg` (`0x81`)/`i32x4.abs` (`0xA0`)/
+  `neg` (`0xA1`) entries (every value landed exactly where the
+  `abs`/`neg`/`[popcnt]`/`all_true`/`bitmask` per-lane-width pattern
+  predicts).
+- `SimdOpKind::AnyTrue`/`AllTrueI8x16`/`AllTrueI16x8`/`AllTrueI32x4`/
+  `AllTrueI64x2`/`BitmaskI8x16`/`BitmaskI16x8`/`BitmaskI32x4`/
+  `BitmaskI64x2`. The first `v128`-in/`i32`-out reduction shape besides
+  `ExtractLane`, but with NO lane-index immediate (these reduce over
+  ALL lanes, not select one).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_boolean.wast` and the resulting baseline delta.
+
+## [0.2.16] - 2026-08-18 - SIMD: v128 bitwise family (task #150-152)
+
+### Added
+
+- 6 new `SIMD_OPS` entries -- the lane-width-agnostic raw-byte bitwise
+  family, a strategic pivot from "widen the next narrow per-lane-width
+  family" to "close the highest-real-world-impact remaining gap" now
+  that `i8x16`/`i16x8`/`i32x4` all have complete
+  arith+cmp+arith2+widening coverage relative to each other:
+  `v128.not` (`0x4D`), `v128.and` (`0x4E`), `v128.andnot` (`0x4F`),
+  `v128.or` (`0x50`), `v128.xor` (`0x51`), `v128.bitselect` (`0x52`)
+  -- 81 SIMD opcodes total, up from 75. Unlike every prior family,
+  these have only ONE spelling each (no `i8x16`/`i16x8`/`i32x4`
+  suffix) since they operate on raw bytes, not typed lanes. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i8x16.add` (`0x6E`)/`i32x4.add` (`0xAE`) entries.
+- `SimdOpKind::Not`/`And`/`AndNot`/`Or`/`Xor`/`Bitselect`.
+  `Bitselect` is the first TERNARY `SimdOpKind` in this crate (pops
+  three `v128`s, pushes one): `(a AND c) OR (b AND (NOT c))`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_bitwise.wast` and the resulting baseline delta.
+
+## [0.2.15] - 2026-08-18 - SIMD: i16x8-from-i8x16 widening family (task #147-149)
+
+### Added
+
+- 6 new `SIMD_OPS` entries -- `i16x8`'s own widening family, mirroring
+  the already-implemented `i32x4`-from-`i16x8` widening family one
+  lane width down, closing the last remaining gap between `i16x8` and
+  `i8x16`'s coverage: `i16x8.extadd_pairwise_i8x16_s` (`0x7C`),
+  `extadd_pairwise_i8x16_u` (`0x7D`), `extmul_low_i8x16_s` (`0x9C`),
+  `extmul_high_i8x16_s` (`0x9D`), `extmul_low_i8x16_u` (`0x9E`),
+  `extmul_high_i8x16_u` (`0x9F`) -- 75 SIMD opcodes total, up from 69.
+  Unlike the `i32x4`-from-`i16x8` family, there is no
+  `i16x8.dot_i8x16_s` -- WASM SIMD does not define a dot-product for
+  this lane-width pair, so this family is 6 ops, not 7. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i8x16.add` (`0x6E`)/`i16x8.mul` (`0x95`)/`i16x8.avgr_u` (`0x9B`)/
+  `i32x4.dot_i16x8_s` (`0xBA`)/`i8x16.popcnt` (`0x62`)/
+  `i32x4.extadd_pairwise_i16x8_s` (`0x7E`) entries (all six matched
+  exactly).
+- `SimdOpKind::ExtaddPairwiseI8x16S`/`ExtaddPairwiseI8x16U`/
+  `ExtmulLowI8x16S`/`ExtmulHighI8x16S`/`ExtmulLowI8x16U`/
+  `ExtmulHighI8x16U`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i16x8_extadd_pairwise_i8x16.wast`/`simd_i16x8_extmul_i8x16.wast`
+corpus files this widening unblocks.
+
+## [0.2.14] - 2026-08-18 - SIMD: i16x8 abs/min/max/avgr_u family (task #144-146)
+
+### Added
+
+- 6 new `SIMD_OPS` entries -- `i16x8`'s own "arith2" family, closing
+  the same gap PR8 (task #141-143) just closed for `i8x16` (no
+  `i16x8.popcnt` -- WASM SIMD only defines `popcnt` for `i8x16`):
+  `i16x8.abs` (`0x80`), `min_s` (`0x96`), `min_u` (`0x97`), `max_s`
+  (`0x98`), `max_u` (`0x99`), `avgr_u` (`0x9B`) -- 69 SIMD opcodes
+  total, up from 63. All six sub-opcodes are >= 128 (2-byte LEB128),
+  same shape as `i16x8`'s own `add`/`sub`/`mul`/`neg`, unlike
+  `i8x16`'s own arith2 family (all < 128). Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against the already-implemented `i16x8.neg`
+  (`0x81`)/`add` (`0x8E`)/`sub` (`0x91`)/`mul` (`0x95`) entries (all
+  four matched exactly).
+- `SimdOpKind::AbsI16x8`/`MinSI16x8`/`MinUI16x8`/`MaxSI16x8`/
+  `MaxUI16x8`/`AvgrUI16x8`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i16x8_arith2.wast` corpus file this widening unblocks.
+
+## [0.2.13] - 2026-08-18 - SIMD: i8x16 abs/popcnt/min/max/avgr_u family (task #141-143)
+
+### Added
+
+- 7 new `SIMD_OPS` entries -- `i8x16`'s own "arith2" family, mirroring
+  `i32x4`'s own `abs`/`min_s`/`min_u`/`max_s`/`max_u` widening, plus
+  two op SHAPES with no `i32x4`/`i16x8` precedent in this table:
+  `i8x16.abs` (`0x60`), `popcnt` (`0x62`, lane-wise Hamming weight --
+  WASM SIMD only defines `popcnt` for `i8x16`), `min_s` (`0x76`),
+  `min_u` (`0x77`), `max_s` (`0x78`), `max_u` (`0x79`), `avgr_u`
+  (`0x7B`, lane-wise unsigned rounding average `(a + b + 1) >> 1` --
+  WASM SIMD defines `avgr_u` for `i8x16`/`i16x8` but not `i32x4`) -- 63
+  SIMD opcodes total, up from 56. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against the already-implemented `i8x16.add` (`0x6E`)/`i8x16.neg`
+  (`0x61`)/`i8x16.sub` (`0x71`) entries (all three matched exactly).
+- `SimdOpKind::AbsI8x16`/`PopcntI8x16`/`MinSI8x16`/`MinUI8x16`/
+  `MaxSI8x16`/`MaxUI8x16`/`AvgrUI8x16`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i8x16_arith2.wast` corpus file this widening unblocks.
+
+## [0.2.12] - 2026-08-18 - SIMD: i8x16 comparison family (task #137-140)
+
+### Added
+
+- 10 new `SIMD_OPS` entries -- `i8x16`'s own comparison family, closing
+  the same gap PR6 closed for `i16x8`: `i8x16.add`/`sub`/`neg` (PR4)
+  landed without a comparison family. `i8x16.eq` (`0x23`), `ne`
+  (`0x24`), `lt_s` (`0x25`), `lt_u` (`0x26`), `gt_s` (`0x27`), `gt_u`
+  (`0x28`), `le_s` (`0x29`), `le_u` (`0x2A`), `ge_s` (`0x2B`), `ge_u`
+  (`0x2C`) -- same boolean-mask convention and signed/unsigned split as
+  `i16x8`'s and `i32x4`'s own comparison families, just at the
+  narrowest lane width -- 56 SIMD opcodes total, up from 46. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i8x16.add` (`0x6E`)/`i16x8.eq` (`0x2D`) entries (both matched
+  exactly), same verification discipline as every widening above.
+- `SimdOpKind::EqI8x16`/`NeI8x16`/`LtSI8x16`/`LtUI8x16`/`GtSI8x16`/
+  `GtUI8x16`/`LeSI8x16`/`LeUI8x16`/`GeSI8x16`/`GeUI8x16`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i8x16_cmp.wast` corpus file this widening unblocks.
+
 ## [0.2.11] - 2026-08-18 - SIMD: i16x8 comparison family (task #133-136)
 
 ### Added

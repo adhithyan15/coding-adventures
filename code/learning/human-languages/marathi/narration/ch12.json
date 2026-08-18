@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6aa24870cb193793",
+  "sourceHash": "fnv1a64:67dc331760170c58",
   "lessons": [
     {
       "id": "MR-C12-dola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:316673ce1d6b6d28",
+      "sourceHash": "fnv1a64:ed891e7565994bd2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "मित्र, कुटुंब, भाऊ, बहीण — the people you'd introduce. This chapter turns to the body you'd ask after when you check how someone is."
+              "text": "मित्र, कुटुंब, भाऊ, बहीण (mitra, kuṭumb, bhāū, bahīṇ) — the people you'd introduce. This chapter turns to the body you'd ask after when you check how someone is."
             }
           ]
         },
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:441ee4d94874fd25",
+      "sourceHash": "fnv1a64:545dd0be7cf4e68d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "डोळा (ḍoḷā)'s own root turned out to be a surprise — a swing, not the old eye-word. This next word has a different kind of surprise: not what it meant, but how its middle got simpler."
+              "text": "डोळा (ḍoḷā) — its own root turned out to be a surprise, a swing, not the old eye-word. This next word has a different kind of surprise: not what it meant, but how its middle got simpler."
             }
           ]
         },
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:11066afc3792d53d",
+      "sourceHash": "fnv1a64:a983124140410927",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -488,7 +488,7 @@
             },
             {
               "kind": "speech",
-              "text": "डोळा (ḍoḷā), कान (kān), तोंड (tõḍ) — say them. One face part left, and it is the one with the plainest history of the four."
+              "text": "डोळा, कान, तोंड (ḍoḷā, kān, tõḍ) — say them. One face part left, and it is the one with the plainest history of the four."
             }
           ]
         },

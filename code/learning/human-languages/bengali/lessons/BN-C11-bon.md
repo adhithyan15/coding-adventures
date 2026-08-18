@@ -34,7 +34,7 @@ reviews_of: [BN-C11-bhai, BN-C11-poribar, BN-C11-bondhu, BN-C10-bhat, BN-C06-num
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BHAI-01] -->
 
-[PAUSE 2s] ভাই turned out to be the very word "brother." This one does not —
+[PAUSE 2s] ভাই (*bhāi*) turned out to be the very word "brother." This one does not —
 and where it comes from instead is the surprise this chapter has been saving.
 
 ## You'll want to know: বোন

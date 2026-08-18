@@ -119,7 +119,9 @@ describe("real curriculum", () => {
       // Chapter 12 adds nâm, del, dar, ketâb onto SPINE-EXCHANGE-NAMES; Chapter 13 adds
       // âsemân, khorshid, mâh, setâre, bârân onto SPINE-CHECK-WELLBEING; Chapter 14 adds
       // khâhar, pesar, mard, zan, dust onto SPINE-EXCHANGE-NAMES, closing the tranche.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+      // 14 -> 15: HL-C233, the track's first script chapter. Persian taught no letters
+      // at all before it, in 59 lessons across 14 chapters.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -137,7 +139,9 @@ describe("real curriculum", () => {
       // 12 -> 15: the second pre-A1 vocabulary tranche (wave 6). Chapter 13 (colors) and
       // 14 (clothing) add further POLITE-REQUEST-REPAIR segments; chapter 15 (weather)
       // returns to CHECK-WELLBEING. All three stay within the 12-atom chapter budget.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+      // 15 -> 16: HL-C234, the track's first script chapter. Urdu was the LAST track in
+      // the corpus teaching no letters at all, in 59 lessons across 15 chapters.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -157,7 +161,10 @@ describe("real curriculum", () => {
       // and father; 13 extends SPINE-POLITE-REQUEST-REPAIR with milk, cheese,
       // juice and soup. 14 is the script chapter: eleven more Cyrillic letters,
       // sorted into true friends, false friends and shapes with no Latin relative.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+      // 14 -> 15: HL-C232, eight more letters on the same three-kinds frame. It exists
+      // because а and о -- the two commonest vowels in the language -- were taught by no
+      // lesson at all, which 75 lessons and 14 chapters had not surfaced.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 
@@ -1092,6 +1099,16 @@ describe("real curriculum", () => {
       "FA-C14-mard-meaning",
       "FA-C14-pesar-meaning",
       "FA-C14-zan-meaning",
+      "FA-C15-practice-vowels",
+      "FA-W15-alef-direction",
+      "FA-W15-be-dot",
+      "FA-W15-he-final",
+      "FA-W15-joining-break",
+      "FA-W15-lam-vs-alef",
+      "FA-W15-mim-tail",
+      "FA-W15-sin-teeth",
+      "FA-W15-te-nun-dots",
+      "FA-W15-vav-join",
       "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
@@ -1159,6 +1176,15 @@ describe("real curriculum", () => {
       "RU-C02-kak-cross-language-what-language",
       "RU-C02-practice-informal-question",
       "RU-C02-vy-formality-safe-default",
+      "RU-C15-practice-false",
+      "RU-W07-a-kind",
+      "RU-W07-f-borrowed",
+      "RU-W07-g-sound",
+      "RU-W07-kh-kind",
+      "RU-W07-o-unstressed",
+      "RU-W07-ts-tail",
+      "RU-W07-y-short-base",
+      "RU-W07-yu-pattern",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
       "TE-C31-subha-madhyahnam-register-source-scope",
@@ -1187,6 +1213,15 @@ describe("real curriculum", () => {
       "UR-C11-dil-cousin",
       "UR-C12-doodh-false-friend",
       "UR-C12-roti-pasand",
+      "UR-C16-practice-vowels",
+      "UR-W16-alef-cascade",
+      "UR-W16-joining-gap",
+      "UR-W16-kaf-lifts",
+      "UR-W16-lam-bowl",
+      "UR-W16-mim-head",
+      "UR-W16-nun-dot",
+      "UR-W16-sin-lifts",
+      "UR-W16-ye-dots",
       "ZH-C01-hao-components",
       "ZH-C01-hao-fond-tone",
       "ZH-C01-ni-meaning",
@@ -1200,6 +1235,13 @@ describe("real curriculum", () => {
       "ZH-C03-si-tone",
       "ZH-C03-wu-derive",
       "ZH-C03-yi-count",
+      "ZH-C04-bu-no",
+      "ZH-C04-kou-meaning",
+      "ZH-C04-practice-double",
+      "ZH-C04-ri-two",
+      "ZH-C05-bushi-sandhi",
+      "ZH-C05-practice-pair",
+      "ZH-C05-shi-yes",
       "ZH-W01-er-role",
       "ZH-W01-hao-build-halves",
       "ZH-W01-ni-build-halves",
@@ -1212,6 +1254,10 @@ describe("real curriculum", () => {
       "ZH-W03-si-last",
       "ZH-W03-wu-strokes",
       "ZH-W03-yi-strokes",
+      "ZH-W04-bu-lifts",
+      "ZH-W04-kou-last",
+      "ZH-W04-ri-order",
+      "ZH-W05-shi-top",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);

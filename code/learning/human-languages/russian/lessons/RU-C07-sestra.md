@@ -34,7 +34,8 @@ reviews_of: [RU-C07-brat, RU-C07-podruga, RU-C07-drug]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-BRAT-NOUN, RU-LEX-PODRUGA, RU-LEX-DRUG] -->
 
-[PAUSE 2s] *Брат*'s partner, one more secure cognate, and the four people this
+[PAUSE 2s] **Брат** (*brat*)'s partner, one more secure cognate, and the four
+people this
 chapter has introduced you to, gathered in one place.
 
 ## You'll want to know first — сестра
@@ -71,7 +72,8 @@ strange. Everyone else still gets **вы**.
 [PAUSE 1s]
 - [YOU SAY: "сестра" — feminine, stress on the end]
 - [YOU SAY: the pair — "брат, сестра" — brother, sister]
-- [YOU SAY: the four people — "друг, подруга, брат, сестра"]
+- [YOU SAY: the four people — "друг, подруга, брат, сестра" (*drug, podrúga,
+  brat, sestrá*)]
 - [YOU SAY: "sister, soror" — same root, one smooth, one bumpy]
 
 ## Wrap-up Recall

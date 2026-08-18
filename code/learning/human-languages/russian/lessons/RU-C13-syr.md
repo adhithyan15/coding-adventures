@@ -72,7 +72,8 @@ That gives you the chapter's drink-and-bread shelf a genuine internal logic:
 - [YOU SAY: "сыр" — masculine, the pulled-back ы]
 - [YOU SAY: the double life — "сыр and сырой, one root"]
 - [YOU SAY: "сырой, sour, súrr, sûr" — Slavic and Germanic, side by side]
-- [YOU SAY: "Сыр, пожалуйста. Хлеб, пожалуйста." — cheese and bread,
+- [YOU SAY: "Сыр, пожалуйста. Хлеб, пожалуйста." (*syr, pazhálusta; khleb,
+  pazhálusta*) — cheese and bread,
   the request pattern's pair]
 
 ## Wrap-up Recall

@@ -744,6 +744,175 @@ fn valid_i16x8_cmp_family() {
 }
 
 #[test]
+fn valid_i8x16_cmp_family() {
+    // SIMD widen PR7: i8x16's own comparison family (v128,v128->v128,
+    // result is a boolean mask v128, same shape as i16x8's/i32x4's own
+    // eq/ne/lt_s/etc.) -- closes the same gap for i8x16 that i16x8.eq/
+    // ne/etc. just closed for i16x8.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i8x16.eq (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.lt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.lt_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.gt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.gt_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.le_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.le_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.ge_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.ge_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_i8x16_arith2_family() {
+    // SIMD widen PR8: i8x16's own abs/popcnt/min_s/min_u/max_s/max_u/
+    // avgr_u family. abs/popcnt are UNARY (v128->v128); min_s/min_u/
+    // max_s/max_u/avgr_u are BINARY (v128,v128->v128), same pop-two-
+    // push-one shape as i32x4's own min_s/min_u/max_s/max_u.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i8x16.abs (local.get 0)))
+             (func (param v128) (result v128) (i8x16.popcnt (local.get 0)))
+             (func (param v128 v128) (result v128) (i8x16.min_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.min_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.max_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.max_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.avgr_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_i16x8_arith2_family() {
+    // SIMD widen PR9: i16x8's own abs/min_s/min_u/max_s/max_u/avgr_u
+    // family, closing the same "arith2" gap PR8 just closed for
+    // i8x16 (no i16x8.popcnt -- WASM SIMD only defines popcnt for
+    // i8x16). abs is UNARY (v128->v128); min_s/min_u/max_s/max_u/
+    // avgr_u are BINARY (v128,v128->v128).
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i16x8.abs (local.get 0)))
+             (func (param v128 v128) (result v128) (i16x8.min_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.min_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.max_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.max_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.avgr_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_i16x8_from_i8x16_widening() {
+    // SIMD widen PR10: extadd_pairwise_i8x16_s/_u (v128->v128, UNARY,
+    // same shape as neg/abs) and extmul_low/high_i8x16_s/_u
+    // (v128,v128->v128, same shape as sub/mul/min/max) -- mirrors
+    // `valid_i32x4_from_i16x8_widening` one lane width down, closing
+    // the last remaining gap between i16x8 and i8x16's coverage. No
+    // i16x8.dot_i8x16_s -- WASM SIMD does not define a dot-product for
+    // this pair. These read their operands as `i8x16` internally, but
+    // the TYPE CHECKER only sees plain `v128`s, same as every other
+    // SIMD op in this widening arc.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i16x8.extadd_pairwise_i8x16_s (local.get 0)))
+             (func (param v128) (result v128) (i16x8.extadd_pairwise_i8x16_u (local.get 0)))
+             (func (param v128 v128) (result v128) (i16x8.extmul_low_i8x16_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.extmul_high_i8x16_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.extmul_low_i8x16_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.extmul_high_i8x16_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_simd_bitwise_family() {
+    // SIMD widen PR11: v128.not/and/andnot/or/xor/bitselect --
+    // lane-width-agnostic raw-byte bitwise ops, so there's only one
+    // `v128.*` spelling per op (no i8x16/i16x8/i32x4 suffix family).
+    // not is UNARY (v128->v128), and/andnot/or/xor are BINARY
+    // (v128,v128->v128), and bitselect is the first TERNARY SIMD op
+    // in this crate (v128,v128,v128->v128) -- the type checker just
+    // pops three V128s and pushes one, same as the runtime shape.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (v128.not (local.get 0)))
+             (func (param v128 v128) (result v128) (v128.and (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (v128.andnot (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (v128.or (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (v128.xor (local.get 0) (local.get 1)))
+             (func (param v128 v128 v128) (result v128) (v128.bitselect (local.get 0) (local.get 1) (local.get 2))))"#,
+    );
+}
+
+#[test]
+fn valid_simd_boolean_reduction_and_bitmask_family() {
+    // SIMD widen PR12: v128.any_true + ixNxM.all_true/bitmask across
+    // all 4 lane widths -- the first v128-in/i32-out reduction shape
+    // besides `extract_lane`, but with NO lane-index immediate (these
+    // reduce over ALL lanes, not select one). i64x2 is the first lane
+    // width these opcodes introduce to this crate's type rules.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result i32) (v128.any_true (local.get 0)))
+             (func (param v128) (result i32) (i8x16.all_true (local.get 0)))
+             (func (param v128) (result i32) (i8x16.bitmask (local.get 0)))
+             (func (param v128) (result i32) (i16x8.all_true (local.get 0)))
+             (func (param v128) (result i32) (i16x8.bitmask (local.get 0)))
+             (func (param v128) (result i32) (i32x4.all_true (local.get 0)))
+             (func (param v128) (result i32) (i32x4.bitmask (local.get 0)))
+             (func (param v128) (result i32) (i64x2.all_true (local.get 0)))
+             (func (param v128) (result i32) (i64x2.bitmask (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn valid_simd_i64x2_arith_and_cmp_family() {
+    // SIMD widen PR13: i64x2.abs/neg/add/sub/mul/eq/ne/lt_s/gt_s/le_s/
+    // ge_s -- i64x2's first REAL ARITHMETIC family (PR12 only added the
+    // all_true/bitmask reduction ops). abs/neg are UNARY (v128->v128);
+    // add/sub/mul/eq/ne/lt_s/gt_s/le_s/ge_s are BINARY
+    // (v128,v128->v128) -- same shapes as every other lane width, just
+    // a new lane width, so no new type-checker plumbing.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i64x2.abs (local.get 0)))
+             (func (param v128) (result v128) (i64x2.neg (local.get 0)))
+             (func (param v128 v128) (result v128) (i64x2.add (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.sub (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.mul (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.eq (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.lt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.gt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.le_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.ge_s (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_simd_shift_family() {
+    // SIMD widen PR14: ixNxM.shl/shr_s/shr_u across all 4 lane widths
+    // -- the FIRST mixed-type binary SIMD op family in this crate: pops
+    // an i32 (pushed last, so on TOP of stack, popped FIRST) then a
+    // v128, pushes one v128. Every prior binary SIMD op pops two v128s
+    // or one v128 -- this is the first time BOTH an i32 and a v128 are
+    // consumed by the same op.
+    assert_valid(
+        r#"(module
+             (func (param v128 i32) (result v128) (i8x16.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i8x16.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i8x16.shr_u (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i16x8.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i16x8.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i16x8.shr_u (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i32x4.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i32x4.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i32x4.shr_u (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i64x2.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i64x2.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i64x2.shr_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

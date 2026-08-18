@@ -516,6 +516,20 @@ failure leaves it locked. Lock synchronously replaces and drops the live
 session before returning; repeated lock is idempotent. Timers, terminal-loss
 signals, prompts, and process lifecycle remain host authorities.
 
+Step 2 above is composed at that lifecycle boundary rather than inside the
+open itself, and the two journals it names are resumed by different callers.
+A `PreparedInit` journal is rehydrated and completed by initialization, which
+is the only caller that knows a vault is being created. A `PendingPublication`
+journal is replayed by a *recovering* unlock, which is a second named entry
+point beside the plain one: it replays the exact journal with the passphrase it
+was given and then performs the ordinary strict open of the repaired durable
+state, so every verification listed above runs on the repaired bytes, and it
+reports which of the two things it did. The plain unlock keeps its strict
+contract and accepts only `Active`, so a host that wants a crash to be refused
+rather than repaired still has exactly that. `VLT-PM42-cli-pending-publication-
+recovery.md` specifies which callers take which door and why the read-only
+status and doctor projections take neither.
+
 Phase 1A does not auto-accept a provider view when pins are absent. The only
 automatic first pin is the receipt from the locally prepared generation-zero
 publication. Device enrollment defines the later fresh-device ceremony.

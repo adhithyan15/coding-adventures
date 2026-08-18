@@ -1,5 +1,6 @@
 #![cfg(unix)]
 
+use std::collections::BTreeMap;
 use std::fs::{self, File};
 use std::io::{self, Read, Write};
 use std::os::fd::FromRawFd;
@@ -11,6 +12,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
 const TARGET_PASSPHRASE: &[u8] = b"e2e separate restore target passphrase";
+const ROTATED_PASSPHRASE: &[u8] = b"e2e rotated correct horse battery staple";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
 const LOGIN_NOTES: &[u8] = b"e2e login notes stay encrypted 91d603be";
@@ -55,6 +57,37 @@ impl TestHome {
 impl Drop for TestHome {
     fn drop(&mut self) {
         let _ = fs::remove_dir_all(&self.0);
+    }
+}
+
+/// The shipped executable must never contain VLT-PM41 crash injection.
+///
+/// The drill needs a `vault-pm` it can kill at a chosen durable write, and the
+/// obvious way to get one — enabling the `crash-injection` feature through
+/// this crate's `dev-dependencies` — quietly fails. Cargo resolves features
+/// per package across a build graph, so `cargo build --release --all-targets`
+/// would pull dev-dependencies in and uplift the instrumented binary to
+/// `target/release/vault-pm`, the exact path a packaging step copies from. A
+/// password manager would then ship an environment-variable kill switch that
+/// fires between durable writes.
+///
+/// The drill therefore lives in a separate crate,
+/// `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
+/// This test is the guard rail on that decision: it reads the binary this
+/// crate actually produced and fails if either injection variable name appears
+/// anywhere in it. It runs in a build that does have dev-dependencies
+/// resolved, which is precisely the configuration the mistake shows up in.
+#[test]
+fn the_shipped_executable_contains_no_crash_injection() {
+    let binary = fs::read(env!("CARGO_BIN_EXE_vault-pm")).unwrap();
+    for forbidden in [b"VAULT_PM_CRASH_AT".as_slice(), b"VAULT_PM_CRASH_TRACE"] {
+        assert!(
+            !binary
+                .windows(forbidden.len())
+                .any(|value| value == forbidden),
+            "the shipped vault-pm binary contains {}; see VLT-PM41 section 4.6",
+            String::from_utf8_lossy(forbidden)
+        );
     }
 }
 
@@ -997,6 +1030,303 @@ fn real_cli_creates_redacts_and_separately_reveals_a_totp_seed() {
     assert_tree_excludes(&home.0, TOTP_RAW_SECRET);
 }
 
+/// VLT-PM45 §9 gates 2, 3, 7, and 11, against the real executable.
+///
+/// The unit tests pin the code against a frozen clock; this one cannot, because
+/// the real binary reads the real one. So it recomputes the answer for the step
+/// the process must have been in, from the same VLT05 engine — which is proven
+/// against the full RFC 6238 Appendix B table in its own crate — and checks the
+/// executable agrees. What that adds over the unit tests is the wiring: that
+/// the stored seed, algorithm, period, and digit count survive encryption,
+/// storage, decryption, and a real PTY unchanged.
+///
+/// It also checks the one property no in-process test can: that the two output
+/// channels really are separate file descriptors, with the code on `/dev/tty`
+/// and the validity line on standard output, and that neither carries the
+/// other's content.
+#[test]
+fn real_cli_shows_the_current_totp_code_on_the_terminal_and_its_window_on_stdout() {
+    use coding_adventures_vault_auth::{TotpAlgorithm, TotpAuthenticator};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+    let (add_status, add_transcript) = run_add_totp_in_pty(&home);
+    assert!(add_status.success(), "TOTP add failed: {add_transcript}");
+    let item_id = extract_item_id(&add_transcript);
+
+    // `--copy` is refused before anything else happens, so it needs no
+    // terminal at all: a plain run with no PTY would fail at the passphrase
+    // prompt if the refusal were not first.
+    let copied = run_plain(&home, &["totp", "code", &item_id, "--copy"]);
+    assert_eq!(copied.status.code(), Some(8), "{copied:?}");
+    assert!(copied.stdout.is_empty());
+
+    let before = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let (status, transcript, stdout) = run_totp_code_in_pty(&home, &item_id, b"yes", true);
+    let after = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    assert!(status.success(), "{transcript}");
+
+    let code = extract_revealed_secret(&transcript);
+    assert_eq!(code.len(), 6, "{transcript}");
+    assert!(code.bytes().all(|byte| byte.is_ascii_digit()), "{code}");
+
+    // The process read its clock somewhere between these two readings, so the
+    // acceptable answers are the codes for every second it could have been in.
+    // Comparing against a window rather than a point is what keeps this test
+    // from failing once every thirty seconds on a period boundary.
+    let authenticator =
+        TotpAuthenticator::new(TOTP_RAW_SECRET.to_vec(), TotpAlgorithm::Sha1, 30, 6, 0).unwrap();
+    let acceptable: Vec<String> = (before..=after)
+        .map(|second| authenticator.formatted_code_at(second).unwrap().to_string())
+        .collect();
+    assert!(
+        acceptable.contains(&code),
+        "the executable produced {code}, which is no code for {before}..={after}"
+    );
+
+    // Standard output carries the window and only the window.
+    let line = String::from_utf8(stdout).unwrap();
+    let remaining: u64 = line
+        .strip_prefix("Code valid for ")
+        .and_then(|rest| rest.strip_suffix(" more seconds\n"))
+        .unwrap_or_else(|| panic!("unexpected standard output: {line:?}"))
+        .parse()
+        .unwrap();
+    assert!(
+        (1..=30).contains(&remaining),
+        "a window outside 1..=30 is not a window into a 30-second step"
+    );
+    assert!(!line.contains(&code), "the code must never reach stdout");
+    assert_transcript_excludes_secrets(&transcript);
+    assert!(!transcript.contains(core::str::from_utf8(TOTP_BASE32).unwrap()));
+
+    // Two runs inside one step agree, which is the observable difference
+    // between computing from a clock and drawing from a random source.
+    let repeat_before = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let (repeat_status, repeat_transcript, repeat_stdout) =
+        run_totp_code_in_pty(&home, &item_id, b"yes", true);
+    let repeat_after = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    assert!(repeat_status.success(), "{repeat_transcript}");
+    let repeat = extract_revealed_secret(&repeat_transcript);
+    if before / 30 == repeat_after / 30 {
+        assert_eq!(
+            code, repeat,
+            "two runs inside one step must produce the same code"
+        );
+    }
+    let repeat_acceptable: Vec<String> = (repeat_before..=repeat_after)
+        .map(|second| authenticator.formatted_code_at(second).unwrap().to_string())
+        .collect();
+    assert!(repeat_acceptable.contains(&repeat), "{repeat_transcript}");
+    assert!(String::from_utf8(repeat_stdout)
+        .unwrap()
+        .starts_with("Code valid for "));
+
+    // Refusal releases nothing on either channel.
+    let (denied_status, denied_transcript, denied_stdout) =
+        run_totp_code_in_pty(&home, &item_id, b"no", false);
+    assert_eq!(denied_status.code(), Some(2), "{denied_transcript}");
+    assert!(denied_stdout.is_empty());
+    assert!(
+        !denied_transcript.contains("Secret: \""),
+        "{denied_transcript}"
+    );
+
+    // The audit chain records the reads and refuses to record their content.
+    let (audit_status, audit) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_read\toutcome=denied",
+    );
+    assert!(audit_status.success(), "{audit}");
+    assert_eq!(
+        audit
+            .lines()
+            .filter(|row| row.contains("action=item_read\toutcome=succeeded"))
+            .count(),
+        2,
+        "{audit}"
+    );
+    for forbidden in [
+        code.as_str(),
+        repeat.as_str(),
+        core::str::from_utf8(TOTP_BASE32).unwrap(),
+        "GitHub ada@example.com",
+        "SHA1",
+    ] {
+        assert!(
+            !audit.contains(forbidden),
+            "{forbidden} leaked into the audit"
+        );
+    }
+    assert_audit_rows_have_only_closed_fields(&audit);
+    assert_tree_excludes(&home.0, TOTP_RAW_SECRET);
+}
+
+/// VLT-PM44 §8 gate 9, against the real executable.
+///
+/// The generator is the one command in this product that must work before
+/// `vault-pm init` has ever run, because the most common moment to want a
+/// generated password is while signing up for something. This test therefore
+/// starts from an untouched home, generates twice, and checks four things the
+/// unit tests cannot: that the process really does reach `/dev/tty` for both
+/// the confirmation and the delivery, that its ordinary standard output stays
+/// empty, that no vault state appears on disk, and that two runs of the same
+/// command produce different passwords — which is the only end-to-end evidence
+/// that the operating-system CSPRNG is genuinely wired in.
+#[test]
+fn real_cli_generates_a_password_without_a_vault_and_delivers_it_only_on_the_terminal() {
+    let home = TestHome::new();
+    let (status, transcript, stdout) =
+        run_password_generate_in_pty(&home, &["password", "generate", "--reveal"], b"yes");
+    assert!(status.success(), "{transcript}");
+    assert!(
+        stdout.is_empty(),
+        "a generated password must never reach standard output"
+    );
+
+    let generated = extract_revealed_secret(&transcript);
+    assert_eq!(generated.len(), 24, "{transcript}");
+    assert!(generated.is_ascii());
+    for character in generated.chars() {
+        assert!(
+            character.is_ascii_graphic() && character != '"' && character != '\\',
+            "{character} is outside the generated alphabet"
+        );
+    }
+    assert_transcript_excludes_secrets(&transcript);
+
+    // Nothing about the request is echoed, and no vault was created or opened.
+    assert!(!transcript.contains("vault-pm:"), "{transcript}");
+    for child in ["config", "data", "cache"] {
+        assert_eq!(
+            fs::read_dir(home.0.join(child)).unwrap().count(),
+            0,
+            "the generator must leave {child} untouched"
+        );
+    }
+
+    // A second run draws again from the operating-system CSPRNG.
+    let (second_status, second_transcript, second_stdout) =
+        run_password_generate_in_pty(&home, &["password", "generate", "--reveal"], b"yes");
+    assert!(second_status.success(), "{second_transcript}");
+    assert!(second_stdout.is_empty());
+    let second = extract_revealed_secret(&second_transcript);
+    assert_ne!(
+        generated, second,
+        "two runs producing the same password would mean the CSPRNG is not wired in"
+    );
+
+    // A narrowed policy is honoured end to end.
+    let (narrow_status, narrow_transcript, narrow_stdout) = run_password_generate_in_pty(
+        &home,
+        &[
+            "password",
+            "generate",
+            "--length",
+            "40",
+            "--no-symbols",
+            "--exclude-ambiguous",
+            "--reveal",
+        ],
+        b"yes",
+    );
+    assert!(narrow_status.success(), "{narrow_transcript}");
+    assert!(narrow_stdout.is_empty());
+    let narrowed = extract_revealed_secret(&narrow_transcript);
+    assert_eq!(narrowed.len(), 40);
+    for character in narrowed.chars() {
+        assert!(character.is_ascii_alphanumeric(), "{character} is a symbol");
+        assert!(!"01IOl|".contains(character), "{character} is ambiguous");
+    }
+}
+
+/// A refused confirmation mints nothing, and an under-strength policy is
+/// refused before the terminal is ever touched.
+#[test]
+fn real_cli_refuses_weak_password_policies_and_unconfirmed_reveals() {
+    let home = TestHome::new();
+
+    let (status, transcript, stdout) =
+        run_password_generate_in_pty(&home, &["password", "generate", "--reveal"], b"no");
+    assert_eq!(status.code(), Some(2), "{transcript}");
+    assert!(stdout.is_empty());
+    assert!(
+        !transcript.contains("Secret: "),
+        "a refused reveal must deliver nothing: {transcript}"
+    );
+
+    // Parse-time refusals never reach the terminal at all, so they need no
+    // pseudo-terminal to observe.
+    let weak = run_plain(
+        &home,
+        &["password", "generate", "--length", "12", "--reveal"],
+    );
+    assert_eq!(weak.status.code(), Some(2));
+    assert!(weak.stdout.is_empty());
+    assert_eq!(
+        String::from_utf8_lossy(&weak.stderr),
+        "vault-pm: password policy below the minimum entropy floor\n"
+    );
+
+    // One character more clears the 80-bit floor, so the refusal is the floor
+    // talking and not a blanket rejection of `--length`.
+    let all_classes_disabled = run_plain(
+        &home,
+        &[
+            "password",
+            "generate",
+            "--no-lowercase",
+            "--no-uppercase",
+            "--no-digits",
+            "--no-symbols",
+            "--reveal",
+        ],
+    );
+    assert_eq!(all_classes_disabled.status.code(), Some(2));
+    assert_eq!(
+        String::from_utf8_lossy(&all_classes_disabled.stderr),
+        "vault-pm: invalid command\n"
+    );
+
+    // `--copy` is recognized but has no adapter behind it yet.
+    let copied = run_plain(&home, &["password", "generate", "--copy"]);
+    assert_eq!(copied.status.code(), Some(8));
+    assert!(copied.stdout.is_empty());
+    assert_eq!(
+        String::from_utf8_lossy(&copied.stderr),
+        "vault-pm: unsupported capability\n"
+    );
+
+    // A selector names a target this command never opens.
+    let selected = run_plain(
+        &home,
+        &["--vault", "personal", "password", "generate", "--reveal"],
+    );
+    assert_eq!(selected.status.code(), Some(2));
+    assert_eq!(
+        String::from_utf8_lossy(&selected.stderr),
+        "vault-pm: invalid command\n"
+    );
+
+    for child in ["config", "data", "cache"] {
+        assert_eq!(fs::read_dir(home.0.join(child)).unwrap().count(), 0);
+    }
+}
+
 fn run_export_in_pty(home: &TestHome, destination: &Path) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
@@ -1654,6 +1984,153 @@ fn extract_audit_trace(transcript: &str, action: &str) -> String {
         .to_string()
 }
 
+/// Run one `password generate --reveal` against a real controlling terminal.
+///
+/// Unlike every other pseudo-terminal helper here this one never sends a
+/// passphrase, because the command it drives never asks for one: VLT-PM44 §1
+/// makes the generator vault-free, so the only terminal interaction is the
+/// reveal confirmation.
+/// Drive `vault-pm totp code ITEM --reveal` through a real controlling
+/// terminal, with standard output captured separately.
+///
+/// Standard output is piped rather than pointed at the terminal because this
+/// command deliberately writes to both channels — the code to `/dev/tty` and
+/// the non-secret validity line to stdout — and the whole point of the test is
+/// that the two never swap.
+fn run_totp_code_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    confirmation: &[u8],
+    expect_code: bool,
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["totp", "code", item_id, "--reveal"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Reveal secret on this terminal? Type yes to continue: ",
+    );
+    master.write_all(confirmation).unwrap();
+    master.write_all(b"\n").unwrap();
+    if expect_code {
+        // The code cannot be predicted here, so wait for the opening of the
+        // quoted line rather than for a known value.
+        read_until(&mut master, &mut transcript, b"Secret: \"");
+    }
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let mut stdout = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        stdout,
+    )
+}
+
+fn run_password_generate_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    confirmation: &[u8],
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    // A generated password must not be influenced by, or leak through, an
+    // attacker-controlled standard input.
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Reveal secret on this terminal? Type yes to continue: ",
+    );
+    master.write_all(confirmation).unwrap();
+    master.write_all(b"\n").unwrap();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let mut stdout = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        stdout,
+    )
+}
+
+/// Pull the one quoted secret line out of a terminal transcript.
+///
+/// The generator's alphabet contains neither `"` nor `\`, so the debug quoting
+/// the host applies is exactly a pair of quotes around the raw value and the
+/// closing quote is unambiguous.
+fn extract_revealed_secret(transcript: &str) -> String {
+    let start = transcript
+        .find("Secret: \"")
+        .expect("the terminal must receive one quoted secret line")
+        + "Secret: \"".len();
+    let rest = &transcript[start..];
+    let end = rest.find('"').expect("the secret line must be closed");
+    rest[..end].to_owned()
+}
+
 fn run_plain(home: &TestHome, arguments: &[&str]) -> std::process::Output {
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
     command.args(arguments);
@@ -1873,6 +2350,167 @@ fn drain_pty(master: &mut File, transcript: &mut Vec<u8>) {
             Err(error) => panic!("pseudo-terminal drain failed: {error}"),
         }
     }
+}
+
+/// Every encrypted repository object under `root`, keyed by absolute path.
+///
+/// VLT-PM43 §7 gate 1. The `objects` directory is `LocalVaultPaths`' object
+/// root, and it holds nothing but sealed `ObjectFrameV1` records: item
+/// revisions, catalogs, commits, device certificates, and audit events. The
+/// walk starts from the whole test home rather than a computed path because
+/// `LocalVaultPaths::resolve` is platform-dependent, and a gate that quietly
+/// looked at an empty directory would pass for the wrong reason — which is why
+/// the caller also asserts the map is non-empty.
+fn encrypted_object_tree(root: &Path) -> BTreeMap<PathBuf, Vec<u8>> {
+    let mut tree = BTreeMap::new();
+    let Ok(entries) = fs::read_dir(root) else {
+        return tree;
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            tree.extend(encrypted_object_tree(&path));
+        } else if path
+            .components()
+            .any(|component| component.as_os_str() == "objects")
+        {
+            tree.insert(path.clone(), fs::read(&path).unwrap());
+        }
+    }
+    tree
+}
+
+fn run_passphrase_rotate_in_pty(
+    home: &TestHome,
+    current: &[u8],
+    replacement: &[u8],
+) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["passphrase", "rotate"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(current).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"New vault passphrase: ");
+    master.write_all(replacement).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Confirm vault passphrase: ");
+    master.write_all(replacement).unwrap();
+    master.write_all(b"\n").unwrap();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+/// VLT-PM43. The real executable, over a real pseudo-terminal, across process
+/// restarts.
+///
+/// The load-bearing assertion is the object-tree comparison: §14.8 does not ask
+/// only that a rotation *work*, it asks that it not re-encrypt every item body,
+/// and the only way to know that is to look at the bytes on disk. Every object
+/// present before the rotation must still be present and byte-for-byte
+/// unchanged; a CLI vault is audit-first from generation zero, so the rotation's
+/// own audit-only commit is the one thing allowed to appear.
+#[test]
+fn real_cli_rotates_the_passphrase_without_re_encrypting_item_bodies() {
+    let home = TestHome::new();
+    let (status, transcript) = run_init_in_pty(&home);
+    assert!(status.success(), "{transcript}");
+    let (status, transcript) = run_add_login_in_pty(&home);
+    assert!(status.success(), "{transcript}");
+    let item_id = extract_item_id(&transcript);
+
+    let before = encrypted_object_tree(&home.0);
+    assert!(
+        !before.is_empty(),
+        "the fixture must have written encrypted objects"
+    );
+
+    let (status, transcript) = run_passphrase_rotate_in_pty(&home, PASSPHRASE, ROTATED_PASSPHRASE);
+    assert!(status.success(), "{transcript}");
+    assert!(
+        transcript.contains("Vault passphrase rotated."),
+        "{transcript}"
+    );
+    assert_transcript_excludes_secrets(&transcript);
+    assert!(!transcript.contains("e2e rotated"), "{transcript}");
+
+    let after = encrypted_object_tree(&home.0);
+    for (path, bytes) in &before {
+        assert_eq!(
+            after.get(path),
+            Some(bytes),
+            "rotation rewrote an encrypted object: {path:?}"
+        );
+    }
+    assert!(after.len() > before.len(), "the audit commit must appear");
+
+    // A new process, the retired passphrase: refused with the authentication
+    // class, and nothing about the vault disclosed.
+    let (status, transcript) =
+        run_unlock_with_passphrase_in_pty(&home, &["item", "list"], b"vault-pm: ", PASSPHRASE);
+    assert_eq!(status.code(), Some(3), "{transcript}");
+    assert!(!transcript.contains("Example account"), "{transcript}");
+
+    // A new process, the new passphrase: the same item, decrypted by the same
+    // unchanged root key.
+    let (status, transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["item", "list"],
+        b"Example account",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(status.success(), "{transcript}");
+    assert!(transcript.contains(&item_id), "{transcript}");
+
+    // And the audit chain carried across the rotation, with the rotation in it.
+    let (status, transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=passphrase_rotate",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(status.success(), "{transcript}");
+    assert!(
+        transcript.contains("action=passphrase_rotate\toutcome=succeeded"),
+        "{transcript}"
+    );
+    assert_audit_rows_have_only_closed_fields(&transcript);
+
+    let (status, transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["audit", "verify"],
+        b"Audit: verified",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(status.success(), "{transcript}");
+
+    assert_tree_excludes(&home.0, PASSPHRASE);
+    assert_tree_excludes(&home.0, ROTATED_PASSPHRASE);
+    assert_tree_excludes(&home.0, ITEM_PASSWORD);
 }
 
 fn assert_tree_excludes(root: &Path, forbidden: &[u8]) {

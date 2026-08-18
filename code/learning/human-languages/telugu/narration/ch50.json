@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c8dd55defa59b40a",
+  "sourceHash": "fnv1a64:d7882d1a74054ce4",
   "lessons": [
     {
       "id": "TE-C50-now",
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5498826f1751796e",
+      "sourceHash": "fnv1a64:c0f84523cc3f570c",
       "notice": null,
       "blocks": [
         {

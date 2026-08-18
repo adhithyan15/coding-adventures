@@ -67,15 +67,25 @@
 //!
 //! Be precise about how far that reaches, because a guarantee believed to be
 //! wider than it is, is worse than none. The runtime validates `output` and
-//! **only** `output`. `artifact_refs` and `memory_refs` are copied to the
-//! result unchecked; `events` are assembled *before* validation runs and are
-//! published even on the rejection path; and the check is `if let Some(schema)`
-//! against the definition passed to `register_handler`, so it is a property of
-//! that definition rather than of the tool id — another crate registering
-//! `vault.request_direct` with `output_schema: None` would get no validation at
+//! `output` and, on the event channel, terminal event kinds. `artifact_refs` and `memory_refs` are copied to the
+//! result unchecked — except that a handler emitting a terminal event kind is
+//! refused outright. Two related holes have since been closed in the runtime,
+//! and are recorded here because this crate's guarantees used to depend on
+//! working around them: handler events are no longer published when output
+//! validation refuses a call, and a definition registered under a built-in tool
+//! id must now match the catalog — so a crate registering
+//! `vault.request_direct` with `output_schema: None` is now rejected outright
+//! rather than silently receiving no validation at
 //! all. Both handlers here therefore return empty `artifact_refs`,
-//! `memory_refs`, and `events`, and there are tests pinning that, because for
-//! those three fields handler discipline is genuinely all there is.
+//! `memory_refs`, and `events` — and [`VaultToolBridge::lease_handler`] and
+//! [`VaultToolBridge::direct_handler`] wrap the real bodies in
+//! [`forbidding_side_channels`] before anyone can register them, so a guarded
+//! handler is the only kind this type hands out. Note what that is and is not:
+//! the combinator's refusal is tested, but no behavioural test can catch an
+//! *unguarded* registration, because the real handlers never populate those
+//! channels — a reviewer verified that by removing every wrapper and watching
+//! the suite stay green. The wiring is a by-construction property, checkable by
+//! reading. See [`VaultToolBridge::lease_handler`].
 //!
 //! **V2 — bounded, secret-free errors.** Every error this crate produces
 //! carries one of a closed set of `&'static str` messages, listed in
@@ -100,11 +110,20 @@
 //! pair is registered all-or-nothing, via a pre-flight that is co-total with
 //! the registration path — profile checks *and* the registry's own.
 //!
-//! Note what this gate is not. It runs once, at registration, per host. It is
-//! not a per-call check, and the default runtime policy admits everything, so
-//! there is presently no per-call authorization at all and no per-secret
-//! policy. An agent that clears this gate can request any registered secret in
-//! either mode. See D18D section 7.2.
+//! All-or-nothing is about partial *failure*, not about which tools a
+//! deployment chooses to offer: a binding with no trusted delivery adapter
+//! should register the lease tool alone, via
+//! [`VaultToolBridge::register_lease_only_into_host`], rather than offering
+//! `request_direct` over a stub that has nowhere to deliver.
+//!
+//! Note what this gate is not. It runs once, at registration, per host, and is
+//! a statement about a *tool*, not a *secret* — it cannot express "this host
+//! may lease the weather key but not the bank password". The per-secret half of
+//! that question is answered below the handlers, by the vault runtime's
+//! admission policy (VLT06): each secret carries `allowed_agents` and
+//! `allowed_mode`, and both handlers forward the attested `agent_id` so the
+//! vault can apply them. What remains absent is a *per-call* policy engine —
+//! the default runtime policy still admits everything.
 //!
 //! # Example
 //!
@@ -113,7 +132,8 @@
 //!
 //! use chief_of_staff_vault_dispatch::VaultToolBridge;
 //! use chief_of_staff_vault_runtime::{
-//!     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
+//!     ChiefVaultRuntime, SecretPolicy, VaultDirectDelivery, VaultDirectDeliveryError,
+//!     VaultDirectRequest,
 //! };
 //! use coding_adventures_vault_leases::LeasePayload;
 //!
@@ -133,7 +153,11 @@
 //! }
 //!
 //! let vault = Arc::new(ChiefVaultRuntime::new());
-//! vault.register_secret("weather-api-key", LeasePayload::new(b"s3cret".to_vec()));
+//! vault.register_secret(
+//!     "weather-api-key",
+//!     LeasePayload::new(b"s3cret".to_vec()),
+//!     SecretPolicy::unrestricted(0),
+//! );
 //!
 //! let bridge = VaultToolBridge::new(vault, Arc::new(Sink));
 //! let mut tools = chief_of_staff_tool_api::InMemoryToolRuntime::new();
@@ -147,12 +171,12 @@ use std::sync::Arc;
 
 use chief_of_staff_host_runtime::{HostRuntimeError, OrchestratorProfileRuntime};
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, InMemoryToolRuntime, ToolApiError, ToolCallError, ToolDefinition,
-    ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
+    builtin_tool_definition, forbidding_side_channels, InMemoryToolRuntime, ToolApiError,
+    ToolCallError, ToolDefinition, ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
 };
 use chief_of_staff_vault_runtime::{
     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
-    VaultRuntimeError,
+    VaultLeaseRequest, VaultRuntimeError,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeaseError;
@@ -222,6 +246,14 @@ pub mod errors {
     pub const CONSUMER_INVALID: &str = "consumer_agent_id is not a valid identifier";
     /// No secret is registered under the requested name.
     pub const SECRET_NOT_FOUND: &str = "vault secret is not registered";
+    /// The secret already has as many tracked leases as the vault will revoke
+    /// on rotation. Transient: slots free as leases are redeemed or expire.
+    pub const TOO_MANY_LEASES: &str = "secret has too many outstanding leases";
+    /// The secret forbids the requested delivery mode (VLT06 P1).
+    pub const MODE_NOT_PERMITTED: &str = "secret does not permit this delivery mode";
+    /// The requesting agent is not on the secret's allow-list, or brought no
+    /// attested identity at all (VLT06 P2, P3).
+    pub const AGENT_NOT_PERMITTED: &str = "agent may not request this secret";
     /// The trusted adapter has no route to the named consumer.
     pub const DELIVERY_CONSUMER_NOT_FOUND: &str = "direct-delivery consumer not found";
     /// The trusted adapter refused to accept the delivery.
@@ -279,6 +311,11 @@ impl VaultToolBridge {
     /// host's tool-allowed, tier, and capability checks — the tool registry has
     /// no host profile to check against. Use it for local dispatch and tests;
     /// use [`Self::register_into_host`] at a real host boundary.
+    ///
+    /// Registers `request_direct` too, so a caller with no trusted delivery
+    /// adapter wants [`Self::register_lease_only`] instead — offering a
+    /// direct-delivery tool over a stub is the configuration this crate argues
+    /// against.
     pub fn register_all(&self, runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
         for definition in Self::definitions()? {
             match definition.tool_id.as_str() {
@@ -343,22 +380,112 @@ impl VaultToolBridge {
         Ok(())
     }
 
+    /// Register only `vault.request_lease` with a bare tool runtime.
+    ///
+    /// The counterpart to [`Self::register_lease_only_into_host`] for the
+    /// unchecked path. It exists so that "no delivery adapter, so do not offer
+    /// direct delivery" is expressible on both paths — otherwise the advice
+    /// would hold at a host boundary and quietly not hold anywhere else.
+    pub fn register_lease_only(
+        &self,
+        runtime: &mut InMemoryToolRuntime,
+    ) -> Result<(), ToolApiError> {
+        let definition = builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID)
+            .ok_or_else(|| ToolApiError::UnknownTool(VAULT_REQUEST_LEASE_TOOL_ID.to_string()))?;
+        runtime.register_handler(definition, self.lease_handler())
+    }
+
+    /// Register **only** `vault.request_lease` at a host boundary.
+    ///
+    /// For deployments that have no trusted [`VaultDirectDelivery`]
+    /// implementation. `request_direct` without one has nowhere to deliver, and
+    /// registering it against a stub that accepts everything would be strictly
+    /// worse than leaving it out: the agent would see a working direct-delivery
+    /// tool while the secret went nowhere, or somewhere unaudited.
+    ///
+    /// This is not a hole in [`Self::register_into_host`]'s all-or-nothing
+    /// rule. That rule is about *partial failure* — a host left holding one
+    /// tool because the second was refused, where the half that registered
+    /// looks healthy and the failure resurfaces somewhere else. This is a
+    /// deliberate subset, chosen up front and complete in itself.
+    ///
+    /// The two are separate named operations precisely so a reader can tell
+    /// which one a call site meant. Reaching the lease-only case by catching
+    /// the pair's error would make an intended configuration indistinguishable
+    /// from a misconfigured one.
+    ///
+    /// The host still needs `vault.request_lease` in `allowed_tools`, the
+    /// `vault:lease` capability, and `max_tier >= Tier2`; it does **not** need
+    /// anything for `request_direct`.
+    pub fn register_lease_only_into_host(
+        &self,
+        host: &mut OrchestratorProfileRuntime,
+    ) -> Result<(), HostRuntimeError> {
+        let definition = builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).ok_or_else(|| {
+            HostRuntimeError::ToolNotAllowed(VAULT_REQUEST_LEASE_TOOL_ID.to_string())
+        })?;
+        host.check_registration(&definition)?;
+        host.register_handler(definition, self.lease_handler())
+    }
+
+    /// Handler for `vault.request_lease`, guarded.
+    ///
+    /// The guard lives here rather than at each registration site.
+    ///
+    /// Be exact about what that buys, because the obvious claim is wrong. It is
+    /// **not** that a test now catches an unguarded registration: the real
+    /// handlers never populate those channels, so no behavioural test can tell
+    /// a guarded handler from an unguarded one. A reviewer confirmed that by
+    /// removing every wrapper and watching the suite stay green -- first with
+    /// the guard at six call sites, then again with it here.
+    ///
+    /// What it buys is surface. This and [`Self::direct_handler`] are the
+    /// only handlers the type hands out, and the unguarded bodies are
+    /// private, so no code outside this crate can obtain an unguarded handler
+    /// at all, and inside it someone would have to reach past two guarded
+    /// accessors for a differently-named private one. That is a reduction from
+    /// six sites that each had to be remembered to two that are hard to bypass
+    /// by accident -- and it is checkable by reading, which is the only way
+    /// this particular property can be checked.
+    ///
+    /// The combinator itself is tested — see
+    /// `the_side_channel_wrapper_refuses_a_misbehaving_handler_at_the_boundary`.
+    /// The wiring is by construction, not by test.
+    pub fn lease_handler(
+        &self,
+    ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
+    {
+        forbidding_side_channels(self.unguarded_lease_handler())
+    }
+
+    /// Handler for `vault.request_direct`, guarded. See [`Self::lease_handler`].
+    pub fn direct_handler(
+        &self,
+    ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
+    {
+        forbidding_side_channels(self.unguarded_direct_handler())
+    }
+
     /// Handler for `vault.request_lease`.
     ///
     /// Returns `{ vault_ref, expires_at_ms }` and nothing else. The `VaultRef`
     /// is intended to leave the boundary — that is the whole point of a lease —
     /// but it is a handle the trusted broker redeems, not secret material.
-    pub fn lease_handler(
+    fn unguarded_lease_handler(
         &self,
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
         let vault = Arc::clone(&self.vault);
-        move |arguments, _context| {
+        move |arguments, context| {
             let secret_name = required_secret_name(&arguments)?;
             let ttl_ms = required_ttl_ms(&arguments)?;
 
             let receipt = vault
-                .request_lease(&secret_name, ttl_ms)
+                .request_lease(VaultLeaseRequest {
+                    requesting_agent_id: context.agent_id.as_deref(),
+                    secret_name: &secret_name,
+                    ttl_ms,
+                })
                 .map_err(lease_error)?;
 
             Ok(ToolHandlerOutput::new(JsonValue::Object(vec![
@@ -394,7 +521,7 @@ impl VaultToolBridge {
     /// under which a caller cleared to send one secret to a consumer is equally
     /// cleared to send every secret to it. Passing the requester and the secret
     /// name is what makes a real decision possible; see [`VaultDirectRequest`].
-    pub fn direct_handler(
+    fn unguarded_direct_handler(
         &self,
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
@@ -536,6 +663,23 @@ fn execution_error(message: &'static str) -> ToolCallError {
 fn lease_error(error: VaultRuntimeError) -> ToolCallError {
     match error {
         VaultRuntimeError::SecretNotFound => execution_error(errors::SECRET_NOT_FOUND),
+        // Unlike the admission refusals below, this one IS worth retrying —
+        // slots free as leases are redeemed or expire — so it is a conflict
+        // rather than a denial.
+        VaultRuntimeError::TooManyOutstandingLeases => {
+            ToolCallError::new(ToolErrorKind::ToolConflict, errors::TOO_MANY_LEASES)
+        }
+        // An admission refusal is the vault exercising authority the caller
+        // does not have, so it is a permission denial rather than an execution
+        // fault — the caller should not read it as "retry".
+        VaultRuntimeError::DeliveryModeNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::MODE_NOT_PERMITTED,
+        ),
+        VaultRuntimeError::AgentNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::AGENT_NOT_PERMITTED,
+        ),
         VaultRuntimeError::InvalidConsumerAgentId => {
             // Unreachable on this path: request_lease takes no consumer. Mapped
             // rather than panicked because a handler that aborts the process on
@@ -559,6 +703,23 @@ fn lease_error(error: VaultRuntimeError) -> ToolCallError {
 fn direct_error(error: VaultRuntimeError) -> ToolCallError {
     match error {
         VaultRuntimeError::SecretNotFound => execution_error(errors::SECRET_NOT_FOUND),
+        // Unlike the admission refusals below, this one IS worth retrying —
+        // slots free as leases are redeemed or expire — so it is a conflict
+        // rather than a denial.
+        VaultRuntimeError::TooManyOutstandingLeases => {
+            ToolCallError::new(ToolErrorKind::ToolConflict, errors::TOO_MANY_LEASES)
+        }
+        // An admission refusal is the vault exercising authority the caller
+        // does not have, so it is a permission denial rather than an execution
+        // fault — the caller should not read it as "retry".
+        VaultRuntimeError::DeliveryModeNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::MODE_NOT_PERMITTED,
+        ),
+        VaultRuntimeError::AgentNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::AGENT_NOT_PERMITTED,
+        ),
         VaultRuntimeError::InvalidConsumerAgentId => validation_error(errors::CONSUMER_INVALID),
         VaultRuntimeError::InvalidVaultRef => execution_error(errors::UNEXPECTED_REFERENCE),
         VaultRuntimeError::DirectDelivery(error) => delivery_error(error),

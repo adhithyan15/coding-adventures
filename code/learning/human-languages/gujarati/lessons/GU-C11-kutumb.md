@@ -34,7 +34,7 @@ reviews_of: [GU-C11-mitra, GU-C06-number-histories]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MITRA] -->
 
-[PAUSE 2s] **મિત્ર** reached Gujarati the long way, worn down through Prakrit
+[PAUSE 2s] **મિત્ર** (*mitra*) reached Gujarati the long way, worn down through Prakrit
 like nearly every word you own. The word for the group a friend gets folded
 into took a different road entirely.
 

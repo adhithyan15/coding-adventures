@@ -1,0 +1,24 @@
+[package]
+name = "macsyma-iir-compiler"
+version = "0.1.1"
+edition = "2021"
+description = "Lowers a Macsyma CST (coding-adventures-macsyma-parser's GrammarASTNode) into an IIRModule, per macsyma-iir-vm.md's v0 scope: literal integer arithmetic (+ - * /, unary), assignment, and unevaluated symbolic expressions (any other head, or any symbolic operand, becomes an inert cons-chain). The third retarget of macsyma-compiler's CST dispatch, after macsyma-compiler itself and macsyma-to-semantic-ir. Emits IIR over the dynval-runtime value model so the module runs end-to-end on macsyma-vm and, later, feeds every IIR backend."
+
+[lib]
+name = "macsyma_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-macsyma-parser = { path = "../macsyma-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+macsyma-vm = { path = "../macsyma-vm" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Oracle ground truth (tests/oracle.rs) + the shared text renderer used to
+# format both the ground truth and the compiled-side read-back result.
+coding-adventures-macsyma-runtime = { path = "../macsyma-runtime" }
+cas-pretty-printer = { path = "../cas-pretty-printer" }

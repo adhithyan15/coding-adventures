@@ -15,15 +15,17 @@ use chief_of_staff_host_runtime::{
     HostProfile, HostRuntimeError, OrchestratorProfile, OrchestratorProfileRuntime,
 };
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
-    ToolErrorKind, ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
+    builtin_tool_definition, forbidding_side_channels, InMemoryToolRuntime, PrivilegeTier,
+    RequestedBy, ToolApiError, ToolDefinition, ToolErrorKind, ToolExecutionTrace,
+    ToolHandlerOutput, ToolInvocationRequest,
 };
 use chief_of_staff_vault_dispatch::{
     errors, VaultToolBridge, MAX_AGENT_LEASE_TTL_MS, MAX_SECRET_NAME_BYTES,
     VAULT_REQUEST_DIRECT_TOOL_ID, VAULT_REQUEST_LEASE_TOOL_ID,
 };
 use chief_of_staff_vault_runtime::{
-    ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
+    AllowedAgents, ChiefVaultRuntime, SecretPolicy, VaultDeliveryMode, VaultDirectDelivery,
+    VaultDirectDeliveryError, VaultDirectRequest,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeasePayload;
@@ -125,7 +127,11 @@ impl VaultDirectDelivery for RecordingDelivery {
 
 fn vault_with_secret() -> Arc<ChiefVaultRuntime> {
     let vault = Arc::new(ChiefVaultRuntime::new());
-    vault.register_secret(SECRET_NAME, LeasePayload::new(SECRET_BYTES.to_vec()));
+    vault.register_secret(
+        SECRET_NAME,
+        LeasePayload::new(SECRET_BYTES.to_vec()),
+        SecretPolicy::unrestricted(0),
+    );
     vault
 }
 
@@ -269,6 +275,172 @@ fn direct_returns_null_and_the_bytes_go_only_to_the_adapter() {
     );
 
     assert_no_secret_escaped(&trace);
+}
+
+// ===========================================================================
+// Per-secret admission policy (VLT06), as seen through the tool boundary
+// ===========================================================================
+
+/// Register one secret under an explicit policy and wire both tools over it.
+fn runtime_with_policy(policy: SecretPolicy) -> InMemoryToolRuntime {
+    let vault = Arc::new(ChiefVaultRuntime::new());
+    vault.register_secret(
+        SECRET_NAME,
+        LeasePayload::new(SECRET_BYTES.to_vec()),
+        policy,
+    );
+    let bridge = VaultToolBridge::new(vault, RecordingDelivery::accepting());
+    let mut runtime = InMemoryToolRuntime::new();
+    bridge
+        .register_all(&mut runtime)
+        .expect("both vault tools should register");
+    runtime
+}
+
+#[test]
+fn a_direct_only_secret_cannot_be_leased_through_the_tool_boundary() {
+    // The inversion the whole check exists to stop, reached the way an agent
+    // would reach it. The runtime-level test proves the rule; this proves the
+    // rule is actually on the path a tool call takes.
+    let runtime = runtime_with_policy(SecretPolicy {
+        privilege_tier: 3,
+        allowed_agents: AllowedAgents::Any,
+        allowed_mode: VaultDeliveryMode::Direct,
+        rotated_at_ms: 0,
+    });
+
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolPermissionDenied);
+    assert_eq!(error.message, errors::MODE_NOT_PERMITTED);
+    assert_no_secret_escaped(&trace);
+}
+
+#[test]
+fn a_leased_only_secret_cannot_be_direct_delivered_through_the_tool_boundary() {
+    let runtime = runtime_with_policy(SecretPolicy {
+        privilege_tier: 1,
+        allowed_agents: AllowedAgents::Any,
+        allowed_mode: VaultDeliveryMode::Leased,
+        rotated_at_ms: 0,
+    });
+
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_DIRECT_TOOL_ID,
+        direct_arguments(SECRET_NAME, "agent:printer"),
+    ));
+
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolPermissionDenied);
+    assert_eq!(error.message, errors::MODE_NOT_PERMITTED);
+    assert_no_secret_escaped(&trace);
+}
+
+#[test]
+fn the_attested_agent_identity_decides_admission() {
+    // `request()` speaks as "agent:weather". The allow-list names someone else,
+    // so the call is refused; naming the caller admits it. This is what makes
+    // the handler's forwarding of `context.agent_id` load-bearing rather than
+    // decorative — without it every allow-listed secret would refuse everyone.
+    let refused = runtime_with_policy(SecretPolicy {
+        privilege_tier: 2,
+        allowed_agents: AllowedAgents::only(["agent:finance"]),
+        allowed_mode: VaultDeliveryMode::Both,
+        rotated_at_ms: 0,
+    });
+    let trace = refused.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolPermissionDenied);
+    assert_eq!(error.message, errors::AGENT_NOT_PERMITTED);
+    assert_no_secret_escaped(&trace);
+
+    let admitted = runtime_with_policy(SecretPolicy {
+        privilege_tier: 2,
+        allowed_agents: AllowedAgents::only(["agent:weather"]),
+        allowed_mode: VaultDeliveryMode::Both,
+        rotated_at_ms: 0,
+    });
+    let trace = admitted.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+    assert!(
+        trace.result.ok,
+        "the allow-listed agent must be admitted: {trace:?}"
+    );
+}
+
+#[test]
+fn a_refusal_says_no_more_than_the_two_static_messages() {
+    // The admission refusals join the closed error set of D18D 7.1 V2: bounded,
+    // static, and with no details payload. A denial that named the allow-list
+    // would hand the caller a map of who *can* reach the secret.
+    for (policy, tool_id, arguments) in [
+        (
+            SecretPolicy {
+                privilege_tier: 2,
+                allowed_agents: AllowedAgents::only(["agent:finance"]),
+                allowed_mode: VaultDeliveryMode::Both,
+                rotated_at_ms: 0,
+            },
+            VAULT_REQUEST_LEASE_TOOL_ID,
+            lease_arguments(SECRET_NAME, 60_000),
+        ),
+        (
+            SecretPolicy {
+                privilege_tier: 3,
+                allowed_agents: AllowedAgents::Any,
+                allowed_mode: VaultDeliveryMode::Direct,
+                rotated_at_ms: 0,
+            },
+            VAULT_REQUEST_LEASE_TOOL_ID,
+            lease_arguments(SECRET_NAME, 60_000),
+        ),
+    ] {
+        let runtime = runtime_with_policy(policy);
+        let trace = runtime.invoke_with_events(&request(tool_id, arguments));
+        let error = trace
+            .result
+            .error
+            .as_ref()
+            .expect("a refusal carries an error");
+
+        assert!(
+            error.message == errors::AGENT_NOT_PERMITTED
+                || error.message == errors::MODE_NOT_PERMITTED,
+            "unexpected refusal message: {}",
+            error.message
+        );
+        assert_eq!(error.details, JsonValue::Null);
+        assert!(
+            !error.message.contains("agent:finance"),
+            "a denial must not enumerate the allow-list: {}",
+            error.message
+        );
+        assert_no_secret_escaped(&trace);
+    }
 }
 
 /// The adapter must be told enough to refuse for a reason.
@@ -790,8 +962,9 @@ fn an_agent_cannot_mint_a_lease_that_outlives_the_sweep_horizon() {
     // The lease layer permits 90 days and bounds its table. Together those are
     // a squat: fill the shared table at the maximum TTL and every other
     // consumer — including trusted host paths — is locked out for a quarter.
-    // Capping the agent-facing TTL well under the sweep horizon makes the
-    // attack self-healing rather than durable.
+    // Capping the agent-facing TTL bounds how long a squat can hold slots in
+    // the shared lease table; the runtime index reclaims them via its own
+    // usability sweep.
     let over = i64::try_from(MAX_AGENT_LEASE_TTL_MS).expect("ceiling fits in i64") + 1;
     let error = lease_direct_call(lease_arguments(SECRET_NAME, over))
         .expect_err("a TTL past the agent ceiling must be refused");
@@ -812,7 +985,11 @@ fn a_secret_name_at_the_length_bound_is_accepted() {
     // is a quieter failure and therefore worth pinning.
     let name = "b".repeat(MAX_SECRET_NAME_BYTES);
     let vault = Arc::new(ChiefVaultRuntime::new());
-    vault.register_secret(name.clone(), LeasePayload::new(SECRET_BYTES.to_vec()));
+    vault.register_secret(
+        name.clone(),
+        LeasePayload::new(SECRET_BYTES.to_vec()),
+        SecretPolicy::unrestricted(0),
+    );
     let bridge = VaultToolBridge::new(vault, RecordingDelivery::accepting());
     let handler = bridge.lease_handler();
 
@@ -1031,5 +1208,208 @@ fn a_lease_reference_is_redeemable_exactly_once_and_only_by_the_broker() {
     assert!(
         vault.consume(&vault_ref).is_err(),
         "a redeemed reference must not be redeemable again"
+    );
+}
+
+// ===========================================================================
+// Deliberate lease-only registration (D18D 7.1 V4)
+// ===========================================================================
+
+#[test]
+fn a_lease_only_registration_wires_exactly_one_tool() {
+    // A deployment with no trusted delivery adapter cannot honestly offer
+    // request_direct. The profile below grants only the lease tool, which the
+    // all-or-nothing pair registration would refuse outright.
+    let mut host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    bridge
+        .register_lease_only_into_host(&mut host)
+        .expect("a lease-only host should accept the lease tool");
+    assert_eq!(host.summary().registered_tool_count, 1);
+}
+
+#[test]
+fn the_pair_registration_still_refuses_that_same_host() {
+    // The two operations must stay distinguishable. If `register_into_host`
+    // quietly succeeded here, "deliberate subset" and "misconfigured host"
+    // would look identical from the call site, which is the thing V4's
+    // amendment exists to prevent.
+    let mut host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    bridge
+        .register_into_host(&mut host)
+        .expect_err("request_direct is not allowed on this host");
+    assert_eq!(
+        host.summary().registered_tool_count,
+        0,
+        "a refused pair must leave the host untouched"
+    );
+}
+
+#[test]
+fn a_lease_only_host_still_enforces_tier_and_capability() {
+    // The subset is narrower, not laxer: it goes through the same checked path.
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    let mut low_tier = orchestrator(host_profile(
+        PrivilegeTier::Tier1,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    assert!(matches!(
+        bridge.register_lease_only_into_host(&mut low_tier),
+        Err(HostRuntimeError::PrivilegeCeilingExceeded { .. })
+    ));
+
+    let mut no_capability = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:direct"],
+    ));
+    assert!(matches!(
+        bridge.register_lease_only_into_host(&mut no_capability),
+        Err(HostRuntimeError::MissingCapability { .. })
+    ));
+}
+
+/// The pre-flight must refuse exactly what registration refuses.
+///
+/// `check_registration` documents itself as co-total with `register_handler`,
+/// because a pre-flight that checks less converts "this will fail" into "this
+/// will succeed" immediately before it fails anyway — leaving the half-wired
+/// host the pre-flight exists to prevent.
+///
+/// It has already drifted once: `InMemoryToolRegistry::register` gained a
+/// built-in-definition check and the mirror was not updated, so a mismatched
+/// definition passed the dry run and failed the real call. Nothing caught that,
+/// because no test compared the two. This one does.
+#[test]
+fn the_preflight_and_the_registration_refuse_the_same_definitions() {
+    let cases = vec![
+        // A look-alike under a real built-in id.
+        ToolDefinition {
+            display_name: "Not the catalog's version".to_string(),
+            ..builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in exists")
+        },
+        // Output validation disarmed — the case the rule exists for.
+        ToolDefinition {
+            output_schema: None,
+            ..builtin_tool_definition(VAULT_REQUEST_DIRECT_TOOL_ID).expect("built-in exists")
+        },
+        // And the genuine article, which both must accept.
+        builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in exists"),
+    ];
+
+    for definition in cases {
+        let mut host = orchestrator(host_profile(
+            PrivilegeTier::Tier2,
+            &[VAULT_REQUEST_LEASE_TOOL_ID, VAULT_REQUEST_DIRECT_TOOL_ID],
+            &["vault:lease", "vault:direct"],
+        ));
+
+        let preflight = host.check_registration(&definition);
+        let registered = host.register_handler(definition.clone(), |_, _| {
+            Ok(ToolHandlerOutput::new(JsonValue::Null))
+        });
+
+        assert_eq!(
+            preflight.is_err(),
+            registered.is_err(),
+            "pre-flight and registration disagreed for {}: {preflight:?} vs {registered:?}",
+            definition.tool_id
+        );
+        if let (Err(a), Err(b)) = (&preflight, &registered) {
+            assert_eq!(
+                format!("{a:?}"),
+                format!("{b:?}"),
+                "both refuse {} but with different errors",
+                definition.tool_id
+            );
+        }
+    }
+}
+
+/// Every registration path must wrap its handler in `forbidding_side_channels`.
+///
+/// The crate doc claims this. Nothing checked it: removing all six wrapper call
+/// sites left the whole suite green, because the real handlers never populate
+/// those fields either way, so no test could tell a wrapped handler from an
+/// unwrapped one. That is the same drift that let the host-runtime pre-flight
+/// fall out of step with registration.
+///
+/// This test injects a deliberately misbehaving handler in place of the bridge's
+/// own, wraps it exactly as each registration path does, and requires the
+/// refusal. It fails if the wrapper is removed from the combinator, and it is
+/// the reason to keep the wrapper applied at every site rather than trusting the
+/// handlers to stay well-behaved.
+#[test]
+fn the_side_channel_wrapper_refuses_a_misbehaving_handler_at_the_boundary() {
+    let definition =
+        builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in must exist");
+    let mut runtime = InMemoryToolRuntime::new();
+
+    // Stand in for a future edit to `lease_handler` that starts using a channel
+    // the crate documents itself as not using.
+    runtime
+        .register_handler(
+            definition,
+            forbidding_side_channels(
+                |_: JsonValue, _: chief_of_staff_tool_api::ToolExecutionContext| {
+                    Ok(ToolHandlerOutput::new(JsonValue::Object(vec![
+                        ("vault_ref".to_string(), string("vault-lease:abcd")),
+                        ("expires_at_ms".to_string(), integer(1)),
+                    ]))
+                    .with_artifact_ref("secret-shaped-artifact-ref"))
+                },
+            ),
+        )
+        .expect("registration itself is fine; the refusal happens at call time");
+
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+
+    assert!(
+        !trace.result.ok,
+        "the wrapper should have refused: {trace:?}"
+    );
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolExecutionError);
+    assert!(
+        !format!("{trace:?}").contains("secret-shaped-artifact-ref"),
+        "the refusal must not echo what it refused: {trace:?}"
+    );
+}
+
+/// The bridge's own handlers pass through the wrapper unharmed.
+///
+/// Companion to the test above: that one proves the wrapper bites, this one
+/// proves wrapping did not break the real path. Both are needed — a wrapper
+/// that refused everything would pass the first and fail this.
+#[test]
+fn wrapping_does_not_disturb_the_real_handlers() {
+    let runtime = runtime_with(RecordingDelivery::accepting());
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+    assert!(
+        trace.result.ok,
+        "the wrapped lease handler still works: {trace:?}"
     );
 }

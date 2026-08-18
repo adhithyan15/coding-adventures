@@ -1,0 +1,23 @@
+[package]
+name = "axiom-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers an Axiom CST (coding-adventures-axiom-parser's GrammarASTNode) into an IIRModule, per axiom-iir-vm.md's v0 scope: literal integer arithmetic (+ - * /, unary), assignment, and unevaluated symbolic expressions. A retarget of axiom-runtime's/axiom-to-semantic-ir's CST dispatch, following macsyma-iir-compiler's precedent. Emits IIR over the dynval-runtime value model so the module runs end-to-end on axiom-vm. Unlike its four siblings, program is a SINGLE expression (axiom.grammar's own program = expr), not a multi-statement worksheet."
+
+[lib]
+name = "axiom_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-axiom-parser = { path = "../axiom-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+axiom-vm = { path = "../axiom-vm" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Oracle ground truth (tests/oracle.rs) + the shared renderer used to
+# format both the ground truth and the compiled-side read-back result.
+coding-adventures-axiom-runtime = { path = "../axiom-runtime" }

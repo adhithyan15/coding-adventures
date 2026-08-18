@@ -53,20 +53,55 @@ let unlock_key = combine_key_contributions(b"vault-id-abcdef", &[&assertion])?;
 For TOTP-as-2FA on top:
 
 ```rust
-let totp = TotpAuthenticator::new(seed.into(), /* period */ 30, /* digits */ 6, /* window */ 1)?;
+let totp = TotpAuthenticator::new(
+    seed.into(),
+    TotpAlgorithm::Sha1,
+    /* period */ 30,
+    /* digits */ 6,
+    /* window */ 1,
+)?;
 let _gate = totp.verify(b"123456")?;  // gate-mode, no key contribution
 ```
 
+The algorithm is a required argument with no `Default`. RFC 6238 §1.2
+names three HMAC variants, a provisioned seed carries its own, and six
+wrong digits look exactly like six right ones — so the parameter that
+decides which is which is never chosen on a caller's behalf.
+
+### Generating, not only verifying
+
+The same type is the generator a password manager needs to display the
+current code for a stored seed:
+
+```rust
+let code = totp.formatted_code_at(unix_time_sec)?;   // Zeroizing<String>, zero-padded
+let left = totp.remaining_seconds(unix_time_sec);    // 1..=period
+```
+
+`formatted_code_at` pads to the configured width because roughly one code
+in ten has a leading zero and `042311` is not `42311`. Both the code and
+the buffer holding it are wipe-on-drop. `remaining_seconds` is never `0`:
+a code with zero seconds left has already been replaced by the next one.
+
 ## RFC 6238 conformance
 
-`TotpAuthenticator` is tested against the published RFC 6238
-Appendix B vectors:
+`TotpAuthenticator` is tested against **every** published RFC 6238
+Appendix B vector — all six timestamps against all three algorithms, at
+the published 8-digit width, plus the 6-digit truncation most apps
+render:
 
-| T (s)         | Step          | 6-digit code |
-|---------------|---------------|--------------|
-| 59            | 1             | `287082`     |
-| 1 111 111 109 | 37 037 036    | `081804`     |
-| 1 111 111 111 | 37 037 037    | `050471`     |
+| T (s)          | SHA-1      | SHA-256    | SHA-512    |
+|----------------|------------|------------|------------|
+| 59             | `94287082` | `46119246` | `90693936` |
+| 1 111 111 109  | `07081804` | `68084774` | `25091201` |
+| 1 111 111 111  | `14050471` | `67062674` | `99943326` |
+| 1 234 567 890  | `89005924` | `91819424` | `93441116` |
+| 2 000 000 000  | `69279037` | `90698825` | `38618901` |
+| 20 000 000 000 | `65353130` | `77737706` | `47863826` |
+
+Each algorithm uses its own Appendix B seed (20, 32, and 64 ASCII bytes
+of repeating `1234567890`), which is what makes the table a real test of
+the algorithm selector rather than of one hash three times.
 
 `verify_at_time(code, unix_time)` returns the matched step counter
 so callers can pin "last-used step" into a per-secret cache and

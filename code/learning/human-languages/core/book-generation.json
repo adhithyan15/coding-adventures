@@ -847,6 +847,20 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 4,
+      "output": "chinese/book/chapters/ch04-negation.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 5,
+      "output": "chinese/book/chapters/ch05-shi.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"
@@ -2455,6 +2469,13 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 15,
+      "output": "persian/book/chapters/ch15-script-nine.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "output": "portuguese/book/chapters/ch02-how-are-you.tex"
@@ -2725,6 +2746,13 @@
       "language": "russian",
       "chapter": 14,
       "output": "russian/book/chapters/ch14-script-eleven.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 15,
+      "output": "russian/book/chapters/ch15-script-eight.tex",
       "unicodeScript": "Cyrillic",
       "scriptCommand": "ru"
     },
@@ -5125,6 +5153,13 @@
       "language": "urdu",
       "chapter": 15,
       "output": "urdu/book/chapters/ch15-weather.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "output": "urdu/book/chapters/ch16-script-seven.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
     },

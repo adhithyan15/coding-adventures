@@ -17,6 +17,10 @@ vault-pm [--vault NAME] audit verify
 vault-pm [--vault NAME] audit list
 vault-pm [--vault NAME] audit show TRACE
 vault-pm [--vault NAME] doctor [--unlock]
+vault-pm [--vault NAME] passphrase rotate
+vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
+                           [--no-digits] [--no-symbols] [--exclude-ambiguous]
+                           (--reveal|--copy)
 vault-pm [--vault NAME] export FILE
 vault-pm [--vault NAME] import FILE
 vault-pm --vault NAME restore FILE
@@ -32,6 +36,7 @@ vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
 vault-pm [--vault NAME] item show ITEM
 vault-pm [--vault NAME] item reveal ITEM FIELD
+vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
 vault-pm [--vault NAME] search QUERY
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
@@ -46,6 +51,12 @@ vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION
 ```
+
+`password generate` is the one exception to everything below: it opens no
+vault, takes no `--vault` selector, collects no passphrase, and runs on a home
+directory where `init` has never happened. It still needs a controlling
+terminal, because its confirmation and its one line of output both go there and
+nowhere else.
 
 `init` and every authenticated command require a controlling terminal even
 when stdin is redirected. No passphrase flag, environment variable, config
@@ -100,6 +111,22 @@ reveals canonical Base32 only after a separate audited confirmation, verifies
 the closed audit-row grammar, and excludes both encoded and raw seed bytes from
 the profile tree.
 
+A second TOTP drill covers `totp code`, the command that turns a stored seed
+into the six digits a person actually types. It cannot hard-code the expected
+answer, because the real executable reads the real clock; instead it brackets
+the run between two of its own clock readings, recomputes the code for every
+second the process could have been in, and requires the executable's answer to
+be one of them. The seed is the RFC 6238 Appendix B vector, so that comparison
+is against the published algorithm rather than against this product's opinion
+of it. The drill also proves the two output channels never swap — the code
+arrives on `/dev/tty` and the non-secret "valid for N more seconds" line on
+captured standard output, with neither carrying the other's content — that
+`--copy` is refused with the unsupported class before any prompt at all (so it
+needs no terminal), that two runs inside one step agree, that a refused
+confirmation releases nothing on either channel, and that the audit chain gains
+one `item_read` row per disclosure while containing neither the code nor the
+seed.
+
 `vault-pm shell` is the same binary in its second host shape: one foreground
 process that reads command lines from the controlling terminal and runs them
 through the identical parser and application boundary. It keeps one wipe-on-drop
@@ -116,9 +143,70 @@ process cleanly. Both spawn the shell with the same injected piped stdin every
 other drill uses, so a redirected stdin is proven unable to supply a command as
 well as unable to supply a secret.
 
+## The crash/fault drill
+
+`tests/local_cli_e2e.rs` proves what this executable does when it is allowed to
+finish. `code/programs/rust/vault-pm-cli-drill` proves what happens when it is
+not: its `tests/crash_fault_matrix.rs` kills a real process with `SIGKILL` at a
+deterministically chosen durable write and then asks the next real process what
+it can see and what it can repair.
+
+That drill lives in a separate crate on purpose, and this crate carries the
+guard rail. VLT-PM41 needs a binary built with
+`coding_adventures_vault_pm_cli`'s `crash-injection` feature, and the obvious
+way to get one — enabling it through this crate's `dev-dependencies` — is a
+trap. Cargo resolves features per package across a build graph, so
+`cargo build --release --all-targets` pulls dev-dependencies in and uplifts the
+instrumented binary to `target/release/vault-pm`, the exact path a packaging
+step copies from. This crate therefore names that feature in no section, and
+the instrumented twin is `vault-pm-drill` in its own workspace.
+
+Naming no feature is necessary and *not sufficient*, because
+`--features <dep>/<feature>` reaches a direct dependency's features regardless
+of what the root package declares. So `src/main.rs` also carries a `const`
+assertion on `CRASH_INJECTION_COMPILED` — a `vault-pm` with the instrumentation
+in it does not compile — and
+`the_shipped_executable_contains_no_crash_injection` reads the binary this
+crate produced and fails if either injection variable name appears in it.
+
+Two results from the drill are worth reading before trusting this executable
+with anything:
+
+- An interrupted `init` is always repairable by running `init` again, and the
+  resumed vault passes authenticated `doctor --unlock`.
+- An interrupted **mutation** is repairable by doing nothing but retrying. The
+  tree is never torn, the durable journal is exact, and the next command that
+  opens the vault replays it with the passphrase it already asks for, then says
+  `vault-pm: recovered an interrupted write` on standard error. There is no
+  recovery verb to learn and no flag to pass, because the person who needs the
+  repair is by definition someone whose ordinary command just failed.
+
+  This is a repair, not a discovery: until
+  `code/specs/VLT-PM42-cli-pending-publication-recovery.md`, an interrupted
+  mutation left a vault every later command refused, as exit 2
+  `vault-pm: invalid command`. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 for the finding and
+  VLT-PM00 §23 item 10a for its closure.
+
+- An interrupted **passphrase rotation** leaves exactly one working passphrase,
+  at every landing point of the ceremony. Never both, which would mean the
+  retired wrap survived the rotation that was supposed to retire it; never
+  neither, which would mean the vault was bricked. Which of the two it is
+  depends on one durable fact — whether the rotation journal landed — and the
+  next ordinary command finishes whatever remains without asking for a secret,
+  so a person who types the passphrase they had before the crash still gets
+  their vault repaired, and then an honest `authentication required`.
+
+`status` and `doctor` are the exception, deliberately. Both report an
+interrupted vault as `recovery_required` — `doctor` with exit class 5 — without
+collecting a passphrase and without repairing anything, so looking before
+leaping, and restoring a pre-mutation backup instead, both stay available.
+
 ## Verification
 
 ```bash
 bash BUILD
 cargo clippy --manifest-path Cargo.toml --all-targets -- -D warnings
 ```
+
+The crash drill has its own `BUILD`, next to its own crate.

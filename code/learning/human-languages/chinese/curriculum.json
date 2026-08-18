@@ -57,6 +57,42 @@
         "ZH-EXT-009-COUNT-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri",
+        "ZH-W04-bu",
+        "ZH-C04-bu",
+        "ZH-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-010-BOX-REUSE",
+        "ZH-EXT-011-NEGATION",
+        "ZH-EXT-012-NEGATE-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-013-SHI-BUILD",
+        "ZH-EXT-014-BU-SANDHI"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -81,10 +117,11 @@
       "relocates": {}
     },
     "SPINE-RESPOND-BASIC": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-003",
+        "ZH-PATH-004"
+      ],
       "omits": [
-        "RESPONSE-YES",
-        "RESPONSE-NO",
         "RESPONSE-YESNO",
         "RESPONSE-OKAY"
       ],
@@ -562,6 +599,77 @@
         "ZH-W03-wu",
         "ZH-C03-wu",
         "ZH-C03-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-010-BOX-REUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write the box character on its own, and get a second character from it by adding one bar inside before closing the bottom.",
+      "prerequisites": [
+        "ZH-EXT-009-COUNT-CONSOLIDATION"
+      ],
+      "lessons": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri"
+      ]
+    },
+    {
+      "id": "ZH-EXT-011-NEGATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can negate a word by putting 不 in front of it, and I know Mandarin has no standalone word for no.",
+      "prerequisites": [
+        "ZH-EXT-010-BOX-REUSE"
+      ],
+      "lessons": [
+        "ZH-W04-bu",
+        "ZH-C04-bu"
+      ]
+    },
+    {
+      "id": "ZH-EXT-012-NEGATE-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can disagree in Mandarin for the first time, answering a yes-or-no question by negating the word it asked about.",
+      "prerequisites": [
+        "ZH-EXT-011-NEGATION"
+      ],
+      "lessons": [
+        "ZH-C04-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-013-SHI-BUILD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write a nine-stroke character by finishing the piece I already know on top before starting the body underneath.",
+      "prerequisites": [
+        "ZH-EXT-012-NEGATE-CONSOLIDATION"
+      ],
+      "lessons": [
+        "ZH-W05-shi",
+        "ZH-C05-shi"
+      ]
+    },
+    {
+      "id": "ZH-EXT-014-BU-SANDHI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can apply the second tone-sandhi rule taught in this book -- 不 rises before a falling tone -- and I know that no sandhi rule appears in the writing.",
+      "prerequisites": [
+        "ZH-EXT-013-SHI-BUILD"
+      ],
+      "lessons": [
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
       ]
     }
   ]

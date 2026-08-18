@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bc272c6f569ea8c9",
+  "sourceHash": "fnv1a64:610b366c32d81a38",
   "lessons": [
     {
       "id": "MR-C11-mitra",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b132b3080165bb37",
+      "sourceHash": "fnv1a64:e9c3e5e20a44ff01",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc4a5ecff53ff890",
+      "sourceHash": "fnv1a64:b11d2c0417823984",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -559,8 +559,8 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "word: मित्र (mitra), कुटुंब (kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.",
-                "word: भाऊ (bhāū), बहीण (bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change."
+                "word: मित्र, कुटुंब (mitra, kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.",
+                "word: भाऊ, बहीण (bhāū, bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change."
               ]
             },
             {

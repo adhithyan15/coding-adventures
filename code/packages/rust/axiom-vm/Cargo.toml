@@ -1,0 +1,15 @@
+[package]
+name = "axiom-vm"
+version = "0.1.0"
+edition = "2021"
+description = "A tiny interpreter for the Axiom v0 arithmetic/assignment IIR subset, built directly on dynval-runtime. Deliberately independent of every sibling VM in this rollout; shares only the dynval-runtime foundation."
+
+[lib]
+name = "axiom_vm"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Provides `RuntimeError`, the error type dynval-runtime's builtins return.
+lang-runtime-core = { path = "../lang-runtime-core" }

@@ -288,6 +288,86 @@ impl<B: StorageBackend> BootstrapStore for StorageCoreApplicationStore<B> {
             exact_bootstrap,
         )
     }
+
+    /// Remove one retired generation record, refusing to remove the live one.
+    ///
+    /// VLT-PM43 §5.4. Advancing the latest pointer is not enough to retire a
+    /// passphrase: the superseded generation still holds a wrapping of the
+    /// *same, unchanged* vault root key under the *old* passphrase-derived key,
+    /// so anyone who later obtained a copy of this directory and the retired
+    /// passphrase could open the vault through it. The delete is the part of a
+    /// rotation that makes the rotation mean something.
+    ///
+    /// Two behaviours are load-bearing rather than incidental:
+    ///
+    /// - The latest generation is refused outright, with `Conflict`. That
+    ///   record is the only way into the vault, and a guard is worth more than
+    ///   a convention that every caller passes the right identifier.
+    /// - An already-absent record is success, because the rotation's recovery
+    ///   replays this call after a crash and must be able to reach the end.
+    ///
+    /// # Why the wrap is overwritten before it is unlinked
+    ///
+    /// Every other durable step in a rotation is a write, and a lost write is
+    /// merely lost work: the journal replays it. This step is a *removal*, and
+    /// a lost removal is the opposite — it resurrects key material that a
+    /// successful rotation has already declared gone, into a vault whose owner
+    /// state has moved on and will therefore never revisit it.
+    ///
+    /// Unlinks are weaker than they look. `fs::remove_file` returning `Ok` and
+    /// a follow-up `get` returning `None` prove only that the removal is
+    /// visible through the page cache; on a journalling filesystem the entry's
+    /// disappearance can still be uncommitted while a later `fsync`ed write in
+    /// another directory lands ahead of it. A power cut in that window would
+    /// leave the retired `passphrase_root_wrap` — a wrapping of the *same,
+    /// unchanged* vault root key under the *old* passphrase — readable forever.
+    ///
+    /// So the record's body is first replaced with nothing, through the very
+    /// `put` path — write, `fsync`, `rename` — that makes every other step of
+    /// the ceremony durable, and only then unlinked. After that write returns,
+    /// the wrap is gone from the file whether or not the unlink survives.
+    fn supersede_generation(
+        &self,
+        locator: BootstrapLocator,
+        superseded: BootstrapId,
+    ) -> Result<(), BootstrapStoreError> {
+        let _write = self
+            .write_lock
+            .lock()
+            .map_err(|_| BootstrapStoreError::Unavailable)?;
+        self.initialize_bootstrap()?;
+        if self
+            .read_latest(locator)?
+            .is_some_and(|latest| latest.id == superseded)
+        {
+            return Err(BootstrapStoreError::Conflict);
+        }
+        let namespace = generation_namespace(locator);
+        let key = hex_bytes(superseded.as_bytes());
+
+        if let Some(existing) = self
+            .backend
+            .get(&namespace, &key)
+            .map_err(map_bootstrap_read)?
+        {
+            if !existing.body.is_empty() {
+                let input = put_input(&namespace, &key, Vec::new())
+                    .map_err(|_| BootstrapStoreError::Corruption)?
+                    .with_if_revision(Some(existing.revision));
+                self.backend.put(input).map_err(map_bootstrap_write)?;
+            }
+        }
+
+        match self.backend.delete(&namespace, &key, None) {
+            Ok(()) | Err(StorageError::NotFound { .. }) => {}
+            Err(error) => return Err(map_bootstrap_write(error)),
+        }
+        match self.backend.get(&namespace, &key) {
+            Ok(None) => Ok(()),
+            Ok(Some(_)) => Err(BootstrapStoreError::Corruption),
+            Err(error) => Err(map_bootstrap_read(error)),
+        }
+    }
 }
 
 impl<B: StorageBackend> LocalStateStore for StorageCoreApplicationStore<B> {
@@ -540,6 +620,169 @@ mod tests {
             .put_generation(locator, Some(first_id), &second)
             .unwrap();
         assert_eq!(store.load_latest(locator).unwrap(), Some(second));
+    }
+
+    /// VLT-PM43 §5.4. The delete is what makes a rotation mean anything, so it
+    /// is checked the only way that proves it: the retired record's own bytes
+    /// must be unreadable from the backend afterwards, not merely unreferenced.
+    #[test]
+    fn a_superseded_generation_is_really_gone_and_the_live_one_is_refused() {
+        let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
+        let locator = locator(7);
+        let first = bootstrap(0, None, 9, 20);
+        let first_id = bootstrap_id(&first);
+        store.put_generation(locator, None, &first).unwrap();
+        let second = bootstrap(1, Some(first_id), 9, 21);
+        let second_id = bootstrap_id(&second);
+        store
+            .put_generation(locator, Some(first_id), &second)
+            .unwrap();
+
+        let namespace = generation_namespace(locator);
+        let retired_key = hex_bytes(first_id.as_bytes());
+        assert!(store
+            .backend()
+            .get(&namespace, &retired_key)
+            .unwrap()
+            .is_some());
+
+        // The live generation is the only way into the vault, so removing it
+        // is refused outright rather than left to caller discipline.
+        assert_eq!(
+            store.supersede_generation(locator, second_id),
+            Err(BootstrapStoreError::Conflict)
+        );
+
+        store.supersede_generation(locator, first_id).unwrap();
+        assert!(store
+            .backend()
+            .get(&namespace, &retired_key)
+            .unwrap()
+            .is_none());
+        // Recovery replays this call, so a second attempt must reach the end.
+        store.supersede_generation(locator, first_id).unwrap();
+        assert_eq!(store.load_latest(locator).unwrap(), Some(second));
+    }
+
+    /// A backend whose `delete` silently does nothing.
+    ///
+    /// This is not a fanciful fault. `fs::remove_file` returning `Ok` proves
+    /// the entry is gone from the page cache, not that its removal is
+    /// committed, so a power cut can undo an unlink that every subsequent read
+    /// in the same process agreed had happened. Simulating a delete that never
+    /// takes is therefore simulating a real crash outcome, and it is the one
+    /// outcome in which the defence below is all that stands between a retired
+    /// passphrase and the unchanged vault root key.
+    struct DeafDeleteBackend(InMemoryStorageBackend);
+
+    impl StorageBackend for DeafDeleteBackend {
+        fn initialize(&self) -> Result<(), StorageError> {
+            self.0.initialize()
+        }
+        fn get(&self, namespace: &str, key: &str) -> Result<Option<StorageRecord>, StorageError> {
+            self.0.get(namespace, key)
+        }
+        fn put(&self, input: StoragePutInput) -> Result<StorageRecord, StorageError> {
+            self.0.put(input)
+        }
+        fn delete(
+            &self,
+            _namespace: &str,
+            _key: &str,
+            _if_revision: Option<&Revision>,
+        ) -> Result<(), StorageError> {
+            Ok(())
+        }
+        fn list(
+            &self,
+            namespace: &str,
+            options: storage_core::StorageListOptions,
+        ) -> Result<storage_core::StoragePage, StorageError> {
+            self.0.list(namespace, options)
+        }
+        fn stat(
+            &self,
+            namespace: &str,
+            key: &str,
+        ) -> Result<Option<storage_core::StorageStat>, StorageError> {
+            self.0.stat(namespace, key)
+        }
+        fn get_summary(
+            &self,
+            namespace: &str,
+            key: &str,
+        ) -> Result<Option<storage_core::StorageRecordSummary>, StorageError> {
+            self.0.get_summary(namespace, key)
+        }
+        fn list_summaries(
+            &self,
+            namespace: &str,
+            options: storage_core::StorageListOptions,
+        ) -> Result<storage_core::StorageSummaryPage, StorageError> {
+            self.0.list_summaries(namespace, options)
+        }
+        fn acquire_lease(
+            &self,
+            name: &str,
+            ttl_ms: u64,
+        ) -> Result<Option<storage_core::StorageLease>, StorageError> {
+            self.0.acquire_lease(name, ttl_ms)
+        }
+    }
+
+    /// VLT-PM43 §5.4.1. The wrap is destroyed by a durable *write*, not only by
+    /// the unlink that follows it.
+    ///
+    /// Every other durable step in a rotation is a write, and a lost write is
+    /// merely lost work the journal replays. A lost *removal* is the opposite:
+    /// it resurrects key material into a vault whose owner state has already
+    /// moved on and will therefore never revisit it. So the retired record's
+    /// body is emptied through the fsync-durable `put` path first. Here the
+    /// delete is made deaf, and the record still holds no wrap.
+    #[test]
+    fn a_retired_wrap_is_destroyed_even_if_the_unlink_never_takes() {
+        let store =
+            StorageCoreApplicationStore::new(DeafDeleteBackend(InMemoryStorageBackend::new()));
+        let locator = locator(8);
+        let first = bootstrap(0, None, 9, 30);
+        let first_id = bootstrap_id(&first);
+        store.put_generation(locator, None, &first).unwrap();
+        let second = bootstrap(1, Some(first_id), 9, 31);
+        store
+            .put_generation(locator, Some(first_id), &second)
+            .unwrap();
+
+        let namespace = generation_namespace(locator);
+        let retired_key = hex_bytes(first_id.as_bytes());
+        let wrap = BootstrapV1::decode(&first)
+            .unwrap()
+            .passphrase_root_wrap
+            .ciphertext;
+        assert!(store
+            .backend()
+            .get(&namespace, &retired_key)
+            .unwrap()
+            .unwrap()
+            .body
+            .windows(wrap.len())
+            .any(|window| window == wrap));
+
+        // The read-back still reports the record as present, so the call fails
+        // closed and the rotation's journal stays for another attempt...
+        assert_eq!(
+            store.supersede_generation(locator, first_id),
+            Err(BootstrapStoreError::Corruption)
+        );
+        // ...but the wrap is already gone, which is the property that matters
+        // when the machine never gets another attempt.
+        let residue = store
+            .backend()
+            .get(&namespace, &retired_key)
+            .unwrap()
+            .unwrap()
+            .body;
+        assert!(residue.is_empty());
+        assert!(!residue.windows(wrap.len()).any(|window| window == wrap));
     }
 
     #[test]

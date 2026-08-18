@@ -96,8 +96,31 @@ assert_eq!(
 - `coding_adventures_sha1`
 - `coding_adventures_sha256`
 - `coding_adventures_sha512`
+- `coding_adventures_zeroize`
 
 All are pure-Rust, zero-external-dependency implementations in this monorepo.
+
+## Memory hygiene
+
+Every key-derived intermediate inside `hmac()` is wipe-on-drop, and that is a
+correctness property rather than a nicety. `K' XOR ipad` is not a one-way
+function of the key: XOR 0x36 back out and you have `K'`. A `Vec<u8>` that
+merely goes out of scope hands its allocation back with those bytes intact,
+where the next allocation in the process can read them.
+
+Two details are easy to get wrong and are therefore worth naming:
+
+- The nested inputs are allocated at their **exact final size** and filled in
+  place. Building the padded key and then growing the buffer with the message
+  reallocates, and a reallocation abandons the old buffer *un-wiped*. Wrapping
+  the final buffer in `Zeroizing` would wipe the wrong copy.
+- The named `hmac_*` variants **wipe the heap tag** before returning their
+  fixed-size array, because `try_into` frees that buffer with a live
+  authentication tag still in it.
+
+The returned array or `Vec` is the function's output and belongs to the caller,
+who is responsible for wiping it if it is secret. A TOTP tag is: the code is
+read straight out of it.
 
 ## How It Fits
 

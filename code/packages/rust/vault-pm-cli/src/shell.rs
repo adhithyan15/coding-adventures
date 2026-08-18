@@ -568,9 +568,20 @@ fn dispatch(
     if tokens.first().is_some_and(|token| is_refused(token)) {
         return CliOutput::failure(CliFailure::InvalidCommand);
     }
+    // Nearly every delegated command carries the session's bound vault as an
+    // explicit selector, so a command can never be aimed somewhere the person
+    // did not authenticate against. `password generate` is the exception, and
+    // for the opposite reason: VLT-PM44 §2.2 refuses the selector because the
+    // command opens no vault, so prefixing it would turn a usable verb into an
+    // invalid one. See `crate::takes_no_vault_selector`.
+    let vault_free = tokens
+        .first()
+        .is_some_and(|token| crate::takes_no_vault_selector(token));
     let mut arguments = Vec::with_capacity(tokens.len() + 2);
-    arguments.push("--vault".to_owned());
-    arguments.push(bound.name.as_str().to_owned());
+    if !vault_free {
+        arguments.push("--vault".to_owned());
+        arguments.push(bound.name.as_str().to_owned());
+    }
     arguments.extend(tokens);
     let output = crate::run(arguments, session_host);
     if output.exit_code() == ExitCode::Locked {
@@ -602,8 +613,18 @@ fn classify(line: &str) -> ShellCommand {
 /// authenticator somewhere the user never authenticated against. A nested
 /// `shell` would open a second session over the same terminal with its own
 /// retained authenticator.
+///
+/// `passphrase` is refused for a sharper reason, and VLT-PM43 §3.1 states it: a
+/// session's whole premise is that the authenticator it collected once still
+/// opens the vault, and a successful rotation is precisely the event that makes
+/// that false. Allowing it would leave two bad options — keep using a
+/// passphrase that no longer works, turning every later command into an
+/// authentication failure the person cannot explain, or silently adopt the new
+/// one, which is a retained secret this session never prompted for and cannot
+/// re-confirm. A rotation belongs to a one-shot invocation, which collects and
+/// discards its own secrets.
 pub(crate) fn is_refused(verb: &str) -> bool {
-    matches!(verb, "init" | "vault" | "shell" | "--vault")
+    matches!(verb, "init" | "vault" | "shell" | "passphrase" | "--vault")
 }
 
 /// Split one command line into the closed shell token grammar.

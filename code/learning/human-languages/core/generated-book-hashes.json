@@ -5,7 +5,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:975f075b68b954ae",
+      "sourceHash": "fnv1a64:8cb8e93eac4de300",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -22,7 +22,7 @@
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:b6ead1e51ea1793c",
+      "sourceHash": "fnv1a64:df6fb15ff943b7f9",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -410,7 +410,7 @@
     {
       "language": "bengali",
       "chapter": 11,
-      "sourceHash": "fnv1a64:da9153764c563267",
+      "sourceHash": "fnv1a64:89cb40fe92cb7cd8",
       "lessonIds": [
         "BN-C11-bondhu",
         "BN-C11-poribar",
@@ -422,7 +422,7 @@
     {
       "language": "bengali",
       "chapter": 12,
-      "sourceHash": "fnv1a64:d262da98de3a941e",
+      "sourceHash": "fnv1a64:4a8bfadfeee7db35",
       "lessonIds": [
         "BN-C12-chokh",
         "BN-C12-mukh",
@@ -534,6 +534,33 @@
         "ZH-C03-practice"
       ],
       "tex": "chinese/book/chapters/ch03-numbers.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:1017c2a5eb9b6d6b",
+      "lessonIds": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri",
+        "ZH-W04-bu",
+        "ZH-C04-bu",
+        "ZH-C04-practice"
+      ],
+      "tex": "chinese/book/chapters/ch04-negation.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:e57ff95fe2751f97",
+      "lessonIds": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "tex": "chinese/book/chapters/ch05-shi.tex"
     },
     {
       "language": "french",
@@ -936,7 +963,7 @@
     {
       "language": "gujarati",
       "chapter": 11,
-      "sourceHash": "fnv1a64:5dd5ff86739e3787",
+      "sourceHash": "fnv1a64:90845aa5f84cb894",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
@@ -948,7 +975,7 @@
     {
       "language": "gujarati",
       "chapter": 12,
-      "sourceHash": "fnv1a64:db5e43033a15f566",
+      "sourceHash": "fnv1a64:54121385f25ba2ae",
       "lessonIds": [
         "GU-C12-aankh",
         "GU-C12-kaan",
@@ -1289,7 +1316,7 @@
     {
       "language": "hindi",
       "chapter": 36,
-      "sourceHash": "fnv1a64:3e43fc6e37fee09e",
+      "sourceHash": "fnv1a64:cc6e26d6a1c42403",
       "lessonIds": [
         "HI-C36-ghar",
         "HI-C36-darvaaza",
@@ -1874,7 +1901,7 @@
     {
       "language": "japanese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:1205af27f6675fc9",
+      "sourceHash": "fnv1a64:76726ad2b2b0b3b1",
       "lessonIds": [
         "JA-C01-hai",
         "JA-C01-iie",
@@ -1963,7 +1990,7 @@
     {
       "language": "kannada",
       "chapter": 9,
-      "sourceHash": "fnv1a64:32858450485fd597",
+      "sourceHash": "fnv1a64:ec35d557249d21ff",
       "lessonIds": [
         "KA-C09-kshamisi",
         "KA-S04-vowel-sign-i",
@@ -3126,7 +3153,7 @@
     {
       "language": "malayalam",
       "chapter": 17,
-      "sourceHash": "fnv1a64:fd01cd124320768d",
+      "sourceHash": "fnv1a64:d2e305459a1f26fc",
       "lessonIds": [
         "ML-C17-ucha-paathira",
         "ML-C17-paathira",
@@ -3667,7 +3694,7 @@
     {
       "language": "marathi",
       "chapter": 10,
-      "sourceHash": "fnv1a64:0e4c84edabf68889",
+      "sourceHash": "fnv1a64:cf2a8dd578f13505",
       "lessonIds": [
         "MR-C10-paani",
         "MR-C10-chaha",
@@ -3679,7 +3706,7 @@
     {
       "language": "marathi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:101115eb3db6665b",
+      "sourceHash": "fnv1a64:81d9b964581c9a85",
       "lessonIds": [
         "MR-C11-mitra",
         "MR-C11-kutumb",
@@ -3691,7 +3718,7 @@
     {
       "language": "marathi",
       "chapter": 12,
-      "sourceHash": "fnv1a64:53b43a3f45294871",
+      "sourceHash": "fnv1a64:556c8f23ff12cd7f",
       "lessonIds": [
         "MR-C12-dola",
         "MR-C12-kaan",
@@ -3807,7 +3834,7 @@
     {
       "language": "persian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:189ad694fcec2dda",
+      "sourceHash": "fnv1a64:10653b6e52e9b4a8",
       "lessonIds": [
         "FA-C09-ab",
         "FA-C09-nan",
@@ -3831,7 +3858,7 @@
     {
       "language": "persian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:a2e7207a4816e812",
+      "sourceHash": "fnv1a64:d4c57c48fbf24363",
       "lessonIds": [
         "FA-C11-cheshm",
         "FA-C11-dast",
@@ -3843,7 +3870,7 @@
     {
       "language": "persian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:78d09fa60f45a70c",
+      "sourceHash": "fnv1a64:b7dc258c97b8921c",
       "lessonIds": [
         "FA-C12-nam",
         "FA-C12-del",
@@ -3855,7 +3882,7 @@
     {
       "language": "persian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:f9cced230ff54588",
+      "sourceHash": "fnv1a64:d4c64a5e309e20e0",
       "lessonIds": [
         "FA-C13-aseman",
         "FA-C13-khorshid",
@@ -3868,7 +3895,7 @@
     {
       "language": "persian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:5da7cf393cf4ac91",
+      "sourceHash": "fnv1a64:ee36853a6bd77421",
       "lessonIds": [
         "FA-C14-khahar",
         "FA-C14-pesar",
@@ -3877,6 +3904,24 @@
         "FA-C14-dust"
       ],
       "tex": "persian/book/chapters/ch14-people-words.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d0838dab3dd89a51",
+      "lessonIds": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "tex": "persian/book/chapters/ch15-script-nine.tex"
     },
     {
       "language": "portuguese",
@@ -4228,7 +4273,7 @@
     {
       "language": "punjabi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:90434f8563da1fad",
+      "sourceHash": "fnv1a64:2eff3cda40a2abe1",
       "lessonIds": [
         "PA-C11-dost",
         "PA-C11-parivar",
@@ -4306,7 +4351,7 @@
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:4813b2d3159b96d9",
+      "sourceHash": "fnv1a64:cce85948b30a2020",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -4330,7 +4375,7 @@
     {
       "language": "russian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:5bc7160b809f4065",
+      "sourceHash": "fnv1a64:53daed5cc988927d",
       "lessonIds": [
         "RU-C07-drug",
         "RU-C07-podruga",
@@ -4386,7 +4431,7 @@
     {
       "language": "russian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:77400bcf75b3f11e",
+      "sourceHash": "fnv1a64:3071c43e143a8294",
       "lessonIds": [
         "RU-C12-mama",
         "RU-C12-papa",
@@ -4398,7 +4443,7 @@
     {
       "language": "russian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:e33f8fc7f6b068cb",
+      "sourceHash": "fnv1a64:75e5bba8e91c4f6e",
       "lessonIds": [
         "RU-C13-moloko",
         "RU-C13-syr",
@@ -4425,6 +4470,23 @@
         "RU-W06-ya"
       ],
       "tex": "russian/book/chapters/ch14-script-eleven.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:16aa4ad297a16db0",
+      "lessonIds": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
+      ],
+      "tex": "russian/book/chapters/ch15-script-eight.tex"
     },
     {
       "language": "sanskrit",
@@ -4509,7 +4571,7 @@
     {
       "language": "sanskrit",
       "chapter": 12,
-      "sourceHash": "fnv1a64:96a077f1b0ce86eb",
+      "sourceHash": "fnv1a64:4bdbdac42bdd01f3",
       "lessonIds": [
         "SA-C12-akshi",
         "SA-C12-karnah",
@@ -4682,7 +4744,7 @@
     {
       "language": "sanskrit",
       "chapter": 25,
-      "sourceHash": "fnv1a64:4a1b5cabfc1c1b24",
+      "sourceHash": "fnv1a64:e4ff3ac7e40d4494",
       "lessonIds": [
         "SA-C25-hand",
         "SA-C25-foot",
@@ -8931,7 +8993,7 @@
     {
       "language": "telugu",
       "chapter": 48,
-      "sourceHash": "fnv1a64:9d9015125c43497d",
+      "sourceHash": "fnv1a64:773cdd3fd7a20474",
       "lessonIds": [
         "TE-C48-teacher",
         "TE-C48-student",
@@ -8957,7 +9019,7 @@
     {
       "language": "telugu",
       "chapter": 50,
-      "sourceHash": "fnv1a64:869a2a5ed96f0517",
+      "sourceHash": "fnv1a64:204d311254d96d78",
       "lessonIds": [
         "TE-C50-now",
         "TE-C50-day-after",
@@ -9254,7 +9316,7 @@
     {
       "language": "urdu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:933a4f5b3b96125d",
+      "sourceHash": "fnv1a64:340213801ea754ca",
       "lessonIds": [
         "UR-C09-bhai",
         "UR-C09-bahan",
@@ -9287,7 +9349,7 @@
     {
       "language": "urdu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:5206e3ae83221d48",
+      "sourceHash": "fnv1a64:7ef0e0f99ce1e9ae",
       "lessonIds": [
         "UR-C12-pani",
         "UR-C12-chai",
@@ -9332,6 +9394,23 @@
         "UR-C15-sardi"
       ],
       "tex": "urdu/book/chapters/ch15-weather.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:2fcf9e68075991d4",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "tex": "urdu/book/chapters/ch16-script-seven.tex"
     }
   ]
 }

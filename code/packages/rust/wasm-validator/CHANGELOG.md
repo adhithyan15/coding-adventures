@@ -2,6 +2,119 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.28] - 2026-08-18 (task #159-161 — SIMD: shift family type rules)
+
+### Added
+
+- New `0xFD` SIMD type-check arm for `ShlI8x16 | ShrSI8x16 |
+  ShrUI8x16 | ShlI16x8 | ShrSI16x8 | ShrUI16x8 | ShlI32x4 | ShrSI32x4
+  | ShrUI32x4 | ShlI64x2 | ShrSI64x2 | ShrUI64x2` -- the FIRST
+  mixed-type binary SIMD op family in this crate's type rules. Pops
+  `I32` first (the shift amount is on top of stack, per
+  `(ixNxM.shl (v128 $a) (i32 $amount))`'s push order), then `V128`,
+  pushes `V128` -- matching wasm-execution's own pop order exactly.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.27] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for i64x2's first REAL
+  ARITHMETIC family: the pop-two-push-one binary arm extended to also
+  cover `AddI64x2 | SubI64x2 | MulI64x2`; the comparison arm extended
+  to also cover `EqI64x2 | NeI64x2 | LtSI64x2 | GtSI64x2 | LeSI64x2 |
+  GeSI64x2`; the pop-one-push-one unary arm extended to also cover
+  `AbsI64x2 | NegI64x2`. All reuse the same `v128,v128->v128`/
+  `v128->v128` type shapes already used for every other lane width --
+  this is a new LANE WIDTH, not a new operand shape, so no new
+  type-checker plumbing.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.26] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family type rules)
+
+### Added
+
+- New `0xFD` SIMD type-check arm for `AnyTrue | AllTrueI8x16 |
+  AllTrueI16x8 | AllTrueI32x4 | AllTrueI64x2 | BitmaskI8x16 |
+  BitmaskI16x8 | BitmaskI32x4 | BitmaskI64x2`: same `v128`-in/`i32`-out
+  shape as the existing `ExtractLane` arm, but with NO lane-index
+  immediate to consume (these reduce over ALL lanes, not select one).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.25] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for the lane-width-agnostic
+  raw-byte bitwise family: the pop-two-push-one binary arm extended
+  to also cover `And | AndNot | Or | Xor`; the pop-one-push-one unary
+  arm extended to also cover `Not`. A brand-new arm added for
+  `Bitselect` -- the first TERNARY SIMD op in this crate -- which
+  pops three `v128`s and pushes one `v128`; at the type level it's
+  just three `V128` pops, the runtime's byte-level `(a AND c) OR (b
+  AND (NOT c))` semantics are invisible to the type checker.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.24] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i16x8`'s own widening
+  family: the pop-two-push-one binary arm extended to also cover
+  `ExtmulLowI8x16S | ExtmulHighI8x16S | ExtmulLowI8x16U |
+  ExtmulHighI8x16U`; the pop-one-push-one unary arm extended to also
+  cover `ExtaddPairwiseI8x16S | ExtaddPairwiseI8x16U`. Both stay
+  `v128`-in/`v128`-out at the type level regardless of the narrower
+  `i8`-in/`i16`-out lane interpretation the interpreter uses
+  internally.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.23] - 2026-08-18 (task #144-146 — SIMD: i16x8 abs/min/max/avgr_u type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i16x8`'s own "arith2"
+  family: the pop-two-push-one binary arm extended to also cover
+  `MinSI16x8 | MinUI16x8 | MaxSI16x8 | MaxUI16x8 | AvgrUI16x8`; the
+  pop-one-push-one unary arm extended to also cover `AbsI16x8`. Both
+  stay `v128`-in/`v128`-out at the type level regardless of the
+  narrower `i16` lane interpretation the interpreter uses internally.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.22] - 2026-08-18 (task #141-143 — SIMD: i8x16 abs/popcnt/min/max/avgr_u type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i8x16`'s own "arith2"
+  family: the pop-two-push-one binary arm (`Add | Sub | Mul | ...`)
+  extended to also cover `MinSI8x16 | MinUI8x16 | MaxSI8x16 |
+  MaxUI8x16 | AvgrUI8x16`; the pop-one-push-one unary arm (`Neg | Abs
+  | ...`) extended to also cover `AbsI8x16 | PopcntI8x16`. Both stay
+  `v128`-in/`v128`-out at the type level regardless of the narrower
+  `i8` lane interpretation the interpreter uses internally.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.21] - 2026-08-18 (task #137-140 — SIMD: i8x16 comparison family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i8x16`'s own comparison
+  family: `Eq | Ne | ... | GeUI16x8` arm extended to also cover
+  `EqI8x16 | NeI8x16 | LtSI8x16 | LtUI8x16 | GtSI8x16 | GtUI8x16 |
+  LeSI8x16 | LeUI8x16 | GeSI8x16 | GeUI8x16` (same pop-two-push-one
+  `v128` shape -- WASM's SIMD comparison convention keeps the RESULT a
+  `v128` boolean mask, not a plain `i32`, same as `i16x8`'s and
+  `i32x4`'s own comparison families).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.20] - 2026-08-18 (task #133-136 — SIMD: i16x8 comparison family type rules)
 
 ### Added

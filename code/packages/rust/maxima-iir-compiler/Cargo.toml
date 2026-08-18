@@ -1,0 +1,19 @@
+[package]
+name = "maxima-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Maxima source -> interpreter_ir::IIRModule, a direct re-export of macsyma-iir-compiler (same algebraic surface, zero shim), executable on macsyma-vm (no maxima-vm exists -- there is nothing Maxima-specific to run)."
+
+[lib]
+name = "maxima_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+macsyma-iir-compiler = { path = "../macsyma-iir-compiler" }
+
+[dev-dependencies]
+# Used only by the compile()/compile_source() symmetry test and the
+# run-through-macsyma-vm doctest.
+coding-adventures-macsyma-parser = { path = "../macsyma-parser" }
+macsyma-vm = { path = "../macsyma-vm" }

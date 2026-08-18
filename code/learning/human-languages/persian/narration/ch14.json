@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Sister, Son, Man, Woman, Friend",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb22b062034b1bbd",
+  "sourceHash": "fnv1a64:74afbe93603a1852",
   "lessons": [
     {
       "id": "FA-C14-khahar",
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0acfe919b99ffa5f",
+      "sourceHash": "fnv1a64:878a7d36dcd4cf57",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2159ff3d4b5fda4a",
+      "sourceHash": "fnv1a64:6dab3630555d9c86",
       "notice": null,
       "blocks": [
         {
@@ -618,7 +618,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say مرد (mard)، زن (zan) — man, woman. One more person word closes the tranche, and it is a word this track has half-taught already."
+              "text": "Say مرد، زن (mard, zan) — man, woman. One more person word closes the tranche, and it is a word this track has half-taught already."
             }
           ]
         },

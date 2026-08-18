@@ -58,7 +58,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:7520b462f31cab77",
+      "sourceHash": "fnv1a64:00cc06864fba2d3d",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -74,13 +74,13 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch03.txt",
       "json": "arabic/narration/ch03.json",
-      "textHash": "fnv1a64:6d6599310045eb09",
-      "jsonHash": "fnv1a64:54f9f6f6cf19616a"
+      "textHash": "fnv1a64:e2a62b90f3294641",
+      "jsonHash": "fnv1a64:a34bd93498f5f2f4"
     },
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:578c8067fccd9a7e",
+      "sourceHash": "fnv1a64:c9ca88fe561b8c3d",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -95,8 +95,8 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch04.txt",
       "json": "arabic/narration/ch04.json",
-      "textHash": "fnv1a64:12db8c44d2a9f92b",
-      "jsonHash": "fnv1a64:f0bb2f3d3c11ce22"
+      "textHash": "fnv1a64:ee7f034c04449c62",
+      "jsonHash": "fnv1a64:82ee7ec7dadb9681"
     },
     {
       "language": "arabic",
@@ -753,7 +753,7 @@
     {
       "language": "bengali",
       "chapter": 11,
-      "sourceHash": "fnv1a64:3f28f826b9058a0d",
+      "sourceHash": "fnv1a64:08a61c259a749e99",
       "lessonIds": [
         "BN-C11-bondhu",
         "BN-C11-poribar",
@@ -765,12 +765,12 @@
       "text": "bengali/narration/ch11.txt",
       "json": "bengali/narration/ch11.json",
       "textHash": "fnv1a64:306694d81f9b00c1",
-      "jsonHash": "fnv1a64:c50ca8cd06d4c02a"
+      "jsonHash": "fnv1a64:2651e904ca27e3d1"
     },
     {
       "language": "bengali",
       "chapter": 12,
-      "sourceHash": "fnv1a64:4917f65a4dae0f72",
+      "sourceHash": "fnv1a64:6f56ed66ba6d8ddf",
       "lessonIds": [
         "BN-C12-chokh",
         "BN-C12-mukh",
@@ -782,7 +782,7 @@
       "text": "bengali/narration/ch12.txt",
       "json": "bengali/narration/ch12.json",
       "textHash": "fnv1a64:2215af79a7520ca2",
-      "jsonHash": "fnv1a64:d95226aa272442ef"
+      "jsonHash": "fnv1a64:cf1404081dab3b7d"
     },
     {
       "language": "bengali",
@@ -922,6 +922,43 @@
       "json": "chinese/narration/ch03.json",
       "textHash": "fnv1a64:a739df7c69498933",
       "jsonHash": "fnv1a64:0753e9e369a88ebc"
+    },
+    {
+      "language": "chinese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:d45966cf46988112",
+      "lessonIds": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri",
+        "ZH-W04-bu",
+        "ZH-C04-bu",
+        "ZH-C04-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch04.txt",
+      "json": "chinese/narration/ch04.json",
+      "textHash": "fnv1a64:cb9aeabffe021265",
+      "jsonHash": "fnv1a64:94a24189944d033d"
+    },
+    {
+      "language": "chinese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:708538f4098aa533",
+      "lessonIds": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch05.txt",
+      "json": "chinese/narration/ch05.json",
+      "textHash": "fnv1a64:86e47e62d04a010b",
+      "jsonHash": "fnv1a64:0b738cd121d2d253"
     },
     {
       "language": "french",
@@ -2146,7 +2183,7 @@
     {
       "language": "gujarati",
       "chapter": 11,
-      "sourceHash": "fnv1a64:268df2f35691414a",
+      "sourceHash": "fnv1a64:b8d449da74c1452e",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
@@ -2158,12 +2195,12 @@
       "text": "gujarati/narration/ch11.txt",
       "json": "gujarati/narration/ch11.json",
       "textHash": "fnv1a64:fabda219f9c195c8",
-      "jsonHash": "fnv1a64:c2370f24eca9ae58"
+      "jsonHash": "fnv1a64:a428713ffe4edf75"
     },
     {
       "language": "gujarati",
       "chapter": 12,
-      "sourceHash": "fnv1a64:dd6356418ad747f7",
+      "sourceHash": "fnv1a64:b4450287fa203285",
       "lessonIds": [
         "GU-C12-aankh",
         "GU-C12-kaan",
@@ -2174,8 +2211,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch12.txt",
       "json": "gujarati/narration/ch12.json",
-      "textHash": "fnv1a64:a41b8946aab1a71c",
-      "jsonHash": "fnv1a64:2d898857829749aa"
+      "textHash": "fnv1a64:e8e47f30baafeb2b",
+      "jsonHash": "fnv1a64:3bbe02bb1b16b3b3"
     },
     {
       "language": "gujarati",
@@ -2774,7 +2811,7 @@
     {
       "language": "hindi",
       "chapter": 36,
-      "sourceHash": "fnv1a64:6b415dff491322be",
+      "sourceHash": "fnv1a64:21e94bfc2692c481",
       "lessonIds": [
         "HI-C36-ghar",
         "HI-C36-darvaaza",
@@ -2785,8 +2822,8 @@
       "drivablePrefix": 0,
       "text": "hindi/narration/ch36.txt",
       "json": "hindi/narration/ch36.json",
-      "textHash": "fnv1a64:94c23af56b5bca5a",
-      "jsonHash": "fnv1a64:bb27ed8786b62894"
+      "textHash": "fnv1a64:5a67d1c7fef3b179",
+      "jsonHash": "fnv1a64:249dcc39108ef541"
     },
     {
       "language": "hindi",
@@ -3621,7 +3658,7 @@
     {
       "language": "japanese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:61da3ea5036d0e14",
+      "sourceHash": "fnv1a64:9927b0eced7c6fcf",
       "lessonIds": [
         "JA-C01-hai",
         "JA-C01-iie",
@@ -3637,7 +3674,7 @@
       "text": "japanese/narration/ch01.txt",
       "json": "japanese/narration/ch01.json",
       "textHash": "fnv1a64:e9d826f7652f1fcf",
-      "jsonHash": "fnv1a64:24c475c85fc84b70"
+      "jsonHash": "fnv1a64:3425b1b2b383325f"
     },
     {
       "language": "japanese",
@@ -3835,7 +3872,7 @@
     {
       "language": "kannada",
       "chapter": 9,
-      "sourceHash": "fnv1a64:6174957c2ce0d6b9",
+      "sourceHash": "fnv1a64:153be3bf12dc9139",
       "lessonIds": [
         "KA-C09-kshamisi",
         "KA-S04-vowel-sign-i",
@@ -3845,8 +3882,8 @@
       "drivablePrefix": 1,
       "text": "kannada/narration/ch09.txt",
       "json": "kannada/narration/ch09.json",
-      "textHash": "fnv1a64:bdacf879fd72adf3",
-      "jsonHash": "fnv1a64:4b40eb6c0e2b94d4"
+      "textHash": "fnv1a64:1e02493cffbf8c9f",
+      "jsonHash": "fnv1a64:db3e148e1efa5154"
     },
     {
       "language": "kannada",
@@ -5653,7 +5690,7 @@
     {
       "language": "malayalam",
       "chapter": 17,
-      "sourceHash": "fnv1a64:96c9978d515355d7",
+      "sourceHash": "fnv1a64:610a0729798efa47",
       "lessonIds": [
         "ML-C17-ucha-paathira",
         "ML-C17-paathira",
@@ -5664,7 +5701,7 @@
       "text": "malayalam/narration/ch17.txt",
       "json": "malayalam/narration/ch17.json",
       "textHash": "fnv1a64:9911aaba91af0be8",
-      "jsonHash": "fnv1a64:b4910dc37812a9cd"
+      "jsonHash": "fnv1a64:86f15f4edbf2612a"
     },
     {
       "language": "malayalam",
@@ -6381,7 +6418,7 @@
     {
       "language": "marathi",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d7d34ac586baf0bb",
+      "sourceHash": "fnv1a64:76482a70a494ffaa",
       "lessonIds": [
         "MR-C02-aahe",
         "MR-C02-anand",
@@ -6397,13 +6434,13 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch02.txt",
       "json": "marathi/narration/ch02.json",
-      "textHash": "fnv1a64:08018d4e9bd10e1e",
-      "jsonHash": "fnv1a64:25cc1db27e3617dd"
+      "textHash": "fnv1a64:a0339c7c4d56d9f6",
+      "jsonHash": "fnv1a64:63340b4ca91c581c"
     },
     {
       "language": "marathi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:4698352cdd6ad6ca",
+      "sourceHash": "fnv1a64:b3107d9fc5cfb536",
       "lessonIds": [
         "MR-C03-kaahi-harkat-nahi",
         "MR-C03-kasa",
@@ -6416,13 +6453,13 @@
       "drivablePrefix": 1,
       "text": "marathi/narration/ch03.txt",
       "json": "marathi/narration/ch03.json",
-      "textHash": "fnv1a64:cbc91fa67dbc5d81",
-      "jsonHash": "fnv1a64:126295a7b9159325"
+      "textHash": "fnv1a64:ae5f953a10a89eb0",
+      "jsonHash": "fnv1a64:f254ce5e8b59bbeb"
     },
     {
       "language": "marathi",
       "chapter": 4,
-      "sourceHash": "fnv1a64:698a7e2e82e9ad58",
+      "sourceHash": "fnv1a64:58a4518fd27913b8",
       "lessonIds": [
         "MR-C04-bhetu",
         "MR-C04-kalji-ghya",
@@ -6435,13 +6472,13 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch04.txt",
       "json": "marathi/narration/ch04.json",
-      "textHash": "fnv1a64:243a6bf3be8eb0df",
-      "jsonHash": "fnv1a64:7330b409ed42ae39"
+      "textHash": "fnv1a64:c7b5fd7feb54ca0b",
+      "jsonHash": "fnv1a64:bc7f83c92bc78707"
     },
     {
       "language": "marathi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:03f79a98594f4da1",
+      "sourceHash": "fnv1a64:2c216f7d781a9d9b",
       "lessonIds": [
         "MR-C05-bolne",
         "MR-C05-kaam-karne",
@@ -6453,8 +6490,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch05.txt",
       "json": "marathi/narration/ch05.json",
-      "textHash": "fnv1a64:a0c31a7d46cfe4b0",
-      "jsonHash": "fnv1a64:80b8a75cfe0cd05f"
+      "textHash": "fnv1a64:72942e4430489a65",
+      "jsonHash": "fnv1a64:0d409ccd3e6d66b0"
     },
     {
       "language": "marathi",
@@ -6527,7 +6564,7 @@
     {
       "language": "marathi",
       "chapter": 10,
-      "sourceHash": "fnv1a64:507c5abe2c6c17d2",
+      "sourceHash": "fnv1a64:8f01d3226aec18e1",
       "lessonIds": [
         "MR-C10-paani",
         "MR-C10-chaha",
@@ -6538,13 +6575,13 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch10.txt",
       "json": "marathi/narration/ch10.json",
-      "textHash": "fnv1a64:599b69607fc99702",
-      "jsonHash": "fnv1a64:012d45932ec4fc4f"
+      "textHash": "fnv1a64:aa53fc4d4fab5ea1",
+      "jsonHash": "fnv1a64:f6c1e4a50ea95cff"
     },
     {
       "language": "marathi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:bc272c6f569ea8c9",
+      "sourceHash": "fnv1a64:610b366c32d81a38",
       "lessonIds": [
         "MR-C11-mitra",
         "MR-C11-kutumb",
@@ -6555,13 +6592,13 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch11.txt",
       "json": "marathi/narration/ch11.json",
-      "textHash": "fnv1a64:3e0f5651dd0af8ef",
-      "jsonHash": "fnv1a64:23c769ab8b30c43d"
+      "textHash": "fnv1a64:bf9df7a07b834741",
+      "jsonHash": "fnv1a64:47a7ceda76586f18"
     },
     {
       "language": "marathi",
       "chapter": 12,
-      "sourceHash": "fnv1a64:6aa24870cb193793",
+      "sourceHash": "fnv1a64:67dc331760170c58",
       "lessonIds": [
         "MR-C12-dola",
         "MR-C12-kaan",
@@ -6572,8 +6609,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch12.txt",
       "json": "marathi/narration/ch12.json",
-      "textHash": "fnv1a64:f475f24d12c4b38a",
-      "jsonHash": "fnv1a64:f7238830a5c1f3ca"
+      "textHash": "fnv1a64:48c40512c0e05775",
+      "jsonHash": "fnv1a64:25435d54b06f316e"
     },
     {
       "language": "marathi",
@@ -6753,7 +6790,7 @@
     {
       "language": "persian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:b5c1a335c3b471aa",
+      "sourceHash": "fnv1a64:badc825e34e86a15",
       "lessonIds": [
         "FA-C09-ab",
         "FA-C09-nan",
@@ -6764,8 +6801,8 @@
       "drivablePrefix": 4,
       "text": "persian/narration/ch09.txt",
       "json": "persian/narration/ch09.json",
-      "textHash": "fnv1a64:d8706547cba09073",
-      "jsonHash": "fnv1a64:5400575e22102cf6"
+      "textHash": "fnv1a64:94787a353584ca0d",
+      "jsonHash": "fnv1a64:af9160b063012e03"
     },
     {
       "language": "persian",
@@ -6787,7 +6824,7 @@
     {
       "language": "persian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:ae02ea595fd16e54",
+      "sourceHash": "fnv1a64:8f4fa561dca27999",
       "lessonIds": [
         "FA-C11-cheshm",
         "FA-C11-dast",
@@ -6799,12 +6836,12 @@
       "text": "persian/narration/ch11.txt",
       "json": "persian/narration/ch11.json",
       "textHash": "fnv1a64:7e5dec6e313e5b6f",
-      "jsonHash": "fnv1a64:0b0b0c632e56d2fc"
+      "jsonHash": "fnv1a64:de0712ce793d86a4"
     },
     {
       "language": "persian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:8df79aa43b350f9f",
+      "sourceHash": "fnv1a64:3d375573d3417b20",
       "lessonIds": [
         "FA-C12-nam",
         "FA-C12-del",
@@ -6816,12 +6853,12 @@
       "text": "persian/narration/ch12.txt",
       "json": "persian/narration/ch12.json",
       "textHash": "fnv1a64:c0420c20f3d365af",
-      "jsonHash": "fnv1a64:6fe9acf09a5f8577"
+      "jsonHash": "fnv1a64:5b8b0554ba49a7f2"
     },
     {
       "language": "persian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:f682c82bef25fe00",
+      "sourceHash": "fnv1a64:eaf81b9034472f37",
       "lessonIds": [
         "FA-C13-aseman",
         "FA-C13-khorshid",
@@ -6833,13 +6870,13 @@
       "drivablePrefix": 5,
       "text": "persian/narration/ch13.txt",
       "json": "persian/narration/ch13.json",
-      "textHash": "fnv1a64:ed8cbed2cc0dceaf",
-      "jsonHash": "fnv1a64:21d9dd9cbed86b1e"
+      "textHash": "fnv1a64:e5c155fb0714a9cf",
+      "jsonHash": "fnv1a64:18eefd0cff2c4381"
     },
     {
       "language": "persian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:cb22b062034b1bbd",
+      "sourceHash": "fnv1a64:74afbe93603a1852",
       "lessonIds": [
         "FA-C14-khahar",
         "FA-C14-pesar",
@@ -6851,8 +6888,31 @@
       "drivablePrefix": 5,
       "text": "persian/narration/ch14.txt",
       "json": "persian/narration/ch14.json",
-      "textHash": "fnv1a64:a4605dd18532ffca",
-      "jsonHash": "fnv1a64:4909c4cedf569170"
+      "textHash": "fnv1a64:97eb74a09ab3ca6d",
+      "jsonHash": "fnv1a64:ce6efb03162a411a"
+    },
+    {
+      "language": "persian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:f4cc4631133ae7af",
+      "lessonIds": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "persian/narration/ch15.txt",
+      "json": "persian/narration/ch15.json",
+      "textHash": "fnv1a64:50a800088cd12148",
+      "jsonHash": "fnv1a64:6d39af3cf2adb125"
     },
     {
       "language": "portuguese",
@@ -7472,7 +7532,7 @@
     {
       "language": "punjabi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:6bda23565e753403",
+      "sourceHash": "fnv1a64:c6c833e1d1a6b395",
       "lessonIds": [
         "PA-C11-dost",
         "PA-C11-parivar",
@@ -7484,7 +7544,7 @@
       "text": "punjabi/narration/ch11.txt",
       "json": "punjabi/narration/ch11.json",
       "textHash": "fnv1a64:3d762a82365f5292",
-      "jsonHash": "fnv1a64:b8a70915952b1f42"
+      "jsonHash": "fnv1a64:ce5df93b051fd97c"
     },
     {
       "language": "punjabi",
@@ -7569,7 +7629,7 @@
     {
       "language": "russian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:f359c6016f6ba24e",
+      "sourceHash": "fnv1a64:8253ed9209494389",
       "lessonIds": [
         "RU-C02-ya",
         "RU-C02-ty-vy",
@@ -7586,8 +7646,8 @@
       "drivablePrefix": 8,
       "text": "russian/narration/ch02.txt",
       "json": "russian/narration/ch02.json",
-      "textHash": "fnv1a64:0499c10826367013",
-      "jsonHash": "fnv1a64:8de1c3f0c415a345"
+      "textHash": "fnv1a64:231b0451122c8000",
+      "jsonHash": "fnv1a64:9f7f1b7a28c4494c"
     },
     {
       "language": "russian",
@@ -7628,7 +7688,7 @@
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:88e8486d0c691191",
+      "sourceHash": "fnv1a64:48c27977fdd918fe",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -7639,8 +7699,8 @@
       "drivablePrefix": 4,
       "text": "russian/narration/ch05.txt",
       "json": "russian/narration/ch05.json",
-      "textHash": "fnv1a64:e3357c5d94bc1996",
-      "jsonHash": "fnv1a64:73d2df65ad99c392"
+      "textHash": "fnv1a64:b4a3dd6676ba148c",
+      "jsonHash": "fnv1a64:bf4410dac8203265"
     },
     {
       "language": "russian",
@@ -7662,7 +7722,7 @@
     {
       "language": "russian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:d465fe6d8a8f0a04",
+      "sourceHash": "fnv1a64:9c5167bf6ccca64a",
       "lessonIds": [
         "RU-C07-drug",
         "RU-C07-podruga",
@@ -7673,8 +7733,8 @@
       "drivablePrefix": 4,
       "text": "russian/narration/ch07.txt",
       "json": "russian/narration/ch07.json",
-      "textHash": "fnv1a64:c35c7f394452280a",
-      "jsonHash": "fnv1a64:e1629f7dbdd58140"
+      "textHash": "fnv1a64:bbfb9bc97611ca2f",
+      "jsonHash": "fnv1a64:22491f205ad07cce"
     },
     {
       "language": "russian",
@@ -7743,7 +7803,7 @@
     {
       "language": "russian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:24208299442caa4a",
+      "sourceHash": "fnv1a64:ef74b1d87089fc19",
       "lessonIds": [
         "RU-C12-mama",
         "RU-C12-papa",
@@ -7754,13 +7814,13 @@
       "drivablePrefix": 4,
       "text": "russian/narration/ch12.txt",
       "json": "russian/narration/ch12.json",
-      "textHash": "fnv1a64:01fb048272f36dc5",
-      "jsonHash": "fnv1a64:266cae639390b4d7"
+      "textHash": "fnv1a64:a2f2020759a9e003",
+      "jsonHash": "fnv1a64:484c0d4fef296d08"
     },
     {
       "language": "russian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:1cd466b23489a474",
+      "sourceHash": "fnv1a64:be60dc97d0b76136",
       "lessonIds": [
         "RU-C13-moloko",
         "RU-C13-syr",
@@ -7771,8 +7831,8 @@
       "drivablePrefix": 1,
       "text": "russian/narration/ch13.txt",
       "json": "russian/narration/ch13.json",
-      "textHash": "fnv1a64:16920cd652723f1b",
-      "jsonHash": "fnv1a64:d6590dbc47e4f2df"
+      "textHash": "fnv1a64:7166c40b7c4e2106",
+      "jsonHash": "fnv1a64:781792177b4209d9"
     },
     {
       "language": "russian",
@@ -7797,6 +7857,28 @@
       "json": "russian/narration/ch14.json",
       "textHash": "fnv1a64:3c5c8ed9355976d1",
       "jsonHash": "fnv1a64:c6ed43d1954823cc"
+    },
+    {
+      "language": "russian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:cd73455eb4b6fe7a",
+      "lessonIds": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "russian/narration/ch15.txt",
+      "json": "russian/narration/ch15.json",
+      "textHash": "fnv1a64:0866bc39157c3a5d",
+      "jsonHash": "fnv1a64:ce6fce6a1fa6519c"
     },
     {
       "language": "sanskrit",
@@ -8006,7 +8088,7 @@
     {
       "language": "sanskrit",
       "chapter": 12,
-      "sourceHash": "fnv1a64:c2e5f8208860ac10",
+      "sourceHash": "fnv1a64:71d9e91f007f92f2",
       "lessonIds": [
         "SA-C12-akshi",
         "SA-C12-karnah",
@@ -8019,7 +8101,7 @@
       "text": "sanskrit/narration/ch12.txt",
       "json": "sanskrit/narration/ch12.json",
       "textHash": "fnv1a64:5074a2fd286695b0",
-      "jsonHash": "fnv1a64:218e09a3acbc02d0"
+      "jsonHash": "fnv1a64:406dd6c1f765f6a6"
     },
     {
       "language": "sanskrit",
@@ -8244,7 +8326,7 @@
     {
       "language": "sanskrit",
       "chapter": 25,
-      "sourceHash": "fnv1a64:af646fe1e249bbd9",
+      "sourceHash": "fnv1a64:68be4c4a02fc726e",
       "lessonIds": [
         "SA-C25-hand",
         "SA-C25-foot",
@@ -8256,8 +8338,8 @@
       "drivablePrefix": 5,
       "text": "sanskrit/narration/ch25.txt",
       "json": "sanskrit/narration/ch25.json",
-      "textHash": "fnv1a64:27bf8b0926e5cd1c",
-      "jsonHash": "fnv1a64:0dcff8bcc3ca7215"
+      "textHash": "fnv1a64:10e936a884296d74",
+      "jsonHash": "fnv1a64:37a045a8ef8e9efe"
     },
     {
       "language": "sanskrit",
@@ -14733,7 +14815,7 @@
     {
       "language": "telugu",
       "chapter": 48,
-      "sourceHash": "fnv1a64:8f31aa85f30163fb",
+      "sourceHash": "fnv1a64:e22e97c39f8b3a48",
       "lessonIds": [
         "TE-C48-teacher",
         "TE-C48-student",
@@ -14745,8 +14827,8 @@
       "drivablePrefix": 2,
       "text": "telugu/narration/ch48.txt",
       "json": "telugu/narration/ch48.json",
-      "textHash": "fnv1a64:69effc2f0194ed19",
-      "jsonHash": "fnv1a64:1faa6f1b9239dca0"
+      "textHash": "fnv1a64:4924ba5a55588581",
+      "jsonHash": "fnv1a64:79a9778597286b90"
     },
     {
       "language": "telugu",
@@ -14769,7 +14851,7 @@
     {
       "language": "telugu",
       "chapter": 50,
-      "sourceHash": "fnv1a64:c8dd55defa59b40a",
+      "sourceHash": "fnv1a64:d7882d1a74054ce4",
       "lessonIds": [
         "TE-C50-now",
         "TE-C50-day-after",
@@ -14782,7 +14864,7 @@
       "text": "telugu/narration/ch50.txt",
       "json": "telugu/narration/ch50.json",
       "textHash": "fnv1a64:9eabdaafd89d516e",
-      "jsonHash": "fnv1a64:6cacbaaa175c5a86"
+      "jsonHash": "fnv1a64:f50ee049b06f10b7"
     },
     {
       "language": "telugu",
@@ -15212,7 +15294,7 @@
     {
       "language": "urdu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:a24f7fd7207d0a03",
+      "sourceHash": "fnv1a64:03400f396e06b4be",
       "lessonIds": [
         "UR-C09-bhai",
         "UR-C09-bahan",
@@ -15223,8 +15305,8 @@
       "drivablePrefix": 0,
       "text": "urdu/narration/ch09.txt",
       "json": "urdu/narration/ch09.json",
-      "textHash": "fnv1a64:cb00f151ae104c18",
-      "jsonHash": "fnv1a64:9d977a1fc69923d6"
+      "textHash": "fnv1a64:7dbdce5a025257a1",
+      "jsonHash": "fnv1a64:e330411758dce9b7"
     },
     {
       "language": "urdu",
@@ -15260,7 +15342,7 @@
     {
       "language": "urdu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:404672bf9b8f91e1",
+      "sourceHash": "fnv1a64:e9210dac6052faaf",
       "lessonIds": [
         "UR-C12-pani",
         "UR-C12-chai",
@@ -15271,8 +15353,8 @@
       "drivablePrefix": 1,
       "text": "urdu/narration/ch12.txt",
       "json": "urdu/narration/ch12.json",
-      "textHash": "fnv1a64:4c1be6db2c4ff184",
-      "jsonHash": "fnv1a64:6dcf3e6fadf06d89"
+      "textHash": "fnv1a64:c5574458caf84a4f",
+      "jsonHash": "fnv1a64:413658fe2bd63126"
     },
     {
       "language": "urdu",
@@ -15325,6 +15407,28 @@
       "json": "urdu/narration/ch15.json",
       "textHash": "fnv1a64:fd5dce85fefda727",
       "jsonHash": "fnv1a64:000057ef453b9b94"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:6ac24a4fee6bc830",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch16.txt",
+      "json": "urdu/narration/ch16.json",
+      "textHash": "fnv1a64:30b82fc16bd26faa",
+      "jsonHash": "fnv1a64:ca3e287d21320d5b"
     }
   ],
   "findings": []

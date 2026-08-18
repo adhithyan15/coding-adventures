@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-cli-drill",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "platform-resolved owner-private vault-pm roots or one explicit portable-import source",
+      "justification": "Composes the audited local host and filesystem storage adapters to read durable local vault state or one bounded encrypted portable artifact."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "platform-resolved owner-private vault-pm roots",
+      "justification": "Composes the audited local host and filesystem storage adapters to persist durable local vault and encrypted item state."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "platform-resolved owner-private vault-pm roots or one explicit portable-export destination",
+      "justification": "Creates first-use private roots, configuration, journals, bootstraps, encrypted immutable records, or one create-new already-encrypted portable artifact selected by the user."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "one explicit durable-step ledger path",
+      "justification": "VLT-PM41 appends ordinal, phase, and step-name lines to an owner-only, symlink-refusing, FIFO-refusing file the drill names. No key, namespace, object identifier, path, title, or ciphertext can reach it."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "one explicit durable-step ledger path",
+      "justification": "The ledger is appended to when it already exists, which is a write outside the platform-resolved vault roots and so is declared here rather than left implied by the create authority above. The path is not confined to those roots: any absolute path naming an existing private regular file this user owns is accepted, and only something that already controls this process's environment can choose it."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "controlling terminal and operating-system entropy APIs",
+      "justification": "Collects bounded login fields and hidden secrets from the controlling terminal and fills generation-zero and item randomness from the OS CSPRNG."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "VAULT_PM_CRASH_AT and VAULT_PM_CRASH_TRACE",
+      "justification": "VLT-PM41 crash injection reads the durable-step ordinal to stop at and the path of the metadata-only step ledger. This authority exists only in this instrumented twin; the shipped rust/vault-pm-cli-program executable never names the feature that compiles the read."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "this process only",
+      "justification": "VLT-PM41 removes this process with SIGKILL at the chosen durable write so a drill can observe what an uncatchable interruption leaves on disk. The signal is sent to the caller's own process id and to no other."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "system wall clock",
+      "justification": "Supplies advisory generation-zero and item mutation timestamps."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "process stdout and stderr",
+      "justification": "Writes only the bounded public output and fixed payload-free errors returned by the CLI package."
+    }
+  ],
+  "justification": "Instrumented twin of the local password-manager CLI, built and used only by the VLT-PM41 crash/fault drill. It carries the shipped executable's capability profile plus the three the drill needs: reading its two injection variables, removing its own process, and appending a metadata-only durable-step ledger. It is not a product executable, is never installed, and its binary is deliberately named vault-pm-drill so it cannot be mistaken for the product."
+}

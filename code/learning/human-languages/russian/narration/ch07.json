@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Friend and Siblings",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d465fe6d8a8f0a04",
+  "sourceHash": "fnv1a64:9c5167bf6ccca64a",
   "lessons": [
     {
       "id": "RU-C07-drug",
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adc14663fd5e418d",
+      "sourceHash": "fnv1a64:8b86380bc8f593e7",
       "notice": null,
       "blocks": [
         {
@@ -383,11 +383,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the chapter so far — \"друг (drug), подруга (podrúga), брат (brat)\"",
+              "instruction": "the chapter so far — \"друг, подруга, брат\" (drug, podrúga, brat)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the chapter so far — \"друг, подруга, брат\"]"
+              "source": "[YOU SAY: the chapter so far — \"друг, подруга, брат\" (*drug, podrúga, brat*)]"
             }
           ]
         },
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bb2afa35ab80406",
+      "sourceHash": "fnv1a64:92abfa643c1d6c0c",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
             },
             {
               "kind": "speech",
-              "text": "Брат's partner, one more secure cognate, and the four people this chapter has introduced you to, gathered in one place."
+              "text": "Брат (brat)'s partner, one more secure cognate, and the four people this chapter has introduced you to, gathered in one place."
             }
           ]
         },
@@ -512,11 +512,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four people — \"друг (drug), подруга (podrúga), брат (brat), сестра (sestrá)\"",
+              "instruction": "the four people — \"друг, подруга, брат, сестра\" (drug, podrúga, brat, sestrá)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four people — \"друг, подруга, брат, сестра\"]"
+              "source": "[YOU SAY: the four people — \"друг, подруга, брат, сестра\" (*drug, podrúga, brat, sestrá*)]"
             },
             {
               "kind": "prompt",

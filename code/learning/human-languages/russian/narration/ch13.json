@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Milk, Cheese, Juice, and Soup",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1cd466b23489a474",
+  "sourceHash": "fnv1a64:be60dc97d0b76136",
   "lessons": [
     {
       "id": "RU-C13-moloko",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6a0dd3d7e96613ef",
+      "sourceHash": "fnv1a64:727d159efe18e5df",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -251,11 +251,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Сыр, пожалуйста. Хлеб, пожалуйста.\" — cheese and bread, the request pattern's pair",
+              "instruction": "\"Сыр, пожалуйста. Хлеб, пожалуйста.\" (syr, pazhálusta; khleb, pazhálusta) — cheese and bread, the request pattern's pair",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Сыр, пожалуйста. Хлеб, пожалуйста.\" — cheese and bread, the request pattern's pair]"
+              "source": "[YOU SAY: \"Сыр, пожалуйста. Хлеб, пожалуйста.\" (*syr, pazhálusta; khleb, pazhálusta*) — cheese and bread, the request pattern's pair]"
             }
           ]
         },
@@ -426,7 +426,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f57478fc076953b",
+      "sourceHash": "fnv1a64:094d82b7f6aa3c65",
       "notice": null,
       "blocks": [
         {
@@ -525,11 +525,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole shelf — \"молоко (malakó), сыр (syr), сок (sok), суп (sup), пожалуйста\"",
+              "instruction": "the whole shelf — \"молоко, сыр, сок, суп, пожалуйста\" (malakó, syr, sok, sup, pazhálusta)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole shelf — \"молоко, сыр, сок, суп, пожалуйста\"]"
+              "source": "[YOU SAY: the whole shelf — \"молоко, сыр, сок, суп, пожалуйста\" (*malakó, syr, sok, sup, pazhálusta*)]"
             }
           ]
         },

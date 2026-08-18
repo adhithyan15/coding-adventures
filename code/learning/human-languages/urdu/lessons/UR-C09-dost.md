@@ -71,7 +71,7 @@ Urdu has no inherited word from *\*ǵews-* to compare it against — but it is
 the same general shape: an old Indo-European root, arriving in Urdu by the
 Persian road alone.
 
-## Grammar Lens: where تم actually lives
+## Grammar Lens: where تم (*tum*) actually lives
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER] -->
 
 Chapter 3 taught **āp / tum / tū** and told you to move to **tum** once

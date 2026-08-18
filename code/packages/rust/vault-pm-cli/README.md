@@ -359,10 +359,285 @@ command one-shot.
 The pre-emptive idle timer that locks a session while nobody is typing remains
 Phase 1B work; this slice ships only the command-boundary bound.
 
+## Finishing what a crash interrupted
+
+A process killed inside a mutation leaves a durable `PendingPublication`
+journal. The bytes in it are already signed; the only open question is whether
+the provider has them yet, and that question has one correct answer the machine
+can check. So every command that opens the vault finishes it, using the
+passphrase it has already collected, through the application's
+`unlock_recovering_pending_publication`.
+
+There is no recovery verb, and that is a design decision rather than an
+omission. The person who needs the repair is by definition someone whose
+ordinary command just failed; a verb they would have to know about would not
+reach them. The repair therefore lives on the path they are already walking:
+
+| Path | On `PendingPublication` |
+|---|---|
+| `authenticated_access` — item CRUD/list/show/reveal, `search`, `history`, `conflict`, `audit enable`/`list`/`show`, `import`, `restore` | recovers, then opens |
+| `export`, `audit verify` | recovers, then opens |
+| `init` and `vault create` resume | recovers, reports `Vault recovered.` |
+| `status`, `doctor`, `doctor --unlock` | **reports, never repairs** |
+
+The last row is the interesting one. `doctor` is a diagnostic, and `--unlock`
+does not turn it into a repair: a wedged vault short-circuits its authenticated
+half entirely — no passphrase is collected, nothing is published — and it
+answers `recovery_required` with exit class 5. Keeping both diagnostics
+read-only is what lets a person look at an interrupted vault, and restore a
+pre-mutation file-level backup instead, without racing an eager repair.
+
+When a command does repair the vault, one fixed payload-free line goes to
+standard error:
+
+```text
+vault-pm: recovered an interrupted write
+```
+
+`execute` decides that by reading the durable lifecycle state immediately
+before the command and — only if that reading found `recovery_required` —
+again immediately after, both inside the cross-process writer lock the command
+already holds. That lock is what makes the inference sound: no other local
+writer can move the state between the two reads.
+
+The second reading is conditional for a reason worth knowing. Reading owner
+state initializes its storage backend, and a backend initialization is itself a
+durable step that VLT-PM41's drill names and kills processes at. Reading after
+*every* command would append durable writes past each ceremony's own last one,
+so "the portable-export artifact is the last thing this command makes durable"
+would stop being true. An observation about a command must not move the
+command.
+
+`observed_a_repair` states the whole rule, and the row worth knowing is the
+quiet one: if the after-state cannot be *observed*, no notice is emitted. "Not
+observed" satisfies "not `recovery_required`" while proving nothing, and
+announcing a repair on a vault that is still wedged would be worse than saying
+nothing at all. Both ends fail toward silence. Standard output and every exit
+class are unchanged.
+
+A `PendingRotation` — the second journal, added by VLT-PM43 — takes the same
+door, with one difference that matters: **the roll-forward consumes no
+passphrase.** Everything left to do after that journal is durable is a pure
+function of the journal, and asking for a secret would create a worse problem
+than it solved, because at that point *which* passphrase is correct depends on
+how far the interrupted process got — precisely the ambiguity the journal
+exists to remove. So a person who types the passphrase they had before the
+crash still gets their vault repaired, and then an honest
+`authentication required` from the open that follows.
+
+See `code/specs/VLT-PM42-cli-pending-publication-recovery.md` and
+`code/specs/VLT-PM43-cli-passphrase-rotation.md`.
+
+## Changing the master passphrase
+
+```text
+vault-pm [--vault NAME] passphrase rotate
+```
+
+The verb takes no arguments. §14.5 forbids a passphrase reaching this process
+through argv, an environment variable, command history, a URL, or config, and a
+flag naming a file or a policy would be the first step toward one that named a
+secret.
+
+Two prompts, in an order that is the whole safety argument:
+
+```text
+Vault passphrase:          the current one -- this is the authentication
+New vault passphrase:      collected against an already unlocked vault
+Confirm vault passphrase:  constant-time compared, same boundary `init` uses
+```
+
+Current first, because someone who cannot produce it must be told so before
+being asked to invent a replacement. New second, so a typo is caught while the
+old passphrase is still the only one that means anything. Nothing durable
+happens until both are in hand and the next bootstrap is built and signed.
+
+What the rotation costs is fixed, and that is the point of it. The passphrase
+protects exactly one thing on disk — the 32 bytes of
+`BootstrapV1.passphrase_root_wrap` that hold the vault root key — so changing
+it is one Argon2id derivation, one AEAD open, one AEAD seal, and a re-signature
+by the unchanged vault authority. No item body, DEK, catalog, commit, or
+certificate is read or rewritten, whether the vault holds three logins or
+thirty thousand.
+
+The retired generation is **deleted**, not merely unpointed-at: it wraps the
+same unchanged root key under the old passphrase-derived key, so leaving it on
+disk would make the rotation ceremonial against exactly the adversary a person
+rotates because of. Two limits are worth stating rather than arguing away — a
+backup taken before the rotation still contains the old wrap, and the delete
+unlinks a file rather than overwriting media.
+
+`shell` refuses the verb. A session's entire premise is that the authenticator
+it collected once still opens the vault, and a rotation is the event that makes
+that false.
+
+## Generating a password
+
+```text
+vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
+                           [--no-digits] [--no-symbols] [--exclude-ambiguous]
+                           (--reveal|--copy)
+```
+
+This is the one command in the grammar that opens no vault. It unlocks nothing,
+reads no item, publishes no audit event, and takes no `--vault` selector,
+because a selector names a target and this command has none. It works on a
+machine where `init` has never run, which is the most common moment to want a
+generated password.
+
+`VLT-PM44-cli-password-generate.md` §1 records why that scoping is deliberate
+rather than incomplete. Briefly: `VLT-PM15` §2 already exempts operations that
+reveal no vault content; a vault-scoped event would be a *new* disclosure,
+correlating an instant with whichever item is created next; and requiring the
+master passphrase to perform an operation that never opens the vault would
+train a person to type it at prompts that do not need it.
+
+The strength of what it produces is fixed by two rules, both in the pure
+`vault-pm-password-policy` crate:
+
+- **The randomness is the operating-system CSPRNG**, reached through
+  `CliHost::fill_entropy` → `OsEntropy::fill` → `csprng::fill_random` →
+  `getrandom`/`getentropy`/`BCryptGenRandom`. That path is fail-closed: an
+  unavailable source is a provider failure, never a weaker draw.
+- **The floor is 80 bits**, checked as the exact integer comparison
+  `alphabet^length >= 2^80`. The default — 24 characters over all four classes
+  — is 155 bits, so the floor only ever bites on a policy someone deliberately
+  narrowed. A 12-character all-class password is 77.7 bits and is refused, one
+  character short, with its own message rather than a generic
+  "invalid command".
+
+Exactly one output mode is required. There is no plain-stdout mode: this
+command has nothing but a secret to say, and a default stdout mode would put a
+live credential into shell history, scrollback, `tee` pipelines, and CI logs
+the first time anyone redirected it. `--reveal` confirms on the controlling
+terminal and writes there and nowhere else, reusing the `item reveal` prompt
+and adapter unchanged. `--copy` is recognized and refused with the unsupported
+class until the clipboard ceremony ships — VLT-PM00 §14.4 documents the flag,
+so someone who reads the spec and types it deserves "not yet" rather than
+"invalid command".
+
+Confirmation happens *before* generation, which buys a property `item reveal`
+cannot have: on refusal no password is ever created, so there is no secret to
+wipe.
+
+The interactive shell can run this verb, and is the one place it is delegated
+*without* the session's bound-vault prefix — see `takes_no_vault_selector`.
+
+## Showing a TOTP code
+
+```text
+vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
+```
+
+`item add totp` stores a seed and `item reveal ITEM totp-secret` hands the seed
+back for re-provisioning another device. Neither is the reason anyone puts a
+TOTP seed in a password manager. This command is: it computes the six digits
+that are valid right now.
+
+It is the *opposite* of `password generate` in almost every respect, and
+deliberately so. It opens a vault, requires the passphrase, resolves an item,
+and publishes an audit event, because `VLT-PM15` §2 already names "TOTP
+display" in its list of accesses. `VLT-PM45-cli-totp-code.md` §3 writes down the
+argument for treating it more lightly — a six-digit code lives about thirty
+seconds and, unlike the seed, does not let its holder produce the next one —
+and rejects it: that is an argument about the consequence of a disclosure,
+while the audit trail records the fact of one, and an access log whose
+completeness depends on how long the disclosed value stays useful is not an
+access log.
+
+The ceremony is therefore `item reveal`'s, unchanged: the same exact-`yes`
+terminal prompt, the same `Denied`/`Failed`/`Succeeded` outcomes on the same
+`ItemRead` action, the same publish-before-release ordering. The event records
+that a code was viewed and never the code, the algorithm, the period, or the
+window.
+
+**The clock is read twice, and that is the load-bearing detail.** The audit
+timestamp is reserved before authentication, as every audited access reserves
+it. The *code* time is read again after unlock and after the confirmation
+answer, immediately before the computation — because an Argon2id derivation and
+a human reading a prompt sit between the two readings, so several seconds is
+ordinary and a whole thirty-second period is entirely reachable. A command that
+reused the reserved reading would routinely return the previous code: six
+digits, correct-looking, and rejected by the site. There is no NTP query and no
+drift correction, so TOTP correctness depends on the host clock being roughly
+right, exactly as it does for every other TOTP client.
+
+Output is split by sensitivity, which is why this command's standard output is
+not empty the way `item reveal`'s is:
+
+- the **code** goes only to the controlling terminal, through the §14.6 reveal
+  adapter;
+- the **window** — one line, `Code valid for N more seconds` — goes to ordinary
+  standard output, because it is a function of the clock and the stored period
+  and anyone with a watch can reproduce it. Hiding a public number on the
+  private channel would make the command's non-secret output invisible to a
+  script and buy nothing.
+
+`N` exists because a person handed `123456` with two seconds left will type it
+into a form that rejects it and blame the vault. When `N` is small the command
+reports the small number and returns; it does not sleep until the next step,
+which would hold an unlocked vault open with decrypted seed material live for a
+duration nobody chose, and it does not hand back the next step's code, which is
+not valid yet.
+
+The computation happens inside `vault-pm-application`, not here. Building this
+as "reveal the seed, then compute" would have worked and would have
+materialized the seed in this outermost layer, next to the argument parser and
+the terminal. What crosses the boundary is the finished code and the countdown.
+
+`--copy` is recognized and refused with the unsupported class before any
+prompt, unlock, clock reading, or entropy reservation — identical to the
+generator's refusal, so both stop refusing on the day a clipboard adapter
+lands. A live refreshing display is deferred by `VLT-PM45` §8, which records
+what it would first have to decide about the idle-lock bound, per-redraw audit
+events, and terminal raw-mode handling.
+
+## The durable-write seam
+
+This package is the layer that knows what "durable" means. `vault-pm-application`
+is deliberately storage-agnostic and owns no filesystem authority, so it cannot
+be. Everything this crate makes durable passes one of three gates: the
+`storage-core` backend it composes over the application-state and object roots,
+the configuration writer, and the portable-export destination.
+
+`src/crash.rs` names those gates for
+`code/specs/VLT-PM41-cli-crash-fault-matrix.md`, so a drill can kill the real
+process at a chosen durable write and then check what the *next* real process
+can see and repair. The module has two bodies:
+
+- **`crash-injection` off** — the default, and the only configuration the
+  product executable is ever built in. `LocalBackend` is exactly
+  `FsStorageBackend`, each combinator is an `#[inline]` function whose whole
+  body is `action()`, and `coding_adventures_vault_pm_crash_injection` is an
+  optional dependency that is not compiled at all.
+- **`crash-injection` on** — enabled by exactly one crate,
+  `code/programs/rust/vault-pm-cli-drill`, through its ordinary
+  `[dependencies]`.
+
+Neither configuration changes behavior, output, exit classes, files, or on-disk
+formats. Nothing here is reachable from an argument vector or from
+configuration.
+
 ## Verification
 
 ```bash
 bash BUILD
 cargo clippy -p coding_adventures_vault_pm_cli --all-targets -- -D warnings
+cargo clippy -p coding_adventures_vault_pm_cli --features crash-injection \
+  --all-targets -- -D warnings
 RUSTDOCFLAGS="-D warnings" cargo doc -p coding_adventures_vault_pm_cli --no-deps
 ```
+
+The real-process crash drill lives in
+`code/programs/rust/vault-pm-cli-drill`, because only there is there a process
+to remove - and because keeping it out of the product crate is what makes the
+"never in a released binary" claim structural rather than conventional. Cargo
+resolves features per package, so a product crate that named
+`crash-injection` even in `dev-dependencies` would hand
+`cargo build --all-targets` an instrumented `target/release/vault-pm`.
+
+Naming no feature is necessary and not sufficient, since
+`--features <dep>/<feature>` reaches a direct dependency's features regardless.
+This crate therefore also exports `CRASH_INJECTION_COMPILED`, and the product
+executable asserts on it in a `const` block, so a `vault-pm` with the
+instrumentation in it does not compile.

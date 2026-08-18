@@ -33,21 +33,21 @@ reviews_of: [AR-C03-kayfa, AR-C03-hal, AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Chapter 1 let you greet. Chapter 2 let you introduce yourself. This
-chapter closes the loop: you can now **ask after someone and answer back**.
+chapter closes the loop: you can **ask after someone and answer back**.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-PRACTICE-01]; assesses=[] -->
 
 | | Arabic | literally |
 |---|---|---|
-| A | **السلام عليكم** | peace [be] upon you |
-| B | **وعليكم السلام** | and upon you, peace |
-| A | **كيف حالك؟** | how [is] your state? |
-| B | **الحمد لله، بخير.** | the praise [is] to God — in goodness |
-| B | **وأنت؟ ما اسمك؟** | and you? what [is] your name? |
+| A | **السلام عليكم** (*as-salāmu ʿalaykum*) | peace [be] upon you |
+| B | **وعليكم السلام** (*wa-ʿalaykum as-salām*) | and upon you, peace |
+| A | **كيف حالك؟** (*kayfa ḥāluka?*) | how [is] your state? |
+| B | **الحمد لله، بخير.** (*al-ḥamdu lillāh, bi-khayr*) | the praise [is] to God — in goodness |
+| B | **وأنت؟ ما اسمك؟** (*wa-anta? mā ismuka?*) | and you? what [is] your name? |
 
-Read down the right-hand column. **Not one line contains a verb "to be."** Arabic
-joins things by putting them next to each other.
+Read down the right-hand column. **Not one line contains a verb "to be."**
+Arabic just puts the two things next to each other.
 
 ## You'll want to know — the pieces
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-PRACTICE-02]; assesses=[] -->
@@ -59,13 +59,13 @@ joins things by putting them next to each other.
 | *al-ḥamdu lillāh* | *al-* + *ḥamd* + **li-** + *allāh* |
 | *ismuka* | *ism* + **-ka/-ki** — the same suffix as *ḥāluka* |
 
-Three tiny attaching pieces — **al-**, **bi-**, **li-** — and two suffixes,
+Three attaching pieces — **al-**, **bi-**, **li-** — and two suffixes,
 **-ī** and **-ka/-ki**. That is most of the chapter.
 
 ## Grammar Lens — gender
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Every "you" in this chapter splits. Say the pair aloud:
+Every "you" here splits. Say the pair aloud:
 
 | to a man | to a woman |
 |---|---|
@@ -73,7 +73,7 @@ Every "you" in this chapter splits. Say the pair aloud:
 | *mā ism**uka**?* | *mā ism**uki**?* |
 | *ant**a*** | *ant**i*** |
 
-One vowel mark decides — the *fatḥa* / *kasra* pair from the writing set.
+One vowel mark decides — the *fatḥa* / *kasra* pair.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02] -->

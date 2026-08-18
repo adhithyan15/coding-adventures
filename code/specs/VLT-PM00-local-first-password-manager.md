@@ -149,7 +149,7 @@ is `VLT-PM15-operation-audit.md`.
 | Phase | Deliverable | Storage | Client surface | Independently useful result |
 |---|---|---|---|---|
 | 0 | Contract and security closure | in-memory fault model | test harness | formats and invariants fixed before product code |
-| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault |
+| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault — crash-survivable since §23 item 10a, passphrase-rotatable since item 10b; the generator named in item 10c belongs to Phase 1B |
 | 1B | Complete local CLI | filesystem + removable folder | CLI + interactive shell/local agent | practical daily local password manager |
 | 2 | Bring-your-own-cloud | Google Drive first, then WebDAV/S3 | CLI | multi-device E2EE without our server |
 | 3 | Web client | IndexedDB/OPFS + direct cloud adapters | installable PWA | browser access without a plaintext backend |
@@ -818,7 +818,11 @@ code/packages/rust/vault-pm-application-storage-core
 code/packages/rust/vault-pm-local-host    secure roots and process exclusion
 code/packages/rust/vault-pm-config        strict storage-neutral client config
 code/packages/rust/vault-pm-cli          product parser/driver/renderer
+code/packages/rust/vault-pm-crash-injection
+                                         VLT-PM41 test-only durable-step
+                                         instrumentation, never in a release
 code/programs/rust/vault-pm-cli          executable composition root
+code/programs/rust/vault-pm-cli-drill    VLT-PM41 instrumented twin and drill
 ```
 
 The first storage adapter is
@@ -885,8 +889,10 @@ vault-pm history list ITEM
 vault-pm history show ITEM REV [--copy|--reveal]
 vault-pm history restore ITEM REV
 
-vault-pm password generate [policy flags] [--copy|--reveal]
-vault-pm totp code ITEM [--copy|--reveal]
+vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
+                           [--no-digits] [--no-symbols] [--exclude-ambiguous]
+                           (--reveal|--copy)
+vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
 
 vault-pm attachment add ITEM PATH
 vault-pm attachment list ITEM
@@ -912,8 +918,31 @@ The leading `--vault NAME` selector may prefix any command that operates on an
 existing vault. It is command-scoped and never rewrites `default_vault`.
 
 Phase 1A implements `init`, `status`, `shell`, item CRUD/list, search, history,
-password generation, portable export, audit verification, and `doctor`.
+portable export, audit verification, and `doctor`. `password generate`,
+`totp code`, and the attachment commands are Phase 1B daily-use conveniences
+(§23 item 11), as are the import adapters (§23 item 13).
 Cloud/storage migration commands activate in Phase 2.
+
+`password generate` has since shipped as the first of item 11, specified by
+`VLT-PM44-cli-password-generate.md`. It is the one command in this table that
+takes no `--vault` selector *and* opens no vault: it mints a password from the
+operating-system CSPRNG, refuses a policy below an 80-bit entropy floor, and
+delivers the result only through the §14.6 reveal path. Its `--copy` mode is
+recognized and refused with the unsupported class until item 11's clipboard
+ceremony provides an adapter.
+
+`totp code` has since shipped as the second of item 11, specified by
+`VLT-PM45-cli-totp-code.md`. It reads the current live revision of one stored
+`TOTP_SEED_V1` item, computes the current RFC 6238 code inside the application
+boundary — the decoded seed never crosses into CLI orchestration — and delivers
+it only through the §14.6 reveal path after the VLT-PM25 confirmation ceremony
+and a durable `ItemRead` event, because VLT-PM15 §2 names TOTP display as an
+access. Ordinary standard output carries only the non-secret remaining-validity
+line. Its `--copy` mode is recognized and refused exactly as the generator's
+is. Both entries in this table now write their output flag as a required
+`(--reveal|--copy)` choice rather than an optional pair, for the reason
+VLT-PM44 §2 records: a default that printed a live credential would put it into
+shell history and scrollback the first time anyone redirected it.
 
 ### 14.5 Unlock experience
 
@@ -967,13 +996,29 @@ and redact item/provider payloads.
   fields.
 - Swapping/corrupting/truncating objects is detected.
 - A simulated crash at every publication step either exposes the old commit or
-  a valid new commit; never a partial logical state.
+  a valid new commit; never a partial logical state. **Verified** by
+  `VLT-PM41-cli-crash-fault-matrix.md` against a real `SIGKILL`ed process at
+  every landing point of generation zero and of the shared publication path.
+  Both halves now hold. The tree is never torn, and since
+  `VLT-PM42-cli-pending-publication-recovery.md` every landing point is either
+  a clean rollback or a state the next ordinary command finishes: no landing
+  point leaves a vault any command refuses.
 - Search can be deleted and rebuilt from records.
 - Password rotation rewraps the VRK without re-encrypting every item body.
+  **Met** since §23 item 10b, by `VLT-PM43-cli-passphrase-rotation.md`.
+  `vault-pm passphrase rotate` unwraps the VRK under the old passphrase-derived
+  KEK, re-wraps *the same VRK* under a KEK derived from the new passphrase with
+  a fresh salt, and durably supersedes the retired wrap. The structural half of
+  the criterion is measured rather than asserted, twice: on a pre-audit vault
+  the object store's complete change feed is identical across the rotation — not
+  one repository write — and on a real CLI vault, whose rotation publishes its
+  own audit-only commit, every encrypted object present beforehand is still
+  present and byte-for-byte unchanged on disk afterwards.
 - Export followed by import into a new vault preserves supported records but
   creates new encryption/object identities.
 - CLI end-to-end tests run through the real executable with a pseudo-terminal
-  for secret prompts.
+  for secret prompts, both when it is allowed to finish and when it is killed
+  mid-write.
 - A backend conformance suite passes for in-memory and filesystem adapters.
 
 ## 15. Synchronization and multi-device behavior
@@ -1248,14 +1293,19 @@ opt-in, previewable, and structurally unable to include object bodies.
    WebDAV, S3, browser storage.
 4. **Fault model:** stale/partial/duplicate lists, delayed read-after-write,
    corruption, deletion, replay, quota, token expiry, clock skew, crash at every
-   publication step.
+   publication step. The in-process half is VLT-PM02's
+   `FaultInjectingObjectStore`; the real-process half — `SIGKILL` of the actual
+   executable at each enumerated durable write — is
+   `VLT-PM41-cli-crash-fault-matrix.md`.
 5. **Format:** canonical golden vectors, mutation tests, backward compatibility.
 6. **Crypto:** published known-answer vectors, cross-implementation differential
    tests, constant-time review, misuse-resistant APIs.
 7. **Parser fuzzing:** bootstrap, object, commit, import, CLI, native messaging.
 8. **End-to-end:** real CLI/PWA/desktop against synthetic vaults and provider
    sandbox accounts.
-9. **Recovery drills:** restore from each backup form with the primary deleted.
+9. **Recovery drills:** restore from each backup form with the primary deleted,
+   and, for the local CLI, restore of a pre-mutation platform home from an
+   ordinary file-level backup after an interrupted write (VLT-PM41 section 7).
 
 ### 22.2 Security gates before real-secret recommendation
 
@@ -1657,11 +1707,126 @@ changelog, focused build, and downstream validation.
        proof of unlock-once, re-lock, and clean end of input, using
        `VLT-PM40-cli-interactive-shell.md`. The pre-emptive idle timer remains
        Phase 1B item 12.
-10. Crash/fault matrix and local restore drill.
+10. completed crash/fault matrix and local restore drill: a deterministic
+     durable-step mechanism that assigns every local durable write two
+     landing points, `SIGKILL` of the real executable at a chosen point, and
+     a sweep that derives each ceremony's landing-point count from the code
+     under test rather than from a hand-maintained list. Generation zero and
+     the shared publication path are swept exhaustively; create, edit,
+     delete, restore, a fail-closed merge, and export are probed at their
+     characteristic points; the read-only diagnostics are pinned at every
+     stage of an interrupted vault, including recovery of a pre-mutation
+     tree from an ordinary file-level backup. Using
+     `VLT-PM41-cli-crash-fault-matrix.md`. The remaining cross-product is
+     enumerated in that document rather than left implicit.
+10a. completed pending-publication recovery at vault open — **fixed**, the
+      availability defect item 10 found. A `SIGKILL` anywhere inside the shared
+      mutation publication path left a durable `PendingPublication` journal
+      that was exact and replayable, that both read-only diagnostics correctly
+      reported as `recovery_required`, and that
+      `vault-pm-application::recover_pending_publication` would have finished —
+      but no CLI code path called that function, so every subsequent command
+      that opened the vault failed, as exit 2 `vault-pm: invalid command`,
+      telling a person their command was wrong about a vault that was intact.
+      `VLT-PM05-application.md` §8 step 2 had required an open to "resume a
+      prepared initialization or pending publication when present" from the
+      start; only the first half had ever been wired. The vault-open boundary
+      now performs the second: a new `VaultAccessV1`
+      `unlock_recovering_pending_publication` replays the exact journal with
+      the passphrase the open already collected and then opens the repaired
+      vault through the ordinary strict open, so every verification a later
+      uninvolved process would perform runs on the repaired bytes. Every
+      authenticated command, portable export, audit verification, and both
+      resume paths of `init` and `vault create` take that door; `status` and
+      `doctor` deliberately do not, keeping their read-only contract, with
+      `doctor --unlock` reclassified from the misleading invalid-command class
+      to `recovery_required`/5. One fixed payload-free line on standard error
+      reports a repair that happened. No verb, flag, file format, on-disk
+      artifact, or environment variable is added. Using
+      `VLT-PM42-cli-pending-publication-recovery.md`, with real-process
+      pseudo-terminal proof in the VLT-PM41 drill that an interrupted
+      `item add` comes back as the item it was.
+10b. completed passphrase rotation — **done**, the gap item 10a's verification
+      of §14.8 found. §14.8 required that "password rotation rewraps the VRK
+      without re-encrypting every item body" and nothing implemented it: no
+      rotation command in §14.4's surface, no rotation use case in
+      `vault-pm-application`, and no Phase 1A item that would have added one.
+      The property the criterion describes was always a consequence of §8.1's
+      key hierarchy, but a property nothing performs is a property nothing
+      tests.
+      `vault-pm passphrase rotate` now performs it: the current passphrase
+      authenticates and is then used a second time to unwrap the VRK — an
+      unlocked session deliberately retains derived subkeys and not the root —
+      the new passphrase is collected and confirmed against an already open
+      vault, and the same VRK is re-wrapped under a KEK derived with a fresh
+      salt into a `generation + 1` bootstrap re-signed by the unchanged vault
+      authority. Nothing below the VRK is read or rewritten.
+      Two properties are load-bearing beyond "it works". The retired generation
+      is **deleted**, through a new `BootstrapStore::supersede_generation` that
+      refuses to remove the live one: advancing the latest pointer alone would
+      have left the old passphrase able to unwrap the unchanged root key from a
+      record still on disk. And a new `PendingRotation` owner state makes the
+      swap crash-resumable in the one direction that is answerable without a
+      secret — the journal is the commit point, and every step after it is a
+      pure function of the journal, so recovery **rolls forward and consumes no
+      passphrase**. The interactive shell refuses the verb, because a session's
+      retained authenticator is precisely what a rotation invalidates.
+      Using `VLT-PM43-cli-passphrase-rotation.md`, with the VLT-PM41 drill
+      sweeping every landing point of the ceremony and requiring that exactly
+      one passphrase opens the vault at each — never both, which would mean the
+      retired wrap survived, and never neither, which would mean the vault was
+      bricked.
+10c. password-generator phase contradiction — **resolved, documentation only,
+      in favour of Phase 1B.** §14.4 stated that Phase 1A implements "password
+      generation" while item 11 below placed the generator in Phase 1B; no
+      `password generate` has shipped from either reading, so nothing had been
+      built against the wrong answer. §14.4 was the incorrect half and now
+      agrees with item 11.
+      Three of this document's own statements decide it. §4 defines Phase 1A as
+      "a usable offline single-user vault" and Phase 1B as a "practical daily
+      local password manager": a vault is usable offline once it can hold,
+      retrieve, and prove the integrity of secrets a person already has, and
+      minting new ones is a convenience of daily use rather than a property of
+      custody. §2.1 groups "password generation, clipboard-safe secret
+      retrieval, URL-aware matching, browser autofill" into a single
+      convenience bullet, and item 11 groups the generator with TOTP display,
+      clipboard, and attachments — the same company in both places. And §14.4's
+      own signature is `password generate [policy flags] [--copy|--reveal]`,
+      whose preferred output path is the clipboard, which item 11 delivers:
+      putting the generator in Phase 1A would have shipped a command whose
+      documented primary mode did not yet exist. §14.8's Phase 1A acceptance
+      criteria never mention generation, so no gate is weakened by moving it.
+      No code changes; no `password generate` is added or removed, because none
+      was ever implemented. The generator remains tracked as part of item 11.
 
 ### Phase 1B — daily local use
 
 11. password generator, TOTP display, clipboard, attachments and packing.
+      The **password generator has shipped**, as
+      `VLT-PM44-cli-password-generate.md`: `vault-pm password generate` mints a
+      password from the operating-system CSPRNG by exactly uniform rejection
+      sampling, refuses any policy worth fewer than 80 bits of entropy, and
+      delivers the result only to the confirmed controlling terminal. It opens
+      no vault, requires no unlock, and publishes no audit event, for the
+      reasons that document's §1 records. That closes the half of §14.4 that
+      named a signature without naming a strength.
+      **TOTP display has shipped**, as `VLT-PM45-cli-totp-code.md`:
+      `vault-pm totp code ITEM --reveal` computes the current RFC 6238 code for
+      one stored `TOTP_SEED_V1` item and delivers it only to the confirmed
+      controlling terminal, after a durable `ItemRead` event — VLT-PM15 §2
+      already classified TOTP display as an access, so this is the full reveal
+      ceremony rather than a lighter one. The RFC 6238 engine is reused from
+      `vault-auth` (VLT05) rather than rewritten; that package gained explicit
+      SHA-1/SHA-256/SHA-512 selection to serve the parameters VLT-PM29 stores.
+      The command is one-shot: it prints the current code and the non-secret
+      number of seconds it remains valid, and returns. A live refreshing
+      display is deferred by that document's §8, which records what it would
+      have to decide about idle-lock, per-redraw audit events, and terminal
+      raw-mode handling.
+      Clipboard delivery and attachments remain open. Both shipped commands'
+      `--copy` modes are recognized and refused with the unsupported class
+      until the clipboard ceremony lands, since no clipboard adapter exists in
+      this product yet.
 12. local agent/IPC and auto-lock.
 13. Bitwarden/KDBX/browser CSV import adapters.
 14. removable/synced-folder mode and mirror decorator.

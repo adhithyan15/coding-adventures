@@ -5,7 +5,23 @@
 
 pub mod shell;
 
-use coding_adventures_storage_fs::FsStorageBackend;
+mod crash;
+
+/// Whether VLT-PM41 crash injection is compiled into this build.
+///
+/// A composition root that must never ship a kill switch can turn this into a
+/// *compile* error rather than a test:
+///
+/// ```
+/// const _: () = assert!(!coding_adventures_vault_pm_cli::CRASH_INJECTION_COMPILED);
+/// ```
+///
+/// That matters because cargo's `--features <dep>/<feature>` syntax reaches a
+/// direct dependency's features even when the root package declares none of
+/// its own. Declaring no feature is therefore not enough on its own to keep
+/// the instrumentation out of a product binary; refusing to compile with it is.
+pub const CRASH_INJECTION_COMPILED: bool = cfg!(feature = "crash-injection");
+
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
     prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,
@@ -14,14 +30,15 @@ use coding_adventures_vault_pm_application::{
     BootstrapStoreError, CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1,
     DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
     LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
-    PortableExportPolicyV1, PortableExportRandomnessV1, PortableImportRandomnessV1,
-    PortableOpenPolicyV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1, RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1,
-    SecretFieldV1, SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1,
-    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
-    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
-    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableExportPolicyV1,
+    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
+    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
+    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    PASSPHRASE_ROTATION_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
@@ -39,6 +56,10 @@ use coding_adventures_vault_pm_domain::{
     RedactedRecordView, RevisionId,
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
+use coding_adventures_vault_pm_password_policy::{
+    generate_password, CharacterClassesV1, PasswordPolicyError, PasswordPolicyV1,
+    DEFAULT_PASSWORD_LENGTH,
+};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
 use coding_adventures_vault_records::{
     AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed, API_KEY_V1, CARD_V1,
@@ -46,6 +67,7 @@ use coding_adventures_vault_records::{
 };
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
+use crash::LocalBackend;
 use shell::{run_shell, NativeShellTerminal, ShellTerminal};
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsString;
@@ -59,7 +81,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -124,7 +146,24 @@ impl CliOutput {
             stderr: format!("{}\n", error.message()),
         }
     }
+
+    /// Prepend the fixed VLT-PM42 repair notice to standard error.
+    ///
+    /// Standard output is untouched on purpose: anything that parses a
+    /// command's output must not have to learn a new line, and the exit class
+    /// of a command that happened to also repair the vault is the exit class of
+    /// the command.
+    fn with_recovery_notice(mut self) -> Self {
+        self.stderr.insert_str(0, RECOVERY_NOTICE);
+        self
+    }
 }
+
+/// The one sentence a repaired vault is announced with.
+///
+/// Fixed at compile time and payload-free: it names no vault, item, revision,
+/// object, provider, path, or count.
+const RECOVERY_NOTICE: &str = "vault-pm: recovered an interrupted write\n";
 
 /// Injected platform authorities used by the testable CLI driver.
 ///
@@ -587,6 +626,17 @@ where
     if matches!(invocation.command, Command::Help) {
         return CliOutput::success(USAGE);
     }
+    // VLT-PM44 §1. `password generate` is dispatched here, beside `help`,
+    // because it is the only other command that touches no vault: it must not
+    // resolve the platform layout, must not take the cross-process writer lock,
+    // and must work on a machine where `init` has never run — which is the most
+    // common moment to want a generated password.
+    if let Command::PasswordGenerate { policy, output } = &invocation.command {
+        return match password_generate(host, policy, *output) {
+            Ok(generated) => generated,
+            Err(error) => CliOutput::failure(error),
+        };
+    }
     // The shell is dispatched before `execute` because `execute` acquires the
     // cross-process writer lock for the whole command. A shell must not hold
     // that lock while it waits at a prompt, and its own per-command
@@ -632,6 +682,19 @@ enum Command {
     Doctor {
         unlock: bool,
     },
+    /// Re-wrap the vault root key under a newly collected master passphrase.
+    PassphraseRotate,
+    /// Mint one password that no vault ever stores (VLT-PM44).
+    ///
+    /// The policy is already validated by the time this variant exists: it
+    /// cannot be constructed below the entropy floor, so the ceremony never has
+    /// to re-check strength after the person has been prompted.
+    PasswordGenerate {
+        /// The validated length, alphabet, and entropy reservation.
+        policy: PasswordPolicyV1,
+        /// Where the one secret this command produces is delivered.
+        output: SecretOutputMode,
+    },
     PortableExport {
         destination: PathBuf,
     },
@@ -663,6 +726,10 @@ enum Command {
     ItemReveal {
         item_id: ItemId,
         field: SecretFieldV1,
+    },
+    TotpCode {
+        item_id: ItemId,
+        output: SecretOutputMode,
     },
     Search {
         query: SearchQuery,
@@ -715,6 +782,25 @@ enum Command {
         base_revision: RevisionId,
     },
     Help,
+}
+
+/// Where a command that produces exactly one live credential delivers it.
+///
+/// Shared by `password generate` (VLT-PM44) and `totp code` (VLT-PM45), which
+/// are the two commands in this grammar whose entire output is a secret.
+///
+/// There is no third arm, and in particular no "print it to standard output".
+/// VLT-PM00 §14.6 makes ordinary output redacted, and a default stdout mode
+/// would put a live credential into shell history, terminal scrollback, `tee`
+/// pipelines, and CI logs the first time anyone redirected it. One of the two
+/// below is required, which also means the delivery is never chosen on the
+/// person's behalf.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum SecretOutputMode {
+    /// Confirm on the controlling terminal, then write there and nowhere else.
+    Reveal,
+    /// Reserved by VLT-PM00 §14.4; refused until a clipboard adapter exists.
+    Copy,
 }
 
 struct SearchQuery(Zeroizing<String>);
@@ -798,6 +884,9 @@ where
         "shell" if tail.is_empty() => Ok(Command::Shell),
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
+        "passphrase" => parse_passphrase(tail),
+        "password" => parse_password(tail),
+        "totp" => parse_totp(tail),
         "export" => parse_export(tail),
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
@@ -806,10 +895,19 @@ where
         "conflict" => parse_conflict(tail),
         _ => Err(CliFailure::InvalidCommand),
     }?;
+    // A `--vault` selector names a target for the command to operate on.
+    // `init` and `vault create` build a vault rather than opening one, `help`
+    // reads nothing, and `password generate` (VLT-PM44 §2.2) touches no vault
+    // at all — so for these four the selector would be a statement with no
+    // referent, and accepting it silently would let a person believe they had
+    // aimed a command that was never aimable.
     if selected_vault.is_some()
         && matches!(
             &command,
-            Command::Init { .. } | Command::VaultCreate { .. } | Command::Help
+            Command::Init { .. }
+                | Command::VaultCreate { .. }
+                | Command::Help
+                | Command::PasswordGenerate { .. }
         )
     {
         return Err(CliFailure::InvalidCommand);
@@ -1056,87 +1154,388 @@ fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+/// Parse the `passphrase` noun.
+///
+/// `rotate` is the only verb, and it takes no arguments at all: VLT-PM00 §14.5
+/// forbids a passphrase reaching this process through argv, an environment
+/// variable, command history, a URL, or config, and a flag that named a file or
+/// a policy would be the first step toward one that named a secret.
+fn parse_passphrase(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [verb] if verb == "rotate" => Ok(Command::PassphraseRotate),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+/// Whether a verb refuses the leading `--vault` selector because it opens no
+/// vault.
+///
+/// The interactive shell binds one vault at session start and prefixes every
+/// delegated command with that selector, so it has to ask. `password generate`
+/// is the only verb in the grammar that a session can usefully run and that
+/// takes no target: it mints a value and hands it to the terminal, consulting
+/// neither the retained authenticator nor the bound vault. Refusing the verb in
+/// the shell instead would have been the smaller change and the worse one — a
+/// generator is exactly the thing you reach for mid-session, while adding a
+/// vault name to a command that ignores it would be a decoration that reads as
+/// a fact.
+pub(crate) fn takes_no_vault_selector(verb: &str) -> bool {
+    verb == "password"
+}
+
+/// Parse the `password` noun.
+///
+/// `generate` is the only verb, and this is the crate's one real flag parser.
+/// Every other command's arguments are positional or a single boolean, so they
+/// are matched as exhaustive slice patterns; a policy is genuinely a set of
+/// independent options and needs a loop.
+///
+/// The loop's structure carries three rules at once, and all three come out of
+/// the `_` arm:
+///
+/// | Input | Why it fails |
+/// |---|---|
+/// | `--jumble` | matches no arm |
+/// | `--reveal --copy` | the second output mode finds `output` already set |
+/// | `--no-digits --no-digits` | the second one finds `digits` already cleared |
+/// | `--length` at the end | there is no following value to take |
+/// | `--length=24` | `--length=24` is one token and matches no arm |
+///
+/// Duplicate rejection needs no bookkeeping flags because the state being built
+/// *is* the record: a class starts selected and can only be cleared once, and
+/// an output mode starts absent and can only be set once. There is nowhere for
+/// a second occurrence to go.
+///
+/// Validation deliberately happens here, at parse time, rather than in the
+/// ceremony. A policy below the entropy floor is a malformed request, not a
+/// runtime failure, and finding out before the confirmation prompt means an
+/// under-strength request costs the person no terminal interaction and this
+/// process no randomness.
+fn parse_password(arguments: &[String]) -> Result<Command, CliFailure> {
+    let Some((verb, flags)) = arguments.split_first() else {
+        return Err(CliFailure::InvalidCommand);
+    };
+    if verb != "generate" {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let mut length: Option<usize> = None;
+    let mut classes = CharacterClassesV1::all();
+    let mut exclude_ambiguous = false;
+    let mut output: Option<SecretOutputMode> = None;
+    let mut index = 0;
+    while index < flags.len() {
+        match flags[index].as_str() {
+            "--length" if length.is_none() => {
+                let value = flags.get(index + 1).ok_or(CliFailure::InvalidCommand)?;
+                length = Some(parse_password_length(value)?);
+                index += 2;
+                continue;
+            }
+            "--no-lowercase" if classes.lowercase => classes.lowercase = false,
+            "--no-uppercase" if classes.uppercase => classes.uppercase = false,
+            "--no-digits" if classes.digits => classes.digits = false,
+            "--no-symbols" if classes.symbols => classes.symbols = false,
+            "--exclude-ambiguous" if !exclude_ambiguous => exclude_ambiguous = true,
+            "--reveal" if output.is_none() => output = Some(SecretOutputMode::Reveal),
+            "--copy" if output.is_none() => output = Some(SecretOutputMode::Copy),
+            _ => return Err(CliFailure::InvalidCommand),
+        }
+        index += 1;
+    }
+    let output = output.ok_or(CliFailure::InvalidCommand)?;
+    let policy = PasswordPolicyV1::new(
+        length.unwrap_or(DEFAULT_PASSWORD_LENGTH),
+        classes,
+        exclude_ambiguous,
+    )
+    .map_err(map_password_policy)?;
+    Ok(Command::PasswordGenerate { policy, output })
+}
+
+/// Parse the `totp` noun.
+///
+/// `code` is the only verb, and the shape is fixed at exactly three tokens:
+/// `code ITEM (--reveal|--copy)`. That is short enough to match as a slice
+/// pattern rather than through a flag loop, and matching it exhaustively is
+/// what makes every near-miss below fall out for free:
+///
+/// | Input | Why it fails |
+/// |---|---|
+/// | `totp code ABC` | no output flag; the delivery is never defaulted |
+/// | `totp code ABC --reveal --copy` | four tokens, no arm |
+/// | `totp code ABC --reveal --reveal` | four tokens, no arm |
+/// | `totp code --reveal` | `--reveal` is not a canonical item selector |
+/// | `totp code abc --reveal` | lowercase; `ItemId::from_user_string` refuses |
+/// | `totp show ABC --reveal` | the verb is closed |
+/// | `totp code ABC --json` | matches no output flag |
+///
+/// The output flag is required rather than defaulted for the reason VLT-PM44 §2
+/// gave for the generator and VLT-PM45 §2.2 repeats: the interesting half of
+/// this command's output is a live second factor, and a default that printed it
+/// would put it into shell history the first time anyone redirected the command.
+fn parse_totp(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, item, flag] if action == "code" => Ok(Command::TotpCode {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+            output: match flag.as_str() {
+                "--reveal" => SecretOutputMode::Reveal,
+                "--copy" => SecretOutputMode::Copy,
+                _ => return Err(CliFailure::InvalidCommand),
+            },
+        }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+/// Read the one number this grammar accepts.
+///
+/// One to three ASCII decimal digits, no sign, no separator, no whitespace, no
+/// leading zero. `str::parse` alone would accept `+24`, `24 ` on some inputs,
+/// and `007`, and a grammar with two spellings of one number is a grammar where
+/// a typo can silently mean something else. The range itself is checked by
+/// `PasswordPolicyV1::new`, so this function's only job is the spelling.
+fn parse_password_length(value: &str) -> Result<usize, CliFailure> {
+    let digits = value.as_bytes();
+    if digits.is_empty()
+        || digits.len() > 3
+        || !digits.iter().all(u8::is_ascii_digit)
+        || (digits.len() > 1 && digits[0] == b'0')
+    {
+        return Err(CliFailure::InvalidCommand);
+    }
+    value.parse().map_err(|_| CliFailure::InvalidCommand)
+}
+
+/// Mint one password and deliver it to the controlling terminal.
+///
+/// The order of the four steps below is the contract from VLT-PM44 §5, not an
+/// implementation detail.
+///
+/// `--copy` is refused *first*, before any prompt, because a person who typed
+/// it asked for a delivery this build cannot perform; confirming a reveal they
+/// did not ask for and then failing would be worse than failing immediately.
+///
+/// Confirmation comes *before* generation. VLT-PM00 §14.6 requires an
+/// interactive confirmation before any reveal, and putting it first buys a
+/// property `item reveal` cannot have: on refusal no password is ever created,
+/// so there is no secret to wipe because none existed. Unlike a stored-secret
+/// reveal there is no audit event that must be published before the answer is
+/// known, so nothing forces the other order.
+///
+/// The randomness is reserved in one call, from the operating-system CSPRNG by
+/// way of [`CliHost::fill_entropy`], and both the reserve and the password live
+/// in wipe-on-drop buffers for their whole lifetime. The password is borrowed
+/// for the terminal write and never copied into [`CliOutput`], so ordinary
+/// standard output and standard error are empty on success.
+fn password_generate(
+    host: &dyn CliHost,
+    policy: &PasswordPolicyV1,
+    output: SecretOutputMode,
+) -> Result<CliOutput, CliFailure> {
+    if matches!(output, SecretOutputMode::Copy) {
+        return Err(CliFailure::Unsupported);
+    }
+    if !host.confirm_secret_reveal().map_err(map_host)? {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let mut reserve = Zeroizing::new(vec![0_u8; policy.required_entropy_bytes()]);
+    host.fill_entropy(reserve.as_mut_slice())
+        .map_err(map_host)?;
+    let password = generate_password(policy, &reserve).map_err(map_password_policy)?;
+    host.write_revealed_text(password.as_str())
+        .map_err(map_host)?;
+    Ok(CliOutput::success(""))
+}
+
 fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
     let writer = prepared.try_acquire_writer().map_err(map_local_host)?;
-    let selected_vault = invocation.selected_vault.as_ref();
-    match invocation.command {
-        Command::Init { vault, storage } => init(host, prepared.paths(), &writer, vault, storage),
-        Command::VaultCreate { vault } => vault_create(host, prepared.paths(), &writer, vault),
-        Command::Status { json } => status(prepared.paths(), &writer, selected_vault, json),
-        Command::AuditEnable => audit_enable(host, prepared.paths(), &writer, selected_vault),
-        Command::AuditVerify => audit_verify(host, prepared.paths(), &writer, selected_vault),
-        Command::AuditList => audit_list(host, prepared.paths(), &writer, selected_vault),
+    let Invocation {
+        selected_vault,
+        command,
+    } = invocation;
+    let selected_vault = selected_vault.as_ref();
+
+    // VLT-PM42 §6. A repair nobody mentions is indistinguishable from no
+    // repair, so the composition root watches the durable lifecycle state
+    // across the command it is about to run: once before, and — only if that
+    // reading found something repairable — once after. Both readings happen
+    // inside the cross-process writer lock the command already holds, which is
+    // what makes the inference sound: no other local writer can move the state
+    // between them, so `RecoveryRequired` before and `Locked` after means
+    // *this* command finished an interrupted publication.
+    // `observed_a_repair` below states the whole rule, including the rows that
+    // must stay quiet.
+    let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
+    let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
+    // The second reading is taken only when the first one found something that
+    // could be repaired, and that condition is load-bearing rather than an
+    // optimization. `LocalStateStore::load` initializes its backend, and a
+    // backend initialization is itself a durable step — one VLT-PM41's ledger
+    // names and kills processes at. Reading unconditionally would therefore
+    // append durable writes *after* every ceremony's own last one, making
+    // "the portable-export artifact is the last thing this command makes
+    // durable" false. An observation about a command must not move the command.
+    let after = if matches!(before, Some(VaultStatusStateV1::RecoveryRequired)) {
+        observed_vault_state(prepared.paths(), &writer, selected_vault)
+    } else {
+        None
+    };
+    if !observed_a_repair(before, after) {
+        return result;
+    }
+    // The notice is attached to a failed command too. A repair that happened
+    // is worth saying even when the verb that triggered it went on to report
+    // `not found`, and rendering the failure here produces exactly the output
+    // the caller would have rendered from the error.
+    Ok(match result {
+        Ok(output) => output.with_recovery_notice(),
+        Err(error) => CliOutput::failure(error).with_recovery_notice(),
+    })
+}
+
+/// Whether two observations prove *this* command finished an interrupted
+/// publication.
+///
+/// The whole truth table, because the interesting cases are the ones that must
+/// stay quiet:
+///
+/// | before | after | repair announced | why |
+/// |---|---|---|---|
+/// | `RecoveryRequired` | `Locked` | **yes** | the journal was replayed and the owner state is `Active`, and only this command held the writer lock |
+/// | `RecoveryRequired` | `RecoveryRequired` | no | still wedged; nothing was finished |
+/// | `RecoveryRequired` | `None` | no | the observation could not be taken, which is not evidence of anything |
+/// | `RecoveryRequired` | `Absent` or `Prepared` | no | not a repair — owner state went missing or backwards |
+/// | anything else | anything | no | there was nothing to repair |
+///
+/// Two rows are worth stating out loud.
+///
+/// `None` means the state could not be read — an owner-state file that just
+/// became unreadable, a store that went away mid-command. `None` is not
+/// `RecoveryRequired`, which makes "the state is no longer `RecoveryRequired`"
+/// perfectly true and completely uninformative; believing it would announce a
+/// repair on a vault that is still wedged, precisely the false claim
+/// [`observed_vault_state`] exists to avoid.
+///
+/// `Absent` and `Prepared` are named rather than lumped into "anything else"
+/// for the same reason. Neither is reachable today — the owner-state store
+/// exposes no delete, and both `PreparedInit` writers demand absence — but if
+/// one ever appeared it would mean the owner state was lost or rolled back, and
+/// calling that "recovered an interrupted write" would be a worse lie than
+/// saying nothing. `Unlocked` cannot appear either, since the observation
+/// always builds a fresh locked handle. So the affirmative row names the one
+/// state a completed repair actually leaves behind.
+const fn observed_a_repair(
+    before: Option<VaultStatusStateV1>,
+    after: Option<VaultStatusStateV1>,
+) -> bool {
+    matches!(before, Some(VaultStatusStateV1::RecoveryRequired))
+        && matches!(after, Some(VaultStatusStateV1::Locked))
+}
+
+/// Read the durable lifecycle state of the vault this invocation targets.
+///
+/// Deliberately total, and deliberately silent about why it failed: this
+/// observation exists only to decide whether one sentence is added to standard
+/// error, so every difficulty — no configuration yet, a selector naming a vault
+/// that does not exist, an unreadable owner-state file — must degrade to
+/// `None`, "say nothing", rather than change what the command itself reports.
+///
+/// `None` therefore biases the notice toward silence. That is the safe
+/// direction: a missing notice loses a courtesy, while a wrong one would be a
+/// false claim about a person's vault. The caller must honour that bias in
+/// *both* observations — see [`execute`], where an unobservable after-state is
+/// treated as "say nothing" rather than as "no longer recovery required".
+///
+/// # This is an observation, not a pure one
+///
+/// Reading owner state is not free of effect. `LocalStateStore::load`
+/// initializes its backend first, and `FsStorageBackend::initialize` creates
+/// missing roots and sweeps stranded temporaries — so this function *writes*,
+/// idempotently, inside the writer lock the command already holds. Under the
+/// `crash-injection` feature that initialization is a named durable step the
+/// VLT-PM41 drill counts and kills processes at, which is why [`execute`] takes
+/// the second reading only when the first found something to repair.
+fn observed_vault_state(
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Option<VaultStatusStateV1> {
+    let exact_config = writer.load_config().ok()??;
+    let config = decode_config(&exact_config).ok()?;
+    let vault = configured_vault(paths, &config, selected_vault).ok()?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    VaultAccessV1::locked(locator)
+        .status(&application_store)
+        .ok()
+        .map(|report| report.state())
+}
+
+fn dispatch(
+    command: Command,
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    match command {
+        Command::Init { vault, storage } => init(host, paths, writer, vault, storage),
+        Command::VaultCreate { vault } => vault_create(host, paths, writer, vault),
+        Command::Status { json } => status(paths, writer, selected_vault, json),
+        Command::AuditEnable => audit_enable(host, paths, writer, selected_vault),
+        Command::AuditVerify => audit_verify(host, paths, writer, selected_vault),
+        Command::AuditList => audit_list(host, paths, writer, selected_vault),
         Command::AuditShow { trace_id } => {
-            audit_show(host, prepared.paths(), &writer, selected_vault, trace_id)
+            audit_show(host, paths, writer, selected_vault, trace_id)
         }
-        Command::Doctor { unlock } => {
-            doctor(host, prepared.paths(), &writer, selected_vault, unlock)
+        Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
+        Command::PassphraseRotate => passphrase_rotate(host, paths, writer, selected_vault),
+        Command::PortableExport { destination } => {
+            portable_export(host, paths, writer, selected_vault, &destination)
         }
-        Command::PortableExport { destination } => portable_export(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            &destination,
-        ),
         Command::PortableImport { source } => {
-            portable_import(host, prepared.paths(), &writer, selected_vault, &source)
+            portable_import(host, paths, writer, selected_vault, &source)
         }
         Command::PortableRestore { source } => {
-            portable_restore(host, prepared.paths(), &writer, selected_vault, &source)
+            portable_restore(host, paths, writer, selected_vault, &source)
         }
         Command::PortableRestoreVerify { source } => {
-            portable_restore_verify(host, prepared.paths(), &writer, selected_vault, &source)
+            portable_restore_verify(host, paths, writer, selected_vault, &source)
         }
-        Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer, selected_vault),
-        Command::ItemAddSecureNote => {
-            item_add_secure_note(host, prepared.paths(), &writer, selected_vault)
-        }
-        Command::ItemAddCard => item_add_card(host, prepared.paths(), &writer, selected_vault),
-        Command::ItemAddApiKey => item_add_api_key(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddLogin => item_add_login(host, paths, writer, selected_vault),
+        Command::ItemAddSecureNote => item_add_secure_note(host, paths, writer, selected_vault),
+        Command::ItemAddCard => item_add_card(host, paths, writer, selected_vault),
+        Command::ItemAddApiKey => item_add_api_key(host, paths, writer, selected_vault),
         Command::ItemAddDatabaseCredential => {
-            item_add_database_credential(host, prepared.paths(), &writer, selected_vault)
+            item_add_database_credential(host, paths, writer, selected_vault)
         }
-        Command::ItemAddTotp => item_add_totp(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddTotp => item_add_totp(host, paths, writer, selected_vault),
         Command::ItemEdit { item_id } => {
-            item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
+            item_edit_login(host, paths, writer, selected_vault, item_id)
         }
         Command::ItemDelete { item_id } => {
-            item_delete(host, prepared.paths(), &writer, selected_vault, item_id)
+            item_delete(host, paths, writer, selected_vault, item_id)
         }
-        Command::ItemList => item_list(host, prepared.paths(), &writer, selected_vault),
-        Command::ItemShow { item_id } => {
-            item_show(host, prepared.paths(), &writer, selected_vault, item_id)
+        Command::ItemList => item_list(host, paths, writer, selected_vault),
+        Command::ItemShow { item_id } => item_show(host, paths, writer, selected_vault, item_id),
+        Command::ItemReveal { item_id, field } => {
+            item_reveal(host, paths, writer, selected_vault, item_id, field)
         }
-        Command::ItemReveal { item_id, field } => item_reveal(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            field,
-        ),
-        Command::Search { query } => {
-            item_search(host, prepared.paths(), &writer, selected_vault, query)
+        Command::TotpCode { item_id, output } => {
+            totp_code(host, paths, writer, selected_vault, item_id, output)
         }
+        Command::Search { query } => item_search(host, paths, writer, selected_vault, query),
         Command::HistoryList { item_id } => {
-            history_list(host, prepared.paths(), &writer, selected_vault, item_id)
+            history_list(host, paths, writer, selected_vault, item_id)
         }
         Command::HistoryRestore {
             item_id,
             revision_id,
-        } => history_restore(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            revision_id,
-        ),
+        } => history_restore(host, paths, writer, selected_vault, item_id, revision_id),
         Command::ConflictList { item_id } => {
-            conflict_list(host, prepared.paths(), &writer, selected_vault, item_id)
+            conflict_list(host, paths, writer, selected_vault, item_id)
         }
         Command::ConflictReveal {
             item_id,
@@ -1144,8 +1543,8 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             field,
         } => conflict_reveal(
             host,
-            prepared.paths(),
-            &writer,
+            paths,
+            writer,
             selected_vault,
             item_id,
             revision_id,
@@ -1154,65 +1553,32 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ConflictChoose {
             item_id,
             revision_id,
-        } => conflict_choose(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            revision_id,
-        ),
+        } => conflict_choose(host, paths, writer, selected_vault, item_id, revision_id),
         Command::ConflictMergeLogin {
             item_id,
             base_revision,
-        } => conflict_merge_login(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_login(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeSecureNote {
             item_id,
             base_revision,
-        } => conflict_merge_secure_note(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => {
+            conflict_merge_secure_note(host, paths, writer, selected_vault, item_id, base_revision)
+        }
         Command::ConflictMergeCard {
             item_id,
             base_revision,
-        } => conflict_merge_card(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_card(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeApiKey {
             item_id,
             base_revision,
-        } => conflict_merge_api_key(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_api_key(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeDatabaseCredential {
             item_id,
             base_revision,
         } => conflict_merge_database_credential(
             host,
-            prepared.paths(),
-            &writer,
+            paths,
+            writer,
             selected_vault,
             item_id,
             base_revision,
@@ -1220,27 +1586,13 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ConflictMergeTotp {
             item_id,
             base_revision,
-        } => conflict_merge_totp(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_totp(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeOpaque {
             item_id,
             base_revision,
-        } => conflict_merge_opaque(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
-        Command::Help | Command::Shell => {
-            unreachable!("help and shell return before writer acquisition")
+        } => conflict_merge_opaque(host, paths, writer, selected_vault, item_id, base_revision),
+        Command::Help | Command::Shell | Command::PasswordGenerate { .. } => {
+            unreachable!("help, shell, and password generate return before writer acquisition")
         }
     }
 }
@@ -1250,7 +1602,7 @@ fn authenticated_access(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
     selected_vault: Option<&ConfigName>,
-) -> Result<(VaultAccessV1, StorageCoreApplicationStore<FsStorageBackend>), CliFailure> {
+) -> Result<(VaultAccessV1, StorageCoreApplicationStore<LocalBackend>), CliFailure> {
     let exact_config = writer
         .load_config()
         .map_err(map_local_host)?
@@ -1262,8 +1614,13 @@ fn authenticated_access(
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM42. A process killed inside a mutation publication leaves an exact
+    // journal that this open finishes with the passphrase it just collected.
+    // Before that, every command on this path answered a crash with exit 2
+    // `invalid command` — telling a person their command was wrong about a
+    // vault that was intact and one replay from healthy.
     access
-        .unlock(
+        .unlock_recovering_pending_publication(
             passphrase,
             &application_store,
             &application_store,
@@ -1339,8 +1696,10 @@ fn portable_export(
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let vault_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM42. An export must describe a settled vault, so an interrupted
+    // publication is finished before the artifact is computed.
     access
-        .unlock(
+        .unlock_recovering_pending_publication(
             vault_passphrase,
             &application_store,
             &application_store,
@@ -1398,14 +1757,14 @@ fn portable_export(
         access.lock();
         operation.map_err(map_application)?
     };
-    host.write_portable_export(destination, artifact.as_bytes())
+    crash::around_export_artifact(|| host.write_portable_export(destination, artifact.as_bytes()))
         .map_err(map_host)?;
     Ok(CliOutput::success("Portable export written.\n"))
 }
 
 struct PortableImportContext {
     access: VaultAccessV1,
-    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    application_store: StorageCoreApplicationStore<LocalBackend>,
     wall_time_ms: u64,
     failure_randomness: AuditedAccessRandomnessV1,
 }
@@ -1506,7 +1865,7 @@ fn portable_import(
 
 struct PortableRestoreVerifyContext {
     access: VaultAccessV1,
-    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    application_store: StorageCoreApplicationStore<LocalBackend>,
     wall_time_ms: u64,
     randomness: AuditedAccessRandomnessV1,
 }
@@ -1696,7 +2055,7 @@ fn portable_restore_verify(
 
 struct ItemCreateContext {
     access: VaultAccessV1,
-    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    application_store: StorageCoreApplicationStore<LocalBackend>,
     now_ms: u64,
     randomness: AddItemRandomnessV1,
     item_id: ItemId,
@@ -2496,6 +2855,103 @@ fn item_reveal(
     let secret = disclosed.map_err(map_application)?;
     deliver_revealed_secret(host, field, secret)?;
     Ok(CliOutput::success(""))
+}
+
+/// Show the current one-time code for one stored TOTP item.
+///
+/// The step order is VLT-PM45 §3.2, §4.1, and §5.3, not an implementation
+/// detail, and three of the steps are where they are on purpose.
+///
+/// **`--copy` is refused first**, before the audit reservation and before the
+/// passphrase prompt. A person who typed it asked for a delivery this build
+/// cannot perform; making them unlock the vault and confirm a reveal before
+/// telling them so would be worse than telling them immediately. This matches
+/// `password_generate`, and when a clipboard adapter lands both stop refusing
+/// on the same day.
+///
+/// **The audit inputs are reserved before authentication**, unchanged from
+/// `item_reveal`: VLT-PM15's ceremony requires the complete advisory time and
+/// randomness for an attempt to exist before the attempt does.
+///
+/// **The clock is read a second time**, after unlock and after the confirmation
+/// answer, immediately before the computation. The reserved reading is stale by
+/// construction — an Argon2id derivation and a human reading a prompt sit
+/// between the two, so several seconds is ordinary and a whole thirty-second
+/// period is entirely reachable. Reusing the reserved reading would routinely
+/// produce the *previous* code: six digits, correct-looking, and rejected by
+/// the site. This is the single most likely way for this command to be subtly
+/// and intermittently wrong, so the second reading is explicit here rather than
+/// hidden inside the application.
+///
+/// Output is split by sensitivity. The code goes only to the controlling
+/// terminal through the §14.6 reveal path. The remaining-validity line goes to
+/// ordinary standard output, because it is a function of the clock and the
+/// stored period and anyone with a watch can reproduce it — hiding a public
+/// number on the private channel would make the command's non-secret output
+/// invisible to a script and buy nothing.
+fn totp_code(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    output: SecretOutputMode,
+) -> Result<CliOutput, CliFailure> {
+    if matches!(output, SecretOutputMode::Copy) {
+        return Err(CliFailure::Unsupported);
+    }
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let (confirmed, confirmation_error) = match host.confirm_secret_reveal() {
+        Ok(confirmed) => (confirmed, None),
+        Err(error) => (false, Some(error)),
+    };
+    // VLT-PM45 §4.1. The fresh reading. It is taken even on the refusal path so
+    // that a refusal and a success cost the same host calls in the same order,
+    // and so that a later reordering cannot accidentally make the clock read
+    // conditional on the answer.
+    //
+    // A clock failure *here* is folded into the same channel as a failure to
+    // collect the confirmation, rather than returned with `?`. An early return
+    // would be the one path through this command on which an authenticated
+    // attempt reached the confirmation prompt and then left no audit row at
+    // all — the exact "an access that happened and left no trace" outcome the
+    // ceremony exists to prevent. Instead the attempt proceeds as unconfirmed,
+    // publishes `Denied`, and only then returns the payload-free host error.
+    // `code_time_ms` is unused on that path because an unauthorized intent
+    // never reaches the selector; the placeholder is never a computed code.
+    let (code_time_ms, clock_error) = match host.now_ms() {
+        Ok(value) => (value, None),
+        Err(error) => (0, Some(error)),
+    };
+    let confirmed = confirmed && clock_error.is_none();
+    let host_error = confirmation_error.or(clock_error);
+    let computed = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_current_item_totp_code(
+            item_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed },
+            code_time_ms,
+            wall_time_ms,
+            randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation();
+    if let Some(error) = host_error {
+        if !matches!(computed, Err(ApplicationError::InvalidInput)) {
+            return Err(CliFailure::Internal);
+        }
+        return Err(map_host(error));
+    }
+    let code = computed.map_err(map_application)?;
+    host.write_revealed_text(code.code()).map_err(map_host)?;
+    let remaining = code.remaining_seconds();
+    drop(code);
+    Ok(CliOutput::success(format!(
+        "Code valid for {remaining} more seconds\n"
+    )))
 }
 
 fn deliver_revealed_secret(
@@ -3438,8 +3894,7 @@ fn begin_init(
         .compare_exchange(locator, None, &exact_prepared)
         .map_err(map_local_state)?;
     let config = initial_config(paths, locator, vault_name, storage_name)?;
-    writer
-        .create_config(render_config(&config).as_bytes())
+    crash::around_config_create(|| writer.create_config(render_config(&config).as_bytes()))
         .map_err(map_local_host)?;
 
     let repository_factory = repository_factory(paths.object_root());
@@ -3476,11 +3931,14 @@ fn resume_init(
         .ok_or(CliFailure::Integrity)?;
     let state = LocalVaultStateV1::decode(&exact_state).map_err(map_application)?;
     let LocalVaultStateV1::PreparedInit(_) = state else {
-        return Err(match state {
-            LocalVaultStateV1::Active(_) => CliFailure::AlreadyInitialized,
-            LocalVaultStateV1::PendingPublication { .. } => CliFailure::Conflict,
+        return match state {
+            LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
+            LocalVaultStateV1::PendingPublication { .. }
+            | LocalVaultStateV1::PendingRotation(_) => {
+                resume_interrupted_write(host, &config, vault, locator, &application_store)
+            }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
-        });
+        };
     };
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let prepared = rehydrate_prepared_init(passphrase, state).map_err(map_application)?;
@@ -3493,6 +3951,47 @@ fn resume_init(
     )
     .map_err(map_application)?;
     Ok(CliOutput::success("Vault initialized.\n"))
+}
+
+/// Finish an interrupted durable write found by a resume path.
+///
+/// VLT-PM42. `init` and `vault create` both mean "finish whatever was
+/// interrupted here", and both used to refuse a `PendingPublication` with the
+/// conflict class. That refusal answered the right observation the wrong way:
+/// the vault's *creation* had indeed finished, so there was no generation zero
+/// left to resume — a later mutation had been cut short instead. A pending
+/// publication is the same promise one generation on, and these are the verbs
+/// a stuck person retries.
+///
+/// VLT-PM43 adds the second journal, an interrupted passphrase rotation, to the
+/// same sentence. The passphrase collected below is used only by the unlock
+/// that follows the repair: a rotation roll-forward consumes none, so a person
+/// who reaches here after an interrupted rotation must type the *new*
+/// passphrase — the one they had just confirmed when the machine stopped.
+///
+/// The repaired vault is opened before success is reported, so "recovered"
+/// means a real authenticated open of the repaired durable bytes succeeded,
+/// not merely that a write returned.
+fn resume_interrupted_write(
+    host: &dyn CliHost,
+    config: &VaultPmConfigV1,
+    vault: &VaultConfigV1,
+    locator: BootstrapLocator,
+    application_store: &StorageCoreApplicationStore<LocalBackend>,
+) -> Result<CliOutput, CliFailure> {
+    let repository_factory = configured_repository_factory(config, vault)?;
+    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let mut access = VaultAccessV1::locked(locator);
+    access
+        .unlock_recovering_pending_publication(
+            passphrase,
+            application_store,
+            application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    access.lock();
+    Ok(CliOutput::success("Vault recovered.\n"))
 }
 
 fn vault_create(
@@ -3568,9 +4067,10 @@ fn vault_create(
     let replacement = VaultPmConfigV1::new(config.default_vault().clone(), vaults, storage)
         .map_err(|_| CliFailure::Internal)?;
     let rendered = render_config(&replacement);
-    writer
-        .compare_exchange_config(&exact_config, rendered.as_bytes())
-        .map_err(map_local_host)?;
+    crash::around_config_replace(|| {
+        writer.compare_exchange_config(&exact_config, rendered.as_bytes())
+    })
+    .map_err(map_local_host)?;
 
     let repository_factory = repository_factory(&target_root);
     complete_generation_zero(
@@ -3598,11 +4098,14 @@ fn resume_vault_create(
         .ok_or(CliFailure::Integrity)?;
     let state = LocalVaultStateV1::decode(&exact_state).map_err(map_application)?;
     let LocalVaultStateV1::PreparedInit(_) = state else {
-        return Err(match state {
-            LocalVaultStateV1::Active(_) => CliFailure::AlreadyInitialized,
-            LocalVaultStateV1::PendingPublication { .. } => CliFailure::Conflict,
+        return match state {
+            LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
+            LocalVaultStateV1::PendingPublication { .. }
+            | LocalVaultStateV1::PendingRotation(_) => {
+                resume_interrupted_write(host, config, vault, locator, &application_store)
+            }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
-        });
+        };
     };
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let prepared = rehydrate_prepared_init(passphrase, state).map_err(map_application)?;
@@ -3640,6 +4143,118 @@ fn status(
         VaultStatusStateV1::RecoveryRequired => "recovery_required",
     };
     Ok(render_status_label(label, json))
+}
+
+/// Collect a new master passphrase and re-wrap the vault root key under it.
+///
+/// VLT-PM43. The order of the two prompts is the whole safety argument. The
+/// *current* passphrase comes first, because it is the authentication, and
+/// because a person who cannot produce it must be told so before being asked to
+/// invent a replacement. The *new* one is collected and confirmed second,
+/// against an already unlocked vault, so a typo is caught while the old
+/// passphrase is still the only one that means anything.
+///
+/// Nothing durable happens until both are in hand and the next bootstrap is
+/// built and signed. Every failure up to that point leaves a vault the current
+/// passphrase still opens.
+fn passphrase_rotate(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
+
+    // Reserved before authentication, exactly as `export` reserves its audit
+    // inputs, so that a failure to collect the new passphrase can still be
+    // recorded without asking the host for anything new at the worst moment.
+    let (wall_time_ms, audit_randomness) = audited_access_inputs(host)?;
+    let mut rotation_random = [0_u8; PASSPHRASE_ROTATION_RANDOM_BYTES];
+    host.fill_entropy(&mut rotation_random).map_err(map_host)?;
+    let (memory_kib, iterations, lanes) = host.generation_zero_kdf();
+    let policy =
+        PassphraseRotationPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
+
+    let current_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let mut access = VaultAccessV1::locked(locator);
+    // VLT-PM42. A rotation must describe a settled vault: the bootstrap it
+    // signs pins the state an interrupted publication may still be moving.
+    access
+        .unlock_recovering_pending_publication(
+            Zeroizing::new(current_passphrase.to_vec()),
+            &application_store,
+            &application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    // Read after the recovering unlock, never before: a replay can advance the
+    // durable bootstrap, and signing a successor to a stale one would be
+    // refused by the store at the worst possible moment.
+    let exact_bootstrap = application_store
+        .load_latest(locator)
+        .map_err(map_bootstrap_store)?
+        .ok_or(CliFailure::Integrity)?;
+    let audit_enabled = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled();
+
+    let new_passphrase = match host.read_new_passphrase() {
+        Ok(passphrase) => passphrase,
+        Err(error) => {
+            if audit_enabled {
+                access
+                    .into_unlocked()
+                    .map_err(map_application)?
+                    .record_audited_passphrase_rotation_host_failure(
+                        wall_time_ms,
+                        audit_randomness,
+                        &application_store,
+                    )
+                    .map_err(map_application)?;
+            }
+            return Err(map_host(error));
+        }
+    };
+    let randomness = PassphraseRotationRandomnessV1::new(rotation_random);
+
+    let unlocked = access.into_unlocked().map_err(map_application)?;
+    if audit_enabled {
+        unlocked
+            .audited_rotate_passphrase(
+                &exact_bootstrap,
+                &current_passphrase,
+                &new_passphrase,
+                policy,
+                randomness,
+                wall_time_ms,
+                audit_randomness,
+                &application_store,
+                &application_store,
+            )
+            .map_err(map_application)?;
+    } else {
+        unlocked
+            .rotate_passphrase(
+                &exact_bootstrap,
+                &current_passphrase,
+                &new_passphrase,
+                policy,
+                randomness,
+                &application_store,
+                &application_store,
+            )
+            .map_err(map_application)?;
+    }
+    Ok(CliOutput::success("Vault passphrase rotated.\n"))
 }
 
 fn audit_enable(
@@ -3684,8 +4299,11 @@ fn audit_verify(
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM42. `audit verify` publishes an audit-only commit of its own
+    // through the very path a crash interrupts, so it finishes an outstanding
+    // publication before starting another.
     access
-        .unlock(
+        .unlock_recovering_pending_publication(
             passphrase,
             &application_store,
             &application_store,
@@ -3776,6 +4394,22 @@ fn doctor(
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
     let mut access = VaultAccessV1::locked(locator);
+    // VLT-PM42. `doctor` is the one command that reports without repairing,
+    // and `--unlock` does not change that: a person who wants to look at a
+    // wedged vault before touching it must be able to. So an interrupted
+    // publication short-circuits the authenticated half entirely — no
+    // passphrase is collected, nothing is published, and the read-only
+    // diagnostic answers `recovery_required` with exit class 5. Only the
+    // *classification* changes: this case used to inherit the refused open's
+    // misleading exit 2 `invalid command`.
+    let unlock = unlock
+        && !matches!(
+            access
+                .status(&application_store)
+                .map_err(map_application)?
+                .state(),
+            VaultStatusStateV1::RecoveryRequired
+        );
     if unlock {
         let repository_factory = configured_repository_factory(&config, vault)?;
         let passphrase = host.read_existing_passphrase().map_err(map_host)?;
@@ -3971,22 +4605,20 @@ fn application_locator(locator: ConfigVaultLocator) -> BootstrapLocator {
     BootstrapLocator::new(*locator.as_bytes())
 }
 
-fn application_store(paths: &LocalVaultPaths) -> StorageCoreApplicationStore<FsStorageBackend> {
-    StorageCoreApplicationStore::new(FsStorageBackend::new(paths.application_state_root()))
+fn application_store(paths: &LocalVaultPaths) -> StorageCoreApplicationStore<LocalBackend> {
+    StorageCoreApplicationStore::new(crash::backend(paths.application_state_root()))
 }
 
 fn repository_factory(
     object_root: &Path,
-) -> V1ApplicationRepositoryFactory<StorageCoreObjectStore<FsStorageBackend>> {
-    V1ApplicationRepositoryFactory::new(StorageCoreObjectStore::new(FsStorageBackend::new(
-        object_root,
-    )))
+) -> V1ApplicationRepositoryFactory<StorageCoreObjectStore<LocalBackend>> {
+    V1ApplicationRepositoryFactory::new(StorageCoreObjectStore::new(crash::backend(object_root)))
 }
 
 fn configured_repository_factory(
     config: &VaultPmConfigV1,
     vault: &VaultConfigV1,
-) -> Result<V1ApplicationRepositoryFactory<StorageCoreObjectStore<FsStorageBackend>>, CliFailure> {
+) -> Result<V1ApplicationRepositoryFactory<StorageCoreObjectStore<LocalBackend>>, CliFailure> {
     let storage = config
         .storage()
         .get(vault.local_store())
@@ -4020,6 +4652,17 @@ fn locator_hex(locator: &[u8; 32]) -> String {
 enum CliFailure {
     InvalidCommand,
     AlreadyInitialized,
+    /// A `password generate` policy worth fewer than 80 bits (VLT-PM44 §4.3).
+    ///
+    /// This is an invalid request and carries the invalid exit class, but it
+    /// gets its own fixed message. It is the one rejection in the grammar a
+    /// person will hit while doing something entirely reasonable — asking for
+    /// a shorter password, or narrowing the alphabet for a site that will not
+    /// accept symbols — and "invalid command" would send them hunting for a
+    /// typo that is not there. The message still names no length, alphabet, or
+    /// bit count: it says which rule was broken, and the specification says
+    /// what the rule is.
+    WeakPasswordPolicy,
     Locked,
     NotFound,
     Conflict,
@@ -4032,7 +4675,9 @@ enum CliFailure {
 impl CliFailure {
     const fn exit_code(self) -> ExitCode {
         match self {
-            Self::InvalidCommand | Self::AlreadyInitialized => ExitCode::InvalidInput,
+            Self::InvalidCommand | Self::AlreadyInitialized | Self::WeakPasswordPolicy => {
+                ExitCode::InvalidInput
+            }
             Self::Locked => ExitCode::Locked,
             Self::NotFound => ExitCode::NotFound,
             Self::Conflict => ExitCode::Conflict,
@@ -4047,6 +4692,7 @@ impl CliFailure {
         match self {
             Self::InvalidCommand => "vault-pm: invalid command",
             Self::AlreadyInitialized => "vault-pm: already initialized",
+            Self::WeakPasswordPolicy => "vault-pm: password policy below the minimum entropy floor",
             Self::Locked => "vault-pm: authentication required",
             Self::NotFound => "vault-pm: not found",
             Self::Conflict => "vault-pm: recovery or conflict required",
@@ -4079,6 +4725,27 @@ fn map_application(error: ApplicationError) -> CliFailure {
         ApplicationError::StorageUnavailable => CliFailure::Provider,
         ApplicationError::Unsupported => CliFailure::Unsupported,
         ApplicationError::InternalInvariant => CliFailure::Internal,
+    }
+}
+
+/// Translate a password-policy failure into a process-visible class.
+///
+/// The two internal-looking arms are deliberate rather than defensive. A
+/// randomness block of the wrong size means this crate and the policy crate
+/// disagree about a number both of them compute — a code defect, not a
+/// condition a person can cause or fix, so it is reported as an internal
+/// invariant failure rather than dressed up as bad input. An exhausted reserve
+/// is a genuine (if astronomically improbable) failure of the randomness path,
+/// so it joins the other provider failures; what it must never do is fall back
+/// to a biased draw, and the policy crate makes that impossible.
+fn map_password_policy(error: PasswordPolicyError) -> CliFailure {
+    match error {
+        PasswordPolicyError::NoCharacterClass | PasswordPolicyError::LengthOutOfRange => {
+            CliFailure::InvalidCommand
+        }
+        PasswordPolicyError::EntropyFloorNotMet => CliFailure::WeakPasswordPolicy,
+        PasswordPolicyError::EntropyExhausted => CliFailure::Provider,
+        PasswordPolicyError::EntropyBlockSizeMismatch => CliFailure::Internal,
     }
 }
 
@@ -4238,6 +4905,15 @@ mod tests {
         /// Zero — the default every existing test uses — makes the clock a
         /// constant, so nothing that does not opt in can observe elapsed time.
         clock_step_ms: u64,
+        /// Readings taken so far, so a test can fail a chosen one.
+        clock_reads: AtomicU64,
+        /// Readings that succeed before the clock starts failing.
+        ///
+        /// `None` — the default — is a clock that never fails. A value lets a
+        /// test prove what a command does when the clock dies *partway
+        /// through*, which is the only way to reach an ordering bug that a
+        /// wholly-broken clock would hide behind an earlier failure.
+        clock_reads_before_failure: Option<u64>,
     }
 
     impl TestHost {
@@ -4277,6 +4953,18 @@ mod tests {
             Self::build(paths, secrets, [], 1, false, 0)
         }
 
+        /// A host that can answer prompts but whose CSPRNG has failed.
+        ///
+        /// `password generate` confirms before it draws, so proving it fails
+        /// closed on an unavailable entropy source needs a scripted `yes` *and*
+        /// a broken source at the same time.
+        fn without_entropy_with_texts(
+            paths: LocalVaultPaths,
+            texts: impl IntoIterator<Item = String>,
+        ) -> Self {
+            Self::build(paths, [], texts, 1, false, 0)
+        }
+
         /// Build a host whose clock advances by `clock_step_ms` per reading.
         fn with_clock_step(
             paths: LocalVaultPaths,
@@ -4284,6 +4972,21 @@ mod tests {
             clock_step_ms: u64,
         ) -> Self {
             Self::build(paths, secrets, [], 1, true, clock_step_ms)
+        }
+
+        /// A host that can answer prompts *and* whose clock moves.
+        ///
+        /// `totp code` needs both at once: proving it computes from a second,
+        /// fresher clock reading requires a scripted `yes` to get past the
+        /// confirmation and a clock that has visibly moved by the time the
+        /// second reading happens.
+        fn with_texts_and_clock_step(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+            clock_step_ms: u64,
+        ) -> Self {
+            Self::build(paths, secrets, texts, 1, true, clock_step_ms)
         }
 
         fn build(
@@ -4303,7 +5006,27 @@ mod tests {
                 entropy_available,
                 clock_ms: AtomicU64::new(FIXED_TEST_TIME_MS),
                 clock_step_ms,
+                clock_reads: AtomicU64::new(0),
+                clock_reads_before_failure: None,
             }
+        }
+
+        /// A host that can answer prompts and whose clock fails after
+        /// `readings` successful readings.
+        fn with_texts_and_failing_clock(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+            readings: u64,
+        ) -> Self {
+            let mut host = Self::build(paths, secrets, texts, 1, true, 0);
+            host.clock_reads_before_failure = Some(readings);
+            host
+        }
+
+        /// How many clock readings this host has served.
+        fn clock_reads(&self) -> u64 {
+            self.clock_reads.load(Ordering::Relaxed)
         }
 
         /// Return how many scripted secrets remain unconsumed.
@@ -4350,6 +5073,17 @@ mod tests {
 
         fn revealed_count(&self) -> usize {
             self.revealed.lock().unwrap().len()
+        }
+
+        /// Copy out the single value this host was asked to reveal.
+        ///
+        /// Only a test may do this, and only because the "secret" a generator
+        /// test inspects was minted by the test's own deterministic host rather
+        /// than read out of a vault.
+        fn revealed_only(&self) -> Vec<u8> {
+            let revealed = self.revealed.lock().unwrap();
+            assert_eq!(revealed.len(), 1, "expected exactly one revealed value");
+            revealed[0].as_slice().to_vec()
         }
     }
 
@@ -4561,6 +5295,13 @@ mod tests {
         }
 
         fn now_ms(&self) -> Result<u64, HostError> {
+            let taken = self.clock_reads.fetch_add(1, Ordering::Relaxed);
+            if self
+                .clock_reads_before_failure
+                .is_some_and(|limit| taken >= limit)
+            {
+                return Err(HostError::Unavailable);
+            }
             Ok(self
                 .clock_ms
                 .fetch_add(self.clock_step_ms, Ordering::Relaxed))
@@ -4667,6 +5408,57 @@ mod tests {
                 "not-a-revision",
             ],
             vec!["unlock"],
+            // VLT-PM44 §2. Every one of these must fail before a prompt, a
+            // reservation, or a single byte of randomness.
+            vec!["password"],
+            vec!["password", "make"],
+            vec!["password", "generate"],
+            vec!["password", "generate", "extra"],
+            vec!["password", "generate", "--reveal", "extra"],
+            vec!["password", "generate", "--reveal", "--copy"],
+            vec!["password", "generate", "--copy", "--reveal"],
+            vec!["password", "generate", "--reveal", "--reveal"],
+            vec!["password", "generate", "--reveal", "--jumble"],
+            vec!["password", "generate", "--reveal", "--length"],
+            vec!["password", "generate", "--reveal", "--length=24"],
+            vec![
+                "password", "generate", "--reveal", "--length", "24", "--length", "32",
+            ],
+            vec!["password", "generate", "--reveal", "--length", "+24"],
+            vec!["password", "generate", "--reveal", "--length", "-24"],
+            vec!["password", "generate", "--reveal", "--length", "024"],
+            vec!["password", "generate", "--reveal", "--length", "2_4"],
+            vec!["password", "generate", "--reveal", "--length", "24 "],
+            vec!["password", "generate", "--reveal", "--length", "twenty"],
+            vec!["password", "generate", "--reveal", "--length", ""],
+            vec!["password", "generate", "--reveal", "--length", "1024"],
+            vec!["password", "generate", "--reveal", "--length", "129"],
+            vec!["password", "generate", "--reveal", "--length", "0"],
+            vec![
+                "password",
+                "generate",
+                "--reveal",
+                "--exclude-ambiguous",
+                "--exclude-ambiguous",
+            ],
+            vec![
+                "password",
+                "generate",
+                "--reveal",
+                "--no-digits",
+                "--no-digits",
+            ],
+            vec![
+                "password",
+                "generate",
+                "--reveal",
+                "--no-lowercase",
+                "--no-uppercase",
+                "--no-digits",
+                "--no-symbols",
+            ],
+            // The selector names a target this command never opens.
+            vec!["--vault", "work", "password", "generate", "--reveal"],
         ] {
             let output = run(arguments, &host);
             assert_eq!(output.exit_code(), ExitCode::InvalidInput);
@@ -8081,6 +8873,342 @@ mod tests {
         assert_eq!(audit.stderr(), "vault-pm: invalid command\n");
     }
 
+    // -----------------------------------------------------------------------
+    // VLT-PM42 — a vault wedged by an interrupted publication
+    //
+    // VLT-PM41 proved with a real killed process that a crash inside the shared
+    // mutation publication path leaves an exact, replayable journal, and that
+    // nothing in the product ever replayed it. These tests wedge a real on-disk
+    // vault the same way — by letting the write-ahead journal become durable
+    // and then taking the provider away — and then drive the ordinary command
+    // surface across it.
+    // -----------------------------------------------------------------------
+
+    /// Leave the default vault's durable owner state as an exact
+    /// `PendingPublication`.
+    ///
+    /// The session is opened through the ordinary application boundary over a
+    /// *faulting view of the very same object root* the CLI itself uses, so
+    /// everything on disk afterwards is what a crash leaves: the journal is
+    /// real, its signed bytes are real, and the objects it names are the ones
+    /// the real repository is missing.
+    fn wedge_by_an_interrupted_publication(paths: &LocalVaultPaths, passphrase: &[u8]) {
+        use coding_adventures_vault_pm_application::open_active_vault;
+        use coding_adventures_vault_pm_storage::{
+            FaultAction, FaultEffect, FaultInjectingObjectStore, StoreOperation,
+        };
+        use std::sync::Arc;
+
+        let (locator, object_root) = configured_vault_location(paths);
+        let application_store = application_store(paths);
+        let faulting = Arc::new(FaultInjectingObjectStore::new(StorageCoreObjectStore::new(
+            crash::backend(&object_root),
+        )));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&faulting));
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &application_store,
+            &application_store,
+            &factory,
+        )
+        .expect("the fixture vault must open");
+        // The commit reaches the provider and the provider then stops
+        // answering — the ambiguity a kill between the journal write and the
+        // owner-state advance produces.
+        faulting
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+        let interrupted = session.audited_list_items(
+            FIXED_TEST_TIME_MS,
+            AuditedAccessRandomnessV1::new([0x5c; AUDITED_ACCESS_RANDOM_BYTES]),
+            &application_store,
+        );
+        assert!(
+            matches!(interrupted, Err(ApplicationError::StorageUnavailable)),
+            "the fixture must interrupt a publication, not complete it",
+        );
+    }
+
+    /// Resolve the default vault's application locator and object root.
+    ///
+    /// The writer lock is acquired and released inside this function, because
+    /// every command the tests run afterwards acquires it for itself.
+    fn configured_vault_location(paths: &LocalVaultPaths) -> (BootstrapLocator, PathBuf) {
+        let prepared = paths.prepare().unwrap();
+        let writer = prepared.try_acquire_writer().unwrap();
+        let exact_config = writer.load_config().unwrap().unwrap();
+        let config = decode_config(&exact_config).unwrap();
+        let vault = configured_vault(prepared.paths(), &config, None).unwrap();
+        let location = config
+            .storage()
+            .get(vault.local_store())
+            .unwrap()
+            .location()
+            .as_str()
+            .to_owned();
+        (
+            application_locator(vault.locator()),
+            PathBuf::from(location),
+        )
+    }
+
+    /// One initialized vault holding one login, and its item identifier.
+    fn vault_with_one_login(paths: &LocalVaultPaths, passphrase: &[u8]) -> String {
+        let init_host = TestHost::new(paths.clone(), [passphrase.to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.to_vec(), b"first note body".to_vec()],
+            ["First note".to_owned()],
+        );
+        let added = run(["item", "add", "secure-note"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        added
+            .stdout()
+            .lines()
+            .find_map(|line| line.strip_prefix("Item added: "))
+            .expect("item-add identifier")
+            .to_owned()
+    }
+
+    #[test]
+    fn a_repair_is_announced_only_when_both_observations_prove_one() {
+        use VaultStatusStateV1::{Absent, Locked, Prepared, RecoveryRequired, Unlocked};
+
+        // The one row that speaks: wedged before, `Active` on disk after,
+        // which a fresh locked handle reports as `Locked`.
+        assert!(observed_a_repair(Some(RecoveryRequired), Some(Locked)));
+
+        // Still wedged, so nothing was finished.
+        assert!(!observed_a_repair(
+            Some(RecoveryRequired),
+            Some(RecoveryRequired)
+        ));
+
+        // An observation that could not be taken proves nothing, and
+        // "not `RecoveryRequired`" is exactly the true-but-meaningless claim
+        // that would otherwise announce a repair on a still-wedged vault.
+        assert!(!observed_a_repair(Some(RecoveryRequired), None));
+
+        // Owner state that went missing or backwards is the opposite of a
+        // repair, and `Unlocked` cannot come from a freshly locked handle.
+        for after in [Absent, Prepared, Unlocked] {
+            assert!(
+                !observed_a_repair(Some(RecoveryRequired), Some(after)),
+                "{after:?}"
+            );
+        }
+
+        // Nothing to repair in the first place — every remaining `before`,
+        // against every possible `after`, so the table above is total.
+        for before in [
+            None,
+            Some(Absent),
+            Some(Prepared),
+            Some(Locked),
+            Some(Unlocked),
+        ] {
+            for after in [
+                None,
+                Some(Absent),
+                Some(Prepared),
+                Some(Locked),
+                Some(Unlocked),
+                Some(RecoveryRequired),
+            ] {
+                assert!(!observed_a_repair(before, after), "{before:?} {after:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn an_ordinary_command_finishes_an_interrupted_publication_and_says_so() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"recovery correct horse battery staple".to_vec();
+        let item = vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // Before VLT-PM42 this was exit 2, `vault-pm: invalid command`, for
+        // every command that opens the vault, forever.
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains(&item), "{listed:?}");
+        assert_eq!(listed.stderr(), RECOVERY_NOTICE, "{listed:?}");
+
+        // The repair happened once. The next command finds an ordinary vault
+        // and says nothing.
+        let again_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let again = run(["item", "list"], &again_host);
+        assert_eq!(again.exit_code(), ExitCode::Success, "{again:?}");
+        assert!(again.stderr().is_empty(), "{again:?}");
+
+        // And the vault is ordinary in the only sense that matters: it still
+        // takes writes, and its whole audit chain still verifies.
+        // A distinct entropy seed, because this host's randomness is
+        // deterministic and reusing the fixture's would mint the identifiers
+        // the first note already owns.
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), b"second note body".to_vec()],
+            ["Second note".to_owned()],
+            29,
+        );
+        let added = run(["item", "add", "secure-note"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let verify_host = TestHost::new(paths, [passphrase]);
+        let verified = run(["audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
+    #[test]
+    fn the_read_only_diagnostics_report_a_wedged_vault_without_repairing_it() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"diagnostic correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // `status` and `doctor` answer without a passphrase, and leave the
+        // vault exactly as wedged as they found it — the property a person
+        // restoring a pre-mutation backup depends on.
+        for _ in 0..2 {
+            let status = run(["status"], &TestHost::new(paths.clone(), []));
+            assert_eq!(status.stdout(), "Status: recovery_required\n", "{status:?}");
+            assert!(status.stderr().is_empty(), "{status:?}");
+
+            let doctor = run(["doctor"], &TestHost::new(paths.clone(), []));
+            assert_eq!(doctor.exit_code(), ExitCode::Conflict, "{doctor:?}");
+            assert_eq!(doctor.stdout(), "Doctor: recovery_required\n");
+            assert!(doctor.stderr().is_empty(), "{doctor:?}");
+        }
+
+        // `--unlock` does not turn a diagnostic into a repair. It collects no
+        // passphrase — the host below would panic if asked for one — and it
+        // now reports the state instead of inheriting the refused open's
+        // misleading exit 2 `invalid command`.
+        let unlock_doctor = run(["doctor", "--unlock"], &TestHost::new(paths.clone(), []));
+        assert_eq!(
+            unlock_doctor.exit_code(),
+            ExitCode::Conflict,
+            "{unlock_doctor:?}"
+        );
+        assert_eq!(unlock_doctor.stdout(), "Doctor: recovery_required\n");
+        assert!(unlock_doctor.stderr().is_empty(), "{unlock_doctor:?}");
+
+        // Still wedged, so the repair below is this test's, not a diagnostic's.
+        let recover_host = TestHost::new(paths.clone(), [passphrase]);
+        let recovered = run(["item", "list"], &recover_host);
+        assert_eq!(recovered.exit_code(), ExitCode::Success, "{recovered:?}");
+        assert_eq!(recovered.stderr(), RECOVERY_NOTICE, "{recovered:?}");
+    }
+
+    #[test]
+    fn init_finishes_an_interrupted_publication_instead_of_refusing_it() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"resume correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // `init` is what a stuck person retries. It used to answer the
+        // conflict class; it now finishes what was interrupted.
+        let resume_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let resumed = run(["init"], &resume_host);
+        assert_eq!(resumed.exit_code(), ExitCode::Success, "{resumed:?}");
+        assert_eq!(resumed.stdout(), "Vault recovered.\n");
+        assert_eq!(resumed.stderr(), RECOVERY_NOTICE, "{resumed:?}");
+
+        assert_eq!(
+            run(["status"], &TestHost::new(paths.clone(), [])).stdout(),
+            "Status: locked\n"
+        );
+        // A healthy vault is still refused, so the repair is the only thing
+        // this path learned to do.
+        let repeat = run(["init"], &TestHost::new(paths, [passphrase]));
+        assert_eq!(repeat.exit_code(), ExitCode::InvalidInput, "{repeat:?}");
+        assert_eq!(repeat.stderr(), "vault-pm: already initialized\n");
+    }
+
+    #[test]
+    fn a_wrong_passphrase_leaves_a_wedged_vault_wedged() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"closed correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // Recovery authenticates before it publishes, so a wrong secret buys
+        // nothing and destroys nothing.
+        let wrong_host = TestHost::new(paths.clone(), [b"not the passphrase".to_vec()]);
+        let refused = run(["item", "list"], &wrong_host);
+        assert_eq!(refused.exit_code(), ExitCode::Locked, "{refused:?}");
+        assert_eq!(refused.stderr(), "vault-pm: authentication required\n");
+        assert_eq!(
+            run(["status"], &TestHost::new(paths.clone(), [])).stdout(),
+            "Status: recovery_required\n"
+        );
+
+        let right_host = TestHost::new(paths, [passphrase]);
+        let recovered = run(["item", "list"], &right_host);
+        assert_eq!(recovered.exit_code(), ExitCode::Success, "{recovered:?}");
+    }
+
+    #[test]
+    fn a_recovering_command_that_then_fails_still_reports_the_repair() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"partial correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // The repair is worth saying even when the verb that triggered it went
+        // on to report something else, and the verb keeps its own exit class.
+        let host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let missing_id = ItemId::new([0x55; 16]).to_user_string();
+        let missing = run(["item", "show", missing_id.as_str()], &host);
+        assert_eq!(missing.exit_code(), ExitCode::NotFound, "{missing:?}");
+        assert_eq!(
+            missing.stderr(),
+            format!("{RECOVERY_NOTICE}vault-pm: not found\n"),
+        );
+        assert_eq!(
+            run(["status"], &TestHost::new(paths, [])).stdout(),
+            "Status: locked\n"
+        );
+    }
+
+    #[test]
+    fn a_portable_export_finishes_an_interrupted_publication_first() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"export correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        let destination = root.0.join("recovered-export.vpm");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [passphrase, b"distinct export passphrase".to_vec()],
+        );
+        let exported = run(
+            ["export", destination.to_str().expect("UTF-8 path")],
+            &export_host,
+        );
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        assert_eq!(exported.stderr(), RECOVERY_NOTICE, "{exported:?}");
+        assert!(destination.exists());
+        assert_eq!(
+            run(["status"], &TestHost::new(paths, [])).stdout(),
+            "Status: locked\n"
+        );
+    }
+
     #[test]
     fn help_has_no_host_side_effects() {
         let root = TestRoot::new();
@@ -8089,6 +9217,231 @@ mod tests {
         assert_eq!(output.exit_code(), ExitCode::Success);
         assert_eq!(output.stdout(), USAGE);
         assert!(!root.0.join("config").exists());
+    }
+
+    /// Recursively collect every encrypted repository object as `(path, bytes)`.
+    ///
+    /// VLT-PM43 §7 gate 1. The rotation claim is not "the same number of
+    /// objects survived" but "not one byte of any of them changed", so the
+    /// comparison is over the whole tree.
+    fn object_tree(root: &std::path::Path) -> BTreeMap<PathBuf, Vec<u8>> {
+        let mut tree = BTreeMap::new();
+        let Ok(entries) = fs::read_dir(root) else {
+            return tree;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                tree.extend(object_tree(&path));
+            } else if let Ok(bytes) = fs::read(&path) {
+                tree.insert(path, bytes);
+            }
+        }
+        tree
+    }
+
+    #[test]
+    fn passphrase_rotate_parser_takes_one_verb_and_no_arguments() {
+        for arguments in [
+            vec!["passphrase"],
+            vec!["passphrase", "change"],
+            vec!["passphrase", "rotate", "extra"],
+            vec!["passphrase", "rotate", "--force"],
+        ] {
+            let root = TestRoot::new();
+            let host = TestHost::new(root.paths(), []);
+            assert_eq!(
+                run(arguments.clone(), &host).exit_code(),
+                ExitCode::InvalidInput,
+                "{arguments:?}"
+            );
+        }
+        assert!(USAGE.contains("passphrase rotate"));
+    }
+
+    /// The measurement §14.8 actually asks for, at the composition root.
+    ///
+    /// Every CLI vault is audit-first from generation zero (VLT-PM21), so there
+    /// is no such thing here as a rotation with a zero repository footprint:
+    /// the ceremony publishes its own audit-only commit, and that commit is
+    /// three new objects. The honest statement of "without re-encrypting every
+    /// item body" is therefore *append-only*: every object that existed before
+    /// the rotation is still present and byte-for-byte unchanged.
+    ///
+    /// That is not a weaker claim than it sounds. Re-encrypting a body would
+    /// necessarily change an existing object's bytes or replace it with a new
+    /// identity, and either would fail the loop below. The stricter
+    /// "not one write at all" form of the claim is measured on a pre-audit
+    /// vault by `vault-pm-application`'s `rotation_rewraps_the_root_key_and_
+    /// writes_no_repository_object`, which watches the object store's complete
+    /// change feed.
+    #[test]
+    fn rotation_leaves_every_encrypted_object_byte_identical() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation original passphrase".to_vec();
+        let new = b"cli rotation replacement passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [
+                old.clone(),
+                b"rotation item password".to_vec(),
+                b"rotation item notes".to_vec(),
+            ],
+            [
+                "Rotation Fixture".to_owned(),
+                "person@example.test".to_owned(),
+                "1".to_owned(),
+                "https://rotation.example.test".to_owned(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+
+        let before = object_tree(paths.object_root());
+        assert!(!before.is_empty(), "the fixture must have written objects");
+
+        let rotate_host = TestHost::new(paths.clone(), [old.clone(), new.clone()]);
+        let rotated = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(rotated.exit_code(), ExitCode::Success, "{rotated:?}");
+        assert_eq!(rotated.stdout(), "Vault passphrase rotated.\n");
+        assert!(rotated.stderr().is_empty());
+
+        // Every object that existed before the rotation is still there, and
+        // every one of them is byte-for-byte what it was. The rotation only
+        // *appends*, and what it appends is its own audit-only commit -- see
+        // the doc comment above for why appending is the honest ceiling here.
+        let after = object_tree(paths.object_root());
+        for (path, bytes) in &before {
+            assert_eq!(after.get(path), Some(bytes), "{path:?} changed");
+        }
+        assert!(after.len() > before.len());
+
+        // The old passphrase is refused, the new one lists the same item, and
+        // neither passphrase is anywhere in the tree.
+        let stale_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(
+            run(["item", "list"], &stale_host).exit_code(),
+            ExitCode::Locked
+        );
+        let fresh_host = TestHost::new(paths.clone(), [new]);
+        let listed = run(["item", "list"], &fresh_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("Rotation Fixture"));
+        assert!(!object_tree(&root.0)
+            .values()
+            .any(|bytes| bytes.windows(old.len()).any(|window| window == old)));
+    }
+
+    #[test]
+    fn a_wrong_current_passphrase_rotates_nothing() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation refusal passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let before = object_tree(&root.0);
+
+        let rotate_host = TestHost::new(
+            paths.clone(),
+            [
+                b"not the current passphrase".to_vec(),
+                b"a replacement nobody will ever need".to_vec(),
+            ],
+        );
+        let refused = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(refused.exit_code(), ExitCode::Locked, "{refused:?}");
+        assert!(refused.stdout().is_empty());
+
+        // Nothing durable moved, and the original passphrase still works.
+        assert_eq!(object_tree(&root.0), before);
+        let still_open = TestHost::new(paths, [old]);
+        assert_eq!(
+            run(["item", "list"], &still_open).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    #[test]
+    fn a_mismatched_new_passphrase_is_refused_before_anything_rotates() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation confirm passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        assert_eq!(
+            run(
+                ["audit", "enable"],
+                &TestHost::new(paths.clone(), [old.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let before = object_tree(paths.object_root());
+
+        // The host is asked for the new passphrase and cannot supply one, which
+        // is the same boundary a confirmation mismatch reaches.
+        let rotate_host = TestHost::new(paths.clone(), [old.clone()]);
+        let refused = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(refused.exit_code(), ExitCode::Provider, "{refused:?}");
+
+        // The failed attempt is durable — the audit epoch grew — but no wrap
+        // moved, so the current passphrase is still the current passphrase.
+        assert_ne!(object_tree(paths.object_root()), before);
+        let audit_host = TestHost::new(paths.clone(), [old.clone()]);
+        let listed = run(["audit", "list"], &audit_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=passphrase_rotate\toutcome=failed"));
+        assert_eq!(
+            run(["item", "list"], &TestHost::new(paths, [old])).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    #[test]
+    fn an_audited_rotation_records_the_event_before_the_wrap_moves() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli audited rotation passphrase".to_vec();
+        let new = b"cli audited rotation replacement".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        assert_eq!(
+            run(
+                ["audit", "enable"],
+                &TestHost::new(paths.clone(), [old.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let rotate_host = TestHost::new(paths.clone(), [old.clone(), new.clone()]);
+        assert_eq!(
+            run(["passphrase", "rotate"], &rotate_host).exit_code(),
+            ExitCode::Success
+        );
+
+        // The event is readable only under the new passphrase, which is itself
+        // proof that the event was durable before the wrap moved: an audit
+        // chain the rotation did not carry forward would not verify.
+        let audit_host = TestHost::new(paths.clone(), [new.clone()]);
+        let listed = run(["audit", "list"], &audit_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=passphrase_rotate\toutcome=succeeded"));
+        let verified = run(["audit", "verify"], &TestHost::new(paths, [new]));
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
     }
 
     /// A scripted stand-in for the controlling terminal a real session reads.
@@ -8111,6 +9464,21 @@ mod tests {
         fn new(lines: impl IntoIterator<Item = &'static str>) -> Self {
             Self {
                 lines: Mutex::new(lines.into_iter().map(str::to_owned).collect()),
+                rendered: Mutex::new(Vec::new()),
+                readable: true,
+                idle_host: None,
+                idle_ms: 0,
+            }
+        }
+
+        /// A terminal scripted with lines built at run time.
+        ///
+        /// `new` takes `&'static str` because almost every scripted line is a
+        /// literal. A command line naming an item selector cannot be, because
+        /// the selector is minted by the `item add` that precedes it.
+        fn owned(lines: impl IntoIterator<Item = String>) -> Self {
+            Self {
+                lines: Mutex::new(lines.into_iter().collect()),
                 rendered: Mutex::new(Vec::new()),
                 readable: true,
                 idle_host: None,
@@ -8357,6 +9725,10 @@ mod tests {
             "init",
             "vault create work",
             "shell",
+            // VLT-PM43 §3.1. A session's premise is that the authenticator it
+            // collected once still opens the vault, and a rotation is exactly
+            // the event that makes that false.
+            "passphrase rotate",
             "--vault work item list",
             "\"unterminated",
             "a b c d e f g h i",
@@ -8365,10 +9737,10 @@ mod tests {
         let output = run_with_terminal(["shell"], &host, &terminal);
 
         assert_eq!(output.exit_code(), ExitCode::Success);
-        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 6]);
+        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 7]);
         assert_eq!(
             terminal.transcript(),
-            "vault-pm: invalid command\n".repeat(6)
+            "vault-pm: invalid command\n".repeat(7)
         );
         // No passphrase was ever collected, so nothing was retained to wipe.
         assert_eq!(host.remaining_secrets(), 0);
@@ -8786,5 +10158,758 @@ mod tests {
             session.authenticator(&host),
             Err(HostError::Unavailable)
         ));
+    }
+
+    /// Build the host a successful `password generate --reveal` needs: one
+    /// scripted `yes` for the confirmation, and nothing else.
+    fn confirming_host(root: &TestRoot, seed: u8) -> TestHost {
+        TestHost::with_texts_and_entropy_seed(root.paths(), [], ["yes".to_owned()], seed)
+    }
+
+    #[test]
+    fn password_generate_parses_the_whole_documented_policy_surface() {
+        assert_eq!(
+            parse(["password", "generate", "--reveal"]),
+            default_invocation(Command::PasswordGenerate {
+                policy: PasswordPolicyV1::new(
+                    DEFAULT_PASSWORD_LENGTH,
+                    CharacterClassesV1::all(),
+                    false
+                )
+                .unwrap(),
+                output: SecretOutputMode::Reveal,
+            })
+        );
+        assert_eq!(
+            parse(["password", "generate", "--copy"]),
+            default_invocation(Command::PasswordGenerate {
+                policy: PasswordPolicyV1::new(
+                    DEFAULT_PASSWORD_LENGTH,
+                    CharacterClassesV1::all(),
+                    false
+                )
+                .unwrap(),
+                output: SecretOutputMode::Copy,
+            })
+        );
+        // Flags compose, in any order, and each one narrows exactly one thing.
+        let narrowed = parse([
+            "password",
+            "generate",
+            "--exclude-ambiguous",
+            "--length",
+            "32",
+            "--no-symbols",
+            "--reveal",
+            "--no-uppercase",
+        ]);
+        assert_eq!(
+            narrowed,
+            default_invocation(Command::PasswordGenerate {
+                policy: PasswordPolicyV1::new(
+                    32,
+                    CharacterClassesV1 {
+                        lowercase: true,
+                        uppercase: false,
+                        digits: true,
+                        symbols: false,
+                    },
+                    true
+                )
+                .unwrap(),
+                output: SecretOutputMode::Reveal,
+            })
+        );
+        // Lowercase 25 + digits 8, with the ambiguous characters gone.
+        let Ok(Invocation {
+            command: Command::PasswordGenerate { policy, .. },
+            ..
+        }) = narrowed
+        else {
+            panic!("the narrowed policy must parse");
+        };
+        assert_eq!(policy.alphabet().len(), 33);
+        assert_eq!(policy.length(), 32);
+        for ambiguous in b"01IOl|" {
+            assert!(!policy.alphabet().contains(ambiguous));
+        }
+    }
+
+    #[test]
+    fn password_generate_refuses_an_under_strength_policy_with_its_own_message() {
+        let root = TestRoot::new();
+        for arguments in [
+            // 12 characters over all 89 is 77.7 bits: one character short.
+            vec!["password", "generate", "--length", "12", "--reveal"],
+            // Lowercase only needs 18; 17 is 79.9 bits.
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "17",
+                "--no-uppercase",
+                "--no-digits",
+                "--no-symbols",
+                "--reveal",
+            ],
+            // A numeric PIN needs 25 digits to earn the name.
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "24",
+                "--no-lowercase",
+                "--no-uppercase",
+                "--no-symbols",
+                "--reveal",
+            ],
+        ] {
+            let host = confirming_host(&root, 1);
+            let refused = run(arguments.clone(), &host);
+            assert_eq!(
+                refused.exit_code(),
+                ExitCode::InvalidInput,
+                "{arguments:?} must be refused"
+            );
+            assert_eq!(
+                refused.stderr(),
+                "vault-pm: password policy below the minimum entropy floor\n"
+            );
+            assert!(refused.stdout().is_empty());
+            // Refused before the confirmation prompt, so nothing was consumed
+            // and nothing was minted.
+            assert_eq!(host.revealed_count(), 0);
+            assert_eq!(host.texts.lock().unwrap().len(), 1);
+        }
+        // And one character more is accepted in each case.
+        for arguments in [
+            vec!["password", "generate", "--length", "13", "--reveal"],
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "18",
+                "--no-uppercase",
+                "--no-digits",
+                "--no-symbols",
+                "--reveal",
+            ],
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "25",
+                "--no-lowercase",
+                "--no-uppercase",
+                "--no-symbols",
+                "--reveal",
+            ],
+        ] {
+            let host = confirming_host(&root, 1);
+            let accepted = run(arguments.clone(), &host);
+            assert_eq!(
+                accepted.exit_code(),
+                ExitCode::Success,
+                "{arguments:?} must be accepted"
+            );
+            assert_eq!(host.revealed_count(), 1);
+        }
+    }
+
+    #[test]
+    fn password_generate_delivers_only_through_the_terminal() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        let generated = run(["password", "generate", "--reveal"], &host);
+
+        assert_eq!(generated.exit_code(), ExitCode::Success, "{generated:?}");
+        // The one secret this command produces never enters ordinary output.
+        assert!(generated.stdout().is_empty());
+        assert!(generated.stderr().is_empty());
+
+        let revealed = host.revealed_only();
+        assert_eq!(revealed.len(), DEFAULT_PASSWORD_LENGTH);
+        let alphabet =
+            PasswordPolicyV1::new(DEFAULT_PASSWORD_LENGTH, CharacterClassesV1::all(), false)
+                .unwrap();
+        for byte in &revealed {
+            assert!(
+                alphabet.alphabet().contains(byte),
+                "{byte} is outside the selected alphabet"
+            );
+        }
+        // Nothing about the request is echoed either.
+        assert!(!generated.stdout().contains("24"));
+
+        // The same host, driven again, produces the same value: the CLI adds no
+        // randomness of its own on top of what the host supplied.
+        let repeat_host = confirming_host(&root, 1);
+        assert_eq!(
+            run(["password", "generate", "--reveal"], &repeat_host).exit_code(),
+            ExitCode::Success
+        );
+        assert_eq!(repeat_host.revealed_only(), revealed);
+
+        // A different entropy source produces a different value, which is what
+        // proves the randomness is actually reaching the sampler.
+        let other_host = confirming_host(&root, 200);
+        assert_eq!(
+            run(["password", "generate", "--reveal"], &other_host).exit_code(),
+            ExitCode::Success
+        );
+        assert_ne!(other_host.revealed_only(), revealed);
+    }
+
+    #[test]
+    fn password_generate_honours_a_narrowed_alphabet() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 3);
+        let generated = run(
+            [
+                "password",
+                "generate",
+                "--length",
+                "40",
+                "--no-symbols",
+                "--exclude-ambiguous",
+                "--reveal",
+            ],
+            &host,
+        );
+        assert_eq!(generated.exit_code(), ExitCode::Success, "{generated:?}");
+        let revealed = host.revealed_only();
+        assert_eq!(revealed.len(), 40);
+        for byte in &revealed {
+            assert!(byte.is_ascii_alphanumeric(), "{byte} is not alphanumeric");
+            assert!(!b"01IOl|".contains(byte), "{byte} is ambiguous");
+        }
+    }
+
+    #[test]
+    fn password_generate_mints_nothing_when_the_reveal_is_refused() {
+        let root = TestRoot::new();
+        for answer in ["no", "", "YES", "yes please", "y"] {
+            let host = TestHost::with_texts(root.paths(), [], [answer.to_owned()]);
+            let refused = run(["password", "generate", "--reveal"], &host);
+            assert_eq!(
+                refused.exit_code(),
+                ExitCode::InvalidInput,
+                "{answer:?} must not authorize a reveal"
+            );
+            assert_eq!(refused.stderr(), "vault-pm: invalid command\n");
+            assert_eq!(host.revealed_count(), 0);
+        }
+        // A host that cannot collect the answer at all is a provider failure,
+        // and still delivers nothing.
+        let silent = TestHost::new(root.paths(), []);
+        let unavailable = run(["password", "generate", "--reveal"], &silent);
+        assert_eq!(unavailable.exit_code(), ExitCode::Provider);
+        assert_eq!(silent.revealed_count(), 0);
+    }
+
+    #[test]
+    fn password_generate_copy_is_recognized_and_refused_before_any_prompt() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        let refused = run(["password", "generate", "--copy"], &host);
+        assert_eq!(refused.exit_code(), ExitCode::Unsupported);
+        assert_eq!(refused.stderr(), "vault-pm: unsupported capability\n");
+        assert!(refused.stdout().is_empty());
+        assert_eq!(host.revealed_count(), 0);
+        // The scripted confirmation was never consumed: `--copy` fails before
+        // asking a person to authorize a delivery this build cannot perform.
+        assert_eq!(host.texts.lock().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn password_generate_fails_closed_when_the_os_csprng_is_unavailable() {
+        let root = TestRoot::new();
+        let host = TestHost::without_entropy_with_texts(root.paths(), ["yes".to_owned()]);
+        let failed = run(["password", "generate", "--reveal"], &host);
+        assert_eq!(failed.exit_code(), ExitCode::Provider);
+        assert_eq!(failed.stderr(), "vault-pm: storage unavailable\n");
+        assert!(failed.stdout().is_empty());
+        // No weaker source is substituted, so nothing is delivered.
+        assert_eq!(host.revealed_count(), 0);
+    }
+
+    #[test]
+    fn password_generate_never_touches_the_vault_layout() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        assert_eq!(
+            run(["password", "generate", "--reveal"], &host).exit_code(),
+            ExitCode::Success
+        );
+        // The most common moment to want a generated password is before the
+        // vault exists, so this must work on an untouched root and must leave
+        // it untouched: no config, no writer lock, no owner state.
+        assert!(!root.0.join("config").exists());
+        assert_eq!(host.remaining_secrets(), 0);
+        // And no passphrase was ever asked for: the scripted secret queue is
+        // empty, and a command that prompted would have failed instead.
+        assert_eq!(host.revealed_count(), 1);
+    }
+
+    #[test]
+    fn usage_lists_password_generate_and_the_shell_delegates_it_unprefixed() {
+        assert!(USAGE.contains("vault-pm password generate"));
+        // The one-shot table names no `--vault` prefix for this verb, because
+        // the parser refuses one.
+        assert!(!USAGE.contains("[--vault NAME] password"));
+        assert!(takes_no_vault_selector("password"));
+        for vault_scoped in ["item", "status", "audit", "search", "conflict", "history"] {
+            assert!(!takes_no_vault_selector(vault_scoped));
+        }
+        // A session must be able to run it: it is neither refused by the shell
+        // nor prefixed with the bound vault.
+        assert!(!shell::is_refused("password"));
+    }
+
+    // ── VLT-PM45 — `totp code` ────────────────────────────────────────────
+
+    /// Add one TOTP item carrying the RFC 6238 Appendix B SHA-1 seed and
+    /// return its canonical selector.
+    ///
+    /// `GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ` is the Base32 spelling of the ASCII
+    /// bytes `12345678901234567890`, which is exactly the seed the RFC
+    /// publishes its answers for. That is why the codes asserted below are
+    /// checkable against the RFC rather than against this implementation.
+    fn totp_item(paths: &LocalVaultPaths, passphrase: &[u8]) -> String {
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [
+                passphrase.to_vec(),
+                b"GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ".to_vec(),
+            ],
+            [
+                "GitHub ada@example.com".to_owned(),
+                "GitHub".to_owned(),
+                "SHA1".to_owned(),
+                "6".to_owned(),
+                "30".to_owned(),
+            ],
+            97,
+        );
+        let added = run(["item", "add", "totp"], &host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap()
+            .to_owned()
+    }
+
+    #[test]
+    fn totp_code_grammar_is_closed() {
+        let item = ItemId::new([0x11; 16]);
+        let rendered = item.to_user_string();
+        assert_eq!(
+            parse(["totp", "code", &rendered, "--reveal"]),
+            default_invocation(Command::TotpCode {
+                item_id: item,
+                output: SecretOutputMode::Reveal,
+            })
+        );
+        assert_eq!(
+            parse(["totp", "code", &rendered, "--copy"]),
+            default_invocation(Command::TotpCode {
+                item_id: item,
+                output: SecretOutputMode::Copy,
+            })
+        );
+        // Unlike `password generate`, this command opens a vault, so the
+        // command-scoped selector is meaningful and is accepted.
+        assert_eq!(
+            parse(["--vault", "work", "totp", "code", &rendered, "--reveal"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::TotpCode {
+                    item_id: item,
+                    output: SecretOutputMode::Reveal,
+                },
+            })
+        );
+        assert!(!takes_no_vault_selector("totp"));
+        assert!(USAGE.contains("vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n"));
+
+        for rejected in [
+            vec!["totp"],
+            vec!["totp", "code"],
+            // No default delivery: the output flag is required.
+            vec!["totp", "code", rendered.as_str()],
+            vec!["totp", "code", rendered.as_str(), "--reveal", "--copy"],
+            vec!["totp", "code", rendered.as_str(), "--reveal", "--reveal"],
+            vec!["totp", "code", rendered.as_str(), "--json"],
+            vec![
+                "totp",
+                "code",
+                rendered.as_str(),
+                "--unsafe-include-secrets",
+            ],
+            vec!["totp", "code", "--reveal"],
+            vec!["totp", "code", &rendered.to_lowercase(), "--reveal"],
+            vec!["totp", "code", "not-an-item-id", "--reveal"],
+            vec!["totp", "show", rendered.as_str(), "--reveal"],
+            vec!["totp", "codes", rendered.as_str(), "--reveal"],
+            vec!["totp", "code", rendered.as_str(), "--reveal", "extra"],
+        ] {
+            assert_eq!(
+                parse(rejected.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{rejected:?}"
+            );
+        }
+    }
+
+    /// The one end-to-end assertion that the code is right rather than merely
+    /// six digits: the fixed test clock sits at 1 700 000 000 000 ms, and RFC
+    /// 6238 says the Appendix B SHA-1 seed produces `921300` at that step,
+    /// with ten seconds left in it.
+    #[test]
+    fn totp_code_delivers_the_published_code_only_through_the_terminal() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp code passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            101,
+        );
+        let output = run(["totp", "code", &item, "--reveal"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        assert!(host.revealed_equals(b"921300"));
+        // Standard output carries the non-secret window and nothing else. The
+        // code is nowhere in it.
+        assert_eq!(output.stdout(), "Code valid for 10 more seconds\n");
+        assert_eq!(output.stderr(), "");
+        assert!(!output.stdout().contains("921300"));
+
+        // The access is audited, and the audit trail carries the fact of the
+        // read without the code, the algorithm, the period, or the label.
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 103),
+        );
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=succeeded"))
+                .count(),
+            1,
+            "{audit:?}"
+        );
+        for forbidden in [
+            "921300",
+            "GEZDGNBVGY3TQOJQ",
+            "12345678901234567890",
+            "GitHub",
+            "SHA1",
+            "valid for",
+        ] {
+            assert!(!audit.stdout().contains(forbidden), "{forbidden}");
+        }
+    }
+
+    /// The code comes from a *fresh* clock reading, not from the one reserved
+    /// for the audit event before authentication.
+    ///
+    /// The test host's first reading is always the fixed base time, and here
+    /// every later reading is a whole period further on — so a command that
+    /// reused the reserved reading would return the base-time code `921300`,
+    /// and one that reads again cannot. This is VLT-PM45 §4.1, and it is the
+    /// single most likely way for this command to be quietly wrong in
+    /// production, where an Argon2id unlock and a human typing `yes` really do
+    /// put seconds between the two readings.
+    #[test]
+    fn totp_code_computes_from_a_fresh_clock_reading() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp fresh clock passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let host =
+            TestHost::with_texts_and_clock_step(paths, [passphrase], ["yes".to_owned()], 30_000);
+        let output = run(["totp", "code", &item, "--reveal"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        let revealed = host.revealed_only();
+        assert_eq!(revealed.len(), 6);
+        assert!(revealed.iter().all(u8::is_ascii_digit));
+        assert_ne!(
+            revealed.as_slice(),
+            b"921300",
+            "the code must not come from the pre-authentication reading"
+        );
+        // Whole-period steps land on the same phase, so the window is
+        // unchanged — which is what makes the code the only thing that moved.
+        assert_eq!(output.stdout(), "Code valid for 10 more seconds\n");
+    }
+
+    #[test]
+    fn totp_code_copy_is_recognized_and_refused_before_any_prompt() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp copy passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        // No passphrase and no confirmation are scripted. A command that
+        // prompted for either would fail with a different class, so the
+        // `Unsupported` result is itself the evidence that neither happened.
+        let host = TestHost::new(paths, []);
+        let output = run(["totp", "code", &item, "--copy"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Unsupported, "{output:?}");
+        assert!(output.stdout().is_empty());
+        assert_eq!(host.revealed_count(), 0);
+    }
+
+    #[test]
+    fn totp_code_refusal_releases_nothing_and_still_audits() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp refusal passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        // Anything but an exact lowercase `yes` refuses.
+        for answer in ["no", "YES", "y", ""] {
+            let host = TestHost::with_texts_and_entropy_seed(
+                paths.clone(),
+                [passphrase.clone()],
+                [answer.to_owned()],
+                107,
+            );
+            let output = run(["totp", "code", &item, "--reveal"], &host);
+            assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{answer:?}");
+            assert!(output.stdout().is_empty());
+            assert_eq!(host.revealed_count(), 0);
+        }
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 109),
+        );
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=denied"))
+                .count(),
+            4,
+            "{audit:?}"
+        );
+    }
+
+    /// A clock failure on the *fresh* reading still leaves an audit row.
+    ///
+    /// This command reads the clock exactly twice: once before authentication
+    /// to reserve the audit timestamp, and once after the confirmation answer
+    /// to compute the code. The second one is the interesting failure. An
+    /// authenticated attempt has by then reached the confirmation prompt, so
+    /// returning the provider error straight from a `?` would be the one path
+    /// through this command on which something happened and left no trace —
+    /// exactly what the ceremony exists to prevent. The attempt therefore
+    /// proceeds as unconfirmed and publishes `Denied` first.
+    ///
+    /// Failing the *first* reading is the control. That is a pre-authentication
+    /// failure, and VLT-PM25 §3 is explicit that it must not claim an item
+    /// access occurred — so it correctly leaves no row at all. The two cases
+    /// return the same class and differ only in the audit trail, which is why
+    /// they are asserted together.
+    #[test]
+    fn totp_code_publishes_denied_when_the_fresh_clock_reading_fails() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp clock failure passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let denied_rows = |paths: LocalVaultPaths, seed: u8| {
+            let audit = run(
+                ["audit", "list"],
+                &TestHost::with_entropy_seed(paths, [passphrase.clone()], seed),
+            );
+            assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=denied"))
+                .count()
+        };
+        assert_eq!(denied_rows(paths.clone(), 137), 0);
+
+        // Control: the pre-authentication reservation fails. No row.
+        let early = TestHost::with_texts_and_failing_clock(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            0,
+        );
+        let output = run(["totp", "code", &item, "--reveal"], &early);
+        assert_eq!(output.exit_code(), ExitCode::Provider, "{output:?}");
+        assert_eq!(early.revealed_count(), 0);
+        assert_eq!(denied_rows(paths.clone(), 139), 0);
+
+        // The fresh reading fails, after an exact-`yes` confirmation. Same
+        // class to the caller, but the access is now on the record.
+        let late = TestHost::with_texts_and_failing_clock(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            1,
+        );
+        let output = run(["totp", "code", &item, "--reveal"], &late);
+        assert_eq!(output.exit_code(), ExitCode::Provider, "{output:?}");
+        assert!(output.stdout().is_empty());
+        assert_eq!(late.revealed_count(), 0, "no code may be released");
+        assert_eq!(late.clock_reads(), 2, "the command reads the clock twice");
+        assert_eq!(denied_rows(paths, 149), 1);
+    }
+
+    #[test]
+    fn totp_code_on_a_non_totp_item_is_invalid_and_missing_items_are_not_found() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp wrong kind passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let login_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), b"login password".to_vec(), Vec::new()],
+            [
+                "Not a TOTP item".to_owned(),
+                "ada@example.com".to_owned(),
+                "0".to_owned(),
+            ],
+            113,
+        );
+        let added = run(["item", "add", "login"], &login_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let login = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap()
+            .to_owned();
+
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            127,
+        );
+        let output = run(["totp", "code", &login, "--reveal"], &host);
+        assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{output:?}");
+        assert_eq!(host.revealed_count(), 0);
+
+        let missing = ItemId::new([0x5b; 16]).to_user_string();
+        let missing_host =
+            TestHost::with_texts_and_entropy_seed(paths, [passphrase], ["yes".to_owned()], 131);
+        let output = run(["totp", "code", &missing, "--reveal"], &missing_host);
+        assert_eq!(output.exit_code(), ExitCode::NotFound, "{output:?}");
+        assert_eq!(missing_host.revealed_count(), 0);
+    }
+
+    #[test]
+    fn totp_code_runs_inside_an_interactive_shell() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp shell passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        // The verb is not refused by the shell, and unlike `password generate`
+        // it is prefixed with the session's bound vault.
+        assert!(!shell::is_refused("totp"));
+        let host = TestHost::with_texts(paths, [passphrase], ["yes".to_owned()]);
+        let terminal =
+            ScriptedTerminal::owned([format!("totp code {item} --reveal"), "exit".to_owned()]);
+        let session = run_with_terminal(["shell"], &host, &terminal);
+        assert_eq!(session.exit_code(), ExitCode::Success, "{session:?}");
+        assert!(host.revealed_equals(b"921300"));
+        // The window reaches the session transcript; the code does not.
+        assert_eq!(terminal.transcript(), "Code valid for 10 more seconds\n");
+        assert!(!terminal.transcript().contains("921300"));
+        assert_eq!(terminal.exit_codes(), vec![ExitCode::Success]);
+    }
+
+    #[test]
+    fn password_generate_runs_inside_an_interactive_shell() {
+        let root = TestRoot::new();
+        let passphrase = b"shell generate passphrase".to_vec();
+        let init_host = TestHost::new(root.paths(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let host = TestHost::with_texts(root.paths(), [], ["yes".to_owned()]);
+        let terminal = ScriptedTerminal::new(["password generate --reveal", "exit"]);
+        let session = run_with_terminal(["shell"], &host, &terminal);
+        assert_eq!(session.exit_code(), ExitCode::Success, "{session:?}");
+        // Delivered once, through the terminal adapter, without ever unlocking:
+        // the scripted passphrase queue is untouched.
+        assert_eq!(host.revealed_count(), 1);
+        assert_eq!(host.remaining_secrets(), 0);
+        // The session's rendered output never carries the value either: the
+        // shell renders exactly what the one-shot command produced, which is
+        // nothing.
+        let generated = host.revealed_only();
+        let generated = core::str::from_utf8(&generated).expect("generated passwords are ASCII");
+        assert!(!terminal.transcript().contains(generated));
+        assert_eq!(terminal.exit_codes(), vec![ExitCode::Success]);
     }
 }

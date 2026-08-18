@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:96c9978d515355d7",
+  "sourceHash": "fnv1a64:610a0729798efa47",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e5d3423d223860c",
+      "sourceHash": "fnv1a64:d7efb9f6cdc7e7e2",
       "notice": null,
       "blocks": [
         {

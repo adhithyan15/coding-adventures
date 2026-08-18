@@ -22,7 +22,7 @@ sentence about yourself.
 ## The phrase, assembled
 
 **माझं** (*mājhaṁ*, my) + **नाव** (*nāv*, name) + **[your name]** + **आहे**
-(*āhe*, is) → **माझं नाव मीरा आहे** (*mājhaṁ nāv Mira āhe*) — "my name is Mira."
+(*āhe*, is) → **माझं नाव मीरा आहे** (*mājhaṁ nāv Mīrā āhe*) — "my name is Mira."
 
 Notice the shape:
 - **माझं** is neuter, agreeing with the neuter **नाव**.
@@ -40,7 +40,7 @@ fact about yourself.
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "mājhaṁ nāv Mira āhe" — my name is Mira]
+- [YOU SAY: "mājhaṁ nāv Mīrā āhe" — my name is Mira]
 - [YOU SAY: it with your own name in the blank]
 
 ## Wrap-up Recall

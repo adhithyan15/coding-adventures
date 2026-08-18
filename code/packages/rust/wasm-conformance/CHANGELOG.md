@@ -1,5 +1,132 @@
 # Changelog — wasm-conformance
 
+## 0.1.49 — 2026-08-18 — vendor simd_bit_shift.wast; baseline regen (task #159-161)
+
+### Changed
+
+- Baseline regen: vendored `simd_bit_shift.wast` -- `ixNxM.shl`/
+  `shr_s`/`shr_u` across all 4 lane widths, the first mixed-type
+  binary SIMD op family (`v128` + scalar `i32`, not two `v128`s), see
+  `wasm-opcodes`'s own CHANGELOG entry. 100% pass on every gradeable
+  directive kind (1/1 modules, 187/187 assert_return, 24/24
+  assert_invalid, 15/15 assert_malformed; 24 assert_return directives
+  grade `NotYetSupported`). Aggregate `assert_return` rose from
+  23750/23767 to 23937/23954 (+187, exactly matching the new file's
+  own count, no ripple into unrelated files this time); `assert_invalid`
+  rose by 24 and `assert_malformed` rose by 15 (both still 100.0% of
+  gradeable directives).
+
+## 0.1.48 — 2026-08-18 — vendor simd_i64x2_arith.wast/simd_i64x2_arith2.wast/simd_i64x2_cmp.wast; baseline regen (task #156-158)
+
+### Changed
+
+- Baseline regen: vendored `simd_i64x2_arith.wast`/`simd_i64x2_arith2.
+  wast`/`simd_i64x2_cmp.wast` -- i64x2's first REAL ARITHMETIC family
+  (`abs`/`neg`/`add`/`sub`/`mul`/`eq`/`ne`/`lt_s`/`gt_s`/`le_s`/
+  `ge_s`), see `wasm-opcodes`'s own CHANGELOG entry. 100% pass on
+  every directive kind across all three files (5/5 modules, 310/310
+  assert_return, 23/23 assert_invalid). Implementing real i64x2
+  arithmetic also unblocked 22 previously-`NotYetSupported`
+  `assert_return` directives in the UNRELATED, already-vendored
+  `simd_const.wast` (its i64x2 `v128.const` round-trip cases needed a
+  real i64x2 op to observe the result through) -- a legitimate ripple
+  effect, not a regression. Aggregate `assert_return` rose from
+  23418/23435 to 23750/23767 (332 = 310 new + 22 newly-unblocked);
+  `assert_invalid` rose by 23 (still 100.0% of gradeable directives).
+
+## 0.1.47 — 2026-08-18 — vendor simd_boolean.wast; baseline regen (task #153-155)
+
+### Changed
+
+- Baseline regen: vendored `simd_boolean.wast` -- `v128.any_true` +
+  `ixNxM.all_true`/`bitmask` across all 4 lane widths, the first
+  `v128`-in/`i32`-out reduction shape besides `extract_lane` and the
+  first opcodes in this interpreter to read the operand as 8-byte
+  (`i64`) lanes, see `wasm-opcodes`'s own CHANGELOG entry. 100% pass
+  on every directive kind (2/2 modules, 259/259 assert_return, 12/12
+  assert_invalid, 4/4 assert_malformed). Aggregate `assert_return`
+  rose from 23159/23176 to 23418/23435; `assert_invalid` rose by 12
+  (still 100.0% of gradeable directives); `assert_malformed` rose by 4
+  (still 100.0% of gradeable directives).
+
+## 0.1.46 — 2026-08-18 — vendor simd_bitwise.wast; baseline regen (task #150-152)
+
+### Changed
+
+- Baseline regen: vendored `simd_bitwise.wast` -- `v128.not`/`and`/
+  `andnot`/`or`/`xor`/`bitselect`, the lane-width-agnostic raw-byte
+  bitwise family, a strategic pivot from "widen the next narrow
+  per-lane-width family" to "close the highest-real-world-impact
+  remaining gap" now that `i8x16`/`i16x8`/`i32x4` all have complete
+  arith+cmp+arith2+widening coverage, see `wasm-opcodes`'s own
+  CHANGELOG entry. 100% pass on every gradeable directive kind (1/1
+  modules, 126/126 assert_return, 28/28 assert_invalid; 13
+  assert_return directives grade `NotYetSupported` because they
+  depend on `v128.load`, not a real failure). Aggregate
+  `assert_return` rose from 23033/23050 to 23159/23176;
+  `assert_invalid` rose by 28 (still 100.0% of gradeable directives).
+
+## 0.1.45 — 2026-08-18 — vendor simd_i16x8_extadd_pairwise_i8x16.wast/simd_i16x8_extmul_i8x16.wast; baseline regen (task #147-149)
+
+### Changed
+
+- Baseline regen: vendored `simd_i16x8_extadd_pairwise_i8x16.wast` and
+  `simd_i16x8_extmul_i8x16.wast` -- `i16x8`'s own widening family
+  (extadd_pairwise_i8x16_s/u, extmul_low/high_i8x16_s/u), mirroring
+  the already-implemented `i32x4`-from-`i16x8` widening family one
+  lane width down, closing the last remaining gap between `i16x8` and
+  `i8x16`'s coverage, see `wasm-opcodes`'s own CHANGELOG entry. 100%
+  pass on EVERY directive kind across both files (2/2 modules,
+  120/120 assert_return, 16/16 assert_invalid). Aggregate
+  `assert_return` rose from 22913/22930 to 23033/23050;
+  `assert_invalid` rose by 16 (still 100.0% of gradeable directives).
+
+## 0.1.44 — 2026-08-18 — vendor simd_i16x8_arith2.wast; baseline regen (task #144-146)
+
+### Changed
+
+- Baseline regen: vendored `simd_i16x8_arith2.wast` -- `i16x8`'s own
+  abs/min_s/min_u/max_s/max_u/avgr_u family, closing the same
+  "arith2" gap PR8 just closed for `i8x16` (no `i16x8.popcnt` -- WASM
+  SIMD only defines `popcnt` for `i8x16`), see `wasm-opcodes`'s own
+  CHANGELOG entry. 100% pass on EVERY directive kind (2/2 modules,
+  151/151 assert_return, 17/17 assert_invalid, 2/2 assert_malformed).
+  Aggregate `assert_return` rose from 22762/22779 to 22913/22930;
+  `assert_invalid` rose by 17 (still 100.0% of gradeable directives);
+  `assert_malformed` rose by 2 (also 100.0% of gradeable directives).
+
+## 0.1.43 — 2026-08-18 — vendor simd_i8x16_arith2.wast; baseline regen (task #141-143)
+
+### Changed
+
+- Baseline regen: vendored `simd_i8x16_arith2.wast` -- `i8x16`'s own
+  abs/popcnt/min_s/min_u/max_s/max_u/avgr_u family, mirroring `i32x4`'s
+  own abs/min/max widening plus two op shapes (popcnt, avgr_u) with no
+  `i32x4`/`i16x8` precedent, see `wasm-opcodes`'s own CHANGELOG entry.
+  100% pass on EVERY directive kind (2/2 modules, 184/184
+  assert_return, 19/19 assert_invalid, 6/6 assert_malformed) -- no
+  `NotYetSupported` tail this time, unlike `simd_i8x16_cmp.wast`'s own
+  `v128.load`-dependent one. Aggregate `assert_return` rose from
+  22578/22595 to 22762/22779; `assert_invalid` rose by 19 (all still
+  100.0% of gradeable directives); `assert_malformed` rose by 6 (also
+  100.0% of gradeable directives).
+
+## 0.1.42 — 2026-08-18 — vendor simd_i8x16_cmp.wast; baseline regen (task #137-140)
+
+### Changed
+
+- Baseline regen: vendored `simd_i8x16_cmp.wast` -- `i8x16`'s own
+  comparison family (eq/ne/lt_s/lt_u/gt_s/gt_u/le_s/le_u/ge_s/ge_u),
+  closing the same gap PR6 closed for `i16x8`: `i8x16.add`/`sub`/`neg`
+  landed without one, see `wasm-opcodes`'s own CHANGELOG entry. 100%
+  pass on every GRADEABLE directive (400/400 assert_return, 30/30
+  assert_invalid); the file's own small "combination" tail references
+  `v128.load` (not yet implemented), so 1 module and 13 assert_return
+  directives grade `NotYetSupported`, same lazy-grading discipline
+  already established for `simd_i16x8_cmp.wast`'s own tail. Aggregate
+  `assert_return` rose from 22178/22195 to 22578/22595; `assert_invalid`
+  from 1501 to 1531.
+
 ## 0.1.41 — 2026-08-18 — vendor simd_i16x8_cmp.wast; baseline regen (task #133-136)
 
 ### Changed

@@ -1434,12 +1434,37 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::SubI8x16
                     | wasm_opcodes::SimdOpKind::AddI16x8
                     | wasm_opcodes::SimdOpKind::SubI16x8
-                    | wasm_opcodes::SimdOpKind::MulI16x8 => {
+                    | wasm_opcodes::SimdOpKind::MulI16x8
+                    | wasm_opcodes::SimdOpKind::MinSI8x16
+                    | wasm_opcodes::SimdOpKind::MinUI8x16
+                    | wasm_opcodes::SimdOpKind::MaxSI8x16
+                    | wasm_opcodes::SimdOpKind::MaxUI8x16
+                    | wasm_opcodes::SimdOpKind::AvgrUI8x16
+                    | wasm_opcodes::SimdOpKind::MinSI16x8
+                    | wasm_opcodes::SimdOpKind::MinUI16x8
+                    | wasm_opcodes::SimdOpKind::MaxSI16x8
+                    | wasm_opcodes::SimdOpKind::MaxUI16x8
+                    | wasm_opcodes::SimdOpKind::AvgrUI16x8
+                    | wasm_opcodes::SimdOpKind::ExtmulLowI8x16S
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI8x16S
+                    | wasm_opcodes::SimdOpKind::ExtmulLowI8x16U
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI8x16U
+                    | wasm_opcodes::SimdOpKind::And
+                    | wasm_opcodes::SimdOpKind::AndNot
+                    | wasm_opcodes::SimdOpKind::Or
+                    | wasm_opcodes::SimdOpKind::Xor
+                    | wasm_opcodes::SimdOpKind::AddI64x2
+                    | wasm_opcodes::SimdOpKind::SubI64x2
+                    | wasm_opcodes::SimdOpKind::MulI64x2 => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
-                        // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul` all
-                        // read/write a narrower-than-`v128` lane width
-                        // internally, but AT THE TYPE LEVEL they're the
-                        // same pop-two-push-one `v128` shape as
+                        // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
+                        // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
+                        // `i16x8.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
+                        // `extmul_low`/`high_i8x16_s`/`_u`/`and`/`andnot`/
+                        // `or`/`xor` all read/write a narrower-than-`v128`
+                        // (or, for the bitwise ops, lane-width-agnostic)
+                        // shape internally, but AT THE TYPE LEVEL they're
+                        // the same pop-two-push-one `v128` shape as
                         // `Add`/`Sub`/`Mul` above -- the type-checker
                         // only sees `v128`, never the narrower lane
                         // interpretation.
@@ -1466,12 +1491,28 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::LeSI16x8
                     | wasm_opcodes::SimdOpKind::LeUI16x8
                     | wasm_opcodes::SimdOpKind::GeSI16x8
-                    | wasm_opcodes::SimdOpKind::GeUI16x8 => {
+                    | wasm_opcodes::SimdOpKind::GeUI16x8
+                    | wasm_opcodes::SimdOpKind::EqI8x16
+                    | wasm_opcodes::SimdOpKind::NeI8x16
+                    | wasm_opcodes::SimdOpKind::LtSI8x16
+                    | wasm_opcodes::SimdOpKind::LtUI8x16
+                    | wasm_opcodes::SimdOpKind::GtSI8x16
+                    | wasm_opcodes::SimdOpKind::GtUI8x16
+                    | wasm_opcodes::SimdOpKind::LeSI8x16
+                    | wasm_opcodes::SimdOpKind::LeUI8x16
+                    | wasm_opcodes::SimdOpKind::GeSI8x16
+                    | wasm_opcodes::SimdOpKind::GeUI8x16
+                    | wasm_opcodes::SimdOpKind::EqI64x2
+                    | wasm_opcodes::SimdOpKind::NeI64x2
+                    | wasm_opcodes::SimdOpKind::LtSI64x2
+                    | wasm_opcodes::SimdOpKind::GtSI64x2
+                    | wasm_opcodes::SimdOpKind::LeSI64x2
+                    | wasm_opcodes::SimdOpKind::GeSI64x2 => {
                         // WASM's SIMD comparison convention: the RESULT is
                         // still a v128 (a per-lane boolean mask), not a
                         // plain i32 -- see `SimdOpKind::Eq`'s own doc
                         // comment in wasm-opcodes. Same convention for
-                        // i16x8's own comparison family.
+                        // i16x8's and i8x16's own comparison families.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
@@ -1481,13 +1522,35 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
                     | wasm_opcodes::SimdOpKind::NegI8x16
-                    | wasm_opcodes::SimdOpKind::NegI16x8 => {
+                    | wasm_opcodes::SimdOpKind::NegI16x8
+                    | wasm_opcodes::SimdOpKind::AbsI8x16
+                    | wasm_opcodes::SimdOpKind::PopcntI8x16
+                    | wasm_opcodes::SimdOpKind::AbsI16x8
+                    | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16S
+                    | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16U
+                    | wasm_opcodes::SimdOpKind::Not
+                    | wasm_opcodes::SimdOpKind::AbsI64x2
+                    | wasm_opcodes::SimdOpKind::NegI64x2 => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
-                        // `i16x8.neg` read their operand as a narrower
-                        // lane width internally, but are still just
-                        // pop-one-`v128`-push-one-`v128` at the type
-                        // level, same as `Neg`/`Abs`.
+                        // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
+                        // `extadd_pairwise_i8x16_s`/`_u`/`v128.not` read
+                        // their operand as a narrower lane width (or,
+                        // for `not`, lane-width-agnostic bytes)
+                        // internally, but are still just pop-one-`v128`-
+                        // push-one-`v128` at the type level, same as
+                        // `Neg`/`Abs`.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Bitselect => {
+                        // The first TERNARY SIMD op in this crate: pops
+                        // THREE v128s, pushes one. See
+                        // `SimdOpKind::Bitselect`'s own doc comment in
+                        // wasm-opcodes for the runtime semantics -- at
+                        // the type level it's just three V128 pops.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
@@ -1501,6 +1564,44 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         offset += 1;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::I32);
+                    }
+                    wasm_opcodes::SimdOpKind::AnyTrue
+                    | wasm_opcodes::SimdOpKind::AllTrueI8x16
+                    | wasm_opcodes::SimdOpKind::AllTrueI16x8
+                    | wasm_opcodes::SimdOpKind::AllTrueI32x4
+                    | wasm_opcodes::SimdOpKind::AllTrueI64x2
+                    | wasm_opcodes::SimdOpKind::BitmaskI8x16
+                    | wasm_opcodes::SimdOpKind::BitmaskI16x8
+                    | wasm_opcodes::SimdOpKind::BitmaskI32x4
+                    | wasm_opcodes::SimdOpKind::BitmaskI64x2 => {
+                        // Same v128-in/i32-out shape as `ExtractLane`
+                        // above, but with NO lane-index immediate (these
+                        // reduce over ALL lanes, not select one) -- pops
+                        // one v128, pushes one i32.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                    wasm_opcodes::SimdOpKind::ShlI8x16
+                    | wasm_opcodes::SimdOpKind::ShrSI8x16
+                    | wasm_opcodes::SimdOpKind::ShrUI8x16
+                    | wasm_opcodes::SimdOpKind::ShlI16x8
+                    | wasm_opcodes::SimdOpKind::ShrSI16x8
+                    | wasm_opcodes::SimdOpKind::ShrUI16x8
+                    | wasm_opcodes::SimdOpKind::ShlI32x4
+                    | wasm_opcodes::SimdOpKind::ShrSI32x4
+                    | wasm_opcodes::SimdOpKind::ShrUI32x4
+                    | wasm_opcodes::SimdOpKind::ShlI64x2
+                    | wasm_opcodes::SimdOpKind::ShrSI64x2
+                    | wasm_opcodes::SimdOpKind::ShrUI64x2 => {
+                        // The FIRST mixed-type binary SIMD op family:
+                        // `(ixNxM.shl (v128 $a) (i32 $amount))` pushes
+                        // the v128 first, the i32 shift amount second --
+                        // so the i32 is on TOP of stack and must be
+                        // popped FIRST, then the v128, matching
+                        // wasm-execution's own pop order.
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
                     }
                 }
             }

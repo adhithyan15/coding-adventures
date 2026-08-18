@@ -551,6 +551,68 @@ Every invocation follows the same pipeline:
 Tools must not implement bespoke approval or audit side channels. If a tool needs
 approval, it declares metadata and the runtime performs the approval flow.
 
+### What a rejected call may publish
+
+A handler returns four caller-observable things: `output`, `artifact_refs`,
+`memory_refs`, and `events`. Only `output` is validated, against the
+definition's `output_schema`.
+
+**A call that fails output validation must publish nothing the handler chose.**
+Handler events are assembled during step 7 but must not reach the event stream
+unless step 10 is reached with a passing result. Publishing them on the
+rejection path is the worst of both worlds: the runtime declares the call
+invalid and forwards the invalid call's side effects anyway, so a handler whose
+output was refused can still say whatever it likes to every event sink.
+
+The runtime's own framing events remain. Be precise about why, because the
+obvious justification is wrong: it is *not* that they describe the call rather
+than its result. The started event does, but the terminal event describes the
+result — that is its purpose. It stays because a caller has to learn the
+outcome. On *this* path it is safe because its payload is bounded to the error
+kind and a message the runtime chose. On the handler-error path the message is
+the handler's own — some description of the failure has to reach the caller —
+and bounding it is the binding's obligation under V2, not the runtime's.
+
+**The terminal event must not carry validation `details`.** On an
+output-validation failure those details hold one path per offending field, and
+each path is built from the handler's own output object — so a handler could
+broadcast arbitrary text, one string per field it invents, through the very
+rejection that refused it. `details` reaches the immediate caller on the
+result; it must not reach the event stream, which is a broadcast. The rule is
+implemented for every error kind, not only validation failures, because
+handler-supplied `details` on the error path is the wider channel of the two.
+
+### Built-in definitions are canonical
+
+A tool id in the built-in catalog names one definition. Registering a *different*
+definition under a built-in id is rejected.
+
+Without this, the schema a tool is validated against is a property of whichever
+`ToolDefinition` value reached `register_handler`, not of the tool id. Anything
+holding a registry could register `vault.request_direct` with
+`output_schema: None` *ahead of* the real binding — duplicate ids were already
+refused, so the hole was getting in first rather than replacing — and silently
+disable the output validation that the vault binding's V1 depends on — and nothing about the resulting registry would look
+wrong. Pinning the id to its catalog entry makes "this tool has these
+guarantees" a fact about the id.
+
+This constrains only ids the catalog claims. Tools outside it — smart-home
+device tools, host-local tools — are unaffected.
+
+### The three unvalidated fields
+
+`artifact_refs`, `memory_refs`, and `events` are passed through unchecked on the
+success path — with one exception, that a handler emitting a terminal event kind
+is refused outright — and deliberately so: a tool that creates an artifact is supposed to
+reference it. There is no general rule making them empty.
+
+For tools that handle secrets there *is* such a rule, and because it cannot come
+from the runtime it must come from the binding. A binding whose handlers must
+not use those channels wraps them at registration with the runtime's
+`forbidding_side_channels` combinator, which fails any call whose handler
+populated one of the three. The wrapper is applied once; the check runs on every
+call. See section 7.1 V1.
+
 ---
 
 ## Policy, Approval, and Tier Integration
@@ -775,19 +837,31 @@ invariant a reviewer trusts too far is worse than one they do not trust at all:
 | `output` | the runtime — *shape* only | validated against `output_schema` after the handler returns; content is excluded only where that schema is `null` |
 | `artifact_refs` | the handler | copied to the result unchecked |
 | `memory_refs` | the handler | copied to the result unchecked |
-| `events` | the handler | assembled *before* validation; published even when validation rejects the call |
+| `events` | the runtime, then the handler | published only when output validation passes; the handler chooses their content |
 | `ToolCallError` | the handler | the runtime adds only a path and a JSON type name, never the offending value |
 
 So for `vault.request_direct`, `output` genuinely cannot carry bytes — the
-declared schema is `null` and a non-null output is rejected. The other three
-fields are handler discipline, and a conforming binding must therefore return
-them empty and test that it does.
+declared schema is `null` and a non-null output is rejected.
 
-Two further limits on the `output` guarantee. It is a property of the
-`ToolDefinition` passed to `register_handler`, not of the tool id: a definition
-registered with `output_schema: None` skips validation entirely, which is why
-V4 requires definitions to come from the built-in catalog. And a rejected output
-is discarded rather than echoed, so the rejection path is not itself a channel.
+The other three fields the runtime does not inspect on the success path, save
+that a handler emitting a terminal event kind is refused. A
+binding whose handlers must not use them wraps them with
+`forbidding_side_channels` at registration, which fails any call whose handler
+populated one; see "The three unvalidated fields" above. Returning them empty
+and testing that is necessary but not sufficient, because a test proves what the
+handler does today and the wrapper proves what it can do at all.
+
+One remaining limit on the `output` guarantee, and one that used to exist and no
+longer does. Still true, with a caveat worth stating: a rejected output *value*
+is discarded rather than echoed. Its *keys* are not — validation names the
+offending fields, and those names are the handler's — so the rejection does
+report handler-chosen strings to the immediate caller. That is why `details` was
+removed from the broadcast: the caller asked, every event sink did not. No longer
+true: the guarantee used to be a property of the `ToolDefinition` passed to
+`register_handler` rather than of the tool id, so a definition registered with
+`output_schema: None` skipped validation. Built-in ids are now pinned to their
+catalog entry, so that registration is rejected outright. Ids the catalog does
+not claim remain the registrant's responsibility.
 
 Finally, note what `vault_ref` is. It is not secret material, but it *is* a
 bearer capability: whoever holds it can redeem it until it is consumed or
@@ -840,6 +914,20 @@ Registering the pair is all-or-nothing: pre-flight every definition before
 attaching any handler. A host left holding one vault tool because the second was
 refused is worse than one holding neither, since the tool that did register
 looks healthy and the failure resurfaces later and elsewhere.
+
+That rule is about *partial failure*, not about which tools a deployment
+chooses to offer. A binding may deliberately register only `vault.request_lease`
+— and must, where no trusted delivery adapter exists, because `request_direct`
+without one has nowhere to deliver. Registering it anyway against a stub that
+accepts everything would be strictly worse than leaving it unregistered: it
+would present a working direct-delivery tool to an agent while the secret went
+nowhere, or worse, somewhere unaudited.
+
+The distinction to preserve is that a deliberate subset is chosen up front and
+is complete in itself, whereas a partial registration is the residue of
+something going wrong halfway. A conforming binding therefore exposes the
+lease-only case as its own named operation rather than by catching an error
+from the pair, so the two are distinguishable in the code that calls it.
 
 Note what this gate does *not* do. It runs once, at registration, per host — it
 is not a per-call check. Per-call authorization is the policy engine's job, and

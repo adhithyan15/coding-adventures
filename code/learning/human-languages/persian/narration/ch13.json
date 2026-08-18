@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Sky, Sun, Moon, Star, Rain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f682c82bef25fe00",
+  "sourceHash": "fnv1a64:eaf81b9034472f37",
   "lessons": [
     {
       "id": "FA-C13-aseman",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d992ea29e7bfb60",
+      "sourceHash": "fnv1a64:d1dee18370dc6a76",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say کتاب, and which language it came from. This chapter turns from things in the house to the world above it, starting with the biggest word of all."
+              "text": "Say کتاب (ketâb), and which language it came from. This chapter turns from things in the house to the world above it, starting with the biggest word of all."
             }
           ]
         },
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:251ffdeba61e505b",
+      "sourceHash": "fnv1a64:8055697d9d545edf",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e4d867ef70e34a1",
+      "sourceHash": "fnv1a64:89ff5e82aad2582f",
       "notice": null,
       "blocks": [
         {
@@ -598,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:514ee9899221b7ba",
+      "sourceHash": "fnv1a64:569219c452011a28",
       "notice": null,
       "blocks": [
         {

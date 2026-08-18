@@ -365,6 +365,31 @@
           "RU-SCRIPT-Y-01"
         ]
       }
+    },
+    {
+      "chapter": 15,
+      "title": "The Two Letters You Already Knew, and Six You Did Not",
+      "label": "ch:ru-script-eight",
+      "canDo": "I can write eight more Cyrillic letters from memory, sort each of them into true friend, false friend or new shape, and read an unstressed о as an a -- which is the commonest thing an English reader gets wrong when reading Russian aloud.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "RU-C15-practice",
+        "kind": "writing",
+        "summary": "Eight letters sorted into two true friends, one false friend and five new shapes -- with the false friend named as the dangerous kind, because it is the only one that can be read confidently and wrongly.",
+        "assesses": [
+          "RU-SCRIPT-A-01",
+          "RU-SCRIPT-O-01",
+          "RU-SCRIPT-G-01",
+          "RU-SCRIPT-KH-01",
+          "RU-SCRIPT-F-01",
+          "RU-SCRIPT-TS-01",
+          "RU-SCRIPT-Y-SHORT-01",
+          "RU-SCRIPT-YU-01",
+          "RU-SCRIPT-EIGHT-SORTED-01"
+        ]
+      }
     }
   ]
 }

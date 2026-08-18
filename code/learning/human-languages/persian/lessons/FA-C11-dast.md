@@ -34,7 +34,7 @@ reviews_of: [FA-C11-cheshm]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHESHM] -->
 
-[PAUSE 2s] Say **چشم**. This lesson's word looks nothing like its closest
+[PAUSE 2s] Say **چشم** (*cheshm*). This lesson's word looks nothing like its closest
 Indo-Iranian relative — and that mismatch is not an accident.
 
 ## You'll want to know first — one word

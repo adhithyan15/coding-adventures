@@ -20,11 +20,11 @@ reviews_of: [MR-C03-kasa, MR-C03-tumhi-kase-aahat, MR-C03-mi, MR-C03-mi-bara-aah
 
 ## The whole exchange
 
-| Marathi | English |
-|---|---|
-| तुम्ही कसे आहात? | How are you? |
-| मी बरा आहे, धन्यवाद. | I'm well, thank you. |
-| काही हरकत नाही. | No problem / you're welcome. |
+| Marathi | Say it | English |
+|---|---|---|
+| तुम्ही कसे आहात? | *tumhī kase āhāt?* | How are you? |
+| मी बरा आहे, धन्यवाद. | *mī barā āhe, dhanyavād.* | I'm well, thank you. |
+| काही हरकत नाही. | *kāhī harkat nāhī.* | No problem / you're welcome. |
 
 ## Atoms banked this chapter
 
@@ -34,7 +34,8 @@ reviews_of: [MR-C03-kasa, MR-C03-tumhi-kase-aahat, MR-C03-mi, MR-C03-mi-bara-aah
 - **बरा / बरी / बरं** (*barā/barī/baraṁ*) — well/fine, now gendered.
 - **काही हरकत नाही** (*kāhī harkat nāhī*) — no problem; *nāhī* ← PIE *\*ne*,
   *harkat* ← Arabic.
-- Copula forms: **मी आहे / तू आहेस / तुम्ही आहात** — one verb, reshaped per person.
+- Copula forms: **मी आहे / तू आहेस / तुम्ही आहात** (*mī āhe / tū āhes / tumhī
+  āhāt*) — one verb, reshaped per person.
 
 ## Guided Practice
 
