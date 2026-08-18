@@ -54,6 +54,9 @@ assert_eq!(value.as_int(), Some(5));
 
 `cargo test -p macsyma-iir-compiler` covers every accepted construct (via
 `macsyma-vm`, as a dev-dependency) and every rejected construct's
-explicit-error path. A cross-checked oracle test against
-`macsyma-runtime`'s own evaluator is a follow-up (see the spec's PR
-sequencing, §8).
+explicit-error path. `tests/oracle.rs` additionally cross-checks every
+accepted construct against `macsyma-runtime`'s own evaluator: the same
+source runs through both, and the compiled side's result is read back into
+a `symbolic_ir::IRNode` and rendered through the same
+`cas_pretty_printer::pretty` call the native runtime uses, so the two are
+compared as text through one shared formatter.
