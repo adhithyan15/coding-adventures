@@ -43,7 +43,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                i8x16 comparison family, same pinned commit, no re-pin),
                extended 2026-08-18 (task #141-143 -- simd_i8x16_arith2.wast,
                i8x16 abs/popcnt/min/max/avgr_u family, same pinned
-               commit, no re-pin)
+               commit, no re-pin),
+               extended 2026-08-18 (task #144-146 -- simd_i16x8_arith2.wast,
+               i16x8 abs/min/max/avgr_u family, same pinned commit, no
+               re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -250,6 +253,17 @@ exactly), same discipline as every prior addition. 100% pass on EVERY
 directive kind (2/2 modules, 184/184 assert_return, 19/19
 assert_invalid, 6/6 assert_malformed) -- no `NotYetSupported` tail this
 time, unlike `simd_i8x16_cmp.wast`'s own `v128.load`-dependent one.
+
+`simd_i16x8_arith2.wast` (task #144-146) closes the same "arith2" gap
+for `i16x8` that PR8 just closed for `i8x16` (no `i16x8.popcnt` --
+WASM SIMD only defines `popcnt` for `i8x16`). `i16x8.abs`/`min_s`/
+`min_u`/`max_s`/`max_u`/`avgr_u` use the same conventions as `i8x16`'s
+own arith2 family, just at `i16x8`'s wider lane width. Each sub-opcode
+byte fetched live from `BinarySIMD.md` and cross-checked against the
+already-implemented `i16x8.neg`/`add`/`sub`/`mul` entries (all four
+matched exactly), same discipline as every prior addition. 100% pass
+on EVERY directive kind (2/2 modules, 151/151 assert_return, 17/17
+assert_invalid, 2/2 assert_malformed).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

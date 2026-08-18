@@ -3248,6 +3248,62 @@
         "not_yet_supported": 0
       }
     },
+    "simd_i16x8_arith2.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 17,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 151,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "simd_i16x8_cmp.wast": {
       "action": {
         "pass": 0,
@@ -4719,19 +4775,19 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 1550,
+      "pass": 1567,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 76
     },
     "assert_malformed": {
-      "pass": 247,
+      "pass": 249,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 22762,
+      "pass": 22913,
       "fail": 17,
       "trap": 0,
       "not_yet_supported": 606
@@ -4749,7 +4805,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1120,
+      "pass": 1122,
       "fail": 1,
       "trap": 0,
       "not_yet_supported": 75
