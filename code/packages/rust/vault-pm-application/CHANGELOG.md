@@ -68,10 +68,17 @@ follow-on work rather than widened into this change:
   verification change, not a local one: `candidate_count` and the signed
   `snapshot_hash` assert completeness, and VLT-PM19/VLT-PM20
   restore-verification depends on that assertion.
-- **The escape hatch.** Deleting the offending item always works, because a
-  tombstone revision carries only the item id and a timestamp. That is what
-  makes the above a degradation rather than a trap, and it is now pinned by
-  `deleting_an_oversized_item_stays_possible` rather than left as an inference.
+- **A narrow escape hatch.** Deleting the offending item works, because a
+  tombstone revision carries only the item id and a timestamp, so the `Live`
+  arm that reaches `encode_any_record` is never taken — now pinned by
+  `deleting_an_oversized_item_stays_possible`. It covers exactly the
+  single-candidate, first-party-record case. It does *not* cover an item that
+  is also conflicted (deletion asserts one live candidate and otherwise returns
+  `ConflictRequired`), nor an oversized *opaque* record, which is undecodable
+  rather than merely unwritable — `decode_record`'s opaque arm re-encodes the
+  payload, so the failure lands during vault open and no session is ever
+  established to delete from. Both are pre-existing, both need a peer with a
+  larger framing budget to reach, and both are tracked separately.
 
 ## [0.61.0] - 2026-08-17
 

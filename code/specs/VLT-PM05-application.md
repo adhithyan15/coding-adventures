@@ -811,15 +811,33 @@ its signed `snapshot_hash` currently assert completeness, and
 VLT-PM19/VLT-PM20 restore-verification depends on that assertion, so
 partial export is a format and verification change, not a local one.
 
-**The escape hatch that keeps this recoverable.** Deleting the offending
-item works, because a tombstone revision carries only the item id and a
-timestamp — the record is not in it. So an operator holding a poisoned
-record can always delete the item and then export. That is what keeps
-the residual exposure a degradation rather than a trap, and it is
-pinned by test (`deleting_an_oversized_item_stays_possible`) rather than
-left as an inference from the encoding shape.
+**An escape hatch, but a narrow one.** Deleting the offending item
+works, because a tombstone revision carries only the item id and a
+timestamp — the record is not in it, so the `Live` arm that reaches
+`encode_any_record` is never taken. An operator can therefore delete the
+item and then export. That is pinned by test
+(`deleting_an_oversized_item_stays_possible`) rather than left as an
+inference from the encoding shape.
 
-Both repairs above are tracked as follow-on work against this section.
+The hatch covers exactly one case, and the boundary is worth stating
+because the two it does not cover are worse, not better:
+
+- **It requires a single current candidate.** Deletion asserts one live
+  candidate and returns `ConflictRequired` otherwise, so an oversized
+  record on an item that is *also* conflicted cannot be deleted by the
+  ordinary path at all.
+- **It requires a first-party record.** An oversized *opaque* record is
+  not merely unwritable, it is undecodable: `decode_record`'s opaque arm
+  re-encodes the payload to canonicalise it, so the failure lands during
+  `decode_item_revision` — that is, during vault *open*. No session is
+  ever established, and deletion needs one. Such a record denies the
+  whole vault rather than one item.
+
+Both are pre-existing and neither is reachable through anything this
+product will author, since the encode ceiling now refuses to produce
+such a record in the first place; they need a peer with a larger
+framing budget. They are tracked as follow-on work alongside the two
+repairs above, against this section.
 
 ## 14. Required verification
 
