@@ -51,6 +51,7 @@ fn main() -> ExitCode {
     //   * Mos6502Bin    → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * M68kBin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Intel8080Bin → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * Z80Bin        → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
@@ -65,6 +66,7 @@ fn main() -> ExitCode {
         EmitMode::M68kBin => input.with_extension("bin"),
         EmitMode::Intel8080Bin => input.with_extension("bin"),
         EmitMode::MipsR2000Bin => input.with_extension("bin"),
+        EmitMode::Z80Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -180,6 +182,14 @@ enum EmitMode {
     /// First lane of the 9-architecture expansion following the
     /// historical-arch backend migration pattern.
     MipsR2000Bin,
+    /// Flat `.bin` of 1- to 4-byte Zilog Z80 opcode sequences via
+    /// `z80-backend`.  Cross-platform.  Downstream consumers: the
+    /// in-tree `z80-simulator` or any external Z80 emulator.  The Z80
+    /// (1976) is a source/binary-compatible superset of the Intel
+    /// 8080 that powered the TRS-80, ZX Spectrum, MSX, the original
+    /// Game Boy (via a variant core), and countless CP/M machines —
+    /// one of the most widely produced microprocessors ever.
+    Z80Bin,
 }
 
 struct CliArgs {
@@ -265,9 +275,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "m68k" | "68000" | "mc68000" | "motorola68000" => Ok(EmitMode::M68kBin),
         "intel8080" | "i8080" | "8080" => Ok(EmitMode::Intel8080Bin),
         "mips-r2000" | "mips" | "r2000" => Ok(EmitMode::MipsR2000Bin),
+        "z80" | "zilog-z80" => Ok(EmitMode::Z80Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80"
         )),
     }
 }
@@ -385,6 +396,17 @@ Options:
                                                 commercially successful RISC
                                                 processor, 1985 — SGI IRIS, DEC
                                                 DECstation, PlayStation, N64)
+                             z80 | zilog-z80
+                                              → flat .bin of 1- to 4-byte Zilog
+                                                Z80 opcode sequences via
+                                                z80-backend; cross-platform; load
+                                                into z80-simulator or an external
+                                                Z80 emulator (1976 — a
+                                                source/binary-compatible
+                                                superset of the Intel 8080 above
+                                                that powered the TRS-80, ZX
+                                                Spectrum, MSX, the original Game
+                                                Boy, and countless CP/M machines)
   -h, --help               Show this help.\
 ");
 }
@@ -509,6 +531,17 @@ fn dispatch(
     // external MIPS I emulator.
     if emit == EmitMode::MipsR2000Bin {
         return lang_aot::compile_file_to_mips_r2000_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Z80 .bin emission is also cross-platform — write the 1- to
+    // 4-byte opcode sequences byte-for-byte (no endianness conversion;
+    // like the 8080/8008, the Z80 has no concept of word endian; 16-bit
+    // immediates within an instruction are already little-endian from
+    // z80-encoder).  Seventh lane of the 9-architecture expansion;
+    // downstream is always z80-simulator, an external Z80 emulator, or
+    // an EPROM burner.
+    if emit == EmitMode::Z80Bin {
+        return lang_aot::compile_file_to_z80_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

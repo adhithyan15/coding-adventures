@@ -235,6 +235,16 @@ pub enum LangAotError {
     /// 9-architecture expansion following the historical-arch
     /// backend migration pattern.
     MipsR2000BackendError(String),
+    /// The Zilog Z80 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `z80-backend` (which
+    /// already includes the failing function name and the
+    /// unsupported op/type/operand).  Seventh lane of the
+    /// 9-architecture expansion following the historical-arch backend
+    /// migration pattern.  The Z80 (1976) powered the TRS-80, ZX
+    /// Spectrum, MSX, the original Game Boy (via a variant core), and
+    /// countless CP/M machines.
+    Z80BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -297,6 +307,7 @@ impl fmt::Display for LangAotError {
             LangAotError::M68kBackendError(m) => write!(f, "m68k: {m}"),
             LangAotError::Intel8080BackendError(m) => write!(f, "intel8080: {m}"),
             LangAotError::MipsR2000BackendError(m) => write!(f, "mips-r2000: {m}"),
+            LangAotError::Z80BackendError(m) => write!(f, "z80: {m}"),
         }
     }
 }
@@ -1752,6 +1763,82 @@ pub fn compile_file_to_mips_r2000_bin(
     }
     if bytes.is_empty() {
         bytes.extend_from_slice(&mips_r2000_encoder::RET_WORD.to_be_bytes());
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Zilog Z80 machine code (`.bin`) on
+/// disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 1- to 4-byte
+/// Z80 opcode sequences.  No endianness conversion: like the 8080 and
+/// 8008, the Z80 has no concept of word endianness — every instruction
+/// is a byte sequence, and 16-bit immediates within an instruction are
+/// already written little-endian by `z80-encoder`.  Downstream
+/// consumers:
+///
+/// * [`z80-simulator`](../z80-simulator) — load + execute in-process
+///   via `Z80Simulator::run`.
+/// * Any external Z80 emulator that consumes raw byte streams.
+/// * An EPROM burner for a Z80 dev board, or a CP/M `.COM` file loader
+///   (with the appropriate `0x0100` origin).
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-agnostic.
+///
+/// # Why no host gating?
+///
+/// The Z80 is a historical ISA with no modern host equivalent — we
+/// never produce a "native" binary the host can execute.  The
+/// downstream consumer is always an emulator (in-tree `z80-simulator`
+/// or external), an EPROM burner, or actual Z80 silicon (still in
+/// production as of this writing).  All host OSes can write a flat byte
+/// file, so the pipeline is universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Z80BackendError` — the IIR contained an op or type the Z80
+///   backend does not yet handle (the message names the function and
+///   op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=z80 -o foo.bin
+/// # Then load foo.bin into z80-simulator or an external Z80 emulator.
+/// ```
+pub fn compile_file_to_z80_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Seventh lane of the 9-architecture expansion: route through
+    // `aot_core` + `z80-backend`, same per-function-loop pattern as
+    // `compile_file_to_arm1_bin`/`compile_file_to_intel8008_bin`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = z80_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Z80BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.push(z80_encoder::HALT);
     }
 
     std::fs::write(out, &bytes)?;
