@@ -1,5 +1,25 @@
 # Changelog — iir-builtin-lowering
 
+## 0.39.0 - 2026-08-18 - lower_dynamic_arith handles a unary `call_builtin "-"` (negate)
+
+`lower_dynamic_arith_function` only ever matched the binary (2-operand) shape
+of a dynamic arithmetic `call_builtin`. Macsyma's `macsyma-iir-compiler`
+(`macsyma-iir-vm.md` Wave 4) always emits `call_builtin "+"/"-"/"*"` — even
+for two already-concrete literal operands, and for unary negate (`-x`) as a
+**one**-operand `call_builtin "-"`. That one-operand shape fell through this
+pass unrewritten and reached the code-gen backends' own `call_builtin`
+whitelist, which only knows heap/predicate builtins — surfaced as a WASM
+`UnsupportedOp` validation failure for `-7$`.
+
+Fixed by adding a unary-negate case (matched before the binary path, on
+`name == "-"` with exactly one `Var` operand): `unbox` (if boxed) → `neg` →
+`box`, reusing the raw typed `neg` IIR op every backend already implements
+(it's already in `interpreter_ir::opcodes::is_arithmetic`, and each of
+`iir-to-wasm`/`iir-to-llvm`/`iir-to-jvm-class-file`/`iir-to-cil-bytecode`/the
+native backends already lowers it) — no backend change needed for this half
+of the fix; see `clr-simulator` 0.5.0 for the other half (a genuine
+CLR-simulator gap this surfaced).
+
 ## 0.38.0 - 2026-08-13 - unbox a tagged parameter before doing arithmetic on it
 
 The function boundary declares every lisp parameter `ref<any>` and callers box
