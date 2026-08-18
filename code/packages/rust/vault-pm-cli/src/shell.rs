@@ -259,9 +259,9 @@ impl Debug for ShellSession {
 /// In particular the hidden-input path is untouched: `item add login` inside a
 /// shell collects its password through the same echo-disabled controlling
 /// terminal ceremony it uses one-shot.
-struct SessionHost<'session> {
-    inner: &'session dyn CliHost,
-    session: &'session ShellSession,
+pub(crate) struct SessionHost<'session> {
+    pub(crate) inner: &'session dyn CliHost,
+    pub(crate) session: &'session ShellSession,
 }
 
 impl CliHost for SessionHost<'_> {

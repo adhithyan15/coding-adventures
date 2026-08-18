@@ -8473,6 +8473,302 @@ mod tests {
         assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
     }
 
+    /// A host whose every answer names the method that produced it.
+    ///
+    /// The point is to make a mis-wired delegation impossible to miss. The
+    /// session host forwards roughly fifty [`CliHost`] methods by hand, and the
+    /// dangerous failure is not a missing method — that would not compile — but
+    /// a copy-paste swap between two methods with the same signature, say
+    /// `read_card_cvv` answering with the card number. Because each answer here
+    /// is its own method's name, any such swap shows up as a wrong value rather
+    /// than as silently plausible output.
+    struct EchoingHost {
+        paths: LocalVaultPaths,
+        calls: Mutex<Vec<&'static str>>,
+    }
+
+    /// Implement the `CliHost` methods whose answer is just a bounded string.
+    macro_rules! echoing_text {
+        ($($method:ident),* $(,)?) => {
+            $(
+                fn $method(&self) -> Result<Zeroizing<String>, HostError> {
+                    Ok(self.echo(stringify!($method)))
+                }
+            )*
+        };
+    }
+
+    /// Implement the `CliHost` methods whose answer is an optional string.
+    macro_rules! echoing_optional_text {
+        ($($method:ident),* $(,)?) => {
+            $(
+                fn $method(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+                    Ok(Some(self.echo(stringify!($method))))
+                }
+            )*
+        };
+    }
+
+    /// Implement the `CliHost` methods whose answer is owned secret bytes.
+    macro_rules! echoing_secret {
+        ($($method:ident),* $(,)?) => {
+            $(
+                fn $method(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
+                    Ok(Zeroizing::new(stringify!($method).as_bytes().to_vec()))
+                }
+            )*
+        };
+    }
+
+    impl EchoingHost {
+        fn new(paths: LocalVaultPaths) -> Self {
+            Self {
+                paths,
+                calls: Mutex::new(Vec::new()),
+            }
+        }
+
+        fn echo(&self, method: &'static str) -> Zeroizing<String> {
+            Zeroizing::new(method.to_owned())
+        }
+
+        fn record(&self, method: &'static str) {
+            self.calls.lock().unwrap().push(method);
+        }
+
+        fn calls(&self) -> Vec<&'static str> {
+            self.calls.lock().unwrap().clone()
+        }
+    }
+
+    impl CliHost for EchoingHost {
+        echoing_text!(
+            read_login_title,
+            read_login_username,
+            read_login_url_count,
+            read_login_url,
+            read_login_password,
+            read_secure_note_title,
+            read_secure_note_body,
+            read_card_title,
+            read_card_holder,
+            read_card_number,
+            read_card_expiry_month,
+            read_card_expiry_year,
+            read_card_cvv,
+            read_api_key_label,
+            read_api_key_service,
+            read_api_key_token,
+            read_api_key_scopes,
+            read_api_key_expiry,
+            read_database_label,
+            read_database_engine,
+            read_database_host,
+            read_database_port,
+            read_database_username,
+            read_database_password,
+            read_totp_label,
+            read_totp_secret,
+            read_totp_algorithm,
+            read_totp_digits,
+            read_totp_period,
+            read_opaque_payload,
+        );
+        echoing_optional_text!(
+            read_login_notes,
+            read_card_billing_postal_code,
+            read_database_name,
+            read_totp_issuer,
+        );
+        echoing_secret!(
+            read_new_passphrase,
+            read_existing_passphrase,
+            read_export_passphrase,
+            read_import_passphrase,
+        );
+
+        fn paths(&self) -> Result<LocalVaultPaths, HostError> {
+            self.record("paths");
+            Ok(self.paths.clone())
+        }
+
+        fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
+            self.record("confirm_secret_reveal");
+            Ok(true)
+        }
+
+        fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
+            assert_eq!(value, "revealed");
+            self.record("write_revealed_text");
+            Ok(())
+        }
+
+        fn write_portable_export(
+            &self,
+            destination: &Path,
+            artifact: &[u8],
+        ) -> Result<(), HostError> {
+            assert_eq!(destination, Path::new("destination"));
+            assert_eq!(artifact, b"artifact");
+            self.record("write_portable_export");
+            Ok(())
+        }
+
+        fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError> {
+            assert_eq!(source, Path::new("source"));
+            self.record("read_portable_export");
+            Ok(b"read_portable_export".to_vec())
+        }
+
+        fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
+            self.record("fill_entropy");
+            output.fill(0xa5);
+            Ok(())
+        }
+
+        fn now_ms(&self) -> Result<u64, HostError> {
+            self.record("now_ms");
+            Ok(FIXED_TEST_TIME_MS)
+        }
+
+        fn generation_zero_kdf(&self) -> (u32, u32, u8) {
+            self.record("generation_zero_kdf");
+            (1, 2, 3)
+        }
+
+        fn portable_export_kdf(&self) -> (u32, u32, u8) {
+            self.record("portable_export_kdf");
+            (4, 5, 6)
+        }
+
+        fn portable_open_kdf(&self) -> (u32, u32, u8) {
+            self.record("portable_open_kdf");
+            (7, 8, 9)
+        }
+    }
+
+    #[test]
+    fn shell_session_host_delegates_every_authority_except_the_unlock_prompt() {
+        let root = TestRoot::new();
+        let inner = EchoingHost::new(root.paths());
+        let session = shell::ShellSession::new(300_000);
+        let host = shell::SessionHost {
+            inner: &inner,
+            session: &session,
+        };
+
+        // Every echoed answer must arrive from the identically named method.
+        macro_rules! assert_text {
+            ($($method:ident),* $(,)?) => {
+                $(assert_eq!(&*host.$method().unwrap(), stringify!($method));)*
+            };
+        }
+        macro_rules! assert_optional_text {
+            ($($method:ident),* $(,)?) => {
+                $(assert_eq!(
+                    &*host.$method().unwrap().expect(stringify!($method)),
+                    stringify!($method)
+                );)*
+            };
+        }
+        assert_text!(
+            read_login_title,
+            read_login_username,
+            read_login_url_count,
+            read_login_url,
+            read_login_password,
+            read_secure_note_title,
+            read_secure_note_body,
+            read_card_title,
+            read_card_holder,
+            read_card_number,
+            read_card_expiry_month,
+            read_card_expiry_year,
+            read_card_cvv,
+            read_api_key_label,
+            read_api_key_service,
+            read_api_key_token,
+            read_api_key_scopes,
+            read_api_key_expiry,
+            read_database_label,
+            read_database_engine,
+            read_database_host,
+            read_database_port,
+            read_database_username,
+            read_database_password,
+            read_totp_label,
+            read_totp_secret,
+            read_totp_algorithm,
+            read_totp_digits,
+            read_totp_period,
+            read_opaque_payload,
+        );
+        assert_optional_text!(
+            read_login_notes,
+            read_card_billing_postal_code,
+            read_database_name,
+            read_totp_issuer,
+        );
+        assert_eq!(
+            &*host.read_new_passphrase().unwrap(),
+            b"read_new_passphrase"
+        );
+        assert_eq!(
+            &*host.read_export_passphrase().unwrap(),
+            b"read_export_passphrase"
+        );
+        assert_eq!(
+            &*host.read_import_passphrase().unwrap(),
+            b"read_import_passphrase"
+        );
+        assert_eq!(
+            host.paths().unwrap().config_root(),
+            root.paths().config_root()
+        );
+        assert!(host.confirm_secret_reveal().unwrap());
+        host.write_revealed_text("revealed").unwrap();
+        host.write_portable_export(Path::new("destination"), b"artifact")
+            .unwrap();
+        assert_eq!(
+            host.read_portable_export(Path::new("source")).unwrap(),
+            b"read_portable_export"
+        );
+        let mut entropy = [0_u8; 4];
+        host.fill_entropy(&mut entropy).unwrap();
+        assert_eq!(entropy, [0xa5; 4]);
+        assert_eq!(host.now_ms().unwrap(), FIXED_TEST_TIME_MS);
+        assert_eq!(host.generation_zero_kdf(), (1, 2, 3));
+        assert_eq!(host.portable_export_kdf(), (4, 5, 6));
+        assert_eq!(host.portable_open_kdf(), (7, 8, 9));
+        assert_eq!(
+            inner.calls(),
+            [
+                "paths",
+                "confirm_secret_reveal",
+                "write_revealed_text",
+                "write_portable_export",
+                "read_portable_export",
+                "fill_entropy",
+                "now_ms",
+                "generation_zero_kdf",
+                "portable_export_kdf",
+                "portable_open_kdf",
+            ]
+        );
+
+        // The unlock prompt is the one method that behaves differently: it is
+        // collected once and then answered from the session.
+        assert_eq!(
+            &*host.read_existing_passphrase().unwrap(),
+            b"read_existing_passphrase"
+        );
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+        assert_eq!(
+            &*host.read_existing_passphrase().unwrap(),
+            b"read_existing_passphrase"
+        );
+    }
+
     #[test]
     fn shell_session_debug_never_reveals_the_authenticator() {
         let session = shell::ShellSession::new(1_000);
