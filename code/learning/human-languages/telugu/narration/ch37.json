@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9d15a83b89defe09",
+  "sourceHash": "fnv1a64:eb4a3f036595f3e7",
   "lessons": [
     {
       "id": "TE-C37-kannu",
@@ -399,7 +399,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf80f7c683a909aa",
+      "sourceHash": "fnv1a64:5c40f58440537d71",
       "notice": null,
       "blocks": [
         {
@@ -445,7 +445,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil and Malayalam both say வாய்/vாyi (vāy), \"mouth,\" and Kannada's ಬಾಯಿ (bāyi) answers it through a regular sound law that turns a Tamil word-initial v- into Kannada b-. Three sisters, one shared root, one visible law."
+              "text": "Tamil and Malayalam both say வாய்/vāyi (vāy), \"mouth,\" and Kannada's ಬಾಯಿ (bāyi) answers it through a regular sound law that turns a Tamil word-initial v- into Kannada b-. Three sisters, one shared root, one visible law."
             },
             {
               "kind": "speech",

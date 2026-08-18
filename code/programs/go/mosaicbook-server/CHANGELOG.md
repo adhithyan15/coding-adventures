@@ -1,5 +1,35 @@
 # Changelog — mosaicbook-server
 
+## Unreleased
+
+### Added
+
+- **Three-file (UI29) component discovery.** MosaicBook previously discovered
+  only `.mosaic` files. There are none left anywhere in this repo — every
+  component (19 packages, 23 toolkit atoms) is authored as separate
+  `.mil`/`.mll`/`.msl` files inside a Mosaic package. The viewer could
+  therefore not display a single real component on any backend. Discovery now
+  anchors on `*.mil` and pairs siblings by base name:
+  - a `.mil` with no matching `.mll` is skipped, not reported as broken — it
+    may be a shared interface fragment
+  - stylesheet resolution prefers `*.light.msl` and falls back to
+    `*.dark.msl`, so a dark-only component previews rather than rendering
+    unstyled; neither variant is also tolerated
+  - the owning `mosaic-package.toml` is located by walking up from the source
+    directory, stopping at the served root so the search cannot escape the tree
+- **Three-file compiler invocation.** `compilerArgs` selects between the legacy
+  single-file form and `--interface/--layout/--style`. `--package-manifest` is
+  passed whenever a manifest was found: it registers the package's exported
+  component names, without which a layout cannot reference its siblings (Field
+  referencing Input) and the compile fails.
+
+### Notes
+
+- The legacy single-file `.mosaic` path is retained and still tested. Nothing
+  in this repo uses it; removing it is a separate decision.
+- Verified against the real `mosaic-pkg-toolkit`: 23 atoms discovered, each
+  correctly paired with its stylesheet and package manifest (previously 0).
+
 ## 0.1.0 — 2026-05-11
 
 ### Added

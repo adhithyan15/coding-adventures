@@ -868,6 +868,20 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 7,
+      "output": "chinese/book/chapters/ch07-zaoshang.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 8,
+      "output": "chinese/book/chapters/ch08-mingzi.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"
@@ -5210,6 +5224,48 @@
       "language": "telugu",
       "chapter": 59,
       "output": "telugu/book/chapters/ch59-weather-and-ground.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 60,
+      "output": "telugu/book/chapters/ch60-animals.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 61,
+      "output": "telugu/book/chapters/ch61-in-the-kitchen.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 62,
+      "output": "telugu/book/chapters/ch62-things-people-make.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 63,
+      "output": "telugu/book/chapters/ch63-hunger-sleep-health.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 64,
+      "output": "telugu/book/chapters/ch64-joining-words.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 65,
+      "output": "telugu/book/chapters/ch65-more-good-manners.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 66,
+      "output": "telugu/book/chapters/ch66-the-field.tex",
       "scriptSet": "telugu-comparisons"
     },
     {

@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0] — 2026-08-18 — `neg` opcode (0x65)
+
+The simulator had no dispatch case for the CIL `neg` opcode at all — any
+program reaching it panicked with `Unknown CLR opcode: 0x65`, even though
+`iir-to-cil-bytecode` already emitted it correctly (standard CIL; real
+CoreCLR via `ilasm`/`dotnet` already handles it natively) and no prior
+language reaching the CLR column had ever exercised unary negation this way.
+Surfaced by `macsyma-iir-vm.md` Wave 4's cross-backend conformance suite
+(`-7$`, `-(5 + 3)$`).
+
+- `OP_NEG: u8 = 0x65` — pop one `i32`, `wrapping_neg`, push the result.
+
 ## [0.4.0] — 2026-06-10 — McCarthy lambda: inter-method call frames (W8b, F7)
 
 - A whole-program **method table** + **call-frame** model: `load_program(methods, entry)`

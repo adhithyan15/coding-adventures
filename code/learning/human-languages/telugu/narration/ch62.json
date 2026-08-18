@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 62,
+  "title": "Things People Make",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:810c054c05f389b8",
+  "lessons": [
+    {
+      "id": "TE-C62-thread",
+      "sequence": 1930,
+      "title": "దారం (dāraṁ) — thread",
+      "headword": "దారం",
+      "romanization": "dāraṁ",
+      "gloss": "thread",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86742144682176d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mirapa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దారం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దారం (dāraṁ) — \"thread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దారం (dāraṁ) is thread — spun cotton, fine enough to sew with and strong enough to tie a knot that holds. It is the first thing in this chapter and the smallest."
+            },
+            {
+              "kind": "speech",
+              "text": "The word came in from Sanskrit, where it belongs to a family about tearing and drawing out. Thread is what you draw out of a mass of cotton."
+            },
+            {
+              "kind": "speech",
+              "text": "దారం (dāraṁ) does ceremonial work too. The thread tied round a wrist at a festival is a దారం (dāraṁ), and once it is on it stays there until it falls off by itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first thing a house makes for itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāraṁ, then dayacēsi, and ask for it politely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāraṁ*, then *dayacēsi*, and ask for it politely]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దారం (dāraṁ) mean? (\"thread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C62-needle",
+      "sequence": 1940,
+      "title": "సూది (sūdi) — a needle",
+      "headword": "సూది",
+      "romanization": "sūdi",
+      "gloss": "a needle",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:284d927a6de4790f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did dāraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సూది",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సూది (sūdi) — \"a needle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సూది (sūdi) is a needle. It arrived from Sanskrit sūcī, and Telugu wore the middle sound down to a d — a change the language makes often enough that the two shapes line up easily once you know to expect it."
+            },
+            {
+              "kind": "speech",
+              "text": "A సూది (sūdi) is useless without a దారం (dāraṁ), and a దారం (dāraṁ) is only a tangle without a సూది (sūdi). That is about as neat a pair as this book has come across."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word does the వైద్యుడు's work: an injection is a సూది (sūdi), and somebody at a clinic who uses the word is not talking about mending a బట్ట."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and neither is much use without the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūdi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūdi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūdi, then dāraṁ, and say which one goes through the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūdi*, then *dāraṁ*, and say which one goes through the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సూది (sūdi) mean? (\"a needle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C62-broom",
+      "sequence": 1950,
+      "title": "చీపురు (cīpuru) — a broom",
+      "headword": "చీపురు",
+      "romanization": "cīpuru",
+      "gloss": "a broom",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d94759836acc76fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did sūdi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చీపురు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చీపురు (cīpuru) — \"a broom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చీపురు (cīpuru) is the broom: a bundle of coconut-leaf ribs bound tight at one end, used bent at the waist rather than standing upright."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. Sweeping is the first work of the morning in a Telugu house, done before the ముగ్గు goes down at the doorstep."
+            },
+            {
+              "kind": "speech",
+              "text": "A చీపురు (cīpuru) is treated with a little care because of that. It is not stood on its bristles, it is not stepped over, and it is not lent out lightly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this one starts the day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīpuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīpuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīpuru, then muggu, and say which one comes first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīpuru*, then *muggu*, and say which one comes first]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చీపురు (cīpuru) mean? (\"a broom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C62-umbrella",
+      "sequence": 1960,
+      "title": "గొడుగు (goḍugu) — an umbrella",
+      "headword": "గొడుగు",
+      "romanization": "goḍugu",
+      "gloss": "an umbrella",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b76e7dcbf84d71ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cīpuru mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గొడుగు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడుగు (goḍugu) — \"an umbrella\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గొడుగు (goḍugu) is an umbrella, and in Telugu it answers the sun as much as the rain — which is the commoner use of it on a hot morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. Long before cloth and wire there was a గొడుగు (goḍugu) of palm leaf, and the ceremonial one held over a deity or over a bride is still made and named the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "It settles two things already met: గాలి will turn it inside out and మంచు will not, so a గొడుగు (goḍugu) goes out in one kind of weather and stays at home in the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍugu, then gāli, and say what one does to the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍugu*, then *gāli*, and say what one does to the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గొడుగు (goḍugu) mean? (\"an umbrella\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C62-mirror",
+      "sequence": 1970,
+      "title": "అద్దం (addaṁ) — a mirror",
+      "headword": "అద్దం",
+      "romanization": "addaṁ",
+      "gloss": "a mirror",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f50d7ef9c08ce07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did goḍugu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అద్దం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అద్దం (addaṁ) — \"a mirror\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అద్దం (addaṁ) is a mirror. Of the five things here it is the only one a household buys rather than makes, and the only one wearing a borrowed name — from Sanskrit ādarśa, \"what shows back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The other four come out of whatever grows nearby: a దారం (dāraṁ) out of cotton, a చీపురు (cīpuru) out of leaf ribs, a గొడుగు (goḍugu) out of palm and cane, and a సూది (sūdi) out of a scrap of metal from the smith at the edge of the గ్రామం. An అద్దం (addaṁ) needs a factory."
+            },
+            {
+              "kind": "speech",
+              "text": "Asking for one is where దయచేసి earns its keep. అద్దం (addaṁ) ఇవ్వండి on its own lands like an instruction; with దయచేసి in front it lands like a request."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: దారం (dāraṁ), సూది (sūdi), చీపురు (cīpuru), గొడుగు (goḍugu), అద్దం (addaṁ). Enough to ask for what you need with దయచేసి in front of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "addaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *addaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say dayacēsi addaṁ ivvaṇḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say *dayacēsi addaṁ ivvaṇḍi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అద్దం (addaṁ) mean? (\"a mirror\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

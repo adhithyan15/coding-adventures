@@ -142,6 +142,10 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Redeclaring a `let` binding** (e.g. when adding overflow-safe `multipliedReportingOverflow` for `bLen`) fails compile — remove the original.
 - **F# interpolated strings break on quoted literals inside expressions.** Bind with `let` first, or switch to `sprintf` for dense XML/HTML attributes.
 
+## C#
+
+- **`CliBuilder.Parser`'s `argv` follows the C/Go convention where index 0 is the program name** (`Parser.Parse()` sets `program = argv[0]` and starts real token parsing at `index = 1`). C#'s top-level `args` array does **not** include the program name — passing it straight to `new Parser(specPath, args)` silently drops the first real CLI token (single-arg invocations parse zero positional arguments; multi-arg invocations lose the first one). Symptom is silent: no exception, just an empty/short result. Fix: prepend a placeholder before calling, `var argv = new List<string> { "<program-name>" }; argv.AddRange(args);`. Found while wiring the C# `cowsay` port to `cli-builder` (first C# consumer of `Parser` outside its own test suite) — verify with an end-to-end run (`dotnet run -- <realistic args>`), not just unit tests that call `Parser` with a hand-built `argv` list, since it's easy to hand-build the list "correctly" (with a leading program name) in a test and then get the real entry point wrong.
+
 ## TypeScript / JavaScript
 
 - **JS bitwise ops are signed 32-bit.** `1 << 32 === 1` (shifts are mod 32) — guard `bitWidth >= 32` separately. `0xFFFFFFFF & 0xFFFFFFFF === -1` — use `>>> 0` to convert to unsigned: `(value & mask) >>> 0`. Critical for register files / ALU / addressing.
@@ -3465,3 +3469,58 @@ hardcode the same stale `"unknown/programs/task-app"` and are presumed to have
 the identical latent gap — flagged as a follow-up rather than bundled into an
 unrelated security-alert PR, since fixing them isn't required to unblock this
 one and touches five extra files with their own test fixtures.
+
+## Verifying a package by running its tests can miss the check that actually fails CI
+
+**What happened (HL-C242).** Chinese chapter 7 was verified locally with
+`npx vitest run` in all three packages that read `human-languages`, plus the
+five `check:*` gates. All green. CI then failed on `language-ladder` with:
+
+    bundle check: largest eager chunk is 500087 bytes (limit 500000)
+
+Eighty-seven bytes over, on a chapter that added five lessons.
+
+**Why local verification could never have caught it.** `scripts/check-bundle.mjs`
+is not a vitest test. It runs in the package's BUILD, after `vite build`, and
+reads `dist/`. No amount of running the test suite reaches it. The script even
+guards against a stale `dist/` — it refuses to report if any source is newer
+than the built `index.html` — precisely because a measurement that cannot move
+reads as evidence.
+
+**Rule:** for a package whose BUILD does more than compile — bundle budgets,
+size gates, generated-artifact checks — run the build, not just the tests:
+
+    npm run build && node scripts/check-bundle.mjs
+
+## `grep "Tests "` on vitest output hides whole test FILES failing
+
+Same incident. Verification was scripted as
+`npx vitest run 2>&1 | grep -E "Tests "`, which prints:
+
+    Tests  243 passed (243)
+
+and looks clean. The line above it read `Test Files  7 failed | 27 passed (34)`.
+Seven files had failed to *load* — so their tests never ran, never failed, and
+never appeared in the count that was being read. A run reporting "243 passed"
+was actually a broken run, and the real suite is 727.
+
+**Rule:** grep `"Test Files|Tests "`, never `"Tests "` alone. A collection error
+is invisible in the passing-test count by construction.
+
+## Splitting a chunk to satisfy a "largest chunk" gate is gaming the metric
+
+The first fix for the bundle failure gave the oversized `curriculum-plans` group
+a `maxSize` so it split into four chunks, each under the ceiling. The gate went
+green. It was the wrong fix, and `main` landed the right one concurrently:
+make the per-track plans lazy so the bytes leave the preload set entirely.
+
+The tell was in the commit message that shipped it — it conceded that "the bytes
+are eager either way, so first paint downloads the same total" and argued the
+cacheability gain made it acceptable. A gate measuring the LARGEST eager chunk
+cannot see four chunks totalling the same half-megabyte. HL-C110 had written
+this exact trade down in advance as gaming the metric.
+
+**Generalisation:** when a budget is expressed as a max over a partition, any fix
+that changes the partition rather than the total satisfies the gate without
+buying the thing the gate exists to protect. Ask what the gate is a proxy for —
+here, bytes before first paint — and move that number.

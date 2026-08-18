@@ -929,6 +929,46 @@ rather than `violations` because deleting a lesson would otherwise count as
 progress. That choice is still right, and it means the queue will under-report
 this family until ordering is measured separately.
 
+## HL-C210 — a "largest chunk" gate can be satisfied by SPLITTING, which fixes nothing
+
+While PR #11983 was blocked on
+
+    bundle check: largest eager chunk is 502251 bytes (limit 500000)
+
+a concurrent session pushed `5a2ede0` "fix(ci): cap curriculum-plans chunk size",
+adding `maxSize: 250_000` to that chunk group. **CI went green.** The browser still
+downloaded the same ~500 kB before first paint -- as four chunks instead of one.
+
+Nothing was fixed. The metric was satisfied.
+
+**The gate's own shape is what allows this.** It measures the LARGEST eager chunk,
+so splitting one oversized chunk into N smaller ones always passes, no matter how
+much total bytes the page eagerly loads. HL-C110 had already written this down as
+the predictable evasion, which is why the real fix was known in advance.
+
+**The real fix, now landed:** `src/curriculum.ts` used
+`import.meta.glob(..., { eager: true })`, welding all 22 tracks' `curriculum.json`
+into the entry graph. Nothing on the first-paint path reads them -- every consumer
+runs after an await the app already performs. The glob is now lazy, one chunk per
+track, and the plans load inside the corpus refresh. Largest eager chunk
+**502,251 -> 287,353 bytes**, and no `curriculum.json` byte is eager at all, so
+corpus growth lands only in lazy chunks. That is structural, not headroom a tranche
+can eat.
+
+**Two things to do:**
+
+1. **Add a TOTAL eager-bytes assertion** beside the per-chunk one. Without it the
+   gate cannot distinguish "made the page lighter" from "cut the same payload into
+   smaller pieces". A limit on the sum is the property actually wanted.
+2. Treat `maxSize` on an eager group as a smell in review. It is a legitimate tool
+   for shaping lazy chunks; on an EAGER group it usually means a size gate is being
+   routed around rather than met.
+
+The superseded `maxSize: 250_000` was left in place with a comment saying so, since
+the group it applied to no longer exists in the eager graph. It is inert, not
+load-bearing -- but it should be deleted whenever that file is next touched, so no
+future reader mistakes it for the thing keeping the build green.
+
 ## HL-C209 — Chinese teaches its script; one glyph per lesson, two of them assemblies
 
 Seven writing lessons, Chapter 2. 人 → 亻 → 尔 → 你, then 女 → 子 → 好. Five teach a
@@ -966,6 +1006,41 @@ number: the lesson genuinely retrieves the earlier assembly ("the first one you
 built had a meaning half and a sound half"), so the atom was declared because it
 is exercised. Widening a declaration to clear a floor is how a floor stops
 measuring anything.
+
+## HL-C209 — the tranche-merge resolution is now a fixed procedure; make it a script
+
+Three tranches in a row have hit the SAME four-file conflict when main advanced
+mid-flight: `core/lesson-modality.json` plus the three test-pin files. The
+resolution is identical every time and is NOT "pick a side" -- both branches add
+lessons, so the correct value is the SUM, which neither side carries.
+
+**The procedure, which works:**
+
+1. `git checkout --theirs core/lesson-modality.json` then REGENERATE it
+   (`generate:modality`, `:narration`, `:books`, `:progress`) from the merged lesson
+   tree. It is a generated artifact; only the merged tree knows the answer.
+2. Clear the conflict markers keeping OUR side, which preserves the pin ledger
+   comments.
+3. Read every object pin from the regenerated `summary`, never from either branch.
+4. `R2` cannot be predicted -- extending a track makes previously unjudgeable tail
+   atoms judgeable -- so read it from the failing assertion.
+
+**Two constraints that must be built in, both learned by breaking them:**
+
+- Confine the object-pin patcher to lines past the corpus block. The synthetic
+  fixture at `modality-manifest.test.ts:359` shares field NAMES with the corpus pin
+  at line 998, and HL-C196 records the patcher oscillating between them for 60
+  rounds.
+- Target the chapter ledger by the line mentioning `ledgers.flatMap`, never the
+  first `toHaveLength` in the file -- a count-limited regex once clobbered
+  `expect(modalityFiles).toHaveLength(22)`, which counts TRACKS.
+
+**Why it should be a script rather than a remembered procedure:** on the third
+run I still got it wrong once, because my hand-written field list omitted
+`drivablePercent`, so the suite failed on a field I had simply forgotten to
+include. A checked-in helper -- alongside `repin_tests.py` -- would enumerate the
+summary keys from the manifest itself rather than from memory, and would carry the
+two constraints above as code instead of as care.
 
 ## HL-C208 — the backlog is now a function; and the head of it is SCRIPT, not vocabulary
 
@@ -1022,6 +1097,51 @@ because "cannot be projected" and "nothing left to do" are opposite facts.
 written, every number this repository reports for that track at that level is a
 proxy for something nobody is graded on — which is HL-C184's Phase 0 restated, now
 with the item queued per track instead of listed once and forgotten.
+
+## HL-C208 — ZWNJ is NOT always a defect, and an UNASSIGNED codepoint can hide from the detector
+
+Two corrections from the Telugu round-3 sweep, the first of which is a correction to
+instructions I have been repeating.
+
+### 1. ZWNJ in Indic text is often CORRECT, and must not be stripped
+
+Every tranche brief in this session said, flatly, that U+200C/U+200D are in no script
+block and should be removed. **That is wrong as a blanket rule.**
+
+`telugu/lessons/TE-C05-undu` carries U+200C ZWNJ between  and , where it
+**deliberately blocks a  conjunct**. Removing it changes how the word renders. It is
+correct Indic orthography, not a defect, and it propagates to `narration/ch05.*` and
+`book/chapters/ch05-first-verbs.tex` as generated output should.
+
+**The real rule:**
+
+- **ZWJ/ZWNJ used to SPELL A LETTER that has an atomic codepoint is a defect** -- the
+  Malayalam chillu case, where consonant+virama+ZWJ falls through to the Latin font and
+  prints missing at exit 0. Use the atomic form (U+0D7B-U+0D7E).
+- **ZWNJ used to BLOCK or FORCE a conjunct is orthography.** Leave it.
+
+A detector cannot tell these apart by the codepoint alone; it has to look at what the
+joiner sits between. Until it can, **report ZWJ/ZWNJ findings, do not auto-remove them.**
+
+### 2. An UNASSIGNED codepoint made the sweep report clean -- ninth blind detector
+
+The tooling wrote **U+0BE3** -- unassigned, but inside the Tamil block -- into a Latin
+run, and the whole-tree sweep called the file **clean**. Two independent failures
+stacked:
+
+- `unicodedata.name()` **raises** on an unassigned codepoint, so the script classifier
+  fell through to "not a script" and the character was ignored;
+- its category is **Cn**, which the word-splitter treated as a boundary, cutting the
+  word into two **pure-Latin halves** that each passed.
+
+So a character that officially does not exist split a mixed-script word into two clean
+ones. **Fix: classify by BLOCK RANGE, not by `unicodedata.name`, and treat Cn as
+word-internal.** With that change the case is caught, and it is now part of the standard
+self-test fixture set.
+
+This is the ninth recorded blind detector and the first whose cause was the DATA being
+undefined rather than the pattern being wrong. Same lesson either way: a clean result is
+worth nothing until the detector has re-found something known to be dirty.
 
 ## HL-C207 — Hindi round two landed; Tamil and Malayalam are now the only tracks a round behind
 

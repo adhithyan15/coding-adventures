@@ -197,6 +197,41 @@ pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction) {
                 continue;
             }
         };
+        // A genuine UNARY `call_builtin "-"` (negate) — exactly one argument
+        // operand (srcs[1], no srcs[2]) — is a distinct case from the binary
+        // subtract below and is handled first. Macsyma's `lower_unary` emits
+        // this shape for `-x` on a concrete operand (`macsyma-iir-compiler::
+        // Lowerer::lower_unary`); McCarthy Lisp has no numeric negation
+        // builtin at all, so this is the first frontend to reach here with a
+        // one-operand arithmetic `call_builtin`. Every backend already lowers
+        // the raw typed `neg` op (it's in `interpreter_ir::opcodes::
+        // is_arithmetic`, and each of iir-to-wasm/iir-to-llvm/
+        // iir-to-jvm-class-file/iir-to-cil-bytecode/the native backends
+        // implements it) — the only missing piece was this pass never
+        // recognising the unary `call_builtin` shape, so it fell through
+        // unrewritten to a backend whose `call_builtin` whitelist only knows
+        // heap/predicate builtins, not arithmetic op names.
+        if name == "-" {
+            if let (Some(Operand::Var(a)), None) = (instr.srcs.get(1), instr.srcs.get(2)) {
+                let a = a.clone();
+                let Some(dest) = instr.dest.clone() else {
+                    out.push(instr);
+                    continue;
+                };
+                let ia = unbox_operand(&a, &mut out, &types, &mut counter);
+                counter += 1;
+                let s = format!("{dest}.raw{counter}");
+                out.push(IIRInstr::new("neg", Some(s.clone()), vec![Operand::Var(ia)], INT));
+                out.push(IIRInstr::new(
+                    "box",
+                    Some(dest.clone()),
+                    vec![Operand::Var(s)],
+                    REF_ANY,
+                ));
+                types.insert(dest, REF_ANY.to_string());
+                continue;
+            }
+        }
         let op = match typed_op(&name) {
             Some(op) => op,
             None => {

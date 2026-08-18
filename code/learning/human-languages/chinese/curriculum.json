@@ -109,6 +109,43 @@
         "ZH-EXT-016-CONVERSATION-CLOSE"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-006",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ZH-W07-zao",
+        "ZH-W07-shang",
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-017-ZAO-SHANG-SCRIPT",
+        "ZH-EXT-018-NEUTRAL-TONE",
+        "ZH-EXT-019-GREETING-FRAME"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-020-WO-SCRIPT",
+        "ZH-EXT-021-NO-INFLECTION",
+        "ZH-EXT-022-MINGZI"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -144,14 +181,14 @@
       "relocates": {}
     },
     "SPINE-EXCHANGE-NAMES": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-007"
+      ],
       "omits": [
         "QUESTION-WHAT",
-        "PRONOUN-I",
         "PRONOUN-ME",
         "PRONOUN-YOU",
         "PRONOUN-MY",
-        "WORD-NAME",
         "WORD-IS",
         "INTRO-MY-NAME-IS",
         "INTRO-WHATS-YOUR-NAME",
@@ -192,15 +229,15 @@
       "relocates": {}
     },
     "SPINE-TIME-OF-DAY": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-006"
+      ],
       "omits": [
         "TIME-DAY",
-        "TIME-MORNING",
         "TIME-AFTERNOON",
         "TIME-EVENING",
         "TIME-NIGHT",
         "GREETING-DAY",
-        "GREETING-MORNING",
         "GREETING-AFTERNOON",
         "GREETING-EVENING"
       ],
@@ -715,6 +752,90 @@
       "lessons": [
         "ZH-W06-jian",
         "ZH-C06-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-017-ZAO-SHANG-SCRIPT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 早 and 上, and I know that stroke-order habits carry conditions -- the horizontal leads when two strokes cross, as in 十, but 上 starts with its vertical because its short bar meets that vertical instead of crossing it.",
+      "prerequisites": [
+        "ZH-EXT-016-CONVERSATION-CLOSE"
+      ],
+      "lessons": [
+        "ZH-W07-zao",
+        "ZH-W07-shang"
+      ]
+    },
+    {
+      "id": "ZH-EXT-018-NEUTRAL-TONE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can recognise a neutral-tone syllable from the absence of a tone mark, say it short and light, and tell it apart from a tone that changes under a sandhi rule.",
+      "prerequisites": [
+        "ZH-EXT-017-ZAO-SHANG-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao"
+      ]
+    },
+    {
+      "id": "ZH-EXT-019-GREETING-FRAME",
+      "stage": "A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can use the X + 好 greeting frame, and I can say why the third-tone sandhi rule fires in 你好 but not in 早上好.",
+      "prerequisites": [
+        "ZH-EXT-018-NEUTRAL-TONE"
+      ],
+      "lessons": [
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-020-WO-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 我, a seven-stroke character that does not decompose into pieces I already know, by following its stroke route and keeping its two hooked strokes unbroken.",
+      "prerequisites": [
+        "ZH-EXT-019-GREETING-FRAME"
+      ],
+      "lessons": [
+        "ZH-W08-wo"
+      ]
+    },
+    {
+      "id": "ZH-EXT-021-NO-INFLECTION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I know that Mandarin never changes a word to show what job it is doing in a sentence -- 我 serves as both 'I' and 'me' -- and I can introduce myself with 我是 plus my name.",
+      "prerequisites": [
+        "ZH-EXT-020-WO-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-C08-wo",
+        "ZH-C08-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-022-MINGZI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can write 名 and 字, recognise 名字 as the word for a name, and say why its literal reading -- name-character -- describes what a Chinese name actually is.",
+      "prerequisites": [
+        "ZH-EXT-021-NO-INFLECTION"
+      ],
+      "lessons": [
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi"
       ]
     }
   ]

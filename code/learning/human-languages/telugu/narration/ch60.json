@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 60,
+  "title": "Animals",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c81bca627d596923",
+  "lessons": [
+    {
+      "id": "TE-C60-buffalo",
+      "sequence": 1830,
+      "title": "గేదె (gēde) — a buffalo",
+      "headword": "గేదె",
+      "romanization": "gēde",
+      "gloss": "a buffalo",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8574853e80eae94a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nippu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గేదె",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గేదె (gēde) — \"a buffalo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గేదె (gēde) is the water buffalo — black, unhurried, and the animal most of the పాలు in a Telugu household actually come from. The cow gets the songs; the గేదె (gēde) fills the pot."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited, and the animal is so ordinary that arriving at a village house often means being met by one before anybody comes out to say నమస్కారం."
+            },
+            {
+              "kind": "speech",
+              "text": "A గేదె (gēde) standing in a చెరువు with only its nose above the water is the picture the word carries. That is where it spends the hottest part of the day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first animal."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēde, then pālu, and say which one gives the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēde*, then *pālu*, and say which one gives the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గేదె (gēde) mean? (\"a buffalo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C60-goat",
+      "sequence": 1840,
+      "title": "మేక (mēka) — a goat",
+      "headword": "మేక",
+      "romanization": "mēka",
+      "gloss": "a goat",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22325be3f45244d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gēde mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మేక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మేక (mēka) — \"a goat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మేక (mēka) is the goat: small, loud, and kept by households that cannot keep a గేదె (gēde). Where the buffalo wants water and grazing, the మేక (mēka) wants almost nothing and will eat what is left."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited and it is old. Its shape sits close to the Tamil and Kannada words for the same animal, which is what happens to the names of animals people have kept for a very long time."
+            },
+            {
+              "kind": "speech",
+              "text": "A మేక (mēka) will strip a bush bare and move on, which is why a గ్రామం keeps them at its edge rather than in its lanes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: one for milk, one for anything."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēka, then gēde, and say which one wants the చెరువు",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēka*, then *gēde*, and say which one wants the చెరువు]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మేక (mēka) mean? (\"a goat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C60-hen",
+      "sequence": 1850,
+      "title": "కోడి (kōḍi) — a hen",
+      "headword": "కోడి",
+      "romanization": "kōḍi",
+      "gloss": "a hen",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb8f0a47504372fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mēka mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కోడి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కోడి (kōḍi) — \"a hen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కోడి (kōḍi) is the domestic fowl, hen or cock alike; the word does not divide them, and when the difference matters a second word goes in front."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited and it is everywhere in the family, close in shape to the Tamil, Kannada and Malayalam words for the same bird — one of those words that travelled with the animal and has not moved since."
+            },
+            {
+              "kind": "speech",
+              "text": "The కోడి (kōḍi) is also the village clock. It wakes a house before ఉదయం is properly under way, which is why nobody there has ever needed a గంట."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḍi, then mēka, and say which one wakes you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḍi*, then *mēka*, and say which one wakes you]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కోడి (kōḍi) mean? (\"a hen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C60-ant",
+      "sequence": 1860,
+      "title": "చీమ (cīma) — an ant",
+      "headword": "చీమ",
+      "romanization": "cīma",
+      "gloss": "an ant",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b18902e5f21d339",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kōḍi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చీమ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చీమ (cīma) — \"an ant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చీమ (cīma) is the ant. After a గేదె (gēde) and a కోడి (kōḍi) it is a jump in scale worth making, because the same plain word-making covers whatever lives in a house, however small it is."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. Telugu has a stock comparison about a చీమ (cīma) carrying many times its own weight, and it is the ordinary way to praise somebody small who works hard."
+            },
+            {
+              "kind": "speech",
+              "text": "A line of చీమలు across a floor usually ends at a పండు somebody left out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four: the biggest and the smallest so far."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīma, then gēde, and say which one is easier to miss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīma*, then *gēde*, and say which one is easier to miss]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చీమ (cīma) mean? (\"an ant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C60-bird",
+      "sequence": 1870,
+      "title": "పక్షి (pakṣi) — a bird",
+      "headword": "పక్షి",
+      "romanization": "pakṣi",
+      "gloss": "a bird",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:408df582366d324c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cīma mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పక్షి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పక్షి (pakṣi) — \"a bird\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పక్షి (pakṣi) is the general one: any bird at all, the కోడి (kōḍi) included. It came in from Sanskrit, and beside it Telugu keeps its own పిట్ట for the small ones about a garden."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a split this book has met before — an inherited word doing the everyday work and a borrowed one carrying the wider idea, the same shape as నిప్పు beside అగ్ని. Once you start expecting it, half the vocabulary sorts itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Five animals now, from the గేదె (gēde) at the gate to the చీమ (cīma) under it, and a నమస్కారం for whoever keeps them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: గేదె (gēde), మేక (mēka), కోడి (kōḍi), చీమ (cīma), పక్షి (pakṣi). Enough to greet a house and name what lives in it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakṣi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakṣi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say namaskāram to whoever keeps them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say *namaskāram* to whoever keeps them]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పక్షి (pakṣi) mean? (\"a bird\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

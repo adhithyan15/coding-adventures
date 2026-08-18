@@ -24,6 +24,7 @@
 //! | Dartmouth BASIC | full (integer subset) | `dartmouth-basic-iir-compiler` |
 //! | Oct             | full (integer subset; 8008 intrinsics rejected) | `oct-iir-compiler` |
 //! | ALGOL 60        | scalar integer/boolean subset | `algol-iir-compiler` |
+//! | Macsyma          | v0: integer arithmetic/assignment/unevaluated symbolic `Apply` | `macsyma-iir-compiler` |
 //!
 //! ## How to add a language
 //!
@@ -79,6 +80,14 @@ pub enum Language {
     /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
     /// i64 exit code.
     Cobol60,
+    /// Macsyma — the v0 integer-arithmetic/assignment/unevaluated-symbolic-
+    /// `Apply` slice via the `macsyma-iir-compiler` frontend, over the same
+    /// tagged-word `dynval-runtime` value model McCarthy Lisp uses (see
+    /// `code/specs/macsyma-iir-vm.md`). Not to be confused with the separate
+    /// `maxima-iir-compiler` crate (Maxima is Macsyma's open-source
+    /// descendant, but is wired here as a thin re-export of this same
+    /// frontend rather than its own `Language` variant).
+    Macsyma,
 }
 
 impl fmt::Display for Language {
@@ -93,6 +102,7 @@ impl fmt::Display for Language {
             Language::Algol60 => write!(f, "algol60"),
             Language::FlowMatic => write!(f, "flow-matic"),
             Language::Cobol60 => write!(f, "cobol60"),
+            Language::Macsyma => write!(f, "macsyma"),
         }
     }
 }
@@ -110,12 +120,13 @@ impl Language {
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
             "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
+            "macsyma" | "mac" => Ok(Self::Macsyma),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
-                 cobol60 (or cobol / cobol-60 / cob)")),
+                 cobol60 (or cobol / cobol-60 / cob), macsyma (or mac)")),
         }
     }
 }
@@ -135,6 +146,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "algol" | "alg" | "a60" => Some(Language::Algol60),
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
         "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
+        "mac" => Some(Language::Macsyma),
         _ => None,
     }
 }
@@ -427,6 +439,13 @@ pub fn compile_source_to_iir(
         }
         Language::Cobol60 => {
             cobol_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        Language::Macsyma => {
+            macsyma_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: format!("{e}"),
