@@ -1816,6 +1816,11 @@
     },
     {
       "language": "latin",
+      "chapter": 1,
+      "output": "latin/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "latin",
       "chapter": 2,
       "output": "latin/book/chapters/ch02-numbers-1-10.tex"
     },
@@ -2430,6 +2435,13 @@
       "output": "marathi/book/chapters/ch14-script-first.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
+    },
+    {
+      "language": "persian",
+      "chapter": 2,
+      "output": "persian/book/chapters/ch02-give-your-name.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
     },
     {
       "language": "persian",
@@ -5114,6 +5126,13 @@
     },
     {
       "language": "urdu",
+      "chapter": 2,
+      "output": "urdu/book/chapters/ch02-give-your-name.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
       "chapter": 3,
       "output": "urdu/book/chapters/ch03-ask-and-answer-names.tex",
       "unicodeScript": "Arabic",
@@ -5697,11 +5716,6 @@
       "output": "kannada/book/chapters/ch05-first-verbs.tex"
     },
     {
-      "language": "latin",
-      "chapter": 1,
-      "output": "latin/book/chapters/ch01-greetings.tex"
-    },
-    {
       "language": "malayalam",
       "chapter": 1,
       "output": "malayalam/book/chapters/ch01-greetings.tex"
@@ -5755,11 +5769,6 @@
       "language": "persian",
       "chapter": 1,
       "output": "persian/book/chapters/ch01-greetings-and-responses.tex"
-    },
-    {
-      "language": "persian",
-      "chapter": 2,
-      "output": "persian/book/chapters/ch02-give-your-name.tex"
     },
     {
       "language": "portuguese",
@@ -5880,11 +5889,6 @@
       "language": "urdu",
       "chapter": 1,
       "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
-    },
-    {
-      "language": "urdu",
-      "chapter": 2,
-      "output": "urdu/book/chapters/ch02-give-your-name.tex"
     }
   ]
 }

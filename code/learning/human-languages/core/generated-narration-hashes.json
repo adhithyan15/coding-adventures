@@ -15296,7 +15296,7 @@
     {
       "language": "urdu",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d3efc74a56512410",
+      "sourceHash": "fnv1a64:d7e6c7d21186e200",
       "lessonIds": [
         "UR-C02-mera-naam"
       ],
@@ -15304,8 +15304,8 @@
       "drivablePrefix": 1,
       "text": "urdu/narration/ch02.txt",
       "json": "urdu/narration/ch02.json",
-      "textHash": "fnv1a64:62f95e1e2a34f5c1",
-      "jsonHash": "fnv1a64:3cc911c9f78d0d11"
+      "textHash": "fnv1a64:b51d3358d9b6bb75",
+      "jsonHash": "fnv1a64:ea3231d5c2ec1fbe"
     },
     {
       "language": "urdu",
