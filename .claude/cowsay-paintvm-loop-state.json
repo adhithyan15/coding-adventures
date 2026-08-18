@@ -22,15 +22,15 @@
       "id": "doc-fix-swift-row",
       "title": "Fix swift's paint-instructions status in cowsay-paintvm-pipeline.md (missed in PR #12031 due to a merge race)",
       "depends_on": [],
-      "status": "pending",
+      "status": "folded-into-fsharp-cowsay",
       "priority": 1,
-      "notes": "Small doc-only correction. Fold into the fsharp PR as its first commit rather than a standalone PR."
+      "notes": "Folded into the fsharp-cowsay branch/PR as its first commit."
     },
     {
       "id": "fsharp-cowsay",
       "title": "F# cowsay via existing paint-vm-ascii",
       "depends_on": [],
-      "status": "in-progress",
+      "status": "pr-open",
       "priority": 2,
       "backend_work": "none -- fsharp/paint-vm-ascii already implements glyph_run",
       "notes": "Mirrors the C# pilot almost exactly; smallest remaining unblocker."
