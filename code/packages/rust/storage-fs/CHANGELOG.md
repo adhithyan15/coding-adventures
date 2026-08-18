@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `delete` now `fsync`s the containing directory after a successful
+  `remove_file`, the same step 4 `write_record_atomic` already performed after
+  its `rename`. Without it a removal was only ever as durable as the page
+  cache: `remove_file` returning `Ok` and every later `get` returning `None`
+  prove the entry is gone from memory, not that its disappearance is committed,
+  so a power cut could resurrect a record every reader had agreed was deleted.
+  That is tolerable when a delete means "stop referencing this" and not when it
+  means "this content must stop existing" — which is exactly what
+  `vault-pm`'s passphrase rotation needs of a retired key wrap.
+
+### Fixed
+
 - Made parallel filesystem-backend tests allocate distinct temporary roots even
   when the platform clock returns the same timestamp.
 

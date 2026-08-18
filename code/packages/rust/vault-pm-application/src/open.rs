@@ -16229,6 +16229,197 @@ mod tests {
         );
     }
 
+    /// A rotation may raise the KDF cost and may never lower it.
+    ///
+    /// The fixture vault is created at the V1 floor, so this raises it first
+    /// and then tries to come back down: a rotation run specifically to improve
+    /// a person's security must not be the thing that weakens it.
+    #[test]
+    fn a_rotation_refuses_to_weaken_the_key_derivation() {
+        let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
+        active_session(locator, &local, &bootstrap, &factory)
+            .rotate_passphrase(
+                &exact_bootstrap(&bootstrap),
+                &Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+                &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                PassphraseRotationPolicyV1::new(16 * 1024, 2, 1).unwrap(),
+                rotation_randomness(0xa1),
+                &local,
+                &bootstrap,
+            )
+            .unwrap();
+        let raised = exact_bootstrap(&bootstrap);
+        assert_eq!(
+            BootstrapV1::decode(&raised).unwrap().kdf.memory_kib,
+            16 * 1024
+        );
+
+        for weaker in [
+            PassphraseRotationPolicyV1::new(8 * 1024, 2, 1).unwrap(),
+            PassphraseRotationPolicyV1::new(16 * 1024, 1, 1).unwrap(),
+        ] {
+            let session = open_active_vault(
+                Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            assert_eq!(
+                session
+                    .rotate_passphrase(
+                        &raised,
+                        &Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                        &Zeroizing::new(b"a third passphrase".to_vec()),
+                        weaker,
+                        rotation_randomness(0xa7),
+                        &local,
+                        &bootstrap,
+                    )
+                    .err(),
+                Some(ApplicationError::InvalidInput)
+            );
+            assert_eq!(exact_bootstrap(&bootstrap), raised);
+        }
+    }
+
+    /// A bootstrap store that refuses to install anything.
+    ///
+    /// It answers `load_latest` truthfully, which is what lets the roll-back
+    /// prove the install never happened.
+    struct RefusingInstallStore<'store>(&'store MemoryBootstrapStore);
+
+    impl BootstrapStore for RefusingInstallStore<'_> {
+        fn load_latest(
+            &self,
+            locator: BootstrapLocator,
+        ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
+            self.0.load_latest(locator)
+        }
+
+        fn put_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _expected_previous: Option<BootstrapId>,
+            _exact_bootstrap: &[u8],
+        ) -> Result<(), BootstrapStoreError> {
+            Err(BootstrapStoreError::Conflict)
+        }
+
+        fn supersede_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _superseded: BootstrapId,
+        ) -> Result<(), BootstrapStoreError> {
+            panic!("a rotation that could not install must never retire anything")
+        }
+    }
+
+    /// A journalled rotation the provider refused has an exit.
+    ///
+    /// Rolling forward is the rule, but it is unanswerable only while it is
+    /// unknown how far the ceremony got. When the store still serves the
+    /// generation this rotation meant to retire, the install provably did not
+    /// happen and neither did the retirement that strictly follows it — so the
+    /// vault is exactly where it started and standing still is safe. Without
+    /// this the vault would be wedged forever by a transient provider answer.
+    #[test]
+    fn a_rotation_the_provider_refused_leaves_the_old_passphrase_working() {
+        let (locator, local, bootstrap, factory, _backend, item_id) = vault_with_one_item();
+        install_pending_rotation(&local, &bootstrap, 0xb1);
+        let before_bootstrap = exact_bootstrap(&bootstrap);
+
+        let refusing = RefusingInstallStore(&bootstrap);
+        assert_eq!(
+            crate::recover_pending_rotation(locator, &local, &refusing).err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
+
+        // The journal is gone, the durable world is the one the rotation
+        // started from, and the old passphrase still opens the vault.
+        assert_eq!(exact_bootstrap(&bootstrap), before_bootstrap);
+        assert_eq!(
+            crate::VaultAccessV1::locked(locator)
+                .status(&local)
+                .unwrap()
+                .state(),
+            crate::VaultStatusStateV1::Locked
+        );
+        let reopened = open_active_vault(
+            Zeroizing::new(OLD_PASSPHRASE.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert!(reopened.get_item(item_id).unwrap().is_some());
+        assert_eq!(
+            open_active_vault(
+                Zeroizing::new(NEW_PASSPHRASE.to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .err(),
+            Some(ApplicationError::AuthenticationFailed)
+        );
+    }
+
+    /// A store that refuses to install *and* cannot be read.
+    ///
+    /// Nothing can be proved about how far the ceremony got, so the journal
+    /// must stay exactly where it is.
+    struct BlindRefusingStore;
+
+    impl BootstrapStore for BlindRefusingStore {
+        fn load_latest(
+            &self,
+            _locator: BootstrapLocator,
+        ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
+            Err(BootstrapStoreError::Unavailable)
+        }
+
+        fn put_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _expected_previous: Option<BootstrapId>,
+            _exact_bootstrap: &[u8],
+        ) -> Result<(), BootstrapStoreError> {
+            Err(BootstrapStoreError::Unavailable)
+        }
+
+        fn supersede_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _superseded: BootstrapId,
+        ) -> Result<(), BootstrapStoreError> {
+            unreachable!()
+        }
+    }
+
+    #[test]
+    fn an_unprovable_rotation_failure_leaves_the_journal_alone() {
+        let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+        install_pending_rotation(&local, &bootstrap, 0xb7);
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+
+        assert_eq!(
+            crate::recover_pending_rotation(locator, &local, &BlindRefusingStore).err(),
+            Some(ApplicationError::StorageUnavailable)
+        );
+        assert_eq!(local.0.lock().unwrap().clone().unwrap(), exact_pending);
+        assert_eq!(
+            crate::VaultAccessV1::locked(locator)
+                .status(&local)
+                .unwrap()
+                .state(),
+            crate::VaultStatusStateV1::RecoveryRequired
+        );
+    }
+
     #[test]
     fn a_generation_that_is_still_live_cannot_be_superseded() {
         let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();

@@ -259,9 +259,13 @@ pub fn prepare_passphrase_rotation(
         return Err(ApplicationError::IntegrityFailure);
     }
 
-    let (authority_public, authority_secret) =
+    // `generate_keypair` returns the secret *by value*, and `[u8; 64]` is
+    // `Copy`, so wrapping it would leave the original array on this frame
+    // un-wiped. Bind it mutably, take the owned copy, and wipe the original.
+    let (authority_public, mut raw_authority_secret) =
         generate_keypair(observed_local_secret.authority_seed());
-    let mut authority_secret = Zeroizing::new(authority_secret);
+    let mut authority_secret = Zeroizing::new(raw_authority_secret);
+    raw_authority_secret.zeroize();
     if PublicKey::new(authority_public) != bootstrap.authority_public_key {
         authority_secret.zeroize();
         return Err(ApplicationError::IntegrityFailure);
@@ -271,6 +275,20 @@ pub fn prepare_passphrase_rotation(
     let salt = take(&randomness.bytes, &mut offset);
     let nonce = take(&randomness.bytes, &mut offset);
     debug_assert_eq!(offset, PASSPHRASE_ROTATION_RANDOM_BYTES);
+
+    // A rotation may raise the KDF cost and may never lower it. The doc on
+    // `PassphraseRotationPolicyV1` promises stronger parameters as a side
+    // effect of rotating on a faster machine; without this floor the same
+    // parameter path would also let a caller hand the person a *weaker*
+    // credential than the one they already had, in the ceremony they ran
+    // specifically to improve their security. The shipped CLI passes a fixed
+    // production policy, so this guards embedders and any future host that
+    // calibrates at run time.
+    if policy.memory_kib < bootstrap.kdf.memory_kib || policy.iterations < bootstrap.kdf.iterations
+    {
+        authority_secret.zeroize();
+        return Err(ApplicationError::InvalidInput);
+    }
 
     let kdf = Argon2idParametersV1 {
         memory_kib: policy.memory_kib,
@@ -406,9 +424,18 @@ fn finish_pending_rotation(
 ) -> Result<ActiveStateV1, ApplicationError> {
     let superseded = journal.superseded_bootstrap_id();
 
-    bootstrap_store
-        .put_generation(locator, Some(superseded), journal.bootstrap())
-        .map_err(map_bootstrap_store)?;
+    if let Err(error) =
+        bootstrap_store.put_generation(locator, Some(superseded), journal.bootstrap())
+    {
+        return Err(abandon_uninstalled_rotation(
+            locator,
+            journal,
+            exact_pending,
+            local_state_store,
+            bootstrap_store,
+            map_bootstrap_store(error),
+        ));
+    }
     // Read the provider back before retiring anything. The old wrap is the
     // only remaining way into this vault until the new one is actually being
     // served, so the delete below must never run on the strength of a write
@@ -438,6 +465,66 @@ fn finish_pending_rotation(
             }
         }
         Err(error) => Err(map_local_state_store(error)),
+    }
+}
+
+/// Undo a journalled rotation that provably never reached the provider.
+///
+/// # The one landing point that would otherwise have no exit
+///
+/// Rolling forward is the rule (see [`recover_pending_rotation`]) precisely
+/// because, once anything has been installed, no passphrase-free code can tell
+/// how far the ceremony got. There is exactly one shape of failure where that
+/// uncertainty does not exist: `put_generation` refused, *and* the store's
+/// latest is still the generation this rotation intended to retire. Then the
+/// install demonstrably did not happen, and neither did the supersession that
+/// strictly follows it — so the durable world is byte-for-byte the one the
+/// rotation started from, and the old passphrase is still the vault's
+/// passphrase.
+///
+/// Without this, a `Conflict` from the bootstrap store after the journal landed
+/// would be terminal. `map_bootstrap_store` turns it into `IntegrityFailure`,
+/// which is not a wait-and-retry class, and every later command re-enters the
+/// roll-forward through the same door and fails the same way — a vault bricked
+/// by a transient answer from a provider, with no verb to escape it. A
+/// contract that only ever rolls forward is worth less than one that also
+/// knows when it is safe to stand still.
+///
+/// # Why this is not a hole in "the journal is the commit point"
+///
+/// The rule the product actually needs is *exactly one passphrase works, and a
+/// person can find out which*. Rolling back here preserves it: the old
+/// passphrase opens the vault, the new one does not, and the command reports
+/// failure rather than success. The rotation simply did not happen, and the
+/// person retries.
+///
+/// Anything that stops this function from *proving* the install never happened
+/// — an unreadable provider, a latest pointer naming something else, a failed
+/// compare-exchange — leaves the journal exactly where it was and returns the
+/// original error. Guessing here would be the one mistake with no recovery.
+fn abandon_uninstalled_rotation(
+    locator: BootstrapLocator,
+    journal: &PendingRotationV1,
+    exact_pending: &[u8],
+    local_state_store: &dyn LocalStateStore,
+    bootstrap_store: &dyn BootstrapStore,
+    original: ApplicationError,
+) -> ApplicationError {
+    let Ok(Some(observed)) = bootstrap_store.load_latest(locator) else {
+        return original;
+    };
+    let Ok(observed) = BootstrapV1::decode(&observed) else {
+        return original;
+    };
+    if observed.id().ok() != Some(journal.superseded_bootstrap_id()) {
+        return original;
+    }
+    let Ok(exact_active) = LocalVaultStateV1::Active(journal.active().clone()).encode() else {
+        return original;
+    };
+    match local_state_store.compare_exchange(locator, Some(exact_pending), &exact_active) {
+        Ok(()) => original,
+        Err(_) => original,
     }
 }
 

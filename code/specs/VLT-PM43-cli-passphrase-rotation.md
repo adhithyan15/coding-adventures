@@ -296,13 +296,40 @@ generation as success, `supersede_generation` is idempotent on an absent
 record, and each compare-exchange re-reads and accepts the value it intended to
 write.
 
-Rolling *back* was considered and rejected. It would have to decide, without a
-passphrase, whether the person still knows the old one; it would have to
-un-install an immutable generation record; and it would have to explain why a
-person who was just asked to type a new passphrase twice ends up with the old
-one still in force. Rolling forward has none of those problems and one crisp
-rule a person can hold: *once the machine accepted your new passphrase, it is
-your passphrase.*
+Rolling *back* as a general rule was considered and rejected. It would have to
+decide, without a passphrase, whether the person still knows the old one; it
+would have to un-install an immutable generation record; and it would have to
+explain why a person who was just asked to type a new passphrase twice ends up
+with the old one still in force. Rolling forward has none of those problems and
+one crisp rule a person can hold: *once the machine accepted your new
+passphrase, it is your passphrase.*
+
+#### 5.3.1 The one case where standing still is provably safe
+
+Rolling forward is unanswerable only while it is *unknown* how far the
+interrupted ceremony got. There is exactly one shape of failure where that
+uncertainty does not exist: the bootstrap store refuses the install, **and** the
+generation it still serves is the one this rotation intended to retire. The
+install demonstrably did not happen, and neither did the supersession that
+strictly follows it, so the durable world is byte-for-byte the one the rotation
+started from.
+
+In that single case the journal is withdrawn — `PendingRotation` is
+compare-exchanged back to the `Active` it recorded — and the original error is
+returned. Without it, one `Conflict` from a provider after the journal landed
+would be terminal: that class is not a wait-and-retry class, every later command
+re-enters the roll-forward through the same door, and the vault is bricked by a
+transient answer with no verb to escape it. A contract that only ever rolls
+forward is worth less than one that also knows when it is safe to stand still.
+
+This is not a hole in "the journal is the commit point". The rule the product
+actually needs is *exactly one passphrase works, and a person can find out
+which*, and the withdrawal preserves it: the old passphrase opens the vault, the
+new one does not, and the command reports failure rather than success. Anything
+that prevents *proving* the install never happened — an unreadable provider, a
+latest pointer naming something else, a failed compare-exchange — leaves the
+journal exactly where it was. Guessing here would be the one mistake with no
+recovery.
 
 The recovery runs at the vault-open boundary, in the same place and by the same
 rule VLT-PM42 established. `status` reports `recovery_required`; `doctor`
@@ -345,6 +372,32 @@ This does not weaken the generation chain. `previous_bootstrap` still names the
 predecessor by hash, so the chain remains linked and a rollback remains
 detectable; what is removed is the ability to *re-open the vault through* a
 retired credential. Nothing in the product reads a non-latest generation.
+
+### 5.4.0 Destroying the wrap is a write, not only an unlink
+
+An unlink is a weaker guarantee than it looks, and the asymmetry matters here
+more than anywhere else in the product. Every *other* durable step of a rotation
+is a write, and a lost write is merely lost work the journal replays. This one
+is a removal, and a lost removal is the opposite: it resurrects key material
+into a vault whose owner state has already moved on and will therefore never
+revisit it.
+
+`remove_file` returning success, and every later read agreeing the record is
+gone, prove only that the removal is visible through the page cache. On a
+journalling filesystem the directory entry's disappearance can still be
+uncommitted while a later `fsync`ed write in another directory lands ahead of
+it. A power cut in that window would leave a vault whose local state says
+`Active` under the new bootstrap, and whose disk still holds the retired
+`passphrase_root_wrap` — permanently, because nothing ever looks at a retired
+generation again.
+
+So `supersede_generation` destroys the wrap with a *write* before it unlinks
+anything: the retired record's body is replaced with nothing through the same
+write-`fsync`-`rename` path that makes every other step durable, and only then
+is the entry removed. After that write returns, the wrap is gone from the file
+whether or not the unlink survives. The unlink still happens, and the filesystem
+adapter's `delete` now `fsync`s the containing directory the way its writes do;
+the overwrite is what makes the guarantee not depend on that.
 
 ### 5.4.1 The window between install and delete
 
@@ -462,7 +515,10 @@ needs its own evidence.
   exists in `BootstrapV1` and is carried across the rotation unchanged.
 - No KDF re-calibration verb. The rotation adopts the host's current Argon2id
   policy, which is how a person gets stronger parameters, but there is no way
-  to change parameters *without* changing the passphrase.
+  to change parameters *without* changing the passphrase. The adopted policy is
+  floored at the vault's existing memory and iteration cost: a rotation may
+  raise the cost and may never lower it, so the ceremony a person runs to
+  improve their security cannot be the thing that weakens it.
 - No authority-key rotation and no device re-enrollment. Those are separate
   operations on separate keys, and VLT-PM00 §15.4 owns them.
 - No rotation of the VRK itself. Rotating the root would re-encrypt every body,

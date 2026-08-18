@@ -74,6 +74,24 @@ All notable changes to this package are documented here.
   between that unwrap and the re-wrap. The prepared rotation value carries the
   next bootstrap's public signed bytes and no live secret, which is why it is
   safe to journal.
+- A rotation is floored at the vault's existing Argon2id memory and iteration
+  cost. It may raise the cost and may never lower it: without the floor, the
+  same parameter path that lets someone rotating on a faster machine get
+  stronger parameters would also let a caller hand them a *weaker* credential
+  than the one they already had, in the ceremony they ran to improve their
+  security. The shipped CLI passes a fixed production policy; this guards
+  embedders and any future host that calibrates at run time.
+- `generate_keypair` returns the Ed25519 secret **by value**, and `[u8; 64]` is
+  `Copy`, so wrapping it in `Zeroizing` silently left the original array on the
+  stack un-wiped. The authority secret is now bound mutably and the original
+  wiped once the owned copy exists.
+- `finish_pending_rotation` withdraws its journal in the one case where doing
+  so is provably safe: the store refused the install *and* still serves the
+  generation the rotation meant to retire, so nothing was installed and nothing
+  deleted. Previously a `Conflict` after the journal landed was terminal —
+  mapped to `IntegrityFailure`, which is not a wait-and-retry class — and every
+  later command re-entered the roll-forward and failed identically, bricking a
+  vault on a transient provider answer.
 
 ## [0.62.0] - 2026-08-18
 

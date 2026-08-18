@@ -17,6 +17,18 @@
   The removal is read back, so a delete that silently did not happen is a
   `Corruption`, not a success.
 
+  **The wrap is destroyed by a write, not only by the unlink.** Every other
+  durable step of a rotation is a write, and a lost write is merely lost work
+  the journal replays; this one is a removal, and a lost removal resurrects key
+  material into a vault whose owner state has already moved on and will never
+  revisit it. `remove_file` returning success proves the entry is gone from the
+  page cache, not that its removal is committed — on a journalling filesystem
+  it can still be uncommitted while a later `fsync`ed write elsewhere lands
+  ahead of it. So the retired record's body is first replaced with nothing
+  through the same write-`fsync`-`rename` path every other step uses, and only
+  then unlinked. After that write returns the wrap is gone whether or not the
+  unlink survives a power cut.
+
 ## 0.1.0
 
 - Added provider-neutral `storage-core` implementations of the VLT-PM05
