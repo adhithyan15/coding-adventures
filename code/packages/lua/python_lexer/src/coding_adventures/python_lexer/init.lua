@@ -22,29 +22,11 @@
 -- # Architecture
 --
 -- This module:
---   1. Locates the shared `python.tokens` grammar file in `code/grammars/`.
---   2. Reads and parses it once (cached) using `grammar_tools.parse_token_grammar`.
+--   1. Selects the pre-compiled grammar module for the requested version.
+--   2. Constructs it once per version (cached) via its `token_grammar()`
+--      function — see "Compiled grammars" below.
 --   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
 --   4. Returns the flat token list.
---
--- # Path navigation
---
--- The source file lives at:
---   code/packages/lua/python_lexer/src/coding_adventures/python_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/python.tokens`.
---
--- Directory structure from script_dir upward:
---   python_lexer/    (1) — module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   python_lexer/        (4) — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/python.tokens
 --
 -- # Token types produced
 --
@@ -62,8 +44,36 @@
 --   PLUS, MINUS, STAR, SLASH,
 --   LPAREN, RPAREN, COMMA, COLON
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
+
+-- =========================================================================
+-- Compiled grammars
+-- =========================================================================
+--
+-- Historically this module read `.tokens` grammar files from `code/grammars/`
+-- at runtime via `io.open`, walking outside this package's own directory
+-- into the monorepo. That works when running inside the monorepo checkout,
+-- but a published LuaRocks package does not ship `code/grammars/`, so
+-- `luarocks install` + first use would raise a file-not-found error.
+--
+-- Instead, each grammar is now pre-compiled to a native Lua data structure
+-- (via `code/programs/lua/grammar-tools`) and checked in as a sibling
+-- `_grammar_<version>.lua` file, `require`d like any other module. No
+-- runtime file I/O, no path traversal outside the package.
+--
+-- Python version strings contain dots ("2.7", "3.12"), which are not
+-- valid in Lua module names, so the filenames/module names use
+-- underscores in place of dots while the lookup KEY below stays exactly
+-- "2.7", "3.12", etc. to match the public API.
+
+local compiled_grammars = {
+    ["2.7"]  = require("coding_adventures.python_lexer._grammar_2_7"),
+    ["3.0"]  = require("coding_adventures.python_lexer._grammar_3_0"),
+    ["3.6"]  = require("coding_adventures.python_lexer._grammar_3_6"),
+    ["3.8"]  = require("coding_adventures.python_lexer._grammar_3_8"),
+    ["3.10"] = require("coding_adventures.python_lexer._grammar_3_10"),
+    ["3.12"] = require("coding_adventures.python_lexer._grammar_3_12"),
+}
 
 local M = {}
 M.VERSION = "0.1.0"
@@ -75,53 +85,14 @@ M.DEFAULT_VERSION = "3.12"
 M.SUPPORTED_VERSIONS = {"2.7", "3.0", "3.6", "3.8", "3.10", "3.12"}
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
-
---- Return the directory of this source file.
--- Lua embeds the source path in chunk debug info with a leading "@".
--- Returns the directory portion of that path (may be relative when the
--- test runner uses a relative package.path like "../src/?.lua").
--- @return string Directory of this init.lua file (absolute or relative).
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
-end
-
---- Walk up `levels` directory levels from `path`.
--- Appends `/../` segments so the OS resolves the result when it is passed
--- to io.open(). Works for both absolute paths (C:/foo, /foo) and relative
--- paths (../src/foo) without needing to know the working directory.
--- The old regex-based dirname approach broke on relative paths starting
--- with `..` because the pattern "(.+)/[^/]+" does not match strings like
--- ".." that have no slash — causing repo_root to collapse to ".".
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string        Path with `levels` parent-dir jumps appended.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
 --
--- The grammar is read from disk exactly once and cached in a module-level
--- variable. Subsequent calls to `tokenize` reuse the cached grammar.
--- This avoids repeated file I/O and repeated regex compilation.
+-- Grammars are constructed once per version and cached in a module-level
+-- table. Subsequent calls to `tokenize` reuse the cached grammar.
 
 -- Per-version grammar cache. Keys are version strings (e.g., "3.12"),
--- values are parsed TokenGrammar objects. Once a grammar is parsed for
+-- values are parsed TokenGrammar objects. Once a grammar is constructed for
 -- a given version, it is reused for all subsequent calls.
 local _grammar_cache = {}
 
@@ -135,18 +106,10 @@ local function resolve_version(version)
     return version
 end
 
---- Return the path to the versioned grammar file.
--- @param version string  The Python version (e.g., "3.12").
--- @return string         Absolute path to the .tokens file.
-local function grammar_path(version)
-    local script_dir  = get_script_dir()
-    local repo_root   = up(script_dir, 6)
-    return repo_root .. "/grammars/python/python" .. version .. ".tokens"
-end
-
 --- Load and parse a versioned Python grammar, with per-version caching.
--- On the first call for a given version, opens and parses the file.
--- On subsequent calls, returns the cached TokenGrammar object.
+-- On the first call for a given version, invokes the compiled module's
+-- `token_grammar()` constructor. On subsequent calls, returns the cached
+-- TokenGrammar object.
 -- @param version string|nil  Python version (e.g., "3.12"). Defaults to DEFAULT_VERSION.
 -- @return TokenGrammar  The parsed Python token grammar.
 local function get_grammar(version)
@@ -156,23 +119,15 @@ local function get_grammar(version)
         return _grammar_cache[v]
     end
 
-    local tokens_path = grammar_path(v)
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
+    local module = compiled_grammars[v]
+    if not module then
         error(
-            "python_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
+            "python_lexer: unknown Python version '" .. tostring(v) .. "'. " ..
+            "Valid values are: 2.7, 3.0, 3.6, 3.8, 3.10, 3.12."
         )
     end
-    local content = f:read("*all")
-    f:close()
 
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("python_lexer: failed to parse python" .. v .. ".tokens: " .. (parse_err or "unknown error"))
-    end
-
+    local grammar = module.token_grammar()
     _grammar_cache[v] = grammar
     return grammar
 end
