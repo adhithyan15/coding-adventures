@@ -30,19 +30,21 @@
       "id": "fsharp-cowsay",
       "title": "F# cowsay via existing paint-vm-ascii",
       "depends_on": [],
-      "status": "pr-open",
+      "status": "merged",
       "pr_number": 12040,
       "priority": 2,
       "backend_work": "none -- fsharp/paint-vm-ascii already implements glyph_run",
-      "notes": "Mirrors the C# pilot almost exactly; smallest remaining unblocker. Auto-merge enabled."
+      "notes": "Merged clean (verified origin/main contains all files + the swift-row doc fix, no race this time)."
     },
     {
       "id": "perl-cowsay",
       "title": "Perl cowsay: add glyph_run to paint-vm-ascii, then cowsay",
       "depends_on": [],
-      "status": "pending",
+      "status": "pr-open",
+      "pr_number": 12043,
       "priority": 3,
-      "backend_work": "add glyph_run instruction handling to perl/paint-vm-ascii (currently rect-only)"
+      "backend_work": "add glyph_run instruction handling to perl/paint-vm-ascii (currently rect-only) -- delivered the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer), not just glyph_run",
+      "notes": "Also fixed a spec-divergence bug in the pre-existing rect handler (undefined fill defaulted to black instead of no-fill). Auto-merge enabled."
     },
     {
       "id": "haskell-cowsay",
