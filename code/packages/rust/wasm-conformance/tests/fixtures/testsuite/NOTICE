@@ -33,7 +33,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                simd_i32x4_extmul_i16x8.wast, i32x4-from-i16x8 widening,
                same pinned commit, no re-pin),
                extended 2026-08-18 (task #125-128 -- simd_i8x16_arith.wast,
-               i8x16 first slice, same pinned commit, no re-pin)
+               i8x16 first slice, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #129-132 -- simd_i16x8_arith.wast,
+               i16x8 first primary-lane-width slice, same pinned commit,
+               no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -182,6 +185,21 @@ opcodes. Each sub-opcode byte fetched live from `BinarySIMD.md` and
 cross-checked against the already-implemented `i32x4.add`/`i32x4.abs`
 entries, same discipline as every prior addition. 100% pass on every
 directive kind (2/2 modules, 121/121 assert_return, 8/8 assert_invalid).
+
+`simd_i16x8_arith.wast` (task #129-132) is the direct follow-up: `i8x16`
+now has add/sub/neg but no `mul` (the spec defines none), so this is the
+first file where `i16x8` is a PRIMARY lane width (produces `i16x8`
+results) rather than merely an INPUT to an `i32x4`-producing widening op
+(`extadd_pairwise`/`dot`/`extmul`, already implemented). `i16x8.add`/
+`sub`/`mul`/`neg` -- unlike `i8x16`, WASM SIMD DOES define `i16x8.mul`,
+so this slice includes all four ops the real upstream corpus bundles
+together in one file. Same "no splat/extract_lane needed" pattern as
+`i8x16.add`/`sub`/`neg`: `v128.const i16x8 ...` already covers this
+file's own operand construction and result comparison. Each sub-opcode
+byte fetched live from `BinarySIMD.md` and cross-checked against the
+already-implemented `i32x4.add`/`i8x16.add` entries, same discipline as
+every prior addition. 100% pass on every directive kind (2/2 modules,
+181/181 assert_return, 11/11 assert_invalid).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

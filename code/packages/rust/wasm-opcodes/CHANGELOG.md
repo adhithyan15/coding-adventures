@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.10] - 2026-08-18 - SIMD: i16x8 first primary-lane slice (task #129-132)
+
+### Added
+
+- 4 new `SIMD_OPS` entries -- the first opcodes in this table where
+  `i16x8` is a PRIMARY lane width (produces `i16x8` results), not just
+  an INPUT to an `i32x4`-producing widening op (`extadd_pairwise`/
+  `dot`/`extmul`, already implemented): `i16x8.neg` (`0x81`),
+  `i16x8.add` (`0x8E`), `i16x8.sub` (`0x91`), `i16x8.mul` (`0x95`).
+  Unlike `i8x16` (whose spec defines no `mul`), WASM SIMD DOES define
+  `i16x8.mul` -- included here since the real upstream corpus file
+  bundles all four ops together -- 36 SIMD opcodes total, up from 32.
+  Each sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i32x4.add` (`0xAE`)/`i8x16.add` (`0x6E`) entries (both matched
+  exactly), same verification discipline as every prior addition.
+- `SimdOpKind::AddI16x8`/`SubI16x8`/`MulI16x8`/`NegI16x8`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i16x8_arith.wast` corpus file this slice unblocks.
+
 ## [0.2.9] - 2026-08-18 - SIMD: i8x16 first slice (task #125-128)
 
 ### Added
