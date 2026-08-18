@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_chacha20_poly1305", path: "../chacha20-poly1305"
+gem "coding_adventures_chief_of_staff_channel_crypto", path: "../chief-of-staff-channel-crypto"
+gem "coding_adventures_chief_of_staff_channel_store", path: "../chief-of-staff-channel-store"
+gem "coding_adventures_ed25519", path: "../ed25519"
+gem "coding_adventures_hkdf", path: "../hkdf"
+gem "coding_adventures_hmac", path: "../hmac"
+gem "coding_adventures_md5", path: "../md5"
+gem "coding_adventures_sha1", path: "../sha1"
+gem "coding_adventures_sha256", path: "../sha256"
+gem "coding_adventures_sha512", path: "../sha512"
+gem "coding_adventures_x25519", path: "../x25519"
