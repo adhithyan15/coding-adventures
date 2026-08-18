@@ -1,0 +1,166 @@
+Mandarin Chinese, chapter 7: Good Morning, and a Rule That Declines to Fire.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+早 (zǎo) — sun on top, one more time.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 日. Four strokes. Middle bar before the bottom bar.
+
+Script — the shape.
+早 (zǎo).
+Six strokes, and you can already guess how it starts.
+早 (zǎo) is 日 on top of 十. You have written the sun before. The piece underneath is 十, which on its own is the character for ten — you have not been taught it and you do not need it today. Treat it as two strokes: one across, one down through it.
+1-4. 日, complete. Left side; top and right in one turning stroke; the middle bar; the bottom bar closing it.
+十's horizontal, left to right.
+十's vertical, coming down through that horizontal.
+Five pen lifts.
+Predict the rule before you read it: does 日 get finished first? It does — the same habit that made 是 manageable, and by now it should be doing the work for you rather than the instruction.
+A word about what 早 (zǎo) means, offered as a memory hook and labelled as one: the sun sitting above a short line is easy to read as the sun just up over the horizon, and 早 (zǎo) means early. That is a picture worth keeping. It is not a proof, and the honest position is that the lower piece's history is disputed.
+
+Guided Practice.
+[once you have stopped driving — write: 日, then 早 (zǎo) — and stop after four strokes to check the sun is closed]
+[your turn — say: zǎo — low and dipping]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which way does the last stroke go? (Down, through the horizontal.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 12 seconds]
+Which piece of this character is finished before the other, and how many strokes does it take?
+
+
+Lesson 2 of 5.
+上 (shàng) — and a rule that does not apply.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 早 (zǎo). Sun first, then the two strokes below.
+
+Script — the shape.
+上 (shàng).
+Three strokes. A vertical, a short horizontal to its right, and a long horizontal underneath.
+Now guess the order, and expect to be wrong:
+the central vertical, from the top down.
+the short horizontal, left to right, starting at the vertical.
+the long base horizontal, left to right.
+Two pen lifts.
+The vertical comes first. Every character so far has trained you toward top before bottom, left before right, and here the top stroke is not the one you start with. This is worth meeting on a three-stroke character, because it tells you something true about the system: the habits are strong tendencies with named exceptions, not laws. 上 (shàng) is one of the exceptions, and it is common enough that you will see it constantly.
+The other thing to notice: short horizontal before long horizontal. The base bar is the widest stroke and it goes last, exactly as the closing bar did in 再. When two horizontals differ in length, the long one is usually the finisher.
+
+Guided Practice.
+[once you have stopped driving — write: 上 (shàng) — vertical first, and resist starting at the top left]
+[once you have stopped driving — write: 上 (shàng) again, and say "short, then long" as you draw the two bars]
+[your turn — say: shàng — falling]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which of the two horizontals is drawn last? (The long one.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 10 seconds]
+Which stroke of this character is drawn first?
+
+
+Lesson 3 of 5.
+早上 (zǎoshang) — morning, and a syllable that goes light.
+
+Warm-up.
+[pause 2 seconds]
+Write 早 (zǎo). Six strokes, sun finished first.
+
+The word, taken apart.
+早上 (zǎoshang).
+早上 zǎoshang — morning.
+The parts add up again, though less tidily than 再见 did. 早 (zǎo) is early; 上 (shàng) on its own means up or on top. Early-up, the early part of the day. Take that as a hook rather than a definition: what you need is that the two characters you just wrote make the word for morning.
+
+Sounds you'll need — the syllable with no tone.
+The pinyin for this word is zǎoshang — and 上 (shàng) has lost its tone mark.
+On its own 上 is shàng, fourth tone, falling — you practised it that way. Inside this word it goes neutral: short, light, and pitched by whatever came before it. Neutral syllables are written with no mark at all, and that absence is the information.
+This is a fifth thing a syllable can do, alongside the four tones. It is not a tone that moves — you have met two of those — it is a syllable giving up its tone because it is unstressed.
+[repeat that twice]
+Say it: zǎo low and dipping, then shang light and quick, riding on the end. The commonest mistake is to give the second syllable a full falling tone out of habit, which makes the word sound like two words.
+
+Guided Practice.
+[your turn — say: shàng alone, falling — then zǎoshang, with the second syllable light]
+[pause 8 seconds for the answer]
+[your turn — say: zǎoshang twice more, and say aloud which syllable carries no tone]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Does 上 (shàng) keep its falling tone when it stands alone? (Yes — it only goes light inside this word.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+In the pinyin for 'morning', why does the second syllable have no tone mark?
+
+
+Lesson 4 of 5.
+早上好 (zǎoshang hǎo) — the greeting was a pattern all along.
+
+Warm-up.
+[pause 2 seconds]
+Say zǎoshang. Second syllable light.
+
+The word, taken apart.
+早上好 (zǎoshang hǎo).
+早上好 zǎoshang hǎo — good morning.
+It ends in 好 — the same character, the same word, that you met in the first greeting in this book.
+That is the payoff, and it is worth being explicit about. 你好 was never a phrase to swallow whole. It is 你 you followed by 好 good, and the second half is reusable:
+你 + 好 becomes 你好 早上 + 好 becomes 早上好 (zǎoshang hǎo).
+Put a person or a time in front of 好 and you have a greeting. You have not learned two greetings; you have learned a frame and filled it twice. Every one of the other times of day works the same way, and you will be able to build those greetings the moment you have the words for those times.
+
+Sounds you'll need — why nothing moves here.
+You know a rule about two third tones meeting: the first one rises, which is why 你好 is said ní hǎo.
+早 is third tone. 好 is third tone. So does 早上好 (zǎoshang hǎo) become záoshang hǎo?
+No — and the reason is the whole point of a rule having conditions. The rule needs the two third tones to be next to each other. Here they are not: 上 (shàng) sits between them. A light, toneless syllable is still a syllable, and it keeps the two dipping tones apart.
+So zǎoshang hǎo: 早 low, 上 (shàng) light, 好 low and dipping. Nothing rises.
+
+Guided Practice.
+[your turn — say: nǐ hǎo, then zǎoshang hǎo — and say which one moved]
+[pause 8 seconds for the answer]
+[your turn — say: zǎoshang, then zǎoshang hǎo — the greeting is the word plus 好]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Why does the third-tone rule not fire in this greeting? (The two third tones are not next to each other.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+Both greetings you now know end in the same character. Which one, and what does it mean on its own?
+
+
+Lesson 5 of 5.
+Practice — greeting the time of day.
+
+Warm-up.
+[pause 2 seconds]
+Say zǎoshang hǎo. Low, light, low.
+
+The exchange.
+A: 早上好 zǎoshang hǎo — good morning. B: 早上好 zǎoshang hǎo — good morning. A: 再见 zàijiàn — goodbye. B: 再见 zàijiàn — goodbye.
+Short, and for the first time you had a choice to make. 你好 would also have been correct. 早上好 (zǎoshang hǎo) is the one that fits the hour, and choosing between them is a thing a speaker does, not a thing a phrasebook does for you.
+
+What you've built — three tones, three behaviours.
+Line the greetings up and every tone behaviour you have been taught is visible at once:
+你好 — two third tones, side by side. The first rises: ní hǎo.
+早上好 (zǎoshang hǎo) — two third tones, held apart by a light syllable. Neither moves.
+再见 — two falling tones. Neither moves.
+That middle line is the one that repays study. It is the same rule as the first line, and it does not fire, because the condition it needs is not met. A rule you can only apply is half a rule; a rule you can also decline to apply is a whole one.
+And none of it shows on the page. Every character in all three is written exactly as it would be alone.
+
+Guided Practice.
+[your turn — say: nǐ hǎo, then zǎoshang hǎo — and say which one moved]
+[pause 8 seconds for the answer]
+[your turn — say: the whole exchange, both parts]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 早上好 (zǎoshang hǎo), then 再见]
+
+Wrap-up Recall.
+Which of the three expressions above has a tone that moves? (Only 你好.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+You meet someone at eight in the morning. You know two greetings that would both be understood. Which one fits the hour?

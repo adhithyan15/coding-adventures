@@ -575,6 +575,19 @@
       "tex": "chinese/book/chapters/ch06-zaijian.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:bcf6965de3964ce8",
+      "lessonIds": [
+        "ZH-W07-zao",
+        "ZH-W07-shang",
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ],
+      "tex": "chinese/book/chapters/ch07-zaoshang.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

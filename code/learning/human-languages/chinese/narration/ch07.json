@@ -1,0 +1,767 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 7,
+  "title": "Good Morning, and a Rule That Declines to Fire",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b62f509fe14069b7",
+  "lessons": [
+    {
+      "id": "ZH-W07-zao",
+      "sequence": 450,
+      "title": "早 (zǎo) — sun on top, one more time",
+      "headword": "早",
+      "romanization": "zǎo",
+      "gloss": "the sun again, and the same habit that made 是 manageable",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bb5c8036968c779a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 日. Four strokes. Middle bar before the bottom bar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早 (zǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "Six strokes, and you can already guess how it starts."
+            },
+            {
+              "kind": "speech",
+              "text": "早 (zǎo) is 日 on top of 十. You have written the sun before. The piece underneath is 十, which on its own is the character for ten — you have not been taught it and you do not need it today. Treat it as two strokes: one across, one down through it."
+            },
+            {
+              "kind": "speech",
+              "text": "1-4. 日, complete. Left side; top and right in one turning stroke; the middle bar; the bottom bar closing it."
+            },
+            {
+              "kind": "speech",
+              "text": "十's horizontal, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "十's vertical, coming down through that horizontal."
+            },
+            {
+              "kind": "speech",
+              "text": "Five pen lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "Predict the rule before you read it: does 日 get finished first? It does — the same habit that made 是 manageable, and by now it should be doing the work for you rather than the instruction."
+            },
+            {
+              "kind": "speech",
+              "text": "A word about what 早 (zǎo) means, offered as a memory hook and labelled as one: the sun sitting above a short line is easy to read as the sun just up over the horizon, and 早 (zǎo) means early. That is a picture worth keeping. It is not a proof, and the honest position is that the lower piece's history is disputed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "日, then 早 (zǎo) — and stop after four strokes to check the sun is closed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 日, then 早 — and stop after four strokes to check the sun is closed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎo — low and dipping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **zǎo** — low and dipping]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which way does the last stroke go? (Down, through the horizontal.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W07-zao-top",
+              "prompt": "Which piece of this character is finished before the other, and how many strokes does it take?",
+              "assesses": [
+                "ZH-SCRIPT-ZAO"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the sun, four strokes",
+                "日, four",
+                "the sun character, 4",
+                "日 first, four strokes",
+                "日 in four"
+              ],
+              "feedback": {
+                "correct": "日 first, all four strokes, before anything below it.",
+                "incorrect": "日 -- all FOUR of its strokes -- before the piece underneath."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W07-shang",
+      "sequence": 460,
+      "title": "上 (shàng) — and a rule that does not apply",
+      "headword": "上",
+      "romanization": "shàng",
+      "gloss": "three strokes, and the first one is not where you would guess",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d8225525672579ec",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 早 (zǎo). Sun first, then the two strokes below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "上 (shàng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes. A vertical, a short horizontal to its right, and a long horizontal underneath."
+            },
+            {
+              "kind": "speech",
+              "text": "Now guess the order, and expect to be wrong:"
+            },
+            {
+              "kind": "speech",
+              "text": "the central vertical, from the top down."
+            },
+            {
+              "kind": "speech",
+              "text": "the short horizontal, left to right, starting at the vertical."
+            },
+            {
+              "kind": "speech",
+              "text": "the long base horizontal, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pen lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "The vertical comes first. Every character so far has trained you toward top before bottom, left before right, and here the top stroke is not the one you start with. This is worth meeting on a three-stroke character, because it tells you something true about the system: the habits are strong tendencies with named exceptions, not laws. 上 (shàng) is one of the exceptions, and it is common enough that you will see it constantly."
+            },
+            {
+              "kind": "speech",
+              "text": "The other thing to notice: short horizontal before long horizontal. The base bar is the widest stroke and it goes last, exactly as the closing bar did in 再. When two horizontals differ in length, the long one is usually the finisher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "上 (shàng) — vertical first, and resist starting at the top left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 上 — vertical first, and resist starting at the top left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "上 (shàng) again, and say \"short, then long\" as you draw the two bars",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 上 again, and say \"short, then long\" as you draw the two bars]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shàng — falling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shàng** — falling]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which of the two horizontals is drawn last? (The long one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W07-shang-first",
+              "prompt": "Which stroke of this character is drawn first?",
+              "assesses": [
+                "ZH-SCRIPT-SHANG"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the vertical",
+                "vertical",
+                "the central vertical",
+                "the up-down stroke",
+                "the vertical stroke"
+              ],
+              "feedback": {
+                "correct": "The vertical -- not the top horizontal, which is the guess the earlier characters set you up for.",
+                "incorrect": "The VERTICAL comes first here."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C07-zaoshang",
+      "sequence": 470,
+      "title": "早上 (zǎoshang) — morning, and a syllable that goes light",
+      "headword": "早上",
+      "romanization": "zǎoshang",
+      "gloss": "morning — and a syllable with no tone at all",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f3263ad64e6f255",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 早 (zǎo). Six strokes, sun finished first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早上 (zǎoshang)."
+            },
+            {
+              "kind": "speech",
+              "text": "早上 zǎoshang — morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The parts add up again, though less tidily than 再见 did. 早 (zǎo) is early; 上 (shàng) on its own means up or on top. Early-up, the early part of the day. Take that as a hook rather than a definition: what you need is that the two characters you just wrote make the word for morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need — the syllable with no tone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pinyin for this word is zǎoshang — and 上 (shàng) has lost its tone mark."
+            },
+            {
+              "kind": "speech",
+              "text": "On its own 上 is shàng, fourth tone, falling — you practised it that way. Inside this word it goes neutral: short, light, and pitched by whatever came before it. Neutral syllables are written with no mark at all, and that absence is the information."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a fifth thing a syllable can do, alongside the four tones. It is not a tone that moves — you have met two of those — it is a syllable giving up its tone because it is unstressed."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: zǎo low and dipping, then shang light and quick, riding on the end. The commonest mistake is to give the second syllable a full falling tone out of habit, which makes the word sound like two words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shàng alone, falling — then zǎoshang, with the second syllable light",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shàng** alone, falling — then **zǎoshang**, with the second syllable light]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎoshang twice more, and say aloud which syllable carries no tone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **zǎoshang** twice more, and say aloud which syllable carries no tone]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does 上 (shàng) keep its falling tone when it stands alone? (Yes — it only goes light inside this word.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C07-zaoshang-neutral",
+              "prompt": "In the pinyin for 'morning', why does the second syllable have no tone mark?",
+              "assesses": [
+                "ZH-TONE-NEUTRAL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it is neutral",
+                "neutral tone",
+                "it lost its tone",
+                "it is unstressed",
+                "no tone, it is neutral"
+              ],
+              "feedback": {
+                "correct": "It goes neutral -- unstressed, light, and written with no mark.",
+                "incorrect": "Because it is NEUTRAL: unstressed and toneless, so no mark is written."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C07-zaoshanghao",
+      "sequence": 480,
+      "title": "早上好 (zǎoshang hǎo) — the greeting was a pattern all along",
+      "headword": "早上好",
+      "romanization": "zǎoshang hǎo",
+      "gloss": "good morning — and proof that 好 was a building block",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d2837011e534580",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say zǎoshang. Second syllable light."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "早上好 (zǎoshang hǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "早上好 zǎoshang hǎo — good morning."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in 好 — the same character, the same word, that you met in the first greeting in this book."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the payoff, and it is worth being explicit about. 你好 was never a phrase to swallow whole. It is 你 you followed by 好 good, and the second half is reusable:"
+            },
+            {
+              "kind": "speech",
+              "text": "你 + 好 becomes 你好 早上 + 好 becomes 早上好 (zǎoshang hǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "Put a person or a time in front of 好 and you have a greeting. You have not learned two greetings; you have learned a frame and filled it twice. Every one of the other times of day works the same way, and you will be able to build those greetings the moment you have the words for those times."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need — why nothing moves here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know a rule about two third tones meeting: the first one rises, which is why 你好 is said ní hǎo."
+            },
+            {
+              "kind": "speech",
+              "text": "早 is third tone. 好 is third tone. So does 早上好 (zǎoshang hǎo) become záoshang hǎo?"
+            },
+            {
+              "kind": "speech",
+              "text": "No — and the reason is the whole point of a rule having conditions. The rule needs the two third tones to be next to each other. Here they are not: 上 (shàng) sits between them. A light, toneless syllable is still a syllable, and it keeps the two dipping tones apart."
+            },
+            {
+              "kind": "speech",
+              "text": "So zǎoshang hǎo: 早 low, 上 (shàng) light, 好 low and dipping. Nothing rises."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ hǎo, then zǎoshang hǎo — and say which one moved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **nǐ hǎo**, then **zǎoshang hǎo** — and say which one moved]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎoshang, then zǎoshang hǎo — the greeting is the word plus 好",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **zǎoshang**, then **zǎoshang hǎo** — the greeting is the word plus 好]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Why does the third-tone rule not fire in this greeting? (The two third tones are not next to each other.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C07-zaoshanghao-frame",
+              "prompt": "Both greetings you now know end in the same character. Which one, and what does it mean on its own?",
+              "assesses": [
+                "ZH-LEX-ZAOSHANGHAO"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "好, good",
+                "hao, good",
+                "好 means good",
+                "好 - good",
+                "the good character"
+              ],
+              "feedback": {
+                "correct": "好, 'good' -- put a person or a time in front of it and you have a greeting.",
+                "incorrect": "好, meaning GOOD. Both greetings are something + 好."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C07-practice",
+      "sequence": 490,
+      "title": "Practice — greeting the time of day",
+      "headword": "早上好",
+      "romanization": "zǎoshang hǎo",
+      "gloss": "a morning exchange, opened and closed",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54ca761e781d9444",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say zǎoshang hǎo. Low, light, low."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 早上好 zǎoshang hǎo — good morning. B: 早上好 zǎoshang hǎo — good morning. A: 再见 zàijiàn — goodbye. B: 再见 zàijiàn — goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "Short, and for the first time you had a choice to make. 你好 would also have been correct. 早上好 (zǎoshang hǎo) is the one that fits the hour, and choosing between them is a thing a speaker does, not a thing a phrasebook does for you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — three tones, three behaviours",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Line the greetings up and every tone behaviour you have been taught is visible at once:"
+            },
+            {
+              "kind": "speech",
+              "text": "你好 — two third tones, side by side. The first rises: ní hǎo."
+            },
+            {
+              "kind": "speech",
+              "text": "早上好 (zǎoshang hǎo) — two third tones, held apart by a light syllable. Neither moves."
+            },
+            {
+              "kind": "speech",
+              "text": "再见 — two falling tones. Neither moves."
+            },
+            {
+              "kind": "speech",
+              "text": "That middle line is the one that repays study. It is the same rule as the first line, and it does not fire, because the condition it needs is not met. A rule you can only apply is half a rule; a rule you can also decline to apply is a whole one."
+            },
+            {
+              "kind": "speech",
+              "text": "And none of it shows on the page. Every character in all three is written exactly as it would be alone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ hǎo, then zǎoshang hǎo — and say which one moved",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **nǐ hǎo**, then **zǎoshang hǎo** — and say which one moved]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "早上好 (zǎoshang hǎo), then 再见",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 早上好, then 再见]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which of the three expressions above has a tone that moves? (Only 你好.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C07-practice-choice",
+              "prompt": "You meet someone at eight in the morning. You know two greetings that would both be understood. Which one fits the hour?",
+              "assesses": [
+                "ZH-DIALOGUE-MORNING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "早上好",
+                "zaoshang hao",
+                "zǎoshang hǎo",
+                "zaoshanghao",
+                "the morning one",
+                "good morning"
+              ],
+              "feedback": {
+                "correct": "早上好 -- 你好 works too, but this one fits the time.",
+                "incorrect": "早上好, the morning greeting. 你好 is not wrong, just not time-specific."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
