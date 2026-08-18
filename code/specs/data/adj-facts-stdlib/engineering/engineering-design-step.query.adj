@@ -1,0 +1,21 @@
+% ============================================================================
+% engineering-design-step.query.adj — worked recall over the
+% engineering-design-step library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what happens in step 3
+% of the engineering design process?" (direct) or "which step is 'select a
+% design'?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The final query demonstrates
+% honest abstention: `step_5` is a real step number the source's own step
+% count implies exists, but the worksheet never gives it an individual
+% heading (it only appears inside the COMBINED "Steps 5-7" heading), so
+% recalling it alone abstains rather than guessing.
+% ============================================================================
+
+import "engineering-design-step.adj"
+
+? engineering_design_step(step_1, $A)              % expect identify_the_problem (direct)
+? engineering_design_step(step_3, $A)              % expect brainstorm_possible_solutions (direct)
+? engineering_design_step(step_8, $A)              % expect share_the_design (direct)
+? engineering_design_step($S, select_a_design)      % expect step_4 (reverse)
+? engineering_design_step(step_5, $A)               % expect abstain -- no individual heading for step 5, only the combined steps_5_7 heading
