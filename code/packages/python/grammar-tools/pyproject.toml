@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-grammar-tools"
-version = "0.1.0"
+version = "0.4.1"
 description = "Define and validate .tokens and .grammar file formats — grammar-driven lexer and parser generation"
 requires-python = ">=3.12"
 license = "MIT"
