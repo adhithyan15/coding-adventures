@@ -194,7 +194,11 @@ defmodule CodingAdventures.ChiefOfStaffChannelEpochActivation.InvariantThreeTest
       {%{genuine | plan_bytes: "not a plan"}, "corrupt_record"},
       {%{genuine | base_epoch: 5, new_epoch: 6}, "invalid_plan"},
       {%{genuine | grants: []}, "invalid_plan"},
-      {%{genuine | grants: ["not a grant"]}, "crypto_error"}
+      {%{genuine | grants: ["not a grant"]}, "crypto_error"},
+      # A saturated base_epoch has no successor at all, which the D18T roster
+      # calls epoch_exhausted -- not invalid_plan. base_epoch + 1 is not a
+      # meaningful question here, so the check must precede the comparison.
+      {%{genuine | base_epoch: Epoch.max_u64(), new_epoch: 0}, "epoch_exhausted"}
     ]
     |> Enum.each(fn {bundle, code} ->
       error =

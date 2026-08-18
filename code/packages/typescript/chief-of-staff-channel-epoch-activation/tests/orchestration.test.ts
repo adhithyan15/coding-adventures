@@ -29,6 +29,7 @@ import {
   ACTIVATION_PLAN_CONTENT_TYPE,
   EPOCH_STATE_CONTENT_TYPE,
   EpochActivationError,
+  PublicPreparation,
   EpochActivationStore,
   InMemoryKeyCustody,
   activationPlanRecordKey,
@@ -293,6 +294,38 @@ describe("D18T orchestration", () => {
     const store = await fixture.store();
     await store.migrateEpochState(definition, ChannelMasterKey.fromBytes(CURRENT_CMK));
     await expect(store.prepareRotation(definition, [fixture.receiverB], fixture.rotation()))
+      .rejects.toMatchObject({ code: "epoch_exhausted" });
+  });
+
+  // A baseEpoch at u64::MAX has no successor at all. The D18T roster calls that
+  // epoch_exhausted, not invalid_plan -- baseEpoch + 1 is not a meaningful
+  // question once baseEpoch is saturated.
+  //
+  // The validator is internal, but it is genuinely reachable: recoverPreparation
+  // with newEpoch === activeEpoch skips both epoch guards and hands a
+  // custody-supplied bundle straight to it. Since custody is an injected
+  // dependency, and this validator exists precisely to catch a tampered bundle,
+  // a saturated baseEpoch is reachable in production -- so this is a real
+  // behavioural fix, not a cosmetic one.
+  it("reports epoch_exhausted for a saturated base epoch from custody", async () => {
+    const fixture = await new Fixture().initialize();
+    const store = await fixture.store();
+    await store.migrateEpochState(fixture.definition, ChannelMasterKey.fromBytes(CURRENT_CMK));
+    await store.prepareRotation(fixture.definition, [fixture.receiverB], fixture.rotation());
+
+    const genuine = await fixture.custody.loadPreparation(channelId(), 1n);
+    expect(genuine).toBeDefined();
+    const saturated = new PublicPreparation(
+      channelId(), (1n << 64n) - 1n, 0n, genuine!.planBytes, genuine!.grants,
+    );
+    const doctored = Object.create(fixture.custody) as typeof fixture.custody;
+    doctored.loadPreparation = async () => saturated;
+
+    const doctoredStore = await EpochActivationStore.openForTesting(
+      fixture.backend, doctored, channelId(),
+    );
+    // newEpoch === activeEpoch (0) reaches the validator with no epoch guard.
+    await expect(doctoredStore.recoverPreparation(fixture.definition, 0n))
       .rejects.toMatchObject({ code: "epoch_exhausted" });
   });
 

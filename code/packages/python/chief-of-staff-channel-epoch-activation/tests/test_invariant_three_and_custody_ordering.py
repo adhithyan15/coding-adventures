@@ -33,6 +33,10 @@ from coding_adventures_chief_of_staff_channel_epoch_activation import (
     EpochActivationError,
     EpochActivationStore,
     InMemoryKeyCustody,
+    PublicPreparation,
+)
+from coding_adventures_chief_of_staff_channel_epoch_activation.activation import (
+    _validate_public_preparation,
 )
 
 CHANNEL_ID = bytes.fromhex("018f47a09b6c7def923456789abcdef0")
@@ -296,4 +300,28 @@ def test_create_erases_the_callers_key_on_every_rejection_path() -> None:
     assert raised.value.code == "invalid_plan"
     # A destroyed key refuses to hand its bytes back.
     assert repr(cmk) == "ChannelMasterKey(<destroyed>)"
+    context.close()
+
+
+def test_a_saturated_base_epoch_is_epoch_exhausted_not_invalid_plan() -> None:
+    """A base_epoch at u64::MAX has no successor at all.
+
+    The D18T roster calls that epoch_exhausted, not invalid_plan --
+    base_epoch + 1 is not a meaningful question once base_epoch is saturated,
+    so the check must precede the successor comparison.
+    """
+    context = Context()
+    context.create()
+    context.store.prepare_rotation(
+        context.definition, (context.receiver_b,), context.rotation()
+    )
+    genuine = context.custody.load_preparation(CHANNEL_ID, 1)
+    assert genuine is not None
+
+    saturated = PublicPreparation(
+        CHANNEL_ID, (1 << 64) - 1, 0, genuine.plan_bytes, genuine.grants
+    )
+    with pytest.raises(EpochActivationError) as raised:
+        _validate_public_preparation(context.definition, saturated)
+    assert raised.value.code == "epoch_exhausted"
     context.close()

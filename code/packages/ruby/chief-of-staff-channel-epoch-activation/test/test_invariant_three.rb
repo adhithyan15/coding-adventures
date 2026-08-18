@@ -164,7 +164,12 @@ class TestInvariantThree < Minitest::Test
       [Epoch::PublicPreparation.new(channel_id: CHANNEL_ID, base_epoch: 0, new_epoch: 1,
         plan_bytes: genuine.plan_bytes, grants: []), "invalid_plan"],
       [Epoch::PublicPreparation.new(channel_id: CHANNEL_ID, base_epoch: 0, new_epoch: 1,
-        plan_bytes: genuine.plan_bytes, grants: ["not a grant"]), "crypto_error"]
+        plan_bytes: genuine.plan_bytes, grants: ["not a grant"]), "crypto_error"],
+      # A saturated base_epoch has no successor at all, which the D18T roster
+      # calls epoch_exhausted -- not invalid_plan. base_epoch + 1 is not a
+      # meaningful question here, so the check must precede the comparison.
+      [Epoch::PublicPreparation.new(channel_id: CHANNEL_ID, base_epoch: Epoch::MAX_U64,
+        new_epoch: 0, plan_bytes: genuine.plan_bytes, grants: genuine.grants), "epoch_exhausted"]
     ].each do |bundle, code|
       error = assert_raises(Epoch::EpochActivationError) do
         Epoch::Support.validate_public_preparation(@definition, bundle)

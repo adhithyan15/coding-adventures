@@ -618,9 +618,15 @@ module CodingAdventures
       # Recomputing from the grants is what makes a tampered custody bundle
       # detectable.
       def validate_public_preparation(definition, prepared)
-        unless prepared.channel_id == definition.channel_id &&
-            prepared.base_epoch != MAX_U64 &&
-            prepared.new_epoch == prepared.base_epoch + 1 &&
+        fail!("invalid_plan") unless prepared.channel_id == definition.channel_id
+        # Exhaustion sits between the channel comparison and the successor
+        # comparison, exactly where Rust's short-circuiting chain evaluates it.
+        # It must precede the successor check because base_epoch + 1 is not a
+        # meaningful question once base_epoch is saturated; it must follow the
+        # channel check so a bundle that is BOTH foreign and saturated still
+        # reports invalid_plan, as it did before and as Rust still does.
+        fail!("epoch_exhausted") if prepared.base_epoch == MAX_U64
+        unless prepared.new_epoch == prepared.base_epoch + 1 &&
             prepared.grants.length.between?(1, MAX_PLAN_RECEIVERS)
           fail!("invalid_plan")
         end
