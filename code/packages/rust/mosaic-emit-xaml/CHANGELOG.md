@@ -1,5 +1,32 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — HostButton labels from row expressions
+
+A `HostButton` whose `label` is a row expression emitted **no `Content`
+attribute at all**, so the button rendered blank.
+
+The `label` match handled `SlotRef`, `String` and `Keyword`; `label: ( row[1] )`
+parses as `LayoutPropValue::Expr`, which had no arm, and the trailing `_ => {}`
+swallowed it silently. Adding the `Expr` arm routes it through
+`lower_expr_for_xbind` — the same helper the `Text` lowering already used
+successfully two elements away inside the same template.
+
+This was not a binding-mode problem. There was no attribute for a mode to
+apply to.
+
+**Scope.** Every `HostButton` inside a `For`. In the generated TaskApp that
+meant the task name, the completion toggle, every project-rail row and every
+notes row rendered as empty buttons. It read as a styling gap for weeks
+because an empty button is invisible rather than obviously broken.
+
+Verified live: the UI Automation tree went from listing only `Delete` for a
+task row to listing `[○]`, `[Ship the XAML fix]` and `[Delete]`, and the
+project rail from a blank row to `[Inbox]`.
+
+`host_button_with_row_expression_label_emits_content` guards it, asserting
+both that the binding is emitted and — more generally — that no emitted
+`<Button>` lacks `Content`.
+
 ## [Unreleased] — every x:Bind declares its mode
 
 `x:Bind` defaults to **OneTime** in WinUI, and each emission site chose its
