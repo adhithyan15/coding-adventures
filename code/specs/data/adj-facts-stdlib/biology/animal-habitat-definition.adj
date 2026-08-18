@@ -1,0 +1,106 @@
+% ============================================================================
+% animal-habitat-definition — WHAT an animal's habitat actually IS, not just
+% its name, DERIVED (not just looked up) by composing two already-shipped
+% BIOLOGY facts (adj-facts-stdlib, BIOLOGY). Grounds the "ecosystems" Major
+% Gap ADJ-STDLIB-COVERAGE.md §5.1/§5.2 names for K-8 science — the FIFTH
+% slice of this loop's science causal-composition sub-technique, and the
+% FIRST to close it against ecosystems rather than Earth-processes,
+% matter/energy, or observation/measurement.
+% ============================================================================
+% `biology/animal-habitat.adj` already tables WHICH named biome a given
+% animal lives in ("a giraffe lives on the grassland"); `biology/biome-type.adj`
+% already tables what actually DEFINES a given biome ("a grassland is an open
+% region dominated by grass, with a warm, dry climate"). Neither file states
+% outright "a giraffe lives somewhere open, grass-dominated, warm, and dry" —
+% but animal-habitat's specific animal→biome assignment, run through
+% biome-type's general biome→definition fact, answers it directly: this is
+% the SAME "compose two independently-citable facts into a derived,
+% dual-cited conclusion" discipline `physics/heat-causes-phase-change.adj`,
+% `physics/force-causes-acceleration.adj`, `geology/earth-layer-matter-
+% behavior.adj`, and `chemistry/measuring-tool-si-unit.adj` already
+% established, applied here to a SAME-DIRECTORY pair (both tables already
+% live in `biology/`, the same shape `heat-causes-phase-change.adj`/
+% `force-causes-acceleration.adj` first proved out, not the cross-directory
+% shape the two most recent slices used) — the FIRST slice to ground the
+% ecosystems gap rather than an Earth-processes, physics-mechanics, or
+% observation/measurement one.
+%
+%     import "animal-habitat-definition.adj"   % transitively imports animal-habitat.adj + biome-type.adj
+%     ? animal_habitat_definition(bactrian_camel, $D)  % dry_areas_where_rainfall_is_less_than_50_centimeters_20_inches_per_year
+%     ? animal_habitat_definition(giraffe, $D)         % open_regions_dominated_by_grass_with_a_warm_dry_climate
+%     ? animal_habitat_definition($A, open_regions_dominated_by_grass_with_a_warm_dry_climate)  % giraffe (reverse)
+%     ? animal_habitat_definition(polar_bear, $D)      % abstain -- "arctic" is not one of biome_type's four keyed biomes
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Animal`/`$Biome`
+% through the already-shipped `animal_habitat` table, then re-binds
+% `$Biome`/`$Description` through the already-shipped `biome_type` table -- a
+% plain two-hop join on the literal, EXACT biome word both tables share. A
+% query's `steps` trail therefore shows THREE entries: the rule's own
+% citation (the biome-defining principle), the `animal_habitat` fact's
+% citation (National Geographic Kids), and the `biome_type` fact's citation
+% (National Geographic Education), so a human can independently verify each
+% link.
+%
+% WHY this is a genuine derivation, not a coincidental word match: a biome's
+% NAME is only a label -- the reason an animal's habitat looks, feels, and
+% behaves the way it does is the biome's own defining climate condition, the
+% exact fact `biome-type.adj` tables and `animal-habitat.adj`'s own schema has
+% no room for (it names the biome, never what the biome actually is). This
+% rule closes that loop: knowing a bactrian camel "lives in the desert" is a
+% label; knowing its habitat is "a dry area where rainfall is less than 50
+% centimeters (20 inches) per year" is the actual environmental fact that
+% label stands for, now a first-class, queryable, dual-cited derivation
+% instead of two disconnected recalls a learner must mentally join themselves.
+%
+% HONEST ABSTENTION -- the crux of why this is a narrow, faithful composition
+% and not a forced one: `animal_habitat` tables THREE animals, but
+% `biome_type` only defines FOUR named biomes (desert, forest, grassland,
+% tundra), and the two tables' biome vocabularies only partially overlap:
+%
+%     animal            animal_habitat's biome   matches biome_type's key?    definition
+%     ----------------  -----------------------  ----------------------------  ---------------------------------------------
+%     bactrian_camel     desert                    YES (desert)                 dry_areas_where_rainfall_is_less_than_50cm/20in_per_year
+%     giraffe             grassland                 YES (grassland)               open_regions_dominated_by_grass_with_a_warm_dry_climate
+%     polar_bear          arctic                    NO -- "arctic" != "tundra"   ABSTAIN
+%
+% `animal-habitat.adj`'s own header quotes its polar-bear source verbatim as
+% living "along shores and on sea ice in the icy cold Arctic" -- the cited
+% page's own word is the CLIMATE REGION "arctic", never the biome name
+% "tundra" `biome-type.adj` tables. Forcing polar_bear to join anyway (e.g. by
+% treating "arctic" as a synonym for "tundra") would assert a definition
+% NEITHER already-cited source states -- exactly the kind of invented mapping
+% this stdlib's honest-abstention discipline forbids. `biome-type.adj`'s own
+% header independently confirms tundra is a real, DIFFERENT biome its cited
+% National Geographic Education source defines on its own terms ("has
+% extremely inhospitable conditions, with the lowest measured temperatures"),
+% not merely a rename of "arctic" -- a genuine cross-source terminology gap,
+% not a coincidental non-match. So this rule derives exactly the two animals
+% whose own cited biome word is a literal, exact match for one of
+% `biome_type`'s four keyed biomes, and abstains on the third, or any other
+% word, rather than inventing a definition.
+%
+% Confirmed via the mandatory full-tree-grep-before-scoping discipline that
+% this exact join was never noticed as a COMPOSITION opportunity: `biome-
+% type.adj`'s own CHANGELOG entry already checked `animal-habitat.adj` for
+% overlap, but only to rule out a DUPLICATE TABLE ("animal-habitat.adj only
+% maps individual animals to habitat names, never tables biome-level defining
+% sentences") -- a check for redundant coverage, not for a rule-composition
+% join, so the pairing had simply gone unexamined from that angle rather than
+% been tried and rejected. Empirically verified in a scratch dir against the
+% real built CLI binary before writing this file.
+%
+% Deliberately scoped to the three animals `animal-habitat.adj` itself
+% already commits to and the four biomes `biome-type.adj` itself already
+% commits to -- no new animal or biome content is asserted here, only the
+% join. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "animal-habitat.adj"
+import "biome-type.adj"
+
+rule { head: animal_habitat_definition($Animal, $Description)
+       when: animal_habitat($Animal, $Biome), biome_type($Biome, $Description)
+       source "Deserts are dry areas where rainfall is less than 50 centimeters (20 inches) per year."
+       locator "https://education.nationalgeographic.org/resource/five-major-types-biomes/"
+       trust consensus }
