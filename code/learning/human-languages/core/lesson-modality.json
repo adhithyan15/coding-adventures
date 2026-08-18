@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:cd109d64c41d3611",
+  "sourceHash": "fnv1a64:cb66977eb8f5ac29",
   "summary": {
-    "totalLessons": 3131,
-    "voice": 2210,
+    "totalLessons": 3135,
+    "voice": 2212,
     "sight": 588,
-    "pen": 333,
-    "drivableLessons": 2210,
+    "pen": 335,
+    "drivableLessons": 2212,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 950,
+    "chapterCount": 951,
     "drivablePrefixTotal": 1967,
     "fullyDrivableChapters": 619,
-    "unstartableChapters": 200,
+    "unstartableChapters": 201,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -867,10 +867,10 @@
     },
     {
       "language": "chinese",
-      "lessonCount": 51,
-      "voice": 24,
+      "lessonCount": 55,
+      "voice": 26,
       "sight": 4,
-      "pen": 23,
+      "pen": 25,
       "drivablePercent": 47,
       "drivablePrefixTotal": 1,
       "modalities": [
@@ -1004,6 +1004,22 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ZH-W08-wo",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 2,
+          "sight": 0,
+          "pen": 2,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W09-shen",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -21382,6 +21398,88 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:7121a6ff99252a7c"
+    },
+    {
+      "id": "ZH-W09-shen",
+      "language": "chinese",
+      "chapter": 9,
+      "sequence": 560,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:368bc1762cecc6a3",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W09-me",
+      "language": "chinese",
+      "chapter": 9,
+      "sequence": 570,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:461dfa665fb77817",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C09-shenme",
+      "language": "chinese",
+      "chapter": 9,
+      "sequence": 580,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5518151ffad90535"
+    },
+    {
+      "id": "ZH-C09-practice",
+      "language": "chinese",
+      "chapter": 9,
+      "sequence": 590,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9d6abbabae2cb283"
     },
     {
       "id": "FR-C01-bien",

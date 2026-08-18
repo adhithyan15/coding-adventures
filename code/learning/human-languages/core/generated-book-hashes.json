@@ -602,6 +602,18 @@
       "tex": "chinese/book/chapters/ch08-mingzi.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:26368e3e6cadb61d",
+      "lessonIds": [
+        "ZH-W09-shen",
+        "ZH-W09-me",
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ],
+      "tex": "chinese/book/chapters/ch09-shenme.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

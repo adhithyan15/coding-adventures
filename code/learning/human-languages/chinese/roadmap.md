@@ -102,9 +102,20 @@ the practice lesson names the gap to the reader instead of papering over it.
 
 Unblocking it needs one `letters` entry plus a **network re-subset**, since 叫,
 的 and 姓 appear nowhere in `chinese.json` — this is the genuine re-subset case,
-unlike 夕 below. 什么 *shénme* is separately ready (什 = 亻 + 十, both already
-shown; 么 inventoried) and can carry `QUESTION-WHAT` on its own whenever it is
-worth a chapter.
+unlike 夕 below.
+
+**Half of it is now delivered (HL-C244).** 什么 *shénme* carries `QUESTION-WHAT`
+in its own chapter: 什 = 亻 (taught) + 十 (shown in 早), 么 is inventoried, and the
+whole chapter cost no new obligation. The reader has the *what* of "what is your
+name?" and not yet the rest of it, which the lessons say plainly rather than
+implying the question is available.
+
+That chapter also does two things worth keeping when the rest of the question
+lands. It refuses a decomposition: 什 and 么 are there for **sound**, and reading
+"ten-person" out of 什么 would be inventing a story of exactly the kind this track
+otherwise labels as a hook. And it flags **register** — a bare 什么? is blunt,
+fine with friends and heavy with a stranger — which is the first time the book
+has told the reader that a correct sentence can still be the wrong move.
 
 **名 needed care but was not blocked.** 名 itself is inventoried and has a ductus.
 **夕**, the piece above 口 that makes 名 decomposable, is *not* inventoried and
