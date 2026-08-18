@@ -5,10 +5,11 @@ package CodingAdventures::TypescriptLexer;
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools and CodingAdventures::Lexer. It reads
-# the shared `typescript.tokens` grammar file (or a versioned variant),
-# compiles the token definitions into Perl regexes, and applies them in
-# priority order to tokenize TypeScript source code.
+# by CodingAdventures::GrammarTools and CodingAdventures::Lexer. It loads
+# the shared TypeScript grammar (or a versioned variant) from a compiled
+# native Perl module checked into git, compiles the token definitions into
+# Perl regexes, and applies them in priority order to tokenize TypeScript
+# source code.
 #
 # TypeScript is a strict superset of JavaScript. Every valid JavaScript
 # program is also valid TypeScript. TypeScript adds:
@@ -33,17 +34,18 @@ package CodingAdventures::TypescriptLexer;
 #   "ts4.0" — TypeScript 4.0 (August 2020): variadic tuple types.
 #   "ts5.0" — TypeScript 5.0 (March 2023): decorators (Stage 3).
 #   "ts5.8" — TypeScript 5.8 (February 2025): granular control-flow.
-#   undef / "" — Generic TypeScript (uses typescript.tokens).
-#
-# Version grammar files live under:
-#   code/grammars/typescript/<version>.tokens
+#   undef / "" — Generic TypeScript (uses the default grammar).
 #
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar($version)` opens the correct .tokens
-#    file, parses it with `CodingAdventures::GrammarTools::parse_token_grammar`,
-#    and caches the result per-version.
+# 1. **Grammar loading** — `_grammar($version)` looks up the compiled
+#    grammar module for `$version` in `%GRAMMAR_MODULE` and calls its
+#    `token_grammar()` sub, caching the result per-version. Each module
+#    (`_Grammar.pm`, `_Grammar_ts1_0.pm`, ...) was generated at dev time
+#    via `grammar-tools.pl compile-tokens ... -p <Package::Name>` from the
+#    corresponding `.tokens` file under `code/grammars/typescript/` and is
+#    checked into git — no runtime disk reads outside the installed package.
 #
 # 2. **Pattern compilation** — `_build_rules($version)` converts every
 #    TokenDefinition in the grammar into a `{ name => str, pat => qr/\G.../ }`
@@ -53,39 +55,48 @@ package CodingAdventures::TypescriptLexer;
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. First match wins.
 #
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/TypescriptLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → typescript-lexer/    (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/                ← repo root
-#   + /grammars/typescript.tokens  (or typescript/<version>.tokens)
-#
 # ============================================================================
 
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
+
+require CodingAdventures::TypescriptLexer::_Grammar;        # generic default
+require CodingAdventures::TypescriptLexer::_Grammar_ts1_0;
+require CodingAdventures::TypescriptLexer::_Grammar_ts2_0;
+require CodingAdventures::TypescriptLexer::_Grammar_ts3_0;
+require CodingAdventures::TypescriptLexer::_Grammar_ts4_0;
+require CodingAdventures::TypescriptLexer::_Grammar_ts5_0;
+require CodingAdventures::TypescriptLexer::_Grammar_ts5_8;
 
 # ============================================================================
 # Valid TypeScript versions
 # ============================================================================
 
 my %VALID_VERSIONS = map { $_ => 1 } qw(ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8);
+
+# ============================================================================
+# Grammar module dispatch table
+# ============================================================================
+#
+# Each compiled grammar module was generated at dev time from a .tokens file
+# via `grammar-tools.pl compile-tokens ... -p <Package::Name>` and is checked
+# into git under lib/CodingAdventures/TypescriptLexer/_Grammar*.pm. This
+# avoids reading code/grammars/ off disk at runtime — a real CPAN install of
+# this package would not ship that directory.
+
+my %GRAMMAR_MODULE = (
+    ''      => 'CodingAdventures::TypescriptLexer::_Grammar',
+    'ts1.0' => 'CodingAdventures::TypescriptLexer::_Grammar_ts1_0',
+    'ts2.0' => 'CodingAdventures::TypescriptLexer::_Grammar_ts2_0',
+    'ts3.0' => 'CodingAdventures::TypescriptLexer::_Grammar_ts3_0',
+    'ts4.0' => 'CodingAdventures::TypescriptLexer::_Grammar_ts4_0',
+    'ts5.0' => 'CodingAdventures::TypescriptLexer::_Grammar_ts5_0',
+    'ts5.8' => 'CodingAdventures::TypescriptLexer::_Grammar_ts5_8',
+);
 
 # ============================================================================
 # Per-version caches
@@ -101,43 +112,15 @@ my %_skip_rules_cache; # version => arrayref of qr//
 my %_keyword_map_cache; # version => hashref  keyword => type
 
 # ============================================================================
-# Path helpers
+# Grammar loading
 # ============================================================================
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/typescript-lexer/lib/CodingAdventures/TypescriptLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → typescript-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
-# --- _resolve_tokens_path($version) ------------------------------------------
-#
-# Return the absolute path to the correct .tokens grammar file.
-#
-#   undef / "" → grammars/typescript.tokens         (generic)
-#   "ts5.0"    → grammars/typescript/ts5.0.tokens
-
-sub _resolve_tokens_path {
-    my ($class, $version) = @_;
-    my $grammars = _grammars_dir();
-
-    return File::Spec->catfile($grammars, 'typescript', 'typescript.tokens')
-        unless $version;
-
-    die "CodingAdventures::TypescriptLexer: unknown TypeScript version '$version'. "
-      . "Valid versions: ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8"
-        unless $VALID_VERSIONS{$version};
-
-    return File::Spec->catfile($grammars, 'typescript', "$version.tokens");
-}
 
 # --- _grammar($version) -------------------------------------------------------
 #
-# Load and parse the grammar for `$version`, caching the result.
+# Look up the compiled grammar for `$version`, caching the result.
+#
+#   undef / "" → CodingAdventures::TypescriptLexer::_Grammar        (generic)
+#   "ts5.0"    → CodingAdventures::TypescriptLexer::_Grammar_ts5_0
 
 sub _grammar {
     my ($class, $version) = @_;
@@ -145,15 +128,14 @@ sub _grammar {
 
     return $_grammar_cache{$version} if $_grammar_cache{$version};
 
-    my $tokens_file = $class->_resolve_tokens_path($version);
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::TypescriptLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    if ($version ne '' && !$VALID_VERSIONS{$version}) {
+        die "CodingAdventures::TypescriptLexer: unknown TypeScript version '$version'. "
+          . "Valid versions: ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8";
+    }
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::TypescriptLexer: failed to parse '$tokens_file': $err"
-        unless $grammar;
+    my $module = $GRAMMAR_MODULE{$version};
+    no strict 'refs';
+    my $grammar = &{"${module}::token_grammar"}();
 
     $_grammar_cache{$version} = $grammar;
     return $grammar;
@@ -406,7 +388,7 @@ Dies on unknown version string.
 
 =head1 VERSION
 
-0.02
+0.03
 
 =head1 AUTHOR
 

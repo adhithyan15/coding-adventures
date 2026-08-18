@@ -1,6 +1,6 @@
 # CodingAdventures::TypescriptLexer (Perl)
 
-A grammar-driven TypeScript tokenizer. Reads the shared `typescript.tokens` grammar file, compiles the token definitions into Perl regexes, and tokenizes TypeScript source into a flat list of typed tokens.
+A grammar-driven TypeScript tokenizer. Loads the shared TypeScript grammar (or a versioned variant) from a compiled native Perl module checked into git, compiles the token definitions into Perl regexes, and tokenizes TypeScript source into a flat list of typed tokens.
 
 TypeScript is a strict superset of JavaScript. This lexer recognizes all JavaScript tokens plus TypeScript-specific keywords.
 
@@ -72,8 +72,10 @@ for my $tok (@$tokens) {
 ## How it fits in the stack
 
 ```
-typescript.tokens  (code/grammars/)
-    ↓  parsed by CodingAdventures::GrammarTools
+typescript.tokens / ts<version>.tokens  (code/grammars/typescript/)
+    ↓  compiled once at dev time via grammar-tools.pl compile-tokens
+_Grammar.pm / _Grammar_ts<version>.pm   (checked into git)
+    ↓  require'd + token_grammar()
 TokenGrammar
     ↓  compiled to Perl qr// rules
 CodingAdventures::TypescriptLexer  ← you are here
