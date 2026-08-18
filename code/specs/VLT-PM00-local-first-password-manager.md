@@ -889,7 +889,9 @@ vault-pm history list ITEM
 vault-pm history show ITEM REV [--copy|--reveal]
 vault-pm history restore ITEM REV
 
-vault-pm password generate [policy flags] [--copy|--reveal]
+vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
+                           [--no-digits] [--no-symbols] [--exclude-ambiguous]
+                           (--reveal|--copy)
 vault-pm totp code ITEM [--copy|--reveal]
 
 vault-pm attachment add ITEM PATH
@@ -920,6 +922,14 @@ portable export, audit verification, and `doctor`. `password generate`,
 `totp code`, and the attachment commands are Phase 1B daily-use conveniences
 (§23 item 11), as are the import adapters (§23 item 13).
 Cloud/storage migration commands activate in Phase 2.
+
+`password generate` has since shipped as the first of item 11, specified by
+`VLT-PM44-cli-password-generate.md`. It is the one command in this table that
+takes no `--vault` selector *and* opens no vault: it mints a password from the
+operating-system CSPRNG, refuses a policy below an 80-bit entropy floor, and
+delivers the result only through the §14.6 reveal path. Its `--copy` mode is
+recognized and refused with the unsupported class until item 11's clipboard
+ceremony provides an adapter.
 
 ### 14.5 Unlock experience
 
@@ -1779,6 +1789,18 @@ changelog, focused build, and downstream validation.
 ### Phase 1B — daily local use
 
 11. password generator, TOTP display, clipboard, attachments and packing.
+      The **password generator has shipped**, as
+      `VLT-PM44-cli-password-generate.md`: `vault-pm password generate` mints a
+      password from the operating-system CSPRNG by exactly uniform rejection
+      sampling, refuses any policy worth fewer than 80 bits of entropy, and
+      delivers the result only to the confirmed controlling terminal. It opens
+      no vault, requires no unlock, and publishes no audit event, for the
+      reasons that document's §1 records. That closes the half of §14.4 that
+      named a signature without naming a strength.
+      TOTP display, clipboard delivery, and attachments remain open. The
+      generator's `--copy` mode is recognized and refused with the unsupported
+      class until the clipboard ceremony lands, since no clipboard adapter
+      exists in this product yet.
 12. local agent/IPC and auto-lock.
 13. Bitwarden/KDBX/browser CSV import adapters.
 14. removable/synced-folder mode and mirror decorator.
