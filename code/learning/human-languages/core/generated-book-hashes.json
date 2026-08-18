@@ -9276,6 +9276,23 @@
         "UR-C15-sardi"
       ],
       "tex": "urdu/book/chapters/ch15-weather.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:2fcf9e68075991d4",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "tex": "urdu/book/chapters/ch16-script-seven.tex"
     }
   ]
 }

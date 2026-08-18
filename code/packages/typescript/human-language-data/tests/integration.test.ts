@@ -139,7 +139,9 @@ describe("real curriculum", () => {
       // 12 -> 15: the second pre-A1 vocabulary tranche (wave 6). Chapter 13 (colors) and
       // 14 (clothing) add further POLITE-REQUEST-REPAIR segments; chapter 15 (weather)
       // returns to CHECK-WELLBEING. All three stay within the 12-atom chapter budget.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+      // 15 -> 16: HL-C234, the track's first script chapter. Urdu was the LAST track in
+      // the corpus teaching no letters at all, in 59 lessons across 15 chapters.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -1211,6 +1213,15 @@ describe("real curriculum", () => {
       "UR-C11-dil-cousin",
       "UR-C12-doodh-false-friend",
       "UR-C12-roti-pasand",
+      "UR-C16-practice-vowels",
+      "UR-W16-alef-cascade",
+      "UR-W16-joining-gap",
+      "UR-W16-kaf-lifts",
+      "UR-W16-lam-bowl",
+      "UR-W16-mim-head",
+      "UR-W16-nun-dot",
+      "UR-W16-sin-lifts",
+      "UR-W16-ye-dots",
       "ZH-C01-hao-components",
       "ZH-C01-hao-fond-tone",
       "ZH-C01-ni-meaning",
