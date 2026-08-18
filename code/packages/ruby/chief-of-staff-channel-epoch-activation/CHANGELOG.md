@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Delegate the custody CMK comparison to `CodingAdventures::CtCompare.ct_eq_fixed`
+  instead of hand-rolling the loop. The D18T spec requires using "the platform's
+  constant-time primitive where one exists"; `ruby/ct-compare` did not exist
+  until now, which is the only reason this package carried its own copy. The
+  other five ports already delegate.
+
 ## 0.1.0
 
 - Add the Ruby D18T durable epoch-activation adapter, consuming the canonical

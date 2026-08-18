@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "ruby/ct-compare",
+  "capabilities": [],
+  "justification": "Pure arithmetic over caller-supplied byte strings and integers. Reads no files, opens no sockets, and consults no clock or randomness."
+}

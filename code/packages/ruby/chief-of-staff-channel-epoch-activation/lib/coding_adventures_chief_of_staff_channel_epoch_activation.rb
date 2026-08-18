@@ -2,6 +2,7 @@
 
 require "coding_adventures_chief_of_staff_channel_crypto"
 require "coding_adventures_chief_of_staff_channel_store"
+require "coding_adventures_ct_compare"
 require "coding_adventures_sha256"
 
 module CodingAdventures

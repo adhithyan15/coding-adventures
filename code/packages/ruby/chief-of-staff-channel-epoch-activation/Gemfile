@@ -6,6 +6,7 @@ gemspec
 
 gem "coding_adventures_chacha20_poly1305", path: "../chacha20-poly1305"
 gem "coding_adventures_chief_of_staff_channel_crypto", path: "../chief-of-staff-channel-crypto"
+gem "coding_adventures_ct_compare", path: "../ct-compare"
 gem "coding_adventures_chief_of_staff_channel_store", path: "../chief-of-staff-channel-store"
 gem "coding_adventures_ed25519", path: "../ed25519"
 gem "coding_adventures_hkdf", path: "../hkdf"
