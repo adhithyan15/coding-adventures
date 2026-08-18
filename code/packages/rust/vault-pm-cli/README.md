@@ -359,6 +359,64 @@ command one-shot.
 The pre-emptive idle timer that locks a session while nobody is typing remains
 Phase 1B work; this slice ships only the command-boundary bound.
 
+## Finishing what a crash interrupted
+
+A process killed inside a mutation leaves a durable `PendingPublication`
+journal. The bytes in it are already signed; the only open question is whether
+the provider has them yet, and that question has one correct answer the machine
+can check. So every command that opens the vault finishes it, using the
+passphrase it has already collected, through the application's
+`unlock_recovering_pending_publication`.
+
+There is no recovery verb, and that is a design decision rather than an
+omission. The person who needs the repair is by definition someone whose
+ordinary command just failed; a verb they would have to know about would not
+reach them. The repair therefore lives on the path they are already walking:
+
+| Path | On `PendingPublication` |
+|---|---|
+| `authenticated_access` — item CRUD/list/show/reveal, `search`, `history`, `conflict`, `audit enable`/`list`/`show`, `import`, `restore` | recovers, then opens |
+| `export`, `audit verify` | recovers, then opens |
+| `init` and `vault create` resume | recovers, reports `Vault recovered.` |
+| `status`, `doctor`, `doctor --unlock` | **reports, never repairs** |
+
+The last row is the interesting one. `doctor` is a diagnostic, and `--unlock`
+does not turn it into a repair: a wedged vault short-circuits its authenticated
+half entirely — no passphrase is collected, nothing is published — and it
+answers `recovery_required` with exit class 5. Keeping both diagnostics
+read-only is what lets a person look at an interrupted vault, and restore a
+pre-mutation file-level backup instead, without racing an eager repair.
+
+When a command does repair the vault, one fixed payload-free line goes to
+standard error:
+
+```text
+vault-pm: recovered an interrupted write
+```
+
+`execute` decides that by reading the durable lifecycle state immediately
+before the command and — only if that reading found `recovery_required` —
+again immediately after, both inside the cross-process writer lock the command
+already holds. That lock is what makes the inference sound: no other local
+writer can move the state between the two reads.
+
+The second reading is conditional for a reason worth knowing. Reading owner
+state initializes its storage backend, and a backend initialization is itself a
+durable step that VLT-PM41's drill names and kills processes at. Reading after
+*every* command would append durable writes past each ceremony's own last one,
+so "the portable-export artifact is the last thing this command makes durable"
+would stop being true. An observation about a command must not move the
+command.
+
+`observed_a_repair` states the whole rule, and the row worth knowing is the
+quiet one: if the after-state cannot be *observed*, no notice is emitted. "Not
+observed" satisfies "not `recovery_required`" while proving nothing, and
+announcing a repair on a vault that is still wedged would be worse than saying
+nothing at all. Both ends fail toward silence. Standard output and every exit
+class are unchanged.
+
+See `code/specs/VLT-PM42-cli-pending-publication-recovery.md`.
+
 ## The durable-write seam
 
 This package is the layer that knows what "durable" means. `vault-pm-application`

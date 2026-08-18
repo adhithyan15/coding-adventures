@@ -83,13 +83,25 @@ Two results are worth reading before trusting the product with anything.
 An interrupted `init` is always repairable by running `init` again, and the
 resumed vault passes authenticated `doctor --unlock`.
 
-An interrupted **mutation** is not repairable from the command surface. The
-tree is never torn and the durable `PendingPublication` journal is exact — but
-no verb replays it, so every later command fails, and it fails as exit 2
-`vault-pm: invalid command`, telling a person their command is wrong about a
-vault that is intact and one journal replay from healthy. See VLT-PM41 section
-8 and VLT-PM00 §23 item 10a. The drill pins that behavior with a comment
-directing the fixing slice to rewrite those assertions rather than delete them.
+An interrupted **mutation** used to be unrepairable from the command surface,
+and that finding is why this crate exists. The tree was never torn and the
+durable `PendingPublication` journal was exact — but nothing replayed it, so
+every later command failed, as exit 2 `vault-pm: invalid command`, telling a
+person their command was wrong about a vault that was intact and one journal
+replay from healthy. See VLT-PM41 section 8 and VLT-PM00 §23 item 10a.
+
+`VLT-PM42-cli-pending-publication-recovery.md` repaired it, and the assertions
+this drill had pinned were rewritten to require the opposite rather than
+deleted. Section 3 of the matrix now proves that every landing point of the
+publication path is finished by the next ordinary command, and section 6 proves
+what a landing-point count cannot: that the write which was interrupted is the
+write that comes back. An `item add` killed after its journal lands is a listed
+item afterwards, with its title and username readable, and it is the only one.
+
+The read-only diagnostics are still not repairs. `status` and `doctor` — with
+or without `--unlock` — report a wedged vault and leave it wedged, however many
+times they are run, which is what keeps restoring a pre-mutation file-level
+backup a real option rather than a race.
 
 ## Verification
 

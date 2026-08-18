@@ -386,6 +386,18 @@ completion.
 ## 8. What the drill found
 
 > This section is the most important output of this slice.
+>
+> **Resolved.** The defect below was repaired by
+> `VLT-PM42-cli-pending-publication-recovery.md` and VLT-PM00 §23 item 10a is
+> closed. The finding is kept in the past tense it was written in, because the
+> value of a drill is the defect it finds and deleting the record would delete
+> the evidence that this one works. What changed: the vault-open boundary now
+> replays the exact journal with the passphrase it already collects, so every
+> landing point in section 6.1's sweep is either a clean rollback or a state
+> the next ordinary command finishes. The assertions section 8's last paragraph
+> left pinned have been rewritten to require that, and the drill additionally
+> proves the *content* of the repair — an interrupted `item add` is a listed,
+> readable item afterwards. The read-only diagnostics still repair nothing.
 
 **A kill anywhere inside the shared publication path leaves a vault that no
 `vault-pm` command can repair.**
@@ -425,6 +437,17 @@ item 10a** and Phase 1A cannot be declared complete until it lands.
 `every_publication_landing_point_leaves_an_exact_resumable_journal` pins the
 observed behavior, including the misleading exit class, with a comment
 directing the fixing slice to rewrite those assertions rather than delete them.
+
+**What the repair turned out to be.** Not a verb. VLT-PM42 found that
+`VLT-PM05-application.md` §8 step 2 had specified the fix all along — an open
+must "resume a prepared initialization or pending publication when present" —
+and that only the first half had ever been wired. So the repair added no
+command, flag, or artifact: the vault-open boundary gained a second, explicitly
+named door that replays the journal with the passphrase the open already
+collects and then performs the ordinary strict open of the repaired bytes. The
+prediction above that this needed "a new verb" was wrong in a useful direction:
+a verb a wedged person does not know about would not have reached the person
+whose command was failing.
 
 ### 8.1 Secondary observations
 

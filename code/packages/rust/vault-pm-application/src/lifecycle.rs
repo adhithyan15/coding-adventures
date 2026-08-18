@@ -1,6 +1,7 @@
 use crate::{
-    open_active_vault, ApplicationError, ApplicationRepositoryFactory, BootstrapLocator,
-    BootstrapStore, LocalStateStore, UnlockedVaultV1, VaultStatusV1,
+    open_active_vault, recover_pending_publication, ApplicationError, ApplicationRepositoryFactory,
+    BootstrapLocator, BootstrapStore, LocalStateStore, UnlockedVaultV1, VaultStatusStateV1,
+    VaultStatusV1,
 };
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
@@ -30,6 +31,22 @@ impl Debug for LockedVaultV1 {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str("LockedVaultV1(<locked>)")
     }
+}
+
+/// What an unlock had to finish before it could open the vault.
+///
+/// A crash inside a mutation publication is invisible to the person who caused
+/// it — the machine simply stopped — so the host that repairs it is the only
+/// party in a position to mention it afterwards. This closed enum is the whole
+/// vocabulary needed for that: it carries no vault, item, revision, object, or
+/// provider identity, and no count.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum UnlockRecoveryV1 {
+    /// Durable owner state was already `Active`; nothing was published.
+    AlreadyActive,
+    /// One exact `PendingPublication` journal was replayed to completion
+    /// before the vault was opened.
+    RecoveredPendingPublication,
 }
 
 /// Explicit host lifecycle boundary for a locked or unlocked vault.
@@ -132,6 +149,100 @@ impl VaultAccessV1 {
         )?;
         *self = Self::Unlocked(Box::new(session));
         Ok(())
+    }
+
+    /// Finish an interrupted publication if one is durable, then unlock.
+    ///
+    /// # Why this exists
+    ///
+    /// `VLT-PM05-application.md` §8 step 2 requires an open to "resume a
+    /// prepared initialization or pending publication when present". The
+    /// `PreparedInit` half of that sentence is `init`'s resume path. This is
+    /// the other half, and until VLT-PM42 nothing in the product performed it:
+    /// [`Self::unlock`] refuses every owner state but `Active`, so a process
+    /// killed inside [`crate::UnlockedVaultV1`]'s publication path left a vault
+    /// that was intact, exactly journalled, correctly diagnosed — and that no
+    /// command could open. VLT-PM41 §8 found that and measured it as an
+    /// availability defect in shipped code.
+    ///
+    /// # What it does
+    ///
+    /// ```text
+    ///   PendingPublication ──▶ recover_pending_publication ──┐
+    ///                                                        ├──▶ open_active_vault
+    ///   anything else ───────────────────────────────────────┘
+    /// ```
+    ///
+    /// The recovery replays the already-signed bytes idempotently and advances
+    /// the owner state only after the repository returns exactly the heads the
+    /// journal expected. Its result is then deliberately *discarded*: the vault
+    /// is opened from durable state by the ordinary strict
+    /// [`open_active_vault`], so every check a later, uninvolved process would
+    /// perform runs here too, on the repaired bytes. A repair that produced a
+    /// session only the repairing process could reproduce would be worth less
+    /// than no repair at all.
+    ///
+    /// # What it costs
+    ///
+    /// One extra Argon2id derivation, and only when a repair actually happens:
+    /// recovery and open each authenticate the passphrase against the bootstrap
+    /// root wrap. The `AlreadyActive` path derives exactly once, as before. A
+    /// process that finds a wedged vault has already survived a crash; paying
+    /// one more key derivation to reopen it from scratch is the right trade.
+    ///
+    /// # Secret handling
+    ///
+    /// Both callees consume a passphrase by value, and
+    /// [`Zeroizing`] deliberately implements neither `Clone` nor `Debug` so
+    /// that duplicating a secret cannot happen by accident. The duplicate below
+    /// is therefore constructed by name, exists only inside the recovering
+    /// branch, and is wiped on drop — including while unwinding from a panic.
+    ///
+    /// # Failure
+    ///
+    /// A wrong passphrase is rejected by the recovery *before* any publication,
+    /// with the same closed authentication class an ordinary unlock returns,
+    /// and leaves the exact journal in place for a later correct attempt. A
+    /// `PreparedInit` state is refused: it belongs to `init`. Any failure
+    /// leaves this boundary locked, and repeating the whole call is always
+    /// sound because the recovery is idempotent.
+    pub fn unlock_recovering_pending_publication(
+        &mut self,
+        passphrase: Zeroizing<Vec<u8>>,
+        local_state_store: &dyn LocalStateStore,
+        bootstrap_store: &dyn BootstrapStore,
+        repository_factory: &dyn ApplicationRepositoryFactory,
+    ) -> Result<UnlockRecoveryV1, ApplicationError> {
+        let Self::Locked(locked) = self else {
+            return Err(ApplicationError::InvalidInput);
+        };
+        let locator = locked.locator();
+        // The same read-only projection `status` exposes to a locked host, so
+        // there is exactly one place in this crate that decides which durable
+        // owner states mean "recovery required".
+        let recovery_required = matches!(
+            self.status(local_state_store)?.state(),
+            VaultStatusStateV1::RecoveryRequired
+        );
+        let outcome = if recovery_required {
+            recover_pending_publication(
+                Zeroizing::new(passphrase.to_vec()),
+                locator,
+                local_state_store,
+                bootstrap_store,
+                repository_factory,
+            )?;
+            UnlockRecoveryV1::RecoveredPendingPublication
+        } else {
+            UnlockRecoveryV1::AlreadyActive
+        };
+        self.unlock(
+            passphrase,
+            local_state_store,
+            bootstrap_store,
+            repository_factory,
+        )?;
+        Ok(outcome)
     }
 
     /// Synchronously drop the live session and return to a key-free state.

@@ -41,16 +41,25 @@
 //! The forbidden class is **torn**: a tree that decodes to something neither
 //! the old nor the new state, or that no longer opens at all.
 //!
-//! # The one cell that is neither
+//! # The cell that used to be neither
 //!
-//! `every_publication_landing_point_leaves_an_exact_resumable_journal`
-//! documents a real defect found by this drill. A kill inside the shared
-//! mutation publication path is *not torn* — the durable journal is exact and
-//! `vault-pm-application`'s `recover_pending_publication` would replay it —
-//! but **no CLI verb reaches that function**, so the vault stays wedged and
-//! every later command reports `invalid command`. See VLT-PM41 section 8.
-//! These assertions therefore pin *observed* behavior and are expected to be
-//! rewritten by the slice that adds the recovery verb.
+//! `every_publication_landing_point_leaves_an_exact_resumable_journal` found a
+//! real defect the first time it ran. A kill inside the shared mutation
+//! publication path was *not torn* — the durable journal was exact and
+//! `vault-pm-application`'s `recover_pending_publication` would have replayed
+//! it — but **no CLI code path reached that function**, so the vault stayed
+//! wedged and every later command answered `invalid command`, exit 2, forever.
+//! VLT-PM41 section 8 recorded it, filed it as VLT-PM00 §23 item 10a, and left
+//! the assertions here pinning the observed behavior with instructions to
+//! rewrite rather than delete them.
+//!
+//! VLT-PM42 is that rewrite. Those assertions now require the opposite: the
+//! very next ordinary command finishes the interrupted publication, says so,
+//! and leaves an ordinary locked vault. Both classes of this matrix are
+//! therefore now recoverable by a person who does nothing but retry, and the
+//! tests further down prove the *content* of what was recovered — an
+//! interrupted `item add` is a listed item afterwards, not merely a vault that
+//! opens.
 
 #![cfg(unix)]
 
@@ -921,16 +930,29 @@ fn every_publication_landing_point_leaves_an_exact_resumable_journal() {
                 assert_eq!(report, "recovery_required", "landing point {point}");
                 assert_eq!(code, Some(5), "landing point {point}");
 
-                // VLT-PM41 section 8. The journal is exact and replayable, but
-                // no CLI verb replays it, so every later command fails closed.
-                // This is a *defect*, pinned here so the slice that adds a
-                // recovery verb must come back and rewrite these three lines.
-                let blocked = unlocked(&home, &["item", "list"], Injection::default());
-                assert_eq!(blocked.code(), Some(2), "landing point {point}");
+                // VLT-PM42, rewriting what VLT-PM41 section 8 pinned. These
+                // lines used to require exit 2, `vault-pm: invalid command`,
+                // from every command that opened the vault — the defect this
+                // drill found. The next ordinary command now replays the exact
+                // journal with the passphrase it already collects.
+                let repaired = unlocked(&home, &["item", "list"], Injection::default());
+                repaired.assert_succeeded(&format!("item list after a wedge at {point}"));
                 assert!(
-                    blocked.transcript.contains("vault-pm: invalid command"),
-                    "landing point {point}: {}",
-                    blocked.transcript
+                    repaired
+                        .transcript
+                        .contains("vault-pm: recovered an interrupted write"),
+                    "landing point {point} repaired silently: {}",
+                    repaired.transcript
+                );
+
+                // The repair is complete, not partial: what is left is an
+                // ordinary locked vault, indistinguishable to both read-only
+                // diagnostics from one that was never interrupted.
+                assert_eq!(status(&home), "locked", "landing point {point}");
+                assert_eq!(
+                    doctor(&home),
+                    ("authentication_required".to_owned(), Some(3)),
+                    "landing point {point}"
                 );
             }
             other => panic!("landing point {point} left status {other}"),
@@ -1337,5 +1359,214 @@ fn the_read_only_diagnostics_describe_every_stage_of_an_interrupted_vault() {
     assert_eq!(status(&home), "locked");
     unlocked(&home, &["audit", "verify"], Injection::default())
         .assert_succeeded("audit verify after restore");
+    assert_tree_excludes_secrets(home.path());
+}
+
+// ---------------------------------------------------------------------------
+// 6. VLT-PM42 — what the next real process does about a wedged vault
+//
+// Section 3 proves every landing point of the publication path is repairable
+// by an ordinary retry. This section proves the two things a *count* of
+// landing points cannot: that the write which was interrupted is the write
+// that comes back, and that the read-only diagnostics still refuse to be
+// repairs.
+// ---------------------------------------------------------------------------
+
+/// Kill `run` at a landing point that leaves an exact journal, and return it.
+///
+/// The last durable write of any mutation is the owner-state advance to
+/// `Active`, so the wedge is almost always its "before" phase at `total - 1`.
+/// Searching downward rather than hard-coding that means a ceremony that grows
+/// a durable write after the advance makes this helper slower, not silently
+/// wrong — the difference between a drill and a decoration.
+///
+/// On return the vault is wedged at the landing point named.
+fn wedge(
+    home: &TestHome,
+    snapshot: &Snapshot,
+    total: u64,
+    run: impl Fn(&TestHome, Injection<'_>) -> Outcome,
+) -> u64 {
+    for point in (1..=total).rev() {
+        snapshot.restore(home);
+        run(
+            home,
+            Injection {
+                trace: None,
+                crash_at: Some(point),
+            },
+        )
+        .assert_killed(point);
+        if status(home) == "recovery_required" {
+            return point;
+        }
+    }
+    panic!("no landing point of this ceremony left a journal to recover");
+}
+
+/// The identifiers one `item list` reported, in the order it printed them.
+///
+/// A row is `ID \t SCHEMA \t "TITLE"`, and the schema is what identifies it:
+/// every V1 schema name begins `vault/`, which no prompt, notice, or shell
+/// echo in the transcript does.
+fn listed_item_ids(transcript: &str) -> Vec<String> {
+    transcript
+        .lines()
+        .map(|line| line.trim_end_matches('\r'))
+        .filter_map(|line| {
+            let mut fields = line.split('\t');
+            let id = fields.next()?;
+            let schema = fields.next()?;
+            (schema.starts_with("vault/") && !id.is_empty()).then(|| id.to_owned())
+        })
+        .collect()
+}
+
+#[test]
+fn an_interrupted_item_create_comes_back_as_the_item_it_was() {
+    // The strongest statement this drill can make about the repair: the write
+    // a person watched their machine die in the middle of is the write they
+    // find when they come back. Not "the vault opens" — the item is *there*,
+    // with its title, and it is the only one.
+    let home = TestHome::new("recover-create");
+    init(&home, Injection::default()).assert_succeeded("init");
+    let snapshot = Snapshot::capture(&home);
+    let create = |home: &TestHome, injection: Injection<'_>| {
+        drive(
+            home,
+            &["item", "add", "login"],
+            &login_script(
+                b"crash matrix password stays encrypted\n",
+                b"Example account\n",
+            ),
+            injection,
+        )
+    };
+    let total = count_landing_points(&home, Some(&snapshot), create);
+    let point = wedge(&home, &snapshot, total, create);
+    assert_eq!(status(&home), "recovery_required");
+
+    // One ordinary command, no new verb, no flag, no argument.
+    let listed = unlocked(&home, &["item", "list"], Injection::default());
+    listed.assert_succeeded(&format!("item list after a create wedged at {point}"));
+    assert!(
+        listed
+            .transcript
+            .contains("vault-pm: recovered an interrupted write"),
+        "{}",
+        listed.transcript
+    );
+    let ids = listed_item_ids(&listed.transcript);
+    assert_eq!(ids.len(), 1, "{}", listed.transcript);
+    assert!(
+        listed
+            .transcript
+            .contains("vault/login/v1\t\"Example account\""),
+        "the recovered write must be the interrupted create: {}",
+        listed.transcript
+    );
+
+    // The recovered item is a whole item, not a husk: its fields read back.
+    let shown = unlocked(&home, &["item", "show", &ids[0]], Injection::default());
+    shown.assert_succeeded("item show after recovery");
+    assert!(shown.transcript.contains("Title: \"Example account\""));
+    assert!(shown.transcript.contains("ada@example.test"));
+
+    // And the vault is ordinary afterwards: it takes a second write, both
+    // items list, and the whole audit chain still verifies.
+    drive(
+        &home,
+        &["item", "add", "login"],
+        &login_script(
+            b"crash matrix password stays encrypted\n",
+            b"Second account\n",
+        ),
+        Injection::default(),
+    )
+    .assert_succeeded("item add after recovery");
+    let relisted = unlocked(&home, &["item", "list"], Injection::default());
+    relisted.assert_succeeded("item list after the second add");
+    assert_eq!(listed_item_ids(&relisted.transcript).len(), 2);
+    assert!(
+        !relisted
+            .transcript
+            .contains("vault-pm: recovered an interrupted write"),
+        "the repair must be announced once, not on every later command: {}",
+        relisted.transcript
+    );
+    unlocked(&home, &["audit", "verify"], Injection::default())
+        .assert_succeeded("audit verify after recovery");
+    assert_tree_excludes_secrets(home.path());
+}
+
+#[test]
+fn the_read_only_diagnostics_still_refuse_to_repair_a_wedged_vault() {
+    // A person who wants to look before they leap must be able to. `status`
+    // and `doctor` answer from durable state without a passphrase, and running
+    // them any number of times leaves the vault exactly as they found it —
+    // which is what makes restoring a pre-mutation file-level backup a real
+    // option rather than a race against an eager repair.
+    let home = TestHome::new("recover-diagnostics");
+    init(&home, Injection::default()).assert_succeeded("init");
+    let snapshot = Snapshot::capture(&home);
+    let verify =
+        |home: &TestHome, injection: Injection<'_>| unlocked(home, &["audit", "verify"], injection);
+    let total = count_landing_points(&home, Some(&snapshot), verify);
+    wedge(&home, &snapshot, total, verify);
+
+    for _ in 0..3 {
+        assert_eq!(status(&home), "recovery_required");
+        assert_eq!(doctor(&home), ("recovery_required".to_owned(), Some(5)));
+    }
+
+    // `--unlock` does not make a diagnostic into a repair. It collects no
+    // passphrase at all now, and it reports the state in the closed vocabulary
+    // instead of inheriting the refused open's exit 2 `invalid command`.
+    let authenticated = plain(&home, &["doctor", "--unlock"]);
+    assert_eq!(
+        authenticated.code(),
+        Some(5),
+        "{}",
+        authenticated.transcript
+    );
+    assert!(
+        authenticated
+            .transcript
+            .contains("Doctor: recovery_required"),
+        "{}",
+        authenticated.transcript
+    );
+    assert_eq!(status(&home), "recovery_required");
+
+    // The repair below is therefore this test's, and nothing before it.
+    let repaired = unlocked(&home, &["item", "list"], Injection::default());
+    repaired.assert_succeeded("item list after the diagnostics");
+    assert_eq!(status(&home), "locked");
+    assert_tree_excludes_secrets(home.path());
+}
+
+#[test]
+fn init_finishes_an_interrupted_publication_instead_of_refusing_it() {
+    // `init` is what a stuck person retries, and it used to answer a wedged
+    // vault with the conflict class. It now finishes what was interrupted,
+    // which is what its resume path already meant one generation earlier.
+    let home = TestHome::new("recover-init");
+    init(&home, Injection::default()).assert_succeeded("init");
+    let snapshot = Snapshot::capture(&home);
+    let verify =
+        |home: &TestHome, injection: Injection<'_>| unlocked(home, &["audit", "verify"], injection);
+    let total = count_landing_points(&home, Some(&snapshot), verify);
+    wedge(&home, &snapshot, total, verify);
+
+    let resumed = init(&home, Injection::default());
+    resumed.assert_succeeded("init against a wedged vault");
+    assert!(
+        resumed.transcript.contains("Vault recovered."),
+        "{}",
+        resumed.transcript
+    );
+    assert_eq!(status(&home), "locked");
+    unlocked(&home, &["audit", "verify"], Injection::default())
+        .assert_succeeded("audit verify after an init-driven recovery");
     assert_tree_excludes_secrets(home.path());
 }

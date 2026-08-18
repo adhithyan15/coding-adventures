@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- The shipped executable now survives a crash inside a mutation. This crate's
+  own sources are unchanged; the repair is in
+  `coding_adventures_vault_pm_cli` under
+  `code/specs/VLT-PM42-cli-pending-publication-recovery.md`, and it is recorded
+  here because it changes what this binary does. A `vault-pm` process killed
+  mid-write used to leave a vault that every later command refused with exit 2
+  `vault-pm: invalid command`; the next command that opens the vault now
+  replays the exact journal with the passphrase it already collects and reports
+  `vault-pm: recovered an interrupted write` on standard error. No verb, flag,
+  file format, on-disk artifact, or environment variable was added.
+- The crash-injection isolation is unchanged and re-verified. This crate still
+  names `crash-injection` in no section, `src/main.rs` still fails to compile
+  with it, and `the_shipped_executable_contains_no_crash_injection` still reads
+  the produced binary and rejects either injection variable name.
+
 - Added `the_shipped_executable_contains_no_crash_injection` to
   `tests/local_cli_e2e.rs`, and kept this crate free of any mention of
   `coding_adventures_vault_pm_cli`'s `crash-injection` feature. VLT-PM41 needs

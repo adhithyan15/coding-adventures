@@ -149,7 +149,7 @@ is `VLT-PM15-operation-audit.md`.
 | Phase | Deliverable | Storage | Client surface | Independently useful result |
 |---|---|---|---|---|
 | 0 | Contract and security closure | in-memory fault model | test harness | formats and invariants fixed before product code |
-| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault (open: §23 item 10a) |
+| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault — crash-survivable since §23 item 10a; open: §23 items 10b–10c |
 | 1B | Complete local CLI | filesystem + removable folder | CLI + interactive shell/local agent | practical daily local password manager |
 | 2 | Bring-your-own-cloud | Google Drive first, then WebDAV/S3 | CLI | multi-device E2EE without our server |
 | 3 | Web client | IndexedDB/OPFS + direct cloud adapters | installable PWA | browser access without a plaintext backend |
@@ -974,11 +974,14 @@ and redact item/provider payloads.
   a valid new commit; never a partial logical state. **Verified** by
   `VLT-PM41-cli-crash-fault-matrix.md` against a real `SIGKILL`ed process at
   every landing point of generation zero and of the shared publication path.
-  The repository half of this criterion holds. The *local* half does not yet:
-  the tree is never torn, but a crash inside a publication leaves a vault only
-  §23 item 10a can repair.
+  Both halves now hold. The tree is never torn, and since
+  `VLT-PM42-cli-pending-publication-recovery.md` every landing point is either
+  a clean rollback or a state the next ordinary command finishes: no landing
+  point leaves a vault any command refuses.
 - Search can be deleted and rebuilt from records.
 - Password rotation rewraps the VRK without re-encrypting every item body.
+  **Not met.** Nothing implements passphrase rotation, so this criterion has
+  never been exercised; see §23 item 10b.
 - Export followed by import into a new vault preserves supported records but
   creates new encryption/object identities.
 - CLI end-to-end tests run through the real executable with a pseudo-terminal
@@ -1684,21 +1687,50 @@ changelog, focused build, and downstream validation.
      tree from an ordinary file-level backup. Using
      `VLT-PM41-cli-crash-fault-matrix.md`. The remaining cross-product is
      enumerated in that document rather than left implicit.
-10a. **Open — found by item 10.** A `SIGKILL` anywhere inside the shared
-      mutation publication path leaves a durable `PendingPublication` journal
-      that is exact and replayable, that both read-only diagnostics correctly
-      report as `recovery_required`, and that
-      `vault-pm-application::recover_pending_publication` would finish — but
-      no CLI code path calls that function. Every subsequent command that
-      opens the vault therefore fails, and it fails as exit 2
-      `vault-pm: invalid command`, telling a person their command is wrong
-      about a vault that is intact. No secret is exposed and no data is lost;
-      the vault is recoverable in principle and unrecoverable in practice.
-      This is an availability defect in already-shipped code. Phase 1A does
-      not close until a recovery ceremony reaches
-      `recover_pending_publication` from the command surface, with its own
-      spec, prompt policy, audit ordering, and exit class. See
-      `VLT-PM41-cli-crash-fault-matrix.md` section 8.
+10a. completed pending-publication recovery at vault open — **fixed**, the
+      availability defect item 10 found. A `SIGKILL` anywhere inside the shared
+      mutation publication path left a durable `PendingPublication` journal
+      that was exact and replayable, that both read-only diagnostics correctly
+      reported as `recovery_required`, and that
+      `vault-pm-application::recover_pending_publication` would have finished —
+      but no CLI code path called that function, so every subsequent command
+      that opened the vault failed, as exit 2 `vault-pm: invalid command`,
+      telling a person their command was wrong about a vault that was intact.
+      `VLT-PM05-application.md` §8 step 2 had required an open to "resume a
+      prepared initialization or pending publication when present" from the
+      start; only the first half had ever been wired. The vault-open boundary
+      now performs the second: a new `VaultAccessV1`
+      `unlock_recovering_pending_publication` replays the exact journal with
+      the passphrase the open already collected and then opens the repaired
+      vault through the ordinary strict open, so every verification a later
+      uninvolved process would perform runs on the repaired bytes. Every
+      authenticated command, portable export, audit verification, and both
+      resume paths of `init` and `vault create` take that door; `status` and
+      `doctor` deliberately do not, keeping their read-only contract, with
+      `doctor --unlock` reclassified from the misleading invalid-command class
+      to `recovery_required`/5. One fixed payload-free line on standard error
+      reports a repair that happened. No verb, flag, file format, on-disk
+      artifact, or environment variable is added. Using
+      `VLT-PM42-cli-pending-publication-recovery.md`, with real-process
+      pseudo-terminal proof in the VLT-PM41 drill that an interrupted
+      `item add` comes back as the item it was.
+10b. **Open — found while verifying §14.8 for item 10a.** §14.8 requires that
+      "password rotation rewraps the VRK without re-encrypting every item
+      body", and nothing implements it. There is no rotation command in §14.4's
+      surface, no rotation use case in `vault-pm-application`, and no Phase 1A
+      item that would have added one, so the criterion has never been
+      exercised. The property the criterion describes is a consequence of the
+      key hierarchy — the VRK is wrapped under a passphrase-derived KEK, so
+      re-wrapping it touches no item body — but a property nothing performs is
+      a property nothing tests. Phase 1A does not close until a passphrase
+      rotation ceremony exists, with its own spec, prompt policy, crash
+      journal, audit ordering, and exit class.
+10c. **Open — found alongside 10b.** §14.4 states that Phase 1A implements
+      "password generation", while §23 item 11 places the password generator in
+      Phase 1B. The two statements contradict each other and the shipped
+      surface has no `password generate`. Decide which document is right and
+      make the other match; if §14.4 is right, the generator is a Phase 1A
+      item and Phase 1A does not close without it.
 
 ### Phase 1B — daily local use
 

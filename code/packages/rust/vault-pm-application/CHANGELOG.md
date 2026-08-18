@@ -2,6 +2,54 @@
 
 All notable changes to this package are documented here.
 
+## [0.62.0] - 2026-08-18
+
+### Added
+
+- `VaultAccessV1::unlock_recovering_pending_publication` and the closed
+  `UnlockRecoveryV1` outcome it returns (`AlreadyActive` or
+  `RecoveredPendingPublication`). This is the second half of
+  `VLT-PM05-application.md` §8 step 2 — "resume a prepared initialization or
+  **pending publication** when present" — which had been specified from the
+  beginning and never wired to anything.
+
+  `recover_pending_publication` was already here, already correct, and already
+  covered: it replays an exact durable journal idempotently and advances the
+  owner state only after the repository returns the heads that journal
+  expected. Nothing called it. `VLT-PM41-cli-crash-fault-matrix.md` §8 measured
+  what that cost by killing a real process: a vault interrupted mid-publication
+  was intact, exactly journalled, correctly diagnosed as `recovery_required` by
+  both read-only projections — and refused by every command that opened it,
+  because `open_active_vault` accepts only `Active`. That refusal surfaced as
+  the invalid-input class, so a person whose machine died mid-write was told
+  their *command* was wrong, indefinitely.
+
+  The new entry point replays the journal and then performs the ordinary strict
+  `open_active_vault` against the repaired durable state, discarding the
+  `ActiveStateV1` the recovery returned. That is deliberate: every check a
+  later, uninvolved process would perform — bootstrap signature, root-wrap
+  authentication, seed-to-pinned-identity reproduction, repository open against
+  non-empty pins — runs on the repaired bytes. A repair that produced a session
+  only the repairing process could reproduce would be worth less than no repair.
+
+  It costs one extra Argon2id derivation, and only when a repair happens: the
+  recovery and the reopen each consume a passphrase by value. Since `Zeroizing`
+  implements neither `Clone` nor `Debug` on purpose, the recovering branch
+  constructs its duplicate by name; both copies are wiped on drop, including
+  while unwinding.
+
+### Unchanged, deliberately
+
+- `VaultAccessV1::unlock` still accepts only `Active` and still refuses a
+  `PendingPublication` with the invalid-input class, so a host that wants a
+  crash refused rather than repaired keeps exactly that. The recovering unlock
+  is a second named door, not a change of behavior behind the existing one.
+- `open_active_vault` and `recover_pending_publication` are untouched. This
+  release composes them; it does not modify either.
+- A `PreparedInit` owner state is still refused by the recovering unlock. It
+  belongs to initialization, which is the only caller that knows a vault is
+  being created.
+
 ## [0.61.2] - 2026-08-17
 
 ### Fixed
