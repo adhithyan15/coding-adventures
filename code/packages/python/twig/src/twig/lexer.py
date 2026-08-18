@@ -1,52 +1,41 @@
 """Twig lexer — thin wrapper around the generic ``GrammarLexer``.
 
-The Twig token grammar lives in ``code/grammars/twig.tokens``; this
-module just locates the file, hands it to ``parse_token_grammar``,
-and constructs a ``GrammarLexer`` over the resulting
-``TokenGrammar``.
+The Twig token grammar is compiled into ``_grammar_tokens.py`` by the
+grammar-tools compiler from ``code/grammars/twig/twig.tokens``; this
+module imports the pre-built ``TOKEN_GRAMMAR`` constant and constructs a
+``GrammarLexer`` over it — no file I/O at startup, no runtime grammar
+parsing overhead. (The parser grammar lives in a separate
+``_grammar_parser.py`` in this same package — see ``parser.py`` — since
+both a lexer and a parser share this ``twig`` package.)
 
 Mirrors the pattern already used by every other language in the
 repo (Brainfuck, Dartmouth BASIC, ALGOL, Prolog…) — a single
 source-of-truth grammar file feeds every implementation, and the
 language-specific package is the thin shim that loads it.
+
+To regenerate after editing ``code/grammars/twig/twig.tokens``::
+
+    grammar-tools compile-tokens code/grammars/twig/twig.tokens \\
+        > code/packages/python/twig/src/twig/_grammar_tokens.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar file location
-# ---------------------------------------------------------------------------
-#
-# Walk up from this module to ``code/``, then into ``grammars/``:
-#
-#   src/twig/lexer.py
-#   ├─ src/twig/        (parent)
-#   ├─ src/             (parent)
-#   ├─ twig/            (parent — package dir)
-#   ├─ python/          (parent)
-#   ├─ packages/        (parent)
-#   └─ code/            (parent) → ``grammars/twig.tokens``
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TWIG_TOKENS_PATH = GRAMMAR_DIR / "twig" / "twig.tokens"
+from twig._grammar_tokens import TOKEN_GRAMMAR
 
 
 def create_twig_lexer(source: str) -> GrammarLexer:
     """Build a ``GrammarLexer`` configured for Twig source.
 
-    Reads ``twig.tokens`` from the grammars directory and returns a
-    lexer ready to call ``.tokenize()``.  The resulting token stream
-    contains ``LPAREN`` / ``RPAREN`` / ``QUOTE`` / ``BOOL_TRUE`` /
-    ``BOOL_FALSE`` / ``INTEGER`` / ``KEYWORD`` / ``NAME`` tokens, with
-    whitespace and ``;`` comments already discarded.
+    Uses the pre-compiled ``TOKEN_GRAMMAR`` (from ``twig._grammar_tokens``)
+    and returns a lexer ready to call ``.tokenize()``.  The resulting
+    token stream contains ``LPAREN`` / ``RPAREN`` / ``QUOTE`` /
+    ``BOOL_TRUE`` / ``BOOL_FALSE`` / ``INTEGER`` / ``KEYWORD`` / ``NAME``
+    tokens, with whitespace and ``;`` comments already discarded.
     """
-    grammar = parse_token_grammar(TWIG_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_twig(source: str) -> list[Token]:

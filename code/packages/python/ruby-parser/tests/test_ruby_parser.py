@@ -49,7 +49,10 @@ Test Organization
 2. **Operator precedence** — ``1 + 2 * 3`` vs ``(1 + 2) * 3``
 3. **Multiple statements** — programs with more than one statement
 4. **Method calls** — ``puts("hello")``, ``add(1, 2)``
-5. **Factory function** — ``create_ruby_parser()``
+5. **Statement-level constructs** — ``def``, ``class``, ``if``, ``while``,
+   ``case``, ``begin`` (regression coverage for the full grammar; see
+   ``TestStatementLevelConstructs`` for why these matter)
+6. **Factory function** — ``create_ruby_parser()``
 """
 
 from __future__ import annotations
@@ -443,6 +446,103 @@ class TestMethodCalls:
         tokens = find_tokens(method_calls[0])
         names = [t for t in tokens if t.type == TokenType.NAME]
         assert any(t.value == "x" for t in names)
+
+
+# ============================================================================
+# Test: Statement-Level Constructs (def/class/if/while/case/begin)
+# ============================================================================
+
+
+class TestStatementLevelConstructs:
+    """Regression tests for statement-level grammar rules.
+
+    The checked-in ``ruby_parser/_grammar.py`` that shipped before this
+    package was wired up to a pre-compiled grammar was stale: it had been
+    compiled from a version of ``ruby.grammar`` that only supported a
+    handful of rules (``program``, ``statement``, ``assignment``,
+    ``expression_stmt``, ``method_call``, and the expression precedence
+    chain). The *current* ``code/grammars/ruby/ruby.grammar`` file defines
+    ~97 rules, including full statement forms for method definitions,
+    classes, conditionals, loops, case/when, and begin/rescue/ensure
+    blocks — none of which the stale file could parse.
+
+    These tests pin down that the freshly-compiled grammar actually
+    recognizes each of those statement forms, so a future regression
+    back to a stale/truncated grammar would be caught immediately.
+    """
+
+    def test_def_statement(self) -> None:
+        """Parse a simple method definition: ``def greet ... end``."""
+        ast = parse_ruby('def greet\n  puts("hi")\nend')
+
+        def_statements = find_nodes(ast, "def_statement")
+        assert len(def_statements) == 1
+
+        tokens = find_tokens(def_statements[0])
+        names = [t for t in tokens if t.type == TokenType.NAME]
+        assert names[0].value == "greet"
+
+        # The body should still recognize the nested method call.
+        method_calls = find_nodes(def_statements[0], "method_call")
+        assert len(method_calls) == 1
+
+    def test_class_statement(self) -> None:
+        """Parse a simple class definition: ``class Foo ... end``."""
+        ast = parse_ruby("class Foo\n  x = 1\nend")
+
+        class_statements = find_nodes(ast, "class_statement")
+        assert len(class_statements) == 1
+
+        tokens = find_tokens(class_statements[0])
+        names = [t for t in tokens if t.type == TokenType.NAME]
+        assert names[0].value == "Foo"
+
+        # The class body should still parse its assignment.
+        assignments = find_nodes(class_statements[0], "assignment")
+        assert len(assignments) == 1
+
+    def test_if_statement(self) -> None:
+        """Parse a simple conditional: ``if x ... end``."""
+        ast = parse_ruby("if x\n  y = 1\nend")
+
+        if_statements = find_nodes(ast, "if_statement")
+        assert len(if_statements) == 1
+
+        assignments = find_nodes(if_statements[0], "assignment")
+        assert len(assignments) == 1
+
+    def test_while_statement(self) -> None:
+        """Parse a simple loop: ``while x ... end``."""
+        ast = parse_ruby("while x\n  y = 1\nend")
+
+        while_statements = find_nodes(ast, "while_statement")
+        assert len(while_statements) == 1
+
+        assignments = find_nodes(while_statements[0], "assignment")
+        assert len(assignments) == 1
+
+    def test_case_statement(self) -> None:
+        """Parse a simple case/when: ``case x when 1 ... end``."""
+        ast = parse_ruby("case x\nwhen 1\n  y = 1\nend")
+
+        case_statements = find_nodes(ast, "case_statement")
+        assert len(case_statements) == 1
+
+        when_clauses = find_nodes(case_statements[0], "when_clause")
+        assert len(when_clauses) == 1
+
+        assignments = find_nodes(case_statements[0], "assignment")
+        assert len(assignments) == 1
+
+    def test_begin_statement(self) -> None:
+        """Parse a simple begin/end block: ``begin ... end``."""
+        ast = parse_ruby("begin\n  x = 1\nend")
+
+        begin_statements = find_nodes(ast, "begin_statement")
+        assert len(begin_statements) == 1
+
+        assignments = find_nodes(begin_statements[0], "assignment")
+        assert len(assignments) == 1
 
 
 # ============================================================================

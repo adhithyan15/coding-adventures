@@ -167,33 +167,23 @@ Locating the Grammar File
 --------------------------
 
 The ``nib.grammar`` file lives in ``code/grammars/`` at the repository root.
-We locate it relative to this module's file path::
+The Nib parser grammar is compiled into ``_grammar.py`` by the grammar-tools
+compiler from ``code/grammars/nib/nib.grammar``. Importing the pre-built
+``PARSER_GRAMMAR`` constant means no file I/O at startup and no runtime
+grammar parsing overhead.
 
-    parser.py
-    └── nib_parser/      (parent)
-        └── src/         (parent)
-            └── nib-parser/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── nib.grammar
+To regenerate after editing ``code/grammars/nib/nib.grammar``::
+
+    grammar-tools compile-grammar code/grammars/nib/nib.grammar \\
+        > code/packages/python/nib-parser/src/nib_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from nib_lexer import tokenize_nib
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-NIB_GRAMMAR_PATH = GRAMMAR_DIR / "nib" / "nib.grammar"
+from nib_parser._grammar import PARSER_GRAMMAR
 
 
 def create_nib_parser(source: str) -> GrammarParser:
@@ -202,7 +192,7 @@ def create_nib_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the Nib lexer.
-    2. Reads and parses the ``nib.grammar`` file.
+    2. Uses the pre-compiled ``PARSER_GRAMMAR`` (from ``nib_parser._grammar``).
     3. Creates a ``GrammarParser`` with those tokens and grammar rules.
 
     The parser handles all Nib grammar features, including:
@@ -233,7 +223,6 @@ def create_nib_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the root ``ASTNode``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains characters not valid in Nib.
 
     Example::
@@ -242,8 +231,7 @@ def create_nib_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_nib(source)
-    grammar = parse_parser_grammar(NIB_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_nib(source: str) -> ASTNode:
@@ -292,7 +280,6 @@ def parse_nib(source: str) -> ASTNode:
         ``rule_name`` is ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains characters not valid in Nib.
         GrammarParseError: If the source has syntax errors according to
             the Nib grammar.

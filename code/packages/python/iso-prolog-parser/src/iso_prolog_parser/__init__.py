@@ -4,7 +4,6 @@ from prolog_core import OperatorTable, PrologDirective
 from prolog_parser import ParsedQuery, ParsedSource, PrologParseError
 
 from iso_prolog_parser.parser import (
-    ISO_PROLOG_GRAMMAR_PATH,
     ParsedIsoSource,
     create_iso_prolog_parser,
     parse_iso_ast,
@@ -15,7 +14,6 @@ from iso_prolog_parser.parser import (
 
 __all__ = [
     "__version__",
-    "ISO_PROLOG_GRAMMAR_PATH",
     "OperatorTable",
     "ParsedQuery",
     "ParsedIsoSource",

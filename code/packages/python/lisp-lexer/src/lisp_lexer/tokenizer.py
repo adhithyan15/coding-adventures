@@ -1,7 +1,7 @@
 """Lisp Lexer — tokenizes Lisp text using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarLexer``. It loads
-the ``lisp.tokens`` file from the ``code/grammars/`` directory and creates a
+This module is a thin wrapper around the generic ``GrammarLexer``. It uses
+a pre-compiled ``TOKEN_GRAMMAR`` (see ``lisp_lexer._grammar``) and creates a
 lexer configured for Lisp tokenization.
 
 Lisp Tokenization
@@ -31,51 +31,30 @@ Two convenience functions:
 - ``tokenize_lisp(source)`` — the all-in-one function. Pass in Lisp text,
   get back a list of tokens.
 
-Locating the Grammar File
---------------------------
+The Lisp token grammar is compiled into ``_grammar.py`` by the grammar-tools
+compiler from ``code/grammars/lisp/lisp.tokens``. Importing the pre-built
+``TOKEN_GRAMMAR`` constant means no file I/O at startup and no runtime
+grammar parsing overhead.
 
-The ``lisp.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``::
+To regenerate after editing ``code/grammars/lisp/lisp.tokens``::
 
-    tokenizer.py
-    └── lisp_lexer/        (parent)
-        └── src/           (parent)
-            └── lisp-lexer/  (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── lisp.tokens
+    grammar-tools compile-tokens code/grammars/lisp/lisp.tokens \\
+        > code/packages/python/lisp-lexer/src/lisp_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate from this file's location up to the repository root's grammars/
-# directory. The path is:
-#   src/lisp_lexer/tokenizer.py -> src/lisp_lexer -> src -> lisp-lexer
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LISP_TOKENS_PATH = GRAMMAR_DIR / "lisp" / "lisp.tokens"
+from lisp_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_lisp_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for Lisp text.
 
-    This function reads the ``lisp.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``lisp_lexer._grammar``) to create a ``GrammarLexer`` ready to tokenize
+    the given source text. No file I/O is performed.
 
     Args:
         source: The Lisp text to tokenize.
@@ -84,17 +63,12 @@ def create_lisp_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with Lisp token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``lisp.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_lisp_lexer('(+ 1 2)')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(LISP_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_lisp(source: str) -> list[Token]:
@@ -124,7 +98,6 @@ def tokenize_lisp(source: str) -> list[Token]:
         A list of ``Token`` objects. The last token is always EOF.
 
     Raises:
-        FileNotFoundError: If the ``lisp.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the Lisp grammar.
 

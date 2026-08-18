@@ -51,34 +51,29 @@ Two convenience functions:
 - ``parse_starlark(source)`` — the all-in-one function. Pass in Starlark
   source code, get back an AST. This is the function most callers want.
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-The ``starlark.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path, similar to how
-the Starlark lexer locates ``starlark.tokens``.
+The ``starlark.grammar`` file is compiled ahead of time by the
+``grammar-tools`` compiler into ``starlark_parser/_grammar.py``, which
+embeds the ``ParserGrammar`` as native Python data structures. This module
+imports ``PARSER_GRAMMAR`` from it directly — no file I/O or grammar
+parsing happens at runtime, and the package works correctly when
+installed as a site-package (it does not depend on the
+``code/grammars/`` directory existing on disk).
+
+To regenerate after editing ``code/grammars/starlark/starlark.grammar``:
+
+    grammar-tools compile-grammar code/grammars/starlark/starlark.grammar \\
+        -o code/packages/python/starlark-parser/src/starlark_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from starlark_lexer import tokenize_starlark
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path traversal is:
-#   src/starlark_parser/parser.py -> src/starlark_parser -> src ->
-#   starlark-parser -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-STARLARK_GRAMMAR_PATH = GRAMMAR_DIR / "starlark" / "starlark.grammar"
+from starlark_parser._grammar import PARSER_GRAMMAR
 
 
 def create_starlark_parser(source: str) -> GrammarParser:
@@ -87,7 +82,7 @@ def create_starlark_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source code using the Starlark lexer.
-    2. Reads and parses the ``starlark.grammar`` file.
+    2. Looks up the pre-compiled ``PARSER_GRAMMAR``.
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Use this when you want access to the parser object itself — for
@@ -102,7 +97,6 @@ def create_starlark_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters or
             reserved keywords.
 
@@ -112,8 +106,7 @@ def create_starlark_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_starlark(source)
-    grammar = parse_parser_grammar(STARLARK_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_starlark(source: str) -> ASTNode:
@@ -147,7 +140,6 @@ def parse_starlark(source: str) -> ASTNode:
         ``rule_name`` is ``"file"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters or
             reserved keywords.
         GrammarParseError: If the source has syntax errors according

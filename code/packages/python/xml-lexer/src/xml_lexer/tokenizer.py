@@ -45,39 +45,19 @@ For comment, CDATA, and PI groups, the callback also disables skip
 patterns (so whitespace is preserved as content) and re-enables them
 when leaving the group.
 
-Locating the Grammar File
---------------------------
+The Grammar
 
-The ``xml.tokens`` file lives in ``code/grammars/`` at the repository
-root. We navigate there from this file's location::
-
-    tokenizer.py
-    └── xml_lexer/        (parent)
-        └── src/          (parent)
-            └── xml-lexer/  (parent)
-                └── python/   (parent)
-                    └── packages/ (parent)
-                        └── code/    (parent)
-                            └── grammars/
-                                └── xml.tokens
+``xml.tokens`` is compiled ahead of time by ``grammar-tools compile-tokens``
+into ``xml_lexer._grammar``, which embeds the ``TokenGrammar`` as native
+Python data structures. This eliminates disk I/O and parsing at runtime —
+downstream packages just import ``TOKEN_GRAMMAR`` directly.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, LexerContext, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = (
-    Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-)
-XML_TOKENS_PATH = GRAMMAR_DIR / "xml" / "xml.tokens"
-
+from xml_lexer._grammar import TOKEN_GRAMMAR
 
 # ---------------------------------------------------------------------------
 # XML On-Token Callback
@@ -179,9 +159,9 @@ def xml_on_token(token: Token, ctx: LexerContext) -> None:
 def create_xml_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for XML text.
 
-    This function reads the ``xml.tokens`` file, parses it into a
-    ``TokenGrammar``, creates a ``GrammarLexer``, and registers the
-    XML on-token callback for pattern group switching.
+    This function creates a ``GrammarLexer`` from the pre-compiled XML
+    token grammar and registers the XML on-token callback for pattern
+    group switching.
 
     Args:
         source: The XML text to tokenize.
@@ -191,17 +171,12 @@ def create_xml_lexer(source: str) -> GrammarLexer:
         and the group-switching callback. Call ``.tokenize()`` to get
         the token list.
 
-    Raises:
-        FileNotFoundError: If the ``xml.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_xml_lexer('<div>hello</div>')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(XML_TOKENS_PATH.read_text())
-    lexer = GrammarLexer(source, grammar)
+    lexer = GrammarLexer(source, TOKEN_GRAMMAR)
     lexer.set_on_token(xml_on_token)
     return lexer
 
@@ -261,7 +236,6 @@ def tokenize_xml(source: str) -> list[Token]:
         A list of ``Token`` objects. The last token is always EOF.
 
     Raises:
-        FileNotFoundError: If the ``xml.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the active group.
 

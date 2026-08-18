@@ -1,4 +1,5 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
+# ruff: noqa: E501, F401
 # Source: xml.tokens
 # Regenerate with: grammar-tools compile-tokens <source.tokens>
 #
@@ -6,7 +7,7 @@
 # Downstream packages import TOKEN_GRAMMAR directly instead of
 # reading and parsing the .tokens file at runtime.
 
-from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar
+from grammar_tools.token_grammar import ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction
 
 # fmt: off  # noqa: E501 — generated code may have long lines
 
@@ -19,56 +20,63 @@ TOKEN_GRAMMAR = TokenGrammar(
             name='TEXT',
             pattern='[^<&]+',
             is_regex=True,
-            line_number=57,
+            line_number=77,
             alias=None,
         ),
         TokenDefinition(
             name='ENTITY_REF',
             pattern='&[a-zA-Z][a-zA-Z0-9]*;',
             is_regex=True,
-            line_number=58,
+            line_number=78,
             alias=None,
         ),
         TokenDefinition(
-            name='CHAR_REF',
-            pattern='&#[0-9]+;|&#x[0-9a-fA-F]+;',
+            name='CHAR_REF_HEX',
+            pattern='&#x[0-9a-fA-F]+;',
             is_regex=True,
-            line_number=59,
-            alias=None,
+            line_number=85,
+            alias='CHAR_REF',
+        ),
+        TokenDefinition(
+            name='CHAR_REF_DEC',
+            pattern='&#[0-9]+;',
+            is_regex=True,
+            line_number=86,
+            alias='CHAR_REF',
         ),
         TokenDefinition(
             name='COMMENT_START',
             pattern='<!--',
             is_regex=False,
-            line_number=60,
+            line_number=88,
             alias=None,
         ),
         TokenDefinition(
             name='CDATA_START',
             pattern='<![CDATA[',
             is_regex=False,
-            line_number=61,
+            line_number=89,
             alias=None,
         ),
         TokenDefinition(
             name='PI_START',
             pattern='<?',
             is_regex=False,
-            line_number=62,
+            line_number=90,
             alias=None,
         ),
         TokenDefinition(
             name='CLOSE_TAG_START',
             pattern='</',
             is_regex=False,
-            line_number=63,
+            line_number=91,
             alias=None,
         ),
         TokenDefinition(
             name='OPEN_TAG_START',
             pattern='<',
             is_regex=False,
-            line_number=64,
+            line_number=92,
             alias=None,
         ),
     ],
@@ -80,7 +88,7 @@ TOKEN_GRAMMAR = TokenGrammar(
             name='WHITESPACE',
             pattern='[ \\t\\r\\n]+',
             is_regex=True,
-            line_number=42,
+            line_number=62,
             alias=None,
         ),
     ],
@@ -94,117 +102,152 @@ TOKEN_GRAMMAR = TokenGrammar(
                     name='TAG_NAME',
                     pattern='[a-zA-Z_][a-zA-Z0-9_:.-]*',
                     is_regex=True,
-                    line_number=79,
+                    line_number=107,
                     alias=None,
                 ),
                 TokenDefinition(
                     name='ATTR_EQUALS',
                     pattern='=',
                     is_regex=False,
-                    line_number=80,
+                    line_number=108,
                     alias=None,
                 ),
                 TokenDefinition(
                     name='ATTR_VALUE_DQ',
                     pattern='"[^"]*"',
                     is_regex=True,
-                    line_number=81,
+                    line_number=109,
                     alias='ATTR_VALUE',
                 ),
                 TokenDefinition(
                     name='ATTR_VALUE_SQ',
                     pattern="'[^']*'",
                     is_regex=True,
-                    line_number=82,
+                    line_number=110,
                     alias='ATTR_VALUE',
                 ),
                 TokenDefinition(
                     name='TAG_CLOSE',
                     pattern='>',
                     is_regex=False,
-                    line_number=83,
+                    line_number=111,
                     alias=None,
                 ),
                 TokenDefinition(
                     name='SELF_CLOSE',
                     pattern='/>',
                     is_regex=False,
-                    line_number=84,
+                    line_number=112,
                     alias=None,
                 ),
                 TokenDefinition(
                     name='SLASH',
                     pattern='/',
                     is_regex=False,
-                    line_number=85,
-                    alias=None,
-                ),
-            ],
-        ),,
-        'comment': PatternGroup(
-            name='comment',
-            definitions=[
-                TokenDefinition(
-                    name='COMMENT_TEXT',
-                    pattern='([^-]|-(?!->))+',
-                    is_regex=True,
-                    line_number=99,
-                    alias=None,
-                ),
-                TokenDefinition(
-                    name='COMMENT_END',
-                    pattern='-->',
-                    is_regex=False,
-                    line_number=100,
-                    alias=None,
-                ),
-            ],
-        ),,
-        'cdata': PatternGroup(
-            name='cdata',
-            definitions=[
-                TokenDefinition(
-                    name='CDATA_TEXT',
-                    pattern='([^\\]]|\\](?!\\]>))+',
-                    is_regex=True,
                     line_number=113,
-                    alias=None,
-                ),
-                TokenDefinition(
-                    name='CDATA_END',
-                    pattern=']]>',
-                    is_regex=False,
-                    line_number=114,
-                    alias=None,
-                ),
-            ],
-        ),,
-        'pi': PatternGroup(
-            name='pi',
-            definitions=[
-                TokenDefinition(
-                    name='PI_TARGET',
-                    pattern='[a-zA-Z_][a-zA-Z0-9_:.-]*',
-                    is_regex=True,
-                    line_number=128,
-                    alias=None,
-                ),
-                TokenDefinition(
-                    name='PI_TEXT',
-                    pattern='([^?]|\\?(?!>))+',
-                    is_regex=True,
-                    line_number=129,
-                    alias=None,
-                ),
-                TokenDefinition(
-                    name='PI_END',
-                    pattern='?>',
-                    is_regex=False,
-                    line_number=130,
                     alias=None,
                 ),
             ],
         ),
+        'comment': PatternGroup(
+            name='comment',
+            definitions=[
+                TokenDefinition(
+                    name='COMMENT_END',
+                    pattern='-->',
+                    is_regex=False,
+                    line_number=133,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='COMMENT_TEXT',
+                    pattern='[^-]+',
+                    is_regex=True,
+                    line_number=134,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='COMMENT_DASH',
+                    pattern='-',
+                    is_regex=True,
+                    line_number=135,
+                    alias='COMMENT_TEXT',
+                ),
+            ],
+        ),
+        'cdata': PatternGroup(
+            name='cdata',
+            definitions=[
+                TokenDefinition(
+                    name='CDATA_END',
+                    pattern=']]>',
+                    is_regex=False,
+                    line_number=150,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='CDATA_TEXT',
+                    pattern='[^\\]]+',
+                    is_regex=True,
+                    line_number=151,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='CDATA_BRACK',
+                    pattern=']',
+                    is_regex=True,
+                    line_number=152,
+                    alias='CDATA_TEXT',
+                ),
+            ],
+        ),
+        'pi': PatternGroup(
+            name='pi',
+            definitions=[
+                TokenDefinition(
+                    name='PI_END',
+                    pattern='?>',
+                    is_regex=False,
+                    line_number=184,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='PI_TARGET',
+                    pattern='[a-zA-Z_][a-zA-Z0-9_:.-]*',
+                    is_regex=True,
+                    line_number=185,
+                    alias=None,
+                ),
+            ],
+        ),
+        'pi_body': PatternGroup(
+            name='pi_body',
+            definitions=[
+                TokenDefinition(
+                    name='PI_END',
+                    pattern='?>',
+                    is_regex=False,
+                    line_number=188,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='PI_TEXT',
+                    pattern='[^?]+',
+                    is_regex=True,
+                    line_number=189,
+                    alias=None,
+                ),
+                TokenDefinition(
+                    name='PI_QMARK',
+                    pattern='\\?',
+                    is_regex=True,
+                    line_number=190,
+                    alias='PI_TEXT',
+                ),
+            ],
+        ),
     },
+    start_mode=None,
+    transitions=[],
     layout_keywords=[],
 )

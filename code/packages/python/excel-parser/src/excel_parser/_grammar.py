@@ -1,4 +1,5 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
+# ruff: noqa: E501, F401
 # Source: excel.grammar
 # Regenerate with: grammar-tools compile-grammar <source.grammar>
 #

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-iso-prolog-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "Parses ISO/Core Prolog source using a dedicated grammar"
 requires-python = ">=3.12"
 license = "MIT"
@@ -62,6 +62,7 @@ testpaths = ["tests"]
 addopts = "--cov=iso_prolog_parser --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 source = ["src/iso_prolog_parser"]
 
 [tool.coverage.report]

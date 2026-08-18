@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-prolog-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "Parses a first executable Prolog syntax subset into logic-engine programs and goals"
 requires-python = ">=3.12"
 license = "MIT"
@@ -56,6 +56,7 @@ testpaths = ["tests"]
 addopts = "--cov=prolog_parser --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 source = ["src/prolog_parser"]
 
 [tool.coverage.report]

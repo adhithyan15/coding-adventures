@@ -1,7 +1,7 @@
 """Dartmouth BASIC 1964 Parser — parses BASIC source into ASTs using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarParser``. It loads
-the ``dartmouth_basic.grammar`` file from the ``code/grammars/`` directory,
+This module is a thin wrapper around the generic ``GrammarParser``. It uses
+a pre-compiled ``PARSER_GRAMMAR`` (see ``dartmouth_basic_parser._grammar``),
 tokenizes the input using the Dartmouth BASIC lexer, and produces a generic
 ``ASTNode`` tree.
 
@@ -94,41 +94,28 @@ The tree is deep because expression precedence is encoded by rule nesting:
 ``expr → term → power → unary → primary``. This is how we represent that
 ``*`` binds tighter than ``+`` without any special precedence annotations.
 
-Locating the Grammar File
---------------------------
+The Dartmouth BASIC parser grammar is compiled into ``_grammar.py`` by the
+grammar-tools compiler from
+``code/grammars/dartmouth_basic/dartmouth_basic.grammar``. Importing the
+pre-built ``PARSER_GRAMMAR`` constant means no file I/O at startup and no
+runtime grammar parsing overhead.
 
-The ``dartmouth_basic.grammar`` file lives in ``code/grammars/`` at the
-repository root. We locate it relative to this module's file path::
+To regenerate after editing
+``code/grammars/dartmouth_basic/dartmouth_basic.grammar`` (path relative
+to the repo root, from ``code/programs/python/grammar-tools``)::
 
-    parser.py
-    └── dartmouth_basic_parser/   (parent)
-        └── src/                  (parent)
-            └── dartmouth-basic-parser/ (parent)
-                └── python/       (parent)
-                    └── packages/ (parent)
-                        └── code/ (parent)
-                            └── grammars/
-                                └── dartmouth_basic.grammar
+    grammar-tools compile-grammar \\
+        ../../../grammars/dartmouth_basic/dartmouth_basic.grammar \\
+        > ../../../packages/python/dartmouth-basic-parser/src/\\
+dartmouth_basic_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from dartmouth_basic_lexer import tokenize_dartmouth_basic
 from lang_parser import ASTNode, GrammarParser
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate six levels up from this source file to reach the repository root,
-# then down into code/grammars/. This path works whether the package is
-# installed in development mode (-e) or used in-place.
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-DARTMOUTH_BASIC_GRAMMAR_PATH = GRAMMAR_DIR / "dartmouth_basic" / "dartmouth_basic.grammar"
+from dartmouth_basic_parser._grammar import PARSER_GRAMMAR
 
 
 def create_dartmouth_basic_parser(source: str) -> GrammarParser:
@@ -142,7 +129,8 @@ def create_dartmouth_basic_parser(source: str) -> GrammarParser:
          relabeled from NUMBER to LINE_NUM.
        - REM suppression: everything after a REM keyword until end-of-line
          is stripped (comment removal).
-    2. Reads and parses the ``dartmouth_basic.grammar`` file.
+    2. Uses the pre-compiled ``PARSER_GRAMMAR`` (from
+       ``dartmouth_basic_parser._grammar``).
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Args:
@@ -155,7 +143,6 @@ def create_dartmouth_basic_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar file cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -165,8 +152,7 @@ def create_dartmouth_basic_parser(source: str) -> GrammarParser:
         print(ast.rule_name)  # "program"
     """
     tokens = tokenize_dartmouth_basic(source)
-    grammar = parse_parser_grammar(DARTMOUTH_BASIC_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_dartmouth_basic(source: str) -> ASTNode:
@@ -211,7 +197,6 @@ def parse_dartmouth_basic(source: str) -> ASTNode:
         ``rule_name`` is always ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar file cannot be found.
         LexerError: If the source contains characters invalid in BASIC.
         GrammarParseError: If the source has syntax errors.
 

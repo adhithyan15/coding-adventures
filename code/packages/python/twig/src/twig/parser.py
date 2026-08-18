@@ -1,7 +1,9 @@
 """Twig parser — thin wrapper around the generic ``GrammarParser``.
 
-Loads ``code/grammars/twig.grammar`` and feeds it the token stream
-produced by :mod:`twig.lexer`.  The result is a generic
+The Twig parser grammar is compiled into ``_grammar_parser.py`` by the
+grammar-tools compiler from ``code/grammars/twig/twig.grammar``; this
+module imports the pre-built ``PARSER_GRAMMAR`` constant and feeds it the
+token stream produced by :mod:`twig.lexer`.  The result is a generic
 :class:`lang_parser.ASTNode` tree whose ``rule_name`` fields match
 the production names from the grammar (``program``, ``define``,
 ``if_form``, ``let_form``, ``begin_form``, ``lambda_form``,
@@ -13,31 +15,30 @@ on ``rule_name`` to interpret each subtree.  This matches how
 and parser are language-agnostic infrastructure, and the language
 package supplies thin lex/parse wrappers plus a typed walker that
 turns the generic AST into the language's semantic actions.
+
+To regenerate after editing ``code/grammars/twig/twig.grammar``::
+
+    grammar-tools compile-grammar code/grammars/twig/twig.grammar \\
+        > code/packages/python/twig/src/twig/_grammar_parser.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 
+from twig._grammar_parser import PARSER_GRAMMAR
 from twig.lexer import tokenize_twig
-
-# Grammar file location — same walk-up as ``lexer.py``.
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TWIG_GRAMMAR_PATH = GRAMMAR_DIR / "twig" / "twig.grammar"
 
 
 def create_twig_parser(source: str) -> GrammarParser:
     """Build a ``GrammarParser`` ready to parse Twig source.
 
-    Combines the Twig token stream with the rules from
-    ``twig.grammar``.  Call ``.parse()`` to get the AST root.
+    Combines the Twig token stream with the pre-compiled
+    ``PARSER_GRAMMAR`` (from ``twig._grammar_parser``).  Call
+    ``.parse()`` to get the AST root.
     """
     tokens = tokenize_twig(source)
-    grammar = parse_parser_grammar(TWIG_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_twig(source: str) -> ASTNode:

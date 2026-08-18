@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import cache
-from pathlib import Path
 
-from grammar_tools import ParserGrammar, parse_parser_grammar
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 from logic_engine import (
@@ -38,8 +35,7 @@ from logic_engine import (
 )
 from prolog_lexer import tokenize_prolog
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "prolog.grammar"
+from prolog_parser._grammar import PARSER_GRAMMAR
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,17 +89,10 @@ class _Scope:
         return var(f"_{self.anonymous_count}")
 
 
-@cache
-def _prolog_grammar() -> ParserGrammar:
-    """Load and cache the declarative Prolog grammar."""
-
-    return parse_parser_grammar(PROLOG_GRAMMAR_PATH.read_text())
-
-
 def create_prolog_parser(source: str) -> GrammarParser:
     """Create a generic ``GrammarParser`` configured for Prolog source."""
 
-    return GrammarParser(tokenize_prolog(source), _prolog_grammar())
+    return GrammarParser(tokenize_prolog(source), PARSER_GRAMMAR)
 
 
 def parse_ast(source: str) -> ASTNode:
@@ -117,7 +106,7 @@ def parse_ast(source: str) -> ASTNode:
                 "DCG rules are recognized by the lexer but not parsed yet",
             )
     try:
-        return GrammarParser(tokens, _prolog_grammar()).parse()
+        return GrammarParser(tokens, PARSER_GRAMMAR).parse()
     except GrammarParseError as error:
         token = error.token if error.token is not None else tokens[-1]
         raise PrologParseError(token, str(error)) from error

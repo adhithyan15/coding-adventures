@@ -2,6 +2,27 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.45.1] - 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `create_sql_parser` now imports a
+  pre-compiled `_grammar` module instead of reading and parsing the
+  `.grammar` file from `code/grammars/` on every call. The old code walked
+  out of the installed package's own directory to a monorepo-relative path
+  that a published PyPI package does not ship, so `pip install` + first use
+  would raise `FileNotFoundError`. The previous `_grammar.py` in this
+  package was a stray, unwired artifact (referenced only by past CHANGELOG
+  entries, never imported by `parser.py`); it has been regenerated fresh
+  from `code/grammars/sql/sql.grammar` and is now actually wired in.
+- Removed the unused `_tokens.py` file (also a stray, never-imported
+  artifact — `parser.py` tokenizes via `sql_lexer.tokenize_sql`, not its
+  own copy of the token grammar).
+- Removed `TestErrorPath` tests in `tests/test_parser.py` that exercised
+  the old `_sql_grammar_path` monkeypatch/disk-loading override, along with
+  the now-dead `_sql_grammar_path` module variable and `_resolve_grammar_path`
+  helper — there is no longer a disk path to override.
+
 ## [0.45.0] - 2026-06-16
 
 ### Added

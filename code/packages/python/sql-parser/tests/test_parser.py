@@ -28,7 +28,6 @@ Test organisation
 - ``TestMultipleStatements`` — semicolon-separated statements.
 - ``TestErrors`` — invalid SQL raises ``GrammarParseError``.
 - ``TestASTStructure`` — rule names in the tree are correct.
-- ``TestErrorPath`` — grammar file not found triggers the error path.
 """
 
 from __future__ import annotations
@@ -37,7 +36,6 @@ import pytest
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
-import sql_parser.parser as _parser_module
 from sql_parser import create_sql_parser, parse_sql
 
 # ---------------------------------------------------------------------------
@@ -789,32 +787,6 @@ class TestASTStructure:
         nodes = find_nodes(ast, "drop_table_stmt")
         assert len(nodes) >= 1
 
-
-# ---------------------------------------------------------------------------
-# Error-path coverage — bad grammar file
-# ---------------------------------------------------------------------------
-
-
-class TestErrorPath:
-    """Override _sql_grammar_path to exercise the error path in create_sql_parser."""
-
-    def test_bad_grammar_path_raises(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        """When _sql_grammar_path points to a non-existent file, a file-not-found
-        error should propagate from ``create_sql_parser``."""
-        monkeypatch.setattr(
-            _parser_module, "_sql_grammar_path", "/no/such/path/sql.grammar"
-        )
-        with pytest.raises((FileNotFoundError, OSError)):
-            create_sql_parser("SELECT 1 FROM t")
-
-    def test_empty_grammar_path_uses_autodiscovery(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        """When _sql_grammar_path is '' (empty), the auto-discovered path is used
-        and parsing succeeds normally."""
-        monkeypatch.setattr(_parser_module, "_sql_grammar_path", "")
-        ast = parse_sql("SELECT id FROM users")
-        assert ast.rule_name == "program"
 
 
 # ---------------------------------------------------------------------------

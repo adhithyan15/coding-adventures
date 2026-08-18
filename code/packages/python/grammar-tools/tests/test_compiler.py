@@ -230,6 +230,33 @@ class TestCompileTokenGrammarRoundTrip:
         assert "tag" in loaded.groups
         assert len(loaded.groups["tag"].definitions) == 2
 
+    def test_multiple_pattern_groups(self) -> None:
+        """Two or more pattern groups round-trip as a valid dict literal.
+
+        Regression test: compile_token_grammar previously joined group
+        entries with an extra "," even though each entry already
+        self-terminated with one, producing a doubled comma (",,") and a
+        SyntaxError in the generated file whenever a grammar had 2+ groups
+        (e.g. xml.tokens, which has 5: tag, comment, cdata, pi, pi_body).
+        """
+        source = textwrap.dedent("""\
+            TEXT = /[^<]+/
+            group tag:
+              ATTR = /[a-z]+/
+              EQ = "="
+            group comment:
+              COMMENT_TEXT = /[^-]+/
+        """)
+        original = parse_token_grammar(source)
+        code = compile_token_grammar(original)
+        assert ",," not in code
+        loaded = _exec_token_grammar(code)
+        assert loaded == original
+        assert "tag" in loaded.groups
+        assert "comment" in loaded.groups
+        assert len(loaded.groups["tag"].definitions) == 2
+        assert len(loaded.groups["comment"].definitions) == 1
+
     def test_version(self) -> None:
         """Version field round-trips."""
         source = "# @version 3\nNAME = /[a-z]+/"

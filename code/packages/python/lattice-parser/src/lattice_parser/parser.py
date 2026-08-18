@@ -9,37 +9,29 @@ The AST contains both CSS nodes (``qualified_rule``, ``declaration``,
 ``mixin_definition``, ``if_directive``, etc.). The AST-to-CSS compiler
 (separate package) removes Lattice nodes by expanding them into pure CSS.
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-Same path strategy as the lexer — navigate from this file up to
-``code/grammars/lattice.grammar``::
+The ``lattice.grammar`` file is compiled ahead of time by the
+``grammar-tools`` compiler into ``lattice_parser/_grammar.py``, which
+embeds the ``ParserGrammar`` as native Python data structures. This module
+imports ``PARSER_GRAMMAR`` from it directly — no file I/O or grammar
+parsing happens at runtime, and the package works correctly when
+installed as a site-package (it does not depend on the
+``code/grammars/`` directory existing on disk).
 
-    parser.py
-    └── lattice_parser/      (parent)
-        └── src/             (parent)
-            └── lattice-parser/  (parent)
-                └── python/      (parent)
-                    └── packages/ (parent)
-                        └── code/ (parent)
-                            └── grammars/
-                                └── lattice.grammar
+To regenerate after editing ``code/grammars/lattice/lattice.grammar``:
+
+    grammar-tools compile-grammar code/grammars/lattice/lattice.grammar \\
+        -o code/packages/python/lattice-parser/src/lattice_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from lattice_lexer import tokenize_lattice
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LATTICE_GRAMMAR_PATH = GRAMMAR_DIR / "lattice" / "lattice.grammar"
+from lattice_parser._grammar import PARSER_GRAMMAR
 
 
 def create_lattice_parser(source: str) -> GrammarParser:
@@ -48,7 +40,7 @@ def create_lattice_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the Lattice lexer.
-    2. Reads and parses the ``lattice.grammar`` file.
+    2. Looks up the pre-compiled ``PARSER_GRAMMAR``.
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Args:
@@ -59,7 +51,6 @@ def create_lattice_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -68,8 +59,7 @@ def create_lattice_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_lattice(source)
-    grammar = parse_parser_grammar(LATTICE_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_lattice(source: str) -> ASTNode:
@@ -91,7 +81,6 @@ def parse_lattice(source: str) -> ASTNode:
         An ``ASTNode`` representing the parse tree.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors.
 

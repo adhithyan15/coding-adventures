@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.1 — 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `create_brainfuck_lexer` and
+  `create_brainfuck_parser` now import pre-compiled `_grammar_tokens` and
+  `_grammar_parser` modules instead of reading and parsing
+  `brainfuck.tokens`/`brainfuck.grammar` from `code/grammars/` on every
+  call. The old code walked out of the installed package's own directory
+  to a monorepo-relative path that a published PyPI package does not ship,
+  so `pip install` + first use would raise `FileNotFoundError`.
+- Also corrected this file's version numbering to match `pyproject.toml`
+  (previously the changelog's latest entry read `0.3.0` while
+  `pyproject.toml` still said `0.1.0`).
+
 ## 0.3.0 — 2026-04-10
 
 ### Added

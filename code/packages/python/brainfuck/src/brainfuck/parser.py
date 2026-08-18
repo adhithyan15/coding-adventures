@@ -1,7 +1,7 @@
 """Brainfuck Parser — parses Brainfuck source into ASTs using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarParser``. It loads
-the ``brainfuck.grammar`` file from the ``code/grammars/`` directory, tokenizes
+This module is a thin wrapper around the generic ``GrammarParser``. It uses a
+pre-compiled ``PARSER_GRAMMAR`` (see ``brainfuck._grammar_parser``), tokenizes
 the input using the Brainfuck lexer, and produces a generic ``ASTNode`` tree.
 
 The Brainfuck Grammar
@@ -72,41 +72,25 @@ If the source contains unmatched brackets (e.g., ``[+`` without a matching
 exception. This is caught at parse time — before execution — which is a key
 advantage of the grammar-driven approach over direct translation.
 
-Locating the Grammar File
---------------------------
+The Brainfuck parser grammar is compiled into ``_grammar_parser.py`` by the
+grammar-tools compiler from ``code/grammars/brainfuck/brainfuck.grammar``.
+Importing the pre-built ``PARSER_GRAMMAR`` constant means no file I/O at
+startup and no runtime grammar parsing overhead. (The token grammar lives
+in a separate ``_grammar_tokens.py`` in this same package — see
+``lexer.py``.)
 
-The ``brainfuck.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
+To regenerate after editing ``code/grammars/brainfuck/brainfuck.grammar``::
 
-    parser.py
-    └── brainfuck/       (parent)
-        └── src/         (parent)
-            └── brainfuck/ (parent)
-                └── python/  (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── brainfuck.grammar
+    grammar-tools compile-grammar code/grammars/brainfuck/brainfuck.grammar \\
+        > code/packages/python/brainfuck/src/brainfuck/_grammar_parser.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from brainfuck.lexer import tokenize_brainfuck
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate 6 levels up from this file to reach code/, then into grammars/.
-# This mirrors the path navigation in lexer.py.
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-BF_GRAMMAR_PATH = GRAMMAR_DIR / "brainfuck" / "brainfuck.grammar"
+from brainfuck._grammar_parser import PARSER_GRAMMAR
+from brainfuck.lexer import tokenize_brainfuck
 
 
 def create_brainfuck_parser(source: str) -> GrammarParser:
@@ -117,7 +101,8 @@ def create_brainfuck_parser(source: str) -> GrammarParser:
     1. Tokenizes the source text using the Brainfuck lexer. Comment text
        and whitespace are discarded during tokenization; only command tokens
        and EOF reach the parser.
-    2. Reads and parses the ``brainfuck.grammar`` file.
+    2. Uses the pre-compiled ``PARSER_GRAMMAR`` (from
+       ``brainfuck._grammar_parser``).
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Args:
@@ -127,9 +112,6 @@ def create_brainfuck_parser(source: str) -> GrammarParser:
         A ``GrammarParser`` instance ready to produce an AST.
         Call ``.parse()`` on it to get the AST root node.
 
-    Raises:
-        FileNotFoundError: If the grammar files cannot be found.
-
     Example::
 
         parser = create_brainfuck_parser("++[>+<-]")
@@ -137,8 +119,7 @@ def create_brainfuck_parser(source: str) -> GrammarParser:
         print(ast.rule_name)  # "program"
     """
     tokens = tokenize_brainfuck(source)
-    grammar = parse_parser_grammar(BF_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_brainfuck(source: str) -> ASTNode:
@@ -160,7 +141,6 @@ def parse_brainfuck(source: str) -> ASTNode:
         ``rule_name`` is ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         GrammarParseError: If the source has structural errors (e.g.,
             unmatched brackets).
 

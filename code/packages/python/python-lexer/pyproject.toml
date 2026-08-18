@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-python-lexer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tokenizes Python source code using versioned grammar files — supports Python 2.7 through 3.12"
 requires-python = ">=3.12"
 license = "MIT"
