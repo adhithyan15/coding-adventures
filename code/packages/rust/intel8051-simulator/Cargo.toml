@@ -1,0 +1,11 @@
+[package]
+name = "intel8051-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Intel 8051 (MCS-51) behavioral simulator -- port of code/packages/python/intel8051-simulator (spec 07p).  Harvard architecture: independent 64 KiB code memory, 256 B internal RAM (incl. SFRs), and 64 KiB external data memory (accessed via MOVX).  Uses the reserved opcode 0xA5 as a HALT sentinel, matching the Python reference.  Fourth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "intel8051_simulator"
+path = "src/lib.rs"
+
+[dependencies]

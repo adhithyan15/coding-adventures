@@ -262,6 +262,41 @@ IX/IY displacement addressing are deliberately NOT ported — every
 rather than executing garbage; see `code/specs/z80-encoder.md` /
 `z80-backend.md` and the `z80-simulator` README for the full scope
 writeup.
+**Intel 8051 (MCS-51)** — `intel8051-encoder` + `intel8051-backend`,
+minimal viable (`const_*`/`ret_*` only, single-accumulator (`A`)
+allocator, same trivial-ROM scope as `intel8008-backend`). Fourth
+lane, and the first genuinely from-scratch simulator of this
+expansion: unlike ARM1 (whose 2270-line behavioral simulator already
+existed in-tree), the 8051 needed a brand-new Rust port of the
+existing **Python** behavioral reference
+(`code/packages/python/intel8051-simulator`, spec 07p) — module-split
+into `opcodes`/`encoding`/`decode`/`execute`/`simulator` mirroring
+`mips-r2000-simulator`'s shape. It is also the first Harvard-
+architecture lane in this expansion: independent 64 KiB code memory,
+256 B internal RAM (+ SFRs), and 64 KiB external data memory (`MOVX`-
+only), versus every other historical arch's flat memory model.
+
+One architecture-specific design decision: the 8051 (1980) has no
+real HALT instruction at all — a genuinely running program that's
+done spins forever (`SJMP $`) or waits for an interrupt, since the
+chip has nothing to hand control back to. Self-jump detection is the
+historically idiomatic convention for this and was seriously
+considered, but `ret_*`/`ret_void` instead lower to the HALT sentinel
+opcode `0xA5` (reserved/undefined on real silicon) that the *existing,
+shipped* Python reference simulator already established
+(`intel8051_simulator.state.HALT_OPCODE`) — reusing it, rather than
+inventing a second halt convention for the same architecture, keeps
+the Python and Rust simulators in byte-for-byte agreement about what
+"the program is done" means and is simpler for an emit-only backend
+to produce/detect. See `code/specs/intel8051-backend.md` for the full
+rationale, including why self-jump detection remains a documented
+option for a future increment that grows real subroutine calls. Byte-
+for-byte parity for the canonical `MOV A, #42; HALT` sequence
+(`[0x74, 0x2A, 0xA5]`) is verified both as a hand-derived byte array
+and by actually executing the emitted bytes in `intel8051-simulator`
+and asserting `acc() == 42` — plus a converse test proving a raw
+`SJMP $` self-loop does *not* halt within the same step budget, so the
+positive halt assertion is meaningful.
 
 Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
 in parallel PRs and are not enumerated here to avoid merge

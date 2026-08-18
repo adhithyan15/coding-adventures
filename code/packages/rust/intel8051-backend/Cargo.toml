@@ -1,0 +1,17 @@
+[package]
+name = "intel8051-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8051 (MCS-51) backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into 8051 machine code via intel8051-encoder.  Emit-only -- bytes go to intel8051-simulator.  Minimal viable: const_*/ret_* only, single-accumulator (A) allocator; ret_* lowers to the reserved-opcode HALT sentinel (0xA5) ported from the Python reference simulator, since the 8051 has no real HALT instruction.  Mirror of intel8008-backend / arm1-backend in shape and intent.  Fourth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "intel8051_backend"
+path = "src/lib.rs"
+
+[dependencies]
+intel8051-encoder = { path = "../intel8051-encoder" }
+jit-core           = { path = "../jit-core" }
+vm-core            = { path = "../vm-core" }
+
+[dev-dependencies]
+intel8051-simulator = { path = "../intel8051-simulator" }
