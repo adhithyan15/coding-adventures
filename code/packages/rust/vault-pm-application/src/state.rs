@@ -1,5 +1,7 @@
 use crate::ApplicationError;
-use coding_adventures_canonical_cbor::{decode, encode, CborValue};
+// No panicking `encode` on a production path in this module; the tests
+// below import it separately to build fixture bytes known to be in range.
+use coding_adventures_canonical_cbor::{decode, try_encode, CborValue};
 use coding_adventures_ed25519::{is_valid_public_key, verify};
 use coding_adventures_sha256::sha256;
 use coding_adventures_vault_pm_format::{
@@ -595,11 +597,17 @@ impl LocalVaultStateV1 {
                 ]),
             ),
         };
-        let encoded = encode(&CborValue::Map(vec![
+        // `check_state_bound` below is 32 MiB and is the outer of two
+        // bounds; canonical-CBOR independently stops at 1 MiB. The body
+        // holds the publication journal, which admits thousands of
+        // prepared objects, so the tighter bound is reachable in ordinary
+        // use and must be reported rather than aborting the process.
+        let encoded = try_encode(&CborValue::Map(vec![
             field(1, CborValue::Unsigned(VERSION)),
             field(2, CborValue::Unsigned(state)),
             field(3, body),
-        ]));
+        ]))
+        .map_err(|_| ApplicationError::BoundExceeded)?;
         check_state_bound(&encoded)?;
         Ok(encoded)
     }
@@ -1097,6 +1105,7 @@ impl From<coding_adventures_canonical_cbor::CborError> for ApplicationError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_canonical_cbor::encode;
     use coding_adventures_ed25519::{generate_keypair, sign};
     use coding_adventures_vault_pm_format::{Argon2idParametersV1, Signature, CRYPTO_SUITE_V1};
 

@@ -2,6 +2,42 @@
 
 All notable changes to this package are documented here.
 
+## [0.61.1] - 2026-08-17
+
+### Fixed
+
+- Report every serialisation that exceeds canonical-CBOR's 1 MiB
+  `MAX_ENCODED_SIZE` as a closed `BoundExceeded` instead of aborting the
+  process. This crate's own `MAX_PLAINTEXT_BYTES` is 16 MiB and its local-state
+  bound 32 MiB, both looser than the codec ceiling beneath them, so six encodes
+  were reachable with values the encoder refuses to emit:
+  - `encode_any_record` — a first-party record (all six schemas) larger than
+    1 MiB, which a peer device with a larger framing budget can author and sync.
+  - `encode_item_revision` — the revision framing around that record. Reachable
+    even when the record itself fits, because the item id, schema tag,
+    timestamps, favourite register, three observed sets, and causal-parent list
+    are added on top of the record bytes.
+  - `CatalogV1::encode` — needs no hostile peer at all. `validate_catalog`
+    admits 100,000 entries at roughly sixty bytes each, so an ordinary vault
+    crossed the codec ceiling somewhere below twenty thousand items, and the
+    catalog is re-encoded by *every* mutation.
+  - The portable export snapshot and artifact encodes — also no hostile peer:
+    a vault holding two ~600 KiB entries produced an export larger than 1 MiB
+    and aborted `vault-pm export`.
+  - The portable *import* re-encode of entries decoded from someone else's
+    artifact, the same shape as `decode_record`'s opaque arm.
+  - `encode_signed_object`, whose wrapped exact bytes are caller-sized.
+
+  `BoundExceeded` rather than `IntegrityFailure` because the cause is a fixed
+  serialisation bound being exceeded, not a corrupt store. The pre-existing
+  opaque arm of `encode_any_record` keeps `IntegrityFailure`, which VLT-PM39
+  relies on. `LocalSecretV1::encode` and the export AAD header stay infallible
+  and are documented as provably fixed-size.
+
+### Changed
+
+- Track `vault-records`' `encode_record` signature change to `Result`.
+
 ## [0.61.0] - 2026-08-17
 
 ### Added

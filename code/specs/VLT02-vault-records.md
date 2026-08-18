@@ -124,9 +124,16 @@ against the same vault. That is a local denial of service reachable by
 one record from an untrusted peer.
 
 So `encode_record` returns `Result` and reports
-`VaultRecordError::Cbor(CborError::EncodeTooLarge)` or
-`…::EncodeTooDeep`. Failing closed loses one record; panicking loses
-the process. This is the same rule and the same remedy already applied
+`VaultRecordError::Cbor(CborError::EncodeTooLarge)`. Failing closed
+loses one record; panicking loses the process.
+
+(The sibling `EncodeTooDeep` is *not* reachable through
+`encode_record`. Every first-party payload has a fixed, shallow shape —
+the deepest is envelope → payload map → a `Vec<String>` field → text,
+four levels against a limit of 128 — so no first-party record can be
+nested past the encoder's depth cap. Depth is reachable only through
+`encode_opaque`, whose payload is caller-supplied CBOR of arbitrary
+shape, and that path is already covered.) This is the same rule and the same remedy already applied
 to `encode_opaque` and to `decode_record`'s opaque arm; it is stated
 here once because it governs all first-party record types equally, not
 just the opaque one.
@@ -228,7 +235,7 @@ This matches VLT01's discipline.
 | Attacker content type leaks through error diagnostic formatting | Closed custom `Debug` on `VaultRecordError`                            | `error_debug_strings_are_static`                                |
 | Forward incompatibility breaks v1 readers                       | Unknown payload fields tolerated                                      | `extra_unknown_fields_in_payload_are_ignored`                   |
 | Peer record between the two ceilings aborts the process on re-encode | `encode_record` returns `Result` via `try_encode`                | `encode_record_reports_an_oversized_record_instead_of_panicking` |
-| Deeply nested first-party payload aborts the process on encode  | Same `Result` path reports `EncodeTooDeep`                            | `encode_record_reports_an_overdeep_record_instead_of_panicking` |
+| Every first-party type shares that exposure, not just `Login`   | The `Result` is on the generic entry point, above the trait            | `every_first_party_record_type_reports_oversize`                |
 
 ## Non-goals
 

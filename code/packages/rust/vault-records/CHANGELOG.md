@@ -7,8 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- **Breaking:** `encode_record` now returns `Result<Vec<u8>, VaultRecordError>`
+  rather than `Vec<u8>`. See *Fixed* below for why the encode is genuinely
+  fallible. Callers that know their record is small can `.expect(…)`, but the
+  only in-tree caller — `vault-pm-application`'s `encode_any_record` — maps the
+  failure to a closed `BoundExceeded`.
+
 ### Fixed
 
+- `encode_record` now reports a record too large to encode through a new
+  `Result`, instead of panicking, closing the last of the four panicking
+  encodes in this crate. The two ceilings either side of this layer disagree:
+  vault-pm's `MAX_PLAINTEXT_BYTES` is 16 MiB while canonical-CBOR's
+  `MAX_ENCODED_SIZE` is 1 MiB, so records between them are legal to hold and
+  legal to decode but illegal to encode. A peer device with a larger framing
+  budget can author a `Login` with a 2 MiB password that seals, syncs, and
+  decodes here without complaint, and every later command that re-serialises
+  it — `item edit`, all seven authored conflict merges, `conflict choose`,
+  `history restore`, `export` — used to abort the process. Because the record
+  stays in the store, that abort repeated on every subsequent command against
+  the same vault: a local denial of service from one synced record. This
+  applies to all six first-party types, not just `Login`.
 - `encode_opaque` now reports an envelope that is one level too deep to encode
   through its existing `Result`, instead of panicking. Wrapping a payload in the
   `{t, d}` envelope costs one level of nesting, so a payload nested exactly as

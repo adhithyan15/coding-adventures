@@ -84,7 +84,7 @@
 //!     urls: vec!["https://github.com".into()],
 //!     notes: None,
 //! };
-//! let bytes = encode_record(&login);                  // canonical CBOR
+//! let bytes = encode_record(&login).unwrap();        // canonical CBOR
 //! let back  = decode_record(&bytes).unwrap();         // AnyRecord
 //! match back {
 //!     AnyRecord::Login(l) => assert_eq!(l, login),
@@ -95,7 +95,12 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborError, CborValue};
+// The panicking `encode` is deliberately not imported here. Every
+// encode on a production path in this crate goes through `try_encode`
+// so that an oversized or overdeep value is reported rather than
+// aborting the process; the tests below import `encode` separately to
+// build fixture bytes they already know are in range.
+use coding_adventures_canonical_cbor::{decode, try_encode, CborError, CborValue};
 use coding_adventures_zeroize::Zeroize;
 
 // ─────────────────────────────────────────────────────────────────────
@@ -225,12 +230,47 @@ impl From<CborError> for VaultRecordError {
 
 /// Encode a `VaultRecord` to canonical CBOR bytes with its
 /// content-type tag. Output is deterministic.
-pub fn encode_record<T: VaultRecord>(rec: &T) -> Vec<u8> {
+///
+/// # Why this returns a `Result`
+///
+/// A well-typed Rust struct looks like it should always encode, and
+/// yet two ceilings sit on either side of this function and disagree:
+///
+/// ```text
+///   canonical-cbor  MAX_ENCODED_SIZE  =  1 MiB   per encoded value
+///   vault-pm        MAX_PLAINTEXT_BYTES = 16 MiB   per sealed object
+/// ```
+///
+/// The application's gate is sixteen times the codec's, and nothing
+/// reconciles them because they answer different questions — one
+/// bounds an AEAD frame, the other bounds the encoder's own
+/// denial-of-service exposure. Between them lies a band of record
+/// sizes that are legal to hold and legal to decode but **illegal to
+/// encode**.
+///
+/// That band is reachable, not theoretical. A peer device with a
+/// larger framing budget can author a `Login` with a 2 MiB password;
+/// it seals, syncs, and decodes here without complaint. The next
+/// command that re-serialises it — `item edit`, any of the seven
+/// authored conflict merges, `conflict choose`, `history restore`,
+/// `export` — arrives back at this function.
+///
+/// So the encode is reported through an error channel rather than by
+/// panicking. Failing closed loses one record; panicking loses the
+/// process, and because the record stays in the store the abort
+/// repeats on every later command against that vault. This mirrors
+/// the rule already applied to [`encode_opaque`] and to
+/// [`decode_record`]'s opaque arm.
+///
+/// No partial output escapes: `try_encode` builds into its own buffer
+/// and returns `Err` without bytes, so a refused record can never be
+/// mistaken for a truncated-but-whole one.
+pub fn encode_record<T: VaultRecord>(rec: &T) -> Result<Vec<u8>, VaultRecordError> {
     let envelope = CborValue::Map(vec![
         (CborValue::text("t"), CborValue::text(T::CONTENT_TYPE)),
         (CborValue::text("d"), rec.encode_payload()),
     ]);
-    encode(&envelope)
+    Ok(try_encode(&envelope)?)
 }
 
 /// Decode any vault record. Returns an [`AnyRecord`] which
@@ -1339,6 +1379,7 @@ fn missing_or_wrong(key: &'static str) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_canonical_cbor::encode;
 
     fn sample_login() -> Login {
         Login {
@@ -1474,7 +1515,7 @@ mod tests {
     #[test]
     fn login_roundtrip() {
         let r = sample_login();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let back = decode_record_as::<Login>(&bytes).unwrap();
         assert_eq!(back, r);
     }
@@ -1482,7 +1523,7 @@ mod tests {
     #[test]
     fn note_roundtrip() {
         let r = sample_note();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let back = decode_record_as::<SecureNote>(&bytes).unwrap();
         assert_eq!(back, r);
     }
@@ -1490,7 +1531,7 @@ mod tests {
     #[test]
     fn card_roundtrip() {
         let r = sample_card();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let back = decode_record_as::<Card>(&bytes).unwrap();
         assert_eq!(back, r);
     }
@@ -1498,7 +1539,7 @@ mod tests {
     #[test]
     fn totp_roundtrip() {
         let r = sample_totp();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let back = decode_record_as::<TotpSeed>(&bytes).unwrap();
         assert_eq!(back, r);
     }
@@ -1506,7 +1547,7 @@ mod tests {
     #[test]
     fn api_key_roundtrip() {
         let r = sample_api_key();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let back = decode_record_as::<ApiKey>(&bytes).unwrap();
         assert_eq!(back, r);
     }
@@ -1514,7 +1555,7 @@ mod tests {
     #[test]
     fn db_credential_roundtrip() {
         let r = sample_db();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let back = decode_record_as::<DatabaseCredential>(&bytes).unwrap();
         assert_eq!(back, r);
     }
@@ -1524,7 +1565,7 @@ mod tests {
     #[test]
     fn any_record_dispatches_login() {
         let r = sample_login();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let any = decode_record(&bytes).unwrap();
         match any {
             AnyRecord::Login(l) => assert_eq!(l, r),
@@ -1535,7 +1576,7 @@ mod tests {
     #[test]
     fn any_record_dispatches_db_credential() {
         let r = sample_db();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let any = decode_record(&bytes).unwrap();
         match any {
             AnyRecord::DatabaseCredential(d) => assert_eq!(d, r),
@@ -1546,7 +1587,7 @@ mod tests {
     #[test]
     fn any_record_summary_counts_login_shape_without_values() {
         let r = sample_login();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let any = decode_record(&bytes).unwrap();
         let summary = any.summary();
 
@@ -1579,7 +1620,7 @@ mod tests {
     #[test]
     fn any_record_summary_marks_machine_secret_lease_and_expiry() {
         let r = sample_db();
-        let bytes = encode_record(&r);
+        let bytes = encode_record(&r).unwrap();
         let any = decode_record(&bytes).unwrap();
         let summary = any.summary();
 
@@ -1613,20 +1654,20 @@ mod tests {
     fn encode_is_byte_stable_across_struct_orderings() {
         // Build "the same login" twice — the struct is the same so
         // canonical-CBOR must produce identical bytes.
-        let bytes_a = encode_record(&sample_login());
-        let bytes_b = encode_record(&sample_login());
+        let bytes_a = encode_record(&sample_login()).unwrap();
+        let bytes_b = encode_record(&sample_login()).unwrap();
         assert_eq!(bytes_a, bytes_b);
     }
 
     #[test]
     fn decode_then_reencode_is_byte_stable() {
-        let bytes = encode_record(&sample_card());
+        let bytes = encode_record(&sample_card()).unwrap();
         let any = decode_record(&bytes).unwrap();
         let card = match any {
             AnyRecord::Card(c) => c,
             _ => unreachable!(),
         };
-        let bytes2 = encode_record(&card);
+        let bytes2 = encode_record(&card).unwrap();
         assert_eq!(bytes, bytes2);
     }
 
@@ -1634,7 +1675,7 @@ mod tests {
 
     #[test]
     fn decode_record_as_rejects_wrong_content_type() {
-        let bytes = encode_record(&sample_login());
+        let bytes = encode_record(&sample_login()).unwrap();
         let err = decode_record_as::<SecureNote>(&bytes).unwrap_err();
         match err {
             VaultRecordError::ContentTypeMismatch { expected, actual } => {
@@ -1804,6 +1845,103 @@ mod tests {
         ));
     }
 
+    /// A `Login` whose password is `n` bytes long and whose every other
+    /// field is as short as the schema permits, so the encoded length is
+    /// `n` plus a constant.
+    fn login_with_password_len(n: usize) -> Login {
+        Login {
+            title: String::new(),
+            username: String::new(),
+            password: "a".repeat(n),
+            urls: Vec::new(),
+            notes: None,
+        }
+    }
+
+    #[test]
+    fn encode_record_reports_an_oversized_record_instead_of_panicking() {
+        use coding_adventures_canonical_cbor::MAX_ENCODED_SIZE;
+
+        // The boundary is derived, not guessed, so it stays exact if the
+        // schema or the ceiling ever moves.
+        //
+        // CBOR text headers are length-prefixed, and the prefix widens in
+        // steps: 1 byte below 24, then 2, 3, 5, 9. Measuring the constant
+        // overhead at a password length that is already in the same
+        // 5-byte-header bracket as `MAX_ENCODED_SIZE` (anything in
+        // 65_536 ..= 4_294_967_295) means the constant really is constant
+        // across the arithmetic below.
+        const PROBE: usize = 65_536;
+        let probe_len = encode_record(&login_with_password_len(PROBE))
+            .expect("the probe is far below the ceiling")
+            .len();
+        let overhead = probe_len - PROBE;
+
+        // Exactly at the ceiling: accepted, and it really is exact.
+        let largest = MAX_ENCODED_SIZE - overhead;
+        let at_ceiling = encode_record(&login_with_password_len(largest))
+            .expect("a record encoding to exactly MAX_ENCODED_SIZE is legal");
+        assert_eq!(at_ceiling.len(), MAX_ENCODED_SIZE);
+
+        // One single byte more: refused, and refused *without panicking*,
+        // which is the whole point. This is the record a peer device with
+        // a 16 MiB plaintext budget can legally author and sync to us.
+        assert!(matches!(
+            encode_record(&login_with_password_len(largest + 1)),
+            Err(VaultRecordError::Cbor(CborError::EncodeTooLarge))
+        ));
+
+        // And far past it, the way a real poisoned record looks: 2 MiB is
+        // comfortably inside vault-pm's 16 MiB plaintext gate and
+        // comfortably outside the encoder's 1 MiB one.
+        assert!(matches!(
+            encode_record(&login_with_password_len(2 * 1024 * 1024)),
+            Err(VaultRecordError::Cbor(CborError::EncodeTooLarge))
+        ));
+    }
+
+    #[test]
+    fn every_first_party_record_type_reports_oversize() {
+        // The `Result` sits on the generic entry point rather than inside
+        // any one schema, so the guarantee has to hold for all six. Each
+        // record below is built from the crate's own sample and then has a
+        // single 2 MiB field substituted, which is the shape a peer record
+        // between the two ceilings actually takes.
+        let huge = "a".repeat(2 * 1024 * 1024);
+        let too_large = |result: Result<Vec<u8>, VaultRecordError>| {
+            matches!(
+                result,
+                Err(VaultRecordError::Cbor(CborError::EncodeTooLarge))
+            )
+        };
+
+        let mut login = sample_login();
+        login.password = huge.clone();
+        assert!(too_large(encode_record(&login)));
+
+        let mut note = sample_note();
+        note.body = huge.clone();
+        assert!(too_large(encode_record(&note)));
+
+        let mut card = sample_card();
+        card.number = huge.clone();
+        assert!(too_large(encode_record(&card)));
+
+        let mut totp = sample_totp();
+        // The TOTP seed is raw bytes rather than text, so the same
+        // oversize arrives through a different CBOR major type.
+        totp.secret = huge.clone().into_bytes();
+        assert!(too_large(encode_record(&totp)));
+
+        let mut api_key = sample_api_key();
+        api_key.token = huge.clone();
+        assert!(too_large(encode_record(&api_key)));
+
+        let mut db = sample_db();
+        db.password = huge;
+        assert!(too_large(encode_record(&db)));
+    }
+
     // --- Schema mismatch rejection ---
 
     #[test]
@@ -1832,7 +1970,7 @@ mod tests {
     fn card_with_invalid_month_is_schema_mismatch() {
         let mut c = sample_card();
         c.expiry_month = 13;
-        let bytes = encode_record(&c);
+        let bytes = encode_record(&c).unwrap();
         let err = decode_record_as::<Card>(&bytes).unwrap_err();
         match err {
             VaultRecordError::SchemaMismatch { what } => {
@@ -1846,7 +1984,7 @@ mod tests {
     fn totp_with_invalid_digits_is_schema_mismatch() {
         let mut t = sample_totp();
         t.digits = 100;
-        let bytes = encode_record(&t);
+        let bytes = encode_record(&t).unwrap();
         let err = decode_record_as::<TotpSeed>(&bytes).unwrap_err();
         assert!(matches!(err, VaultRecordError::SchemaMismatch { .. }));
     }

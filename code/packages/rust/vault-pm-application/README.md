@@ -456,6 +456,33 @@ authority-verifies the exact locally pinned certificate frame and object ID,
 and commits and announcements must match that vault, device, certificate ID,
 and Ed25519 key.
 
+## Two size ceilings, not one
+
+This crate's bounds are not the tightest ones in the stack. It gates a sealed
+plaintext object at 16 MiB and local state at 32 MiB, while the canonical-CBOR
+encoder beneath refuses to emit any single value past 1 MiB
+(`MAX_ENCODED_SIZE`). Every serialisation here therefore treats "too large to
+encode" as a reachable outcome and reports `BoundExceeded`, never a panic — a
+process abort would discard in-flight state and, because the offending value
+persists, would repeat on every later command against the same vault.
+
+Three of these need no hostile input at all:
+
+- the **catalog** is re-encoded by every mutation, and its own validation admits
+  100,000 entries — far past the codec ceiling;
+- a **portable export** of a vault holding a couple of large entries produces a
+  snapshot over 1 MiB;
+- **local state** carries the publication journal, which admits thousands of
+  prepared objects.
+
+The remaining ones — a first-party record, the revision framing around it, and
+the re-encode of entries imported from someone else's artifact — are reachable
+from a peer device whose framing budget is larger than the codec's ceiling.
+
+`BoundExceeded` is used rather than `IntegrityFailure` because the value is not
+corrupt, merely larger than a fixed serialisation bound allows. See VLT-PM05
+section 13.1 and VLT02 *Encoding is fallible*.
+
 ## Verification
 
 The package tests cover exact canonical and cryptographic vectors,
