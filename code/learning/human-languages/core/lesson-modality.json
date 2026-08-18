@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2852b0149e1a2626",
+  "sourceHash": "fnv1a64:144fe6fd96d53bbf",
   "summary": {
-    "totalLessons": 3120,
-    "voice": 2204,
+    "totalLessons": 3125,
+    "voice": 2207,
     "sight": 588,
-    "pen": 328,
-    "drivableLessons": 2204,
+    "pen": 330,
+    "drivableLessons": 2207,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 948,
+    "chapterCount": 949,
     "drivablePrefixTotal": 1967,
     "fullyDrivableChapters": 619,
-    "unstartableChapters": 198,
+    "unstartableChapters": 199,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -867,11 +867,11 @@
     },
     {
       "language": "chinese",
-      "lessonCount": 40,
-      "voice": 18,
+      "lessonCount": 45,
+      "voice": 21,
       "sight": 4,
-      "pen": 18,
-      "drivablePercent": 45,
+      "pen": 20,
+      "drivablePercent": 47,
       "drivablePrefixTotal": 1,
       "modalities": [
         "voice",
@@ -972,6 +972,22 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ZH-W06-zai",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 5,
+          "voice": 3,
+          "sight": 0,
+          "pen": 2,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W07-zao",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -21127,6 +21143,106 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:16da26941dafaebc"
+    },
+    {
+      "id": "ZH-W07-zao",
+      "language": "chinese",
+      "chapter": 7,
+      "sequence": 450,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:bb5c8036968c779a",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W07-shang",
+      "language": "chinese",
+      "chapter": 7,
+      "sequence": 460,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4f69ff1bea8d65f3",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C07-zaoshang",
+      "language": "chinese",
+      "chapter": 7,
+      "sequence": 470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3fe74ccf51b90d2b"
+    },
+    {
+      "id": "ZH-C07-zaoshanghao",
+      "language": "chinese",
+      "chapter": 7,
+      "sequence": 480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:405520fd53f59724"
+    },
+    {
+      "id": "ZH-C07-practice",
+      "language": "chinese",
+      "chapter": 7,
+      "sequence": 490,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:54ca761e781d9444"
     },
     {
       "id": "FR-C01-bien",

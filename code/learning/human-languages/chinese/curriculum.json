@@ -109,6 +109,24 @@
         "ZH-EXT-016-CONVERSATION-CLOSE"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-006",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ZH-W07-zao",
+        "ZH-W07-shang",
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-017-ZAO-SHANG-SCRIPT",
+        "ZH-EXT-018-NEUTRAL-TONE",
+        "ZH-EXT-019-GREETING-FRAME"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -192,15 +210,15 @@
       "relocates": {}
     },
     "SPINE-TIME-OF-DAY": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-006"
+      ],
       "omits": [
         "TIME-DAY",
-        "TIME-MORNING",
         "TIME-AFTERNOON",
         "TIME-EVENING",
         "TIME-NIGHT",
         "GREETING-DAY",
-        "GREETING-MORNING",
         "GREETING-AFTERNOON",
         "GREETING-EVENING"
       ],
@@ -715,6 +733,48 @@
       "lessons": [
         "ZH-W06-jian",
         "ZH-C06-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-017-ZAO-SHANG-SCRIPT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 早 and 上, and I know that stroke-order habits carry conditions -- the horizontal leads when two strokes cross, as in 十, but 上 starts with its vertical because its short bar meets that vertical instead of crossing it.",
+      "prerequisites": [
+        "ZH-EXT-016-CONVERSATION-CLOSE"
+      ],
+      "lessons": [
+        "ZH-W07-zao",
+        "ZH-W07-shang"
+      ]
+    },
+    {
+      "id": "ZH-EXT-018-NEUTRAL-TONE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can recognise a neutral-tone syllable from the absence of a tone mark, say it short and light, and tell it apart from a tone that changes under a sandhi rule.",
+      "prerequisites": [
+        "ZH-EXT-017-ZAO-SHANG-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao"
+      ]
+    },
+    {
+      "id": "ZH-EXT-019-GREETING-FRAME",
+      "stage": "A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can use the X + 好 greeting frame, and I can say why the third-tone sandhi rule fires in 你好 but not in 早上好.",
+      "prerequisites": [
+        "ZH-EXT-018-NEUTRAL-TONE"
+      ],
+      "lessons": [
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
       ]
     }
   ]
