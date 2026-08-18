@@ -1,0 +1,5 @@
+**/bin/
+**/obj/
+**/.dotnet/
+**/.artifacts/
+**/coverage.json
