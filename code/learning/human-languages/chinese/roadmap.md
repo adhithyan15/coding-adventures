@@ -38,11 +38,23 @@ slow on purpose: the new machinery, not the vocabulary, is the load.
 that turns 谢 into an everyday thank-you, plus the neutral tone on the second
 syllable. Realises `SPINE-COURTESY-THANK`.
 
-## Chapter 3 — Yes, no, and 不 *(planned)*
+## Yes, no, and 不 — *partly delivered, chapter 4*
 
-**是** *shì* and **不是** *bú shì*, with the second tone-sandhi rule the track
-needs. Realises `SPINE-RESPOND-BASIC`. Mandarin has no bare word for "yes", which
-is itself a spine-shaped divergence worth a lesson.
+**Delivered (HL-C239, chapter 4).** 不 *bù* alone, taught as the negator, with
+不好 as the worked example, and 口 / 日 alongside it. `SPINE-RESPOND-BASIC` is
+**realised** by this: `RESPONSE-NO` is now claimed, because Mandarin answers a
+yes-or-no question by negating the word it asked about rather than with a bare
+reply word.
+
+**Still owed, and deliberately deferred.** 是 *shì* and 不是 *bú shì*, and with
+them the **不 tone-sandhi rule** — 不 shifts to *bú* before a fourth tone. The
+chapter's only collocation is 不好, where 好 is third tone and the rule does not
+fire, so nothing taught is wrong; but the rule is not yet anywhere in the track's
+lessons and `pronunciation-reference.md` still carries it as unused. Teach it
+with the first fourth-tone partner, which 不是 supplies.
+
+Mandarin has no bare word for "yes" either, which remains a spine-shaped
+divergence worth its own lesson.
 
 ## Chapter 4 — Names *(planned)*
 

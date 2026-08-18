@@ -1,0 +1,1049 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 4,
+  "title": "One Box, Two Characters, and the First Thing You Can Refuse",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d45966cf46988112",
+  "lessons": [
+    {
+      "id": "ZH-W04-kou",
+      "sequence": 300,
+      "title": "口 (kǒu) — the box, on its own",
+      "headword": "口",
+      "romanization": "kǒu",
+      "gloss": "three strokes your hand already knows, in a character of its own",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5e22de3c623cdf5e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 四. Walls, then the two inner strokes, then the bottom last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "口 (kǒu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Your hand can already write this. Three strokes, in exactly the order you learned inside 四, and the rule from there is the whole instruction:"
+            },
+            {
+              "kind": "speech",
+              "text": "the left vertical, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "the top and right side in one turning stroke — the héngzhé, across then down without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "the bottom bar, closing it — last."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes, two pen lifts. Walls, then the door."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest note, because it will save you trouble later. The enclosing frame around 四 and this character are not the same piece, even though they are written identically. Chinese has a separate enclosure component that does the surrounding, and 口 (kǒu) is a character in its own right. What transfers here is the hand movement, not the identity — and the hand movement is most of the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "口 (kǒu) — left wall, turning stroke, bottom last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 口 — left wall, turning stroke, bottom last]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "四, then 口 (kǒu) — the same movement, two different pieces",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 四, then 口 — the same movement, two different pieces]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes? (Three — the turning corner counts as one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W04-kou-last",
+              "prompt": "Which stroke of this box is written last?",
+              "assesses": [
+                "ZH-SCRIPT-KOU"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "the bottom",
+                "bottom",
+                "the bottom bar",
+                "bottom bar",
+                "closing the bottom"
+              ],
+              "feedback": {
+                "correct": "The bottom. Walls, then the door.",
+                "incorrect": "The BOTTOM bar, closing the box."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C04-kou",
+      "sequence": 310,
+      "title": "口 (kǒu) — mouth, and a piece you will meet everywhere",
+      "headword": "口",
+      "romanization": "kǒu",
+      "gloss": "mouth",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:52e816fdf4546142",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Draw the box. Three strokes, bottom last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "口 kǒu means mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at it again now that it means something. It is an open mouth, seen from the front — squared off, the way every Chinese character is squared off to fit its block, but a picture all the same. The oldest forms are rounder and even more obviously a mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "kǒu is third tone, the low dipping one you have had since nǐ. Keep it low."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the piece inside other characters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have already met pieces that live inside other characters — 女 and 子 sit inside 好. 口 (kǒu) is the commonest of them all. When you see it as a small element in a corner of a bigger character, it very often says the word has something to do with the mouth: speaking, eating, calling, tasting."
+            },
+            {
+              "kind": "speech",
+              "text": "The size matters. A full-height frame around a whole character is a different piece doing a different job; the mouth hint is for the small one tucked into a corner."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth more than the word itself. You are not going to memorise five thousand characters as pictures; you are going to learn a few hundred pieces and read the rest as combinations. 口 (kǒu) is one of the commonest pieces there is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǒu — low and dipping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kǒu** — low and dipping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "口 (kǒu) — and say what it is a picture of",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 口 — and say what it is a picture of]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If you meet this box inside a bigger character, what does it usually hint at? (Something to do with the mouth.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C04-kou-meaning",
+              "prompt": "What does this character mean, and what is it a picture of?",
+              "assesses": [
+                "ZH-LEX-KOU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "mouth",
+                "a mouth",
+                "an open mouth",
+                "mouth - it is a picture of one"
+              ],
+              "feedback": {
+                "correct": "Mouth — an open mouth, squared off to fit its block.",
+                "incorrect": "MOUTH. It is a picture of one, squared off."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W04-ri",
+      "sequence": 320,
+      "title": "日 (rì) — one bar inside the box",
+      "headword": "日",
+      "romanization": "rì",
+      "gloss": "the same box, with one bar added",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e785aae0f783305b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Draw the box. Now hold it in your head; you are about to fill it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日 (rì)."
+            },
+            {
+              "kind": "speech",
+              "text": "The same box, with one horizontal bar across the middle. That is the entire difference, and it buys you a second character."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes, and the order has one thing worth getting right:"
+            },
+            {
+              "kind": "speech",
+              "text": "the left vertical."
+            },
+            {
+              "kind": "speech",
+              "text": "the top and right side, one turning stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "the middle bar."
+            },
+            {
+              "kind": "speech",
+              "text": "the bottom bar, closing it — still last."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle bar goes in before the bottom. Fill the box, then shut it. That is the same instinct as the box rule itself, applied one level in: you never close a space you still have to write inside."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pen lifts. If your box was comfortable, this cost you one line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "口 (kǒu), then 日 (rì) — the same four movements plus one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 口, then 日 — the same four movements plus one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "日 (rì) — and check that the middle bar went in before the bottom",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 日 — and check that the middle bar went in before the bottom]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes separate this character from the box? (One.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W04-ri-order",
+              "prompt": "Does the middle bar go in before or after the bottom bar?",
+              "assesses": [
+                "ZH-SCRIPT-RI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "before",
+                "before it",
+                "before the bottom",
+                "the middle comes first"
+              ],
+              "feedback": {
+                "correct": "Before. Fill the box, then shut it.",
+                "incorrect": "BEFORE. You never close a space you still have to write inside."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C04-ri",
+      "sequence": 330,
+      "title": "日 (rì) — the sun, and the day it measures",
+      "headword": "日",
+      "romanization": "rì",
+      "gloss": "sun, and also day",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eaa51bf1251abeb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the box, then the box with a bar. Two characters, one shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日 rì means sun — and also day."
+            },
+            {
+              "kind": "speech",
+              "text": "The picture is the sun: a disc with a mark in the middle. Squared off, like everything else, but that is what the bar is doing there. The oldest forms are a circle with a dot."
+            },
+            {
+              "kind": "speech",
+              "text": "rì is fourth tone, falling. The r is not an English r and not a Spanish one either: start where your tongue sits for the s in English measure, then curl the tip back a little. Let the vowel be short and tight."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — one word, two jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sun and day in the same word is not a Chinese quirk. It is what happens in language after language, because the sun is how a day was counted before anybody had a clock. English does the same thing from the other end: we say the sun rose and three days later, and nobody finds it strange that a day is both the light and the span."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is one of the rare characters where you get two meanings and have to learn neither: they are the same idea, and the context tells you which."
+            },
+            {
+              "kind": "speech",
+              "text": "Like 口 (kǒu), this one turns up inside other characters, and when it does it is almost always about the sun, light, or time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rì — falling, and the r of measure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **rì** — falling, and the *r* of *measure*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "日 (rì) — and say both of its meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 日 — and say both of its meanings]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If you meet this shape inside a bigger character, what is it hinting at? (Sun, light or time.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C04-ri-two",
+              "prompt": "This character means two things. What are they, and why are they the same word?",
+              "assesses": [
+                "ZH-LEX-RI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "sun and day",
+                "sun and day - the sun measures the day",
+                "sun, day",
+                "the sun and the day it counts"
+              ],
+              "feedback": {
+                "correct": "Sun and day — the sun is how a day was counted.",
+                "incorrect": "SUN and DAY. The sun is how a day was measured before clocks."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W04-bu",
+      "sequence": 340,
+      "title": "不 (bù) — four strokes, all of them separate",
+      "headword": "不",
+      "romanization": "bù",
+      "gloss": "four strokes that never touch",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4fb9f9f4171b1cad",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 日 (rì). Middle bar before the bottom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不 (bù)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes, in this order:"
+            },
+            {
+              "kind": "speech",
+              "text": "a top horizontal, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then a long stroke from the upper centre down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then the central vertical, straight down."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, then a short right-falling dot."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pen lifts, and every stroke stands alone. Nothing joins here. That is unusual enough to be worth saying plainly: the boxes you have just written were one continuous movement in places, and this is the opposite — four deliberate, separate marks under a single roof."
+            },
+            {
+              "kind": "speech",
+              "text": "The commonest beginner's version runs the second and third strokes together into a corner. They are not a corner. Lift."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "不 (bù) — top bar, the long left-falling stroke, the vertical, the dot",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 不 — top bar, the long left-falling stroke, the vertical, the dot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "it again, counting the lifts aloud. There should be three.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: it again, counting the lifts aloud. There should be three.]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do the second and third strokes meet in a corner? (No — lift between them.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W04-bu-lifts",
+              "prompt": "How many times do you lift the pen writing this character?",
+              "assesses": [
+                "ZH-SCRIPT-BU"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "3",
+                "three",
+                "3 times",
+                "three times"
+              ],
+              "feedback": {
+                "correct": "Three — all four strokes stand alone.",
+                "incorrect": "THREE. Every stroke is separate; nothing joins."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C04-bu",
+      "sequence": 350,
+      "title": "不 (bù) — how Mandarin says no",
+      "headword": "不",
+      "romanization": "bù",
+      "gloss": "not — the character that turns a word around",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90d32de54cfd2ac9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 不 (bù), counting three lifts. Then say hǎo — good."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不 bù means not."
+            },
+            {
+              "kind": "speech",
+              "text": "bù is fourth tone, falling — the same firm drop you learned on èr and sì."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: there is no word for \"no\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is something that surprises nearly every learner, and it is better met now than discovered later."
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin has no single word meaning \"no.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English has one. So does French, Spanish, Russian. Mandarin does not. What it has instead is 不 (bù), which goes in front of a word and turns it around:"
+            },
+            {
+              "kind": "speech",
+              "text": "好 hǎo — good 不好 bù hǎo — not good."
+            },
+            {
+              "kind": "speech",
+              "text": "So when someone asks you a yes-or-no question in Mandarin, you do not answer with a word for \"no\". You answer by negating the thing they asked about. Ask whether something is 好, and \"no\" comes back as 不好 (bù hǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "This sounds like extra work and is actually less: you already know 好, so you already know how to refuse it, and the same holds for every word you have so far."
+            },
+            {
+              "kind": "speech",
+              "text": "One word will break the pattern later — Mandarin has a second negator for having, and you will meet it with the word it belongs to. Everything in this book up to now takes 不 (bù)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bù — falling, firm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bù** — falling, firm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎo, then bù hǎo — good, then not good",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **hǎo**, then **bù hǎo** — good, then not good]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "不好 (bù hǎo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 不好]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have known 好 since the first lesson. How much did its opposite cost you? (One character.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C04-bu-no",
+              "prompt": "Mandarin has no single word meaning 'no'. So how do you answer no to a yes-or-no question?",
+              "assesses": [
+                "ZH-GRAMMAR-NEGATE"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "negate the word they asked about",
+                "by negating the verb",
+                "put bu in front of the word",
+                "negate what was asked",
+                "say bu plus the word"
+              ],
+              "feedback": {
+                "correct": "You negate the thing they asked about — 好 becomes 不好.",
+                "incorrect": "You NEGATE the word they asked about, by putting 不 in front of it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C04-practice",
+      "sequence": 360,
+      "title": "Practice — one box, two characters, and a refusal",
+      "headword": "不好",
+      "romanization": "bù hǎo",
+      "gloss": "two boxes, a negator, and the first thing you can refuse",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80fd961985ee743e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 口 (kǒu). Then write 日 (rì). One line apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two voices, using only what you have:"
+            },
+            {
+              "kind": "speech",
+              "text": "A: 你好 ní hǎo B: 你好 ní hǎo A: 好 hǎo — good? B: 不好 bù hǎo — not good."
+            },
+            {
+              "kind": "speech",
+              "text": "Small, and it is the first time in this book you have been able to disagree. Up to now every exchange has been agreement: a greeting answered by the same greeting, a number read back. This one has a no in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three characters, and not one of them cost what it looks like it cost:"
+            },
+            {
+              "kind": "speech",
+              "text": "口 kǒu, mouth — you already knew the shape; it is the box from the number four, standing on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "日 rì, sun and day — the same box with one bar added."
+            },
+            {
+              "kind": "speech",
+              "text": "不 bù, not — four separate strokes, and it turns every word you own into its opposite."
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is the largest thing in the chapter. 不 (bù) does not add one word to your vocabulary; it doubles what you already have. Everything you have learned to say so far, you have now learned to refuse."
+            },
+            {
+              "kind": "speech",
+              "text": "And the two boxes are a down payment of a different kind. 口 (kǒu) and 日 (rì) both turn up inside other characters — mouth for speaking and eating, sun for light and time — so the next character that contains one will already be half read."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "口 (kǒu) 日 (rì) 不 (bù) — name each one, then say what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 口 日 不 — name each one, then say what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "日 (rì) — and check the middle bar went in before the bottom",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 日 — and check the middle bar went in before the bottom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎo, then bù hǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **hǎo**, then **bù hǎo**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which two of this chapter's characters share a shape? (口 (kǒu) and 日 (rì).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C04-practice-double",
+              "prompt": "Why is 不 (bù) worth more than one word of vocabulary?",
+              "assesses": [
+                "ZH-DIALOGUE-NEGATE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it negates every word you know",
+                "it doubles your vocabulary",
+                "it turns any word into its opposite",
+                "every word gets a negative"
+              ],
+              "feedback": {
+                "correct": "It negates everything you already have — one character, twice the vocabulary.",
+                "incorrect": "Because it turns EVERY word you know into its opposite."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
