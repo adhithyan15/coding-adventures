@@ -1,12 +1,9 @@
-"""SWI-Prolog parser backed by ``code/grammars/prolog/swi.grammar``."""
+"""SWI-Prolog parser backed by a pre-compiled ``swi.grammar``."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import cache
-from pathlib import Path
 
-from grammar_tools import ParserGrammar, parse_parser_grammar
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 from logic_engine import Clause, Program
@@ -29,8 +26,7 @@ from prolog_parser import (
 )
 from swi_prolog_lexer import tokenize_swi_prolog
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-SWI_PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "swi.grammar"
+from swi_prolog_parser._grammar import PARSER_GRAMMAR
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,17 +44,10 @@ class ParsedSwiSource:
 ParsedSwiDirective = PrologDirective
 
 
-@cache
-def _swi_parser_grammar() -> ParserGrammar:
-    """Load and cache the SWI-Prolog parser grammar."""
-
-    return parse_parser_grammar(SWI_PROLOG_GRAMMAR_PATH.read_text())
-
-
 def create_swi_prolog_parser(source: str) -> GrammarParser:
     """Create a grammar-driven parser configured for SWI-Prolog."""
 
-    return GrammarParser(tokenize_swi_prolog(source), _swi_parser_grammar())
+    return GrammarParser(tokenize_swi_prolog(source), PARSER_GRAMMAR)
 
 
 def parse_swi_ast(source: str) -> ASTNode:
@@ -66,7 +55,7 @@ def parse_swi_ast(source: str) -> ASTNode:
 
     tokens = tokenize_swi_prolog(source)
     try:
-        return GrammarParser(tokens, _swi_parser_grammar()).parse()
+        return GrammarParser(tokens, PARSER_GRAMMAR).parse()
     except GrammarParseError as error:
         token = error.token if error.token is not None else tokens[-1]
         raise PrologParseError(token, str(error)) from error

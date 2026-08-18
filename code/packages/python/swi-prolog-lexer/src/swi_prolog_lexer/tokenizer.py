@@ -1,28 +1,16 @@
-"""SWI-Prolog lexer backed by ``code/grammars/prolog/swi.tokens``."""
+"""SWI-Prolog lexer backed by a pre-compiled ``swi.tokens`` grammar."""
 
 from __future__ import annotations
 
-from functools import cache
-from pathlib import Path
-
-from grammar_tools import TokenGrammar, parse_token_grammar
 from lexer import GrammarLexer, Token
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-SWI_PROLOG_TOKENS_PATH = GRAMMAR_DIR / "prolog" / "swi.tokens"
-
-
-@cache
-def _swi_token_grammar() -> TokenGrammar:
-    """Load and cache the SWI-Prolog token grammar."""
-
-    return parse_token_grammar(SWI_PROLOG_TOKENS_PATH.read_text())
+from swi_prolog_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_swi_prolog_lexer(source: str) -> GrammarLexer:
     """Create a grammar-driven lexer configured for SWI-Prolog."""
 
-    return GrammarLexer(source, _swi_token_grammar())
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_swi_prolog(source: str) -> list[Token]:
