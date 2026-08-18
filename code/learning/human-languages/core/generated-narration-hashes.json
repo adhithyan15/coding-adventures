@@ -13658,7 +13658,7 @@
     {
       "language": "tamil",
       "chapter": 50,
-      "sourceHash": "fnv1a64:07b37d86815ed439",
+      "sourceHash": "fnv1a64:e4075edd14f098ed",
       "lessonIds": [
         "TA-C50-threshold",
         "TA-C50-kolam",
@@ -13670,8 +13670,134 @@
       "drivablePrefix": 5,
       "text": "tamil/narration/ch50.txt",
       "json": "tamil/narration/ch50.json",
-      "textHash": "fnv1a64:a562fb44610c66d4",
-      "jsonHash": "fnv1a64:60140fe828ae6eb5"
+      "textHash": "fnv1a64:44394ee595c90483",
+      "jsonHash": "fnv1a64:88ee567a9a0c9671"
+    },
+    {
+      "language": "tamil",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:7f0385d4692f0090",
+      "lessonIds": [
+        "TA-C51-sky",
+        "TA-C51-sun",
+        "TA-C51-moon",
+        "TA-C51-star",
+        "TA-C51-cloud"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch51.txt",
+      "json": "tamil/narration/ch51.json",
+      "textHash": "fnv1a64:1f52fa49857f0f0e",
+      "jsonHash": "fnv1a64:7f5d3e95a125c499"
+    },
+    {
+      "language": "tamil",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:b520d8966f76601f",
+      "lessonIds": [
+        "TA-C52-tree",
+        "TA-C52-branch",
+        "TA-C52-shoot",
+        "TA-C52-root",
+        "TA-C52-seed"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch52.txt",
+      "json": "tamil/narration/ch52.json",
+      "textHash": "fnv1a64:0a1fa92f05919659",
+      "jsonHash": "fnv1a64:1868558c8f5ba324"
+    },
+    {
+      "language": "tamil",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:5db0fbc58a27718f",
+      "lessonIds": [
+        "TA-C53-river",
+        "TA-C53-hill",
+        "TA-C53-field",
+        "TA-C53-path",
+        "TA-C53-village"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch53.txt",
+      "json": "tamil/narration/ch53.json",
+      "textHash": "fnv1a64:af036dbb5f7ee412",
+      "jsonHash": "fnv1a64:9d9854c2b18fafae"
+    },
+    {
+      "language": "tamil",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:0162b1f949460b47",
+      "lessonIds": [
+        "TA-C54-mat",
+        "TA-C54-basket",
+        "TA-C54-knife",
+        "TA-C54-bowl",
+        "TA-C54-box"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch54.txt",
+      "json": "tamil/narration/ch54.json",
+      "textHash": "fnv1a64:f473f9724c1e6663",
+      "jsonHash": "fnv1a64:f00e38a9fa5866ae"
+    },
+    {
+      "language": "tamil",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:d207a9552db063ff",
+      "lessonIds": [
+        "TA-C55-neck",
+        "TA-C55-back",
+        "TA-C55-lip",
+        "TA-C55-nail",
+        "TA-C55-bone"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch55.txt",
+      "json": "tamil/narration/ch55.json",
+      "textHash": "fnv1a64:0b7a35b11614701f",
+      "jsonHash": "fnv1a64:f96b8eebf771c226"
+    },
+    {
+      "language": "tamil",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:e8cc56bd9d4b2098",
+      "lessonIds": [
+        "TA-C56-a-little",
+        "TA-C56-a-lot",
+        "TA-C56-less",
+        "TA-C56-no-need",
+        "TA-C56-let-it-be"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch56.txt",
+      "json": "tamil/narration/ch56.json",
+      "textHash": "fnv1a64:920766e861dec516",
+      "jsonHash": "fnv1a64:cf8ad0815c1aac24"
+    },
+    {
+      "language": "tamil",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:f4f881474d19f9b2",
+      "lessonIds": [
+        "TA-C57-wind",
+        "TA-C57-sand",
+        "TA-C57-mud",
+        "TA-C57-smoke",
+        "TA-C57-ember"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch57.txt",
+      "json": "tamil/narration/ch57.json",
+      "textHash": "fnv1a64:57b7800fcb3e2ac3",
+      "jsonHash": "fnv1a64:0839f215d2b02f4a"
     },
     {
       "language": "telugu",

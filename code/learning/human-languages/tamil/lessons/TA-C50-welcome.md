@@ -42,7 +42,7 @@ reviews_of: [TA-C50-betel-leaf]
 
 Two pieces you can almost hear coming apart. *vara* is the coming, from *vā*, the word for 'come' you already have; *ēṟpu* is the accepting, from *ēṟṟu*, 'to receive'. A welcome, in Tamil, is the acceptance of somebody's arrival, and the word says that and nothing more.
 
-*varavēṟkiṟēṉ* is "I welcome you". At the *vāsal*, over the *kōlam*, with a *malar* and a *veṟṟilai* in hand, it is the last thing left to say — and it brings this book back to where it started, at a door, with *vaṇakkam*.
+*varavēṟkiṟēṉ* is "I welcome you". At the *vāsal*, over the *kōlam*, with a *malar* and a *veṟṟilai* in hand, it is the last thing left to say at a door — and it sets you back down exactly where this book began, at a door, with *vaṇakkam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
