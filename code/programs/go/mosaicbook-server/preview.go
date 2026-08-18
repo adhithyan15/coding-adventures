@@ -104,7 +104,7 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Compile the source file to the requested backend.
-	compiled, compileErr := s.compileToString(found.SourcePath, backend)
+	compiled, compileErr := s.compileToString(*found, backend)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// For the html backend the compiled output is a static HTML fragment with no

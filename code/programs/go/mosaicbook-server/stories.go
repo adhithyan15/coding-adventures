@@ -54,11 +54,121 @@ type Component struct {
 	Title string `json:"title"`
 
 	// SourcePath is the relative path to the .mosaic file from root.
+	//
+	// Empty for three-file components (see below), which have no single
+	// source file.
 	SourcePath string `json:"source_path"`
+
+	// The three-file (UI29) form: a component authored as separate
+	// interface/layout/style files inside a Mosaic package, rather than as
+	// one bundled .mosaic file.
+	//
+	// Every component in this repo is authored this way — there are no
+	// .mosaic files left — so these are the paths that actually get used.
+	// When InterfacePath is non-empty the compiler invokes
+	// `--interface/--layout/--style` instead of legacy single-file mode.
+	InterfacePath string `json:"interface_path,omitempty"`
+	LayoutPath    string `json:"layout_path,omitempty"`
+	StylePath     string `json:"style_path,omitempty"`
+
+	// ManifestPath points at the owning package's mosaic-package.toml.
+	// Passing it as --package-manifest is what lets a component reference
+	// its siblings (Field referencing Input, for example); without it those
+	// references fail to resolve.
+	ManifestPath string `json:"manifest_path,omitempty"`
 
 	// Stories is the list of story variants.  Always non-empty (at minimum the
 	// auto-generated "Default" story is present).
 	Stories []Story `json:"stories"`
+}
+
+// isThreeFile reports whether this component is authored in the UI29
+// interface/layout/style form rather than as a single .mosaic file.
+func (c Component) isThreeFile() bool {
+	return c.InterfacePath != ""
+}
+
+// threeFileComponent builds a Component from a UI29 interface file and its
+// siblings.
+//
+// The set is paired by base name inside one directory:
+//
+//	Button.mil            interface  (required — the anchor)
+//	Button.mll            layout     (required)
+//	Button.light.msl      style      (preferred)
+//	Button.dark.msl       style      (fallback if no light variant)
+//
+// A .mil with no matching .mll is not a renderable component (it may be a
+// shared interface fragment), so it is skipped rather than reported as a
+// broken component.
+//
+// The owning package's mosaic-package.toml is located by walking up from the
+// source directory. It is optional: a component outside any package still
+// renders, it just cannot reference siblings.
+func threeFileComponent(root, milPath, fileName string) (Component, bool) {
+	base := strings.TrimSuffix(fileName, ".mil")
+	dir := filepath.Dir(milPath)
+
+	layout := filepath.Join(dir, base+".mll")
+	if _, err := os.Stat(layout); err != nil {
+		// Interface with no layout — not renderable on its own.
+		return Component{}, false
+	}
+
+	// Prefer the light stylesheet; fall back to dark so a dark-only
+	// component still previews rather than rendering unstyled.
+	style := filepath.Join(dir, base+".light.msl")
+	if _, err := os.Stat(style); err != nil {
+		style = filepath.Join(dir, base+".dark.msl")
+		if _, err := os.Stat(style); err != nil {
+			style = ""
+		}
+	}
+
+	rel, err := filepath.Rel(root, milPath)
+	if err != nil {
+		return Component{}, false
+	}
+	id := strings.TrimSuffix(filepath.ToSlash(rel), ".mil")
+
+	return Component{
+		ID:            id,
+		Title:         componentTitleFromBase(base),
+		InterfacePath: milPath,
+		LayoutPath:    layout,
+		StylePath:     style,
+		ManifestPath:  findPackageManifest(dir, root),
+		Stories:       []Story{{Name: "Default", Fixtures: map[string]interface{}{}}},
+	}, true
+}
+
+// findPackageManifest walks up from dir looking for a mosaic-package.toml,
+// stopping at root so the search cannot escape the served tree.
+// Returns "" when the component does not belong to a package.
+func findPackageManifest(dir, root string) string {
+	absRoot, err := filepath.Abs(root)
+	if err != nil {
+		return ""
+	}
+	cur, err := filepath.Abs(dir)
+	if err != nil {
+		return ""
+	}
+	for {
+		candidate := filepath.Join(cur, "mosaic-package.toml")
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate
+		}
+		if cur == absRoot {
+			return ""
+		}
+		parent := filepath.Dir(cur)
+		if parent == cur {
+			// Reached the filesystem root without finding a manifest.
+			return ""
+		}
+		cur = parent
+	}
 }
 
 // storiesFile is the JSON schema of a .stories.json file.
@@ -85,6 +195,16 @@ func discoverComponents(root string) ([]Component, error) {
 			// scanning noise and very large trees.
 			if strings.HasPrefix(info.Name(), ".") && path != root {
 				return filepath.SkipDir
+			}
+			return nil
+		}
+
+		// Three-file (UI29) components: a .mil interface is the anchor, and
+		// the sibling .mll/.msl files complete the set. This is the form
+		// every component in this repo actually uses.
+		if strings.HasSuffix(info.Name(), ".mil") {
+			if c, ok := threeFileComponent(root, path, info.Name()); ok {
+				components = append(components, c)
 			}
 			return nil
 		}
