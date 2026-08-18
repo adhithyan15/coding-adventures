@@ -1,0 +1,98 @@
+{
+  "issue": 1611,
+  "spec": "code/specs/cowsay-paintvm-pipeline.md",
+  "reference_impl": "code/programs/go/cowsay/main.go",
+  "pilot_pr": {
+    "number": 12031,
+    "status": "merged",
+    "language": "csharp",
+    "note": "First paint-vm-ascii consumer; established the PaintGlyphRun-per-line pattern and the CliBuilder argv[0] convention gotcha (see lessons.md, 'C#' section)."
+  },
+  "known_gotchas": [
+    "CliBuilder.Parser expects argv[0] to be a program name (C/Go convention); language's real args must be prepended with a placeholder, not passed raw.",
+    "LoadCow-equivalent file-path building from a user-supplied cowfile flag needs path-traversal / rooted-path-override protection (see cowsay.cs LoadCow for the pattern: GetFileName-only + reject rooted + verify containment).",
+    "paint-vm-ascii's glyph_run treats glyph_id as a literal Unicode code point (ASCII-backend-specific relaxation), not a font-internal glyph index -- see spec section 3.1.",
+    "Output must be verified byte-identical against an existing port (e.g. Go) for several flag combos, modulo paint-vm-ascii's spec-mandated trailing-blank-line trimming.",
+    "Gradle (java/kotlin): must redirect build output away from build/ (collides with BUILD file on case-insensitive filesystems) -- see lessons.md Gradle entries.",
+    "Swift on Windows needs the winget toolchain + vcvars setup -- see memory 'Swift on Windows setup'.",
+    "Lua rockspecs must pin immutable refs (tag/SHA), not moving branch tips -- see lessons.md Lua section."
+  ],
+  "backlog": [
+    {
+      "id": "doc-fix-swift-row",
+      "title": "Fix swift's paint-instructions status in cowsay-paintvm-pipeline.md (missed in PR #12031 due to a merge race)",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 1,
+      "notes": "Small doc-only correction. Fold into the fsharp PR as its first commit rather than a standalone PR."
+    },
+    {
+      "id": "fsharp-cowsay",
+      "title": "F# cowsay via existing paint-vm-ascii",
+      "depends_on": [],
+      "status": "in-progress",
+      "priority": 2,
+      "backend_work": "none -- fsharp/paint-vm-ascii already implements glyph_run",
+      "notes": "Mirrors the C# pilot almost exactly; smallest remaining unblocker."
+    },
+    {
+      "id": "perl-cowsay",
+      "title": "Perl cowsay: add glyph_run to paint-vm-ascii, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 3,
+      "backend_work": "add glyph_run instruction handling to perl/paint-vm-ascii (currently rect-only)"
+    },
+    {
+      "id": "haskell-cowsay",
+      "title": "Haskell cowsay: add glyph_run to paint-vm-ascii, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 4,
+      "backend_work": "add glyph_run instruction handling to haskell/paint-vm-ascii (currently rect-only)"
+    },
+    {
+      "id": "java-cowsay",
+      "title": "Java cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 5,
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer)"
+    },
+    {
+      "id": "kotlin-cowsay",
+      "title": "Kotlin cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 6,
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract"
+    },
+    {
+      "id": "dart-cowsay",
+      "title": "Dart cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 7,
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract"
+    },
+    {
+      "id": "swift-cowsay",
+      "title": "Swift cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 8,
+      "backend_work": "new PaintVmAscii package implementing full P2D02 contract (swift already has PaintInstructions)"
+    },
+    {
+      "id": "lua-cowsay",
+      "title": "Lua cowsay: build paint-instructions AND paint-vm-ascii from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 9,
+      "backend_work": "new paint-instructions package + new paint-vm-ascii package implementing full P2D02 contract",
+      "notes": "Most work of the 8 remaining items -- neither prerequisite package exists yet. Prior attempt at Lua cowsay (PR #1535, closed) was destructive; must be additive-only."
+    }
+  ],
+  "discovered_work": [],
+  "last_updated_by": "autonomous loop, issue #1611"
+}
