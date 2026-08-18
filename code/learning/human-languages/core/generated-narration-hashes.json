@@ -3663,6 +3663,30 @@
       "jsonHash": "fnv1a64:4a0f57dceb21953d"
     },
     {
+      "language": "japanese",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:1a25d37b069264b0",
+      "lessonIds": [
+        "JA-W03-a",
+        "JA-W03-ri",
+        "JA-W03-ka",
+        "JA-W03-dakuten",
+        "JA-W03-to",
+        "JA-W03-u",
+        "JA-W03-arigatou-read",
+        "JA-W03-sa",
+        "JA-W03-ma",
+        "JA-W03-su",
+        "JA-C03-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch03.txt",
+      "json": "japanese/narration/ch03.json",
+      "textHash": "fnv1a64:cfe27fe655c7819d",
+      "jsonHash": "fnv1a64:a37a70fe9ab1f01d"
+    },
+    {
       "language": "kannada",
       "chapter": 1,
       "sourceHash": "fnv1a64:dc1b0406cbf54722",

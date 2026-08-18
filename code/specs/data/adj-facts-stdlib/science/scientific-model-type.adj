@@ -1,0 +1,145 @@
+% ============================================================================
+% scientific-model-type — the three kinds of scientific model a K-8 Earth
+% Science textbook names, and the one-sentence definition each gets
+% (adj-facts-stdlib, SCIENCE).
+% ============================================================================
+% This grounds "models" — the THIRD and last of the three K-8-science Major
+% Gaps this item's notes have tracked as fully untouched since they were
+% first flagged (alongside "experiments", shipped as
+% `science/scientific-method-step.adj`, and "engineering design", shipped as
+% `engineering/engineering-design-step.adj`). Two prior cycles flagged
+% "models" specifically as HARDER to find table-shaped primary-source
+% content for than the other two gaps, so this cycle's own search tried
+% several distinct angles before landing here:
+%
+%   1. Historical atomic models (Dalton/Thomson/Rutherford/Bohr) as a
+%      numbered sequence, the same shape as `scientific-method-step.adj`'s
+%      seven steps. WebFetched MIT OpenCourseWare's "Atomic Models:
+%      Rutherford & Bohr" lecture page and a UPenn WRDS-classroom timeline
+%      page (the latter did not resolve via DNS at fetch time). MIT OCW
+%      presented Thomson/Rutherford/Bohr as three separate narrative
+%      paragraphs with their own bullet points, not a unified sequential
+%      table naming all four scientists — rejected as not table-shaped.
+%   2. NASA/NOAA/NIST pages defining "types of models" (physical/
+%      conceptual/mathematical/computer) directly. WebSearched and
+%      WebFetched `nasaeclips.arc.nasa.gov` (redirected to a generic
+%      landing page, no model-types content survived the redirect),
+%      `mynasadata.larc.nasa.gov`'s "Developing and Using Models with MND"
+%      page (states the same flat sentence Appendix F does — see angle 3 —
+%      but no table, and confirmed via WebFetch to have no dedicated
+%      types-of-models download), and NSTA's "Using Models to Teach
+%      Science" (discusses HOW to build one model with a class, never
+%      categorizes model types at all) — rejected, no table found.
+%   3. The NGSS Framework/Appendix F's own definitional sentence for the
+%      "Developing and Using Models" practice. WebFetched the official
+%      Appendix F PDF (nextgenscience.org) directly and confirmed via
+%      `pdftotext -layout`: "Models include diagrams, physical replicas,
+%      mathematical representations, analogies, and computer simulations."
+%      — a real, citable, NGSS-authoritative sentence, but a flat list of
+%      SIX nouns with no individual definition attached to any of them, so
+%      building a two-column (type, definition) table from it would mean
+%      inventing definitions the source itself never states — rejected on
+%      that same "don't force a thin source into a table" ground the
+%      sibling sweeps used.
+%   4. Types of scientific models WITH a definition sentence for each type,
+%      from a K-8-audience textbook. WebFetched CK-12 Foundation's Middle
+%      School Earth Science FlexBook 2.0 (as hosted, and lightly re-edited
+%      to LibreTexts house style, at k12.libretexts.org), section "1.10:
+%      Scientific Models" — its own "Models are Useful Tools" section
+%      states, as three separate bullet points, "There are different types
+%      of models" followed immediately by one full defining sentence (two
+%      for physical and mathematical) for EACH of physical, conceptual,
+%      and mathematical models, and its own Summary line closes the
+%      taxonomy explicitly: "Models may be physical, conceptual, or
+%      mathematical." This is genuinely table-shaped (three named types,
+%      each with its own citable defining sentence) and the taxonomy is
+%      exhaustive per the source's own Summary — angle 4 is what this
+%      table grounds.
+%
+% A full-tree grep for `\bmodel\b` across this stdlib (confirming no
+% duplication before scoping, per this item's established playbook) hits
+% dozens of files, but EVERY hit is the incidental phrase "zero model
+% calls" (or "zero answer-time model calls") in each table's own boilerplate
+% commentary about the ADJ engine — never a genuine scientific-model fact.
+% This table is the FIRST genuine scientific-model content anywhere in this
+% stdlib.
+%
+% Recall is a binding query:
+%
+%     ? scientific_model_type(physical, $D)
+%       % smaller_and_simpler_representation_of_the_thing_being_studied
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `scientific_model_type(type, description)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a model type the source does not name (see
+% below). The query also runs BACKWARD — bind the description and recall
+% which type it defines:
+%
+%     ? scientific_model_type($T, ties_together_many_ideas_to_explain_a_phenomenon_or_event)
+%       % conceptual
+%
+% The three named model types, as a little truth table (the page's own text
+% for each, verbatim, alongside the atom this table gives it):
+%
+%     type          description (atom)                                                          quote (verbatim, CK-12 Middle School Earth Science FlexBook 2.0)
+%     ------------  --------------------------------------------------------------------------   -------------------------------------------------------------------------------------------------------------------------------
+%     physical      smaller_and_simpler_representation_of_the_thing_being_studied                "Physical models are smaller and simpler representations of the thing being studied. A globe or a map is a physical model of a portion or all of Earth."
+%     conceptual    ties_together_many_ideas_to_explain_a_phenomenon_or_event                     "Conceptual models tie together many ideas to explain a phenomenon or event."
+%     mathematical  sets_of_equations_that_take_into_account_many_factors_to_represent_a_phenomenon  "Mathematical models are sets of equations that take into account many factors to represent a phenomenon. Mathematical models are usually done on computers."
+%
+% IMPORTANT — why there is no fourth `computer` row: the source's own text
+% mentions computers only as an implementation detail OF a mathematical
+% model ("Mathematical models are usually done on computers... Many models
+% are created on computers... Only computers can handle and manipulate such
+% enormous amounts of data"), never as a fourth category with its own
+% defining sentence — and the page's own Summary line closes the taxonomy
+% at exactly three: "Models may be physical, conceptual, or mathematical."
+% Adding a `computer` row would assert a category the source itself never
+% names as one, so a recall on it ABSTAINS instead (see the query file).
+%
+% Provenance: quoted verbatim from CK-12 Foundation's Middle School Earth
+% Science FlexBook 2.0, section "1.10: Scientific Models", as hosted (and
+% edited to LibreTexts house style, with no change to the quoted sentences
+% themselves) at k12.libretexts.org — an open, CK-12-licensed K-12 science
+% textbook actually used in classrooms, not a primary government or
+% standards-body source, hence `trust consensus` (the same tier
+% `language/figurative-language-type.adj` already established for a
+% reputable secondary/tertiary reference, and NOT `authoritative`, which
+% this stdlib reserves for a primary .gov/.edu/standards source). Each
+% type's exact text above is quoted character-for-character from the
+% fetched page (HTML fetched directly; only doubled internal whitespace
+% from the page's own markup was collapsed to a single space — no wording
+% was added, removed, or reordered), so any reader can re-check it. An ADJ
+% `table` carries ONE provenance envelope, so `source`/`locator`/`trust`
+% below hold the strongest single span (the `physical` row's text, which
+% fixes the first row); every OTHER row's own verbatim text is quoted above
+% and additionally carried as its own `cites` entry below, so each type
+% remains independently checkable.
+%
+% A word this page uses but that is not itself one of these three type
+% atoms — "computer" (see above), "globe" or "map" (named INSIDE the
+% `physical` row's own example, never a type name of its own), or "climate
+% model" (an EXAMPLE the page later gives of a mathematical model, not a
+% fourth type) — has no row, so a recall on it ABSTAINS rather than
+% inventing a type. That honest-abstention property is what makes this
+% table safe to reason from.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table scientific_model_type {
+    columns type, description
+
+    row (physical, smaller_and_simpler_representation_of_the_thing_being_studied)
+    row (conceptual, ties_together_many_ideas_to_explain_a_phenomenon_or_event)
+    row (mathematical, sets_of_equations_that_take_into_account_many_factors_to_represent_a_phenomenon)
+
+    source "Physical models are smaller and simpler representations of the thing being studied. A globe or a map is a physical model of a portion or all of Earth."
+    locator "https://k12.libretexts.org/Bookshelves/Science_and_Technology/Earth_Science/01:_The_Nature_of_Science/1.10:_Scientific_Models"
+    trust consensus
+
+    cites "Conceptual models tie together many ideas to explain a phenomenon or event." locator "https://k12.libretexts.org/Bookshelves/Science_and_Technology/Earth_Science/01:_The_Nature_of_Science/1.10:_Scientific_Models"
+    cites "Mathematical models are sets of equations that take into account many factors to represent a phenomenon. Mathematical models are usually done on computers." locator "https://k12.libretexts.org/Bookshelves/Science_and_Technology/Earth_Science/01:_The_Nature_of_Science/1.10:_Scientific_Models"
+}

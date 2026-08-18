@@ -153,7 +153,7 @@ enter cross-language review only after focused retrieval.
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | 59 | 59 | 14 chapters; through Ch. 14; 12 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 59 | 59 | 15 chapters; through Ch. 15; 13 generated |
 | [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 25 | 25 | 3 chapters; through Ch. 3; 3 generated |
-| [Japanese](./japanese/README.md) | Japonic / Japanese | 18 | 18 | 2 chapters; through Ch. 2; 2 generated |
+| [Japanese](./japanese/README.md) | Japonic / Japanese | 29 | 29 | 3 chapters; through Ch. 3; 3 generated |
 <!-- END GENERATED TRACK PROGRESS -->
 
 Spanish is the pilot that proved the format; every other track replicates it,

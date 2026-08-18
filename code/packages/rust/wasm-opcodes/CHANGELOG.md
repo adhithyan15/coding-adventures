@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.11] - 2026-08-18 - SIMD: i16x8 comparison family (task #133-136)
+
+### Added
+
+- 10 new `SIMD_OPS` entries -- `i16x8`'s own comparison family, closing
+  the gap left when `i16x8.add`/`sub`/`mul`/`neg` (PR5) landed without
+  one (unlike `i32x4`, which got arith+cmp together): `i16x8.eq`
+  (`0x2D`), `ne` (`0x2E`), `lt_s` (`0x2F`), `lt_u` (`0x30`), `gt_s`
+  (`0x31`), `gt_u` (`0x32`), `le_s` (`0x33`), `le_u` (`0x34`), `ge_s`
+  (`0x35`), `ge_u` (`0x36`) -- same boolean-mask convention and signed/
+  unsigned split as `i32x4`'s own comparison family, just at `i16x8`'s
+  narrower lane width -- 46 SIMD opcodes total, up from 36. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i16x8.add` (`0x8E`)/`i32x4.eq` (`0x37`) entries (both matched
+  exactly), same verification discipline as every widening above.
+- `SimdOpKind::EqI16x8`/`NeI16x8`/`LtSI16x8`/`LtUI16x8`/`GtSI16x8`/
+  `GtUI16x8`/`LeSI16x8`/`LeUI16x8`/`GeSI16x8`/`GeUI16x8`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i16x8_cmp.wast` corpus file this widening unblocks.
+
 ## [0.2.10] - 2026-08-18 - SIMD: i16x8 first primary-lane slice (task #129-132)
 
 ### Added

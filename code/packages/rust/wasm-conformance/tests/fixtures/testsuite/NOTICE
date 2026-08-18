@@ -36,7 +36,9 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                i8x16 first slice, same pinned commit, no re-pin),
                extended 2026-08-18 (task #129-132 -- simd_i16x8_arith.wast,
                i16x8 first primary-lane-width slice, same pinned commit,
-               no re-pin)
+               no re-pin),
+               extended 2026-08-18 (task #133-136 -- simd_i16x8_cmp.wast,
+               i16x8 comparison family, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -200,6 +202,21 @@ byte fetched live from `BinarySIMD.md` and cross-checked against the
 already-implemented `i32x4.add`/`i8x16.add` entries, same discipline as
 every prior addition. 100% pass on every directive kind (2/2 modules,
 181/181 assert_return, 11/11 assert_invalid).
+
+`simd_i16x8_cmp.wast` (task #133-136) closes the gap left when
+`i16x8.add`/`sub`/`mul`/`neg` landed without a comparison family --
+unlike `i32x4`, which got arith+cmp together in one pass. `i16x8.eq`/
+`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/`le_u`/`ge_s`/`ge_u` use the same
+boolean-mask convention and signed/unsigned split as `i32x4`'s own
+comparison family, just at `i16x8`'s narrower lane width. Each
+sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+against the already-implemented `i16x8.add`/`i32x4.eq` entries, same
+discipline as every prior addition. 100% pass on every GRADEABLE
+directive (420/420 assert_return, 30/30 assert_invalid); the file's own
+small "combination" tail references `v128.load` (not yet implemented),
+so 1 module and 13 assert_return directives grade `NotYetSupported`,
+the same lazy-grading discipline already established for
+`simd_i32x4_cmp.wast`'s own `trunc_sat`-dependent tail.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

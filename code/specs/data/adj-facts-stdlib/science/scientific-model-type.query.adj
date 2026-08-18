@@ -1,0 +1,21 @@
+% ============================================================================
+% scientific-model-type.query.adj — worked recall over the
+% scientific-model-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of model is
+% a globe?" (a `physical` model, by definition, direct) or "which type of
+% model ties together many ideas to explain a phenomenon?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. The final query demonstrates honest abstention:
+% `computer` is not a type this source names on its own (the page only ever
+% closes its taxonomy at physical/conceptual/mathematical, mentioning
+% computers only as an implementation detail of a mathematical model), so
+% recalling it abstains rather than inventing a fourth type.
+% ============================================================================
+
+import "scientific-model-type.adj"
+
+? scientific_model_type(physical, $D)         % expect smaller_and_simpler_representation_of_the_thing_being_studied (direct)
+? scientific_model_type(mathematical, $D)     % expect sets_of_equations_that_take_into_account_many_factors_to_represent_a_phenomenon (direct)
+? scientific_model_type($T, ties_together_many_ideas_to_explain_a_phenomenon_or_event)   % expect conceptual (reverse)
+? scientific_model_type(computer, $D)         % expect abstain -- the source closes its taxonomy at physical/conceptual/mathematical
