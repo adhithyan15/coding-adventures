@@ -13,8 +13,6 @@ WriteMakefile(
         'CodingAdventures::GrammarTools' => 0,
         'CodingAdventures::Parser'       => 0,
         'CodingAdventures::NibLexer'     => 0,
-        'File::Basename'                 => 0,
-        'File::Spec'                     => 0,
     },
     TEST_REQUIRES    => {
         'Test2::V0' => 0,

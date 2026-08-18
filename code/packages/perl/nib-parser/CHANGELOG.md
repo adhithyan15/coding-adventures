@@ -1,5 +1,22 @@
 # Changelog — CodingAdventures::StarlarkParser
 
+## 0.02 — 2026-08-17
+
+Eliminated runtime grammar-file disk reads.
+
+- `_grammar()` (new) now `require`s a checked-in generated module,
+  `CodingAdventures::NibParser::_Grammar` (compiled ahead of time from
+  `code/grammars/nib/nib.grammar` via `grammar-tools.pl compile-grammar`),
+  instead of `parse()` opening and parsing `nib.grammar` off disk on every
+  call.
+- The old path climbed out of the installed package's own directory to a
+  monorepo-relative `code/grammars/nib/nib.grammar` path that a real CPAN
+  install of this package does not ship, so first use after `cpanm install`
+  would have died with "cannot open ... No such file or directory".
+- `_grammars_dir()` is removed along with the now-unused
+  `File::Basename`/`File::Spec` imports.
+- Public API (`parse`), AST shape, and error messages are unchanged.
+
 ## 0.01 — initial release
 
 - Implement `CodingAdventures::StarlarkParser` — hand-written recursive-descent

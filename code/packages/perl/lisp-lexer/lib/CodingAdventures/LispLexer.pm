@@ -66,9 +66,16 @@ package CodingAdventures::LispLexer;
 #
 # # Architecture
 #
-# 1. **Grammar loading** — `_grammar()` opens `lisp.tokens`, parses it with
-#    `CodingAdventures::GrammarTools::parse_token_grammar`, and caches the
-#    resulting TokenGrammar for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` requires
+#    `CodingAdventures::LispLexer::_Grammar`, a checked-in generated module
+#    produced ahead of time by
+#    `grammar-tools.pl compile-tokens code/grammars/lisp/lisp.tokens`, and
+#    calls its `token_grammar()` sub to reconstruct the TokenGrammar object
+#    graph natively. The result is cached for the lifetime of the process.
+#    This avoids reading `lisp.tokens` off disk at runtime: a real CPAN
+#    install of this package does not ship `code/grammars/`, so the old
+#    disk-read approach would fail with "cannot open ... No such file or
+#    directory" outside this monorepo checkout.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
 #    in the grammar into either a skip pattern (`qr/\G.../`) or a token rule
@@ -78,30 +85,13 @@ package CodingAdventures::LispLexer;
 #    `\G` anchoring.  Skip patterns are tried first; then token patterns in
 #    definition order.  The first match wins.
 #
-# # Path navigation
-#
-# `__FILE__` resolves to:
-#   .../code/packages/perl/lisp-lexer/lib/CodingAdventures/LispLexer.pm
-#
-# From dirname(__FILE__) we climb 5 levels to reach `code/`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → lisp-lexer/
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/       ← repo root
-#   + /grammars/lisp.tokens
-#
 # ============================================================================
 
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -117,43 +107,24 @@ my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
 my $_rules;        # arrayref of { name => str, pat => qr/\G.../ }
 my $_skip_rules;   # arrayref of qr/\G.../ patterns for skip definitions
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-#
-# We use File::Spec for cross-platform path construction and
-# File::Basename::dirname to strip the filename component.
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/lisp-lexer/lib/CodingAdventures/LispLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → lisp-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `lisp.tokens`, caching the result.
+# Load the pre-compiled `lisp.tokens` grammar, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
+#
+# The grammar is compiled once at dev time via
+# `grammar-tools.pl compile-tokens code/grammars/lisp/lisp.tokens` into
+# CodingAdventures::LispLexer::_Grammar, a checked-in generated module that
+# reconstructs the TokenGrammar object graph natively — no disk I/O or
+# grammar re-parsing at runtime, and no reliance on `code/grammars/` being
+# present outside the monorepo checkout.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'lisp', 'lisp.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::LispLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::LispLexer::_Grammar;
+    $_grammar = CodingAdventures::LispLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::LispLexer: failed to parse lisp.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 
