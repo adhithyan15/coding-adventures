@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-vault-dispatch"
+version = "0.1.0"
+edition = "2021"
+description = "Chief of Staff D18D vault tool handlers bound to the D18 vault runtime"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-vault-runtime = { path = "../chief-of-staff-vault-runtime" }
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_vault_leases = { path = "../vault-leases" }
+
+[dev-dependencies]
+smart-home-core = { path = "../smart-home-core" }

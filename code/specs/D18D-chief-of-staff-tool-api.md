@@ -749,6 +749,142 @@ These wrap repository channel services rather than exposing raw log internals.
 
 These always participate in approval/tier checks.
 
+#### 7.1 Host dispatch binding
+
+The two definitions above are declarations. This subsection is the normative
+contract for the handlers that *implement* them at the host boundary, so that a
+reviewer can check an implementation against a written rule rather than against
+the author's intent.
+
+A conforming binding registers exactly these two handlers against a vault
+runtime that owns the secret material, and it obeys four invariants.
+
+**V1 — no secret return channel.** Neither handler may place secret bytes, or
+any value derived from secret bytes, into `ToolHandlerOutput.output`,
+`artifact_refs`, `memory_refs`, `events`, or into any field of a returned
+`ToolCallError`. `vault.request_lease` returns exactly `{ vault_ref,
+expires_at_ms }`. `vault.request_direct` returns JSON `null`, and moves the
+payload into the trusted delivery adapter rather than receiving the bytes back
+to forward.
+
+How much of this the runtime enforces, precisely — stated exactly, because an
+invariant a reviewer trusts too far is worse than one they do not trust at all:
+
+| Field | Enforced by | Notes |
+|---|---|---|
+| `output` | the runtime — *shape* only | validated against `output_schema` after the handler returns; content is excluded only where that schema is `null` |
+| `artifact_refs` | the handler | copied to the result unchecked |
+| `memory_refs` | the handler | copied to the result unchecked |
+| `events` | the handler | assembled *before* validation; published even when validation rejects the call |
+| `ToolCallError` | the handler | the runtime adds only a path and a JSON type name, never the offending value |
+
+So for `vault.request_direct`, `output` genuinely cannot carry bytes — the
+declared schema is `null` and a non-null output is rejected. The other three
+fields are handler discipline, and a conforming binding must therefore return
+them empty and test that it does.
+
+Two further limits on the `output` guarantee. It is a property of the
+`ToolDefinition` passed to `register_handler`, not of the tool id: a definition
+registered with `output_schema: None` skips validation entirely, which is why
+V4 requires definitions to come from the built-in catalog. And a rejected output
+is discarded rather than echoed, so the rejection path is not itself a channel.
+
+Finally, note what `vault_ref` is. It is not secret material, but it *is* a
+bearer capability: whoever holds it can redeem it until it is consumed or
+expires. `VaultLeaseReceipt` redacts it in `Debug` for that reason, but a
+successful `vault.request_lease` necessarily puts it into the tool output, from
+where the runtime copies it into the terminal event payload and the execution
+journal. Any sink that persists or prints journals is therefore persisting live
+capabilities and must be written knowing that. Redacting `vault.*` outputs at
+the sink, or shortening lease TTLs on the agent-facing path, are both reasonable
+responses; pretending the receipt is inert is not.
+
+**V2 — bounded, secret-free errors.** Handler errors carry a fixed
+`ToolErrorKind` and one of a closed set of static messages. A handler must not
+interpolate the requested secret name, the payload, a `VaultRef`, or any
+adapter-supplied string into the message or `details`. `details` stays JSON
+`null` unless it carries a value already safe to show the caller.
+
+This bounds what an error may *contain*; it does not claim the error set carries
+no information. It does not: a caller can distinguish "secret not registered"
+from success, and can distinguish the three delivery failures from each other,
+so it can probe both the set of registered names and the adapter's consumer
+table. Both are accepted deliberately. The caller supplied the name, and — until
+per-secret authorization exists (see below) — name enumeration is strictly the
+lesser problem, while collapsing the delivery failures would make a
+misconfigured adapter undebuggable. A binding that needs those distinctions
+hidden must suppress them explicitly; nothing here does it automatically.
+
+**V3 — validate arguments independently of the registry.** A handler may be
+invoked directly, without the registry's schema validation in front of it, so
+each handler re-checks argument presence and type and returns
+`ToolValidationError` on any mismatch. Missing, null, wrong-typed, and
+out-of-range arguments are all validation failures, never panics: no `unwrap`,
+no indexing, no arithmetic that can overflow on caller-controlled input.
+
+**V4 — the registration path is the tier gate.** Handlers are attached with
+`register_handler`, which enforces `allows_tool`, the `required_tier` ceiling
+and the `required_capabilities` of the definition being registered. A binding
+must not bypass that path by inserting into the handler map directly, and must
+not register a vault tool against a host profile whose `max_tier` is below
+`Tier2`. Registration failure is fatal to host startup rather than degraded
+into an unregistered tool, because a missing vault handler is observationally
+identical to a denied one from the agent's side.
+
+Definitions must come from the built-in catalog rather than being reconstructed
+by the binding, so a binding cannot register a vault tool under a weaker tier,
+a smaller capability set, or a laxer `output_schema` than the rest of the system
+validates against.
+
+Registering the pair is all-or-nothing: pre-flight every definition before
+attaching any handler. A host left holding one vault tool because the second was
+refused is worse than one holding neither, since the tool that did register
+looks healthy and the failure resurfaces later and elsewhere.
+
+Note what this gate does *not* do. It runs once, at registration, per host — it
+is not a per-call check. Per-call authorization is the policy engine's job, and
+the default policy admits everything, so a binding that wants per-call control
+must install a policy rather than assume one.
+
+#### 7.2 What this binding does *not* establish
+
+`vault.request_direct`'s `consumer_agent_id` names a consumer the caller asserts
+is authorized. The handler does not perform that authorization; it forwards to
+the trusted adapter, which is the component entitled to accept or refuse. A
+binding that treats a caller-supplied `consumer_agent_id` as proof of
+authorization is non-conforming.
+
+For the adapter to be able to refuse for a *reason*, it has to know what it is
+being asked. A binding must therefore forward the requesting agent, the session,
+and the secret name alongside the destination. Given only `(consumer, payload)`,
+the strongest rule an adapter can express is a global destination allowlist —
+and under that rule a caller cleared to send one secret to a consumer is equally
+cleared to send every secret to it, because nothing in the chain can tell the
+two requests apart. That is a confused deputy: the adapter holds the authority
+but not the facts.
+
+Forwarding those fields makes a decision *possible*. It does not make one. Two
+gaps remain open, and are recorded here so nobody mistakes silence for safety:
+
+1. **There is no per-secret policy.** The `privilege_tier`, `allowed_agents`,
+   and `allowed_mode` metadata this system's vault requirements call for is not
+   implemented. The tier and capability checks in V4 are per-*tool* and run once
+   at registration, so they cannot express "this agent may read that secret" or
+   "this secret is direct-delivery only". Until per-secret policy exists, any
+   caller that clears the tool gate can request any registered secret by name,
+   in either mode — including leasing a secret that was meant to be
+   direct-delivery only, which hands the caller exactly the material direct
+   delivery exists to withhold.
+
+2. **The identity fields are only as good as their source.** This covers all
+   three — `requesting_agent_id`, `requesting_user_id`, and `session_id`. Each
+   is read from the execution context, which is populated from the tool
+   invocation request. If a host fills those from caller-supplied values rather
+   than from an attested identity, an adapter that authorizes on any of them is
+   authorizing on the attacker's own claim. Any binding that relies on a field
+   must first establish that its host attests *that* field; attesting one says
+   nothing about the others.
+
 ### 8. Filesystem tools
 
 - `fs.read`
