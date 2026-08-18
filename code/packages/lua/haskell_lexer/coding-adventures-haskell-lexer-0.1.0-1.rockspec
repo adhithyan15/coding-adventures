@@ -26,5 +26,12 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.haskell_lexer"] = "src/coding_adventures/haskell_lexer/init.lua",
+        ["coding_adventures.haskell_lexer._grammar_1_0"] = "src/coding_adventures/haskell_lexer/_grammar_1_0.lua",
+        ["coding_adventures.haskell_lexer._grammar_1_1"] = "src/coding_adventures/haskell_lexer/_grammar_1_1.lua",
+        ["coding_adventures.haskell_lexer._grammar_1_2"] = "src/coding_adventures/haskell_lexer/_grammar_1_2.lua",
+        ["coding_adventures.haskell_lexer._grammar_1_3"] = "src/coding_adventures/haskell_lexer/_grammar_1_3.lua",
+        ["coding_adventures.haskell_lexer._grammar_1_4"] = "src/coding_adventures/haskell_lexer/_grammar_1_4.lua",
+        ["coding_adventures.haskell_lexer._grammar_98"] = "src/coding_adventures/haskell_lexer/_grammar_98.lua",
+        ["coding_adventures.haskell_lexer._grammar_2010"] = "src/coding_adventures/haskell_lexer/_grammar_2010.lua",
     },
 }
