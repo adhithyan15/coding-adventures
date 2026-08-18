@@ -1755,6 +1755,13 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::LeUI8x16
             | wasm_opcodes::SimdOpKind::GeSI8x16
             | wasm_opcodes::SimdOpKind::GeUI8x16
+            | wasm_opcodes::SimdOpKind::AbsI8x16
+            | wasm_opcodes::SimdOpKind::PopcntI8x16
+            | wasm_opcodes::SimdOpKind::MinSI8x16
+            | wasm_opcodes::SimdOpKind::MinUI8x16
+            | wasm_opcodes::SimdOpKind::MaxSI8x16
+            | wasm_opcodes::SimdOpKind::MaxUI8x16
+            | wasm_opcodes::SimdOpKind::AvgrUI8x16
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -2368,6 +2375,13 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::LeUI8x16
             | wasm_opcodes::SimdOpKind::GeSI8x16
             | wasm_opcodes::SimdOpKind::GeUI8x16
+            | wasm_opcodes::SimdOpKind::AbsI8x16
+            | wasm_opcodes::SimdOpKind::PopcntI8x16
+            | wasm_opcodes::SimdOpKind::MinSI8x16
+            | wasm_opcodes::SimdOpKind::MinUI8x16
+            | wasm_opcodes::SimdOpKind::MaxSI8x16
+            | wasm_opcodes::SimdOpKind::MaxUI8x16
+            | wasm_opcodes::SimdOpKind::AvgrUI8x16
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -4928,6 +4942,32 @@ mod tests {
         assert!(code_of(&m, 7).windows(2).any(|w| w == [0xFD, 0x2A]), "i8x16.le_u: {:?}", code_of(&m, 7));
         assert!(code_of(&m, 8).windows(2).any(|w| w == [0xFD, 0x2B]), "i8x16.ge_s: {:?}", code_of(&m, 8));
         assert!(code_of(&m, 9).windows(2).any(|w| w == [0xFD, 0x2C]), "i8x16.ge_u: {:?}", code_of(&m, 9));
+    }
+
+    #[test]
+    fn simd_i8x16_arith2_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR8: i8x16's own abs/popcnt/min_s/min_u/max_s/
+        // max_u/avgr_u family. All seven sub-opcodes are < 128, so
+        // single-byte LEB128 (no continuation byte). Each real
+        // sub-opcode verified against wasm-opcodes' own CHANGELOG entry.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (i8x16.abs (local.get 0)))
+                 (func (param v128) (result v128) (i8x16.popcnt (local.get 0)))
+                 (func (param v128 v128) (result v128) (i8x16.min_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.min_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.max_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.max_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.avgr_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x60]), "i8x16.abs: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x62]), "i8x16.popcnt: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x76]), "i8x16.min_s: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(2).any(|w| w == [0xFD, 0x77]), "i8x16.min_u: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(2).any(|w| w == [0xFD, 0x78]), "i8x16.max_s: {:?}", code_of(&m, 4));
+        assert!(code_of(&m, 5).windows(2).any(|w| w == [0xFD, 0x79]), "i8x16.max_u: {:?}", code_of(&m, 5));
+        assert!(code_of(&m, 6).windows(2).any(|w| w == [0xFD, 0x7B]), "i8x16.avgr_u: {:?}", code_of(&m, 6));
     }
 
     #[test]

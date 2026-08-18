@@ -765,6 +765,24 @@ fn valid_i8x16_cmp_family() {
 }
 
 #[test]
+fn valid_i8x16_arith2_family() {
+    // SIMD widen PR8: i8x16's own abs/popcnt/min_s/min_u/max_s/max_u/
+    // avgr_u family. abs/popcnt are UNARY (v128->v128); min_s/min_u/
+    // max_s/max_u/avgr_u are BINARY (v128,v128->v128), same pop-two-
+    // push-one shape as i32x4's own min_s/min_u/max_s/max_u.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i8x16.abs (local.get 0)))
+             (func (param v128) (result v128) (i8x16.popcnt (local.get 0)))
+             (func (param v128 v128) (result v128) (i8x16.min_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.min_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.max_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.max_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.avgr_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

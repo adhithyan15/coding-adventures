@@ -964,6 +964,27 @@ pub enum SimdOpKind {
     GeSI8x16,
     /// `i8x16.ge_u` -- lane-wise unsigned greater-than-or-equal, boolean-mask convention.
     GeUI8x16,
+    /// `i8x16.abs` -- lane-wise absolute value, wrapping (`i8::MIN.abs()`
+    /// wraps back to `i8::MIN`, same two's-complement discipline as
+    /// [`Self::Neg`]/[`Self::Abs`] at `i32x4`'s width).
+    AbsI8x16,
+    /// `i8x16.popcnt` -- lane-wise population count (Hamming weight) of
+    /// each `i8` lane's bits. First SIMD popcnt in this table -- no
+    /// `i32x4`/`i16x8` precedent, since WASM SIMD only defines `popcnt`
+    /// for `i8x16`.
+    PopcntI8x16,
+    /// `i8x16.min_s` -- lane-wise signed minimum.
+    MinSI8x16,
+    /// `i8x16.min_u` -- lane-wise unsigned minimum.
+    MinUI8x16,
+    /// `i8x16.max_s` -- lane-wise signed maximum.
+    MaxSI8x16,
+    /// `i8x16.max_u` -- lane-wise unsigned maximum.
+    MaxUI8x16,
+    /// `i8x16.avgr_u` -- lane-wise unsigned rounding average:
+    /// `(a + b + 1) >> 1`, computed widened (as `u16`) to avoid overflow.
+    /// First SIMD avgr in this table -- no `i32x4`/`i16x8` precedent.
+    AvgrUI8x16,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1033,6 +1054,14 @@ pub struct SimdOpInfo {
 /// from `BinarySIMD.md` and cross-checked against the already-
 /// implemented `i8x16.add` (`0x6E`)/`i16x8.eq` (`0x2D`) entries (both
 /// matched exactly).
+/// `i8x16.abs`/`popcnt`/`min_s`/`min_u`/`max_s`/`max_u`/`avgr_u` -- the
+/// "arith2" family, mirroring `i32x4`'s own `abs`/`min_s`/`min_u`/
+/// `max_s`/`max_u` widening, plus two op SHAPES with no `i32x4`/`i16x8`
+/// precedent in this table: `popcnt` (lane-wise Hamming weight) and
+/// `avgr_u` (lane-wise unsigned rounding average). Each sub-opcode byte
+/// fetched live from `BinarySIMD.md` and cross-checked against the
+/// already-implemented `i8x16.add` (`0x6E`)/`i8x16.neg` (`0x61`)/
+/// `i8x16.sub` (`0x71`) entries (all three matched exactly).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1090,6 +1119,13 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i8x16.le_u", sub_opcode: 0x2A, kind: SimdOpKind::LeUI8x16 },
     SimdOpInfo { name: "i8x16.ge_s", sub_opcode: 0x2B, kind: SimdOpKind::GeSI8x16 },
     SimdOpInfo { name: "i8x16.ge_u", sub_opcode: 0x2C, kind: SimdOpKind::GeUI8x16 },
+    SimdOpInfo { name: "i8x16.abs", sub_opcode: 0x60, kind: SimdOpKind::AbsI8x16 },
+    SimdOpInfo { name: "i8x16.popcnt", sub_opcode: 0x62, kind: SimdOpKind::PopcntI8x16 },
+    SimdOpInfo { name: "i8x16.min_s", sub_opcode: 0x76, kind: SimdOpKind::MinSI8x16 },
+    SimdOpInfo { name: "i8x16.min_u", sub_opcode: 0x77, kind: SimdOpKind::MinUI8x16 },
+    SimdOpInfo { name: "i8x16.max_s", sub_opcode: 0x78, kind: SimdOpKind::MaxSI8x16 },
+    SimdOpInfo { name: "i8x16.max_u", sub_opcode: 0x79, kind: SimdOpKind::MaxUI8x16 },
+    SimdOpInfo { name: "i8x16.avgr_u", sub_opcode: 0x7B, kind: SimdOpKind::AvgrUI8x16 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1508,8 +1544,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_56_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 56);
+    fn simd_ops_table_has_the_expected_63_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 63);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1719,6 +1755,31 @@ mod tests {
             ("i8x16.le_u", 0x2A, SimdOpKind::LeUI8x16),
             ("i8x16.ge_s", 0x2B, SimdOpKind::GeSI8x16),
             ("i8x16.ge_u", 0x2C, SimdOpKind::GeUI8x16),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i8x16_arith2_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i8x16.add (0x6E)/i8x16.neg (0x61)/
+        // i8x16.sub (0x71) entries (all three matched exactly) -- same
+        // discipline as every prior addition. Mirrors i32x4's own
+        // abs/min_s/min_u/max_s/max_u "arith2" widening (task #118-120),
+        // plus two op SHAPES with no i32x4/i16x8 precedent: popcnt and
+        // avgr_u (WASM SIMD defines popcnt/avgr_u only for i8x16).
+        for (name, sub_opcode, kind) in [
+            ("i8x16.abs", 0x60, SimdOpKind::AbsI8x16),
+            ("i8x16.popcnt", 0x62, SimdOpKind::PopcntI8x16),
+            ("i8x16.min_s", 0x76, SimdOpKind::MinSI8x16),
+            ("i8x16.min_u", 0x77, SimdOpKind::MinUI8x16),
+            ("i8x16.max_s", 0x78, SimdOpKind::MaxSI8x16),
+            ("i8x16.max_u", 0x79, SimdOpKind::MaxUI8x16),
+            ("i8x16.avgr_u", 0x7B, SimdOpKind::AvgrUI8x16),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

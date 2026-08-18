@@ -5087,6 +5087,73 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::AbsI8x16 | SimdOpKind::PopcntI8x16 => {
+                // i8x16.abs/i8x16.popcnt: UNARY, same shape as
+                // `i8x16.neg`/`i32x4.abs` -- pops exactly ONE v128,
+                // transforms each of the 16 `i8` lanes, pushes one.
+                // `i8::MIN.wrapping_abs() == i8::MIN` is the same
+                // two's-complement wrapping edge case `i32x4.abs`'s own
+                // test already established. `popcnt` counts set bits per
+                // lane (Hamming weight) -- first SIMD popcnt in this
+                // interpreter, no `i32x4`/`i16x8` precedent since WASM
+                // SIMD only defines `popcnt` for `i8x16`; the underlying
+                // bit pattern doesn't depend on signed/unsigned
+                // interpretation, so no `as u8`/`as i8` split is needed.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    result[i] = match op.kind {
+                        SimdOpKind::AbsI8x16 => (bytes[i] as i8).wrapping_abs() as u8,
+                        SimdOpKind::PopcntI8x16 => bytes[i].count_ones() as u8,
+                        _ => unreachable!("only AbsI8x16/PopcntI8x16 reach this arm"),
+                    };
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::MinSI8x16 | SimdOpKind::MinUI8x16 | SimdOpKind::MaxSI8x16 | SimdOpKind::MaxUI8x16 | SimdOpKind::AvgrUI8x16 => {
+                // i8x16.min_s/min_u/max_s/max_u: BINARY, same shape as
+                // `i32x4`'s own `min_s`/`min_u`/`max_s`/`max_u` (task
+                // #118-120), just at `i8x16`'s narrower lane width.
+                // `avgr_u`: BINARY unsigned rounding average, `(a + b +
+                // 1) >> 1` -- computed widened to `u16` so the `+1`
+                // cannot overflow the lane width, then narrowed back.
+                // First SIMD avgr in this interpreter, no `i32x4`/
+                // `i16x8` precedent since WASM SIMD only defines `avgr`
+                // (rounding average) for `i8x16`/`i16x8`, not `i32x4`.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    let l = lhs[i] as i8;
+                    let r = rhs[i] as i8;
+                    let out = match op.kind {
+                        SimdOpKind::MinSI8x16 => l.min(r),
+                        SimdOpKind::MinUI8x16 => ((lhs[i]).min(rhs[i])) as i8,
+                        SimdOpKind::MaxSI8x16 => l.max(r),
+                        SimdOpKind::MaxUI8x16 => ((lhs[i]).max(rhs[i])) as i8,
+                        SimdOpKind::AvgrUI8x16 => (((lhs[i] as u16) + (rhs[i] as u16) + 1) >> 1) as i8,
+                        _ => unreachable!("only MinS/MinU/MaxS/MaxU/AvgrU I8x16 reach this arm"),
+                    };
+                    result[i] = out as u8;
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8537,6 +8604,91 @@ mod tests {
         let mut lt_u_engine = simd_engine_returning_v128(lt_code(0x26)); // i8x16.lt_u
         let (_, lt_u_bytes) = lt_u_engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(lt_u_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([0; 16]).try_into().unwrap())), "0xFF <_u 1 must be false (all lanes)");
+    }
+
+    /// `i8x16.abs`: same two's-complement wrapping edge case
+    /// `i32x4.abs`'s own test already established -- `i8::MIN`
+    /// (`-128`) has no positive counterpart in `i8`, so `abs` wraps
+    /// back to `i8::MIN` instead of panicking or producing `128`.
+    #[test]
+    fn i8x16_abs_wraps_i8_min_instead_of_panicking() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16([i8::MIN; 16]));
+        code.extend([0xFD, 0x60]); // i8x16.abs (sub-opcode 0x60, single-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([i8::MIN; 16]).try_into().unwrap())), "i8::MIN.abs() must wrap back to i8::MIN, not panic");
+    }
+
+    /// `i8x16.popcnt`: lane-wise Hamming weight. No i32x4/i16x8
+    /// precedent for this op SHAPE in this interpreter -- verifies a
+    /// mix of bit patterns (`0x00` -> 0 bits, `0xFF` -> 8 bits, `0x0F`
+    /// -> 4 bits, `0x01` -> 1 bit) land in the RESULT lane as a plain
+    /// count, not a boolean mask.
+    #[test]
+    fn i8x16_popcnt_counts_set_bits_per_lane() {
+        let lanes: [i8; 16] = [0x00u8 as i8, 0xFFu8 as i8, 0x0Fu8 as i8, 0x01u8 as i8, 0, -1, 15, 1, 0, -1, 15, 1, 0, -1, 15, 1];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(lanes));
+        code.extend([0xFD, 0x62]); // i8x16.popcnt (sub-opcode 0x62, single-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        let expected: [i8; 16] = [0, 8, 4, 1, 0, 8, 4, 1, 0, 8, 4, 1, 0, 8, 4, 1];
+        assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i8x16(expected).try_into().unwrap())), "popcnt must be the Hamming weight of each lane's bits");
+    }
+
+    /// `i8x16.min_s`/`min_u`/`max_s`/`max_u`: same signed/unsigned
+    /// disagreement pattern as the comparison family's own test -- `-1`
+    /// reinterpreted as `u8` is `0xFF`, the LARGEST unsigned value, so
+    /// `min_s(-1, 1) == -1` but `min_u(-1, 1) == 1` (and symmetrically
+    /// for `max`).
+    #[test]
+    fn i8x16_min_max_disagree_on_signed_vs_unsigned_interpretation() {
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i8x16([-1; 16]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i8x16([1; 16]));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0x76-0x79 are < 128 -- single-byte LEB128
+            code.push(0x0B);
+            code
+        };
+        let mut min_s_engine = simd_engine_returning_v128(code_for(0x76)); // i8x16.min_s
+        let (_, min_s_bytes) = min_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(min_s_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([-1; 16]).try_into().unwrap())), "min_s(-1, 1) must be -1 (signed: -1 < 1)");
+
+        let mut min_u_engine = simd_engine_returning_v128(code_for(0x77)); // i8x16.min_u
+        let (_, min_u_bytes) = min_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(min_u_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([1; 16]).try_into().unwrap())), "min_u(0xFF, 1) must be 1 (unsigned: 0xFF > 1)");
+
+        let mut max_s_engine = simd_engine_returning_v128(code_for(0x78)); // i8x16.max_s
+        let (_, max_s_bytes) = max_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(max_s_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([1; 16]).try_into().unwrap())), "max_s(-1, 1) must be 1 (signed: 1 > -1)");
+
+        let mut max_u_engine = simd_engine_returning_v128(code_for(0x79)); // i8x16.max_u
+        let (_, max_u_bytes) = max_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(max_u_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([-1; 16]).try_into().unwrap())), "max_u(0xFF, 1) must be 0xFF (unsigned: 0xFF > 1)");
+    }
+
+    /// `i8x16.avgr_u`: unsigned ROUNDING average, `(a + b + 1) >> 1` --
+    /// distinct from a plain truncating average. `avgr_u(0xFF, 0) ==
+    /// 128`, not `127`, because the `+1` rounds up before the shift;
+    /// this is the one case that would silently hide a missing `+1`.
+    #[test]
+    fn i8x16_avgr_u_rounds_up_not_truncates() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16([-1; 16])); // 0xFF as u8
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16([0; 16]));
+        code.extend([0xFD, 0x7B]); // i8x16.avgr_u (sub-opcode 0x7B, single-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        // (0xFF + 0 + 1) >> 1 == 0x100 >> 1 == 0x80 == 128, which as i8 is -128.
+        assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([-128; 16]).try_into().unwrap())), "avgr_u(0xFF, 0) must round UP to 128 (0x80), not truncate to 127");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve

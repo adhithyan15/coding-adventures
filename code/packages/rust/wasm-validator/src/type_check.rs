@@ -1434,13 +1434,19 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::SubI8x16
                     | wasm_opcodes::SimdOpKind::AddI16x8
                     | wasm_opcodes::SimdOpKind::SubI16x8
-                    | wasm_opcodes::SimdOpKind::MulI16x8 => {
+                    | wasm_opcodes::SimdOpKind::MulI16x8
+                    | wasm_opcodes::SimdOpKind::MinSI8x16
+                    | wasm_opcodes::SimdOpKind::MinUI8x16
+                    | wasm_opcodes::SimdOpKind::MaxSI8x16
+                    | wasm_opcodes::SimdOpKind::MaxUI8x16
+                    | wasm_opcodes::SimdOpKind::AvgrUI8x16 => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
-                        // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul` all
-                        // read/write a narrower-than-`v128` lane width
-                        // internally, but AT THE TYPE LEVEL they're the
-                        // same pop-two-push-one `v128` shape as
-                        // `Add`/`Sub`/`Mul` above -- the type-checker
+                        // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
+                        // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`
+                        // all read/write a narrower-than-`v128` lane
+                        // width internally, but AT THE TYPE LEVEL
+                        // they're the same pop-two-push-one `v128` shape
+                        // as `Add`/`Sub`/`Mul` above -- the type-checker
                         // only sees `v128`, never the narrower lane
                         // interpretation.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
@@ -1491,13 +1497,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
                     | wasm_opcodes::SimdOpKind::NegI8x16
-                    | wasm_opcodes::SimdOpKind::NegI16x8 => {
+                    | wasm_opcodes::SimdOpKind::NegI16x8
+                    | wasm_opcodes::SimdOpKind::AbsI8x16
+                    | wasm_opcodes::SimdOpKind::PopcntI8x16 => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
-                        // `i16x8.neg` read their operand as a narrower
-                        // lane width internally, but are still just
-                        // pop-one-`v128`-push-one-`v128` at the type
-                        // level, same as `Neg`/`Abs`.
+                        // `i16x8.neg`/`i8x16.abs`/`popcnt` read their
+                        // operand as a narrower lane width internally,
+                        // but are still just pop-one-`v128`-push-one-
+                        // `v128` at the type level, same as `Neg`/`Abs`.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
