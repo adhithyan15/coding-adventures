@@ -143,6 +143,15 @@ decoded payload behind. No opaque value enters arguments, stdout/stderr, audit
 history, debug output, config, or durable plaintext. Repository and local-state
 access remain injected and provider neutral.
 
+That wipe-on-drop guarantee is a statement about this application's own buffers.
+The canonical-CBOR layer beneath them holds its intermediate value trees in
+types that implement neither `Zeroize` nor a wiping `Drop`, so a re-encode leaves
+plaintext in freed heap on every path, success included. That is true of all
+seven record types and of every seal and unseal in the product rather than
+anything this ceremony introduces, and closing it is a separate change against
+the codec layer; the distinction is recorded here so the guarantee above is not
+read as covering more than it does.
+
 ## 6. Acceptance gates
 
 Tests must prove exact default/named grammar; audited missing, unconflicted,
