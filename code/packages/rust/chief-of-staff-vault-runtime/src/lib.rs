@@ -342,11 +342,6 @@ fn check_admission(
     Ok(Admitted(()))
 }
 
-/// One registered secret: the bytes, and the policy governing who gets them.
-///
-/// Kept together in one map value rather than in two parallel maps, so a secret
-/// cannot exist without a policy — the pairing is a type-level fact rather than
-/// an invariant someone has to maintain across two insertions.
 /// Proof that [`check_admission`] ran and admitted the request.
 ///
 /// Its field is private, so no *other crate* can forge one. Within this crate
@@ -426,10 +421,12 @@ pub struct ChiefVaultRuntime {
     ///
     /// **Lock order is `secrets` → `issued` → `leases`** for every path that
     /// holds more than one at a time. `consume` and `revoke` touch `leases` and
-    /// then `issued`, which is the reverse — they are safe only because they
-    /// release the first before taking the second, and **must never hold
-    /// both**. Making them atomic by holding `issued` across `leases.consume`
-    /// would close a cycle against `request_lease` and deadlock. `request_lease` holds
+    /// then `issued`, and must not acquire `issued` while a lease-table guard is
+    /// live. (Holding `issued` *across* `leases.consume` would in fact be the
+    /// same `issued` → `leases` order `request_lease` already uses, so it would
+    /// not deadlock — it is simply unnecessary, because a stale id left in the
+    /// index is harmless: rotation's `revoke` of an already-dead lease is a
+    /// no-op.) `request_lease` holds
     /// `secrets` across the whole mint, which is what stops a rotation from
     /// slipping between the admission decision and the lease being indexed;
     /// see [`ChiefVaultRuntime::request_lease`].
@@ -644,8 +641,6 @@ impl ChiefVaultRuntime {
         let stored = secrets
             .get(request.secret_name)
             .ok_or(VaultRuntimeError::SecretNotFound)?;
-        let payload = stored.admit(request.requesting_agent_id, true)?;
-
         let mut issued = self
             .issued
             .lock()
@@ -659,6 +654,12 @@ impl ChiefVaultRuntime {
         if issued.count(request.secret_name) >= MAX_TRACKED_LEASES_PER_SECRET {
             return Err(VaultRuntimeError::TooManyOutstandingLeases);
         }
+
+        // Admission last, so the payload is cloned only once every refusal is
+        // behind us. VLT06 P4 is about the admission checks specifically, but
+        // the capacity refusal is a refusal too, and there is no reason to
+        // materialize a secret for a request that is about to be turned away.
+        let payload = stored.admit(request.requesting_agent_id, true)?;
 
         let lease_id = self.leases.issue(payload, request.ttl_ms)?;
         let info = self.leases.lookup(&lease_id)?;
@@ -730,10 +731,17 @@ impl ChiefVaultRuntime {
 
 /// Wall-clock milliseconds, for deciding whether a tracked lease is still live.
 ///
-/// Falls back to 0 if the clock is before the epoch, which makes every lease
-/// look expired and so sweeps aggressively. That is the safe direction: a
-/// swept-too-early id costs a revocable capability being forgotten, while a
-/// kept-too-long id costs availability.
+/// Falls back to 0 if the clock is before the epoch. That is not "sweep
+/// everything" — at `now_ms == 0` a freshly issued lease still reads as active,
+/// so the sweep reclaims nothing. The reason the fallback is nonetheless right
+/// is consistency: `InMemoryLeaseManager::now_ms` uses the identical
+/// `unwrap_or(0)`, so under a pre-epoch clock both layers agree that leases are
+/// live, and the index never disagrees with the table it indexes.
+///
+/// Which direction is "safe" also runs the other way from the obvious guess.
+/// Sweeping too early drops a *live* id, and rotation-revokes (VLT06 P6) is
+/// exactly what depends on those ids being present; keeping one too long only
+/// costs a slot.
 fn now_ms() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)

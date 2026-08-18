@@ -30,7 +30,7 @@ closed without returning secret material.
 Every registered secret carries a `SecretPolicy` (VLT06). It is required at
 registration, not defaulted: a permissive default leaves a secret unguarded
 silently, and a restrictive one surfaces only when a legitimate caller is
-refused. `SecretPolicy::unrestricted()` is the named, greppable way to say a
+refused. `SecretPolicy::unrestricted(rotated_at_ms)` is the named, greppable way to say a
 secret really is open.
 
 | Field | Effect |

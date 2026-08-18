@@ -250,8 +250,12 @@ fn expired_leases_release_their_slots() {
         SecretPolicy::unrestricted(0),
     );
 
-    // Fill the cap with leases that die almost immediately, holding every
-    // reference so nothing is redeemed or revoked. Expiry is the only way back.
+    // Ask for the cap's worth of leases that die almost immediately, holding
+    // every reference so nothing is redeemed or revoked -- expiry is the only
+    // way back. With the sweep working, occupancy never actually approaches
+    // 1024 here, because each request reclaims what the last few left behind;
+    // the loop asks 1024 times regardless so that a broken sweep is forced to
+    // refuse partway and fail the assertion below.
     let mut held = Vec::new();
     for _ in 0..1_024 {
         match lease(&vault, 1) {
@@ -262,7 +266,7 @@ fn expired_leases_release_their_slots() {
     assert_eq!(
         held.len(),
         1_024,
-        "expected to reach the cap; got {} leases",
+        "a working sweep serves all 1024 requests; got {} before a refusal",
         held.len()
     );
 
