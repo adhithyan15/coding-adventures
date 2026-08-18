@@ -3,7 +3,7 @@
 --
 -- This package is part of the coding-adventures monorepo. It is a thin
 -- wrapper around the grammar-driven `GrammarLexer` from the `lexer` package,
--- loading the appropriate grammar file to configure the tokenizer.
+-- loading the appropriate grammar to configure the tokenizer.
 --
 -- # What is Java tokenization?
 --
@@ -19,46 +19,40 @@
 --   Token(EOF,        "",     1:12)
 --
 -- Whitespace and comments are silently consumed (declared as skip patterns
--- in the grammar file). The parser never sees them.
+-- in the grammar). The parser never sees them.
 --
 -- # Architecture
 --
 -- This module:
---   1. Locates the correct grammar file in `code/grammars/java/`.
---   2. Reads and parses it once per version (cached) using
---      `grammar_tools.parse_token_grammar`.
+--   1. Selects the correct *precompiled* grammar module for the requested
+--      version (see "Why precompiled grammars?" below).
+--   2. Builds (and caches) a `TokenGrammar` from it via `token_grammar()`.
 --   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
 --   4. Returns the flat token list.
 --
+-- # Why precompiled grammars?
+--
+-- Earlier versions of this module read `code/grammars/java/java<version>.tokens`
+-- off disk at runtime, using a path that walked outside this package's own
+-- directory into the monorepo. That works when running from a checkout of
+-- the monorepo, but a published LuaRocks package does not include
+-- `code/grammars/` — installing this rock and calling `tokenize` would raise
+-- a file-not-found error.
+--
+-- Instead, each supported Java version's grammar is compiled ahead of time
+-- (via `grammar-tools compile-tokens`) into a `_grammar_<version>.lua`
+-- sibling module that embeds the parsed `TokenGrammar` as native Lua data.
+-- Those modules ship with this package like any other source file, so the
+-- rock is self-contained.
+--
 -- # Version routing
 --
--- When `version` is nil or "" → loads `code/grammars/java/java21.tokens`
---   (defaults to Java 21, the latest LTS)
--- When `version` is "1.0"    → loads `code/grammars/java/java1.0.tokens`
--- When `version` is "8"      → loads `code/grammars/java/java8.tokens`
+-- When `version` is nil or "" → uses the Java 21 grammar (default, latest LTS)
+-- When `version` is "1.0"    → uses the Java 1.0 grammar.
+-- When `version` is "8"      → uses the Java 8 grammar.
 -- ... etc.
---
--- # Path navigation
---
--- The source file lives at:
---   code/packages/lua/java_lexer/src/coding_adventures/java_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/java/`.
---
--- Directory structure from script_dir upward:
---   java_lexer/          (1) — module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   java_lexer/          (4) — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/java/...
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
 
 local M = {}
 M.VERSION = "0.1.0"
@@ -68,7 +62,7 @@ M.VERSION = "0.1.0"
 -- =========================================================================
 --
 -- Java is versioned by release number. The version strings we accept
--- match the grammar files under code/grammars/java/:
+-- correspond to the precompiled grammar modules below:
 --
 --   "1.0" — Java 1.0  (1996): the original release.
 --   "1.1" — Java 1.1  (1997): inner classes.
@@ -92,50 +86,39 @@ local VALID_JAVA_VERSIONS = {
 local DEFAULT_VERSION = "21"
 
 -- =========================================================================
--- Path helpers
+-- Precompiled grammars
 -- =========================================================================
+--
+-- Each entry maps a version string to the `require`d module produced by
+-- `grammar-tools compile-tokens code/grammars/java/java<version>.tokens`.
+-- The module exposes a `token_grammar()` constructor; we call it lazily
+-- (and cache the result) so grammar construction only happens for versions
+-- actually used.
 
---- Return the directory of this source file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
-end
-
---- Walk up `levels` directory levels from `path`.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
--- Grammar loading
--- =========================================================================
+local compiled_grammars = {
+    ["1.0"] = require("coding_adventures.java_lexer._grammar_1_0"),
+    ["1.1"] = require("coding_adventures.java_lexer._grammar_1_1"),
+    ["1.4"] = require("coding_adventures.java_lexer._grammar_1_4"),
+    ["5"]   = require("coding_adventures.java_lexer._grammar_5"),
+    ["7"]   = require("coding_adventures.java_lexer._grammar_7"),
+    ["8"]   = require("coding_adventures.java_lexer._grammar_8"),
+    ["10"]  = require("coding_adventures.java_lexer._grammar_10"),
+    ["14"]  = require("coding_adventures.java_lexer._grammar_14"),
+    ["17"]  = require("coding_adventures.java_lexer._grammar_17"),
+    ["21"]  = require("coding_adventures.java_lexer._grammar_21"),
+}
 
 local _grammar_cache = {}
 
---- Resolve the path to the correct .tokens grammar file for a given version.
+--- Resolve a version string (or nil/"") to a valid, known version.
 --
 -- @param version string|nil  The Java version tag, or nil/empty for default (21).
--- @return string             Absolute path to the grammar .tokens file.
-local function resolve_tokens_path(version)
-    local script_dir = get_script_dir()
-    local repo_root  = up(script_dir, 6)
-
-    -- Default to Java 21 when no version specified.
+-- @return string             A key present in VALID_JAVA_VERSIONS.
+local function resolve_version(version)
     if not version or version == "" then
         version = DEFAULT_VERSION
     end
 
-    -- Validate the version string before building the path.
     if not VALID_JAVA_VERSIONS[version] then
         error(
             "java_lexer: unknown Java version '" .. version .. "'. " ..
@@ -143,45 +126,19 @@ local function resolve_tokens_path(version)
         )
     end
 
-    return repo_root .. "/grammars/java/java" .. version .. ".tokens"
+    return version
 end
 
---- Load and parse the grammar for a specific version, with per-version caching.
+--- Build (or return the cached) `TokenGrammar` for a specific version.
 --
--- @param version string|nil  The Java version tag (see resolve_tokens_path).
--- @return TokenGrammar       The parsed Java token grammar.
+-- @param version string|nil  The Java version tag (see resolve_version).
+-- @return TokenGrammar       The Java token grammar.
 local function get_grammar(version)
-    local key = version or DEFAULT_VERSION
-    if key == "" then key = DEFAULT_VERSION end
-    if _grammar_cache[key] then
-        return _grammar_cache[key]
+    local key = resolve_version(version)
+    if _grammar_cache[key] == nil then
+        _grammar_cache[key] = compiled_grammars[key].token_grammar()
     end
-
-    local tokens_path = resolve_tokens_path(version)
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "java_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    -- Some Java grammar files may use \v and \f in whitespace patterns.
-    -- Lua's regex engine does not support these escape sequences inside
-    -- character classes, so we replace them with the actual control characters.
-    content = content:gsub("\\v", "\x0B")
-    content = content:gsub("\\f", "\x0C")
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("java_lexer: failed to parse grammar file: " .. (parse_err or "unknown error"))
-    end
-
-    _grammar_cache[key] = grammar
-    return grammar
+    return _grammar_cache[key]
 end
 
 -- =========================================================================
@@ -234,10 +191,10 @@ function M.create_lexer(source, version)
     return lexer_pkg.GrammarLexer.new(source, grammar)
 end
 
---- Return the cached (or freshly loaded) TokenGrammar for Java.
+--- Return the cached (or freshly built) TokenGrammar for Java.
 --
 -- @param version string|nil  Java version tag (see tokenize for valid values).
--- @return TokenGrammar       The parsed Java token grammar.
+-- @return TokenGrammar       The Java token grammar.
 function M.get_grammar(version)
     return get_grammar(version)
 end

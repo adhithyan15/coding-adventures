@@ -33,8 +33,7 @@
 --
 -- # Java grammar
 --
--- The Java grammar is defined in `code/grammars/java/java<version>.grammar`.
--- The grammar covers a focused subset:
+-- The Java grammar covers a focused subset:
 --
 --   program        = { statement } ;
 --   statement      = var_declaration | assignment | expression_stmt ;
@@ -48,10 +47,26 @@
 -- # Architecture
 --
 -- 1. **Tokenize** — call `java_lexer.tokenize(source, version)` to get tokens.
--- 2. **Load grammar** — call `grammar_tools.parse_parser_grammar(content)`
---    to get a `ParserGrammar` with `.rules`.
+-- 2. **Load grammar** — select the precompiled `ParserGrammar` module for
+--    the requested version (see "Why precompiled grammars?" below) and call
+--    its `parser_grammar()` constructor.
 -- 3. **Parse** — construct a `GrammarParser` (from the `parser` package)
 --    and call `:parse()`.
+--
+-- # Why precompiled grammars?
+--
+-- Earlier versions of this module read `code/grammars/java/java<version>.grammar`
+-- off disk at runtime, using a path that walked outside this package's own
+-- directory into the monorepo. That works when running from a checkout of
+-- the monorepo, but a published LuaRocks package does not include
+-- `code/grammars/` — installing this rock and calling `parse` would raise a
+-- file-not-found error.
+--
+-- Instead, each supported Java version's grammar is compiled ahead of time
+-- (via `grammar-tools compile-grammar`) into a `_grammar_<version>.lua`
+-- sibling module that embeds the parsed `ParserGrammar` as native Lua data.
+-- Those modules ship with this package like any other source file, so the
+-- rock is self-contained.
 --
 -- # Operator precedence
 --
@@ -60,15 +75,7 @@
 --   expression  → handles + and - (lowest precedence)
 --   term        → handles * and / (higher precedence)
 --   factor      → literals, names, parenthesized expressions (highest)
---
--- # Path navigation
---
--- This file lives at:
---   code/packages/lua/java_parser/src/coding_adventures/java_parser/init.lua
---
--- Walking up 6 levels reaches `code/`, the repo root.
 
-local grammar_tools = require("coding_adventures.grammar_tools")
 local java_lexer    = require("coding_adventures.java_lexer")
 local parser_pkg    = require("coding_adventures.parser")
 
@@ -89,43 +96,35 @@ local VALID_JAVA_VERSIONS = {
 local DEFAULT_VERSION = "21"
 
 -- =========================================================================
--- Path helpers
+-- Precompiled grammars
 -- =========================================================================
+--
+-- Each entry maps a version string to the `require`d module produced by
+-- `grammar-tools compile-grammar code/grammars/java/java<version>.grammar`.
+-- The module exposes a `parser_grammar()` constructor; we call it lazily
+-- (and cache the result) so grammar construction only happens for versions
+-- actually used.
 
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    src = src:gsub("\\", "/")
-    local dir = src:match("(.+)/[^/]+$") or "."
-    return dir
-end
-
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
--- Grammar loading
--- =========================================================================
+local compiled_grammars = {
+    ["1.0"] = require("coding_adventures.java_parser._grammar_1_0"),
+    ["1.1"] = require("coding_adventures.java_parser._grammar_1_1"),
+    ["1.4"] = require("coding_adventures.java_parser._grammar_1_4"),
+    ["5"]   = require("coding_adventures.java_parser._grammar_5"),
+    ["7"]   = require("coding_adventures.java_parser._grammar_7"),
+    ["8"]   = require("coding_adventures.java_parser._grammar_8"),
+    ["10"]  = require("coding_adventures.java_parser._grammar_10"),
+    ["14"]  = require("coding_adventures.java_parser._grammar_14"),
+    ["17"]  = require("coding_adventures.java_parser._grammar_17"),
+    ["21"]  = require("coding_adventures.java_parser._grammar_21"),
+}
 
 local _grammar_cache = {}
 
---- Resolve the path to the correct .grammar file for a given version.
-local function resolve_grammar_path(version)
-    local script_dir = get_script_dir()
-    local repo_root  = up(script_dir, 6)
-
+--- Resolve a version string (or nil/"") to a valid, known version.
+--
+-- @param version string|nil  The Java version tag, or nil/empty for default (21).
+-- @return string             A key present in VALID_JAVA_VERSIONS.
+local function resolve_version(version)
     if not version or version == "" then
         version = DEFAULT_VERSION
     end
@@ -137,39 +136,19 @@ local function resolve_grammar_path(version)
         )
     end
 
-    return repo_root .. "/grammars/java/java" .. version .. ".grammar"
+    return version
 end
 
---- Load and parse the grammar for a specific version, with per-version caching.
+--- Build (or return the cached) `ParserGrammar` for a specific version.
+--
+-- @param version string|nil  The Java version tag (see resolve_version).
+-- @return ParserGrammar      The Java parser grammar.
 local function get_grammar(version)
-    local key = version or DEFAULT_VERSION
-    if key == "" then key = DEFAULT_VERSION end
-    if _grammar_cache[key] then
-        return _grammar_cache[key]
+    local key = resolve_version(version)
+    if _grammar_cache[key] == nil then
+        _grammar_cache[key] = compiled_grammars[key].parser_grammar()
     end
-
-    local grammar_path = resolve_grammar_path(version)
-
-    local f, open_err = io.open(grammar_path, "r")
-    if not f then
-        error(
-            "java_parser: cannot open grammar file: " .. grammar_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
-    if not grammar then
-        error(
-            "java_parser: failed to parse grammar file: " ..
-            (parse_err or "unknown error")
-        )
-    end
-
-    _grammar_cache[key] = grammar
-    return grammar
+    return _grammar_cache[key]
 end
 
 -- =========================================================================
@@ -206,10 +185,10 @@ function M.create_parser(source, version)
     return parser_pkg.GrammarParser.new(tokens, grammar)
 end
 
---- Return the cached (or freshly loaded) ParserGrammar for Java.
+--- Return the cached (or freshly built) ParserGrammar for Java.
 --
 -- @param version string|nil  Java version tag (see parse for valid values).
--- @return ParserGrammar      The parsed Java parser grammar.
+-- @return ParserGrammar      The Java parser grammar.
 function M.get_grammar(version)
     return get_grammar(version)
 end

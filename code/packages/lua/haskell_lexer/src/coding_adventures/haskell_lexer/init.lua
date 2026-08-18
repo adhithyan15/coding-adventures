@@ -1,9 +1,9 @@
--- haskell_lexer â€” Tokenizes Haskell source using the grammar-driven infrastructure
+-- haskell_lexer — Tokenizes Haskell source using the grammar-driven infrastructure
 -- ============================================================================
 --
 -- This package is part of the coding-adventures monorepo. It is a thin
 -- wrapper around the grammar-driven `GrammarLexer` from the `lexer` package,
--- loading the appropriate grammar file to configure the lexer.
+-- loading the appropriate grammar to configure the lexer.
 --
 -- # What is Haskell tokenization?
 --
@@ -19,46 +19,41 @@
 --   Token(EOF,        "",     1:12)
 --
 -- Whitespace and comments are silently consumed (declared as skip patterns
--- in the grammar file). The parser never sees them.
+-- in the grammar). The parser never sees them.
 --
 -- # Architecture
 --
 -- This module:
---   1. Locates the correct grammar file in `code/grammars/haskell/`.
---   2. Reads and parses it once per version (cached) using
---      `grammar_tools.parse_token_grammar`.
+--   1. Selects the correct *precompiled* grammar module for the requested
+--      version (see "Why precompiled grammars?" below).
+--   2. Builds (and caches) a `TokenGrammar` from it via `token_grammar()`.
 --   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
 --   4. Returns the flat token list.
 --
+-- # Why precompiled grammars?
+--
+-- Earlier versions of this module read `code/grammars/haskell/haskell<version>.tokens`
+-- off disk at runtime, using a path that walked outside this package's own
+-- directory into the monorepo. That works when running from a checkout of
+-- the monorepo, but a published LuaRocks package does not include
+-- `code/grammars/` — installing this rock and calling `tokenize` would raise
+-- a file-not-found error.
+--
+-- Instead, each supported Haskell version's grammar is compiled ahead of
+-- time (via `grammar-tools compile-tokens`) into a `_grammar_<version>.lua`
+-- sibling module that embeds the parsed `TokenGrammar` as native Lua data.
+-- Those modules ship with this package like any other source file, so the
+-- rock is self-contained.
+--
 -- # Version routing
 --
--- When `version` is nil or "" â†’ loads `code/grammars/haskell/haskell21.tokens`
---   (defaults to Haskell 21, the latest LTS)
--- When `version` is "1.0"    â†’ loads `code/grammars/haskell/haskell1.0.tokens`
--- When `version` is "8"      â†’ loads `code/grammars/haskell/haskell8.tokens`
+-- When `version` is nil or "" → uses the Haskell 2010 grammar (default,
+--   the Haskell 2010 Report, the latest standardized revision)
+-- When `version` is "1.0"    → uses the Haskell 1.0 grammar.
+-- When `version` is "98"     → uses the Haskell 98 grammar.
 -- ... etc.
---
--- # Path navigation
---
--- The source file lives at:
---   code/packages/lua/haskell_lexer/src/coding_adventures/haskell_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/haskell/`.
---
--- Directory structure from script_dir upward:
---   haskell_lexer/          (1) â€” module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   haskell_lexer/          (4) â€” the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                â†’ then /grammars/haskell/...
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
 
 local M = {}
 M.VERSION = "0.1.0"
@@ -67,20 +62,17 @@ M.VERSION = "0.1.0"
 -- Valid Haskell versions
 -- =========================================================================
 --
--- Haskell is versioned by release number. The version strings we accept
--- match the grammar files under code/grammars/haskell/:
+-- Haskell is versioned by report/release. The version strings we accept
+-- correspond to the precompiled grammar modules below:
 --
---   "1.0" â€” Haskell 1.0  (1996): the original release.
---   "1.1" â€” Haskell 1.1  (1997): inner classes.
---   "1.4" â€” Haskell 1.4  (2002): assert keyword.
---   "5"   â€” Haskell 5    (2004): generics, annotations, enums.
---   "7"   â€” Haskell 7    (2011): try-with-resources, diamond operator.
---   "8"   â€” Haskell 8    (2014): lambdas, default methods, streams.
---   "10"  â€” Haskell 10   (2018): local variable type inference (var).
---   "14"  â€” Haskell 14   (2020): switch expressions, records (preview).
---   "17"  â€” Haskell 17   (2021): sealed classes, pattern matching.
---   "21"  â€” Haskell 21   (2023): virtual threads, record patterns.
---   nil / "" â€” defaults to Haskell 21 (latest LTS).
+--   "1.0"  — Haskell 1.0  (1990): the original report.
+--   "1.1"  — Haskell 1.1  (1991): first revision.
+--   "1.2"  — Haskell 1.2  (1992): second revision.
+--   "1.3"  — Haskell 1.3  (1996): monadic I/O, strictness annotations.
+--   "1.4"  — Haskell 1.4  (1997): newtype, standard libraries reorganized.
+--   "98"   — Haskell 98   (1998): the stable, standardized language report.
+--   "2010" — Haskell 2010 (2010): FFI, hierarchical modules, language pragmas.
+--   nil / "" — defaults to Haskell 2010 (latest standardized revision).
 
 local VALID_HASKELL_VERSIONS = {
     ["1.0"] = true, ["1.1"] = true, ["1.2"] = true,
@@ -91,50 +83,36 @@ local VALID_HASKELL_VERSIONS = {
 local DEFAULT_VERSION = "2010"
 
 -- =========================================================================
--- Path helpers
+-- Precompiled grammars
 -- =========================================================================
+--
+-- Each entry maps a version string to the `require`d module produced by
+-- `grammar-tools compile-tokens code/grammars/haskell/haskell<version>.tokens`.
+-- The module exposes a `token_grammar()` constructor; we call it lazily
+-- (and cache the result) so grammar construction only happens for versions
+-- actually used.
 
---- Return the directory of this source file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
-end
-
---- Walk up `levels` directory levels from `path`.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
--- Grammar loading
--- =========================================================================
+local compiled_grammars = {
+    ["1.0"]  = require("coding_adventures.haskell_lexer._grammar_1_0"),
+    ["1.1"]  = require("coding_adventures.haskell_lexer._grammar_1_1"),
+    ["1.2"]  = require("coding_adventures.haskell_lexer._grammar_1_2"),
+    ["1.3"]  = require("coding_adventures.haskell_lexer._grammar_1_3"),
+    ["1.4"]  = require("coding_adventures.haskell_lexer._grammar_1_4"),
+    ["98"]   = require("coding_adventures.haskell_lexer._grammar_98"),
+    ["2010"] = require("coding_adventures.haskell_lexer._grammar_2010"),
+}
 
 local _grammar_cache = {}
 
---- Resolve the path to the correct .tokens grammar file for a given version.
+--- Resolve a version string (or nil/"") to a valid, known version.
 --
--- @param version string|nil  The Haskell version tag, or nil/empty for default (21).
--- @return string             Absolute path to the grammar .tokens file.
-local function resolve_tokens_path(version)
-    local script_dir = get_script_dir()
-    local repo_root  = up(script_dir, 6)
-
-    -- Default to Haskell 21 when no version specified.
+-- @param version string|nil  The Haskell version tag, or nil/empty for default (2010).
+-- @return string             A key present in VALID_HASKELL_VERSIONS.
+local function resolve_version(version)
     if not version or version == "" then
         version = DEFAULT_VERSION
     end
 
-    -- Validate the version string before building the path.
     if not VALID_HASKELL_VERSIONS[version] then
         error(
             "haskell_lexer: unknown Haskell version '" .. version .. "'. " ..
@@ -142,45 +120,19 @@ local function resolve_tokens_path(version)
         )
     end
 
-    return repo_root .. "/grammars/haskell/haskell" .. version .. ".tokens"
+    return version
 end
 
---- Load and parse the grammar for a specific version, with per-version caching.
+--- Build (or return the cached) `TokenGrammar` for a specific version.
 --
--- @param version string|nil  The Haskell version tag (see resolve_tokens_path).
--- @return TokenGrammar       The parsed Haskell token grammar.
+-- @param version string|nil  The Haskell version tag (see resolve_version).
+-- @return TokenGrammar       The Haskell token grammar.
 local function get_grammar(version)
-    local key = version or DEFAULT_VERSION
-    if key == "" then key = DEFAULT_VERSION end
-    if _grammar_cache[key] then
-        return _grammar_cache[key]
+    local key = resolve_version(version)
+    if _grammar_cache[key] == nil then
+        _grammar_cache[key] = compiled_grammars[key].token_grammar()
     end
-
-    local tokens_path = resolve_tokens_path(version)
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "haskell_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    -- Some Haskell grammar files may use \v and \f in whitespace patterns.
-    -- Lua's regex engine does not support these escape sequences inside
-    -- character classes, so we replace them with the actual control characters.
-    content = content:gsub("\\v", "\x0B")
-    content = content:gsub("\\f", "\x0C")
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("haskell_lexer: failed to parse grammar file: " .. (parse_err or "unknown error"))
-    end
-
-    _grammar_cache[key] = grammar
-    return grammar
+    return _grammar_cache[key]
 end
 
 -- =========================================================================
@@ -190,9 +142,9 @@ end
 --- Tokenize a Haskell source string.
 --
 -- @param source  string       The Haskell text to tokenize.
--- @param version string|nil   Haskell version: "1.0", "1.1", "1.4", "5", "7",
---                             "8", "10", "14", "17", "21", or nil/"" for
---                             default (21).
+-- @param version string|nil   Haskell version: "1.0", "1.1", "1.2", "1.3",
+--                             "1.4", "98", "2010", or nil/"" for default
+--                             (2010).
 -- @return table               Array of Token objects (type, value, line, col).
 -- @error                      Raises an error on unexpected characters or
 --                             unknown version string.
@@ -204,7 +156,7 @@ end
 --
 -- Example (versioned):
 --
---   local tokens = haskell_lexer.tokenize("int x = 1;", "1.0")
+--   local tokens = haskell_lexer.tokenize("int x = 1;", "98")
 function M.tokenize(source, version)
     local grammar = get_grammar(version)
     local gl      = lexer_pkg.GrammarLexer.new(source, grammar)
@@ -233,13 +185,12 @@ function M.create_lexer(source, version)
     return lexer_pkg.GrammarLexer.new(source, grammar)
 end
 
---- Return the cached (or freshly loaded) TokenGrammar for Haskell.
+--- Return the cached (or freshly built) TokenGrammar for Haskell.
 --
 -- @param version string|nil  Haskell version tag (see tokenize for valid values).
--- @return TokenGrammar       The parsed Haskell token grammar.
+-- @return TokenGrammar       The Haskell token grammar.
 function M.get_grammar(version)
     return get_grammar(version)
 end
 
 return M
-

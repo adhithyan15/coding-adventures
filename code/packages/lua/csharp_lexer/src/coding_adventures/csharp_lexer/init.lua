@@ -3,7 +3,7 @@
 --
 -- This package is part of the coding-adventures monorepo. It is a thin
 -- wrapper around the grammar-driven `GrammarLexer` from the `lexer` package,
--- loading the appropriate grammar file to configure the tokenizer.
+-- loading the appropriate grammar to configure the tokenizer.
 --
 -- # What is C# tokenization?
 --
@@ -19,46 +19,41 @@
 --   Token(EOF,        "",     1:12)
 --
 -- Whitespace and comments are silently consumed (declared as skip patterns
--- in the grammar file). The parser never sees them.
+-- in the grammar). The parser never sees them.
 --
 -- # Architecture
 --
 -- This module:
---   1. Locates the correct grammar file in `code/grammars/csharp/`.
---   2. Reads and parses it once per version (cached) using
---      `grammar_tools.parse_token_grammar`.
+--   1. Selects the correct *precompiled* grammar module for the requested
+--      version (see "Version routing" below).
+--   2. Builds (and caches) a `TokenGrammar` from it via `token_grammar()`.
 --   3. Constructs a `GrammarLexer` from the `lexer` package for each call.
 --   4. Returns the flat token list.
 --
+-- # Why precompiled grammars?
+--
+-- Earlier versions of this module read `code/grammars/csharp/csharp<version>.tokens`
+-- off disk at runtime, using a path that walked outside this package's own
+-- directory into the monorepo. That works when running from a checkout of
+-- the monorepo, but a published LuaRocks package does not include
+-- `code/grammars/` — installing this rock and calling `tokenize_csharp` would
+-- raise a file-not-found error.
+--
+-- Instead, each supported C# version's grammar is compiled ahead of time (via
+-- `grammar-tools compile-tokens`) into a `_grammar_<version>.lua` sibling
+-- module that embeds the parsed `TokenGrammar` as native Lua data. Those
+-- modules ship with this package like any other source file, so the rock is
+-- self-contained.
+--
 -- # Version routing
 --
--- When `version` is nil or "" → loads `code/grammars/csharp/csharp12.0.tokens`
---   (defaults to C# 12.0, the latest stable release)
--- When `version` is "1.0"  → loads `code/grammars/csharp/csharp1.0.tokens`
--- When `version` is "8.0"  → loads `code/grammars/csharp/csharp8.0.tokens`
+-- When `version` is nil or "" → uses the C# 12.0 grammar (default, latest
+--   stable release).
+-- When `version` is "1.0"    → uses the C# 1.0 grammar.
+-- When `version` is "8.0"    → uses the C# 8.0 grammar.
 -- ... etc.
---
--- # Path navigation
---
--- The source file lives at:
---   code/packages/lua/csharp_lexer/src/coding_adventures/csharp_lexer/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path to this file.
--- We strip the leading `@` Lua adds to source paths, then walk up 6
--- directory levels to reach the repo root (`code/`), then descend into
--- `grammars/csharp/`.
---
--- Directory structure from script_dir upward:
---   csharp_lexer/        (1) — module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   csharp_lexer/        (4) — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/csharp/...
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local lexer_pkg     = require("coding_adventures.lexer")
+local lexer_pkg = require("coding_adventures.lexer")
 
 local M = {}
 M.VERSION = "0.1.0"
@@ -68,7 +63,7 @@ M.VERSION = "0.1.0"
 -- =========================================================================
 --
 -- C# is versioned by language release. The version strings we accept
--- match the grammar files under code/grammars/csharp/:
+-- correspond to the precompiled grammar modules below:
 --
 --   "1.0"  — C# 1.0  (2002): the original .NET 1.0 release. Classes,
 --             interfaces, structs, delegates, events, enums, basic OOP.
@@ -105,50 +100,41 @@ local VALID_CSHARP_VERSIONS = {
 local DEFAULT_VERSION = "12.0"
 
 -- =========================================================================
--- Path helpers
+-- Precompiled grammars
 -- =========================================================================
+--
+-- Each entry maps a version string to the `require`d module produced by
+-- `grammar-tools compile-tokens code/grammars/csharp/csharp<version>.tokens`.
+-- The module exposes a `token_grammar()` constructor; we call it lazily (and
+-- cache the result) so grammar construction only happens for versions
+-- actually used.
 
---- Return the directory of this source file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes.
-    src = src:gsub("\\", "/")
-    return src:match("(.+)/[^/]+$") or "."
-end
-
---- Walk up `levels` directory levels from `path`.
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
--- Grammar loading
--- =========================================================================
+local compiled_grammars = {
+    ["1.0"]  = require("coding_adventures.csharp_lexer._grammar_1_0"),
+    ["2.0"]  = require("coding_adventures.csharp_lexer._grammar_2_0"),
+    ["3.0"]  = require("coding_adventures.csharp_lexer._grammar_3_0"),
+    ["4.0"]  = require("coding_adventures.csharp_lexer._grammar_4_0"),
+    ["5.0"]  = require("coding_adventures.csharp_lexer._grammar_5_0"),
+    ["6.0"]  = require("coding_adventures.csharp_lexer._grammar_6_0"),
+    ["7.0"]  = require("coding_adventures.csharp_lexer._grammar_7_0"),
+    ["8.0"]  = require("coding_adventures.csharp_lexer._grammar_8_0"),
+    ["9.0"]  = require("coding_adventures.csharp_lexer._grammar_9_0"),
+    ["10.0"] = require("coding_adventures.csharp_lexer._grammar_10_0"),
+    ["11.0"] = require("coding_adventures.csharp_lexer._grammar_11_0"),
+    ["12.0"] = require("coding_adventures.csharp_lexer._grammar_12_0"),
+}
 
 local _grammar_cache = {}
 
---- Resolve the path to the correct .tokens grammar file for a given version.
+--- Resolve a version string (or nil/"") to a valid, known version.
 --
 -- @param version string|nil  The C# version tag, or nil/empty for default (12.0).
--- @return string             Absolute path to the grammar .tokens file.
-local function resolve_tokens_path(version)
-    local script_dir = get_script_dir()
-    local repo_root  = up(script_dir, 6)
-
-    -- Default to C# 12.0 when no version specified.
+-- @return string             A key present in VALID_CSHARP_VERSIONS.
+local function resolve_version(version)
     if not version or version == "" then
         version = DEFAULT_VERSION
     end
 
-    -- Validate the version string before building the path.
     if not VALID_CSHARP_VERSIONS[version] then
         error(
             "csharp_lexer: unknown C# version '" .. version .. "'. " ..
@@ -157,51 +143,22 @@ local function resolve_tokens_path(version)
         )
     end
 
-    return repo_root .. "/grammars/csharp/csharp" .. version .. ".tokens"
+    return version
 end
 
---- Load and parse the grammar for a specific version, with per-version caching.
+--- Build (or return the cached) `TokenGrammar` for a specific version.
 --
--- Caching is important for performance: the grammar files are parsed from text
--- using pattern matching and table construction. For programs that tokenize many
--- C# snippets, we don't want to re-parse the grammar on each call.
+-- Caching matters: for programs that tokenize many C# snippets, we don't
+-- want to reconstruct the grammar's Lua tables on every call.
 --
--- @param version string|nil  The C# version tag (see resolve_tokens_path).
--- @return TokenGrammar       The parsed C# token grammar.
+-- @param version string|nil  The C# version tag (see resolve_version).
+-- @return TokenGrammar       The C# token grammar.
 local function get_grammar(version)
-    local key = version or DEFAULT_VERSION
-    if key == "" then key = DEFAULT_VERSION end
-    if _grammar_cache[key] then
-        return _grammar_cache[key]
+    local key = resolve_version(version)
+    if _grammar_cache[key] == nil then
+        _grammar_cache[key] = compiled_grammars[key].token_grammar()
     end
-
-    local tokens_path = resolve_tokens_path(version)
-
-    local f, open_err = io.open(tokens_path, "r")
-    if not f then
-        error(
-            "csharp_lexer: cannot open grammar file: " .. tokens_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    -- Some grammar files may use \v and \f in whitespace patterns.
-    -- Lua's regex engine does not support these escape sequences inside
-    -- character classes, so we replace them with the actual control characters.
-    --   \v  →  vertical tab   (0x0B)
-    --   \f  →  form feed      (0x0C)
-    content = content:gsub("\\v", "\x0B")
-    content = content:gsub("\\f", "\x0C")
-
-    local grammar, parse_err = grammar_tools.parse_token_grammar(content)
-    if not grammar then
-        error("csharp_lexer: failed to parse grammar file: " .. (parse_err or "unknown error"))
-    end
-
-    _grammar_cache[key] = grammar
-    return grammar
+    return _grammar_cache[key]
 end
 
 -- =========================================================================
@@ -257,13 +214,13 @@ function M.create_csharp_lexer(source, version)
     return lexer_pkg.GrammarLexer.new(source, grammar)
 end
 
---- Return the cached (or freshly loaded) TokenGrammar for C#.
+--- Return the cached (or freshly built) TokenGrammar for C#.
 --
 -- Useful for inspecting what tokens the grammar defines, or for passing
 -- the grammar to other infrastructure components.
 --
 -- @param version string|nil  C# version tag (see tokenize_csharp for valid values).
--- @return TokenGrammar       The parsed C# token grammar.
+-- @return TokenGrammar       The C# token grammar.
 function M.get_grammar(version)
     return get_grammar(version)
 end
