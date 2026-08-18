@@ -263,6 +263,7 @@ members = [
     "maxima-runtime",
     "maxima-repl",
     "maxima-to-semantic-ir",
+    "maxima-iir-compiler",
     "wolfram-lexer",
     "wolfram-parser",
     "wolfram-runtime",
