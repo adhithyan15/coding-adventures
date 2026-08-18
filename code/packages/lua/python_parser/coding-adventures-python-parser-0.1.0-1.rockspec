@@ -47,5 +47,7 @@ build = {
     modules = {
         ["coding_adventures.python_parser"] =
             "src/coding_adventures/python_parser/init.lua",
+        ["coding_adventures.python_parser._grammar_default"] =
+            "src/coding_adventures/python_parser/_grammar_default.lua",
     },
 }
