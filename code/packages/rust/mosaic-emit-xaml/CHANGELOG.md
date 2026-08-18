@@ -1,5 +1,64 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — every x:Bind declares its mode
+
+`x:Bind` defaults to **OneTime** in WinUI, and each emission site chose its
+binding mode by hand, so coverage drifted. In the generated TaskApp that left
+118 of 153 bindings frozen after first render: every event reached the Rust
+engine and the engine computed correctly, but none of it reached the screen.
+
+A previous change fixed `Text=` and `AutomationProperties.Name=`. Every
+remaining site now emits `Mode=OneWay`:
+
+- **`Visibility=`** on the `If` lowering — the one that mattered most, since it
+  pinned every conditional surface to its first-render value and made view
+  switching a no-op
+- `Content=` (7 sites, including the two literal `Content="{x:Bind Index}"`
+  forms), `Source=`, `Glyph=`, `IsReadOnly=`, `GroupName=`, `NavigateUri=`,
+  `ToolTipService.ToolTip=`
+- the UI31 table cell/header attributes (`Row=`, `Column=`, `Header=`,
+  `Value=`, `AutomationProperties.Name=`)
+- the GROUP C `Width=` injection, whose own doc comment already claimed a mode
+  it did not emit
+- `ItemsRepeater.ItemsSource`, where the mode was conditional on there being a
+  projection property — so a repeater bound directly to a slot got the
+  OneTime default and never re-rendered when its list changed
+
+### The guard
+
+`every_xbind_emission_site_declares_its_mode` scans **this file's own source**
+and fails on any emission site whose `x:Bind` carries no `Mode`, naming each
+offender by line.
+
+Scanning source rather than emitted output is deliberate, and was learned the
+hard way. The first version of this test compiled a fixture and scanned the
+resulting XAML — but a fixture only reaches the sites it happens to exercise.
+It used a `Text` and an `If`, both already correct, so it passed while roughly
+twenty sites were still emitting mode-less bindings. A fixture-based test would
+also have gone stale the moment someone added a site it did not cover, which is
+exactly how the original defect arose.
+
+It handles both emission forms — the doubled-brace `format!` form and the
+literal single-brace form used by `inject_attr_into_first_element` — and
+brace-matches rather than stopping at the first `}}`, so a binding carrying a
+nested `Converter={StaticResource …}` parses correctly. It scans only up to
+`#[cfg(test)]`, since tests legitimately pass mode-less bindings as *input*.
+
+Verified by regression: reverting a single site to the mode-less form makes the
+test fail and name that binding.
+
+## The actual deliverable
+
+`every_emitted_xbind_declares_its_mode` scans emitted XAML and fails on any
+`{x:Bind …}` without an explicit `Mode`, naming the offenders. It brace-matches
+rather than scanning to the first `}`, so a binding carrying a nested
+`Converter={StaticResource …}` is parsed correctly.
+
+Verified by regression: reverting a single site to the mode-less form makes the
+test fail and name that binding. Without that check the test would be
+decoration — a per-site fix list goes stale the moment a new emission site is
+added, which is exactly how this defect arose.
+
 ## [Unreleased] — accessible HostSlider names
 
 Literal and slot-backed `HostSlider.a11y-label` values now lower to

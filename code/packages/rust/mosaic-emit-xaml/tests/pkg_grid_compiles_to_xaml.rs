@@ -189,7 +189,7 @@ fn grid_component_lowers_to_xaml_without_error() {
     );
     assert!(xaml.contains("<local:GridMosaicTableHeaderCell "));
     assert!(xaml.contains("<local:GridMosaicTableCell "));
-    assert!(xaml.contains("AutomationProperties.Name=\"{x:Bind MosaicTableName}\""));
+    assert!(xaml.contains("AutomationProperties.Name=\"{x:Bind MosaicTableName, Mode=OneWay}\""));
     // For block lowered to ItemsRepeater.
     assert!(
         xaml.contains("<ItemsRepeater"),
