@@ -1,0 +1,23 @@
+[package]
+name = "derive-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers a Derive CST (coding-adventures-derive-parser's GrammarASTNode) into an IIRModule, per derive-iir-vm.md's v0 scope: literal integer arithmetic (+ - * /, unary), assignment, and unevaluated symbolic expressions (any other head, or any symbolic operand, becomes an inert cons-chain). A retarget of derive-runtime's/derive-to-semantic-ir's CST dispatch, following macsyma-iir-compiler's precedent. Emits IIR over the dynval-runtime value model so the module runs end-to-end on derive-vm."
+
+[lib]
+name = "derive_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-derive-parser = { path = "../derive-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+derive-vm = { path = "../derive-vm" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Oracle ground truth (tests/oracle.rs) + the shared renderer used to
+# format both the ground truth and the compiled-side read-back result.
+coding-adventures-derive-runtime = { path = "../derive-runtime" }
