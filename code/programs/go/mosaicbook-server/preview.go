@@ -167,6 +167,18 @@ func wrapForBackend(compiled string, backend string, componentID string) string 
 	// Derive a component name from the ID (last path segment, PascalCase).
 	compName := componentNameFromID(componentID)
 
+	// The name is interpolated into an *executing* script block below, so it
+	// must be an inert identifier. Discovery already rejects anything else,
+	// but that guard lives three call frames away and only covers the
+	// discovery paths that exist today — the next one added would silently
+	// reintroduce script injection here. Enforce the invariant at the sink,
+	// where it actually matters, rather than trusting the caller.
+	if !validComponentBase.MatchString(compName) {
+		return errorPage(
+			fmt.Sprintf("component name %q is not a valid identifier", compName),
+			backend, componentID, "")
+	}
+
 	switch backend {
 
 	case "html":

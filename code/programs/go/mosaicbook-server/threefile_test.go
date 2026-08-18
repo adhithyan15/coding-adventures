@@ -307,6 +307,43 @@ func TestDiscoverThreeFile_AcceptsIdentifierNames(t *testing.T) {
 	}
 }
 
+// The legacy .mosaic branch feeds the same executing-script sink as the
+// three-file branch, so it needs the identical restriction. Validating only
+// one of the two discovery paths left the legacy form injectable with the
+// same payload.
+func TestDiscoverLegacy_RejectsNonIdentifierNames(t *testing.T) {
+	dir := t.TempDir()
+	mustWrite(t, filepath.Join(dir, "Has Space.mosaic"), "component X {}")
+	mustWrite(t, filepath.Join(dir, "Fine.mosaic"), "component Fine {}")
+
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discoverComponents: %v", err)
+	}
+	if len(comps) != 1 {
+		t.Fatalf("expected only the valid component, got %d", len(comps))
+	}
+	if comps[0].ID != "Fine" {
+		t.Errorf("ID: got %q, want %q", comps[0].ID, "Fine")
+	}
+}
+
+// Defence in depth: the sink refuses a non-identifier name even if some
+// future discovery path forgets to validate. The name is interpolated into
+// an executing script block, so this invariant belongs where it is used.
+func TestWrapForBackend_RefusesNonIdentifierComponentName(t *testing.T) {
+	for _, backend := range []string{"react", "webcomponent", "html"} {
+		got := wrapForBackend("console.log(1)", backend, "alert(document.domain)||X")
+		if strings.Contains(got, "alert(document.domain)||X, null") ||
+			strings.Contains(got, "<alert(") {
+			t.Errorf("backend %s: payload reached the sink:\n%s", backend, got)
+		}
+		if !strings.Contains(got, "not a valid identifier") {
+			t.Errorf("backend %s: expected an inert error page, got:\n%s", backend, got)
+		}
+	}
+}
+
 // The absolute filesystem paths used to drive the compiler must not be
 // serialised into GET /api/stories — they leak the OS username and the
 // server's directory layout to anything that can reach the port.

@@ -125,6 +125,15 @@ func threeFileComponent(root, milPath, fileName string) (Component, bool) {
 		return Component{}, false
 	}
 
+	// The interface file itself gets the same containment check as its
+	// siblings. filepath.Walk uses Lstat and never descends a symlinked
+	// directory, so today no generated path can escape — but checking here
+	// makes the invariant local rather than a consequence of Walk's
+	// behaviour, which is what the next refactor is liable to change.
+	if !isRegularFileWithin(root, milPath) {
+		return Component{}, false
+	}
+
 	dir := filepath.Dir(milPath)
 
 	layout := filepath.Join(dir, base+".mll")
@@ -311,6 +320,16 @@ func discoverComponents(root string) ([]Component, error) {
 		// Derive a default title from the final path segment (filename without
 		// extension) by inserting spaces before uppercase runs.
 		baseName := strings.TrimSuffix(info.Name(), ".mosaic")
+
+		// Same restriction as the three-file branch, and for the same
+		// reason: this name reaches an executing script block in the
+		// react/webcomponent preview wrappers. Applying it to only one of
+		// the two discovery paths would leave the legacy form injectable
+		// with the identical payload.
+		if !validComponentBase.MatchString(baseName) {
+			return nil
+		}
+
 		title := componentTitleFromBase(baseName)
 
 		// Look for a sibling .stories.json file (same base name, same dir).
