@@ -8720,6 +8720,223 @@ mod tests {
         assert!(!root.0.join("config").exists());
     }
 
+    /// Recursively collect every encrypted repository object as `(path, bytes)`.
+    ///
+    /// VLT-PM43 §7 gate 1. The rotation claim is not "the same number of
+    /// objects survived" but "not one byte of any of them changed", so the
+    /// comparison is over the whole tree.
+    fn object_tree(root: &std::path::Path) -> BTreeMap<PathBuf, Vec<u8>> {
+        let mut tree = BTreeMap::new();
+        let Ok(entries) = fs::read_dir(root) else {
+            return tree;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                tree.extend(object_tree(&path));
+            } else if let Ok(bytes) = fs::read(&path) {
+                tree.insert(path, bytes);
+            }
+        }
+        tree
+    }
+
+    #[test]
+    fn passphrase_rotate_parser_takes_one_verb_and_no_arguments() {
+        for arguments in [
+            vec!["passphrase"],
+            vec!["passphrase", "change"],
+            vec!["passphrase", "rotate", "extra"],
+            vec!["passphrase", "rotate", "--force"],
+        ] {
+            let root = TestRoot::new();
+            let host = TestHost::new(root.paths(), []);
+            assert_eq!(
+                run(arguments.clone(), &host).exit_code(),
+                ExitCode::InvalidInput,
+                "{arguments:?}"
+            );
+        }
+        assert!(USAGE.contains("passphrase rotate"));
+    }
+
+    /// The measurement §14.8 actually asks for, at the composition root.
+    ///
+    /// Every CLI vault is audit-first from generation zero (VLT-PM21), so there
+    /// is no such thing here as a rotation with a zero repository footprint:
+    /// the ceremony publishes its own audit-only commit, and that commit is
+    /// three new objects. The honest statement of "without re-encrypting every
+    /// item body" is therefore *append-only*: every object that existed before
+    /// the rotation is still present and byte-for-byte unchanged.
+    ///
+    /// That is not a weaker claim than it sounds. Re-encrypting a body would
+    /// necessarily change an existing object's bytes or replace it with a new
+    /// identity, and either would fail the loop below. The stricter
+    /// "not one write at all" form of the claim is measured on a pre-audit
+    /// vault by `vault-pm-application`'s `rotation_rewraps_the_root_key_and_
+    /// writes_no_repository_object`, which watches the object store's complete
+    /// change feed.
+    #[test]
+    fn rotation_leaves_every_encrypted_object_byte_identical() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation original passphrase".to_vec();
+        let new = b"cli rotation replacement passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [
+                old.clone(),
+                b"rotation item password".to_vec(),
+                b"rotation item notes".to_vec(),
+            ],
+            [
+                "Rotation Fixture".to_owned(),
+                "person@example.test".to_owned(),
+                "1".to_owned(),
+                "https://rotation.example.test".to_owned(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+
+        let before = object_tree(paths.object_root());
+        assert!(!before.is_empty(), "the fixture must have written objects");
+
+        let rotate_host = TestHost::new(paths.clone(), [old.clone(), new.clone()]);
+        let rotated = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(rotated.exit_code(), ExitCode::Success, "{rotated:?}");
+        assert_eq!(rotated.stdout(), "Vault passphrase rotated.\n");
+        assert!(rotated.stderr().is_empty());
+
+        // Every object that existed before the rotation is still there, and
+        // every one of them is byte-for-byte what it was. The rotation only
+        // *appends*, and what it appends is its own audit-only commit -- see
+        // the doc comment above for why appending is the honest ceiling here.
+        let after = object_tree(paths.object_root());
+        for (path, bytes) in &before {
+            assert_eq!(after.get(path), Some(bytes), "{path:?} changed");
+        }
+        assert!(after.len() > before.len());
+
+        // The old passphrase is refused, the new one lists the same item, and
+        // neither passphrase is anywhere in the tree.
+        let stale_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(
+            run(["item", "list"], &stale_host).exit_code(),
+            ExitCode::Locked
+        );
+        let fresh_host = TestHost::new(paths.clone(), [new]);
+        let listed = run(["item", "list"], &fresh_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("Rotation Fixture"));
+        assert!(!object_tree(&root.0)
+            .values()
+            .any(|bytes| bytes.windows(old.len()).any(|window| window == old)));
+    }
+
+    #[test]
+    fn a_wrong_current_passphrase_rotates_nothing() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation refusal passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let before = object_tree(&root.0);
+
+        let rotate_host = TestHost::new(
+            paths.clone(),
+            [
+                b"not the current passphrase".to_vec(),
+                b"a replacement nobody will ever need".to_vec(),
+            ],
+        );
+        let refused = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(refused.exit_code(), ExitCode::Locked, "{refused:?}");
+        assert!(refused.stdout().is_empty());
+
+        // Nothing durable moved, and the original passphrase still works.
+        assert_eq!(object_tree(&root.0), before);
+        let still_open = TestHost::new(paths, [old]);
+        assert_eq!(
+            run(["item", "list"], &still_open).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    #[test]
+    fn a_mismatched_new_passphrase_is_refused_before_anything_rotates() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli rotation confirm passphrase".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        assert_eq!(
+            run(["audit", "enable"], &TestHost::new(paths.clone(), [old.clone()])).exit_code(),
+            ExitCode::Success
+        );
+        let before = object_tree(paths.object_root());
+
+        // The host is asked for the new passphrase and cannot supply one, which
+        // is the same boundary a confirmation mismatch reaches.
+        let rotate_host = TestHost::new(paths.clone(), [old.clone()]);
+        let refused = run(["passphrase", "rotate"], &rotate_host);
+        assert_eq!(refused.exit_code(), ExitCode::Provider, "{refused:?}");
+
+        // The failed attempt is durable — the audit epoch grew — but no wrap
+        // moved, so the current passphrase is still the current passphrase.
+        assert_ne!(object_tree(paths.object_root()), before);
+        let audit_host = TestHost::new(paths.clone(), [old.clone()]);
+        let listed = run(["audit", "list"], &audit_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=passphrase_rotate\toutcome=failed"));
+        assert_eq!(
+            run(["item", "list"], &TestHost::new(paths, [old])).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    #[test]
+    fn an_audited_rotation_records_the_event_before_the_wrap_moves() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let old = b"cli audited rotation passphrase".to_vec();
+        let new = b"cli audited rotation replacement".to_vec();
+
+        let init_host = TestHost::new(paths.clone(), [old.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        assert_eq!(
+            run(["audit", "enable"], &TestHost::new(paths.clone(), [old.clone()])).exit_code(),
+            ExitCode::Success
+        );
+
+        let rotate_host = TestHost::new(paths.clone(), [old.clone(), new.clone()]);
+        assert_eq!(
+            run(["passphrase", "rotate"], &rotate_host).exit_code(),
+            ExitCode::Success
+        );
+
+        // The event is readable only under the new passphrase, which is itself
+        // proof that the event was durable before the wrap moved: an audit
+        // chain the rotation did not carry forward would not verify.
+        let audit_host = TestHost::new(paths.clone(), [new.clone()]);
+        let listed = run(["audit", "list"], &audit_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=passphrase_rotate\toutcome=succeeded"));
+        let verified = run(["audit", "verify"], &TestHost::new(paths, [new]));
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
     /// A scripted stand-in for the controlling terminal a real session reads.
     ///
     /// It answers command lines from a queue and records what the shell chose
@@ -8986,6 +9203,10 @@ mod tests {
             "init",
             "vault create work",
             "shell",
+            // VLT-PM43 §3.1. A session's premise is that the authenticator it
+            // collected once still opens the vault, and a rotation is exactly
+            // the event that makes that false.
+            "passphrase rotate",
             "--vault work item list",
             "\"unterminated",
             "a b c d e f g h i",
@@ -8994,10 +9215,10 @@ mod tests {
         let output = run_with_terminal(["shell"], &host, &terminal);
 
         assert_eq!(output.exit_code(), ExitCode::Success);
-        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 6]);
+        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 7]);
         assert_eq!(
             terminal.transcript(),
-            "vault-pm: invalid command\n".repeat(6)
+            "vault-pm: invalid command\n".repeat(7)
         );
         // No passphrase was ever collected, so nothing was retained to wipe.
         assert_eq!(host.remaining_secrets(), 0);

@@ -391,17 +391,26 @@ The acceptance gates below are the ones this contract is measured by. A gate
 that only proves rotation "works" is not enough for §14.8; the structural half
 needs its own evidence.
 
-1. **No item body is re-encrypted.** Snapshot every byte of the encrypted
-   object repository before the rotation and after it, and require the two
-   trees to be *byte-identical* — same file set, same contents. This is the
-   direct measurement of §14.8's clause. It is stated over the whole object
-   root rather than over sampled records so that no future change can
-   re-encrypt "just one" thing and pass.
+1. **No item body is re-encrypted.** This is the direct measurement of §14.8's
+   clause, and it is taken twice because the two vaults it can be taken on
+   differ.
 
-   The rotation of a vault whose audit epoch is active publishes one audit
-   commit, which does add objects. The gate is therefore taken over a
-   pre-audit vault, where the rotation's repository footprint is exactly zero,
-   and the audited case is covered separately by gate 2.
+   - **A pre-audit vault: not one write.** Watch the object store's complete
+     change feed across the rotation and require it to be *identical*. Comparing
+     object counts would only show that the number of objects stayed the same;
+     comparing the feed shows that no write happened at all.
+   - **A CLI vault: append-only, byte-for-byte.** Every vault the CLI creates is
+     audit-first from generation zero (VLT-PM21), so its rotation always
+     publishes an audit-only commit and its repository footprint is never zero.
+     The gate there is over the whole on-disk object tree: every object present
+     before the rotation must still be present and byte-for-byte unchanged, and
+     the only difference must be additions.
+
+   The second form is not the weaker one it looks like. Re-encrypting a body
+   would necessarily change an existing object's bytes or replace it with a new
+   identity, and either fails the comparison. Both gates are stated over the
+   whole object set rather than over sampled records so that no future change
+   can re-encrypt "just one" thing and pass.
 
 2. **The rotation itself is audited before it takes effect**, and the event's
    rendered row carries only closed field names.
