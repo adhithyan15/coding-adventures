@@ -312,6 +312,43 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   the soldiers'-slang pot story, the circumflex's lost *s* — that nothing had
   revisited since Chapter 17 was written. **Authored.**
 
+## Chapter 33 — Want, can, must *(authored)*
+
+***vouloir*** (`FR-C33-vouloir`) → ***pouvoir*** (`FR-C33-pouvoir`) →
+***devoir*** (`FR-C33-devoir`) → the three chants side by side
+(`FR-C33-practice`). Realises `SPINE-SAY-WHAT-I-WANT`, which had **no segments
+at all** before this, and claims `VERB-WANT`. It also covers DELF A1 point
+`A1-V-11`, "vouloir, pouvoir, devoir in the singular", which the exam-inventory
+measure reported as uncovered.
+
+Three things make this a cheap chapter with a large payoff.
+
+**One shape, three times.** *veux/veux/veut*, *peux/peux/peut*, *dois/dois/doit*
+— in each chant the three singular persons are **one sound**, and the pronoun is
+what tells them apart. Meeting that three times in a row makes it a fact about
+French rather than a quirk of one verb.
+
+**Everything already learned plugs in behind them.** A plain, unchanged verb
+follows all three, so *parler*, *aider*, *fermer*, *ouvrir*, *écrire*, *lire*
+and *dormir* are all immediately usable in three new frames at no extra cost.
+
+**The register warning has to arrive with the word.** *Je veux* is blunt where
+English *I want* is blunt, so ***je voudrais*** is taught in the same lesson
+rather than deferred — and *pouvoir* is framed as what it actually does for a
+beginner, which is to turn a demand into a question about ability (*tu peux
+fermer la porte ?*). The chapter names the trap explicitly: this is correct
+French used at the wrong moment, which is harder to hear than a grammatical
+mistake and easier to make.
+
+*devoir* pays its own way etymologically — Latin *dēbēre*, "to owe", which is
+why the one French verb still means both *must* and *owe*, and why English
+*debt*, *debit* and *due* are its cousins.
+
+Presented as **chants rather than conjugation grids**, following the precedent
+named in the `paradigmTables` ceiling: a grid would have pushed that ceiling
+past its limit, and the chant is what a reader can say aloud anyway. All four
+lessons are drivable, and the chapter is drivable end to end.
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

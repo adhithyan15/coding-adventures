@@ -816,6 +816,18 @@
       "tex": "french/book/chapters/ch32-questions.tex"
     },
     {
+      "language": "french",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:7168cce5129f2cfa",
+      "lessonIds": [
+        "FR-C33-vouloir",
+        "FR-C33-pouvoir",
+        "FR-C33-devoir",
+        "FR-C33-practice"
+      ],
+      "tex": "french/book/chapters/ch33-modaux.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "sourceHash": "fnv1a64:ddeac1fb72ea589d",

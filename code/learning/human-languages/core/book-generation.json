@@ -983,6 +983,11 @@
       "output": "french/book/chapters/ch32-questions.tex"
     },
     {
+      "language": "french",
+      "chapter": 33,
+      "output": "french/book/chapters/ch33-modaux.tex"
+    },
+    {
       "language": "german",
       "chapter": 17,
       "output": "german/book/chapters/ch17-head-and-hand.tex"
