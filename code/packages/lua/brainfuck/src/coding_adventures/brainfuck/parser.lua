@@ -51,118 +51,44 @@
 --   node:is_leaf()   — true when the node wraps exactly one token
 --   node:token()     — the wrapped token (only valid when is_leaf() is true)
 --
--- # Path navigation
+-- # Grammar source
 --
--- This file lives at:
---   code/packages/lua/brainfuck/src/coding_adventures/brainfuck/parser.lua
---
--- We use `debug.getinfo(1, "S").source` (prefixed with "@") and walk up 6
--- levels to reach `code/`, then descend into `grammars/brainfuck.grammar`.
---
--- Directory structure from script_dir upward:
---   brainfuck/           (1)  — this file's directory
---   coding_adventures/   (2)
---   src/                 (3)
---   brainfuck/           (4)  — the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/brainfuck.grammar
+-- The parser grammar is no longer read from `code/grammars/` at runtime.
+-- A published LuaRocks package does not ship the monorepo's `code/grammars/`
+-- directory, so walking out of the package's own directory to find it would
+-- fail after installation. Instead, `brainfuck.grammar` is pre-compiled (via
+-- `grammar-tools compile-grammar`) into `_grammar_parser.lua`, a plain Lua
+-- module that embeds the ParserGrammar as native Lua data structures. That
+-- module ships as part of this package, so `require()` always finds it.
 
-local grammar_tools    = require("coding_adventures.grammar_tools")
-local brainfuck_lexer  = require("coding_adventures.brainfuck.lexer")
-local parser_pkg       = require("coding_adventures.parser")
+local brainfuck_lexer = require("coding_adventures.brainfuck.lexer")
+local parser_pkg      = require("coding_adventures.parser")
 
 local M = {}
 M.VERSION = "0.1.0"
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
---
--- Identical to the pattern used by json_parser and brainfuck.lexer.
-
---- Return the directory portion of a file path (no trailing slash).
--- Example:  "/a/b/c/parser.lua"  →  "/a/b/c"
--- @param path string
--- @return string
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- Lua prepends "@" to the source path in debug info — we strip it.
--- Resolves relative paths (containing "..") to absolute via shell.
--- @return string Absolute directory of this parser.lua file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
-    src = src:gsub("\\", "/")
-    local dir = src:match("(.+)/[^/]+$") or "."
-    return dir
-end
-
---- Walk up `levels` directory levels from `path`.
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
 --
--- The parser grammar is loaded from disk once and cached. Repeated calls
--- to `parse()` or `create_parser()` reuse the cached grammar, avoiding
--- repeated file I/O and repeated rule compilation.
+-- The compiled grammar module is required exactly once and its
+-- `parser_grammar()` result cached in a module-level variable. Repeated
+-- calls to `parse()` or `create_parser()` reuse the cached grammar.
 
 local _grammar_cache = nil
 
---- Load and parse `brainfuck.grammar`, with caching.
--- On the first call, opens the file and parses it with
--- `grammar_tools.parse_parser_grammar`. Subsequent calls return the cache.
--- @return ParserGrammar  The parsed Brainfuck parser grammar.
--- @error                 Raises an error if the file cannot be opened or parsed.
+--- Return the (cached) ParserGrammar for Brainfuck.
+-- On the first call, requires the pre-compiled `_grammar_parser` module
+-- and invokes `parser_grammar()`. Subsequent calls return the cache.
+-- @return ParserGrammar  The Brainfuck parser grammar.
 local function get_grammar()
     if _grammar_cache then
         return _grammar_cache
     end
 
-    -- Navigate: 6 levels up from this file's directory → code/ root.
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/brainfuck/brainfuck.grammar"
-
-    local f, open_err = io.open(grammar_path, "r")
-    if not f then
-        error(
-            "brainfuck.parser: cannot open grammar file: " .. grammar_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
-    if not grammar then
-        error(
-            "brainfuck.parser: failed to parse brainfuck.grammar: " ..
-            (parse_err or "unknown error")
-        )
-    end
-
-    _grammar_cache = grammar
-    return grammar
+    local compiled = require("coding_adventures.brainfuck._grammar_parser")
+    _grammar_cache = compiled.parser_grammar()
+    return _grammar_cache
 end
 
 -- =========================================================================

@@ -1,5 +1,16 @@
 # Changelog — coding-adventures-brainfuck (Lua)
 
+## Unreleased
+
+### Fixed
+
+- Eliminated runtime grammar loading: `lexer.tokenize` and `parser.parse`
+  now require pre-compiled `_grammar_tokens`/`_grammar_parser` modules
+  instead of reading and parsing `brainfuck.tokens`/`brainfuck.grammar`
+  from `code/grammars/` on every call. The old code walked out of the
+  installed package's own directory to a monorepo-relative path that a
+  published LuaRocks package does not ship.
+
 ## [0.3.0] — 2026-04-10
 
 ### Added
