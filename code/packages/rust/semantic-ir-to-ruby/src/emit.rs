@@ -11,7 +11,10 @@ use std::collections::HashSet;
 use std::fmt::Write;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use semantic_ir::{Block, Expr, Function, Global, IntWidth, Module, ParamKind, Scope, Stmt};
+use semantic_ir::{
+    Block, ElementwiseOpKind, Expr, Function, Global, IndexArg, IntWidth, Module, ParamKind,
+    Scope, Stmt,
+};
 
 use crate::runtime::RUNTIME;
 
@@ -232,6 +235,15 @@ pub enum ScanHit {
     /// A `Scope::ClassVar` name (`@@x`) that is not a valid Ruby class-variable
     /// name (`@@<identifier>`) — injection guard at the class-variable positions.
     ClassVarName(String, semantic_ir::Span),
+    /// SIR22 "APL addendum" node (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+    /// `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) — shares
+    /// `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut this
+    /// slice implements, so a bare feature-flag check cannot tell a module
+    /// using one of these nine apart from a safe base-cut-only module.
+    /// Rejected cleanly here rather than reaching `emit_expr`'s
+    /// `unreachable!` — mirrors JS/TS's own (since-removed, once the
+    /// addendum shipped there) `find_unimplemented_sir22_addendum_node`.
+    Sir22AddendumNode(&'static str, semantic_ir::Span),
 }
 
 /// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
@@ -640,7 +652,23 @@ impl Scan {
                 None
             }
         }
-        _ => None,
+        // SIR22 indexed-write — sub-expressions may hide a deferred
+        // builtin, matching the pattern every other compound stmt above
+        // follows (`SeqSet`/`MapSet`, ...).
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => self
+            .expr(target)
+            .or_else(|| {
+                indices.iter().find_map(|arg| match arg {
+                    IndexArg::Scalar(e) | IndexArg::Range(e) => self.expr(e),
+                    IndexArg::Whole => None,
+                })
+            })
+            .or_else(|| self.expr(value)),
     }
     }
 }
@@ -906,6 +934,45 @@ impl Scan {
         } if !is_valid_classvar_name(name) => {
             Some(ScanHit::ClassVarName(name.clone(), span.clone()))
         }
+        // ── SIR22 array/matrix base cut ──────────────────────────────
+        // Sub-expressions may themselves hide a deferred builtin or
+        // injectable name — scan them, matching every other composite
+        // expr arm above.
+        Expr::ArrayLit { rows, .. } => rows.iter().flatten().find_map(|e| self.expr(e)),
+        Expr::Range {
+            start, step, stop, ..
+        } => self
+            .expr(start)
+            .or_else(|| step.as_deref().and_then(|s| self.expr(s)))
+            .or_else(|| self.expr(stop)),
+        Expr::MatMul { lhs, rhs, .. } => self.expr(lhs).or_else(|| self.expr(rhs)),
+        Expr::ElementwiseOp { lhs, rhs, .. } => self.expr(lhs).or_else(|| self.expr(rhs)),
+        Expr::Transpose { target, .. } => self.expr(target),
+        Expr::IndexGet {
+            target, indices, ..
+        } => self.expr(target).or_else(|| {
+            indices.iter().find_map(|arg| match arg {
+                IndexArg::Scalar(e) | IndexArg::Range(e) => self.expr(e),
+                IndexArg::Whole => None,
+            })
+        }),
+        // ── SIR22 "APL addendum" — deferred, rejected cleanly ────────
+        // Shares NDArrays/MatrixOps/ArrayColumnMajor with the base cut
+        // above, so it must be checked explicitly here (not just at the
+        // feature-flag gate) — see `ScanHit::Sir22AddendumNode`'s doc.
+        Expr::Reduce { span, .. } => Some(ScanHit::Sir22AddendumNode("Reduce", span.clone())),
+        Expr::Scan { span, .. } => Some(ScanHit::Sir22AddendumNode("Scan", span.clone())),
+        Expr::OuterProduct { span, .. } => {
+            Some(ScanHit::Sir22AddendumNode("OuterProduct", span.clone()))
+        }
+        Expr::Shape { span, .. } => Some(ScanHit::Sir22AddendumNode("Shape", span.clone())),
+        Expr::Reshape { span, .. } => Some(ScanHit::Sir22AddendumNode("Reshape", span.clone())),
+        Expr::IndexGenerator { span, .. } => {
+            Some(ScanHit::Sir22AddendumNode("IndexGenerator", span.clone()))
+        }
+        Expr::IndexOf { span, .. } => Some(ScanHit::Sir22AddendumNode("IndexOf", span.clone())),
+        Expr::Ravel { span, .. } => Some(ScanHit::Sir22AddendumNode("Ravel", span.clone())),
+        Expr::Catenate { span, .. } => Some(ScanHit::Sir22AddendumNode("Catenate", span.clone())),
         _ => None,
     }
     }
@@ -1244,7 +1311,25 @@ fn emit_stmt(s: &Stmt) -> String {
         // registered separately with `__def_method__` (reusing slice-2 machinery),
         // and a class mixes it in with the native `include`/`extend` below.
         Stmt::ModuleDef { name, .. } => format!("Object.const_set(:{name}, Module.new)"),
-        // Other not-yet-supported statements (e.g. index-set, singleton defs) are
+        // ── SIR22: array/matrix indexed assignment ──────────────────
+        // `target[indices...] = value` — mutates IN PLACE via
+        // `sir_array_index_set` (see `runtime.rs`), matching the SIR22
+        // spec's own note that `IndexSet` is a `Stmt`, not a pure `Expr`,
+        // for exactly this in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            format!(
+                "sir_array_index_set({}, [{}], {})",
+                emit_expr(target),
+                emit_index_args(indices),
+                emit_expr(value)
+            )
+        }
+        // Other not-yet-supported statements (e.g. singleton defs) are
         // rejected by the capability check / scan before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
     }
@@ -1415,12 +1500,124 @@ fn emit_expr(e: &Expr) -> String {
         Expr::KeywordArg { name, value, .. } => {
             format!("{}: {}", sanitize_ident(name), emit_expr(value))
         }
+        // ── SIR22 array/matrix base cut ──────────────────────────────
+        // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+        // (and `Stmt::IndexSet` below) route into `sir_array_*` helpers
+        // ported from `semantic-ir-to-javascript`'s own already-proven
+        // `ArrayRt` sub-runtime (see `runtime.rs`'s "SIR22 array/matrix
+        // domain" section for the value model and the full port). This
+        // backend inlines its runtime like the JS/C/Go/Rust backends
+        // (not an imported package, unlike Python/TS) — consistent with
+        // this crate's existing precedent for every other feature batch.
+        Expr::ArrayLit { rows, .. } => {
+            let row_strs: Vec<String> = rows
+                .iter()
+                .map(|row| {
+                    let elems: Vec<String> = row.iter().map(emit_expr).collect();
+                    format!("[{}]", elems.join(", "))
+                })
+                .collect();
+            format!("sir_array_from_rows([{}])", row_strs.join(", "))
+        }
+        // Argument ORDER: the SIR node's own field order is `start, step,
+        // stop`, but `sir_array_range(start, stop, step = 1)` (matching
+        // the JS/TS reference's `range(start, stop, step)`) takes `stop`
+        // before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            let step_str = step
+                .as_ref()
+                .map(|s| emit_expr(s))
+                .unwrap_or_else(|| "1".to_string());
+            format!(
+                "sir_array_range({}, {}, {})",
+                emit_expr(start),
+                emit_expr(stop),
+                step_str
+            )
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            format!("sir_array_matmul({}, {})", emit_expr(lhs), emit_expr(rhs))
+        }
+        // The op name must match `sir_array_apply_op`'s `case` in
+        // `runtime.rs` exactly (`"Add"`, not `.name()`'s lowercase form).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            format!(
+                "sir_array_elementwise({}, {}, {})",
+                elementwise_op_ruby_name(*op),
+                emit_expr(lhs),
+                emit_expr(rhs)
+            )
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            format!(
+                "sir_array_transpose({}, {})",
+                emit_expr(target),
+                conjugate
+            )
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            format!(
+                "sir_array_index_get({}, [{}])",
+                emit_expr(target),
+                emit_index_args(indices)
+            )
+        }
         other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),
     }
 }
 
 fn emit_args(args: &[Expr]) -> String {
     args.iter().map(emit_expr).collect::<Vec<_>>().join(", ")
+}
+
+/// The Ruby string `sir_array_apply_op`'s `case` switches on — exact
+/// `ElementwiseOpKind` variant names, not `.name()`'s lowercase forms
+/// (`"add"`, used elsewhere for display), since this string is a real
+/// runtime dispatch key, matching the JS backend's `elementwise_op_js_name`.
+fn elementwise_op_ruby_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "\"Add\"",
+        ElementwiseOpKind::Sub => "\"Sub\"",
+        ElementwiseOpKind::Mul => "\"Mul\"",
+        ElementwiseOpKind::Div => "\"Div\"",
+        ElementwiseOpKind::Pow => "\"Pow\"",
+        ElementwiseOpKind::Max => "\"Max\"",
+        ElementwiseOpKind::Min => "\"Min\"",
+        ElementwiseOpKind::Eq => "\"Eq\"",
+        ElementwiseOpKind::Ne => "\"Ne\"",
+        ElementwiseOpKind::Lt => "\"Lt\"",
+        ElementwiseOpKind::Le => "\"Le\"",
+        ElementwiseOpKind::Ge => "\"Ge\"",
+        ElementwiseOpKind::Gt => "\"Gt\"",
+    }
+}
+
+/// Emit one `IndexArg` as the Ruby Hash literal `sir_array_index_get`/
+/// `sir_array_index_set` expect: `{ kind: "scalar", value: <expr> }` /
+/// `{ kind: "whole" }` / `{ kind: "range", indices: <NDArray> }`. The
+/// `Range` case reuses `emit_expr` on the inner `Expr::Range` node
+/// directly — that node's own `Expr::Range` arm already emits a call
+/// into `sir_array_range(...)`.
+fn emit_index_arg(arg: &IndexArg) -> String {
+    match arg {
+        IndexArg::Scalar(e) => format!("{{ kind: \"scalar\", value: {} }}", emit_expr(e)),
+        IndexArg::Whole => "{ kind: \"whole\" }".to_string(),
+        IndexArg::Range(e) => format!("{{ kind: \"range\", indices: {} }}", emit_expr(e)),
+    }
+}
+
+fn emit_index_args(indices: &[IndexArg]) -> String {
+    indices
+        .iter()
+        .map(emit_index_arg)
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
 fn emit_var_ref(name: &str, scope: Scope) -> String {
