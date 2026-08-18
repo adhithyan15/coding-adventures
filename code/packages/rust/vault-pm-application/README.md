@@ -317,6 +317,28 @@ publication failure withholds the capability, secret, and original error.
 The item-bound current-field boundary records refusal as `Denied` without item
 traversal, ambiguity or absence as `Failed` without a revision, schema mismatch
 as `Failed` with the reached revision, and success with that exact revision.
+
+`audited_current_item_totp_code` shares that exact ceremony — one code path, so
+the mapping from situation to audit outcome cannot drift between the two — and
+adds nothing to it, because VLT-PM15 §2 already classifies TOTP display as an
+access. It reads the sole current live revision of a `TOTP_SEED_V1` item and
+computes the current RFC 6238 code *inside* this crate, so the decoded seed
+never crosses the boundary; what the host receives is a `TotpCodeV1` holding
+the zero-padded digits and the seconds they remain valid. That type implements
+no `Debug`, `Display`, or `Clone` and wipes the code on drop, while the
+countdown stays readable because it is a fact about the clock rather than a
+secret. The RFC 6238 engine itself is `coding_adventures_vault_auth`, reused
+per VLT-PM00 §6 rather than reimplemented.
+
+The instant is a caller-supplied Unix-millisecond reading, and it is
+deliberately a *separate* argument from the audit event's advisory timestamp:
+VLT-PM45 §4.1 requires a fresh reading, because an Argon2id unlock and a human
+confirmation sit between the pre-authentication reservation and the
+computation, and a stale reading routinely yields the previous code. Stored
+parameters this build cannot compute — an unrecognized algorithm, an
+unrenderable digit count, a zero period — are `Unsupported` with a `Failed`
+event; there is no fallback to SHA-1 and no clamped digit count, because six
+wrong digits are indistinguishable from six right ones until a login fails.
 The conflict-candidate field boundary adds a stricter current-membership gate:
 the named item must have at least two candidates and the named revision must be
 one of them. Denial still avoids traversal; an unconflicted item or historical

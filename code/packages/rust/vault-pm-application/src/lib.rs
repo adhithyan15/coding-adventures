@@ -24,6 +24,7 @@ mod rotate;
 mod search;
 mod state;
 mod status;
+mod totp;
 mod verifier;
 
 pub use access::AuditedAccessResultV1;
@@ -93,6 +94,7 @@ pub use state::{
     PublicationJournalV1,
 };
 pub use status::{VaultStatusStateV1, VaultStatusV1};
+pub use totp::TotpCodeV1;
 pub use verifier::V1SingleDeviceVerifier;
 
 use core::fmt::{self, Debug, Display, Formatter};
