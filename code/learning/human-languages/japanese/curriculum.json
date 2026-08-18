@@ -60,6 +60,30 @@
         "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "JA-PATH-004",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "JA-W03-a",
+        "JA-W03-ri",
+        "JA-W03-ka",
+        "JA-W03-dakuten",
+        "JA-W03-to",
+        "JA-W03-u",
+        "JA-W03-arigatou-read",
+        "JA-W03-sa",
+        "JA-W03-ma",
+        "JA-W03-su",
+        "JA-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-010-HIRAGANA-THANKS",
+        "JA-EXT-011-DAKUTEN-WRITING",
+        "JA-EXT-012-POLITE-THANKS-CONSOLIDATION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -76,7 +100,8 @@
     },
     "SPINE-COURTESY-THANK": {
       "segments": [
-        "JA-PATH-003"
+        "JA-PATH-003",
+        "JA-PATH-004"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL",
@@ -549,6 +574,53 @@
         "JA-W01-chi",
         "JA-W01-wa",
         "JA-W01-konnichiwa-read"
+      ]
+    },
+    {
+      "id": "JA-EXT-010-HIRAGANA-THANKS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write eight more hiragana signs from memory, add the dakuten to voice one of them, and read ありがとう from them without leaning on the romanization.",
+      "prerequisites": [
+        "JA-EXT-009-HIRAGANA-GREETING"
+      ],
+      "lessons": [
+        "JA-W03-a",
+        "JA-W03-ri",
+        "JA-W03-ka",
+        "JA-W03-dakuten",
+        "JA-W03-to",
+        "JA-W03-u",
+        "JA-W03-arigatou-read"
+      ]
+    },
+    {
+      "id": "JA-EXT-011-DAKUTEN-WRITING",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can carry the dakuten to a sign I meet later, voicing さ into ざ without being taught a new shape.",
+      "prerequisites": [
+        "JA-EXT-010-HIRAGANA-THANKS"
+      ],
+      "lessons": [
+        "JA-W03-sa"
+      ]
+    },
+    {
+      "id": "JA-EXT-012-POLITE-THANKS-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can read and write ありがとうございます in full, and I know when the polite form is the one to use.",
+      "prerequisites": [
+        "JA-EXT-011-DAKUTEN-WRITING"
+      ],
+      "lessons": [
+        "JA-W03-ma",
+        "JA-W03-su",
+        "JA-C03-practice"
       ]
     }
   ]
