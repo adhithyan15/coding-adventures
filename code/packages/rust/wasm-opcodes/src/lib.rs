@@ -1104,6 +1104,47 @@ pub enum SimdOpKind {
     /// `i64x2.bitmask` -- same as [`Self::BitmaskI8x16`], but one sign
     /// bit per `i64` lane (2 lanes), packed into the low 2 bits.
     BitmaskI64x2,
+    /// `i64x2.abs` -- lane-wise absolute value of two SIGNED `i64` lanes,
+    /// using `wrapping_abs` (so `i64::MIN` maps to itself, not a panic).
+    /// UNARY, same shape as [`Self::AbsI8x16`] but at `i64x2`'s width --
+    /// the first REAL ARITHMETIC opcode at this lane width (PR12 only
+    /// added the all_true/bitmask reduction family).
+    AbsI64x2,
+    /// `i64x2.neg` -- lane-wise two's-complement negation of two `i64`
+    /// lanes, using `wrapping_neg`. UNARY, same shape as
+    /// [`Self::NegI8x16`] but at `i64x2`'s width.
+    NegI64x2,
+    /// `i64x2.add` -- lane-wise wrapping addition of two `i64x2`
+    /// operands. BINARY, same shape as [`Self::Add`] but at `i64x2`'s
+    /// width.
+    AddI64x2,
+    /// `i64x2.sub` -- lane-wise wrapping subtraction. BINARY, same shape
+    /// as [`Self::AddI64x2`].
+    SubI64x2,
+    /// `i64x2.mul` -- lane-wise wrapping multiplication. BINARY, same
+    /// shape as [`Self::AddI64x2`].
+    MulI64x2,
+    /// `i64x2.eq` -- lane-wise equality, boolean mask (all-1s/all-0s per
+    /// `i64` lane). BINARY, same shape as [`Self::Eq`] but at `i64x2`'s
+    /// width.
+    EqI64x2,
+    /// `i64x2.ne` -- lane-wise inequality, boolean mask. BINARY, same
+    /// shape as [`Self::EqI64x2`].
+    NeI64x2,
+    /// `i64x2.lt_s` -- lane-wise SIGNED less-than, boolean mask. BINARY,
+    /// same shape as [`Self::EqI64x2`]. No `lt_u` -- the SIMD proposal
+    /// never defines unsigned `i64x2` comparisons, unlike every narrower
+    /// lane width.
+    LtSI64x2,
+    /// `i64x2.gt_s` -- lane-wise SIGNED greater-than, boolean mask.
+    /// BINARY, same shape as [`Self::EqI64x2`].
+    GtSI64x2,
+    /// `i64x2.le_s` -- lane-wise SIGNED less-than-or-equal, boolean mask.
+    /// BINARY, same shape as [`Self::EqI64x2`].
+    LeSI64x2,
+    /// `i64x2.ge_s` -- lane-wise SIGNED greater-than-or-equal, boolean
+    /// mask. BINARY, same shape as [`Self::EqI64x2`].
+    GeSI64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1302,6 +1343,17 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.bitmask", sub_opcode: 0xA4, kind: SimdOpKind::BitmaskI32x4 },
     SimdOpInfo { name: "i64x2.all_true", sub_opcode: 0xC3, kind: SimdOpKind::AllTrueI64x2 },
     SimdOpInfo { name: "i64x2.bitmask", sub_opcode: 0xC4, kind: SimdOpKind::BitmaskI64x2 },
+    SimdOpInfo { name: "i64x2.abs", sub_opcode: 0xC0, kind: SimdOpKind::AbsI64x2 },
+    SimdOpInfo { name: "i64x2.neg", sub_opcode: 0xC1, kind: SimdOpKind::NegI64x2 },
+    SimdOpInfo { name: "i64x2.add", sub_opcode: 0xCE, kind: SimdOpKind::AddI64x2 },
+    SimdOpInfo { name: "i64x2.sub", sub_opcode: 0xD1, kind: SimdOpKind::SubI64x2 },
+    SimdOpInfo { name: "i64x2.mul", sub_opcode: 0xD5, kind: SimdOpKind::MulI64x2 },
+    SimdOpInfo { name: "i64x2.eq", sub_opcode: 0xD6, kind: SimdOpKind::EqI64x2 },
+    SimdOpInfo { name: "i64x2.ne", sub_opcode: 0xD7, kind: SimdOpKind::NeI64x2 },
+    SimdOpInfo { name: "i64x2.lt_s", sub_opcode: 0xD8, kind: SimdOpKind::LtSI64x2 },
+    SimdOpInfo { name: "i64x2.gt_s", sub_opcode: 0xD9, kind: SimdOpKind::GtSI64x2 },
+    SimdOpInfo { name: "i64x2.le_s", sub_opcode: 0xDA, kind: SimdOpKind::LeSI64x2 },
+    SimdOpInfo { name: "i64x2.ge_s", sub_opcode: 0xDB, kind: SimdOpKind::GeSI64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1720,8 +1772,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_90_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 90);
+    fn simd_ops_table_has_the_expected_101_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 101);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2063,6 +2115,41 @@ mod tests {
             ("i32x4.bitmask", 0xA4, SimdOpKind::BitmaskI32x4),
             ("i64x2.all_true", 0xC3, SimdOpKind::AllTrueI64x2),
             ("i64x2.bitmask", 0xC4, SimdOpKind::BitmaskI64x2),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i64x2_arith_and_cmp_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md (twice, identical both times).
+        // `i64x2.abs` (0xC0)/`neg` (0xC1) fill the gap left by PR12's
+        // `all_true` (0xC3)/`bitmask` (0xC4), matching the identical
+        // abs/neg/[gap]/all_true/bitmask cluster layout already confirmed
+        // for i8x16 (0x60/0x61/../0x63/0x64), i16x8 (0x80/0x81/../0x83/
+        // 0x84), and i32x4 (0xA0/0xA1/../0xA3/0xA4). `add`/`sub`/`mul`
+        // (0xCE/0xD1/0xD5) and the `eq`..`ge_s` comparison family form
+        // one contiguous 0xD5-0xDB run, matching the contiguous cmp
+        // blocks of every other lane width. No `lt_u`/`gt_u`/`le_u`/
+        // `ge_u` -- the SIMD proposal never defines unsigned i64x2
+        // comparisons, unlike every narrower lane width. This is i64x2's
+        // first REAL ARITHMETIC family (PR12 only added the all_true/
+        // bitmask reduction ops).
+        for (name, sub_opcode, kind) in [
+            ("i64x2.abs", 0xC0, SimdOpKind::AbsI64x2),
+            ("i64x2.neg", 0xC1, SimdOpKind::NegI64x2),
+            ("i64x2.add", 0xCE, SimdOpKind::AddI64x2),
+            ("i64x2.sub", 0xD1, SimdOpKind::SubI64x2),
+            ("i64x2.mul", 0xD5, SimdOpKind::MulI64x2),
+            ("i64x2.eq", 0xD6, SimdOpKind::EqI64x2),
+            ("i64x2.ne", 0xD7, SimdOpKind::NeI64x2),
+            ("i64x2.lt_s", 0xD8, SimdOpKind::LtSI64x2),
+            ("i64x2.gt_s", 0xD9, SimdOpKind::GtSI64x2),
+            ("i64x2.le_s", 0xDA, SimdOpKind::LeSI64x2),
+            ("i64x2.ge_s", 0xDB, SimdOpKind::GeSI64x2),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

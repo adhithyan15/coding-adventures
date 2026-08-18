@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.18] - 2026-08-18 - SIMD: i64x2 arith+cmp family (task #156-158)
+
+### Added
+
+- 11 new `SIMD_OPS` entries -- i64x2's first REAL ARITHMETIC family
+  (task #153-155 only added the `all_true`/`bitmask` reduction ops, no
+  computation): `i64x2.abs` (`0xC0`), `neg` (`0xC1`), `add` (`0xCE`),
+  `sub` (`0xD1`), `mul` (`0xD5`), `eq` (`0xD6`), `ne` (`0xD7`), `lt_s`
+  (`0xD8`), `gt_s` (`0xD9`), `le_s` (`0xDA`), `ge_s` (`0xDB`) -- 101
+  SIMD opcodes total, up from 90. No `lt_u`/`gt_u`/`le_u`/`ge_u` -- the
+  SIMD proposal never defines unsigned `i64x2` comparisons, unlike
+  every narrower lane width. `abs`/`neg` fill the gap left by the
+  already-implemented `all_true` (`0xC3`)/`bitmask` (`0xC4`), matching
+  the identical `abs`/`neg`/`[gap]`/`all_true`/`bitmask` cluster layout
+  already confirmed for `i8x16` (`0x60`/`0x61`/../`0x63`/`0x64`),
+  `i16x8` (`0x80`/`0x81`/../`0x83`/`0x84`), and `i32x4`
+  (`0xA0`/`0xA1`/../`0xA3`/`0xA4`). `eq`..`ge_s` form one contiguous
+  `0xD5-0xDB` run, matching the contiguous cmp blocks of every other
+  lane width. Each sub-opcode byte fetched live from the SIMD
+  proposal's own `BinarySIMD.md` (twice, identical both times) and
+  cross-checked against the already-implemented `i64x2.all_true`/
+  `bitmask` entries.
+- `SimdOpKind::AbsI64x2`/`NegI64x2`/`AddI64x2`/`SubI64x2`/`MulI64x2`/
+  `EqI64x2`/`NeI64x2`/`LtSI64x2`/`GtSI64x2`/`LeSI64x2`/`GeSI64x2`.
+  Reuses the existing `v128,v128->v128`/`v128->v128` shapes already
+  used everywhere else -- this closes a lane-width coverage gap, not a
+  new operand shape.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i64x2_arith.wast`/`simd_i64x2_arith2.wast`/`simd_i64x2_cmp.wast`
+and the resulting baseline delta.
+
 ## [0.2.17] - 2026-08-18 - SIMD: boolean-reduction/bitmask family (task #153-155)
 
 ### Added

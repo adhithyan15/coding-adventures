@@ -864,6 +864,30 @@ fn valid_simd_boolean_reduction_and_bitmask_family() {
 }
 
 #[test]
+fn valid_simd_i64x2_arith_and_cmp_family() {
+    // SIMD widen PR13: i64x2.abs/neg/add/sub/mul/eq/ne/lt_s/gt_s/le_s/
+    // ge_s -- i64x2's first REAL ARITHMETIC family (PR12 only added the
+    // all_true/bitmask reduction ops). abs/neg are UNARY (v128->v128);
+    // add/sub/mul/eq/ne/lt_s/gt_s/le_s/ge_s are BINARY
+    // (v128,v128->v128) -- same shapes as every other lane width, just
+    // a new lane width, so no new type-checker plumbing.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i64x2.abs (local.get 0)))
+             (func (param v128) (result v128) (i64x2.neg (local.get 0)))
+             (func (param v128 v128) (result v128) (i64x2.add (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.sub (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.mul (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.eq (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.lt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.gt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.le_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.ge_s (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

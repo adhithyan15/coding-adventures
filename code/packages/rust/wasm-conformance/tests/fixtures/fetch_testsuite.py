@@ -346,6 +346,22 @@ TESTSUITE_FILES = [
     # implemented v128.bitselect/i8x16.popcnt/i16x8.abs/neg/i32x4.abs/
     # neg entries, same discipline as every prior addition.
     "simd_boolean.wast",
+    # SIMD widen PR13 (task #156-158): simd_i64x2_arith.wast/
+    # simd_i64x2_arith2.wast/simd_i64x2_cmp.wast -- i64x2.abs/neg/add/
+    # sub/mul/eq/ne/lt_s/gt_s/le_s/ge_s, i64x2's first REAL ARITHMETIC
+    # family (PR12 only added the all_true/bitmask reduction ops). No
+    # lt_u/gt_u/le_u/ge_u -- the SIMD proposal never defines unsigned
+    # i64x2 comparisons, unlike every narrower lane width. Reuses the
+    # existing v128,v128->v128 / v128->v128 shapes already implemented
+    # for every other lane width -- this closes a lane-width coverage
+    # gap, not a new operand shape. Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-
+    # implemented i64x2.all_true/bitmask entries plus the identical
+    # abs/neg/[gap]/all_true/bitmask cluster layout already confirmed
+    # for i8x16/i16x8/i32x4.
+    "simd_i64x2_arith.wast",
+    "simd_i64x2_arith2.wast",
+    "simd_i64x2_cmp.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

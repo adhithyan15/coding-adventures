@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.27] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for i64x2's first REAL
+  ARITHMETIC family: the pop-two-push-one binary arm extended to also
+  cover `AddI64x2 | SubI64x2 | MulI64x2`; the comparison arm extended
+  to also cover `EqI64x2 | NeI64x2 | LtSI64x2 | GtSI64x2 | LeSI64x2 |
+  GeSI64x2`; the pop-one-push-one unary arm extended to also cover
+  `AbsI64x2 | NegI64x2`. All reuse the same `v128,v128->v128`/
+  `v128->v128` type shapes already used for every other lane width --
+  this is a new LANE WIDTH, not a new operand shape, so no new
+  type-checker plumbing.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.26] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family type rules)
 
 ### Added
