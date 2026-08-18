@@ -823,6 +823,26 @@ fn valid_i16x8_from_i8x16_widening() {
 }
 
 #[test]
+fn valid_simd_bitwise_family() {
+    // SIMD widen PR11: v128.not/and/andnot/or/xor/bitselect --
+    // lane-width-agnostic raw-byte bitwise ops, so there's only one
+    // `v128.*` spelling per op (no i8x16/i16x8/i32x4 suffix family).
+    // not is UNARY (v128->v128), and/andnot/or/xor are BINARY
+    // (v128,v128->v128), and bitselect is the first TERNARY SIMD op
+    // in this crate (v128,v128,v128->v128) -- the type checker just
+    // pops three V128s and pushes one, same as the runtime shape.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (v128.not (local.get 0)))
+             (func (param v128 v128) (result v128) (v128.and (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (v128.andnot (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (v128.or (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (v128.xor (local.get 0) (local.get 1)))
+             (func (param v128 v128 v128) (result v128) (v128.bitselect (local.get 0) (local.get 1) (local.get 2))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

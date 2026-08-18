@@ -1774,6 +1774,12 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::ExtmulHighI8x16S
             | wasm_opcodes::SimdOpKind::ExtmulLowI8x16U
             | wasm_opcodes::SimdOpKind::ExtmulHighI8x16U
+            | wasm_opcodes::SimdOpKind::Not
+            | wasm_opcodes::SimdOpKind::And
+            | wasm_opcodes::SimdOpKind::AndNot
+            | wasm_opcodes::SimdOpKind::Or
+            | wasm_opcodes::SimdOpKind::Xor
+            | wasm_opcodes::SimdOpKind::Bitselect
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -2406,6 +2412,12 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::ExtmulHighI8x16S
             | wasm_opcodes::SimdOpKind::ExtmulLowI8x16U
             | wasm_opcodes::SimdOpKind::ExtmulHighI8x16U
+            | wasm_opcodes::SimdOpKind::Not
+            | wasm_opcodes::SimdOpKind::And
+            | wasm_opcodes::SimdOpKind::AndNot
+            | wasm_opcodes::SimdOpKind::Or
+            | wasm_opcodes::SimdOpKind::Xor
+            | wasm_opcodes::SimdOpKind::Bitselect
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -5049,6 +5061,35 @@ mod tests {
         assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0x9D, 0x01]), "i16x8.extmul_high_i8x16_s: {:?}", code_of(&m, 3));
         assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0x9E, 0x01]), "i16x8.extmul_low_i8x16_u: {:?}", code_of(&m, 4));
         assert!(code_of(&m, 5).windows(3).any(|w| w == [0xFD, 0x9F, 0x01]), "i16x8.extmul_high_i8x16_u: {:?}", code_of(&m, 5));
+    }
+
+    #[test]
+    fn simd_bitwise_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR11: v128.not/and/andnot/or/xor/bitselect
+        // (sub-opcodes 0x4D-0x52, all < 128 so single-byte LEB128).
+        // Lane-width-agnostic -- these operate on raw bytes, not
+        // typed lanes, so there's only ever one `v128.*` spelling
+        // per op (no i8x16/i16x8/i32x4 suffix family). bitselect is
+        // the first ternary SIMD op (3 v128 operands); the "no
+        // immediate beyond the opcode byte itself" encoder bucket
+        // handles it with zero special-casing since operand count
+        // is driven by the S-expression recursion, not the encoder.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (v128.not (local.get 0)))
+                 (func (param v128 v128) (result v128) (v128.and (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (v128.andnot (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (v128.or (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (v128.xor (local.get 0) (local.get 1)))
+                 (func (param v128 v128 v128) (result v128) (v128.bitselect (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x4D]), "v128.not: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x4E]), "v128.and: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x4F]), "v128.andnot: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(2).any(|w| w == [0xFD, 0x50]), "v128.or: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(2).any(|w| w == [0xFD, 0x51]), "v128.xor: {:?}", code_of(&m, 4));
+        assert!(code_of(&m, 5).windows(2).any(|w| w == [0xFD, 0x52]), "v128.bitselect: {:?}", code_of(&m, 5));
     }
 
     #[test]

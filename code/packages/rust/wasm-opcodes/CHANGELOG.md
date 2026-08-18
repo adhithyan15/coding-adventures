@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.16] - 2026-08-18 - SIMD: v128 bitwise family (task #150-152)
+
+### Added
+
+- 6 new `SIMD_OPS` entries -- the lane-width-agnostic raw-byte bitwise
+  family, a strategic pivot from "widen the next narrow per-lane-width
+  family" to "close the highest-real-world-impact remaining gap" now
+  that `i8x16`/`i16x8`/`i32x4` all have complete
+  arith+cmp+arith2+widening coverage relative to each other:
+  `v128.not` (`0x4D`), `v128.and` (`0x4E`), `v128.andnot` (`0x4F`),
+  `v128.or` (`0x50`), `v128.xor` (`0x51`), `v128.bitselect` (`0x52`)
+  -- 81 SIMD opcodes total, up from 75. Unlike every prior family,
+  these have only ONE spelling each (no `i8x16`/`i16x8`/`i32x4`
+  suffix) since they operate on raw bytes, not typed lanes. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i8x16.add` (`0x6E`)/`i32x4.add` (`0xAE`) entries.
+- `SimdOpKind::Not`/`And`/`AndNot`/`Or`/`Xor`/`Bitselect`.
+  `Bitselect` is the first TERNARY `SimdOpKind` in this crate (pops
+  three `v128`s, pushes one): `(a AND c) OR (b AND (NOT c))`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_bitwise.wast` and the resulting baseline delta.
+
 ## [0.2.15] - 2026-08-18 - SIMD: i16x8-from-i8x16 widening family (task #147-149)
 
 ### Added

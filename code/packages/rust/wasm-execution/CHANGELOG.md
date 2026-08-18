@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.23] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family)
+
+### Added
+
+- `register_simd` gains three new dispatch arms for the
+  lane-width-agnostic raw-byte bitwise family: `SimdOpKind::Not`
+  (UNARY -- flips every bit of the popped v128), `And | AndNot | Or |
+  Xor` (BINARY -- pops rhs then lhs, computes the bytewise operation
+  lane-by-lane over all 16 bytes, `AndNot` being `lhs & !rhs`), and
+  `Bitselect` (TERNARY -- the first three-operand SIMD op in this
+  interpreter: pops `c` then `b` then `a`, computes `(a[i] & c[i]) |
+  (b[i] & !c[i])` per byte, i.e. select bits from `a` where the
+  corresponding `c` bit is 1, else from `b`). Every handler resolves
+  its `v128_heap` handle(s) via `.get(...).ok_or_else(...)` --
+  never raw indexing -- so a malformed handle produces a clean typed
+  `VMError`, not a panic. Verified with dedicated tests covering
+  `not`'s full-bit-flip, each of `and`/`andnot`/`or`/`xor`'s real
+  boundary-value semantics, and `bitselect` selecting an exact mask
+  pattern from two maximally-different operands.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.22] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening family)
 
 ### Added

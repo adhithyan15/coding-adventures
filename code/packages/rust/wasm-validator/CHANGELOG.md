@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.25] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for the lane-width-agnostic
+  raw-byte bitwise family: the pop-two-push-one binary arm extended
+  to also cover `And | AndNot | Or | Xor`; the pop-one-push-one unary
+  arm extended to also cover `Not`. A brand-new arm added for
+  `Bitselect` -- the first TERNARY SIMD op in this crate -- which
+  pops three `v128`s and pushes one `v128`; at the type level it's
+  just three `V128` pops, the runtime's byte-level `(a AND c) OR (b
+  AND (NOT c))` semantics are invisible to the type checker.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.24] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening type rules)
 
 ### Added
