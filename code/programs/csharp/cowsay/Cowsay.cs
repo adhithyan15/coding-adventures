@@ -225,13 +225,31 @@ public static class CowsayRenderer
     /// default.cow when the requested file doesn't exist. The template is a Perl
     /// heredoc (`$the_cow = &lt;&lt;EOC; ... EOC`); only the body between the heredoc
     /// markers is returned.
+    ///
+    /// <paramref name="cowName"/> comes from the user-supplied -f/--file flag, so it
+    /// is treated as untrusted: only a bare filename (no directory separators, no
+    /// rooted/absolute path) is accepted, and the resolved path is verified to stay
+    /// inside <paramref name="cowsDir"/> before it's read — otherwise this falls back
+    /// to default.cow instead of reading an arbitrary file the caller pointed at via
+    /// "..", a rooted override, or similar. A rooted `cowName` matters because
+    /// Path.Combine ignores its first argument entirely when the second is already
+    /// rooted (e.g. "C:\Windows\win" + ".cow"), which would otherwise let a crafted
+    /// -f value escape cowsDir outright, not just traverse out of it.
     /// </summary>
     public static string LoadCow(string cowName, string cowsDir)
     {
-        var cowPath = Path.Combine(cowsDir, cowName + ".cow");
-        if (!File.Exists(cowPath))
+        var cowsRoot = Path.GetFullPath(cowsDir);
+        var safeName = Path.GetFileName(cowName);
+        var cowPath = safeName.Length > 0 && !Path.IsPathRooted(cowName)
+            ? Path.GetFullPath(Path.Combine(cowsRoot, safeName + ".cow"))
+            : null;
+
+        var isWithinCowsDir = cowPath is not null &&
+            cowPath.StartsWith(cowsRoot + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+
+        if (cowPath is null || !isWithinCowsDir || !File.Exists(cowPath))
         {
-            cowPath = Path.Combine(cowsDir, "default.cow");
+            cowPath = Path.Combine(cowsRoot, "default.cow");
         }
 
         var content = File.ReadAllText(cowPath);

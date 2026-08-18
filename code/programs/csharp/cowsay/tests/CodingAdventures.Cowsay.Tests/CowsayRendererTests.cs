@@ -200,6 +200,49 @@ public class LoadCowTests : IDisposable
 
         Assert.Equal("fallback\n", body);
     }
+
+    [Theory]
+    [InlineData("../../../../../../etc/passwd")]
+    [InlineData("..\\..\\..\\secret")]
+    [InlineData("../outside")]
+    public void FallsBackToDefaultInsteadOfEscapingCowsDirViaTraversal(string maliciousCowName)
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "default.cow"), "$the_cow = <<EOC;\nfallback\nEOC\n");
+        var outsideDir = Directory.CreateTempSubdirectory("cowsay-outside-").FullName;
+        try
+        {
+            File.WriteAllText(Path.Combine(outsideDir, "secret.cow"), "$the_cow = <<EOC;\nSECRET\nEOC\n");
+            File.WriteAllText(Path.Combine(outsideDir, "outside.cow"), "$the_cow = <<EOC;\nSECRET\nEOC\n");
+
+            var body = CowsayRenderer.LoadCow(maliciousCowName, _tempDir);
+
+            Assert.Equal("fallback\n", body);
+        }
+        finally
+        {
+            Directory.Delete(outsideDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void FallsBackToDefaultInsteadOfFollowingARootedPathOverride()
+    {
+        File.WriteAllText(Path.Combine(_tempDir, "default.cow"), "$the_cow = <<EOC;\nfallback\nEOC\n");
+        var outsideDir = Directory.CreateTempSubdirectory("cowsay-outside-").FullName;
+        try
+        {
+            var rootedTarget = Path.Combine(outsideDir, "win");
+            File.WriteAllText(rootedTarget + ".cow", "$the_cow = <<EOC;\nSECRET\nEOC\n");
+
+            var body = CowsayRenderer.LoadCow(rootedTarget, _tempDir);
+
+            Assert.Equal("fallback\n", body);
+        }
+        finally
+        {
+            Directory.Delete(outsideDir, recursive: true);
+        }
+    }
 }
 
 public class ComposeContentTests : IDisposable
