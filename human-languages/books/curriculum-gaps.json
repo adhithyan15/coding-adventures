@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 3143,
+    "totalLessons": 3147,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -32,12 +32,12 @@
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 600,
+    "atomsNeverRevisited": 601,
     "forwardReferences": 511,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2658,
+    "drivableLessons": 2662,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 97,
     "unexplainedModalityOverrides": 0
@@ -1680,7 +1680,8 @@
           29,
           30,
           31,
-          32
+          32,
+          33
         ],
         "bookChapters": [
           1,
@@ -1714,7 +1715,8 @@
           29,
           30,
           31,
-          32
+          32,
+          33
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3110,10 +3112,10 @@
       {
         "language": "french",
         "status": "mixed",
-        "lessonCount": 114,
+        "lessonCount": 118,
         "versions": {
           "1": 64,
-          "2": 50
+          "2": 54
         }
       },
       {
@@ -3842,8 +3844,8 @@
       },
       {
         "language": "french",
-        "bookChapters": 32,
-        "declaredChapters": 32,
+        "bookChapters": 33,
+        "declaredChapters": 33,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -3994,8 +3996,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 953,
-      "declaredChapters": 953,
+      "bookChapters": 954,
+      "declaredChapters": 954,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -4007,11 +4009,11 @@
     }
   },
   "levels": {
-    "totalLessons": 3143,
+    "totalLessons": 3147,
     "byLevel": {
       "pre-A1": 1856,
       "A1": 573,
-      "A2": 543,
+      "A2": 547,
       "B1": 40,
       "B2": 17,
       "C1": 10,
@@ -4067,11 +4069,11 @@
       },
       {
         "language": "french",
-        "lessonCount": 114,
+        "lessonCount": 118,
         "byLevel": {
           "pre-A1": 42,
           "A1": 33,
-          "A2": 25,
+          "A2": 29,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4857,8 +4859,8 @@
       },
       {
         "language": "french",
-        "lessonCount": 114,
-        "measurable": 50,
+        "lessonCount": 118,
+        "measurable": 54,
         "unmeasurable": 64,
         "lessonViolations": 6,
         "chapterViolations": 0
@@ -5788,7 +5790,7 @@
           "language": "french",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 114,
+          "lessonCount": 118,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -21753,10 +21755,46 @@
         "revisits": 0
       },
       {
+        "atom": "FR-ETYMON-ENFANT-07",
+        "language": "french",
+        "introducedBy": "FR-C29-enfant",
+        "introducedAt": 95,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-FAMILLE-05",
+        "language": "french",
+        "introducedBy": "FR-C29-famille",
+        "introducedAt": 94,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "FR-ETYMON-FERMER-11",
         "language": "french",
         "introducedBy": "FR-C27-fermer",
         "introducedAt": 88,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-FROMAGE-02",
+        "language": "french",
+        "introducedBy": "FR-C30-fromage",
+        "introducedAt": 97,
         "missed": [
           "R1",
           "R2",
@@ -21793,6 +21831,18 @@
         "language": "french",
         "introducedBy": "FR-C18-oui",
         "introducedAt": 66,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "FR-ETYMON-PERSONNE-09",
+        "language": "french",
+        "introducedBy": "FR-C29-personne",
+        "introducedAt": 96,
         "missed": [
           "R1",
           "R2",
@@ -35985,17 +36035,6 @@
         "revisits": 1
       },
       {
-        "atom": "FR-ETYMON-ENFANT-07",
-        "language": "french",
-        "introducedBy": "FR-C29-enfant",
-        "introducedAt": 95,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FR-ETYMON-ENTENDRE-02",
         "language": "french",
         "introducedBy": "FR-C26-entendre",
@@ -36005,28 +36044,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "FR-ETYMON-FAMILLE-05",
-        "language": "french",
-        "introducedBy": "FR-C29-famille",
-        "introducedAt": 94,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-FROMAGE-02",
-        "language": "french",
-        "introducedBy": "FR-C30-fromage",
-        "introducedAt": 97,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
       },
       {
         "atom": "FR-ETYMON-LAIT-06",
@@ -36104,17 +36121,6 @@
           "R3"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "FR-ETYMON-PERSONNE-09",
-        "language": "french",
-        "introducedBy": "FR-C29-personne",
-        "introducedAt": 96,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
       },
       {
         "atom": "FR-ETYMON-SEL-06",
@@ -36326,6 +36332,17 @@
         "revisits": 1
       },
       {
+        "atom": "FR-LEX-ENFANT-06",
+        "language": "french",
+        "introducedBy": "FR-C29-enfant",
+        "introducedAt": 95,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "FR-LEX-ENTENDRE-01",
         "language": "french",
         "introducedBy": "FR-C26-entendre",
@@ -36335,6 +36352,28 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-FAMILLE-04",
+        "language": "french",
+        "introducedBy": "FR-C29-famille",
+        "introducedAt": 94,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-LEX-FROMAGE-01",
+        "language": "french",
+        "introducedBy": "FR-C30-fromage",
+        "introducedAt": 97,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "FR-LEX-IL-PLEUT-04",
@@ -50383,6 +50422,16 @@
         "revisits": 4
       },
       {
+        "atom": "FR-GRAMMAR-INVERSION-08",
+        "language": "french",
+        "introducedBy": "FR-C32-inversion",
+        "introducedAt": 112,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-GRAMMAR-PLEASE-REGISTER-04",
         "language": "french",
         "introducedBy": "FR-C19-sil-vous-plait",
@@ -50391,6 +50440,16 @@
           "R1"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "FR-GRAMMAR-QUEL-09",
+        "language": "french",
+        "introducedBy": "FR-C32-quel",
+        "introducedAt": 113,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
       },
       {
         "atom": "FR-LEX-AMI-01",
@@ -50433,6 +50492,26 @@
         "revisits": 4
       },
       {
+        "atom": "FR-LEX-COMBIEN-06",
+        "language": "french",
+        "introducedBy": "FR-C32-combien",
+        "introducedAt": 110,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-COMMENT-05",
+        "language": "french",
+        "introducedBy": "FR-C32-comment",
+        "introducedAt": 109,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "FR-LEX-COMPRENDRE-01",
         "language": "french",
         "introducedBy": "FR-C25-comprendre",
@@ -50441,36 +50520,6 @@
           "R3"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "FR-LEX-ENFANT-06",
-        "language": "french",
-        "introducedBy": "FR-C29-enfant",
-        "introducedAt": 95,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "FR-LEX-FAMILLE-04",
-        "language": "french",
-        "introducedBy": "FR-C29-famille",
-        "introducedAt": 94,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "FR-LEX-FROMAGE-01",
-        "language": "french",
-        "introducedBy": "FR-C30-fromage",
-        "introducedAt": 97,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "FR-LEX-MAIN-02",
@@ -50533,6 +50582,16 @@
         "revisits": 4
       },
       {
+        "atom": "FR-LEX-PERSONNE-08",
+        "language": "french",
+        "introducedBy": "FR-C29-personne",
+        "introducedAt": 96,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "FR-LEX-PLEASE-02",
         "language": "french",
         "introducedBy": "FR-C19-sil-vous-plait",
@@ -50541,6 +50600,16 @@
           "R1"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "FR-LEX-POURQUOI-07",
+        "language": "french",
+        "introducedBy": "FR-C32-pourquoi",
+        "introducedAt": 111,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-PRENDRE-01",
@@ -60526,12 +60595,12 @@
       },
       {
         "language": "french",
-        "lessonCount": 114,
+        "lessonCount": 118,
         "lessonsWithoutSequence": 64,
         "forwardPrerequisites": 21,
         "forwardReviews": 28,
-        "atomsTaught": 118,
-        "atomsNeverRevisited": 32,
+        "atomsTaught": 122,
+        "atomsNeverRevisited": 33,
         "forwardReferences": 63
       },
       {
@@ -60720,13 +60789,13 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4305,
-      "atomsNeverRevisited": 600,
+      "atomsTaught": 4309,
+      "atomsNeverRevisited": 601,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1149,
-        "R2": 3346,
-        "R3": 3171,
+        "R1": 1150,
+        "R2": 3350,
+        "R3": 3179,
         "R4": 1759
       },
       "forwardReferences": 511
@@ -66343,7 +66412,7 @@
             "shortfall": 2
           }
         ],
-        "vocabulary": 98
+        "vocabulary": 101
       },
       {
         "language": "german",
@@ -66759,11 +66828,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3143,
-    "voice": 2217,
+    "totalLessons": 3147,
+    "voice": 2221,
     "sight": 588,
     "pen": 338,
-    "coreVoice": 2658,
+    "coreVoice": 2662,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 85,
     "tracks": [
@@ -67722,13 +67791,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 114,
-        "voice": 99,
+        "lessonCount": 118,
+        "voice": 103,
         "sight": 12,
         "pen": 3,
-        "coreVoice": 99,
+        "coreVoice": 103,
         "drivablePercent": 87,
-        "drivablePrefixTotal": 83,
+        "drivablePrefixTotal": 87,
         "chapters": [
           {
             "language": "french",
@@ -68185,6 +68254,20 @@
               "voice"
             ],
             "drivablePrefix": 9,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 33,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           }
         ]
@@ -81204,11 +81287,11 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3073,
-    "underspent": 2959,
-    "neverSpent": 2034,
+    "roots": 3076,
+    "underspent": 2962,
+    "neverSpent": 2037,
     "payoffDistribution": {
-      "0": 2034,
+      "0": 2037,
       "1": 648,
       "2": 277,
       "3": 65,
@@ -81223,7 +81306,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3143,
+    "lessons": 3147,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -81233,14 +81316,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 3061,
-    "usesBeforeIntroduction": 11590,
-    "technicalUsesBeforeIntroduction": 3141,
-    "technicalLessons": 1622,
+    "lessonsUsingTerms": 3065,
+    "usesBeforeIntroduction": 11612,
+    "technicalUsesBeforeIntroduction": 3148,
+    "technicalLessons": 1626,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1006
+        "lessons": 1010
       },
       {
         "term": "noun",
@@ -81260,17 +81343,17 @@
       },
       {
         "term": "pronoun",
-        "lessons": 141
+        "lessons": 144
       }
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3143,
+    "lessonsScanned": 3147,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1085,
+    "filesScanned": 1086,
     "mainCharacters": 126,
     "scriptCharacters": 692,
     "gaps": 0
