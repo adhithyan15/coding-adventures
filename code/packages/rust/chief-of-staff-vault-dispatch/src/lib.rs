@@ -100,6 +100,12 @@
 //! pair is registered all-or-nothing, via a pre-flight that is co-total with
 //! the registration path — profile checks *and* the registry's own.
 //!
+//! All-or-nothing is about partial *failure*, not about which tools a
+//! deployment chooses to offer: a binding with no trusted delivery adapter
+//! should register the lease tool alone, via
+//! [`VaultToolBridge::register_lease_only_into_host`], rather than offering
+//! `request_direct` over a stub that has nowhere to deliver.
+//!
 //! Note what this gate is not. It runs once, at registration, per host, and is
 //! a statement about a *tool*, not a *secret* — it cannot express "this host
 //! may lease the weather key but not the bank password". The per-secret half of
@@ -295,6 +301,11 @@ impl VaultToolBridge {
     /// host's tool-allowed, tier, and capability checks — the tool registry has
     /// no host profile to check against. Use it for local dispatch and tests;
     /// use [`Self::register_into_host`] at a real host boundary.
+    ///
+    /// Registers `request_direct` too, so a caller with no trusted delivery
+    /// adapter wants [`Self::register_lease_only`] instead — offering a
+    /// direct-delivery tool over a stub is the configuration this crate argues
+    /// against.
     pub fn register_all(&self, runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
         for definition in Self::definitions()? {
             match definition.tool_id.as_str() {
@@ -357,6 +368,54 @@ impl VaultToolBridge {
             }
         }
         Ok(())
+    }
+
+    /// Register only `vault.request_lease` with a bare tool runtime.
+    ///
+    /// The counterpart to [`Self::register_lease_only_into_host`] for the
+    /// unchecked path. It exists so that "no delivery adapter, so do not offer
+    /// direct delivery" is expressible on both paths — otherwise the advice
+    /// would hold at a host boundary and quietly not hold anywhere else.
+    pub fn register_lease_only(
+        &self,
+        runtime: &mut InMemoryToolRuntime,
+    ) -> Result<(), ToolApiError> {
+        let definition = builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID)
+            .ok_or_else(|| ToolApiError::UnknownTool(VAULT_REQUEST_LEASE_TOOL_ID.to_string()))?;
+        runtime.register_handler(definition, self.lease_handler())
+    }
+
+    /// Register **only** `vault.request_lease` at a host boundary.
+    ///
+    /// For deployments that have no trusted [`VaultDirectDelivery`]
+    /// implementation. `request_direct` without one has nowhere to deliver, and
+    /// registering it against a stub that accepts everything would be strictly
+    /// worse than leaving it out: the agent would see a working direct-delivery
+    /// tool while the secret went nowhere, or somewhere unaudited.
+    ///
+    /// This is not a hole in [`Self::register_into_host`]'s all-or-nothing
+    /// rule. That rule is about *partial failure* — a host left holding one
+    /// tool because the second was refused, where the half that registered
+    /// looks healthy and the failure resurfaces somewhere else. This is a
+    /// deliberate subset, chosen up front and complete in itself.
+    ///
+    /// The two are separate named operations precisely so a reader can tell
+    /// which one a call site meant. Reaching the lease-only case by catching
+    /// the pair's error would make an intended configuration indistinguishable
+    /// from a misconfigured one.
+    ///
+    /// The host still needs `vault.request_lease` in `allowed_tools`, the
+    /// `vault:lease` capability, and `max_tier >= Tier2`; it does **not** need
+    /// anything for `request_direct`.
+    pub fn register_lease_only_into_host(
+        &self,
+        host: &mut OrchestratorProfileRuntime,
+    ) -> Result<(), HostRuntimeError> {
+        let definition = builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).ok_or_else(|| {
+            HostRuntimeError::ToolNotAllowed(VAULT_REQUEST_LEASE_TOOL_ID.to_string())
+        })?;
+        host.check_registration(&definition)?;
+        host.register_handler(definition, self.lease_handler())
     }
 
     /// Handler for `vault.request_lease`.
