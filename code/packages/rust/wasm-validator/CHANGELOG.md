@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.19] - 2026-08-18 (task #129-132 — SIMD: i16x8 first primary-lane slice type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for this crate's first opcodes
+  where `i16x8` is a PRIMARY lane width: `Add | Sub | Mul | ... |
+  SubI8x16` arm extended to also cover `AddI16x8 | SubI16x8 | MulI16x8`
+  (same pop-two-push-one `v128` shape). `Neg | Abs | ... | NegI8x16` arm
+  extended to also cover `NegI16x8` (same pop-one-push-one `v128`
+  shape). Same "type checker only sees plain `v128`, never the narrower
+  lane interpretation" pattern as every prior SIMD addition.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.18] - 2026-08-18 (task #125-128 — SIMD: i8x16 first slice type rules)
 
 ### Added

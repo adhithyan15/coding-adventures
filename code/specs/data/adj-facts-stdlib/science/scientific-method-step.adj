@@ -1,0 +1,115 @@
+% ============================================================================
+% scientific-method-step — the steps of the scientific method, as NASA Space
+% Place's own student page names them in order (adj-facts-stdlib, SCIENCE).
+% ============================================================================
+% This is the first table in a new `science/` subject directory in this
+% stdlib, and grounds the "experiments" Major Gap the "K-8 science
+% foundations" item's own notes record as fully untouched through six prior
+% cycles of reuse-only causal-composition: a full-tree atom-overlap census
+% (see this item's loop-state notes, cycle 6) found no table anywhere in the
+% stdlib addressing the scientific method, hypotheses, variables, or
+% experimental design as a concept, and confirmed no independently-sourced
+% second table shares an atom with any candidate in this space — so, per
+% this item's own established playbook (the same one that shipped
+% `engineering/engineering-design-step.adj`), this table grounds the concept
+% directly from a fresh primary source instead.
+%
+% This is a DIFFERENT process from `engineering/engineering-design-step.adj`,
+% not a restatement of it under a new name: that table names the repeatable
+% steps an ENGINEER follows to build something (identify the problem, define
+% constraints, brainstorm, select, build/test/refine, share) — an NGSS
+% Engineering Design practice. This table names the repeatable steps a
+% SCIENTIST follows to test an idea about how the world already works (state
+% a hypothesis, define variables and controls, research, design an
+% experiment, run it, analyze the data, conclude) — the NGSS Science
+% practice of planning and carrying out investigations. The two tables share
+% zero atoms: no step name, action, or example overlaps between them.
+%
+% Recall is a binding query:
+%
+%     ? scientific_method_step(step_4, $A)   % design_the_experiment
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `scientific_method_step(step, action)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% action WITH its source, on the CPU, with zero model calls, and abstains on
+% a step number the source does not define (see below). The query also runs
+% BACKWARD — bind the action and recall which step performs it:
+%
+%     ? scientific_method_step($S, analyze_the_data)   % step_6
+%
+% The seven named steps, as a little truth table (the page's own text for
+% each step, verbatim, alongside the atom this table gives it):
+%
+%     step      action                                    heading (verbatim, NASA Space Place)
+%     --------  ----------------------------------------  -----------------------------------------------------------------------------------------------------------------------------
+%     step_1    ask_a_question_or_state_a_hypothesis       "Ask a question or make a statement that you can test by an experiment. This statement is called a hypothesis."
+%     step_2    define_variables_and_controls              "Define the parts of your experiment that will change. These are called variables. Define the parts of your experiment that will not change. These are called controls."
+%     step_3    research_what_is_already_known             "Find out what people have already said or written about the subject."
+%     step_4    design_the_experiment                      "Think of an experiment to test the hypothesis."
+%     step_5    do_the_experiment_and_record_the_data      "Now do the experiment and carefully record the data."
+%     step_6    analyze_the_data                           "Figure out what the data means."
+%     step_7    draw_conclusions_and_write_a_report        "Draw conclusions and write a report."
+%
+% IMPORTANT — why `step_2` is ONE row naming BOTH variables and controls,
+% not two rows: the source page groups both definitions ("Define the parts
+% of your experiment that will change. These are called variables." AND
+% "Define the parts of your experiment that will not change. These are
+% called controls.") under the SINGLE heading "Step 2.", the same way it
+% groups each of the other six steps under their own single heading. Every
+% other step on the page states exactly one instruction under its heading;
+% only step 2 states two, back to back, under the one heading. Splitting
+% that heading into a "step_2a" (variables) and "step_2b" (controls) would
+% assert a numbering the source itself never gives — it never calls either
+% half "Step 2a" or "Step 2b" — so this table keeps the source's own
+% grouping instead of inventing a finer one, the same discipline
+% `engineering/engineering-design-step.adj` already established for its own
+% `steps_5_7` row.
+%
+% Provenance: quoted verbatim from NASA Space Place's "Steps in Scientific
+% Method" page (a NASA Science education resource for students, published
+% under the "One Way to Do Science..." heading), a direct child of the
+% nasa.gov domain. Each step's exact text above is quoted character-for-
+% character from the fetched page (HTML fetched directly; only doubled
+% internal whitespace from the page's own markup was collapsed to a single
+% space — no wording was added, removed, or reordered), so any reader can
+% re-check it. An ADJ `table` carries ONE provenance envelope, so
+% `source`/`locator`/`trust` below hold the strongest single span (step 1's
+% text, which fixes the first row); every OTHER row's own verbatim text is
+% quoted above and additionally carried as its own `cites` entry below, so
+% each step remains independently checkable. The source is a NASA Science
+% education page (nasa.gov), so `trust authoritative`.
+%
+% A term this page uses but that is not itself one of these seven step
+% atoms — "hypothesis" (defined INSIDE step 1's action, never a step name of
+% its own), "variable" or "control" (defined INSIDE step 2's action), or an
+% eighth step the page does not have — has no row, so a recall on it
+% ABSTAINS rather than inventing a step. That honest-abstention property,
+% plus the `step_2` grouping decision above, is what makes this table safe
+% to reason from.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table scientific_method_step {
+    columns step, action
+
+    row (step_1, ask_a_question_or_state_a_hypothesis)
+    row (step_2, define_variables_and_controls)
+    row (step_3, research_what_is_already_known)
+    row (step_4, design_the_experiment)
+    row (step_5, do_the_experiment_and_record_the_data)
+    row (step_6, analyze_the_data)
+    row (step_7, draw_conclusions_and_write_a_report)
+
+    source "Ask a question or make a statement that you can test by an experiment. This statement is called a hypothesis."
+    locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    trust authoritative
+
+    cites "Define the parts of your experiment that will change. These are called variables. Define the parts of your experiment that will not change. These are called controls." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Find out what people have already said or written about the subject." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Think of an experiment to test the hypothesis." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Now do the experiment and carefully record the data." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Figure out what the data means." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+    cites "Draw conclusions and write a report." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
+}

@@ -900,6 +900,30 @@
       "jsonHash": "fnv1a64:57153004a2405256"
     },
     {
+      "language": "chinese",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:7b9e605a797cb959",
+      "lessonIds": [
+        "ZH-W03-yi",
+        "ZH-C03-yi",
+        "ZH-W03-er",
+        "ZH-C03-er",
+        "ZH-W03-san",
+        "ZH-C03-san",
+        "ZH-W03-si",
+        "ZH-C03-si",
+        "ZH-W03-wu",
+        "ZH-C03-wu",
+        "ZH-C03-practice"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch03.txt",
+      "json": "chinese/narration/ch03.json",
+      "textHash": "fnv1a64:a739df7c69498933",
+      "jsonHash": "fnv1a64:0753e9e369a88ebc"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",

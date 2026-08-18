@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add `check_registration` to `HostProfileRuntime` and
+  `OrchestratorProfileRuntime`: reports whether a definition would be accepted
+  without registering it, so a caller wiring several related tools can pre-flight
+  the whole set instead of leaving a host half-wired when a later one is refused.
+  `register_handler` now calls it rather than repeating the checks, so the dry
+  run and the real thing cannot drift apart. The walk is co-total with
+  registration: it repeats the registry's own `InvalidDefinition` and
+  `DuplicateToolId` checks as well as the three profile checks, returning the
+  same error variants. A pre-flight that checks fewer things than the real call
+  is worse than none — it converts "this will fail" into "this will succeed"
+  immediately before it fails anyway.
+
 - Accept canonical colon-delimited D18D capability scopes in reviewed host
   profiles so built-in service policy can be registered without aliases.
 - Support a distinct signed, code-free `SKILL.md` package layout alongside the

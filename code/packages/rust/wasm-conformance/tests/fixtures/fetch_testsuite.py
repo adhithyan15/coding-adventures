@@ -255,6 +255,17 @@ TESTSUITE_FILES = [
     # entries (both matched exactly), same discipline as every prior
     # addition.
     "simd_i8x16_arith.wast",
+    # SIMD widen PR5 (task #129-132): simd_i16x8_arith.wast -- the first
+    # opcodes where i16x8 is a PRIMARY lane width (add/sub/mul/neg,
+    # produces i16x8 results), not just an INPUT to an i32x4-producing
+    # widening op (extadd_pairwise/dot/extmul, already implemented).
+    # Unlike i8x16, WASM SIMD DOES define i16x8.mul, so this slice
+    # includes all four ops the real upstream file bundles together.
+    # Each sub-opcode byte fetched live from BinarySIMD.md and cross-
+    # checked against the already-implemented i32x4.add/i8x16.add
+    # entries (both matched exactly), same discipline as every prior
+    # addition.
+    "simd_i16x8_arith.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

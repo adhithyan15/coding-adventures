@@ -667,6 +667,24 @@ const HEX: &[u8; 16] = b"0123456789abcdef";
 ///   `checked_add` without ambiguity.
 const MAX_TTL_MS: u64 = 90 * 24 * 60 * 60 * 1_000;
 
+/// Hard ceiling on simultaneously-outstanding leases.
+///
+/// `MAX_TTL_MS` bounds how *long* one lease lives; it does nothing about how
+/// *many* exist. Without a count bound, a caller that can reach `issue` in a
+/// loop grows this table without limit — and because every row holds its own
+/// clone of the plaintext, that is also an unbounded number of live copies of
+/// the secret in process memory, and an unbounded number of independently
+/// redeemable bearer capabilities for it.
+///
+/// That was survivable while `issue` had no agent-reachable caller. It stopped
+/// being survivable when the D18D `vault.request_lease` tool was wired up, so
+/// the bound belongs here, at the layer that owns the table, rather than in
+/// whichever caller happens to be in front of it.
+///
+/// 4096 is far above any legitimate working set — leases are short-lived
+/// handles, not storage — and far below a table that could exhaust memory.
+const MAX_OUTSTANDING_LEASES: usize = 4096;
+
 impl LeaseManager for InMemoryLeaseManager {
     fn issue(&self, payload: LeasePayload, ttl_ms: u64) -> Result<LeaseId, LeaseError> {
         if ttl_ms == 0 {
@@ -682,6 +700,27 @@ impl LeaseManager for InMemoryLeaseManager {
         // concurrent operation would observe — no TOCTOU on
         // expiry-edge semantics.
         let now = Self::now_ms();
+
+        // Reap before counting. `expire_due` is caller-driven and, in practice,
+        // no caller drives it — a repo-wide search finds no call site outside
+        // this crate. So a table full of long-dead entries would otherwise trip
+        // the cap and deny service on the strength of leases nobody can use.
+        // Sweeping here makes the bound mean "outstanding", not "ever issued".
+        if g.len() >= MAX_OUTSTANDING_LEASES {
+            let dead: Vec<LeaseId> = g
+                .iter()
+                .filter(|(_, entry)| entry.revoked || entry.expires_at_ms <= now)
+                .map(|(id, _)| id.clone())
+                .collect();
+            for id in dead {
+                // Removal runs `LeaseEntry::Drop`, which zeroizes the payload.
+                g.remove(&id);
+            }
+        }
+        if g.len() >= MAX_OUTSTANDING_LEASES {
+            return Err(LeaseError::InvalidParameter("too many outstanding leases"));
+        }
+
         let expires = now
             .checked_add(ttl_ms)
             .ok_or(LeaseError::InvalidParameter("ttl_ms overflow"))?;
@@ -1059,6 +1098,42 @@ mod tests {
             mgr.renew(&id, 0),
             Err(LeaseError::InvalidParameter(_))
         ));
+    }
+
+    #[test]
+    fn the_lease_table_is_bounded_and_says_so() {
+        // MAX_TTL_MS bounds how long one lease lives and does nothing about how
+        // many exist. Every row holds its own clone of the plaintext, so an
+        // unbounded table is also an unbounded number of live copies of the
+        // secret and of independently redeemable bearer capabilities for it.
+        let mgr = InMemoryLeaseManager::new();
+        for index in 0..MAX_OUTSTANDING_LEASES {
+            mgr.issue(mk_payload("held"), 600_000)
+                .unwrap_or_else(|error| panic!("lease {index} should issue: {error:?}"));
+        }
+
+        assert!(matches!(
+            mgr.issue(mk_payload("one too many"), 600_000),
+            Err(LeaseError::InvalidParameter("too many outstanding leases"))
+        ));
+    }
+
+    #[test]
+    fn a_full_table_of_dead_leases_still_admits_a_new_one() {
+        // The cap must mean "outstanding", not "ever issued". `expire_due` is
+        // caller-driven and no caller outside this crate drives it, so without
+        // an inline sweep a table full of revoked entries would deny service on
+        // the strength of leases nobody can use.
+        let mgr = InMemoryLeaseManager::new();
+        for _ in 0..MAX_OUTSTANDING_LEASES {
+            let id = mgr
+                .issue(mk_payload("dead"), 600_000)
+                .expect("should issue");
+            mgr.revoke(&id).expect("should revoke");
+        }
+
+        mgr.issue(mk_payload("fresh"), 600_000)
+            .expect("revoked entries must be swept to make room");
     }
 
     #[test]
