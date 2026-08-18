@@ -1,5 +1,19 @@
 # Changelog — coding-adventures-ruby-parser
 
+## Unreleased
+
+### Fixed
+
+- Eliminated runtime grammar loading: `get_grammar` now requires a
+  pre-compiled `_grammar` module instead of reading and parsing the
+  `ruby.grammar` file from `code/grammars/` on every call. The old code
+  walked out of the installed package's own directory to a
+  monorepo-relative path that a published LuaRocks package does not ship.
+- Verified against the current `ruby.grammar` (which now defines ~97
+  rules, up from the version this package was originally written
+  against) that `def`/`class`/`if`/`while`/`case`/`begin` statements all
+  parse correctly; added regression tests covering each.
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

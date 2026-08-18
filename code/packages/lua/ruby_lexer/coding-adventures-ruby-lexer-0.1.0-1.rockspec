@@ -26,5 +26,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.ruby_lexer"] = "src/coding_adventures/ruby_lexer/init.lua",
+        ["coding_adventures.ruby_lexer._grammar"] = "src/coding_adventures/ruby_lexer/_grammar.lua",
     },
 }

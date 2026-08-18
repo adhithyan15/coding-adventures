@@ -394,3 +394,47 @@ describe("error handling", function()
         end)
     end)
 end)
+
+-- =========================================================================
+-- Statement-level constructs (regression)
+-- =========================================================================
+--
+-- ruby.grammar now defines ~97 rules (def/class/if/while/case/begin among
+-- them), well beyond the small assignment/method_call/expression_stmt
+-- subset this package's module doc describes. These regression tests
+-- confirm the pre-compiled grammar this package now requires() actually
+-- includes those statement rules and parses them without error — the same
+-- construct class that was found silently missing from a stale compiled
+-- grammar in several other language ports of this campaign.
+
+describe("statement-level constructs (regression)", function()
+    it("parses a def statement", function()
+        local ast = ruby_parser.parse("def foo\n  x = 1\nend")
+        assert.equals("program", ast.rule_name)
+    end)
+
+    it("parses a class statement", function()
+        local ast = ruby_parser.parse("class Foo\nend")
+        assert.equals("program", ast.rule_name)
+    end)
+
+    it("parses an if statement", function()
+        local ast = ruby_parser.parse("if x\n  y = 1\nend")
+        assert.equals("program", ast.rule_name)
+    end)
+
+    it("parses a while statement", function()
+        local ast = ruby_parser.parse("while x\n  y = 1\nend")
+        assert.equals("program", ast.rule_name)
+    end)
+
+    it("parses a case statement", function()
+        local ast = ruby_parser.parse("case x\nwhen 1\n  y = 1\nend")
+        assert.equals("program", ast.rule_name)
+    end)
+
+    it("parses a begin statement", function()
+        local ast = ruby_parser.parse("begin\n  x = 1\nend")
+        assert.equals("program", ast.rule_name)
+    end)
+end)
