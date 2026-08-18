@@ -17,8 +17,11 @@ All notable changes to this package will be documented in this file.
   They were assembled before validation and forwarded on the rejection path, so
   the runtime declared a call invalid and shipped that call's side effects
   anyway -- a handler whose output was refused could still say whatever it liked
-  to every event sink. The runtime's own framing events are unaffected: they
-  describe the call, not its result.
+  to every event sink. The runtime's own framing events remain — not because
+  they "describe the call rather than its result", which is false of the
+  terminal event, but because a caller has to learn the outcome, and the
+  terminal payload is now bounded to the error kind and a runtime-chosen
+  message.
 - Registering a definition under a built-in tool id now requires it to match the
   catalog entry, with a new `ToolApiError::BuiltinDefinitionMismatch`. Without
   it, the schema a tool is validated against was a property of whichever
@@ -38,6 +41,14 @@ All notable changes to this package will be documented in this file.
   synthetic tool testing the runtime had no business claiming a catalogued id.
 
 ### Added
+
+- `forbidding_side_channels`, a `ToolHandler` combinator that fails any call
+  whose handler populated `artifact_refs`, `memory_refs`, or `events`. The
+  runtime cannot know which tools must leave those empty; this is how a binding
+  says so once, at registration, and has it checked on every call.
+- `ToolApiError::BuiltinDefinitionMismatch`. Adding an enum variant is
+  technically breaking for exhaustive matches on `ToolApiError`; all 16
+  in-repo dependents compile unchanged.
 
 - Added the canonical Tier-2 `vault.request_lease` built-in with strict opaque
   receipt schemas and the D18D `vault:lease` policy capability.

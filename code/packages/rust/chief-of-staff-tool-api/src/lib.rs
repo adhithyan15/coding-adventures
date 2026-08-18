@@ -3202,8 +3202,10 @@ impl InMemoryToolRegistry {
         // A built-in tool id names one definition. Without this, the schema a
         // tool is validated against is a property of whichever `ToolDefinition`
         // value happened to reach this function rather than of the tool id --
-        // so anything holding a registry could re-register
-        // `vault.request_direct` with `output_schema: None` and silently
+        // so anything holding a registry could register
+        // `vault.request_direct` with `output_schema: None` ahead of the real
+        // binding (duplicate ids were already refused, so the hole was getting
+        // in first, not replacing) and silently
         // disable the output validation that binding's guarantees rest on,
         // while the resulting registry looked entirely normal.
         //
@@ -4149,9 +4151,10 @@ pub trait ToolHandler {
 
 /// Wrap a handler so it cannot use the three unvalidated output channels.
 ///
-/// The runtime validates `output` and nothing else: `artifact_refs` and
-/// `memory_refs` are copied to the result unchecked, and `events` are the
-/// handler's own. That is deliberate — a tool that creates an artifact is
+/// The runtime validates `output` against the declared schema, and rejects a
+/// handler that emits a terminal event kind directly. Beyond that:
+/// `artifact_refs` and `memory_refs` are copied to the result unchecked, and
+/// the content of `events` is the handler's own. That is deliberate — a tool that creates an artifact is
 /// supposed to reference it — so there is no general rule making them empty.
 ///
 /// For a tool that handles secrets there *is* such a rule, and it cannot come
@@ -5112,6 +5115,14 @@ fn terminal_payload(result: &ToolResult) -> JsonValue {
             // string per unknown field, by naming its fields carefully. That is
             // the same covert channel this crate closed for handler events,
             // reached through a different field.
+            //
+            // `message` is a different matter and is deliberately still here.
+            // On the handler-error path it is whatever the handler chose, and
+            // it has to be: some description of the failure must reach the
+            // caller. Bounding it is the binding's job -- D18D 7.1 V2 requires
+            // a closed set of `&'static str` for exactly this reason -- not
+            // something the runtime can do without discarding every error
+            // message in the system.
         ])
     } else {
         JsonValue::Null
@@ -6762,8 +6773,9 @@ mod tests {
     /// Without this, the schema a tool is validated against is a property of
     /// whichever `ToolDefinition` reached `register`, not of the tool id. The
     /// vault binding's "no secret return channel" rests on
-    /// `vault.request_direct` having `output_schema: Some(Null)`; re-registering
-    /// it with `None` disables that check while the registry looks normal.
+    /// `vault.request_direct` having `output_schema: Some(Null)`; registering it
+    /// with `None` ahead of the binding disables that check while the registry
+    /// looks normal.
     #[test]
     fn a_lookalike_definition_cannot_claim_a_builtin_tool_id() {
         let mut registry = InMemoryToolRegistry::new();

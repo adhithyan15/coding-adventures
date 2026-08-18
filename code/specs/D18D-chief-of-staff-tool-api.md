@@ -585,9 +585,10 @@ definition under a built-in id is rejected.
 
 Without this, the schema a tool is validated against is a property of whichever
 `ToolDefinition` value reached `register_handler`, not of the tool id. Anything
-holding a registry could re-register `vault.request_direct` with
-`output_schema: None` and silently disable the output validation that the vault
-binding's V1 depends on — and nothing about the resulting registry would look
+holding a registry could register `vault.request_direct` with
+`output_schema: None` *ahead of* the real binding — duplicate ids were already
+refused, so the hole was getting in first rather than replacing — and silently
+disable the output validation that the vault binding's V1 depends on — and nothing about the resulting registry would look
 wrong. Pinning the id to its catalog entry makes "this tool has these
 guarantees" a fact about the id.
 
@@ -831,19 +832,28 @@ invariant a reviewer trusts too far is worse than one they do not trust at all:
 | `output` | the runtime — *shape* only | validated against `output_schema` after the handler returns; content is excluded only where that schema is `null` |
 | `artifact_refs` | the handler | copied to the result unchecked |
 | `memory_refs` | the handler | copied to the result unchecked |
-| `events` | the handler | assembled *before* validation; published even when validation rejects the call |
+| `events` | the runtime, then the handler | published only when output validation passes; the handler chooses their content |
 | `ToolCallError` | the handler | the runtime adds only a path and a JSON type name, never the offending value |
 
 So for `vault.request_direct`, `output` genuinely cannot carry bytes — the
-declared schema is `null` and a non-null output is rejected. The other three
-fields are handler discipline, and a conforming binding must therefore return
-them empty and test that it does.
+declared schema is `null` and a non-null output is rejected.
 
-Two further limits on the `output` guarantee. It is a property of the
-`ToolDefinition` passed to `register_handler`, not of the tool id: a definition
-registered with `output_schema: None` skips validation entirely, which is why
-V4 requires definitions to come from the built-in catalog. And a rejected output
-is discarded rather than echoed, so the rejection path is not itself a channel.
+The other three fields the runtime does not inspect on the success path. A
+binding whose handlers must not use them wraps them with
+`forbidding_side_channels` at registration, which fails any call whose handler
+populated one; see "The three unvalidated fields" above. Returning them empty
+and testing that is necessary but not sufficient, because a test proves what the
+handler does today and the wrapper proves what it can do at all.
+
+One remaining limit on the `output` guarantee, and one that used to exist and no
+longer does. Still true: a rejected output is discarded rather than echoed, so
+the rejection path is not itself a channel — and since the terminal event no
+longer carries validation `details`, that holds for the broadcast too. No longer
+true: the guarantee used to be a property of the `ToolDefinition` passed to
+`register_handler` rather than of the tool id, so a definition registered with
+`output_schema: None` skipped validation. Built-in ids are now pinned to their
+catalog entry, so that registration is rejected outright. Ids the catalog does
+not claim remain the registrant's responsibility.
 
 Finally, note what `vault_ref` is. It is not secret material, but it *is* a
 bearer capability: whoever holds it can redeem it until it is consumed or

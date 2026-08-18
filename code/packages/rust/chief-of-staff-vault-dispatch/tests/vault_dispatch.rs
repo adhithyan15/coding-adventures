@@ -15,8 +15,9 @@ use chief_of_staff_host_runtime::{
     HostProfile, HostRuntimeError, OrchestratorProfile, OrchestratorProfileRuntime,
 };
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
-    ToolDefinition, ToolErrorKind, ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
+    builtin_tool_definition, forbidding_side_channels, InMemoryToolRuntime, PrivilegeTier,
+    RequestedBy, ToolApiError, ToolDefinition, ToolErrorKind, ToolExecutionTrace,
+    ToolHandlerOutput, ToolInvocationRequest,
 };
 use chief_of_staff_vault_dispatch::{
     errors, VaultToolBridge, MAX_AGENT_LEASE_TTL_MS, MAX_SECRET_NAME_BYTES,
@@ -1336,4 +1337,79 @@ fn the_preflight_and_the_registration_refuse_the_same_definitions() {
             );
         }
     }
+}
+
+/// Every registration path must wrap its handler in `forbidding_side_channels`.
+///
+/// The crate doc claims this. Nothing checked it: removing all six wrapper call
+/// sites left the whole suite green, because the real handlers never populate
+/// those fields either way, so no test could tell a wrapped handler from an
+/// unwrapped one. That is the same drift that let the host-runtime pre-flight
+/// fall out of step with registration.
+///
+/// This test injects a deliberately misbehaving handler in place of the bridge's
+/// own, wraps it exactly as each registration path does, and requires the
+/// refusal. It fails if the wrapper is removed from the combinator, and it is
+/// the reason to keep the wrapper applied at every site rather than trusting the
+/// handlers to stay well-behaved.
+#[test]
+fn the_side_channel_wrapper_refuses_a_misbehaving_handler_at_the_boundary() {
+    let definition =
+        builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in must exist");
+    let mut runtime = InMemoryToolRuntime::new();
+
+    // Stand in for a future edit to `lease_handler` that starts using a channel
+    // the crate documents itself as not using.
+    runtime
+        .register_handler(
+            definition,
+            forbidding_side_channels(
+                |_: JsonValue, _: chief_of_staff_tool_api::ToolExecutionContext| {
+                    Ok(ToolHandlerOutput::new(JsonValue::Object(vec![
+                        ("vault_ref".to_string(), string("vault-lease:abcd")),
+                        ("expires_at_ms".to_string(), integer(1)),
+                    ]))
+                    .with_artifact_ref("secret-shaped-artifact-ref"))
+                },
+            ),
+        )
+        .expect("registration itself is fine; the refusal happens at call time");
+
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+
+    assert!(
+        !trace.result.ok,
+        "the wrapper should have refused: {trace:?}"
+    );
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolExecutionError);
+    assert!(
+        !format!("{trace:?}").contains("secret-shaped-artifact-ref"),
+        "the refusal must not echo what it refused: {trace:?}"
+    );
+}
+
+/// The bridge's own handlers pass through the wrapper unharmed.
+///
+/// Companion to the test above: that one proves the wrapper bites, this one
+/// proves wrapping did not break the real path. Both are needed — a wrapper
+/// that refused everything would pass the first and fail this.
+#[test]
+fn wrapping_does_not_disturb_the_real_handlers() {
+    let runtime = runtime_with(RecordingDelivery::accepting());
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+    assert!(
+        trace.result.ok,
+        "the wrapped lease handler still works: {trace:?}"
+    );
 }

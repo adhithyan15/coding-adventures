@@ -73,8 +73,8 @@
 //! working around them: handler events are no longer published when output
 //! validation refuses a call, and a definition registered under a built-in tool
 //! id must now match the catalog — so a crate registering
-//! `vault.request_direct` with `output_schema: None` no longer gets no
-//! validation at
+//! `vault.request_direct` with `output_schema: None` is now rejected outright
+//! rather than silently receiving no validation at
 //! all. Both handlers here therefore return empty `artifact_refs`,
 //! `memory_refs`, and `events` — and every registration path wraps them in
 //! [`forbidding_side_channels`], so that is checked on each call rather than
