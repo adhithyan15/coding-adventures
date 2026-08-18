@@ -139,6 +139,11 @@ scripts here, Chinese stroke order is a standardised taught system, so that file
 marks its stroke orders `authoritative`.
 
 The book sets Chinese in `_fonts/NotoSansSC-Subset.ttf`, a fonttools subset of
-Noto Sans SC covering exactly the characters in that JSON file. Adding a character
-means adding it there and re-running
-[`_fonts/subset-cjk.sh`](../_fonts/subset-cjk.sh).
+Noto Sans SC. It covers every CJK codepoint appearing **anywhere** in that JSON
+file — not only the inventoried `letters`, but every character named inside
+another entry's components, stroke notes or citations. That is 51 characters
+against 29 inventoried glyphs, so a character can be perfectly printable without
+being taught (夕, 十, 目, 儿, 寸, 身, 青 all are). Only a character mentioned
+nowhere in the file needs an entry plus a re-run of
+[`_fonts/subset-cjk.sh`](../_fonts/subset-cjk.sh). Check the font's cmap before
+concluding a character is unavailable.

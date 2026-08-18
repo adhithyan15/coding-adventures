@@ -62,7 +62,7 @@ language.
 ### tone-sandhi-bu — 不 before a fourth tone
 
 不 *bù* is said *bú* when the next syllable has a fourth tone: *bù shì* → *bú
-shì*. Recorded here for completeness; no Chapter 1 lesson needs it.
+shì*. Taught in full on 不是, the first collocation in the track that forces it.
 
 ## Segments
 
