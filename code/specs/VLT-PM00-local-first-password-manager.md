@@ -897,7 +897,7 @@ vault-pm clipboard clear
 
 vault-pm attachment add ITEM PATH
 vault-pm attachment list ITEM
-vault-pm attachment export ITEM ATTACHMENT [PATH]
+vault-pm attachment export ITEM ATTACHMENT PATH
 vault-pm attachment remove ITEM ATTACHMENT
 
 vault-pm import portable|bitwarden|kdbx|csv PATH
@@ -923,6 +923,12 @@ portable export, audit verification, and `doctor`. `password generate`,
 `totp code`, and the attachment commands are Phase 1B daily-use conveniences
 (§23 item 11), as are the import adapters (§23 item 13).
 Cloud/storage migration commands activate in Phase 2.
+
+**Item 11 has since shipped in full.** All four of its conveniences —
+`password generate`, `totp code`, `--copy`, and the attachment commands — are
+implemented, by `VLT-PM44`, `VLT-PM45`, `VLT-PM46`, and
+`VLT-PM47-cli-attachments.md` respectively. The paragraphs below record what
+each one decided.
 
 `password generate` has since shipped as the first of item 11, specified by
 `VLT-PM44-cli-password-generate.md`. It is the one command in this table that
@@ -956,6 +962,26 @@ new disclosure path: the confirmation ceremony, the `ItemRead` event, and their
 ordering are identical to `--reveal`, and only the final delivery differs.
 Windows and any host with no clipboard session fail closed with the
 `unsupported` class before any prompt.
+
+**Attachments have since shipped** as the fourth and last of item 11, specified
+by `VLT-PM47-cli-attachments.md`. `attachment add`, `attachment list`, and
+`attachment export` store a file as fixed 64 KiB chunks, each sealed by VLT14's
+chunk AEAD under a per-attachment DEK and then sealed again as an ordinary
+vault-pm repository object, with one manifest object holding the name, length,
+content hash, DEK, and ordered chunk references, and the item revision holding
+only a 48-byte pointer to that manifest. The chunk size is chosen against
+`canonical-cbor`'s 1 MiB `MAX_ENCODED_SIZE` — the ceiling that actually binds,
+as §23 item 10's panic-fix history established — leaving sixteen times the
+headroom on a value whose size cannot vary with the file. One attachment is
+capped at `MAX_PLAINTEXT_BYTES`, so an attachment can never be larger than a
+plaintext this product already accepts in one sealed frame. The write is one
+ordinary mutation publishing one journal, so VLT-PM41's and VLT-PM42's crash
+guarantees carry over unchanged rather than a resumable-upload protocol being
+invented beside them. Two lines of this table changed: `attachment export`'s
+destination is required rather than optional, because the only available
+default was a peer-authored name resolved against the working directory; and
+`attachment remove` is deferred to `gc run`, because a removal that leaves every
+byte in the store would say something false.
 
 ### 14.5 Unlock experience
 
@@ -1866,9 +1892,39 @@ changelog, focused build, and downstream validation.
       clipboard would misdescribe what is being consented to. Windows fails
       closed — it ships `clip.exe` but no console-mode clipboard reader, so a
       verified clear is not available there.
-      Attachments and packing remain open, and `--copy` on the VLT-PM25 reveal
-      commands (`item reveal`, `item show --field`, `history show`) is deferred
-      to those ceremonies by VLT-PM46 §8.1.
+      **Attachments have shipped**, as `VLT-PM47-cli-attachments.md`, and item
+      11 is now complete. `attachment add`, `attachment list`, and
+      `attachment export` split a file into fixed 64 KiB chunks, seal each with
+      VLT14's chunk AEAD under a per-attachment DEK — the reuse §6's map and
+      §8.1 both already assigned — and store each sealed chunk as one ordinary
+      vault-pm repository object. One manifest object per attachment carries the
+      name, plaintext length, content hash, DEK, and the ordered chunk
+      references; the item revision carries only a pointer to it, in a tenth
+      live-state field present exactly when the item has attachments, so a
+      revision without any is byte-identical to what this product wrote before.
+      Three decisions define it. The chunk size is chosen against
+      `canonical-cbor`'s 1 MiB `MAX_ENCODED_SIZE` rather than the 16 MiB frame
+      bound, because item 10's history is that the codec's ceiling is the one
+      that binds and that crossing it used to abort the process; one chunk
+      object encodes to about 65,600 bytes and cannot grow with the file. One
+      attachment is capped at `MAX_PLAINTEXT_BYTES` exactly, so an attachment is
+      never a larger door than a record. And the write is **one mutation** — all
+      256-plus frames enter one `PendingPublication` journal and one commit — so
+      VLT-PM41's matrix and VLT-PM42's recovery cover it without a second
+      durable ceremony, and an interrupted attach leaves the same unreachable
+      objects §10.4 already describes rather than an orphaned partial blob.
+      Two things in §14.4's table changed and are recorded there: the export
+      destination is required rather than optional, because a defaulted one
+      would resolve a peer-authored name against a directory; and
+      `attachment remove` is deferred to `gc run` by that document's §2.2,
+      because removing a reference while every byte stays in the store is not
+      the removal the word promises. Packing is not a gap: §10.7 and §13.5 both
+      place it in a storage adapter in the first cloud phase, and the only
+      adapter this product has is `storage-fs`, where per-object overhead does
+      not justify a layer. It lands with item 15.
+      `--copy` on the VLT-PM25 reveal commands (`item reveal`,
+      `item show --field`, `history show`) remains deferred to those ceremonies
+      by VLT-PM46 §8.1.
 12. local agent/IPC and auto-lock.
 13. Bitwarden/KDBX/browser CSV import adapters.
 14. removable/synced-folder mode and mirror decorator.
