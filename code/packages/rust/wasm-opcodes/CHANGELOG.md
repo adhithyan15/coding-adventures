@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.7] - 2026-08-18 - SIMD widening: i32x4 abs/min/max family (task #118-120)
+
+### Added
+
+- 5 new `SIMD_OPS` entries widening the `i32x4` lane coverage further:
+  `i32x4.abs` (the second UNARY kind, alongside `neg`) plus the
+  `min_s`/`min_u`/`max_s`/`max_u` family (same `v128,v128->v128` binary
+  shape as `add`/`sub`/`mul`) -- 22 SIMD opcodes total, up from 17. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i32x4.eq` (`0x37`)/`i32x4.add` (`0xAE`) entries (both matched
+  exactly), same verification discipline as every widening pass above.
+- `SimdOpKind::Abs`/`MinS`/`MinU`/`MaxS`/`MaxU`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i32x4_arith2.wast` corpus file this widening unblocks.
+
 ## [0.2.6] - 2026-08-18 - SIMD widening: i32x4 arithmetic + comparison family (task #113-117)
 
 ### Added

@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.26 — 2026-08-18 — SIMD widening: i32x4 abs/min/max family text-form (task #118-120)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened further to cover `i32x4.abs`/`min_s`/
+  `min_u`/`max_s`/`max_u` -- same "no immediate beyond the opcode byte
+  itself" shape every prior SIMD op in this family has, so no new
+  parsing logic, just a wider match-arm pattern list. Verified via a
+  dedicated test asserting the real LEB128-encoded sub-opcode bytes
+  (`[0xFD, 0xA0, 0x01]` for `abs`, `[0xFD, 0xB6, 0x01]`/`0xB7`/`0xB8`/
+  `0xB9` for `min_s`/`min_u`/`max_s`/`max_u`) -- all five sub-opcodes are
+  ≥128 so each needs the LEB128 continuation byte, unlike every prior
+  SIMD sub-opcode this crate has encoded so far.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.25 — 2026-08-18 — SIMD widening: i32x4 arithmetic + comparison family text-form (task #113-117)
 
 ### Added

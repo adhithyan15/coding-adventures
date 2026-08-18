@@ -658,6 +658,21 @@ fn valid_i32x4_arith_and_cmp_widening() {
 }
 
 #[test]
+fn valid_i32x4_arith2_widening() {
+    // SIMD widening (task #118-120): i32x4.abs (v128->v128, UNARY, same
+    // shape as neg) and the min/max family (v128,v128->v128, same shape
+    // as sub/mul).
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i32x4.abs (local.get 0)))
+             (func (param v128 v128) (result v128) (i32x4.min_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.min_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.max_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.max_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

@@ -230,6 +230,11 @@ TESTSUITE_FILES = [
     # and stays deferred to a future widening pass.
     "simd_i32x4_arith.wast",
     "simd_i32x4_cmp.wast",
+    # SIMD widening (task #118-120): i32x4.abs (UNARY) and the min_s/
+    # min_u/max_s/max_u family -- the "second half" of i32x4 arithmetic
+    # coverage this repo's upstream corpus itself splits into a separate
+    # file, same real-verified-sub-opcode discipline as the pass above.
+    "simd_i32x4_arith2.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
