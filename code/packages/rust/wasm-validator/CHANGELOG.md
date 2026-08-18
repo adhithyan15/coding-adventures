@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.26] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family type rules)
+
+### Added
+
+- New `0xFD` SIMD type-check arm for `AnyTrue | AllTrueI8x16 |
+  AllTrueI16x8 | AllTrueI32x4 | AllTrueI64x2 | BitmaskI8x16 |
+  BitmaskI16x8 | BitmaskI32x4 | BitmaskI64x2`: same `v128`-in/`i32`-out
+  shape as the existing `ExtractLane` arm, but with NO lane-index
+  immediate to consume (these reduce over ALL lanes, not select one).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.25] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family type rules)
 
 ### Added

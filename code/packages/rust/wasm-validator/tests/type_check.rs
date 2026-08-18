@@ -843,6 +843,27 @@ fn valid_simd_bitwise_family() {
 }
 
 #[test]
+fn valid_simd_boolean_reduction_and_bitmask_family() {
+    // SIMD widen PR12: v128.any_true + ixNxM.all_true/bitmask across
+    // all 4 lane widths -- the first v128-in/i32-out reduction shape
+    // besides `extract_lane`, but with NO lane-index immediate (these
+    // reduce over ALL lanes, not select one). i64x2 is the first lane
+    // width these opcodes introduce to this crate's type rules.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result i32) (v128.any_true (local.get 0)))
+             (func (param v128) (result i32) (i8x16.all_true (local.get 0)))
+             (func (param v128) (result i32) (i8x16.bitmask (local.get 0)))
+             (func (param v128) (result i32) (i16x8.all_true (local.get 0)))
+             (func (param v128) (result i32) (i16x8.bitmask (local.get 0)))
+             (func (param v128) (result i32) (i32x4.all_true (local.get 0)))
+             (func (param v128) (result i32) (i32x4.bitmask (local.get 0)))
+             (func (param v128) (result i32) (i64x2.all_true (local.get 0)))
+             (func (param v128) (result i32) (i64x2.bitmask (local.get 0))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

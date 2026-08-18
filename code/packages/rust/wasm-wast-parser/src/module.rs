@@ -1780,6 +1780,15 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::Or
             | wasm_opcodes::SimdOpKind::Xor
             | wasm_opcodes::SimdOpKind::Bitselect
+            | wasm_opcodes::SimdOpKind::AnyTrue
+            | wasm_opcodes::SimdOpKind::AllTrueI8x16
+            | wasm_opcodes::SimdOpKind::AllTrueI16x8
+            | wasm_opcodes::SimdOpKind::AllTrueI32x4
+            | wasm_opcodes::SimdOpKind::AllTrueI64x2
+            | wasm_opcodes::SimdOpKind::BitmaskI8x16
+            | wasm_opcodes::SimdOpKind::BitmaskI16x8
+            | wasm_opcodes::SimdOpKind::BitmaskI32x4
+            | wasm_opcodes::SimdOpKind::BitmaskI64x2
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -2418,6 +2427,15 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::Or
             | wasm_opcodes::SimdOpKind::Xor
             | wasm_opcodes::SimdOpKind::Bitselect
+            | wasm_opcodes::SimdOpKind::AnyTrue
+            | wasm_opcodes::SimdOpKind::AllTrueI8x16
+            | wasm_opcodes::SimdOpKind::AllTrueI16x8
+            | wasm_opcodes::SimdOpKind::AllTrueI32x4
+            | wasm_opcodes::SimdOpKind::AllTrueI64x2
+            | wasm_opcodes::SimdOpKind::BitmaskI8x16
+            | wasm_opcodes::SimdOpKind::BitmaskI16x8
+            | wasm_opcodes::SimdOpKind::BitmaskI32x4
+            | wasm_opcodes::SimdOpKind::BitmaskI64x2
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -5090,6 +5108,39 @@ mod tests {
         assert!(code_of(&m, 3).windows(2).any(|w| w == [0xFD, 0x50]), "v128.or: {:?}", code_of(&m, 3));
         assert!(code_of(&m, 4).windows(2).any(|w| w == [0xFD, 0x51]), "v128.xor: {:?}", code_of(&m, 4));
         assert!(code_of(&m, 5).windows(2).any(|w| w == [0xFD, 0x52]), "v128.bitselect: {:?}", code_of(&m, 5));
+    }
+
+    #[test]
+    fn simd_boolean_reduction_and_bitmask_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR12: v128.any_true (0x53, single-byte LEB128) +
+        // ixNxM.all_true/bitmask across all 4 lane widths (i8x16 <128
+        // single-byte; i16x8/i32x4/i64x2 >=128 2-byte). Same "no
+        // immediate beyond the opcode byte itself" encoder bucket as
+        // every prior SIMD op -- these produce an i32 result instead of
+        // a v128, but that's a TYPE-checker concern (see wasm-validator),
+        // invisible to this encoder.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128) (result i32) (v128.any_true (local.get 0)))
+                 (func (param v128) (result i32) (i8x16.all_true (local.get 0)))
+                 (func (param v128) (result i32) (i8x16.bitmask (local.get 0)))
+                 (func (param v128) (result i32) (i16x8.all_true (local.get 0)))
+                 (func (param v128) (result i32) (i16x8.bitmask (local.get 0)))
+                 (func (param v128) (result i32) (i32x4.all_true (local.get 0)))
+                 (func (param v128) (result i32) (i32x4.bitmask (local.get 0)))
+                 (func (param v128) (result i32) (i64x2.all_true (local.get 0)))
+                 (func (param v128) (result i32) (i64x2.bitmask (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x53]), "v128.any_true: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x63]), "i8x16.all_true: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x64]), "i8x16.bitmask: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0x83, 0x01]), "i16x8.all_true: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0x84, 0x01]), "i16x8.bitmask: {:?}", code_of(&m, 4));
+        assert!(code_of(&m, 5).windows(3).any(|w| w == [0xFD, 0xA3, 0x01]), "i32x4.all_true: {:?}", code_of(&m, 5));
+        assert!(code_of(&m, 6).windows(3).any(|w| w == [0xFD, 0xA4, 0x01]), "i32x4.bitmask: {:?}", code_of(&m, 6));
+        assert!(code_of(&m, 7).windows(3).any(|w| w == [0xFD, 0xC3, 0x01]), "i64x2.all_true: {:?}", code_of(&m, 7));
+        assert!(code_of(&m, 8).windows(3).any(|w| w == [0xFD, 0xC4, 0x01]), "i64x2.bitmask: {:?}", code_of(&m, 8));
     }
 
     #[test]

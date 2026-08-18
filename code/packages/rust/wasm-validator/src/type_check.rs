@@ -1554,6 +1554,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::I32);
                     }
+                    wasm_opcodes::SimdOpKind::AnyTrue
+                    | wasm_opcodes::SimdOpKind::AllTrueI8x16
+                    | wasm_opcodes::SimdOpKind::AllTrueI16x8
+                    | wasm_opcodes::SimdOpKind::AllTrueI32x4
+                    | wasm_opcodes::SimdOpKind::AllTrueI64x2
+                    | wasm_opcodes::SimdOpKind::BitmaskI8x16
+                    | wasm_opcodes::SimdOpKind::BitmaskI16x8
+                    | wasm_opcodes::SimdOpKind::BitmaskI32x4
+                    | wasm_opcodes::SimdOpKind::BitmaskI64x2 => {
+                        // Same v128-in/i32-out shape as `ExtractLane`
+                        // above, but with NO lane-index immediate (these
+                        // reduce over ALL lanes, not select one) -- pops
+                        // one v128, pushes one i32.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::I32);
+                    }
                 }
             }
 

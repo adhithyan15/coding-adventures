@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.24] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family)
+
+### Added
+
+- `register_simd` gains three new dispatch arms: `SimdOpKind::AnyTrue`
+  (pops one v128, pushes i32 `1` if ANY of the 128 bits is set, else
+  `0` -- reduces over the WHOLE operand, no lane interpretation
+  needed), `AllTrueI8x16 | AllTrueI16x8 | AllTrueI32x4 | AllTrueI64x2`
+  (pops one v128, pushes i32 `1` only if EVERY lane at that width is
+  nonzero -- chunks the 16 raw bytes into 1/2/4/8-byte lanes and
+  checks each chunk for any nonzero byte), and `BitmaskI8x16 |
+  BitmaskI16x8 | BitmaskI32x4 | BitmaskI64x2` (pops one v128, pushes
+  an i32 whose bit `i` is the sign bit of lane `i`, packed low-to-high
+  -- a lane's sign bit is the MSB of its last, most-significant,
+  little-endian byte). `i64x2`'s two variants are the first opcodes in
+  this crate to read the operand as 8-byte lanes. Verified with
+  dedicated tests proving `any_true` distinguishes all-zero from a
+  single nonzero byte anywhere, `all_true` flips to false when exactly
+  one lane (at that op's own width) is zeroed out even though the
+  surrounding bytes are nonzero, and `bitmask` packs an alternating
+  sign-bit pattern correctly at every width.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.23] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family)
 
 ### Added

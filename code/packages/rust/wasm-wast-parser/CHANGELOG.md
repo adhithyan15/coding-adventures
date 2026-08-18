@@ -1,5 +1,24 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.36 — 2026-08-18 — SIMD: boolean-reduction/bitmask family text-form (task #153-155)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover `v128.any_true` +
+  `ixNxM.all_true`/`bitmask` across all 4 lane widths -- same "no
+  immediate beyond the opcode byte itself" shape every prior SIMD op
+  has, so no new parsing logic. These produce an `i32` result instead
+  of a `v128`, but that's invisible to this encoder (a type-checker
+  concern -- see `wasm-validator`). Verified via a dedicated test
+  asserting the real single-byte LEB128 bytes for `v128.any_true`
+  (`[0xFD, 0x53]`) and `i8x16.all_true`/`bitmask` (`[0xFD, 0x63]`/
+  `[0xFD, 0x64]`, both < 128), and the 2-byte LEB128 bytes for
+  `i16x8`/`i32x4`/`i64x2`'s own `all_true`/`bitmask` pairs (`[0xFD,
+  0x83, 0x01]` through `[0xFD, 0xC4, 0x01]`, all >= 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.35 — 2026-08-18 — SIMD: v128 bitwise family text-form (task #150-152)
 
 ### Added

@@ -331,6 +331,21 @@ TESTSUITE_FILES = [
     # the already-implemented i8x16.add/i32x4.add entries, same
     # discipline as every prior addition.
     "simd_bitwise.wast",
+    # SIMD widen PR12 (task #153-155): simd_boolean.wast -- v128.any_true
+    # + ixNxM.all_true/bitmask across all 4 lane widths (i8x16/i16x8/
+    # i32x4/i64x2). The first v128-in/i32-out reduction shape besides
+    # extract_lane (no lane-index immediate -- reduces over ALL lanes),
+    # and the first opcodes in this interpreter to read the operand as
+    # 8-byte (i64) lanes. Chosen over the shift-op and i64x2-arithmetic
+    # candidates in a broader prioritization survey: highest opcode
+    # count (9) behind a single new operand shape and a single 72KB
+    # corpus file, and unlocks real use of the comparison families from
+    # PR1/PR6/PR7 (a v128 mask result is otherwise inert without a
+    # reduction op to consume it). Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-
+    # implemented v128.bitselect/i8x16.popcnt/i16x8.abs/neg/i32x4.abs/
+    # neg entries, same discipline as every prior addition.
+    "simd_boolean.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
