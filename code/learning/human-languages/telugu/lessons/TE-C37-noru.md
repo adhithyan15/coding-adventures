@@ -12,7 +12,7 @@ concept_tag: TE-MOUTH
 prerequisites: [TE-C37-mukku, TE-C37-cevi, TE-C37-kannu]
 sounds: [telugu-long-oo, telugu-ru]
 roots: [noru-mouth-telugu]
-etymology_hook: "Tamil and Malayalam both say vாy for mouth, and Kannada's బాయి answers it through a regular v-to-b sound law — three sisters, one shared root; Telugu's నోరు does not visibly belong to that set, and no source consulted here confirms what its own deeper root is, so nothing is invented for it — the fourth face word is the one place this chapter cannot draw a clean line back to the family"
+etymology_hook: "Tamil and Malayalam both say vāy for mouth, and Kannada's బాయి answers it through a regular v-to-b sound law — three sisters, one shared root; Telugu's నోరు does not visibly belong to that set, and no source consulted here confirms what its own deeper root is, so nothing is invented for it — the fourth face word is the one place this chapter cannot draw a clean line back to the family"
 duration:
   max_seconds: 250
 requires:
@@ -50,7 +50,7 @@ Four body words done: *kannu*, *cevi*, *mukku*, *nōru*.
 ## The word, taken apart - the one place this chapter cannot draw a clean line
 <!-- hl-knowledge: introduces=[TE-ETYMON-C37-NORU-02]; assesses=[TE-ETYMON-C37-CEVI-02, TE-ETYMON-C37-MUKKU-02, TE-ETYMON-C37-KANNU-02] -->
 
-Tamil and Malayalam both say **வாய்**/**vாyi** (*vāy*), "mouth," and
+Tamil and Malayalam both say **வாய்**/**vāyi** (*vāy*), "mouth," and
 Kannada's **ಬಾಯಿ** (*bāyi*) answers it through a regular sound law that turns
 a Tamil word-initial *v-* into Kannada *b-*. Three sisters, one shared root,
 one visible law.

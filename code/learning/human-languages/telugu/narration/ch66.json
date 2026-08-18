@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 66,
+  "title": "The Field",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e23f6c0c2f7c4565",
+  "lessons": [
+    {
+      "id": "TE-C66-field",
+      "sequence": 2130,
+      "title": "పొలం (polaṁ) — a field",
+      "headword": "పొలం",
+      "romanization": "polaṁ",
+      "gloss": "a field",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b01a09e8676510e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nammakaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పొలం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పొలం (polaṁ) — \"a field\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పొలం (polaṁ) is a field under cultivation — not open ground, but somebody's, with a boundary and a name and a రైతు who walks it every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. A గ్రామం is measured by its పొలం (polaṁ) far more than by its houses, and directions in the country are given by whose పొలం (polaṁ) you pass rather than by any బాట."
+            },
+            {
+              "kind": "speech",
+              "text": "Going out to the పొలం (polaṁ) before ఉదయం and coming back after సాయంత్రం is the shape of the day the rest of this chapter describes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ground everything else here stands on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polaṁ, then grāmaṁ, and say which one feeds the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polaṁ*, then *grāmaṁ*, and say which one feeds the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పొలం (polaṁ) mean? (\"a field\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C66-paddy",
+      "sequence": 2140,
+      "title": "వరి (vari) — paddy, rice still in the field",
+      "headword": "వరి",
+      "romanization": "vari",
+      "gloss": "paddy, rice still in the field",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:432cb121542c281b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did polaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వరి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వరి (vari) — \"paddy\", rice while it is still standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu counts rice three times over and this is the first of them: వరి (vari) in the పొలం (polaṁ), బియ్యం once it is husked, అన్నం once it is cooked. Three words, three states, and none of them will stand in for another."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited and it names the plant. English has one word for the lot and has to borrow \"paddy\" from Malay to get the same distinction; Telugu had it from the start."
+            },
+            {
+              "kind": "speech",
+              "text": "A వరి (vari) పొలం (polaṁ) under water with the seedlings just pushed in is the picture the coast is built on, and what is being pushed in is the మొక్క from earlier in this book."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: the ground and what is standing in it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vari, then say which of బియ్యం and అన్నం comes next",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vari*, then say which of బియ్యం and అన్నం comes next]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వరి (vari) mean? (\"paddy, rice still in the field\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C66-grass",
+      "sequence": 2150,
+      "title": "గడ్డి (gaḍḍi) — grass",
+      "headword": "గడ్డి",
+      "romanization": "gaḍḍi",
+      "gloss": "grass",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f51199bf8cd1faf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vari mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గడ్డి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గడ్డి (gaḍḍi) — \"grass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గడ్డి (gaḍḍi) is grass, and in a village it mostly means fodder — what gets cut at the edge of the పొలం (polaṁ) and carried back for the గేదె and the మేక."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. It covers straw as well, meaning what is left of the వరి (vari) once the grain is off, so one word runs all the way from the living plant to the dry stalk stacked beside the house."
+            },
+            {
+              "kind": "speech",
+              "text": "గడ్డి (gaḍḍi) does insulting work too. Calling something గడ్డి (gaḍḍi) is calling it worthless, which is what tends to happen to a word that means \"the part nobody eats\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this is what the animals get."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḍḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḍḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḍḍi, then gēde, and say which one is carried to the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḍḍi*, then *gēde*, and say which one is carried to the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గడ్డి (gaḍḍi) mean? (\"grass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C66-threshing-floor",
+      "sequence": 2160,
+      "title": "కల్లం (kallaṁ) — a threshing floor",
+      "headword": "కల్లం",
+      "romanization": "kallaṁ",
+      "gloss": "a threshing floor",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed88cf387461732a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gaḍḍi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కల్లం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కల్లం (kallaṁ) — \"a threshing floor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కల్లం (kallaṁ) is the threshing floor: a flat patch of ground beaten hard and swept clean, where the cut వరి (vari) is separated from its గడ్డి (gaḍḍi)."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. A కల్లం (kallaṁ) belongs to the గ్రామం rather than to one house, and the order in which families take their turn on it is settled by custom rather than by asking — the kind of arrangement a village is full of."
+            },
+            {
+              "kind": "speech",
+              "text": "It gets swept with a చీపురు before anything is laid down on it, and that sweeping is taken about as seriously as the ముగ్గు at a doorstep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four: where the year's work gets finished."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kallaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kallaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kallaṁ, then cīpuru, and say which one is used on the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kallaṁ*, then *cīpuru*, and say which one is used on the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కల్లం (kallaṁ) mean? (\"a threshing floor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C66-harvest",
+      "sequence": 2170,
+      "title": "పంట (paṇṭa) — a harvest",
+      "headword": "పంట",
+      "romanization": "paṇṭa",
+      "gloss": "a harvest",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6a2a94db3af3e1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kallaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పంట",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పంట (paṇṭa) — \"a harvest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పంట (paṇṭa) is the harvest — the crop standing and the crop taken in, both at once. It is inherited, and it is what this whole chapter has been walking towards: పొలం (polaṁ), వరి (vari), గడ్డి (gaḍḍi), కల్లం (kallaṁ), and then పంట (paṇṭa)."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu uses it well outside the field. A good year at anything is a మంచి పంట (paṇṭa), and somebody talking about how their children turned out will reach for the word without meaning anything about rice at all."
+            },
+            {
+              "kind": "speech",
+              "text": "When the పంట (paṇṭa) is in and the కల్లం (kallaṁ) is swept, the day and the season finish together, and there is nothing left to do but say వెళ్ళొస్తాను."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: పొలం (polaṁ), వరి (vari), గడ్డి (gaḍḍi), కల్లం (kallaṁ), పంట (paṇṭa). A year's work in five words, and a good place to take your leave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇṭa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then take your leave with veḷḷostānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then take your leave with *veḷḷostānu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పంట (paṇṭa) mean? (\"a harvest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

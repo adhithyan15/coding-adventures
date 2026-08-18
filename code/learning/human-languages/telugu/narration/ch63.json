@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 63,
+  "title": "Hunger, Sleep and Health",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ca7c3be34920e255",
+  "lessons": [
+    {
+      "id": "TE-C63-hunger",
+      "sequence": 1980,
+      "title": "ఆకలి (ākali) — hunger",
+      "headword": "ఆకలి",
+      "romanization": "ākali",
+      "gloss": "hunger",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1652f41114597740",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did addaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆకలి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆకలి (ākali) — \"hunger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆకలి (ākali) is hunger. Telugu does not say \"I am hungry\" — it says నాకు ఆకలి (ākali), \"to me, hunger\", the same shape as నాకు తెలుసు and నాకు తెలుగు వచ్చు. Hunger is something that happens to you."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited, and it is among the first a child in a Telugu house learns to say — usually loudly, and usually before bhōjanaṁ is anywhere near ready."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆకలిగా ఉందా? is a real greeting in a house you are close to. It gets asked before మీరు ఎలా ఉన్నారు? has a chance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first thing to say about yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāku ākali, then ask mīru elā unnāru?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāku ākali*, then ask *mīru elā unnāru?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆకలి (ākali) mean? (\"hunger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C63-sleep",
+      "sequence": 1990,
+      "title": "నిద్ర (nidra) — sleep",
+      "headword": "నిద్ర",
+      "romanization": "nidra",
+      "gloss": "sleep",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de13683f401c4647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ākali mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిద్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిద్ర (nidra) — \"sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నిద్ర (nidra) is sleep, and it takes the same shape as ఆకలి (ākali): నాకు నిద్ర (nidra) వస్తోంది, \"sleep is coming to me\". You do not do it; it arrives."
+            },
+            {
+              "kind": "speech",
+              "text": "The word came from Sanskrit nidrā and settled without changing. Beside it Telugu keeps నిదుర, the softer everyday form, and the two are one word wearing different clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "నిద్ర (nidra) also makes a polite reason for leaving late in the evening, and it works the way గాలి worked earlier. Nobody argues with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and both of them come to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidra, then ākali, and say which one you have now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidra*, then *ākali*, and say which one you have now]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిద్ర (nidra) mean? (\"sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C63-cough",
+      "sequence": 2000,
+      "title": "దగ్గు (daggu) — a cough",
+      "headword": "దగ్గు",
+      "romanization": "daggu",
+      "gloss": "a cough",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc1f54509cbf92d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nidra mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దగ్గు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దగ్గు (daggu) — \"a cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దగ్గు (daggu) is a cough. It is inherited, and it is a sound turned into a word, which is how a good many of these words start out."
+            },
+            {
+              "kind": "speech",
+              "text": "Like ఆకలి (ākali) and నిద్ర (nidra) it comes to you rather than from you: నాకు దగ్గు (daggu), and nobody needs telling any more than that."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu keeps దగ్గు (daggu) for the whole thing at once — the single cough, the fit of coughing, and the illness sitting behind both — where English reaches for three phrases. A మంచు morning in the hills fills a house with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daggu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daggu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daggu, then nidra, and say which one keeps you from the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daggu*, then *nidra*, and say which one keeps you from the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దగ్గు (daggu) mean? (\"a cough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C63-disease",
+      "sequence": 2010,
+      "title": "రోగం (rōgaṁ) — a disease",
+      "headword": "రోగం",
+      "romanization": "rōgaṁ",
+      "gloss": "a disease",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a717e9d5a9b98fc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did daggu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రోగం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రోగం (rōgaṁ) — \"a disease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రోగం (rōgaṁ) is illness in general: not the దగ్గు (daggu) you have this week, but the thing a వైద్యుడు puts a name to."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Sanskrit, from a root about breaking — an illness is something breaking in you — and Telugu took the word whole, the way it took hṛdayaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "రోగి is the person who has one. A వైద్యుడు's whole working day is spent between those two words, and so is a good deal of ordinary conversation about relatives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōgaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōgaṁ, then daggu, and say which one is the smaller trouble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōgaṁ*, then *daggu*, and say which one is the smaller trouble]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రోగం (rōgaṁ) mean? (\"a disease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C63-health",
+      "sequence": 2020,
+      "title": "ఆరోగ్యం (ārōgyaṁ) — health",
+      "headword": "ఆరోగ్యం",
+      "romanization": "ārōgyaṁ",
+      "gloss": "health",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3129a4cdfdec42a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did rōgaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆరోగ్యం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆరోగ్యం (ārōgyaṁ) — \"health\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆరోగ్యం (ārōgyaṁ) is health, and it is the word before it with a small piece stuck on the front. The piece means \"not\", and రోగ is the illness: health here is what is left when the illness is gone."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a real difference in outlook and worth a moment. English health is something to be built up. ఆరోగ్యం (ārōgyaṁ) is a subtraction."
+            },
+            {
+              "kind": "speech",
+              "text": "మీ ఆరోగ్యం (ārōgyaṁ) ఎలా ఉంది? is what a house asks an atithi who has been ill. It is more particular than మీరు ఎలా ఉన్నారు?, and it expects a real answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ఆకలి (ākali), నిద్ర (nidra), దగ్గు (daggu), రోగం (rōgaṁ), ఆరోగ్యం (ārōgyaṁ). Enough to say what is wrong and to ask after somebody else."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārōgyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārōgyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then ask mī ārōgyaṁ elā undi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then ask *mī ārōgyaṁ elā undi?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆరోగ్యం (ārōgyaṁ) mean? (\"health\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

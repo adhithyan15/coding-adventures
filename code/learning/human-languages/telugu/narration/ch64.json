@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 64,
+  "title": "Words That Join an Answer",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a642c62262ecb3f2",
+  "lessons": [
+    {
+      "id": "TE-C64-also",
+      "sequence": 2030,
+      "title": "కూడా (kūḍā) — also",
+      "headword": "కూడా",
+      "romanization": "kūḍā",
+      "gloss": "also",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a8704e84ed82550",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ārōgyaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కూడా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూడా (kūḍā) — \"also\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కూడా (kūḍā) goes after the thing it is adding, not before it. నేను కూడా (kūḍā) is \"me too\"; పెరుగు కూడా (kūḍā) is \"the curd as well\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English can drop \"also\" almost anywhere in a sentence and let the stress carry the meaning. Telugu puts కూడా (kūḍā) straight after whatever it includes, and that placement does the work the stress would have done."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a small word that softens a great deal. Adding కూడా (kūḍā) to an answer turns a flat అవును into agreement with the person who asked."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first joining word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēnu kūḍā, then perugu kūḍā, and say what each one adds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēnu kūḍā*, then *perugu kūḍā*, and say what each one adds]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కూడా (kūḍā) mean? (\"also\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C64-only",
+      "sequence": 2040,
+      "title": "మాత్రమే (mātramē) — only",
+      "headword": "మాత్రమే",
+      "romanization": "mātramē",
+      "gloss": "only",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4d2b22f26414abb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kūḍā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మాత్రమే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాత్రమే (mātramē) — \"only\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మాత్రమే (mātramē) is the other half of కూడా (kūḍā). Where కూడా (kūḍā) opens an answer out, మాత్రమే (mātramē) shuts it: పెరుగు మాత్రమే (mātramē) is \"curd and nothing else\". It stands in the same place, straight after the thing it is about."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built on Sanskrit mātra, \"a measure\" — the same piece English carries in metre and in diameter. Saying మాత్రమే (mātramē) is saying \"this much and no further\"."
+            },
+            {
+              "kind": "speech",
+              "text": "With a small quantity in front it does polite work. కొంచెం మాత్రమే (mātramē), \"only a little\", accepts what is offered without taking much of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and they pull opposite ways."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātramē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātramē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perugu kūḍā, then perugu mātramē, and say which one takes more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perugu kūḍā*, then *perugu mātramē*, and say which one takes more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మాత్రమే (mātramē) mean? (\"only\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C64-in-that-case",
+      "sequence": 2050,
+      "title": "అయితే (ayitē) — in that case",
+      "headword": "అయితే",
+      "romanization": "ayitē",
+      "gloss": "in that case",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a9790589e8e54b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mātramē mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అయితే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అయితే (ayitē) — \"in that case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అయితే (ayitē) picks up what the other person has just said and turns on it: సరే, అయితే (ayitē) వెళ్ళొస్తాను — \"alright, in that case I'll be off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is put together out of the piece Telugu uses for \"it happened\" plus the little ending that means \"if\", so what it literally says is \"if it is so\". English \"well then\" and \"in that case\" both land in the same spot."
+            },
+            {
+              "kind": "speech",
+              "text": "At the head of an answer, on its own, అయితే (ayitē) is one of the most useful things a learner can carry. It buys a moment, and it shows the other person you were listening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayitē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayitē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarē, then ayitē, and put the two together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarē*, then *ayitē*, and put the two together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అయితే (ayitē) mean? (\"in that case\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C64-after",
+      "sequence": 2060,
+      "title": "తరువాత (taruvāta) — after that, later",
+      "headword": "తరువాత",
+      "romanization": "taruvāta",
+      "gloss": "after that, later",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:559905e942120f28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ayitē mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తరువాత",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తరువాత (taruvāta) — \"after that, later\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తరువాత puts two things in order: bhōjanaṁ taruvāta, \"after the meal\". It goes after the thing it follows, exactly like కూడా (kūḍā) and మాత్రమే (mātramē) before it — a habit worth noticing, because it holds for a great many of these small words."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited. Standing alone at the front of a sentence it means \"later\", and it is the gentle way to put something off: తరువాత (taruvāta), not now, and no reason offered."
+            },
+            {
+              "kind": "speech",
+              "text": "తరువాత (taruvāta) is also how a story gets kept moving. A listener who says it is asking you to go on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one is about order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taruvāta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taruvāta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhōjanaṁ taruvāta, then just taruvāta, and say how the two differ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhōjanaṁ taruvāta*, then just *taruvāta*, and say how the two differ]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తరువాత (taruvāta) mean? (\"after that, later\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C64-still",
+      "sequence": 2070,
+      "title": "ఇంకా (iṅkā) — still, yet",
+      "headword": "ఇంకా",
+      "romanization": "iṅkā",
+      "gloss": "still, yet",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d0a86327374a7c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did taruvāta mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇంకా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇంకా (iṅkā) — \"still, yet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఇంకా (iṅkā) says the thing is not finished. ఇంకా (iṅkā) ఉంది is \"there is still some\"; ఇంకా (iṅkā) రాలేదు is \"she hasn't come yet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the natural answer to అంతే. Where అంతే closes a list off, ఇంకా (iṅkā) says there is more of it coming, and the two make a pair the way కూడా (kūḍā) and మాత్రమే (mātramē) do."
+            },
+            {
+              "kind": "speech",
+              "text": "Five small words, and not one of them names a thing. కూడా (kūḍā), మాత్రమే (mātramē), అయితే (ayitē), తరువాత (taruvāta), ఇంకా (iṅkā) are what turn a set of separate answers into a conversation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: కూడా (kūḍā), మాత్రమే (mātramē), అయితే (ayitē), తరువాత (taruvāta), ఇంకా (iṅkā). Enough to add to an answer, limit it, order it, or keep it open."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṅkā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṅkā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then answer antē? with iṅkā undi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then answer *antē?* with *iṅkā undi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇంకా (iṅkā) mean? (\"still, yet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

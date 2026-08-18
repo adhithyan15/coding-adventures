@@ -8873,7 +8873,7 @@
     {
       "language": "telugu",
       "chapter": 37,
-      "sourceHash": "fnv1a64:9d8b1adcdee37c47",
+      "sourceHash": "fnv1a64:99eb80f4feb1465f",
       "lessonIds": [
         "TE-C37-kannu",
         "TE-C37-cevi",
@@ -9157,6 +9157,97 @@
         "TE-C59-fire"
       ],
       "tex": "telugu/book/chapters/ch59-weather-and-ground.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:7e81f3dbf65dccfb",
+      "lessonIds": [
+        "TE-C60-buffalo",
+        "TE-C60-goat",
+        "TE-C60-hen",
+        "TE-C60-ant",
+        "TE-C60-bird"
+      ],
+      "tex": "telugu/book/chapters/ch60-animals.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:593d5e21767e1f97",
+      "lessonIds": [
+        "TE-C61-curd",
+        "TE-C61-ghee",
+        "TE-C61-oil",
+        "TE-C61-sugar",
+        "TE-C61-chilli"
+      ],
+      "tex": "telugu/book/chapters/ch61-in-the-kitchen.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:45eceae2ad2e2e94",
+      "lessonIds": [
+        "TE-C62-thread",
+        "TE-C62-needle",
+        "TE-C62-broom",
+        "TE-C62-umbrella",
+        "TE-C62-mirror"
+      ],
+      "tex": "telugu/book/chapters/ch62-things-people-make.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:3062c05174f48c62",
+      "lessonIds": [
+        "TE-C63-hunger",
+        "TE-C63-sleep",
+        "TE-C63-cough",
+        "TE-C63-disease",
+        "TE-C63-health"
+      ],
+      "tex": "telugu/book/chapters/ch63-hunger-sleep-health.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:15ad7ffbad6af617",
+      "lessonIds": [
+        "TE-C64-also",
+        "TE-C64-only",
+        "TE-C64-in-that-case",
+        "TE-C64-after",
+        "TE-C64-still"
+      ],
+      "tex": "telugu/book/chapters/ch64-joining-words.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:60d871c6d92667aa",
+      "lessonIds": [
+        "TE-C65-welcome",
+        "TE-C65-manners",
+        "TE-C65-request",
+        "TE-C65-permission",
+        "TE-C65-trust"
+      ],
+      "tex": "telugu/book/chapters/ch65-more-good-manners.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:b8f837ccb6aaaa1a",
+      "lessonIds": [
+        "TE-C66-field",
+        "TE-C66-paddy",
+        "TE-C66-grass",
+        "TE-C66-threshing-floor",
+        "TE-C66-harvest"
+      ],
+      "tex": "telugu/book/chapters/ch66-the-field.tex"
     },
     {
       "language": "urdu",
