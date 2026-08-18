@@ -4983,6 +4983,58 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::EqI16x8
+            | SimdOpKind::NeI16x8
+            | SimdOpKind::LtSI16x8
+            | SimdOpKind::LtUI16x8
+            | SimdOpKind::GtSI16x8
+            | SimdOpKind::GtUI16x8
+            | SimdOpKind::LeSI16x8
+            | SimdOpKind::LeUI16x8
+            | SimdOpKind::GeSI16x8
+            | SimdOpKind::GeUI16x8 => {
+                // i16x8's own comparison family: same lane-wise BINARY
+                // shape and boolean-mask convention as i32x4's comparison
+                // family above, but over 8 `i16` lanes instead of 4 `i32`
+                // lanes -- each lane becomes all-1s (`-1i16`, i.e.
+                // `0xFFFF`) if true, all-0s otherwise (the mask width
+                // tracks the LANE width, not a fixed `i32`).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mask = |b: bool| if b { -1i16 } else { 0i16 };
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let l = i16::from_le_bytes(lhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let r = i16::from_le_bytes(rhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::EqI16x8 => mask(l == r),
+                        SimdOpKind::NeI16x8 => mask(l != r),
+                        SimdOpKind::LtSI16x8 => mask(l < r),
+                        SimdOpKind::LtUI16x8 => mask((l as u16) < (r as u16)),
+                        SimdOpKind::GtSI16x8 => mask(l > r),
+                        SimdOpKind::GtUI16x8 => mask((l as u16) > (r as u16)),
+                        SimdOpKind::LeSI16x8 => mask(l <= r),
+                        SimdOpKind::LeUI16x8 => mask((l as u16) <= (r as u16)),
+                        SimdOpKind::GeSI16x8 => mask(l >= r),
+                        SimdOpKind::GeUI16x8 => mask((l as u16) >= (r as u16)),
+                        _ => unreachable!("only the i16x8 comparison kinds listed in this arm's pattern reach here"),
+                    };
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8345,6 +8397,50 @@ mod tests {
             Some(V128Bytes(v128_const_bytes_i16x8([-5, 5, i16::MIN + 1, i16::MIN, 0, -1, 1, -2]).try_into().unwrap())),
             "neg(i16::MAX) == i16::MIN+1, neg(i16::MIN) must wrap back to i16::MIN"
         );
+    }
+
+    /// `i16x8`'s own comparison family: the boolean-mask convention (all
+    /// `-1i16`/`0xFFFF` per lane, not a scalar 0/1) extends to this lane
+    /// width too, and -- the one place a signed/unsigned bug could hide
+    /// -- `lt_u` on a negative `i16` lane (a LARGE value when
+    /// reinterpreted as `u16`) must disagree with `lt_s` on the exact
+    /// same bit pattern, same discipline as `i32x4`'s own comparison test.
+    #[test]
+    fn i16x8_comparison_family_uses_the_mask_convention_and_distinguishes_signed_from_unsigned() {
+        let mut ne_code = vec![0xFD, 0x0C];
+        ne_code.extend(v128_const_bytes_i16x8([5, 6, 7, 8, 5, 6, 7, 8]));
+        ne_code.extend([0xFD, 0x0C]);
+        ne_code.extend(v128_const_bytes_i16x8([5, 0, 7, 0, 5, 0, 7, 0]));
+        ne_code.extend([0xFD, 0x2E]); // i16x8.ne (sub-opcode 0x2E, single-byte LEB128)
+        ne_code.push(0x0B);
+        let mut ne_engine = simd_engine_returning_v128(ne_code);
+        let (_, ne_bytes) = ne_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            ne_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0, -1, 0, -1, 0, -1, 0, -1]).try_into().unwrap())),
+            "unequal lanes must be all-1s (-1), equal lanes all-0s"
+        );
+
+        // -1i16 reinterpreted as u16 is 0xFFFF, the largest possible u16
+        // -- so `-1 <_s 1` is true (signed: -1 < 1) but `-1 <_u 1` is
+        // false (unsigned: 0xFFFF is NOT < 1).
+        let lt_code = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8([-1; 8]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i16x8([1; 8]));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0x2F/0x30 are < 128 -- single-byte LEB128
+            code.push(0x0B);
+            code
+        };
+        let mut lt_s_engine = simd_engine_returning_v128(lt_code(0x2F)); // i16x8.lt_s
+        let (_, lt_s_bytes) = lt_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(lt_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([-1; 8]).try_into().unwrap())), "-1 <_s 1 must be true (all lanes)");
+
+        let mut lt_u_engine = simd_engine_returning_v128(lt_code(0x30)); // i16x8.lt_u
+        let (_, lt_u_bytes) = lt_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(lt_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([0; 8]).try_into().unwrap())), "0xFFFF <_u 1 must be false (all lanes)");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve
