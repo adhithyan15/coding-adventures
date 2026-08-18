@@ -557,15 +557,26 @@ A handler returns four caller-observable things: `output`, `artifact_refs`,
 `memory_refs`, and `events`. Only `output` is validated, against the
 definition's `output_schema`.
 
-**A call that fails output validation must publish nothing the handler
-produced.** Handler events are assembled during step 7 but must not reach the
-event stream unless step 10 is reached with a passing result. Publishing them on
-the rejection path is the worst of both worlds: the runtime declares the call
+**A call that fails output validation must publish nothing the handler chose.**
+Handler events are assembled during step 7 but must not reach the event stream
+unless step 10 is reached with a passing result. Publishing them on the
+rejection path is the worst of both worlds: the runtime declares the call
 invalid and forwards the invalid call's side effects anyway, so a handler whose
 output was refused can still say whatever it likes to every event sink.
 
-The framing events the runtime emits itself — the started event and the terminal
-event — are not affected; they describe the call, not its result.
+The runtime's own framing events remain. Be precise about why, because the
+obvious justification is wrong: it is *not* that they describe the call rather
+than its result. The started event does, but the terminal event describes the
+result — that is its purpose. It stays because a caller has to learn the
+outcome, and it is safe to keep only because its payload is bounded to the error
+kind and a message the runtime chose.
+
+**The terminal event must not carry validation `details`.** On an
+output-validation failure those details hold one path per offending field, and
+each path is built from the handler's own output object — so a handler could
+broadcast arbitrary text, one string per field it invents, through the very
+rejection that refused it. `details` reaches the immediate caller on the
+result; it must not reach the event stream, which is a broadcast.
 
 ### Built-in definitions are canonical
 
@@ -591,9 +602,10 @@ reference it. There is no general rule making them empty.
 
 For tools that handle secrets there *is* such a rule, and because it cannot come
 from the runtime it must come from the binding. A binding whose handlers must
-not use those channels is required to enforce that at registration rather than
-by convention, so the property is checked on every call instead of asserted in a
-comment. See section 7.1 V1.
+not use those channels wraps them at registration with the runtime's
+`forbidding_side_channels` combinator, which fails any call whose handler
+populated one of the three. The wrapper is applied once; the check runs on every
+call. See section 7.1 V1.
 
 ---
 

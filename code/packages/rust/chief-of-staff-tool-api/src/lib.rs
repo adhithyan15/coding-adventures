@@ -4147,6 +4147,40 @@ pub trait ToolHandler {
     ) -> Result<ToolHandlerOutput, ToolCallError>;
 }
 
+/// Wrap a handler so it cannot use the three unvalidated output channels.
+///
+/// The runtime validates `output` and nothing else: `artifact_refs` and
+/// `memory_refs` are copied to the result unchecked, and `events` are the
+/// handler's own. That is deliberate — a tool that creates an artifact is
+/// supposed to reference it — so there is no general rule making them empty.
+///
+/// For a tool that handles secrets there *is* such a rule, and it cannot come
+/// from the runtime, which has no way to know. This is how a binding supplies
+/// it: wrap at registration, and the property is then checked on every call
+/// rather than asserted in a comment and hoped for.
+///
+/// A violation is an execution error rather than a silent scrub, because a
+/// handler reaching for a channel it was declared not to use is a bug in the
+/// handler, and scrubbing would hide it.
+pub fn forbidding_side_channels<H>(handler: H) -> impl ToolHandler
+where
+    H: ToolHandler,
+{
+    move |arguments: JsonValue, context: ToolExecutionContext| {
+        let output = handler.invoke(arguments, context)?;
+        if !output.artifact_refs.is_empty()
+            || !output.memory_refs.is_empty()
+            || !output.events.is_empty()
+        {
+            return Err(ToolCallError::new(
+                ToolErrorKind::ToolExecutionError,
+                "handler used an output channel it is declared not to use",
+            ));
+        }
+        Ok(output)
+    }
+}
+
 impl<F> ToolHandler for F
 where
     F: Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError>,
@@ -4820,8 +4854,13 @@ impl InMemoryToolRuntime {
                         );
                         record.status = ToolCallStatus::Failed;
                         record.completed_at = Some(request.requested_at);
-                        // Only the runtime's own framing events. Those describe
-                        // the call, not its result, so they stay.
+                        // Only the runtime's framing events. The started event
+                        // carries a Null payload and describes the call alone;
+                        // the terminal event does describe the result, and is
+                        // kept because a caller has to learn the failure -- but
+                        // its payload is bounded to the error kind and the
+                        // runtime's own static message, with `details` withheld
+                        // from the broadcast (see `terminal_payload`).
                         return trace_with_terminal(
                             record,
                             request,
@@ -5058,7 +5097,21 @@ fn terminal_payload(result: &ToolResult) -> JsonValue {
                 "message".to_string(),
                 JsonValue::String(error.message.clone()),
             ),
-            ("details".to_string(), error.details.clone()),
+            // `details` is deliberately absent.
+            //
+            // It is a structured diagnostic for the immediate caller, and it
+            // reaches them intact on `ToolResult`. The event stream is a
+            // broadcast: `ToolExecutionJournal::record_trace` fans it out to
+            // every sink and makes it queryable.
+            //
+            // The distinction matters because `details` can carry strings the
+            // *handler* chose. On an output-validation failure it holds one
+            // `path` per offending field, and those paths are built from the
+            // handler's own output object -- so a handler whose output the
+            // runtime just refused could still broadcast arbitrary text, one
+            // string per unknown field, by naming its fields carefully. That is
+            // the same covert channel this crate closed for handler events,
+            // reached through a different field.
         ])
     } else {
         JsonValue::Null
@@ -5986,14 +6039,15 @@ mod tests {
         );
         assert_eq!(
             registry
-                // The fixture is no longer in the Artifact family -- its id
-                // is synthetic now -- so query by capability, which is what
-                // this assertion was really about.
-                .schema_documents(&ToolCatalogQuery::new())
+                // Retargeted, not dropped: the fixture left the Artifact
+                // family when its id became synthetic, so filter on a family
+                // that still has members. What is under test is that
+                // `schema_documents` honours the filter at all.
+                .schema_documents(&ToolCatalogQuery::new().for_family(BuiltinToolFamily::Memory))
                 .into_iter()
                 .map(|document| document.tool_id)
                 .collect::<Vec<_>>(),
-            vec!["memory.remember", "memory.search", SYNTHETIC_TOOL_ID]
+            vec!["memory.remember", "memory.search"]
         );
         assert_eq!(
             registry
@@ -6642,6 +6696,66 @@ mod tests {
         assert!(sink.records().is_empty());
     }
 
+    /// The side-channel wrapper refuses each of the three fields.
+    ///
+    /// Added with the wrapper: a mechanism with no test is a mechanism nobody
+    /// has watched fail.
+    #[test]
+    fn forbidding_side_channels_refuses_every_unvalidated_field() {
+        let context = || ToolExecutionContext::from_request(&artifact_create_request());
+        let clean = JsonValue::Object(vec![(
+            "artifact_ref".to_string(),
+            JsonValue::String("artifact_1/rev_1".to_string()),
+        )]);
+
+        // The wrapper is transparent when the handler behaves.
+        let passthrough = forbidding_side_channels({
+            let clean = clean.clone();
+            move |_: JsonValue, _: ToolExecutionContext| Ok(ToolHandlerOutput::new(clean.clone()))
+        });
+        assert!(passthrough.invoke(JsonValue::Null, context()).is_ok());
+
+        // And refuses each channel in turn.
+        let via_artifact = forbidding_side_channels({
+            let clean = clean.clone();
+            move |_: JsonValue, _: ToolExecutionContext| {
+                Ok(ToolHandlerOutput::new(clean.clone()).with_artifact_ref("leak"))
+            }
+        });
+        let via_memory = forbidding_side_channels({
+            let clean = clean.clone();
+            move |_: JsonValue, _: ToolExecutionContext| {
+                Ok(ToolHandlerOutput::new(clean.clone()).with_memory_ref("leak"))
+            }
+        });
+        let via_event = forbidding_side_channels(move |_: JsonValue, _: ToolExecutionContext| {
+            Ok(ToolHandlerOutput::new(clean.clone()).with_event(
+                ToolEventKind::Progress,
+                JsonValue::String("leak".to_string()),
+            ))
+        });
+
+        for (name, result) in [
+            (
+                "artifact_refs",
+                via_artifact.invoke(JsonValue::Null, context()),
+            ),
+            ("memory_refs", via_memory.invoke(JsonValue::Null, context())),
+            ("events", via_event.invoke(JsonValue::Null, context())),
+        ] {
+            let error = result.expect_err(&format!("{name} should have been refused"));
+            assert_eq!(error.kind, ToolErrorKind::ToolExecutionError);
+            assert_eq!(
+                error.message,
+                "handler used an output channel it is declared not to use"
+            );
+            assert!(
+                !format!("{error:?}").contains("leak"),
+                "the refusal must not echo what it refused: {error:?}"
+            );
+        }
+    }
+
     /// A built-in tool id names one definition (D18D, "Built-in definitions
     /// are canonical").
     ///
@@ -6699,8 +6813,10 @@ mod tests {
         runtime
             .register_handler(artifact_create_definition(), |_, _| {
                 Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
-                    // Wrong shape: fails the declared output schema.
-                    "wrong_field".to_string(),
+                    // Wrong shape, and the field NAME is attacker-chosen: the
+                    // validator builds an error path out of it, so a broadcast
+                    // `details` would carry this string to every sink.
+                    "smuggled-through-a-field-name".to_string(),
                     JsonValue::String("x".to_string()),
                 )]))
                 .with_event(
@@ -6717,6 +6833,18 @@ mod tests {
         assert!(
             !rendered.contains("smuggled-through-an-event"),
             "a refused call must not forward the handler's event payload: {rendered}"
+        );
+        assert!(
+            !rendered.contains("smuggled-through-a-field-name"),
+            "a refused call must not broadcast handler-chosen field names: {rendered}"
+        );
+
+        // The direct caller still gets the diagnostic -- it is the broadcast
+        // that is narrowed, not the caller's error.
+        let details = format!("{:?}", trace.result.error.as_ref().unwrap().details);
+        assert!(
+            details.contains("smuggled-through-a-field-name"),
+            "the immediate caller should still see which field was wrong: {details}"
         );
     }
 

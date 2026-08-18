@@ -68,14 +68,17 @@
 //! Be precise about how far that reaches, because a guarantee believed to be
 //! wider than it is, is worse than none. The runtime validates `output` and
 //! **only** `output`. `artifact_refs` and `memory_refs` are copied to the
-//! result unchecked; `events` are assembled *before* validation runs and are
-//! published even on the rejection path; and the check is `if let Some(schema)`
-//! against the definition passed to `register_handler`, so it is a property of
-//! that definition rather than of the tool id — another crate registering
-//! `vault.request_direct` with `output_schema: None` would get no validation at
+//! result unchecked. Two related holes have since been closed in the runtime,
+//! and are recorded here because this crate's guarantees used to depend on
+//! working around them: handler events are no longer published when output
+//! validation refuses a call, and a definition registered under a built-in tool
+//! id must now match the catalog — so a crate registering
+//! `vault.request_direct` with `output_schema: None` no longer gets no
+//! validation at
 //! all. Both handlers here therefore return empty `artifact_refs`,
-//! `memory_refs`, and `events`, and there are tests pinning that, because for
-//! those three fields handler discipline is genuinely all there is.
+//! `memory_refs`, and `events` — and every registration path wraps them in
+//! [`forbidding_side_channels`], so that is checked on each call rather than
+//! left to discipline and a test.
 //!
 //! **V2 — bounded, secret-free errors.** Every error this crate produces
 //! carries one of a closed set of `&'static str` messages, listed in
@@ -161,8 +164,8 @@ use std::sync::Arc;
 
 use chief_of_staff_host_runtime::{HostRuntimeError, OrchestratorProfileRuntime};
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, InMemoryToolRuntime, ToolApiError, ToolCallError, ToolDefinition,
-    ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
+    builtin_tool_definition, forbidding_side_channels, InMemoryToolRuntime, ToolApiError,
+    ToolCallError, ToolDefinition, ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
 };
 use chief_of_staff_vault_runtime::{
     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
@@ -309,12 +312,12 @@ impl VaultToolBridge {
     pub fn register_all(&self, runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
         for definition in Self::definitions()? {
             match definition.tool_id.as_str() {
-                VAULT_REQUEST_LEASE_TOOL_ID => {
-                    runtime.register_handler(definition, self.lease_handler())?
-                }
-                VAULT_REQUEST_DIRECT_TOOL_ID => {
-                    runtime.register_handler(definition, self.direct_handler())?
-                }
+                VAULT_REQUEST_LEASE_TOOL_ID => runtime
+                    .register_handler(definition, forbidding_side_channels(self.lease_handler()))?,
+                VAULT_REQUEST_DIRECT_TOOL_ID => runtime.register_handler(
+                    definition,
+                    forbidding_side_channels(self.direct_handler()),
+                )?,
                 // `definitions()` builds this list from two known ids, so this
                 // arm is unreachable today. It is a hard error rather than a
                 // skip because a third vault tool appearing here should stop
@@ -358,12 +361,12 @@ impl VaultToolBridge {
 
         for definition in definitions {
             match definition.tool_id.as_str() {
-                VAULT_REQUEST_LEASE_TOOL_ID => {
-                    host.register_handler(definition, self.lease_handler())?
-                }
-                VAULT_REQUEST_DIRECT_TOOL_ID => {
-                    host.register_handler(definition, self.direct_handler())?
-                }
+                VAULT_REQUEST_LEASE_TOOL_ID => host
+                    .register_handler(definition, forbidding_side_channels(self.lease_handler()))?,
+                VAULT_REQUEST_DIRECT_TOOL_ID => host.register_handler(
+                    definition,
+                    forbidding_side_channels(self.direct_handler()),
+                )?,
                 other => return Err(HostRuntimeError::ToolNotAllowed(other.to_string())),
             }
         }
@@ -382,7 +385,7 @@ impl VaultToolBridge {
     ) -> Result<(), ToolApiError> {
         let definition = builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID)
             .ok_or_else(|| ToolApiError::UnknownTool(VAULT_REQUEST_LEASE_TOOL_ID.to_string()))?;
-        runtime.register_handler(definition, self.lease_handler())
+        runtime.register_handler(definition, forbidding_side_channels(self.lease_handler()))
     }
 
     /// Register **only** `vault.request_lease` at a host boundary.
@@ -415,7 +418,7 @@ impl VaultToolBridge {
             HostRuntimeError::ToolNotAllowed(VAULT_REQUEST_LEASE_TOOL_ID.to_string())
         })?;
         host.check_registration(&definition)?;
-        host.register_handler(definition, self.lease_handler())
+        host.register_handler(definition, forbidding_side_channels(self.lease_handler()))
     }
 
     /// Handler for `vault.request_lease`.

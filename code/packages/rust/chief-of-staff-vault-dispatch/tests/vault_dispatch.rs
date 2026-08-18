@@ -16,7 +16,7 @@ use chief_of_staff_host_runtime::{
 };
 use chief_of_staff_tool_api::{
     builtin_tool_definition, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
-    ToolErrorKind, ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
+    ToolDefinition, ToolErrorKind, ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
 };
 use chief_of_staff_vault_dispatch::{
     errors, VaultToolBridge, MAX_AGENT_LEASE_TTL_MS, MAX_SECRET_NAME_BYTES,
@@ -1279,4 +1279,61 @@ fn a_lease_only_host_still_enforces_tier_and_capability() {
         bridge.register_lease_only_into_host(&mut no_capability),
         Err(HostRuntimeError::MissingCapability { .. })
     ));
+}
+
+/// The pre-flight must refuse exactly what registration refuses.
+///
+/// `check_registration` documents itself as co-total with `register_handler`,
+/// because a pre-flight that checks less converts "this will fail" into "this
+/// will succeed" immediately before it fails anyway — leaving the half-wired
+/// host the pre-flight exists to prevent.
+///
+/// It has already drifted once: `InMemoryToolRegistry::register` gained a
+/// built-in-definition check and the mirror was not updated, so a mismatched
+/// definition passed the dry run and failed the real call. Nothing caught that,
+/// because no test compared the two. This one does.
+#[test]
+fn the_preflight_and_the_registration_refuse_the_same_definitions() {
+    let cases = vec![
+        // A look-alike under a real built-in id.
+        ToolDefinition {
+            display_name: "Not the catalog's version".to_string(),
+            ..builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in exists")
+        },
+        // Output validation disarmed — the case the rule exists for.
+        ToolDefinition {
+            output_schema: None,
+            ..builtin_tool_definition(VAULT_REQUEST_DIRECT_TOOL_ID).expect("built-in exists")
+        },
+        // And the genuine article, which both must accept.
+        builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID).expect("built-in exists"),
+    ];
+
+    for definition in cases {
+        let mut host = orchestrator(host_profile(
+            PrivilegeTier::Tier2,
+            &[VAULT_REQUEST_LEASE_TOOL_ID, VAULT_REQUEST_DIRECT_TOOL_ID],
+            &["vault:lease", "vault:direct"],
+        ));
+
+        let preflight = host.check_registration(&definition);
+        let registered = host.register_handler(definition.clone(), |_, _| {
+            Ok(ToolHandlerOutput::new(JsonValue::Null))
+        });
+
+        assert_eq!(
+            preflight.is_err(),
+            registered.is_err(),
+            "pre-flight and registration disagreed for {}: {preflight:?} vs {registered:?}",
+            definition.tool_id
+        );
+        if let (Err(a), Err(b)) = (&preflight, &registered) {
+            assert_eq!(
+                format!("{a:?}"),
+                format!("{b:?}"),
+                "both refuse {} but with different errors",
+                definition.tool_id
+            );
+        }
+    }
 }

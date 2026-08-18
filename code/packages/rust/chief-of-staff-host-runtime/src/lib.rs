@@ -11,9 +11,9 @@ pub use package::{
 };
 
 use chief_of_staff_tool_api::{
-    validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
-    ToolApprovalGrant, ToolDefinition, ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
-    ToolPolicyEngine,
+    builtin_tool_definition, validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy,
+    ToolApiError, ToolApprovalGrant, ToolDefinition, ToolExecutionTrace, ToolHandler,
+    ToolInvocationRequest, ToolPolicyEngine,
 };
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
@@ -370,6 +370,13 @@ impl HostProfileRuntime {
             return Err(HostRuntimeError::ToolApi(ToolApiError::InvalidDefinition(
                 report.errors,
             )));
+        }
+        if let Some(canonical) = builtin_tool_definition(&definition.tool_id) {
+            if canonical != *definition {
+                return Err(HostRuntimeError::ToolApi(
+                    ToolApiError::BuiltinDefinitionMismatch(definition.tool_id.clone()),
+                ));
+            }
         }
         if self.runtime.get(&definition.tool_id).is_some() {
             return Err(HostRuntimeError::ToolApi(ToolApiError::DuplicateToolId(
