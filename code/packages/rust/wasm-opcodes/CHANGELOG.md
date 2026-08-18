@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.13] - 2026-08-18 - SIMD: i8x16 abs/popcnt/min/max/avgr_u family (task #141-143)
+
+### Added
+
+- 7 new `SIMD_OPS` entries -- `i8x16`'s own "arith2" family, mirroring
+  `i32x4`'s own `abs`/`min_s`/`min_u`/`max_s`/`max_u` widening, plus
+  two op SHAPES with no `i32x4`/`i16x8` precedent in this table:
+  `i8x16.abs` (`0x60`), `popcnt` (`0x62`, lane-wise Hamming weight --
+  WASM SIMD only defines `popcnt` for `i8x16`), `min_s` (`0x76`),
+  `min_u` (`0x77`), `max_s` (`0x78`), `max_u` (`0x79`), `avgr_u`
+  (`0x7B`, lane-wise unsigned rounding average `(a + b + 1) >> 1` --
+  WASM SIMD defines `avgr_u` for `i8x16`/`i16x8` but not `i32x4`) -- 63
+  SIMD opcodes total, up from 56. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against the already-implemented `i8x16.add` (`0x6E`)/`i8x16.neg`
+  (`0x61`)/`i8x16.sub` (`0x71`) entries (all three matched exactly).
+- `SimdOpKind::AbsI8x16`/`PopcntI8x16`/`MinSI8x16`/`MinUI8x16`/
+  `MaxSI8x16`/`MaxUI8x16`/`AvgrUI8x16`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i8x16_arith2.wast` corpus file this widening unblocks.
+
 ## [0.2.12] - 2026-08-18 - SIMD: i8x16 comparison family (task #137-140)
 
 ### Added

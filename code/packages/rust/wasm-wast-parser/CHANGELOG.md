@@ -1,5 +1,21 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.32 — 2026-08-18 — SIMD: i8x16 abs/popcnt/min/max/avgr_u text-form (task #141-143)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover `i8x16`'s own "arith2" family:
+  `i8x16.abs`/`popcnt`/`min_s`/`min_u`/`max_s`/`max_u`/`avgr_u` -- same
+  "no immediate beyond the opcode byte itself" shape every prior SIMD
+  op in this family has, so no new parsing logic, just a wider
+  match-arm pattern list. Verified via a dedicated test asserting the
+  real single-byte LEB128-encoded sub-opcode bytes (`[0xFD, 0x60]`,
+  `[0xFD, 0x62]`, `[0xFD, 0x76]` through `[0xFD, 0x79]`, `[0xFD,
+  0x7B]` -- all seven are < 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.31 — 2026-08-18 — SIMD: i8x16 comparison family text-form (task #137-140)
 
 ### Added

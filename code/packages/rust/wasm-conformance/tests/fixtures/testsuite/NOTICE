@@ -40,7 +40,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-18 (task #133-136 -- simd_i16x8_cmp.wast,
                i16x8 comparison family, same pinned commit, no re-pin),
                extended 2026-08-18 (task #137-140 -- simd_i8x16_cmp.wast,
-               i8x16 comparison family, same pinned commit, no re-pin)
+               i8x16 comparison family, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #141-143 -- simd_i8x16_arith2.wast,
+               i8x16 abs/popcnt/min/max/avgr_u family, same pinned
+               commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -233,6 +236,20 @@ assert_return); the file's own small "combination" tail references
 `v128.load` (not yet implemented), so 1 module and 13 assert_return
 directives grade `NotYetSupported`, the same lazy-grading discipline
 already established for `simd_i16x8_cmp.wast`'s own tail.
+
+`simd_i8x16_arith2.wast` (task #141-143) is the direct follow-up: it
+mirrors `i32x4`'s own `abs`/`min_s`/`min_u`/`max_s`/`max_u` widening
+(PR2), plus two op SHAPES with no `i32x4`/`i16x8` precedent in this
+interpreter -- `popcnt` (lane-wise Hamming weight) and `avgr_u`
+(lane-wise unsigned rounding average, `(a + b + 1) >> 1`). WASM SIMD
+only defines `popcnt`/`avgr_u` for `i8x16` (`avgr_u` is also defined
+for `i16x8`, but not `i32x4`). Each sub-opcode byte fetched live from
+`BinarySIMD.md` and cross-checked against the already-implemented
+`i8x16.add`/`i8x16.neg`/`i8x16.sub` entries (all three matched
+exactly), same discipline as every prior addition. 100% pass on EVERY
+directive kind (2/2 modules, 184/184 assert_return, 19/19
+assert_invalid, 6/6 assert_malformed) -- no `NotYetSupported` tail this
+time, unlike `simd_i8x16_cmp.wast`'s own `v128.load`-dependent one.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

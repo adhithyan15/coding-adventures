@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.20] - 2026-08-18 (task #141-143 — SIMD: i8x16 abs/popcnt/min/max/avgr_u family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for `i8x16`'s own
+  "arith2" family: `AbsI8x16 | PopcntI8x16` (UNARY, same shape as
+  `i8x16.neg`/`i32x4.abs`) and `MinSI8x16 | MinUI8x16 | MaxSI8x16 |
+  MaxUI8x16 | AvgrUI8x16` (BINARY, same shape as `i32x4`'s own
+  `min_s`/`min_u`/`max_s`/`max_u`). `abs` uses the same
+  two's-complement wrapping discipline `i32x4.abs`'s own test already
+  established (`i8::MIN.wrapping_abs() == i8::MIN`). `popcnt` and
+  `avgr_u` are genuinely NEW op shapes with no `i32x4`/`i16x8`
+  precedent in this interpreter: `popcnt` counts set bits per lane
+  (Hamming weight, bit-pattern-only -- no signed/unsigned split
+  needed); `avgr_u` computes `(a + b + 1) >> 1` widened to `u16` so
+  the `+1` cannot overflow the lane width. Verified with a dedicated
+  test proving `avgr_u(0xFF, 0)` rounds UP to `128`, not down to
+  `127` -- the one case that would silently hide a missing `+1`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.19] - 2026-08-18 (task #137-140 — SIMD: i8x16 comparison family)
 
 ### Added

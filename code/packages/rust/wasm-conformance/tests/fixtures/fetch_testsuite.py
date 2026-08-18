@@ -286,6 +286,18 @@ TESTSUITE_FILES = [
     # already-implemented i8x16.add/i16x8.eq entries (both matched
     # exactly), same discipline as every prior addition.
     "simd_i8x16_cmp.wast",
+    # SIMD widen PR8 (task #141-143): simd_i8x16_arith2.wast -- i8x16's
+    # own abs/popcnt/min_s/min_u/max_s/max_u/avgr_u family, mirroring
+    # i32x4's own abs/min_s/min_u/max_s/max_u widening (PR2), plus two op
+    # SHAPES with no i32x4/i16x8 precedent in this interpreter: popcnt
+    # (lane-wise Hamming weight) and avgr_u (lane-wise unsigned rounding
+    # average, (a+b+1)>>1) -- WASM SIMD only defines popcnt/avgr_u for
+    # i8x16 (avgr_u is also defined for i16x8, but not i32x4). Each
+    # sub-opcode byte fetched live from BinarySIMD.md and cross-checked
+    # against the already-implemented i8x16.add/i8x16.neg/i8x16.sub
+    # entries (all three matched exactly), same discipline as every
+    # prior addition.
+    "simd_i8x16_arith2.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
