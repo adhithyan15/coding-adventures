@@ -635,6 +635,44 @@ fn valid_i32x4_extract_lane_pops_v128_pushes_i32() {
 }
 
 #[test]
+fn valid_i32x4_arith_and_cmp_widening() {
+    // SIMD widening (task #113-117): the new arithmetic ops (Sub/Mul --
+    // same v128,v128->v128 shape as Add) and the full comparison family
+    // (same v128,v128->v128 mask shape as Eq), plus `neg`, the one UNARY
+    // kind (v128->v128, only one operand).
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i32x4.sub (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.mul (local.get 0) (local.get 1)))
+             (func (param v128) (result v128) (i32x4.neg (local.get 0)))
+             (func (param v128 v128) (result v128) (i32x4.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.lt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.lt_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.gt_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.gt_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.le_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.le_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.ge_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.ge_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_i32x4_arith2_widening() {
+    // SIMD widening (task #118-120): i32x4.abs (v128->v128, UNARY, same
+    // shape as neg) and the min/max family (v128,v128->v128, same shape
+    // as sub/mul).
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i32x4.abs (local.get 0)))
+             (func (param v128 v128) (result v128) (i32x4.min_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.min_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.max_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.max_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

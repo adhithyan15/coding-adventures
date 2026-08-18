@@ -204,21 +204,37 @@ TESTSUITE_FILES = [
     "obsolete-keywords.wast",
     "utf8-invalid-encoding.wast",
     # SIMD proposal (v128) -- this repo's first-slice implementation
-    # (SIMD PR1a/PR1b, code/specs/W13-wasm-simd-v128-first-slice.md) only
-    # covers 5 opcodes (v128.const/i32x4.splat/add/eq/extract_lane), so
-    # only the narrowest real corpus file is vendored: `simd_const.wast`
-    # tests v128.const's OWN literal syntax across all 6 shapes (this
-    # repo's wast-parser already handles all 6, SIMD PR1b-2/1b-3) and is
-    # almost entirely gradeable already; its one instruction beyond this
-    # slice (a single `i64x2.add` line) now grades NotYetSupported for
-    # just that one directive rather than blocking the whole file (W14,
-    # code/specs/W14-wasm-conformance-lazy-module-build.md) -- the first
-    # real corpus file this repo can vendor from a post-MVP proposal.
-    # The other 3 root-level simd_*.wast files (simd_splat.wast,
-    # simd_i32x4_arith.wast, simd_i32x4_cmp.wast) each reference many
-    # more unsupported opcode families and are deferred to a future PR
-    # once coverage widens further (task #76's logged follow-up).
+    # (SIMD PR1a/PR1b, code/specs/W13-wasm-simd-v128-first-slice.md)
+    # originally covered only 5 opcodes (v128.const/i32x4.splat/add/eq/
+    # extract_lane), so only the narrowest real corpus file was vendored:
+    # `simd_const.wast` tests v128.const's OWN literal syntax across all
+    # 6 shapes (this repo's wast-parser already handles all 6, SIMD
+    # PR1b-2/1b-3) and is almost entirely gradeable already; its one
+    # instruction beyond this slice (a single `i64x2.add` line) grades
+    # NotYetSupported for just that one directive rather than blocking
+    # the whole file (W14, code/specs/W14-wasm-conformance-lazy-module-
+    # build.md) -- the first real corpus file this repo could vendor from
+    # a post-MVP proposal.
     "simd_const.wast",
+    # SIMD widening (task #113-117): the i32x4 lane width's own
+    # arithmetic (mul/neg/sub, joining the already-implemented add) and
+    # full comparison family (ne/lt_s/lt_u/gt_s/gt_u/le_s/le_u/ge_s/ge_u,
+    # joining eq) newly unblock these two sibling files -- each opcode's
+    # exact sub-opcode byte was fetched live from the SIMD proposal's own
+    # BinarySIMD.md and cross-checked against the already-implemented
+    # i32x4.eq/i32x4.add entries (both matched exactly). `simd_splat.wast`
+    # (the third sibling named alongside these two in this comment's own
+    # prior revision) still references many more unsupported opcode
+    # families (f32x4/f64x2/i16x8/i8x16 arithmetic, shr_s, all_true,
+    # swizzle, saturating add/sub, trunc_sat -- not just more i32x4 ops)
+    # and stays deferred to a future widening pass.
+    "simd_i32x4_arith.wast",
+    "simd_i32x4_cmp.wast",
+    # SIMD widening (task #118-120): i32x4.abs (UNARY) and the min_s/
+    # min_u/max_s/max_u family -- the "second half" of i32x4 arithmetic
+    # coverage this repo's upstream corpus itself splits into a separate
+    # file, same real-verified-sub-opcode discipline as the pass above.
+    "simd_i32x4_arith2.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

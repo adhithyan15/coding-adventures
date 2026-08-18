@@ -4706,9 +4706,25 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, bytes)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
-            SimdOpKind::Add | SimdOpKind::Eq => {
-                // Both are lane-wise binary ops over 4 i32 lanes, popped
-                // in WASM's usual (lhs pushed first, rhs second) order --
+            SimdOpKind::Add
+            | SimdOpKind::Sub
+            | SimdOpKind::Mul
+            | SimdOpKind::Eq
+            | SimdOpKind::Ne
+            | SimdOpKind::LtS
+            | SimdOpKind::LtU
+            | SimdOpKind::GtS
+            | SimdOpKind::GtU
+            | SimdOpKind::LeS
+            | SimdOpKind::LeU
+            | SimdOpKind::GeS
+            | SimdOpKind::GeU
+            | SimdOpKind::MinS
+            | SimdOpKind::MinU
+            | SimdOpKind::MaxS
+            | SimdOpKind::MaxU => {
+                // All lane-wise BINARY ops over 4 i32 lanes, popped in
+                // WASM's usual (lhs pushed first, rhs second) order --
                 // rhs is on top of the stack.
                 let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
                 let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
@@ -4721,28 +4737,60 @@ fn register_simd(vm: &mut GenericVM) {
                     .get(lhs_handle as usize)
                     .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
 
+                // WASM SIMD comparisons produce a boolean MASK per lane:
+                // all-1s (-1) if true, all-0s (0) if false -- not a plain
+                // 0/1 i32 the way a scalar comparison does.
+                let mask = |b: bool| if b { -1i32 } else { 0i32 };
+
                 let mut result = [0u8; 16];
                 for i in 0..4 {
                     let l = i32::from_le_bytes(lhs[i * 4..i * 4 + 4].try_into().unwrap());
                     let r = i32::from_le_bytes(rhs[i * 4..i * 4 + 4].try_into().unwrap());
                     let out = match op.kind {
                         SimdOpKind::Add => l.wrapping_add(r),
-                        // WASM SIMD comparisons produce a boolean MASK
-                        // per lane: all-1s (-1) if true, all-0s (0) if
-                        // false -- not a plain 0/1 i32 the way scalar
-                        // i32.eq does.
-                        SimdOpKind::Eq => {
-                            if l == r {
-                                -1
-                            } else {
-                                0
-                            }
-                        }
-                        _ => unreachable!("only Add/Eq reach this arm"),
+                        SimdOpKind::Sub => l.wrapping_sub(r),
+                        SimdOpKind::Mul => l.wrapping_mul(r),
+                        SimdOpKind::Eq => mask(l == r),
+                        SimdOpKind::Ne => mask(l != r),
+                        SimdOpKind::LtS => mask(l < r),
+                        SimdOpKind::LtU => mask((l as u32) < (r as u32)),
+                        SimdOpKind::GtS => mask(l > r),
+                        SimdOpKind::GtU => mask((l as u32) > (r as u32)),
+                        SimdOpKind::LeS => mask(l <= r),
+                        SimdOpKind::LeU => mask((l as u32) <= (r as u32)),
+                        SimdOpKind::GeS => mask(l >= r),
+                        SimdOpKind::GeU => mask((l as u32) >= (r as u32)),
+                        SimdOpKind::MinS => l.min(r),
+                        SimdOpKind::MinU => ((l as u32).min(r as u32)) as i32,
+                        SimdOpKind::MaxS => l.max(r),
+                        SimdOpKind::MaxU => ((l as u32).max(r as u32)) as i32,
+                        _ => unreachable!("only the binary lane-wise kinds listed in this arm's pattern reach here"),
                     };
                     result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
                 }
 
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Neg | SimdOpKind::Abs => {
+                // i32x4.neg/i32x4.abs: UNARY, unlike every kind in the arm
+                // above -- pops exactly ONE v128, transforms each lane,
+                // pushes one.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = i32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::Neg => v.wrapping_neg(),
+                        SimdOpKind::Abs => v.wrapping_abs(),
+                        _ => unreachable!("only Neg/Abs reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
@@ -7717,6 +7765,142 @@ mod tests {
         code2.push(0x0B);
         let mut engine2 = simd_engine(code2);
         assert_eq!(engine2.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "unequal lane must be all-0s (0)");
+    }
+
+    /// `i32x4.sub`/`i32x4.mul`: real lane-wise arithmetic (SIMD widening,
+    /// task #113-117), verified via `extract_lane` the same way `i32x4.add`
+    /// already is above, including wrapping.
+    #[test]
+    fn i32x4_sub_and_mul_compute_real_lane_wise_wrapping_results() {
+        let mut sub_code = vec![0xFD, 0x0C];
+        sub_code.extend(v128_const_bytes([10, 20, 30, i32::MIN]));
+        sub_code.extend([0xFD, 0x0C]);
+        sub_code.extend(v128_const_bytes([1, 2, 3, 1]));
+        sub_code.extend([0xFD, 0xB1, 0x01]); // i32x4.sub (LEB128 for sub-opcode 0xB1 = 177)
+        sub_code.extend([0xFD, 0x1B, 0x03]); // extract_lane 3 -- checks the wrapping case
+        sub_code.push(0x0B);
+        let mut sub_engine = simd_engine(sub_code);
+        assert_eq!(
+            sub_engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(i32::MIN.wrapping_sub(1))],
+            "lane 3 must wrap exactly like scalar i32.sub does"
+        );
+
+        let mut mul_code = vec![0xFD, 0x0C];
+        mul_code.extend(v128_const_bytes([2, 3, 4, i32::MAX]));
+        mul_code.extend([0xFD, 0x0C]);
+        mul_code.extend(v128_const_bytes([5, 6, 7, 2]));
+        mul_code.extend([0xFD, 0xB5, 0x01]); // i32x4.mul (LEB128 for sub-opcode 0xB5 = 181)
+        mul_code.extend([0xFD, 0x1B, 0x03]); // extract_lane 3 -- checks the wrapping case
+        mul_code.push(0x0B);
+        let mut mul_engine = simd_engine(mul_code);
+        assert_eq!(
+            mul_engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(i32::MAX.wrapping_mul(2))],
+            "lane 3 must wrap exactly like scalar i32.mul does"
+        );
+    }
+
+    /// `i32x4.neg`: UNARY, unlike every other arithmetic op tested above
+    /// (pops exactly one v128, not two) -- also verifies wrapping negation
+    /// (`i32::MIN.wrapping_neg() == i32::MIN`, the one value that doesn't
+    /// negate to its "intuitive" positive counterpart).
+    #[test]
+    fn i32x4_neg_computes_real_lane_wise_wrapping_negation() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([5, -5, 0, i32::MIN]));
+        code.extend([0xFD, 0xA1, 0x01]); // i32x4.neg (LEB128 for sub-opcode 0xA1 = 161)
+        code.extend([0xFD, 0x1B, 0x03]); // extract_lane 3 -- the wrapping edge case
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(i32::MIN)],
+            "negating i32::MIN must wrap back to i32::MIN, matching scalar wrapping_neg"
+        );
+    }
+
+    /// `i32x4.ne`/signed-vs-unsigned comparison family (SIMD widening,
+    /// task #113-117): the boolean-mask convention extends to every new
+    /// predicate, and -- the one place a signed/unsigned bug could
+    /// actually hide -- `lt_u` on a negative i32 lane (which is a LARGE
+    /// value when reinterpreted as u32) must disagree with `lt_s` on the
+    /// exact same bit pattern.
+    #[test]
+    fn i32x4_comparison_family_uses_the_mask_convention_and_distinguishes_signed_from_unsigned() {
+        let mut ne_code = vec![0xFD, 0x0C];
+        ne_code.extend(v128_const_bytes([5, 6, 7, 8]));
+        ne_code.extend([0xFD, 0x0C]);
+        ne_code.extend(v128_const_bytes([5, 0, 7, 0]));
+        ne_code.extend([0xFD, 0x38]); // i32x4.ne
+        ne_code.extend([0xFD, 0x1B, 0x01]); // extract_lane 1 -- 6 != 0
+        ne_code.push(0x0B);
+        let mut ne_engine = simd_engine(ne_code);
+        assert_eq!(ne_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "unequal lane must be all-1s (-1)");
+
+        // -1i32 reinterpreted as u32 is 0xFFFFFFFF, the largest possible
+        // u32 -- so `-1 <_s 1` is true (signed: -1 < 1) but `-1 <_u 1` is
+        // false (unsigned: 0xFFFFFFFF is NOT < 1). If the u32 cast in the
+        // interpreter were missing or wrong, these two would silently
+        // agree instead of disagreeing.
+        let lt_s_code = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes([-1, 0, 0, 0]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes([1, 0, 0, 0]));
+            code.extend([0xFD, sub_opcode]);
+            code.extend([0xFD, 0x1B, 0x00]); // extract_lane 0
+            code.push(0x0B);
+            code
+        };
+        let mut lt_s_engine = simd_engine(lt_s_code(0x39)); // i32x4.lt_s
+        assert_eq!(lt_s_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "-1 <_s 1 must be true");
+        let mut lt_u_engine = simd_engine(lt_s_code(0x3A)); // i32x4.lt_u
+        assert_eq!(lt_u_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "0xFFFFFFFF <_u 1 must be false");
+    }
+
+    /// `i32x4.abs`: UNARY, same shape as `neg` -- including the wrapping
+    /// edge case (`i32::MIN.wrapping_abs() == i32::MIN`, since `-i32::MIN`
+    /// doesn't fit in an `i32`).
+    #[test]
+    fn i32x4_abs_computes_real_lane_wise_wrapping_absolute_value() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([5, -5, 0, i32::MIN]));
+        code.extend([0xFD, 0xA0, 0x01]); // i32x4.abs (LEB128 for sub-opcode 0xA0 = 160)
+        code.extend([0xFD, 0x1B, 0x03]); // extract_lane 3 -- the wrapping edge case
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(i32::MIN)],
+            "abs(i32::MIN) must wrap back to i32::MIN, matching scalar wrapping_abs"
+        );
+    }
+
+    /// `i32x4.min_s`/`min_u`/`max_s`/`max_u`: the same signed-vs-unsigned
+    /// distinguishing pattern as the comparison family above -- `-1`
+    /// (0xFFFFFFFF unsigned) vs `1` must give opposite answers for the
+    /// signed and unsigned variants of both min and max.
+    #[test]
+    fn i32x4_min_max_family_distinguishes_signed_from_unsigned() {
+        let minmax_code = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes([-1, 0, 0, 0]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes([1, 0, 0, 0]));
+            code.extend([0xFD, sub_opcode, 0x01]); // LEB128: sub-opcodes 0xB6-0xB9 all need the continuation byte
+            code.extend([0xFD, 0x1B, 0x00]); // extract_lane 0
+            code.push(0x0B);
+            code
+        };
+        let mut min_s_engine = simd_engine(minmax_code(0xB6)); // i32x4.min_s
+        assert_eq!(min_s_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "min_s(-1, 1) must be -1 (signed: -1 < 1)");
+        let mut min_u_engine = simd_engine(minmax_code(0xB7)); // i32x4.min_u
+        assert_eq!(min_u_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "min_u(0xFFFFFFFF, 1) must be 1 (unsigned: 1 < 0xFFFFFFFF)");
+        let mut max_s_engine = simd_engine(minmax_code(0xB8)); // i32x4.max_s
+        assert_eq!(max_s_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "max_s(-1, 1) must be 1 (signed: 1 > -1)");
+        let mut max_u_engine = simd_engine(minmax_code(0xB9)); // i32x4.max_u
+        assert_eq!(max_u_engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "max_u(0xFFFFFFFF, 1) must be -1's bit pattern (unsigned: 0xFFFFFFFF > 1)");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve

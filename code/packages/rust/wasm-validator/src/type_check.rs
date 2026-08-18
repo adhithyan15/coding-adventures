@@ -1418,17 +1418,37 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::I32)?;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Add => {
+                    wasm_opcodes::SimdOpKind::Add
+                    | wasm_opcodes::SimdOpKind::Sub
+                    | wasm_opcodes::SimdOpKind::Mul
+                    | wasm_opcodes::SimdOpKind::MinS
+                    | wasm_opcodes::SimdOpKind::MinU
+                    | wasm_opcodes::SimdOpKind::MaxS
+                    | wasm_opcodes::SimdOpKind::MaxU => {
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Eq => {
+                    wasm_opcodes::SimdOpKind::Eq
+                    | wasm_opcodes::SimdOpKind::Ne
+                    | wasm_opcodes::SimdOpKind::LtS
+                    | wasm_opcodes::SimdOpKind::LtU
+                    | wasm_opcodes::SimdOpKind::GtS
+                    | wasm_opcodes::SimdOpKind::GtU
+                    | wasm_opcodes::SimdOpKind::LeS
+                    | wasm_opcodes::SimdOpKind::LeU
+                    | wasm_opcodes::SimdOpKind::GeS
+                    | wasm_opcodes::SimdOpKind::GeU => {
                         // WASM's SIMD comparison convention: the RESULT is
                         // still a v128 (a per-lane boolean mask), not a
                         // plain i32 -- see `SimdOpKind::Eq`'s own doc
                         // comment in wasm-opcodes.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Neg | wasm_opcodes::SimdOpKind::Abs => {
+                        // UNARY, unlike every kind in the two arms above.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

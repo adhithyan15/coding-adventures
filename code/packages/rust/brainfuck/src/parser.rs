@@ -4,10 +4,10 @@
 // This module is the parsing layer for Brainfuck source code. It sits above
 // the lexer in the three-stage front-end pipeline:
 //
-//   brainfuck.grammar    (grammar file on disk — rules for the parser)
-//          |
+//   brainfuck.grammar     (grammar file — rules for the parser)
+//          |               compiled to Rust at BUILD time (see build.rs)
 //          v
-//   grammar-tools        (parses .grammar → ParserGrammar struct)
+//   grammar-tools         (compile_parser_grammar embeds a ParserGrammar literal)
 //          |
 //          v
 //   parser::GrammarParser (builds an AST from tokens using ParserGrammar)
@@ -52,17 +52,36 @@
 //   - LOOP_END → end of enclosing loop
 //   - EOF → end of program
 //
-// # Path navigation
+// # Grammar source
 //
-// This module lives inside the `brainfuck` crate. CARGO_MANIFEST_DIR is
-// `code/packages/rust/brainfuck/`. The grammar file is at:
-//   `code/packages/rust/brainfuck/../../../grammars/brainfuck.grammar`
-//   = `code/grammars/brainfuck.grammar`
+// The grammar is compiled ahead of time by `build.rs` (via
+// `grammar_tools::compiler::compile_parser_grammar`) into Rust source
+// embedded at `$OUT_DIR/brainfuck_parser_grammar.rs`, `include!`d below and
+// cached in a `OnceLock`. See `build.rs` for the full rationale. This
+// mirrors `twig-parser`, the canonical reference for this pattern in the
+// repo — including the `.clone()` on each use: `GrammarParser::new` takes
+// `ParserGrammar` by value, so the cached `&'static ParserGrammar` is
+// cloned per parser construction (cheap relative to re-parsing from disk).
 
-use std::fs;
+use std::sync::OnceLock;
 
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
+use grammar_tools::parser_grammar::ParserGrammar;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+
+// ===========================================================================
+// Generated grammar (build.rs -> grammar-tools::compiler -> Rust)
+// ===========================================================================
+
+mod generated_grammar {
+    // build.rs writes this file; it defines `pub fn parser_grammar() -> ParserGrammar`.
+    include!(concat!(env!("OUT_DIR"), "/brainfuck_parser_grammar.rs"));
+}
+
+static BRAINFUCK_PARSER_GRAMMAR: OnceLock<ParserGrammar> = OnceLock::new();
+
+fn brainfuck_parser_grammar() -> &'static ParserGrammar {
+    BRAINFUCK_PARSER_GRAMMAR.get_or_init(generated_grammar::parser_grammar)
+}
 
 /// Recursion-depth cap for the Brainfuck [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -89,30 +108,6 @@ use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 const MAX_RULE_DEPTH: usize = 170;
 
 // ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `brainfuck.grammar` file.
-///
-/// Uses the same strategy as the lexer module: `env!("CARGO_MANIFEST_DIR")`
-/// gives us the compile-time path to this crate's directory, and we navigate
-/// up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     brainfuck.grammar         <-- target file
-///   packages/
-///     rust/
-///       brainfuck/
-///         Cargo.toml            <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/brainfuck/brainfuck.grammar")
-}
-
-// ===========================================================================
 // Public API
 // ===========================================================================
 
@@ -123,8 +118,9 @@ fn grammar_path() -> String {
 /// 1. **Tokenization** — calls `super::lexer::tokenize_brainfuck` to break the
 ///    source into command tokens (comment characters are silently discarded).
 ///
-/// 2. **Grammar loading** — reads and parses `brainfuck.grammar`, which defines
-///    4 rules: program, instruction, loop, command.
+/// 2. **Grammar lookup** — clones the build-time-compiled `ParserGrammar`
+///    (see "Generated grammar" above), which defines 4 rules: program,
+///    instruction, loop, command.
 ///
 /// The returned `GrammarParser` is ready to call `.parse()` on.
 ///
@@ -136,12 +132,6 @@ fn grammar_path() -> String {
 /// - Use trace mode for debugging.
 ///
 /// For most use cases, `parse_brainfuck` is simpler.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `brainfuck.grammar` file cannot be read or parsed.
-/// - (tokenization never panics for Brainfuck — all non-command chars are skipped)
 ///
 /// # Example
 ///
@@ -161,30 +151,13 @@ pub fn create_brainfuck_parser(source: &str) -> GrammarParser {
     // Comment characters are silently consumed by the lexer's skip patterns.
     let tokens = super::lexer::tokenize_brainfuck(source);
 
-    // Step 2: Read the parser grammar from disk.
+    // Step 2: Create and return the parser.
     //
-    // The grammar file defines Brainfuck's syntactic structure in EBNF:
-    //   program     = { instruction } ;
-    //   instruction = loop | command ;
-    //   loop        = LOOP_START { instruction } LOOP_END ;
-    //   command     = RIGHT | LEFT | INC | DEC | OUTPUT | INPUT ;
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read brainfuck.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains a list of GrammarRule objects, each with
-    // a name and a body (a tree of GrammarElement nodes encoding the EBNF).
-    // The rules are: program, instruction, loop, command.
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse brainfuck.grammar: {e}"));
-
-    // Step 4: Create and return the parser.
-    //
-    // GrammarParser takes ownership of both tokens and grammar. It builds
-    // internal indexes (rule lookup, memo cache) for efficient recursive
-    // descent parsing with packrat memoization.
-    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
+    // GrammarParser takes ownership of both tokens and grammar (hence the
+    // .clone() of the cached ParserGrammar). It builds internal indexes
+    // (rule lookup, memo cache) for efficient recursive descent parsing
+    // with packrat memoization.
+    GrammarParser::new(tokens, brainfuck_parser_grammar().clone()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse Brainfuck source text into an AST.
@@ -197,11 +170,10 @@ pub fn create_brainfuck_parser(source: &str) -> GrammarParser {
 /// nodes, each of which is either a `loop` node (for `[...]`) or a `command`
 /// node (for the six non-bracket commands).
 ///
-/// # Panics
+/// # Errors
 ///
-/// Panics if the grammar file is missing/invalid, or if the source has
-/// unmatched brackets. Well-formed Brainfuck (all brackets matched) will
-/// always parse successfully.
+/// Returns `Err` if the source has unmatched brackets. Well-formed
+/// Brainfuck (all brackets matched) will always parse successfully.
 ///
 /// # Example
 ///
@@ -286,7 +258,10 @@ mod tests {
         assert_program_root(&ast);
         // No instruction children expected.
         let instruction_count = count_rule(&ast, "instruction");
-        assert_eq!(instruction_count, 0, "Empty program should have no instructions");
+        assert_eq!(
+            instruction_count, 0,
+            "Empty program should have no instructions"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -299,7 +274,10 @@ mod tests {
         let ast = parse_brainfuck("+").expect("+  should parse");
         assert_program_root(&ast);
         assert!(find_rule(&ast, "command"), "Expected a 'command' node");
-        assert!(find_rule(&ast, "instruction"), "Expected an 'instruction' node");
+        assert!(
+            find_rule(&ast, "instruction"),
+            "Expected an 'instruction' node"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -313,7 +291,11 @@ mod tests {
         for src in &[">", "<", "+", "-", ".", ","] {
             let ast = parse_brainfuck(src).unwrap_or_else(|e| panic!("'{}' failed: {}", src, e));
             assert_program_root(&ast);
-            assert!(find_rule(&ast, "command"), "Expected 'command' for '{}'", src);
+            assert!(
+                find_rule(&ast, "command"),
+                "Expected 'command' for '{}'",
+                src
+            );
         }
     }
 
@@ -328,7 +310,10 @@ mod tests {
         let ast = parse_brainfuck("++>").expect("++> should parse");
         assert_program_root(&ast);
         let instruction_count = count_rule(&ast, "instruction");
-        assert_eq!(instruction_count, 3, "Expected 3 instruction nodes for '++>'");
+        assert_eq!(
+            instruction_count, 3,
+            "Expected 3 instruction nodes for '++>'"
+        );
     }
 
     // -----------------------------------------------------------------------

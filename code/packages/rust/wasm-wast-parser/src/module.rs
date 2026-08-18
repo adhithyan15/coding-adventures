@@ -1715,7 +1715,30 @@ fn encode_stream_instr(
                 out.push(lane);
                 return Ok(1);
             }
-            wasm_opcodes::SimdOpKind::Splat | wasm_opcodes::SimdOpKind::Add | wasm_opcodes::SimdOpKind::Eq => {
+            wasm_opcodes::SimdOpKind::Splat
+            | wasm_opcodes::SimdOpKind::Add
+            | wasm_opcodes::SimdOpKind::Sub
+            | wasm_opcodes::SimdOpKind::Mul
+            | wasm_opcodes::SimdOpKind::Neg
+            | wasm_opcodes::SimdOpKind::Abs
+            | wasm_opcodes::SimdOpKind::MinS
+            | wasm_opcodes::SimdOpKind::MinU
+            | wasm_opcodes::SimdOpKind::MaxS
+            | wasm_opcodes::SimdOpKind::MaxU
+            | wasm_opcodes::SimdOpKind::Eq
+            | wasm_opcodes::SimdOpKind::Ne
+            | wasm_opcodes::SimdOpKind::LtS
+            | wasm_opcodes::SimdOpKind::LtU
+            | wasm_opcodes::SimdOpKind::GtS
+            | wasm_opcodes::SimdOpKind::GtU
+            | wasm_opcodes::SimdOpKind::LeS
+            | wasm_opcodes::SimdOpKind::LeU
+            | wasm_opcodes::SimdOpKind::GeS
+            | wasm_opcodes::SimdOpKind::GeU => {
+                // All of these take NO immediate beyond the opcode byte
+                // itself -- their operands are ordinary stack values,
+                // pushed by whatever preceding instruction(s) already ran
+                // (folded or flat), same as `Splat`/`Add`/`Eq` above.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2271,7 +2294,26 @@ fn encode_flat_instr(
                 out.push(lane);
                 return Ok(());
             }
-            wasm_opcodes::SimdOpKind::Splat | wasm_opcodes::SimdOpKind::Add | wasm_opcodes::SimdOpKind::Eq => {
+            wasm_opcodes::SimdOpKind::Splat
+            | wasm_opcodes::SimdOpKind::Add
+            | wasm_opcodes::SimdOpKind::Sub
+            | wasm_opcodes::SimdOpKind::Mul
+            | wasm_opcodes::SimdOpKind::Neg
+            | wasm_opcodes::SimdOpKind::Abs
+            | wasm_opcodes::SimdOpKind::MinS
+            | wasm_opcodes::SimdOpKind::MinU
+            | wasm_opcodes::SimdOpKind::MaxS
+            | wasm_opcodes::SimdOpKind::MaxU
+            | wasm_opcodes::SimdOpKind::Eq
+            | wasm_opcodes::SimdOpKind::Ne
+            | wasm_opcodes::SimdOpKind::LtS
+            | wasm_opcodes::SimdOpKind::LtU
+            | wasm_opcodes::SimdOpKind::GtS
+            | wasm_opcodes::SimdOpKind::GtU
+            | wasm_opcodes::SimdOpKind::LeS
+            | wasm_opcodes::SimdOpKind::LeU
+            | wasm_opcodes::SimdOpKind::GeS
+            | wasm_opcodes::SimdOpKind::GeU => {
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -4634,6 +4676,50 @@ mod tests {
         .unwrap();
         assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0xAE, 0x01]), "i32x4.add: {:?}", code_of(&m, 0));
         assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x37]), "i32x4.eq: {:?}", code_of(&m, 1));
+    }
+
+    #[test]
+    fn simd_i32x4_arith_and_cmp_widening_encodes_the_real_sub_opcodes() {
+        // SIMD widening (task #113-117): a representative sample of the
+        // new arithmetic (Sub/Mul/Neg, including the one UNARY kind) and
+        // comparison-family opcodes, each real sub-opcode verified
+        // against wasm-opcodes' own CHANGELOG entry. `i32x4.neg` takes
+        // only ONE folded operand, unlike every binary op here.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 v128) (result v128) (i32x4.sub (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.mul (local.get 0) (local.get 1)))
+                 (func (param v128) (result v128) (i32x4.neg (local.get 0)))
+                 (func (param v128 v128) (result v128) (i32x4.lt_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.ge_s (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0xB1, 0x01]), "i32x4.sub: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0xB5, 0x01]), "i32x4.mul: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xA1, 0x01]), "i32x4.neg: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(2).any(|w| w == [0xFD, 0x3A]), "i32x4.lt_u: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(2).any(|w| w == [0xFD, 0x3F]), "i32x4.ge_s: {:?}", code_of(&m, 4));
+    }
+
+    #[test]
+    fn simd_i32x4_arith2_widening_encodes_the_real_sub_opcodes() {
+        // SIMD widening (task #118-120): i32x4.abs (the one UNARY kind
+        // here) and the min/max family, each real sub-opcode verified
+        // against wasm-opcodes' own CHANGELOG entry.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (i32x4.abs (local.get 0)))
+                 (func (param v128 v128) (result v128) (i32x4.min_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.min_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.max_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.max_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0xA0, 0x01]), "i32x4.abs: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0xB6, 0x01]), "i32x4.min_s: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xB7, 0x01]), "i32x4.min_u: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0xB8, 0x01]), "i32x4.max_s: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0xB9, 0x01]), "i32x4.max_u: {:?}", code_of(&m, 4));
     }
 
     #[test]

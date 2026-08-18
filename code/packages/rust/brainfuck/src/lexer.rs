@@ -4,10 +4,10 @@
 // This module is the tokenization layer for Brainfuck source code. It is one
 // of three layers in the Brainfuck front-end pipeline:
 //
-//   brainfuck.tokens    (grammar file on disk — declarative token definitions)
-//          |
+//   brainfuck.tokens    (grammar file — declarative token definitions)
+//          |             compiled to Rust at BUILD time (see build.rs)
 //          v
-//   grammar-tools       (parses .tokens → TokenGrammar struct)
+//   grammar-tools       (compile_token_grammar embeds a TokenGrammar literal)
 //          |
 //          v
 //   lexer::GrammarLexer (tokenizes source using TokenGrammar)
@@ -40,48 +40,35 @@
 // character, so those never appear in the token stream. The parser sees
 // only the eight command tokens plus EOF.
 //
-// # Path navigation
+// # Grammar source
 //
-// This module lives inside the `brainfuck` crate. The crate's Cargo.toml
-// is at `code/packages/rust/brainfuck/Cargo.toml`, so CARGO_MANIFEST_DIR
-// points to `code/packages/rust/brainfuck/`. From there, the grammar file
-// is at `../../../grammars/brainfuck.tokens`.
+// The grammar is compiled ahead of time by `build.rs` (via
+// `grammar_tools::compiler::compile_token_grammar`) into Rust source
+// embedded at `$OUT_DIR/brainfuck_token_grammar.rs`, `include!`d below and
+// cached in a `OnceLock`. See `build.rs` for the full rationale (no
+// runtime file I/O, Miri-sandbox compatibility, one construction per
+// process). This mirrors `twig-lexer`/`twig-parser`, the canonical
+// reference for this pattern in the repo.
 
-use std::fs;
+use std::sync::OnceLock;
 
-use grammar_tools::token_grammar::parse_token_grammar;
+use grammar_tools::token_grammar::TokenGrammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
 // ===========================================================================
-// Grammar file location
+// Generated grammar (build.rs -> grammar-tools::compiler -> Rust)
 // ===========================================================================
 
-/// Build the path to the `brainfuck.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     brainfuck.tokens           <-- this is what we want
-///   packages/
-///     rust/
-///       brainfuck/
-///         Cargo.toml             <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lexer.rs             <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/brainfuck.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/brainfuck/brainfuck.tokens")
+mod generated_grammar {
+    // build.rs writes this file; it defines `pub fn token_grammar() -> TokenGrammar`.
+    include!(concat!(env!("OUT_DIR"), "/brainfuck_token_grammar.rs"));
+}
+
+static BRAINFUCK_TOKEN_GRAMMAR: OnceLock<TokenGrammar> = OnceLock::new();
+
+fn brainfuck_token_grammar() -> &'static TokenGrammar {
+    BRAINFUCK_TOKEN_GRAMMAR.get_or_init(generated_grammar::token_grammar)
 }
 
 // ===========================================================================
@@ -90,10 +77,9 @@ fn grammar_path() -> String {
 
 /// Create a `GrammarLexer` configured for Brainfuck source text.
 ///
-/// This function:
-/// 1. Reads the `brainfuck.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
+/// This function looks up the build-time-compiled `TokenGrammar` (see
+/// "Generated grammar" above) and constructs a `GrammarLexer` with it and
+/// the given source.
 ///
 /// The returned lexer is ready to call `.tokenize()` on. Use this when you
 /// need access to the lexer object itself (e.g., for incremental tokenization
@@ -111,13 +97,6 @@ fn grammar_path() -> String {
 /// is discarded before the command characters are matched. The token stream
 /// the parser receives is clean: only the 8 commands and EOF.
 ///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. This should never
-/// happen in a correctly cloned repository — the grammar file is checked in
-/// and validated by grammar-tools tests. A panic here indicates a broken
-/// build or missing file.
-///
 /// # Example
 ///
 /// ```no_run
@@ -130,30 +109,7 @@ fn grammar_path() -> String {
 /// }
 /// ```
 pub fn create_brainfuck_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read at runtime (not compile time via include_str!) because grammar
-    // files may be updated independently of Rust source. This also avoids
-    // embedding grammar text in the binary.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read brainfuck.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar for Brainfuck contains:
-    //   - 8 token definitions (one per command character)
-    //   - 2 skip patterns (WHITESPACE and COMMENT)
-    //   - No keywords (Brainfuck has none — all tokens are punctuation)
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse brainfuck.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    //
-    // The GrammarLexer compiles all token patterns into anchored regexes
-    // and is ready to tokenize the source string. Because skip patterns
-    // consume comments, the caller only ever sees command tokens and EOF.
-    GrammarLexer::new(source, &grammar)
+    GrammarLexer::new(source, brainfuck_token_grammar())
 }
 
 /// Tokenize Brainfuck source text into a vector of tokens.
@@ -168,9 +124,9 @@ pub fn create_brainfuck_lexer(source: &str) -> GrammarLexer<'_> {
 ///
 /// # Panics
 ///
-/// Panics if the grammar file cannot be read/parsed. Brainfuck source
-/// never causes a tokenization error because every non-command character
-/// is treated as a comment — there is no "unexpected character" case.
+/// Brainfuck source never causes a tokenization error because every
+/// non-command character is treated as a comment — there is no
+/// "unexpected character" case.
 ///
 /// # Example
 ///
@@ -353,7 +309,19 @@ mod tests {
         // The '{' is a comment (not a command), so it is silently skipped.
         // We expect 8 command tokens.
         let n = names(&tokens);
-        assert_eq!(n, vec!["RIGHT", "LEFT", "INC", "DEC", "OUTPUT", "INPUT", "LOOP_START", "LOOP_END"]);
+        assert_eq!(
+            n,
+            vec![
+                "RIGHT",
+                "LEFT",
+                "INC",
+                "DEC",
+                "OUTPUT",
+                "INPUT",
+                "LOOP_START",
+                "LOOP_END"
+            ]
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -427,7 +395,11 @@ mod tests {
     fn test_comments_only() {
         let tokens = tokenize_brainfuck("hello this is all a comment");
         let n = names(&tokens);
-        assert_eq!(n.len(), 0, "Comments-only source should have no command tokens");
+        assert_eq!(
+            n.len(),
+            0,
+            "Comments-only source should have no command tokens"
+        );
         assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
     }
 
@@ -448,7 +420,16 @@ mod tests {
         let n = names(&tokens);
         assert_eq!(
             n,
-            vec!["INC", "INC", "LOOP_START", "RIGHT", "INC", "LEFT", "DEC", "LOOP_END"]
+            vec![
+                "INC",
+                "INC",
+                "LOOP_START",
+                "RIGHT",
+                "INC",
+                "LEFT",
+                "DEC",
+                "LOOP_END"
+            ]
         );
         // All command characters should have correct values.
         let v = values(&tokens);
@@ -464,7 +445,9 @@ mod tests {
     #[test]
     fn test_create_lexer() {
         let mut lexer = create_brainfuck_lexer("+");
-        let tokens = lexer.tokenize().expect("Lexer should tokenize successfully");
+        let tokens = lexer
+            .tokenize()
+            .expect("Lexer should tokenize successfully");
         // Should produce: INC, EOF
         assert_eq!(tokens.len(), 2);
         assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
@@ -482,6 +465,18 @@ mod tests {
         let source = "++ two increments [loop body >+<-] done";
         let tokens = tokenize_brainfuck(source);
         let n = names(&tokens);
-        assert_eq!(n, vec!["INC", "INC", "LOOP_START", "RIGHT", "INC", "LEFT", "DEC", "LOOP_END"]);
+        assert_eq!(
+            n,
+            vec![
+                "INC",
+                "INC",
+                "LOOP_START",
+                "RIGHT",
+                "INC",
+                "LEFT",
+                "DEC",
+                "LOOP_END"
+            ]
+        );
     }
 }

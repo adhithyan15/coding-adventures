@@ -2,6 +2,47 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.14] - 2026-08-18 (task #118-120 — SIMD widening: i32x4 abs/min/max family)
+
+### Added
+
+- `register_simd`'s binary `v128,v128->v128` dispatch arm widened further
+  to add `MinS | MinU | MaxS | MaxU`: `MinS`/`MaxS` compare lanes as
+  signed `i32` (plain `.min`/`.max`), `MinU`/`MaxU` cast each lane to
+  `u32` first -- same signed/unsigned split already proven necessary for
+  the comparison family, verified with a dedicated test showing
+  `min_s(-1, 1) == -1` but `min_u(-1, 1)` (i.e. `min_u(0xFFFFFFFF, 1)`)
+  `== 1` actually disagree.
+- `SimdOpKind::Neg | SimdOpKind::Abs` now share the unary dispatch arm
+  (previously `Neg`-only), computing `wrapping_neg`/`wrapping_abs`
+  per-kind inside -- `i32::MIN.wrapping_abs() == i32::MIN` (the classic
+  two's-complement absolute-value overflow edge case) is covered by a
+  dedicated test.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.13] - 2026-08-18 (task #113-117 — SIMD widening: i32x4 arithmetic + comparison family)
+
+### Added
+
+- `register_simd`'s `SimdOpKind::Add | SimdOpKind::Eq` dispatch arm
+  widened to `Add | Sub | Mul | Eq | Ne | LtS | LtU | GtS | GtU | LeS |
+  LeU | GeS | GeU` -- all 13 kinds share the identical binary
+  `v128,v128->v128` shape (pop rhs, pop lhs, lane-wise op, push result),
+  differing only in the per-lane operation (`wrapping_add`/`sub`/`mul`,
+  or one of 10 comparison predicates producing WASM's boolean-mask
+  convention). Unsigned comparisons (`LtU`/`GtU`/`LeU`/`GeU`) cast each
+  lane to `u32` before comparing -- verified with a dedicated test
+  proving `-1 <_s 1` (true) and `-1 <_u 1` i.e. `0xFFFFFFFF <_u 1`
+  (false) actually disagree, the one place a missing/wrong cast would
+  silently hide.
+- New `SimdOpKind::Neg` arm: the first UNARY SIMD op in this interpreter
+  (pops exactly one `v128`, negates each lane with `wrapping_neg`,
+  pushes one) -- a genuinely different shape from every op above, kept
+  in its own match arm rather than folded into the binary-ops one.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.12] - 2026-08-17 (task #92/#109 — real multi-memory memarg)
 
 ### Fixed
