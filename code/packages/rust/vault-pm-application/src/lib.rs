@@ -54,7 +54,7 @@ pub use initialize::{
     GenerationZeroRandomness, PreparedGenerationZero, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
     GENERATION_ZERO_RANDOM_BYTES,
 };
-pub use lifecycle::{LockedVaultV1, VaultAccessV1};
+pub use lifecycle::{LockedVaultV1, UnlockRecoveryV1, VaultAccessV1};
 pub use mutation::{
     portable_import_random_bytes, AddItemRandomnessV1, AuditedAccessRandomnessV1,
     DeleteItemRandomnessV1, PortableImportRandomnessV1, ReplaceItemRandomnessV1,

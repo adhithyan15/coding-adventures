@@ -141,7 +141,24 @@ impl CliOutput {
             stderr: format!("{}\n", error.message()),
         }
     }
+
+    /// Prepend the fixed VLT-PM42 repair notice to standard error.
+    ///
+    /// Standard output is untouched on purpose: anything that parses a
+    /// command's output must not have to learn a new line, and the exit class
+    /// of a command that happened to also repair the vault is the exit class of
+    /// the command.
+    fn with_recovery_notice(mut self) -> Self {
+        self.stderr.insert_str(0, RECOVERY_NOTICE);
+        self
+    }
 }
+
+/// The one sentence a repaired vault is announced with.
+///
+/// Fixed at compile time and payload-free: it names no vault, item, revision,
+/// object, provider, path, or count.
+const RECOVERY_NOTICE: &str = "vault-pm: recovered an interrupted write\n";
 
 /// Injected platform authorities used by the testable CLI driver.
 ///
@@ -1077,83 +1094,123 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
     let writer = prepared.try_acquire_writer().map_err(map_local_host)?;
-    let selected_vault = invocation.selected_vault.as_ref();
-    match invocation.command {
-        Command::Init { vault, storage } => init(host, prepared.paths(), &writer, vault, storage),
-        Command::VaultCreate { vault } => vault_create(host, prepared.paths(), &writer, vault),
-        Command::Status { json } => status(prepared.paths(), &writer, selected_vault, json),
-        Command::AuditEnable => audit_enable(host, prepared.paths(), &writer, selected_vault),
-        Command::AuditVerify => audit_verify(host, prepared.paths(), &writer, selected_vault),
-        Command::AuditList => audit_list(host, prepared.paths(), &writer, selected_vault),
+    let Invocation {
+        selected_vault,
+        command,
+    } = invocation;
+    let selected_vault = selected_vault.as_ref();
+
+    // VLT-PM42 §6. A repair nobody mentions is indistinguishable from no
+    // repair, so the composition root watches the durable lifecycle state
+    // across the command it is about to run. Both reads happen inside the
+    // cross-process writer lock the command already holds, which is what makes
+    // the inference sound: no other local writer can move the state between
+    // them, so `RecoveryRequired` before and anything else after means *this*
+    // command finished an interrupted publication.
+    let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
+    let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
+    let recovered = before == Some(VaultStatusStateV1::RecoveryRequired)
+        && observed_vault_state(prepared.paths(), &writer, selected_vault)
+            != Some(VaultStatusStateV1::RecoveryRequired);
+    if !recovered {
+        return result;
+    }
+    // The notice is attached to a failed command too. A repair that happened
+    // is worth saying even when the verb that triggered it went on to report
+    // `not found`, and rendering the failure here produces exactly the output
+    // the caller would have rendered from the error.
+    Ok(match result {
+        Ok(output) => output.with_recovery_notice(),
+        Err(error) => CliOutput::failure(error).with_recovery_notice(),
+    })
+}
+
+/// Read the durable lifecycle state of the vault this invocation targets.
+///
+/// Deliberately total, and deliberately silent about why it failed: this
+/// observation exists only to decide whether one sentence is added to standard
+/// error, so every difficulty — no configuration yet, a selector naming a vault
+/// that does not exist, an unreadable owner-state file — must degrade to
+/// `None`, "say nothing", rather than change what the command itself reports.
+///
+/// `None` therefore biases the notice toward silence. That is the safe
+/// direction: a missing notice loses a courtesy, while a wrong one would be a
+/// false claim about a person's vault.
+fn observed_vault_state(
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Option<VaultStatusStateV1> {
+    let exact_config = writer.load_config().ok()??;
+    let config = decode_config(&exact_config).ok()?;
+    let vault = configured_vault(paths, &config, selected_vault).ok()?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    VaultAccessV1::locked(locator)
+        .status(&application_store)
+        .ok()
+        .map(|report| report.state())
+}
+
+fn dispatch(
+    command: Command,
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    match command {
+        Command::Init { vault, storage } => init(host, paths, writer, vault, storage),
+        Command::VaultCreate { vault } => vault_create(host, paths, writer, vault),
+        Command::Status { json } => status(paths, writer, selected_vault, json),
+        Command::AuditEnable => audit_enable(host, paths, writer, selected_vault),
+        Command::AuditVerify => audit_verify(host, paths, writer, selected_vault),
+        Command::AuditList => audit_list(host, paths, writer, selected_vault),
         Command::AuditShow { trace_id } => {
-            audit_show(host, prepared.paths(), &writer, selected_vault, trace_id)
+            audit_show(host, paths, writer, selected_vault, trace_id)
         }
-        Command::Doctor { unlock } => {
-            doctor(host, prepared.paths(), &writer, selected_vault, unlock)
+        Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
+        Command::PortableExport { destination } => {
+            portable_export(host, paths, writer, selected_vault, &destination)
         }
-        Command::PortableExport { destination } => portable_export(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            &destination,
-        ),
         Command::PortableImport { source } => {
-            portable_import(host, prepared.paths(), &writer, selected_vault, &source)
+            portable_import(host, paths, writer, selected_vault, &source)
         }
         Command::PortableRestore { source } => {
-            portable_restore(host, prepared.paths(), &writer, selected_vault, &source)
+            portable_restore(host, paths, writer, selected_vault, &source)
         }
         Command::PortableRestoreVerify { source } => {
-            portable_restore_verify(host, prepared.paths(), &writer, selected_vault, &source)
+            portable_restore_verify(host, paths, writer, selected_vault, &source)
         }
-        Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer, selected_vault),
-        Command::ItemAddSecureNote => {
-            item_add_secure_note(host, prepared.paths(), &writer, selected_vault)
-        }
-        Command::ItemAddCard => item_add_card(host, prepared.paths(), &writer, selected_vault),
-        Command::ItemAddApiKey => item_add_api_key(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddLogin => item_add_login(host, paths, writer, selected_vault),
+        Command::ItemAddSecureNote => item_add_secure_note(host, paths, writer, selected_vault),
+        Command::ItemAddCard => item_add_card(host, paths, writer, selected_vault),
+        Command::ItemAddApiKey => item_add_api_key(host, paths, writer, selected_vault),
         Command::ItemAddDatabaseCredential => {
-            item_add_database_credential(host, prepared.paths(), &writer, selected_vault)
+            item_add_database_credential(host, paths, writer, selected_vault)
         }
-        Command::ItemAddTotp => item_add_totp(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddTotp => item_add_totp(host, paths, writer, selected_vault),
         Command::ItemEdit { item_id } => {
-            item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
+            item_edit_login(host, paths, writer, selected_vault, item_id)
         }
         Command::ItemDelete { item_id } => {
-            item_delete(host, prepared.paths(), &writer, selected_vault, item_id)
+            item_delete(host, paths, writer, selected_vault, item_id)
         }
-        Command::ItemList => item_list(host, prepared.paths(), &writer, selected_vault),
-        Command::ItemShow { item_id } => {
-            item_show(host, prepared.paths(), &writer, selected_vault, item_id)
+        Command::ItemList => item_list(host, paths, writer, selected_vault),
+        Command::ItemShow { item_id } => item_show(host, paths, writer, selected_vault, item_id),
+        Command::ItemReveal { item_id, field } => {
+            item_reveal(host, paths, writer, selected_vault, item_id, field)
         }
-        Command::ItemReveal { item_id, field } => item_reveal(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            field,
-        ),
-        Command::Search { query } => {
-            item_search(host, prepared.paths(), &writer, selected_vault, query)
-        }
+        Command::Search { query } => item_search(host, paths, writer, selected_vault, query),
         Command::HistoryList { item_id } => {
-            history_list(host, prepared.paths(), &writer, selected_vault, item_id)
+            history_list(host, paths, writer, selected_vault, item_id)
         }
         Command::HistoryRestore {
             item_id,
             revision_id,
-        } => history_restore(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            revision_id,
-        ),
+        } => history_restore(host, paths, writer, selected_vault, item_id, revision_id),
         Command::ConflictList { item_id } => {
-            conflict_list(host, prepared.paths(), &writer, selected_vault, item_id)
+            conflict_list(host, paths, writer, selected_vault, item_id)
         }
         Command::ConflictReveal {
             item_id,
@@ -1161,8 +1218,8 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             field,
         } => conflict_reveal(
             host,
-            prepared.paths(),
-            &writer,
+            paths,
+            writer,
             selected_vault,
             item_id,
             revision_id,
@@ -1171,65 +1228,32 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ConflictChoose {
             item_id,
             revision_id,
-        } => conflict_choose(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            revision_id,
-        ),
+        } => conflict_choose(host, paths, writer, selected_vault, item_id, revision_id),
         Command::ConflictMergeLogin {
             item_id,
             base_revision,
-        } => conflict_merge_login(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_login(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeSecureNote {
             item_id,
             base_revision,
-        } => conflict_merge_secure_note(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => {
+            conflict_merge_secure_note(host, paths, writer, selected_vault, item_id, base_revision)
+        }
         Command::ConflictMergeCard {
             item_id,
             base_revision,
-        } => conflict_merge_card(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_card(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeApiKey {
             item_id,
             base_revision,
-        } => conflict_merge_api_key(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_api_key(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeDatabaseCredential {
             item_id,
             base_revision,
         } => conflict_merge_database_credential(
             host,
-            prepared.paths(),
-            &writer,
+            paths,
+            writer,
             selected_vault,
             item_id,
             base_revision,
@@ -1237,25 +1261,11 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ConflictMergeTotp {
             item_id,
             base_revision,
-        } => conflict_merge_totp(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_totp(host, paths, writer, selected_vault, item_id, base_revision),
         Command::ConflictMergeOpaque {
             item_id,
             base_revision,
-        } => conflict_merge_opaque(
-            host,
-            prepared.paths(),
-            &writer,
-            selected_vault,
-            item_id,
-            base_revision,
-        ),
+        } => conflict_merge_opaque(host, paths, writer, selected_vault, item_id, base_revision),
         Command::Help | Command::Shell => {
             unreachable!("help and shell return before writer acquisition")
         }
@@ -1279,8 +1289,13 @@ fn authenticated_access(
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM42. A process killed inside a mutation publication leaves an exact
+    // journal that this open finishes with the passphrase it just collected.
+    // Before that, every command on this path answered a crash with exit 2
+    // `invalid command` — telling a person their command was wrong about a
+    // vault that was intact and one replay from healthy.
     access
-        .unlock(
+        .unlock_recovering_pending_publication(
             passphrase,
             &application_store,
             &application_store,
@@ -1356,8 +1371,10 @@ fn portable_export(
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let vault_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM42. An export must describe a settled vault, so an interrupted
+    // publication is finished before the artifact is computed.
     access
-        .unlock(
+        .unlock_recovering_pending_publication(
             vault_passphrase,
             &application_store,
             &application_store,
@@ -3492,11 +3509,13 @@ fn resume_init(
         .ok_or(CliFailure::Integrity)?;
     let state = LocalVaultStateV1::decode(&exact_state).map_err(map_application)?;
     let LocalVaultStateV1::PreparedInit(_) = state else {
-        return Err(match state {
-            LocalVaultStateV1::Active(_) => CliFailure::AlreadyInitialized,
-            LocalVaultStateV1::PendingPublication { .. } => CliFailure::Conflict,
+        return match state {
+            LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
+            LocalVaultStateV1::PendingPublication { .. } => {
+                resume_pending_publication(host, &config, vault, locator, &application_store)
+            }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
-        });
+        };
     };
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let prepared = rehydrate_prepared_init(passphrase, state).map_err(map_application)?;
@@ -3509,6 +3528,41 @@ fn resume_init(
     )
     .map_err(map_application)?;
     Ok(CliOutput::success("Vault initialized.\n"))
+}
+
+/// Finish an interrupted mutation publication found by a resume path.
+///
+/// VLT-PM42. `init` and `vault create` both mean "finish whatever was
+/// interrupted here", and both used to refuse a `PendingPublication` with the
+/// conflict class. That refusal answered the right observation the wrong way:
+/// the vault's *creation* had indeed finished, so there was no generation zero
+/// left to resume — a later mutation had been cut short instead. A pending
+/// publication is the same promise one generation on, and these are the verbs
+/// a stuck person retries.
+///
+/// The repaired vault is opened before success is reported, so "recovered"
+/// means a real authenticated open of the repaired durable bytes succeeded,
+/// not merely that a write returned.
+fn resume_pending_publication(
+    host: &dyn CliHost,
+    config: &VaultPmConfigV1,
+    vault: &VaultConfigV1,
+    locator: BootstrapLocator,
+    application_store: &StorageCoreApplicationStore<LocalBackend>,
+) -> Result<CliOutput, CliFailure> {
+    let repository_factory = configured_repository_factory(config, vault)?;
+    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let mut access = VaultAccessV1::locked(locator);
+    access
+        .unlock_recovering_pending_publication(
+            passphrase,
+            application_store,
+            application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    access.lock();
+    Ok(CliOutput::success("Vault recovered.\n"))
 }
 
 fn vault_create(
@@ -3615,11 +3669,13 @@ fn resume_vault_create(
         .ok_or(CliFailure::Integrity)?;
     let state = LocalVaultStateV1::decode(&exact_state).map_err(map_application)?;
     let LocalVaultStateV1::PreparedInit(_) = state else {
-        return Err(match state {
-            LocalVaultStateV1::Active(_) => CliFailure::AlreadyInitialized,
-            LocalVaultStateV1::PendingPublication { .. } => CliFailure::Conflict,
+        return match state {
+            LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
+            LocalVaultStateV1::PendingPublication { .. } => {
+                resume_pending_publication(host, config, vault, locator, &application_store)
+            }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
-        });
+        };
     };
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let prepared = rehydrate_prepared_init(passphrase, state).map_err(map_application)?;
@@ -3701,8 +3757,11 @@ fn audit_verify(
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM42. `audit verify` publishes an audit-only commit of its own
+    // through the very path a crash interrupts, so it finishes an outstanding
+    // publication before starting another.
     access
-        .unlock(
+        .unlock_recovering_pending_publication(
             passphrase,
             &application_store,
             &application_store,
@@ -3793,6 +3852,22 @@ fn doctor(
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
     let mut access = VaultAccessV1::locked(locator);
+    // VLT-PM42. `doctor` is the one command that reports without repairing,
+    // and `--unlock` does not change that: a person who wants to look at a
+    // wedged vault before touching it must be able to. So an interrupted
+    // publication short-circuits the authenticated half entirely — no
+    // passphrase is collected, nothing is published, and the read-only
+    // diagnostic answers `recovery_required` with exit class 5. Only the
+    // *classification* changes: this case used to inherit the refused open's
+    // misleading exit 2 `invalid command`.
+    let unlock = unlock
+        && !matches!(
+            access
+                .status(&application_store)
+                .map_err(map_application)?
+                .state(),
+            VaultStatusStateV1::RecoveryRequired
+        );
     if unlock {
         let repository_factory = configured_repository_factory(&config, vault)?;
         let passphrase = host.read_existing_passphrase().map_err(map_host)?;
@@ -8094,6 +8169,292 @@ mod tests {
         let audit = run(["audit", "verify"], &host);
         assert_eq!(audit.exit_code(), ExitCode::InvalidInput);
         assert_eq!(audit.stderr(), "vault-pm: invalid command\n");
+    }
+
+    // -----------------------------------------------------------------------
+    // VLT-PM42 — a vault wedged by an interrupted publication
+    //
+    // VLT-PM41 proved with a real killed process that a crash inside the shared
+    // mutation publication path leaves an exact, replayable journal, and that
+    // nothing in the product ever replayed it. These tests wedge a real on-disk
+    // vault the same way — by letting the write-ahead journal become durable
+    // and then taking the provider away — and then drive the ordinary command
+    // surface across it.
+    // -----------------------------------------------------------------------
+
+    /// Leave the default vault's durable owner state as an exact
+    /// `PendingPublication`.
+    ///
+    /// The session is opened through the ordinary application boundary over a
+    /// *faulting view of the very same object root* the CLI itself uses, so
+    /// everything on disk afterwards is what a crash leaves: the journal is
+    /// real, its signed bytes are real, and the objects it names are the ones
+    /// the real repository is missing.
+    fn wedge_by_an_interrupted_publication(paths: &LocalVaultPaths, passphrase: &[u8]) {
+        use coding_adventures_vault_pm_application::open_active_vault;
+        use coding_adventures_vault_pm_storage::{
+            FaultAction, FaultEffect, FaultInjectingObjectStore, StoreOperation,
+        };
+        use std::sync::Arc;
+
+        let (locator, object_root) = configured_vault_location(paths);
+        let application_store = application_store(paths);
+        let faulting = Arc::new(FaultInjectingObjectStore::new(StorageCoreObjectStore::new(
+            crash::backend(&object_root),
+        )));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&faulting));
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &application_store,
+            &application_store,
+            &factory,
+        )
+        .expect("the fixture vault must open");
+        // The commit reaches the provider and the provider then stops
+        // answering — the ambiguity a kill between the journal write and the
+        // owner-state advance produces.
+        faulting
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+        let interrupted = session.audited_list_items(
+            FIXED_TEST_TIME_MS,
+            AuditedAccessRandomnessV1::new([0x5c; AUDITED_ACCESS_RANDOM_BYTES]),
+            &application_store,
+        );
+        assert!(
+            matches!(interrupted, Err(ApplicationError::StorageUnavailable)),
+            "the fixture must interrupt a publication, not complete it",
+        );
+    }
+
+    /// Resolve the default vault's application locator and object root.
+    ///
+    /// The writer lock is acquired and released inside this function, because
+    /// every command the tests run afterwards acquires it for itself.
+    fn configured_vault_location(paths: &LocalVaultPaths) -> (BootstrapLocator, PathBuf) {
+        let prepared = paths.prepare().unwrap();
+        let writer = prepared.try_acquire_writer().unwrap();
+        let exact_config = writer.load_config().unwrap().unwrap();
+        let config = decode_config(&exact_config).unwrap();
+        let vault = configured_vault(prepared.paths(), &config, None).unwrap();
+        let location = config
+            .storage()
+            .get(vault.local_store())
+            .unwrap()
+            .location()
+            .as_str()
+            .to_owned();
+        (
+            application_locator(vault.locator()),
+            PathBuf::from(location),
+        )
+    }
+
+    /// One initialized vault holding one login, and its item identifier.
+    fn vault_with_one_login(paths: &LocalVaultPaths, passphrase: &[u8]) -> String {
+        let init_host = TestHost::new(paths.clone(), [passphrase.to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.to_vec(), b"first note body".to_vec()],
+            ["First note".to_owned()],
+        );
+        let added = run(["item", "add", "secure-note"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        added
+            .stdout()
+            .lines()
+            .find_map(|line| line.strip_prefix("Item added: "))
+            .expect("item-add identifier")
+            .to_owned()
+    }
+
+    #[test]
+    fn an_ordinary_command_finishes_an_interrupted_publication_and_says_so() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"recovery correct horse battery staple".to_vec();
+        let item = vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // Before VLT-PM42 this was exit 2, `vault-pm: invalid command`, for
+        // every command that opens the vault, forever.
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains(&item), "{listed:?}");
+        assert_eq!(listed.stderr(), RECOVERY_NOTICE, "{listed:?}");
+
+        // The repair happened once. The next command finds an ordinary vault
+        // and says nothing.
+        let again_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let again = run(["item", "list"], &again_host);
+        assert_eq!(again.exit_code(), ExitCode::Success, "{again:?}");
+        assert!(again.stderr().is_empty(), "{again:?}");
+
+        // And the vault is ordinary in the only sense that matters: it still
+        // takes writes, and its whole audit chain still verifies.
+        // A distinct entropy seed, because this host's randomness is
+        // deterministic and reusing the fixture's would mint the identifiers
+        // the first note already owns.
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), b"second note body".to_vec()],
+            ["Second note".to_owned()],
+            29,
+        );
+        let added = run(["item", "add", "secure-note"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let verify_host = TestHost::new(paths, [passphrase]);
+        let verified = run(["audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
+    #[test]
+    fn the_read_only_diagnostics_report_a_wedged_vault_without_repairing_it() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"diagnostic correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // `status` and `doctor` answer without a passphrase, and leave the
+        // vault exactly as wedged as they found it — the property a person
+        // restoring a pre-mutation backup depends on.
+        for _ in 0..2 {
+            let status = run(["status"], &TestHost::new(paths.clone(), []));
+            assert_eq!(status.stdout(), "Status: recovery_required\n", "{status:?}");
+            assert!(status.stderr().is_empty(), "{status:?}");
+
+            let doctor = run(["doctor"], &TestHost::new(paths.clone(), []));
+            assert_eq!(doctor.exit_code(), ExitCode::Conflict, "{doctor:?}");
+            assert_eq!(doctor.stdout(), "Doctor: recovery_required\n");
+            assert!(doctor.stderr().is_empty(), "{doctor:?}");
+        }
+
+        // `--unlock` does not turn a diagnostic into a repair. It collects no
+        // passphrase — the host below would panic if asked for one — and it
+        // now reports the state instead of inheriting the refused open's
+        // misleading exit 2 `invalid command`.
+        let unlock_doctor = run(["doctor", "--unlock"], &TestHost::new(paths.clone(), []));
+        assert_eq!(
+            unlock_doctor.exit_code(),
+            ExitCode::Conflict,
+            "{unlock_doctor:?}"
+        );
+        assert_eq!(unlock_doctor.stdout(), "Doctor: recovery_required\n");
+        assert!(unlock_doctor.stderr().is_empty(), "{unlock_doctor:?}");
+
+        // Still wedged, so the repair below is this test's, not a diagnostic's.
+        let recover_host = TestHost::new(paths.clone(), [passphrase]);
+        let recovered = run(["item", "list"], &recover_host);
+        assert_eq!(recovered.exit_code(), ExitCode::Success, "{recovered:?}");
+        assert_eq!(recovered.stderr(), RECOVERY_NOTICE, "{recovered:?}");
+    }
+
+    #[test]
+    fn init_finishes_an_interrupted_publication_instead_of_refusing_it() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"resume correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // `init` is what a stuck person retries. It used to answer the
+        // conflict class; it now finishes what was interrupted.
+        let resume_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let resumed = run(["init"], &resume_host);
+        assert_eq!(resumed.exit_code(), ExitCode::Success, "{resumed:?}");
+        assert_eq!(resumed.stdout(), "Vault recovered.\n");
+        assert_eq!(resumed.stderr(), RECOVERY_NOTICE, "{resumed:?}");
+
+        assert_eq!(
+            run(["status"], &TestHost::new(paths.clone(), [])).stdout(),
+            "Status: locked\n"
+        );
+        // A healthy vault is still refused, so the repair is the only thing
+        // this path learned to do.
+        let repeat = run(["init"], &TestHost::new(paths, [passphrase]));
+        assert_eq!(repeat.exit_code(), ExitCode::InvalidInput, "{repeat:?}");
+        assert_eq!(repeat.stderr(), "vault-pm: already initialized\n");
+    }
+
+    #[test]
+    fn a_wrong_passphrase_leaves_a_wedged_vault_wedged() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"closed correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // Recovery authenticates before it publishes, so a wrong secret buys
+        // nothing and destroys nothing.
+        let wrong_host = TestHost::new(paths.clone(), [b"not the passphrase".to_vec()]);
+        let refused = run(["item", "list"], &wrong_host);
+        assert_eq!(refused.exit_code(), ExitCode::Locked, "{refused:?}");
+        assert_eq!(refused.stderr(), "vault-pm: authentication required\n");
+        assert_eq!(
+            run(["status"], &TestHost::new(paths.clone(), [])).stdout(),
+            "Status: recovery_required\n"
+        );
+
+        let right_host = TestHost::new(paths, [passphrase]);
+        let recovered = run(["item", "list"], &right_host);
+        assert_eq!(recovered.exit_code(), ExitCode::Success, "{recovered:?}");
+    }
+
+    #[test]
+    fn a_recovering_command_that_then_fails_still_reports_the_repair() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"partial correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        // The repair is worth saying even when the verb that triggered it went
+        // on to report something else, and the verb keeps its own exit class.
+        let host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let missing_id = ItemId::new([0x55; 16]).to_user_string();
+        let missing = run(["item", "show", missing_id.as_str()], &host);
+        assert_eq!(missing.exit_code(), ExitCode::NotFound, "{missing:?}");
+        assert_eq!(
+            missing.stderr(),
+            format!("{RECOVERY_NOTICE}vault-pm: not found\n"),
+        );
+        assert_eq!(
+            run(["status"], &TestHost::new(paths, [])).stdout(),
+            "Status: locked\n"
+        );
+    }
+
+    #[test]
+    fn a_portable_export_finishes_an_interrupted_publication_first() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"export correct horse battery staple".to_vec();
+        vault_with_one_login(&paths, &passphrase);
+        wedge_by_an_interrupted_publication(&paths, &passphrase);
+
+        let destination = root.0.join("recovered-export.vpm");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [passphrase, b"distinct export passphrase".to_vec()],
+        );
+        let exported = run(
+            ["export", destination.to_str().expect("UTF-8 path")],
+            &export_host,
+        );
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        assert_eq!(exported.stderr(), RECOVERY_NOTICE, "{exported:?}");
+        assert!(destination.exists());
+        assert_eq!(
+            run(["status"], &TestHost::new(paths, [])).stdout(),
+            "Status: locked\n"
+        );
     }
 
     #[test]

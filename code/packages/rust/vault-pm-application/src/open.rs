@@ -5514,6 +5514,297 @@ mod tests {
         assert_eq!(backend.pending_faults().unwrap(), 0);
     }
 
+    // -----------------------------------------------------------------------
+    // VLT-PM42 — the recovering unlock
+    //
+    // `recover_pending_publication` was correct and unreachable. These tests
+    // cover the lifecycle boundary that finally reaches it, and they build
+    // their wedged vault the way a crash builds one — by letting a real
+    // publication start and then taking the provider away — rather than by
+    // hand-assembling journal bytes.
+    // -----------------------------------------------------------------------
+
+    /// One vault whose durable owner state is an exact `PendingPublication`,
+    /// plus those exact pending bytes for later comparison.
+    #[allow(clippy::type_complexity)]
+    fn wedged_by_an_interrupted_publication(
+        passphrase: &[u8],
+    ) -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<FaultInjectingObjectStore<InMemoryObjectStore>>,
+        Vec<u8>,
+    ) {
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let backend = Arc::new(FaultInjectingObjectStore::new(InMemoryObjectStore::new()));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+        complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        // The commit lands and *then* the provider stops answering: exactly the
+        // ambiguity a `SIGKILL` between the write-ahead journal and the
+        // owner-state advance produces.
+        backend
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+        assert!(matches!(
+            session.activate_audit_epoch(703, audited_access_randomness(0xab), &local),
+            Err(ApplicationError::StorageUnavailable)
+        ));
+
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        assert!(matches!(
+            LocalVaultStateV1::decode(&exact_pending).unwrap(),
+            LocalVaultStateV1::PendingPublication { .. }
+        ));
+        (locator, local, bootstrap, factory, exact_pending)
+    }
+
+    #[test]
+    fn a_recovering_unlock_leaves_an_active_vault_alone() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let mut access = crate::VaultAccessV1::locked(locator);
+
+        let outcome = access
+            .unlock_recovering_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+
+        assert_eq!(outcome, crate::UnlockRecoveryV1::AlreadyActive);
+        assert!(access.is_unlocked());
+        // Nothing was published, so the durable bytes are the ones we started
+        // with, byte for byte.
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_active.as_slice())
+        );
+    }
+
+    #[test]
+    fn a_recovering_unlock_finishes_an_interrupted_publication_and_opens() {
+        let passphrase = b"active passphrase";
+        let (locator, local, bootstrap, factory, exact_pending) =
+            wedged_by_an_interrupted_publication(passphrase);
+        let LocalVaultStateV1::PendingPublication {
+            active: interrupted,
+            publication,
+        } = LocalVaultStateV1::decode(&exact_pending).unwrap()
+        else {
+            panic!("fixture must be pending")
+        };
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        let outcome = access
+            .unlock_recovering_pending_publication(
+                Zeroizing::new(passphrase.to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+
+        assert_eq!(
+            outcome,
+            crate::UnlockRecoveryV1::RecoveredPendingPublication
+        );
+        // The durable end state is exactly what the journal intended, which is
+        // the same state `recover_pending_publication` produces on its own.
+        let intended = interrupted.after_publication(&publication).unwrap();
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(
+                LocalVaultStateV1::Active(intended)
+                    .encode()
+                    .unwrap()
+                    .as_slice()
+            )
+        );
+        // And the session is a real one: the recovered audit epoch is present
+        // and the whole chain verifies.
+        let session = access.into_unlocked().unwrap();
+        assert!(session.audit_enabled());
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 2);
+        assert_eq!(report.audit_event_count(), 1);
+    }
+
+    #[test]
+    fn a_recovering_unlock_is_idempotent() {
+        let passphrase = b"active passphrase";
+        let (locator, local, bootstrap, factory, _) =
+            wedged_by_an_interrupted_publication(passphrase);
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        access
+            .unlock_recovering_pending_publication(
+                Zeroizing::new(passphrase.to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        let recovered = local.0.lock().unwrap().clone().unwrap();
+
+        // A second process finds an ordinary vault and publishes nothing more.
+        let mut again = crate::VaultAccessV1::locked(locator);
+        let outcome = again
+            .unlock_recovering_pending_publication(
+                Zeroizing::new(passphrase.to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        assert_eq!(outcome, crate::UnlockRecoveryV1::AlreadyActive);
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(recovered.as_slice())
+        );
+    }
+
+    #[test]
+    fn a_recovering_unlock_refuses_the_wrong_passphrase_and_keeps_the_journal() {
+        let (locator, local, bootstrap, factory, exact_pending) =
+            wedged_by_an_interrupted_publication(b"active passphrase");
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert!(matches!(
+            access.unlock_recovering_pending_publication(
+                Zeroizing::new(b"wrong passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            ),
+            Err(ApplicationError::AuthenticationFailed)
+        ));
+
+        // Fails closed: still locked, and the exact journal is untouched so a
+        // later attempt with the right secret still repairs the vault.
+        assert!(access.is_locked());
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_pending.as_slice())
+        );
+        let outcome = access
+            .unlock_recovering_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        assert_eq!(
+            outcome,
+            crate::UnlockRecoveryV1::RecoveredPendingPublication
+        );
+    }
+
+    #[test]
+    fn a_recovering_unlock_refuses_a_prepared_initialization() {
+        // A `PreparedInit` journal is `init`'s to finish, not an unlock's: it
+        // has no signed publication to replay and no `Active` state to open.
+        let passphrase = b"prepared passphrase";
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let factory =
+            V1ApplicationRepositoryFactory::from_shared(Arc::new(InMemoryObjectStore::new()));
+        let exact_prepared = prepared.owner_state().encode().unwrap();
+        *local.0.lock().unwrap() = Some(exact_prepared.clone());
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert!(matches!(
+            access.unlock_recovering_pending_publication(
+                Zeroizing::new(passphrase.to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            ),
+            Err(ApplicationError::InvalidInput)
+        ));
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_prepared.as_slice())
+        );
+    }
+
+    #[test]
+    fn a_plain_unlock_still_refuses_a_pending_publication() {
+        // The strict door stays strict. A host that wants "open an `Active`
+        // vault and refuse anything else" still has exactly that.
+        let (locator, local, bootstrap, factory, exact_pending) =
+            wedged_by_an_interrupted_publication(b"active passphrase");
+
+        let mut access = crate::VaultAccessV1::locked(locator);
+        assert!(matches!(
+            access.unlock(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            ),
+            Err(ApplicationError::InvalidInput)
+        ));
+        assert!(access.is_locked());
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_pending.as_slice())
+        );
+    }
+
+    #[test]
+    fn a_recovering_unlock_refuses_an_already_unlocked_boundary() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let mut access = crate::VaultAccessV1::locked(locator);
+        access
+            .unlock_recovering_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+        assert!(matches!(
+            access.unlock_recovering_pending_publication(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                &local,
+                &bootstrap,
+                &factory,
+            ),
+            Err(ApplicationError::InvalidInput)
+        ));
+    }
+
     #[test]
     fn audited_list_refuses_pre_audit_sessions_without_changing_owner_state() {
         let (locator, local, bootstrap, factory) = initialized();

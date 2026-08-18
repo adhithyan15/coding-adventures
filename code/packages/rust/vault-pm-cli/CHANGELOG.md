@@ -2,6 +2,53 @@
 
 ## Unreleased
 
+- **Fixed the availability defect `VLT-PM41-cli-crash-fault-matrix.md` §8
+  found.** A process killed inside the shared mutation publication path left a
+  vault that was intact and one journal replay from healthy, and that every
+  subsequent command refused — as exit 2, `vault-pm: invalid command`. The
+  person was told their command was wrong, over and over, about a vault that
+  was fine. `VLT-PM42-cli-pending-publication-recovery.md` is the repair.
+
+  It adds no verb, no flag, no file format, no on-disk artifact, and no
+  environment variable. The vault-open path finishes the interrupted
+  publication with the passphrase it has already collected, through the
+  application's new `unlock_recovering_pending_publication`, and then opens the
+  repaired vault through the ordinary strict open. Every authenticated command
+  (`item` CRUD/list/show/reveal, `search`, `history`, `conflict`, `audit
+  enable`/`list`/`show`, `import`, `restore`), `export`, and `audit verify`
+  take that path, so the repair reaches a person on whatever command they
+  happened to retry.
+- `init` and `vault create` resume paths now finish a `PendingPublication`
+  instead of refusing it with the conflict class, and report
+  `Vault recovered.`. "Finish what was interrupted" is what those paths already
+  meant for a `PreparedInit` journal; a pending publication is the same promise
+  one generation later, and `init` is the verb a stuck person retries. A vault
+  that is merely already initialized is still refused, unchanged.
+- `doctor` is deliberately **not** a repair, and `--unlock` does not make it
+  one. A wedged vault now short-circuits the authenticated half entirely — no
+  passphrase is collected and nothing is published — and the read-only
+  diagnostic answers `recovery_required` with exit class 5. Only the
+  classification changes: this case used to inherit the refused open's
+  misleading exit 2. `status` is untouched and still reports without repairing,
+  which is what keeps restoring a pre-mutation file-level backup a real option
+  rather than a race against an eager repair.
+- Added one fixed, payload-free notice on standard error,
+  `vault-pm: recovered an interrupted write`, emitted exactly when a command
+  moved the durable state out of `recovery_required`. The composition root
+  observes that transition across the command, both reads inside the
+  cross-process writer lock the command already holds — which is what makes the
+  inference sound, since no other local writer can move the state between them.
+  An observation it cannot make degrades to silence, never to a false claim.
+  Standard output and every exit class are unchanged, and the notice is
+  attached to a failing command too, because a repair is worth saying even when
+  the verb that triggered it went on to report `not found`.
+- No change to the crash-injection isolation. The `crash-injection` feature is
+  still named in no section of the product crate, still enabled only by
+  `code/programs/rust/vault-pm-cli-drill`, and the product executable still
+  fails to compile with it. The new tests reach a wedged vault through
+  `vault-pm-storage`'s ordinary fault-injecting object store — a plain
+  dev-dependency that enables no feature — rather than through that seam.
+
 - Added the composition root's durable-write seam for
   `VLT-PM41-cli-crash-fault-matrix.md`. The new `crash` module names every
   point at which this package makes something durable, so a drill can kill the

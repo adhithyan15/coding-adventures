@@ -1,6 +1,6 @@
 [package]
 name = "vault-pm-cli-drill"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "VLT-PM41 instrumented vault-pm executable and its real-process crash/fault drill"
 license = "MIT"

@@ -147,12 +147,24 @@ with anything:
 
 - An interrupted `init` is always repairable by running `init` again, and the
   resumed vault passes authenticated `doctor --unlock`.
-- An interrupted **mutation** is not repairable from this command surface. The
-  tree is never torn and the durable journal is exact, but no verb replays it,
-  so every later command fails — as exit 2 `vault-pm: invalid command`, which
-  tells a person their command is wrong about a vault that is intact. See
-  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 and VLT-PM00 §23
-  item 10a.
+- An interrupted **mutation** is repairable by doing nothing but retrying. The
+  tree is never torn, the durable journal is exact, and the next command that
+  opens the vault replays it with the passphrase it already asks for, then says
+  `vault-pm: recovered an interrupted write` on standard error. There is no
+  recovery verb to learn and no flag to pass, because the person who needs the
+  repair is by definition someone whose ordinary command just failed.
+
+  This is a repair, not a discovery: until
+  `code/specs/VLT-PM42-cli-pending-publication-recovery.md`, an interrupted
+  mutation left a vault every later command refused, as exit 2
+  `vault-pm: invalid command`. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 for the finding and
+  VLT-PM00 §23 item 10a for its closure.
+
+`status` and `doctor` are the exception, deliberately. Both report an
+interrupted vault as `recovery_required` — `doctor` with exit class 5 — without
+collecting a passphrase and without repairing anything, so looking before
+leaping, and restoring a pre-mutation backup instead, both stay available.
 
 ## Verification
 

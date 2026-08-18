@@ -30,3 +30,11 @@ crash-injection = ["dep:coding_adventures_vault_pm_crash_injection"]
 
 [dev-dependencies]
 libc = "0.2"
+# VLT-PM42 tests wedge a real on-disk vault the way a crash wedges one: they
+# open it through the ordinary application boundary over a *faulting* view of
+# the very same object root, so the write-ahead journal becomes durable and the
+# publication does not. This adds nothing to the shipped graph -
+# `vault-pm-application` already depends on this crate - and it enables no
+# feature, unlike the crash-injection seam which must stay out of any build the
+# product executable can reach.
+coding_adventures_vault_pm_storage = { path = "../vault-pm-storage" }

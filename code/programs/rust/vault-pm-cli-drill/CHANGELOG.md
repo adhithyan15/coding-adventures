@@ -2,6 +2,38 @@
 
 All notable changes to this package are documented here.
 
+## [0.2.0] - 2026-08-18
+
+### Changed
+
+- Rewrote the assertions `every_publication_landing_point_leaves_an_exact_resumable_journal`
+  had pinned. They required exit 2 and `vault-pm: invalid command` from every
+  command that opened a vault wedged by an interrupted publication — the defect
+  this drill found — and carried a comment instructing the fixing slice to
+  rewrite rather than delete them. `VLT-PM42-cli-pending-publication-recovery.md`
+  is that slice, so the same landing points now require the opposite: the next
+  ordinary command succeeds, announces the repair, and leaves a vault both
+  read-only diagnostics call an ordinary locked one.
+
+### Added
+
+- `an_interrupted_item_create_comes_back_as_the_item_it_was`, which proves what
+  a count of landing points cannot: that the write a person's machine died in
+  the middle of is the write they find afterwards. A killed `item add login` is
+  a listed item with its title and username readable, and it is the only one;
+  the vault then takes a second write and its whole audit chain verifies.
+- `the_read_only_diagnostics_still_refuse_to_repair_a_wedged_vault`, which runs
+  `status` and `doctor` repeatedly against a wedged vault and requires it to
+  stay wedged, and pins `doctor --unlock`'s new `recovery_required`/5 in place
+  of the misleading invalid-command class it used to inherit.
+- `init_finishes_an_interrupted_publication_instead_of_refusing_it`, since
+  `init` is the verb a stuck person retries and it used to answer the conflict
+  class.
+- `wedge`, a helper that searches downward from a ceremony's last landing point
+  for one that leaves a journal. Hard-coding `total - 1` would work today and
+  would silently start measuring nothing the day a ceremony grows a durable
+  write after its owner-state advance.
+
 ## [0.1.0] - 2026-08-18
 
 ### Added

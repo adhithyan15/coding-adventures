@@ -507,6 +507,44 @@ still cause. That residual is pre-existing and tracked; it needs a decision
 about what a partly-unreadable item looks like to every ceremony, not a local
 fix. See VLT-PM05 section 13.3 and VLT02 *Decoding never re-encodes*.
 
+## Two doors into an unlocked vault
+
+`VaultAccessV1` offers two named unlocks, and choosing between them is a
+policy decision this crate deliberately leaves to the host.
+
+`unlock` is strict. It accepts only an `Active` owner state and refuses
+everything else with the invalid-input class. A host that wants a vault
+interrupted mid-write to be *refused* rather than silently finished has exactly
+that, unchanged.
+
+`unlock_recovering_pending_publication` is the other door, and it is the second
+half of what VLT-PM05 §8 step 2 has always required: "resume a prepared
+initialization or **pending publication** when present". If the durable owner
+state is a `PendingPublication`, it replays that exact journal through
+`recover_pending_publication` — idempotently, advancing the state only after the
+repository returns the heads the journal expected — and then throws the result
+away and performs the ordinary strict open of the repaired durable bytes. The
+discard is the point: every check a later, uninvolved process would run happens
+here too, on the repaired bytes. It returns `UnlockRecoveryV1` so the host can
+tell a person that something was repaired.
+
+The cost is one extra Argon2id derivation, paid only when a repair actually
+happens, because recovery and open each authenticate the passphrase against the
+bootstrap root wrap. `Zeroizing` implements neither `Clone` nor `Debug`, so the
+duplicate passphrase the recovering branch needs is constructed by name and
+wiped on drop.
+
+`PreparedInit` is refused by both doors. It belongs to initialization, which is
+the only caller that knows a vault is being created.
+
+Why this matters is worth stating plainly: `recover_pending_publication` was
+correct and well tested here for a long time, and nothing called it. A drill
+that killed the real executable
+(`code/specs/VLT-PM41-cli-crash-fault-matrix.md` §8) found that a vault
+interrupted mid-publication was intact, exactly journalled, correctly
+diagnosed — and unopenable by any command. A recovery routine nobody reaches is
+a receipt for a repair that never happens.
+
 ## Verification
 
 The package tests cover exact canonical and cryptographic vectors,
