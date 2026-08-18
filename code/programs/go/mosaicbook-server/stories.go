@@ -26,6 +26,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -111,7 +112,7 @@ func (c Component) isThreeFile() bool {
 // The owning package's mosaic-package.toml is located by walking up from the
 // source directory. It is optional: a component outside any package still
 // renders, it just cannot reference siblings.
-func threeFileComponent(root, milPath, fileName string) (Component, bool) {
+func threeFileComponent(root, resolvedRoot, milPath, fileName string) (Component, bool) {
 	base := strings.TrimSuffix(fileName, ".mil")
 
 	// The base name becomes the component name, which the react and
@@ -130,14 +131,14 @@ func threeFileComponent(root, milPath, fileName string) (Component, bool) {
 	// directory, so today no generated path can escape — but checking here
 	// makes the invariant local rather than a consequence of Walk's
 	// behaviour, which is what the next refactor is liable to change.
-	if !isRegularFileWithin(root, milPath) {
+	if !isRegularFileWithin(resolvedRoot, milPath) {
 		return Component{}, false
 	}
 
 	dir := filepath.Dir(milPath)
 
 	layout := filepath.Join(dir, base+".mll")
-	if !isRegularFileWithin(root, layout) {
+	if !isRegularFileWithin(resolvedRoot, layout) {
 		// Interface with no layout — not renderable on its own.
 		return Component{}, false
 	}
@@ -145,9 +146,9 @@ func threeFileComponent(root, milPath, fileName string) (Component, bool) {
 	// Prefer the light stylesheet; fall back to dark so a dark-only
 	// component still previews rather than rendering unstyled.
 	style := filepath.Join(dir, base+".light.msl")
-	if !isRegularFileWithin(root, style) {
+	if !isRegularFileWithin(resolvedRoot, style) {
 		style = filepath.Join(dir, base+".dark.msl")
-		if !isRegularFileWithin(root, style) {
+		if !isRegularFileWithin(resolvedRoot, style) {
 			style = ""
 		}
 	}
@@ -164,7 +165,7 @@ func threeFileComponent(root, milPath, fileName string) (Component, bool) {
 		InterfacePath: milPath,
 		LayoutPath:    layout,
 		StylePath:     style,
-		ManifestPath:  findPackageManifest(dir, root),
+		ManifestPath:  findPackageManifest(dir, root, resolvedRoot),
 		Stories:       []Story{{Name: "Default", Fixtures: map[string]interface{}{}}},
 	}, true
 }
@@ -190,7 +191,7 @@ var validComponentBase = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_]*$`)
 // would be discovered as a valid component and those absolute paths handed to
 // the compiler — whose stderr is rendered back into the preview error page,
 // making it an arbitrary-file-read primitive over one unauthenticated GET.
-func isRegularFileWithin(root, path string) bool {
+func isRegularFileWithin(resolvedRoot, path string) bool {
 	// Lstat does not follow, so a symlink fails IsRegular here and is
 	// rejected outright — as is a directory.
 	info, err := os.Lstat(path)
@@ -199,26 +200,24 @@ func isRegularFileWithin(root, path string) bool {
 	}
 	// Belt and braces: catches the case where an ancestor directory is a
 	// symlink pointing outside the served tree.
-	return withinRoot(root, path)
+	return withinRoot(resolvedRoot, path)
 }
 
 // withinRoot reports whether path, fully symlink-resolved, is contained by
 // root. Used to keep discovery from handing the compiler a path outside the
 // served tree.
-func withinRoot(root, path string) bool {
-	// Both sides must be absolute before comparing: filepath.Rel returns an
-	// error when one argument is relative and the other absolute, and the
-	// two do mix here — the walk root is whatever --root was given (often
-	// relative) while findPackageManifest builds absolute candidates.
-	absRoot, err := filepath.Abs(root)
-	if err != nil {
-		return false
-	}
+func withinRoot(resolvedRoot, path string) bool {
+	// resolvedRoot is pre-resolved by resolveRoot: absolutised and
+	// symlink-resolved once per walk rather than once per candidate. That
+	// halves the syscall cost of this check, which runs several times per
+	// discovered component.
+	//
+	// path must still be absolutised before EvalSymlinks, because
+	// filepath.Rel errors when one argument is relative and the other
+	// absolute — and the two do mix here: the walk yields paths relative to
+	// whatever --root was given, while findPackageManifest builds absolute
+	// candidates.
 	absPath, err := filepath.Abs(path)
-	if err != nil {
-		return false
-	}
-	resolvedRoot, err := filepath.EvalSymlinks(absRoot)
 	if err != nil {
 		return false
 	}
@@ -233,10 +232,26 @@ func withinRoot(root, path string) bool {
 	return rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator))
 }
 
+// resolveRoot absolutises and symlink-resolves the served root once, so the
+// per-candidate containment checks do not repeat that work. Returns "" if the
+// root cannot be resolved, which makes every subsequent containment check
+// fail closed.
+func resolveRoot(root string) string {
+	abs, err := filepath.Abs(root)
+	if err != nil {
+		return ""
+	}
+	resolved, err := filepath.EvalSymlinks(abs)
+	if err != nil {
+		return ""
+	}
+	return resolved
+}
+
 // findPackageManifest walks up from dir looking for a mosaic-package.toml,
 // stopping at root so the search cannot escape the served tree.
 // Returns "" when the component does not belong to a package.
-func findPackageManifest(dir, root string) string {
+func findPackageManifest(dir, root, resolvedRoot string) string {
 	absRoot, err := filepath.Abs(root)
 	if err != nil {
 		return ""
@@ -249,7 +264,7 @@ func findPackageManifest(dir, root string) string {
 		candidate := filepath.Join(cur, "mosaic-package.toml")
 		// Same guard as the sibling files: a symlinked manifest would
 		// otherwise ride into argv as --package-manifest.
-		if isRegularFileWithin(root, candidate) {
+		if isRegularFileWithin(resolvedRoot, candidate) {
 			return candidate
 		}
 		if cur == absRoot {
@@ -278,6 +293,18 @@ type storiesFile struct {
 func discoverComponents(root string) ([]Component, error) {
 	var components []Component
 
+	// Resolved once per walk rather than once per containment check.
+	// If the root cannot be resolved this is "", which makes every
+	// containment check fail closed and the walk yield nothing.
+	resolvedRoot := resolveRoot(root)
+
+	// Counted, not logged per candidate: this walk runs on every
+	// /api/stories request, so a per-rejection log would flood. One line at
+	// the end is O(1) and is exactly the signal that makes a silent
+	// mis-discovery obvious -- "0 components, 23 skipped" diagnoses in
+	// seconds what silence does not.
+	skipped := 0
+
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			// Non-fatal: skip inaccessible paths and continue walking.
@@ -296,8 +323,10 @@ func discoverComponents(root string) ([]Component, error) {
 		// the sibling .mll/.msl files complete the set. This is the form
 		// every component in this repo actually uses.
 		if strings.HasSuffix(info.Name(), ".mil") && info.Mode().IsRegular() {
-			if c, ok := threeFileComponent(root, path, info.Name()); ok {
+			if c, ok := threeFileComponent(root, resolvedRoot, path, info.Name()); ok {
 				components = append(components, c)
+			} else {
+				skipped++
 			}
 			return nil
 		}
@@ -327,6 +356,7 @@ func discoverComponents(root string) ([]Component, error) {
 		// the two discovery paths would leave the legacy form injectable
 		// with the identical payload.
 		if !validComponentBase.MatchString(baseName) {
+			skipped++
 			return nil
 		}
 
@@ -352,6 +382,9 @@ func discoverComponents(root string) ([]Component, error) {
 		return nil
 	})
 
+	if skipped > 0 {
+		log.Printf("discovery: %d candidate(s) skipped in %s", skipped, root)
+	}
 	return components, err
 }
 

@@ -314,7 +314,11 @@ func TestDiscoverThreeFile_AcceptsIdentifierNames(t *testing.T) {
 func TestDiscoverLegacy_RejectsNonIdentifierNames(t *testing.T) {
 	dir := t.TempDir()
 	mustWrite(t, filepath.Join(dir, "Has Space.mosaic"), "component X {}")
-	mustWrite(t, filepath.Join(dir, "Fine.mosaic"), "component Fine {}")
+	// Deliberately sorts AFTER the rejected file. filepath.Walk is
+	// alphabetical, so a survivor named e.g. "Fine" would already be
+	// collected before the rejection happened — the test would then pass
+	// even if rejecting a candidate aborted the whole walk.
+	mustWrite(t, filepath.Join(dir, "Zed.mosaic"), "component Zed {}")
 
 	comps, err := discoverComponents(dir)
 	if err != nil {
@@ -323,8 +327,8 @@ func TestDiscoverLegacy_RejectsNonIdentifierNames(t *testing.T) {
 	if len(comps) != 1 {
 		t.Fatalf("expected only the valid component, got %d", len(comps))
 	}
-	if comps[0].ID != "Fine" {
-		t.Errorf("ID: got %q, want %q", comps[0].ID, "Fine")
+	if comps[0].ID != "Zed" {
+		t.Errorf("ID: got %q, want %q", comps[0].ID, "Zed")
 	}
 }
 
