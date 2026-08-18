@@ -312,9 +312,17 @@ defmodule CodingAdventures.ChiefOfStaffChannelEpochActivation.Store do
   def validate_public_preparation(definition, prepared) do
     grant_count = length(prepared.grants)
 
-    unless prepared.channel_id == definition.channel_id and
-             prepared.base_epoch != Epoch.max_u64() and
-             prepared.new_epoch == prepared.base_epoch + 1 and
+    unless prepared.channel_id == definition.channel_id, do: Epoch.fail!("invalid_plan")
+
+    # Exhaustion sits between the channel comparison and the successor
+    # comparison, exactly where Rust's short-circuiting chain evaluates it. It
+    # must precede the successor check because base_epoch + 1 is not a
+    # meaningful question once base_epoch is saturated; it must follow the
+    # channel check so a bundle that is BOTH foreign and saturated still reports
+    # invalid_plan, as it did before and as Rust still does.
+    if prepared.base_epoch == Epoch.max_u64(), do: Epoch.fail!("epoch_exhausted")
+
+    unless prepared.new_epoch == prepared.base_epoch + 1 and
              grant_count >= 1 and grant_count <= Epoch.max_plan_receivers() do
       Epoch.fail!("invalid_plan")
     end

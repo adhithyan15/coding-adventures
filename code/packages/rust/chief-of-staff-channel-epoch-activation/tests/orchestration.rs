@@ -734,3 +734,43 @@ fn recovery_rejects_decreasing_epochs_and_preparation_reports_exhaustion() {
     );
 }
 use std::sync::atomic::{AtomicBool, Ordering};
+
+/// A candidate whose `base_epoch` is already saturated has no successor at all.
+///
+/// The D18T roster calls that `epoch_exhausted`, not `unexpected_epoch`:
+/// `base_epoch + 1` is not a meaningful question once `base_epoch` is
+/// `u64::MAX`, so exhaustion must be checked before the successor comparison.
+/// This test is what keeps the two codes disjoint.
+#[test]
+fn candidate_construction_reports_exhaustion_before_an_unexpected_successor() {
+    let fixture = Fixture::new();
+    // D18Q itself refuses to plan a rotation from a saturated epoch, so the
+    // rotation is built normally and the saturated base_epoch is supplied
+    // separately -- which is exactly how a caller reaches this path.
+    let rotation = plan_rotation(
+        b"originator",
+        channel_id(),
+        KeyEpoch(0),
+        ChannelMasterKey::from_bytes([0x34; 32]),
+        vec![RotationReceiver::with_material(
+            b"receiver-b".to_vec(),
+            fixture.receiver_b.public_key,
+            [0x55; 32],
+            [0x65; 24],
+        )
+        .unwrap()],
+        &fixture.signer,
+    )
+    .unwrap();
+    assert_eq!(
+        prepare_rotation_candidate(
+            &fixture.definition,
+            KeyEpoch(u64::MAX),
+            std::slice::from_ref(&fixture.receiver_b),
+            rotation,
+        )
+        .unwrap_err()
+        .code(),
+        "epoch_exhausted"
+    );
+}

@@ -949,9 +949,19 @@ func PrepareRotationCandidate(definition channelstore.ChannelDefinition, baseEpo
 // from the grants is what makes a tampered custody bundle detectable.
 func validatePublicPreparation(definition channelstore.ChannelDefinition, prepared PublicPreparation) (ActivationPlan, error) {
 	grants := prepared.Grants()
-	if !bytesEqual(prepared.ChannelID(), definition.ChannelID()) ||
-		prepared.BaseEpoch() == MaxU64 ||
-		prepared.NewEpoch() != prepared.BaseEpoch()+1 ||
+	if !bytesEqual(prepared.ChannelID(), definition.ChannelID()) {
+		return ActivationPlan{}, fail(ErrInvalidPlan)
+	}
+	// Exhaustion sits between the channel comparison and the successor
+	// comparison, exactly where Rust's short-circuiting `||` chain evaluates it.
+	// It must precede the successor check because base_epoch + 1 is not a
+	// meaningful question once base_epoch is saturated; it must follow the
+	// channel check so that a bundle which is BOTH foreign and saturated still
+	// reports invalid_plan, as it did before and as Rust still does.
+	if prepared.BaseEpoch() == MaxU64 {
+		return ActivationPlan{}, fail(ErrEpochExhausted)
+	}
+	if prepared.NewEpoch() != prepared.BaseEpoch()+1 ||
 		len(grants) < 1 || len(grants) > MaxPlanReceivers {
 		return ActivationPlan{}, fail(ErrInvalidPlan)
 	}
