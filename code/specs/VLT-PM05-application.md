@@ -743,6 +743,46 @@ InternalInvariant
 format, repository, crypto, and provider errors are mapped without formatting
 their payloads.
 
+### 13.1 The plaintext bound is not the encoder's bound
+
+The 16 MiB *application plaintext object* bound above is this layer's
+own gate. It is **not** the ceiling the canonical-CBOR encoder beneath
+it enforces, which is `MAX_ENCODED_SIZE` = 1 MiB per value (see
+VLT02 *Encoding is fallible* and CBR01). The two are independent and
+the application's is the looser of the pair.
+
+Two encodes in this layer therefore have to treat "too large to encode"
+as a reachable outcome rather than an impossible one:
+
+- **`encode_any_record`** — the per-record encode. A first-party record
+  (`Login`, `SecureNote`, `Card`, `TotpSeed`, `ApiKey`,
+  `DatabaseCredential`) whose fields sum past 1 MiB is refused here.
+- **`encode_item_revision`** — the encode of the revision *around* that
+  record. This one is reachable even when the record itself fits,
+  because the revision map adds the item id, schema tag, timestamps,
+  favourite register, observed collection/tag/attachment sets, and the
+  causal-parent list on top of the record bytes. A record just under
+  the ceiling plus that framing lands just over it.
+
+Both report `BoundExceeded`, the same variant `check_plaintext_bound`
+already returns for the 16 MiB gate. The choice is deliberate: the
+cause is a fixed serialisation bound being exceeded, which is exactly
+what `BoundExceeded` names, and reporting it as `IntegrityFailure`
+would tell an operator their store is corrupt when in fact one record
+is merely too big. `check_plaintext_bound` remains in place after each
+encode; it is now the *outer* of two bounds rather than the only one.
+
+The pre-existing opaque arm of `encode_any_record` continues to fold
+all `encode_opaque` failures into `IntegrityFailure`, because its
+dominant failure is a genuine one — stored opaque payload bytes that
+are not valid CBOR — and that mapping is relied on by VLT-PM39.
+
+The guarantee this restores is VLT-PM00's fail-closed contract, on the
+paths that re-serialise an already-stored record: `item edit`, the
+seven authored conflict merges (VLT-PM33–VLT-PM39), `conflict choose`,
+`history restore`, and `export`. Each returns `BoundExceeded` and
+leaves the vault untouched. None aborts the process.
+
 ## 14. Required verification
 
 The Phase 1A package must include:
