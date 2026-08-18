@@ -31,7 +31,9 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-18 (task #121-124 -- simd_i32x4_extadd_
                pairwise_i16x8.wast/simd_i32x4_dot_i16x8.wast/
                simd_i32x4_extmul_i16x8.wast, i32x4-from-i16x8 widening,
-               same pinned commit, no re-pin)
+               same pinned commit, no re-pin),
+               extended 2026-08-18 (task #125-128 -- simd_i8x16_arith.wast,
+               i8x16 first slice, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -164,6 +166,22 @@ OUTPUT lane width (32-bit `i32x4`), each sub-opcode fetched live from
 `i32x4.eq`/`i32x4.add` entries, same discipline as every widening pass
 above. 100% pass on every directive kind across all three files (3/3
 modules, 148/148 assert_return, 19/19 assert_invalid).
+
+`simd_i8x16_arith.wast` (task #125-128) is this arc's first pivot to a
+BRAND-NEW lane width rather than a further widening of `i32x4`: `i32x4`
+had run out of small increments (everything left needs a float lane
+width). `i8x16.add`/`sub`/`neg` -- the first `i8x16` opcodes this repo
+implements -- follow the exact same "first slice" pattern `i32x4` itself
+started with (see the very first paragraph above), except even smaller:
+no `i8x16.splat`/`extract_lane` were needed, since `v128.const i8x16
+...` (already supported for all 6 shapes since PR1b) covers both this
+file's operand construction and its result comparison on its own.
+WASM SIMD defines no `i8x16.mul` (8-bit lanes are too narrow for a
+useful lane-wise multiply), so this slice is deliberately just 3
+opcodes. Each sub-opcode byte fetched live from `BinarySIMD.md` and
+cross-checked against the already-implemented `i32x4.add`/`i32x4.abs`
+entries, same discipline as every prior addition. 100% pass on every
+directive kind (2/2 modules, 121/121 assert_return, 8/8 assert_invalid).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

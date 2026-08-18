@@ -1,0 +1,360 @@
+Mandarin Chinese, chapter 3: One to Five — Where the Character Is the Count.
+11 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 11.
+一 (yī) — one stroke, and that is the character.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the whole character and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Two chapters ago a character was a block to take apart. You learned pieces first, then the characters they build. This chapter asks nothing of the sort. Put the pieces down.
+
+Script — the whole character.
+Here it is:
+一 (yī).
+That is not a fragment. That is the character. One horizontal stroke, drawn left to right across the middle of the square, and nothing else.
+Write it: one héng stroke, left to right. No pen lifts, because there is nothing to lift between. It is the shortest character you will ever write.
+
+Guided Practice.
+[once you have stopped driving — write: 一 (yī) — one stroke, left to right, straight and level]
+
+Wrap-up Recall.
+A character you did not have to decompose. How many times did you lift the pen? (Not once.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 8 seconds]
+How many strokes does the character for one have?
+
+
+Lesson 2 of 11.
+一 (yī) — one, and the number is the strokes.
+
+Warm-up.
+[pause 2 seconds]
+Draw the shape you just learned. One stroke, left to right.
+
+Sounds you'll need.
+一 yī means one.
+Read those two facts together, because their meeting is the point:
+One stroke. And it means one.
+Chinese will do this exactly three times, and you are about to meet all three in a row. It is the gentlest corner of a writing system with a reputation for being anything but.
+Now the sound, and here is something new. Every word this book has given you so far has dipped (nǐ, hǎo, ěr) or risen (rén). This one does neither.
+First tone: high and flat. Start high and stay there — not a question, not a statement, just a held note. Hum a single steady pitch and put yi on it.
+[repeat that twice]
+One honest note, so it does not surprise you later. 一 does not always keep this tone. In front of certain syllables it shifts to yí or yì — the same kind of change that turned 你好 into ní hǎo. Counting is exactly where it stays yī, so counting is where this book leaves it.
+
+Guided Practice.
+[your turn — say: yī — high and flat, held]
+[pause 8 seconds for the answer]
+[your turn — read: 一 (yī) — say it, then say how many strokes it has]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which tone is yī — the dipping one, or the flat one? (Flat, held high.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+What is the relationship between the number of strokes in this character and what it means?
+
+
+Lesson 3 of 11.
+二 (èr) — two bars, and neither is decoration.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — you were right and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Draw the character for one. Now guess what two looks like before you read on.
+
+Script — you were right.
+二 (èr).
+Two strokes, both horizontal, and the order is the one this book has repeated since the person radical: top before bottom.
+But look properly, because they are not the same length:
+the upper bar is the shorter one.
+the lower bar is the longer one.
+That is not decoration. A character occupies a square, and two identical bars floating in one look like an accident. The widening bottom gives the block a base to sit on. You will meet the same instinct everywhere: the last horizontal tends to be the widest, because it is the one holding everything up.
+Write it: short bar. Lift. Long bar beneath.
+
+Guided Practice.
+[once you have stopped driving — write: 二 (èr) — short bar on top, then the long one below]
+
+Wrap-up Recall.
+Two strokes for two. Which goes first? (The top.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 8 seconds]
+In the character for two, which bar is longer — the top or the bottom?
+
+
+Lesson 4 of 11.
+二 (èr) — two, and a syllable you have met before.
+
+Warm-up.
+[pause 2 seconds]
+Draw the shape. Two bars, short over long. Count the strokes and say what number you expect it to be.
+
+Sounds you'll need — and a trap worth meeting now.
+二 èr means two. Two strokes, and it means two — the pattern holds.
+èr is fourth tone, the last of the four you had not used in a real word. Fourth tone falls, sharply and from a height, the way an English speaker says a short firm "No." Drop it, do not trail it.
+[repeat that twice]
+Now hold èr next to a piece you already know:
+尔 ěr — the sound-component inside 你 二 èr — the number two.
+Same syllable. Different tone. Completely unrelated characters. One dips; one falls. Nothing else separates them.
+You met this idea once already, when 好 hǎo "good" turned into 好 hào "fond of" on a change of pitch alone. That was one character with two readings; this is two characters colliding in sound. Both are the same lesson: in Mandarin the pitch is not decoration on the word. It is part of the word.
+
+Guided Practice.
+[your turn — say: èr — falling, dropped firmly]
+[pause 8 seconds for the answer]
+[your turn — say: ěr, then èr — dip, then fall. Feel the difference in your throat.]
+[pause 8 seconds for the answer]
+[your turn — say: yī, èr — flat, then down]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+What separates ěr from èr? (Only the tone — and they are different characters entirely.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 8 seconds]
+Type the pinyin, with its tone mark, for the number two.
+
+
+Lesson 5 of 11.
+三 (sān) — three bars, and the pattern's last stand.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the pattern holds one last time and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One bar. Two bars. Say what comes next out loud before you look.
+
+Script — the pattern holds one last time.
+三 (sān).
+Three strokes. Top, then middle, then bottom — the same rule, a third time.
+The lengths are not a simple ladder:
+the top bar is medium.
+the middle bar is the shortest of the three.
+the bottom bar is by far the longest.
+Pinching the middle and widening the base keeps 三 (sān) from reading as three identical lines you would have to stop and count. Your eye takes it in whole. That is the difference between a character and a tally — and the reason the next one cannot be four bars.
+Write it: top, lift, middle, lift, bottom. Two pen lifts.
+
+Guided Practice.
+[once you have stopped driving — write: 三 (sān) — top, middle short, bottom long]
+[your turn — read: 一 (yī) 二 (èr) 三 (sān) — point at each and count its strokes]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Imagine four bars stacked in a square. Could you read it, or would you have to count it? (Count it — which is why the next character is not four bars.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 10 seconds]
+In the character for three, which of the three bars is shortest?
+
+
+Lesson 6 of 11.
+三 (sān) — three, and the end of the easy road.
+
+Warm-up.
+[pause 2 seconds]
+Draw the three bars. Middle short, bottom long.
+
+Sounds you'll need.
+三 sān means three. Three strokes, three — for the third and last time.
+sān is first tone, the flat high one you met on yī. Hold it level. The a is open, the n light at the end.
+[repeat that twice]
+So of your first three numbers, two sit flat and one falls:
+yī flat, èr falling, sān flat.
+Say the run. It goes level, down, level, and that shape is the first thing a listener recognises — before any of the individual words.
+
+Why it's said this way — the pattern stops here.
+Three characters in, one stroke per unit, a system so regular it barely needs teaching. It stops here, and you should know why before it happens.
+Every counting system humans have built hits the same wall in the same place. Roman numerals go I, II, III and then break to IV, because stacked marks stop being readable at about three. This one breaks for exactly the same reason.
+You are being told now so that the next character feels like a solved problem rather than a broken promise.
+
+Guided Practice.
+[your turn — say: yī, èr, sān — level, down, level]
+[pause 8 seconds for the answer]
+[your turn — read: 一 (yī) 二 (èr) 三 (sān) — say each as you point at it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Three characters, three stroke counts, nothing memorised. That ends now.
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+Do you expect the character for four to have four strokes? Why or why not?
+
+
+Lesson 7 of 11.
+四 (sì) — a box, and the rule that governs every box.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — five strokes, for four and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Draw one, two and three. You were told this is where it stops.
+
+Script — five strokes, for four.
+四 (sì).
+Five strokes, for the number four. The trick is gone, exactly as promised.
+四 (sì) is a box with two things inside it, and every box obeys one rule: close the bottom LAST. Walls, then contents, then shut the door.
+In order:
+the left vertical, top to bottom.
+the top and right side in one turning stroke — across, then down without lifting the pen at the corner.
+the short inner left-falling stroke.
+the inner stroke that turns up at its foot.
+the bottom bar, closing the box — last.
+Two strokes of wall, two of filling, one to shut the door. Four pen lifts.
+Notice that the corner in step 2 is one stroke, not two. A horizontal that turns and runs downward without the pen leaving the paper is a single unit — héngzhé, "horizontal-turn". Miscounting it is the commonest way a beginner's stroke count goes wrong.
+
+Guided Practice.
+[once you have stopped driving — write: 四 (sì) — walls, then the two inner strokes, then the bottom last]
+
+Wrap-up Recall.
+Is the turning corner one stroke or two? (One — héngzhé.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 10 seconds]
+Which stroke of the box in the character for four is drawn LAST?
+
+
+Lesson 8 of 11.
+四 (sì) — four, borrowed for its sound.
+
+Warm-up.
+[pause 2 seconds]
+Draw the box. Walls, contents, bottom last. Count the strokes: five, for the number four.
+
+Sounds you'll need — and a tone worth respecting.
+四 sì means four, and the shape has nothing to do with fourness.
+四 (sì) is not a picture of four things. It is a shape that already meant something else, borrowed for its sound — the same move you met in 尔, a piece carried for how it sounds rather than what it means. The borrowing won outright: nobody reads 四 (sì) as anything but four now.
+sì is fourth tone, falling, like èr. The vowel is not the ee of "see": after s, pinyin i is a tight buzz in the same position as the s itself. Say sss, then voice it without moving your tongue.
+[repeat that twice]
+
+Why it's said this way — the pun in the lift.
+A reason to get that tone right, and it is a real one:
+sì (falling) — four sǐ (dipping) — die.
+Separated by pitch alone — the third time this chapter has shown you that tone is part of a Mandarin word's identity, not an accent on it.
+Not a curiosity, either: it is why many buildings in China number floors 1, 2, 3, 5, skipping four the way some Western buildings skip thirteen.
+
+Guided Practice.
+[your turn — say: sì — falling, firm]
+[pause 8 seconds for the answer]
+[your turn — read: 一 (yī) 二 (èr) 三 (sān) 四 (sì) — in order, then out of order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Four is the first number here you could not work out. What replaced the trick? (A shape borrowed for its sound, built to a rule.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 15 seconds]
+Why do some buildings in China have no fourth floor?
+
+
+Lesson 9 of 11.
+五 (wǔ) — count the strokes and be wrong.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — four, for five and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Guess, out loud, how many strokes the character for five will have.
+
+Script — four, for five.
+五 (wǔ).
+Four strokes. For five.
+If you guessed five, good — that guess is the point. The trick that carried you through the first three is not merely retired, it now actively misleads.
+The four strokes, in order:
+the top horizontal, left to right.
+the descending stroke, from the top bar down, leaning slightly left.
+the turning stroke — across to the right, then down.
+the bottom horizontal, the widest in the character, closing it.
+You already know why the last is widest: it is the base, the same instinct as the long bottom bar of 二 (èr) and 三 (sān). Three pen lifts.
+
+Guided Practice.
+[once you have stopped driving — write: 五 (wǔ) — top bar, descender, turn, then the wide base]
+[your turn — read: 一 (yī) 二 (èr) 三 (sān) 四 (sì) 五 (wǔ) — name each shape without saying the numbers yet]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which stroke is widest, and why? (The bottom — it is the base.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 10 seconds]
+How many strokes does the character for five have?
+
+
+Lesson 10 of 11.
+五 (wǔ) — five, and the run is complete.
+
+Warm-up.
+[pause 2 seconds]
+Draw the shape. Four strokes — for five.
+
+Sounds you'll need.
+五 wǔ means five.
+wǔ is third tone, the low dipping one you have had since nǐ. Keep it low and let it creak; do not push it back up.
+[repeat that twice]
+You already own two words on this tone:
+你 nǐ, 好 hǎo, 五 wǔ.
+All three dip. Say them in a row: the pitch should not change shape once, only the mouth around it.
+One spelling note while you are here. In wǔ there is no consonant hiding under that w: the w is the u, written that way because pinyin does not begin a syllable with a bare u. Round your lips and voice it.
+
+What you've built — one to five.
+You can now count:
+一 二 三 四 五 yī, èr, sān, sì, wǔ.
+Say it as one run, not five separate words. The tone shape is level, down, level, down, dip, and that rhythm is what a listener hears first.
+Five characters, and three ways one can come to you: two you derived, one was borrowed for its sound, and two you simply learned. That mix is Chinese writing in miniature, and you have now met all of it.
+
+Guided Practice.
+[your turn — say: nǐ, hǎo, wǔ — three dips, one shape]
+[pause 8 seconds for the answer]
+[your turn — say: yī èr sān sì wǔ — one run, at speed]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which tone do nǐ, hǎo and wǔ share? (The third — low and dipping.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+Which of the five numbers could you have worked out from their strokes alone?
+
+
+Lesson 11 of 11.
+Practice — read the numbers off a wall.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the same five, shuffled and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Count to five aloud, in order, without looking. Then do it again with your eyes on the characters:
+一 (yī) 二 (èr) 三 (sān) 四 (sì) 五 (wǔ).
+
+Script — the same five, shuffled.
+Counting in order is slightly dishonest: the sequence carries you, and you can recite yī èr sān without reading anything.
+So here they are shuffled. Name each before moving on, without letting your eye run back to the row above:
+四 (sì) 一 (yī) 五 (wǔ) 二 (èr) 三 (sān) 三 (sān) 五 (wǔ) 一 (yī) 四 (sì) 二 (èr).
+If one of them made you pause, it will be 四 (sì) or 五 (wǔ) — the two you could not derive. That is expected, and it tells you exactly which two to drill.
+
+Why it's said this way — where you will actually meet these.
+Not a party trick. A lift panel, a floor directory, a bus number, a market price — all use these characters on their own, with no sentence around them. That is why five are already useful; you are not waiting on grammar:
+You see: 三 You say: sān — third floor.
+And when the panel reads.
+一 (yī) 二 (èr) 三 (sān) 五 (wǔ).
+with no 四 (sì) between three and five, you know why, and you are not confused by it.
+
+The exchange.
+Two voices, using only what this book has given you:
+A: 你好 — ní hǎo (the sandhi tone, as always) B: 你好 — ní hǎo A: [pointing at a panel] 五 — wǔ B: 五 — wǔ.
+Small, and entirely real: repeating a floor number back is what people do in a lift, in any language.
+
+Guided Practice.
+[your turn — read: 四 (sì) 一 (yī) 五 (wǔ) 二 (èr) 三 (sān) — cover the row above first]
+[pause 8 seconds for the answer]
+[your turn — say: yī èr sān sì wǔ — one run, level, down, level, down, dip]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 五 (wǔ) — top bar, descender, turn, wide base]
+
+What you've built this chapter.
+Five characters, and three different ways a character can come to you:
+一 (yī) 二 (èr) 三 (sān) — transparent. The strokes are the number.
+四 (sì) — borrowed for its sound, and built on a box whose rule you can reuse.
+五 (wǔ) — plain. Four strokes for five, learned as a shape.
+That spread is not an accident of this chapter. It is the whole writing system in small: a little of it can be reasoned out, more of it is borrowed sound, and the rest is simply known. You have now met all three, on characters short enough that none of them hurt.
+
+Wrap-up Recall.
+You can read the five characters cold, in any order, with no sentence around them. A panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ) — which number is missing, and why? (四, because sì sits one tone from sǐ.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 15 seconds]
+A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor number is missing, and why?

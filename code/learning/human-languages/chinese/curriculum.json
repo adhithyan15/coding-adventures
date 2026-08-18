@@ -33,6 +33,30 @@
         "ZH-EXT-005-GREETING-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-002",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ZH-W03-yi",
+        "ZH-C03-yi",
+        "ZH-W03-er",
+        "ZH-C03-er",
+        "ZH-W03-san",
+        "ZH-C03-san",
+        "ZH-W03-si",
+        "ZH-C03-si",
+        "ZH-W03-wu",
+        "ZH-C03-wu",
+        "ZH-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-007-NUMERAL-TRANSPARENCY",
+        "ZH-EXT-008-BOX-STROKE-RULE",
+        "ZH-EXT-009-COUNT-CONSOLIDATION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -143,10 +167,10 @@
       "relocates": {}
     },
     "SPINE-COUNT-ONE-TO-FIVE": {
-      "segments": [],
-      "omits": [
-        "NUMBER-ONE-TO-FIVE"
+      "segments": [
+        "ZH-PATH-002"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-SAY-WHAT-I-DO": {
@@ -491,6 +515,53 @@
       ],
       "lessons": [
         "ZH-C01-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-007-NUMERAL-TRANSPARENCY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read 一, 二 and 三 by counting their strokes, and I know that the trick stops at three and why it has to.",
+      "prerequisites": [
+        "ZH-EXT-005-GREETING-CONSOLIDATION"
+      ],
+      "lessons": [
+        "ZH-W03-yi",
+        "ZH-C03-yi",
+        "ZH-W03-er",
+        "ZH-C03-er",
+        "ZH-W03-san",
+        "ZH-C03-san"
+      ]
+    },
+    {
+      "id": "ZH-EXT-008-BOX-STROKE-RULE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write a character built on a box, closing the bottom stroke last, and I can count a turning corner as one stroke rather than two.",
+      "prerequisites": [
+        "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+      ],
+      "lessons": [
+        "ZH-W03-si",
+        "ZH-C03-si"
+      ]
+    },
+    {
+      "id": "ZH-EXT-009-COUNT-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can count from one to five aloud and read the five characters out of order, off a lift panel or a price board, without a sentence around them.",
+      "prerequisites": [
+        "ZH-EXT-008-BOX-STROKE-RULE"
+      ],
+      "lessons": [
+        "ZH-W03-wu",
+        "ZH-C03-wu",
+        "ZH-C03-practice"
       ]
     }
   ]

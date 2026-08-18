@@ -229,6 +229,21 @@ impl OrchestratorProfileRuntime {
         })
     }
 
+    /// Report whether this definition would be accepted, without registering it.
+    ///
+    /// See [`HostProfileRuntime::check_registration`] — this resolves the owning
+    /// host first, so a tool no host claims is refused here rather than later.
+    pub fn check_registration(&self, definition: &ToolDefinition) -> Result<(), HostRuntimeError> {
+        let host_id = self
+            .tool_owners
+            .get(&definition.tool_id)
+            .ok_or_else(|| HostRuntimeError::ToolNotAllowed(definition.tool_id.clone()))?;
+        self.hosts
+            .get(host_id)
+            .expect("validated orchestrator profile must retain each tool owner")
+            .check_registration(definition)
+    }
+
     pub fn register_handler<H>(
         &mut self,
         definition: ToolDefinition,
@@ -313,21 +328,27 @@ impl HostProfileRuntime {
         self.runtime.set_policy(policy);
     }
 
-    pub fn register_handler<H>(
-        &mut self,
-        definition: ToolDefinition,
-        handler: H,
-    ) -> Result<(), HostRuntimeError>
-    where
-        H: ToolHandler + 'static,
-    {
-        let tool_id = definition.tool_id.clone();
-        if !self.profile.allows_tool(&tool_id) {
-            return Err(HostRuntimeError::ToolNotAllowed(tool_id));
+    /// Report whether this definition would be accepted, without registering it.
+    ///
+    /// Exists so a caller registering several related tools can pre-flight the
+    /// whole set and avoid leaving a host half-wired when a later one is
+    /// refused. `register_handler` calls it rather than repeating the checks, so
+    /// the dry run and the real thing cannot drift apart.
+    ///
+    /// The walk must stay **co-total** with the registration path: a pre-flight
+    /// that checks fewer things than the real call is worse than none, because
+    /// it converts "this will fail" into "this will succeed" right before it
+    /// fails anyway. That is why the registry-level checks below are repeated
+    /// here and not just the profile ones — the profile checks were the obvious
+    /// three, and the registry's own two are exactly the ones a caller would be
+    /// surprised by.
+    pub fn check_registration(&self, definition: &ToolDefinition) -> Result<(), HostRuntimeError> {
+        if !self.profile.allows_tool(&definition.tool_id) {
+            return Err(HostRuntimeError::ToolNotAllowed(definition.tool_id.clone()));
         }
         if definition.required_tier > self.profile.max_tier {
             return Err(HostRuntimeError::PrivilegeCeilingExceeded {
-                tool_id,
+                tool_id: definition.tool_id.clone(),
                 required: definition.required_tier,
                 maximum: self.profile.max_tier,
             });
@@ -340,6 +361,34 @@ impl HostProfileRuntime {
                 });
             }
         }
+
+        // Mirror `InMemoryToolRegistry::register`, in its order, returning the
+        // same error variants so a caller cannot tell a refused pre-flight from
+        // a refused registration.
+        let report = definition.validate();
+        if !report.ok {
+            return Err(HostRuntimeError::ToolApi(ToolApiError::InvalidDefinition(
+                report.errors,
+            )));
+        }
+        if self.runtime.get(&definition.tool_id).is_some() {
+            return Err(HostRuntimeError::ToolApi(ToolApiError::DuplicateToolId(
+                definition.tool_id.clone(),
+            )));
+        }
+        Ok(())
+    }
+
+    pub fn register_handler<H>(
+        &mut self,
+        definition: ToolDefinition,
+        handler: H,
+    ) -> Result<(), HostRuntimeError>
+    where
+        H: ToolHandler + 'static,
+    {
+        self.check_registration(&definition)?;
+        let tool_id = definition.tool_id.clone();
         self.runtime
             .register_handler(definition, handler)
             .map_err(HostRuntimeError::ToolApi)?;
