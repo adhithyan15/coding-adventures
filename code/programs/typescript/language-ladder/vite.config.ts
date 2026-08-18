@@ -54,6 +54,12 @@ export default defineConfig({
             {
               name: "curriculum-plans",
               test: /(?:curriculum\.json|core[\\/](?:languages|spine)\.json)$/,
+              // Same shape as script-data above: 22 tracks' worth of curriculum
+              // JSON grows with every tranche, and this group had no cap until a
+              // human-languages merge pushed the single chunk to 502 kB, over the
+              // 500 kB eager-chunk budget. Capped rather than the budget raised,
+              // for the same reason script-data was capped instead of the budget.
+              maxSize: 250_000,
             },
             {
               name: "book-ledgers",
