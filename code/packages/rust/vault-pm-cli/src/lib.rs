@@ -4319,6 +4319,12 @@ mod tests {
             self.clock_ms.fetch_add(milliseconds, Ordering::Relaxed);
         }
 
+        /// Move the advisory clock backwards, as an NTP step or a manual
+        /// correction can do to real wall time.
+        fn rewind_clock(&self, milliseconds: u64) {
+            self.clock_ms.fetch_sub(milliseconds, Ordering::Relaxed);
+        }
+
         fn secret(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
             self.secrets
                 .lock()
@@ -8438,6 +8444,33 @@ mod tests {
                 "{rejected}"
             );
         }
+    }
+
+    #[test]
+    fn shell_idle_bound_fails_closed_on_an_unusable_clock() {
+        let root = TestRoot::new();
+        let host = TestHost::new(root.paths(), [b"retained value".to_vec()]);
+        let session = shell::ShellSession::new(300_000);
+        assert_eq!(&*session.authenticator(&host).unwrap(), b"retained value");
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+
+        // Wall time is advisory, not monotonic. A backwards step must expire the
+        // authenticator rather than report zero elapsed time forever.
+        host.rewind_clock(1);
+        session.enforce_idle_bound(&host);
+        assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
+
+        // A forward step inside the bound retains it; past the bound expires it.
+        assert!(session.authenticator(&host).is_err());
+        let host = TestHost::new(root.paths(), [b"retained value".to_vec()]);
+        let session = shell::ShellSession::new(300_000);
+        session.authenticator(&host).unwrap();
+        host.advance_clock(299_999);
+        session.enforce_idle_bound(&host);
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+        host.advance_clock(1);
+        session.enforce_idle_bound(&host);
+        assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
     }
 
     #[test]

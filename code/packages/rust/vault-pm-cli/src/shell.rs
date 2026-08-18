@@ -217,13 +217,22 @@ impl ShellSession {
     /// and this slice does not pretend to deliver it.
     ///
     /// A clock that cannot be read fails closed: the authenticator is dropped.
+    /// So does a clock that has moved *backwards* since collection. The host
+    /// clock is advisory wall time, not a monotonic source, so an NTP step or a
+    /// manual correction can make "now" earlier than the collection instant. A
+    /// saturating subtraction would report zero elapsed time for as long as the
+    /// clock stayed behind, silently suspending the bound for exactly as long
+    /// as the machine's clock was wrong. Treating an impossible reading as
+    /// expiry costs one re-prompt and keeps this control fail-closed for the
+    /// same reason an unreadable clock is.
     pub(crate) fn enforce_idle_bound(&self, host: &dyn CliHost) {
         if self.retained.borrow().is_none() {
             return;
         }
+        let retained_at_ms = self.retained_at_ms.get();
         match host.now_ms() {
-            Ok(now_ms) if now_ms.saturating_sub(self.retained_at_ms.get()) < self.idle_bound_ms => {
-            }
+            Ok(now_ms)
+                if now_ms >= retained_at_ms && now_ms - retained_at_ms < self.idle_bound_ms => {}
             _ => self.lock(),
         }
     }

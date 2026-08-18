@@ -17,7 +17,11 @@
   `auto_lock_seconds` bound wipes it when a command is submitted and again when
   the value is handed to an unlock — never merely before the prompt was
   printed, which would let an unattended session serve a stale authenticator to
-  whoever types next — and `exit`, `quit`, or end of input ends the session. `init`, `vault`, a nested `shell`, and a
+  whoever types next. An unreadable clock and a clock that has stepped
+  *backwards* since collection both expire the value, since advisory wall time
+  is not monotonic and a saturating comparison would otherwise suspend the
+  bound for exactly as long as the machine's clock was wrong. `exit`, `quit`,
+  or end of input ends the session. `init`, `vault`, a nested `shell`, and a
   leading `--vault` are refused inside a session. Command lines are read from
   the controlling terminal, never from process standard input, so a redirected
   stdin can supply neither a secret nor a command.

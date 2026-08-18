@@ -122,8 +122,13 @@ happen:
    turn one mistake into a session that can never succeed again;
 3. the configured `auto_lock_seconds` has elapsed when a command is submitted,
    or when the authenticator is handed to an unlock;
-4. the advisory clock cannot be read at a command boundary, or could not be read
-   when the value was first collected, in which case it is never retained;
+4. the advisory clock cannot be read at a command boundary, has stepped
+   *backwards* since collection, or could not be read when the value was first
+   collected — in the last case it is never retained at all. Wall time here is
+   advisory, not monotonic: a saturating comparison against a rolled-back clock
+   would report zero elapsed time and suspend the bound for exactly as long as
+   the machine's clock stayed wrong, so an impossible reading is treated as
+   expiry for the same reason an unreadable one is;
 5. the session ends by `exit`, `quit`, end of input, or terminal failure;
 6. the process exits.
 
@@ -311,7 +316,8 @@ The slice is complete only when tests prove:
 4. a rejected passphrase is not retained, and the following command may succeed;
 5. the configured idle bound drops the authenticator both when the clock
    advances between commands and when it advances entirely inside the blocked
-   terminal read, so a stale value is never handed to a submitted command;
+   terminal read, so a stale value is never handed to a submitted command, and
+   a clock that steps backwards expires it rather than suspending the bound;
 6. lifecycle verbs, nested `shell`, a leading `--vault`, unterminated quotes,
    and over-long token lists are refused without ending the session, and the
    refusal is enforced at dispatch as well as at classification;
