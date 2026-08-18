@@ -876,11 +876,14 @@ gaps remain open, and are recorded here so nobody mistakes silence for safety:
    direct-delivery only, which hands the caller exactly the material direct
    delivery exists to withhold.
 
-2. **`requesting_agent_id` is only as good as its source.** It is read from the
-   execution context. If a host populates that from a caller-supplied field
-   rather than from an attested identity, an adapter that authorizes on it is
-   authorizing on the attacker's own claim. Any binding that relies on this
-   field must first establish that its host attests it.
+2. **The identity fields are only as good as their source.** This covers all
+   three — `requesting_agent_id`, `requesting_user_id`, and `session_id`. Each
+   is read from the execution context, which is populated from the tool
+   invocation request. If a host fills those from caller-supplied values rather
+   than from an attested identity, an adapter that authorizes on any of them is
+   authorizing on the attacker's own claim. Any binding that relies on a field
+   must first establish that its host attests *that* field; attesting one says
+   nothing about the others.
 
 ### 8. Filesystem tools
 

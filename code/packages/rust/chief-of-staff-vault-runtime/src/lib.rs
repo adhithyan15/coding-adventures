@@ -60,20 +60,26 @@ impl std::error::Error for VaultDirectDeliveryError {}
 /// Naming the requester and the secret does not by itself authorize anything.
 /// It is the precondition for an adapter that wants to.
 ///
-/// `requesting_agent_id` is only as trustworthy as whatever populated it. If a
-/// host lets a caller assert its own identity, an adapter must not treat this
-/// field as evidence — see the note in D18D section 7.1.
+/// **All three identity fields are only as trustworthy as whatever populated
+/// them** — `requesting_agent_id`, `requesting_user_id`, and `session_id`
+/// alike. They are read from the tool invocation request. If a host lets a
+/// caller assert its own identity, an adapter that authorizes on any of them is
+/// authorizing on the attacker's own claim. Establish that your host attests a
+/// field before relying on it; see D18D section 7.2.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct VaultDirectRequest<'a> {
-    /// Identity of the agent that invoked the tool, if the host attested one.
+    /// Identity of the agent that invoked the tool. Unattested unless the host
+    /// says otherwise — see the type-level note.
     pub requesting_agent_id: Option<&'a str>,
-    /// User on whose behalf the request was made, if any.
+    /// User on whose behalf the request was made. Unattested unless the host
+    /// says otherwise — see the type-level note.
     ///
     /// Carried separately from the agent because one vault instance may serve
     /// several users; without it an adapter cannot tell *whose* session asked
     /// for a delivery, only which agent process did.
     pub requesting_user_id: Option<&'a str>,
-    /// Session the request arrived on, if any.
+    /// Session the request arrived on. Unattested unless the host says
+    /// otherwise — see the type-level note.
     pub session_id: Option<&'a str>,
     /// Name of the secret being moved.
     pub secret_name: &'a str,

@@ -760,6 +760,29 @@ fn a_duplicated_argument_key_is_rejected_rather_than_resolved() {
         assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
         assert_eq!(error.message, errors::DUPLICATE_ARGUMENT);
     }
+
+    // The direct handler is the one where this matters most: a repeated
+    // `consumer_agent_id` is a redirected destination, so covering only the
+    // lease handler would leave the more interesting attack untested. The
+    // mechanism is the shared `field()` helper, but a shared mechanism is a
+    // reason the test is cheap, not a reason to skip it.
+    for arguments in [
+        object(vec![
+            ("secret_name", string(SECRET_NAME)),
+            ("consumer_agent_id", string("agent:printer")),
+            ("consumer_agent_id", string("agent:attacker")),
+        ]),
+        object(vec![
+            ("secret_name", string(SECRET_NAME)),
+            ("secret_name", string("other")),
+            ("consumer_agent_id", string("agent:printer")),
+        ]),
+    ] {
+        let error = direct_direct_call(arguments.clone())
+            .expect_err(&format!("a repeated key must be refused: {arguments:?}"));
+        assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
+        assert_eq!(error.message, errors::DUPLICATE_ARGUMENT);
+    }
 }
 
 #[test]
