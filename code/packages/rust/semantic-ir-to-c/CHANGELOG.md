@@ -1,5 +1,125 @@
 # Changelog
 
+## 0.40.0 — SIR22 array/matrix base cut (Phase A Slice 2, second-wave backend rollout)
+
+Opens this backend to `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}` and
+implements the SIR22 "base cut": `Expr::ArrayLit`/`Range`/`MatMul`/
+`ElementwiseOp`/`Transpose`/`IndexGet` and `Stmt::IndexSet` (the mutating
+counterpart — a statement, not an expression, per the SIR22 spec's
+"Effects" section). One of five parallel, independent backend PRs for this
+slice (C/Go/Rust/Ruby follow JS's inlined-runtime model; Python follows
+TS's imported-package model — see the SIR22 spec's "Backend impact"
+section, amended for this rollout in #11946).
+
+**New `_sir_array_*` runtime** (`runtime.rs`, appended as a new "SIR22
+array/matrix domain" section): an inlined port of
+`semantic-ir-to-javascript`'s own already-proven `ArrayRt` sub-runtime,
+following this crate's existing inlined-runtime convention (this backend
+always inlines its runtime helpers into the emitted `.c` file — it never
+imports a package, unlike the TS/Python model). A new `SirNDArray` struct
+(`{ rank, rows, cols, data, data_len }`, `rank` always 0 or 2 — a rank-1
+shape is never actually produced by any base-cut constructor, see the
+runtime's own module doc) and a new `SIR_ARRAY` `SirTag` variant carry the
+value; `_sir_fmt`/`_sir_display_str`/`_sir_value_eq_d`/`_sir_object_equal_p`
+each gained a minimal `SIR_ARRAY` case (a `#<Array>` placeholder for
+display, pointer identity for equality — a full `[1 2; 3 4]`-style
+rendering is out of this slice's scope, matching every reference backend's
+own test suite, which reads a scalar element back out via `IndexGet`
+instead of printing the array itself).
+
+**Value-model divergence from the Ruby port (documented, deliberate)**: the
+sibling `semantic-ir-to-ruby` 0.x SIR22 slice (merged the same day) chose
+to preserve native Ruby `Integer`/`Float` propagation through `+`/`-`/`*`,
+forcing `Float` only for `Div`/`Pow`. This C port instead follows the JS
+reference's ACTUAL internal representation: every `SirNDArray` element is
+an unconditional `double`, and an element read back out is always
+`_sir_float(d)` — not JS's cosmetic integer-display shortcut (`19` instead
+of `19.0`), just its real `Float64Array` storage. Given C's `SirValue` is
+statically tagged (`SIR_INT` xor `SIR_FLOAT`, no dynamic `Numeric`
+hierarchy the way Ruby has), this is the simplest correct choice: it
+avoids a second int/float dispatch path through `_sir_array_apply_op`
+(which the Ruby port needs precisely because Ruby's numeric tower isn't
+statically tracked), at the cost of a cosmetic trailing ".0" that no
+reference backend's tests need to match — each backend's own
+`tests/sir22_array.rs` asserts against its own emitted output only.
+
+**The C-specific overflow hazard neither JS nor Ruby has**: JS `Number`s
+are IEEE doubles (lose precision past 2^53, but never wrap) and Ruby
+`Integer` is arbitrary-precision (never overflows) — `rows * cols`
+computing an element count is safe in both references with no explicit
+overflow check. C's `int64_t` has neither property: `rows * cols` can
+silently wrap (undefined behaviour, for a signed overflow) before it is
+ever compared against the `SIR_ARRAY_MAX_ELEMENTS` (2^26) cap, turning a
+huge requested shape into a small/negative/UB computed size and then
+`malloc`ing too little for what the caller believes it got — a classic
+heap-overflow setup. `_sir_array_checked_size` checks `rows >
+SIR_ARRAY_MAX_ELEMENTS / cols` (rejecting) **before** ever computing
+`rows * cols`, not after; every allocation in this file routes through it
+(directly, or via a caller — `_sir_array_new_matrix` — that always calls
+it) before ever calling `_sir_alloc`. Index-position resolution has its
+own, distinct NaN/overflow hazard: casting a NaN or out-of-`int64_t`-range
+`double` to `int64_t` is undefined behaviour in C (unlike JS's
+`Number.isInteger` guard or Ruby's `Float#to_i`, which both fail cleanly
+instead) — `_sir_array_assert_valid_position` bounds-checks the `double`
+**before** the `(int64_t)` cast, not after, and every index position in
+this domain funnels through that one choke point.
+
+**Two compile-time structural checks, added specifically because C's
+static AST shape makes them possible where the JS/Ruby ports could only
+check at runtime**: (1) an `ArrayLit` with ragged rows is rejected by
+`emit.rs`'s pre-emit scan (raggedness is knowable from the SIR AST alone —
+`rows: Vec<Vec<Expr>>`'s row lengths are fixed at parse/lowering time, not
+a runtime-computed shape); (2) an `IndexGet`/`IndexSet` with other than 1
+or 2 index arguments (the "rank <= 2" scope boundary) is likewise rejected
+at compile time (`indices.len()` is static too). The runtime
+(`_sir_array_index_get`/`_sir_array_index_set`) repeats the arg-count
+check anyway, as defense-in-depth for a hand-built `Module` that bypassed
+the scan — consistent with this file's existing "don't rely on every
+future caller re-deriving an invariant" discipline.
+
+**SIR22 "APL addendum" rejected cleanly, using this crate's EXISTING
+mechanism, not a new one**: `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` share
+`NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut above, so the
+ordinary feature-flag capability check alone cannot distinguish "safe"
+modules from "still unimplemented" ones. Nine new arms were added directly
+to `emit.rs`'s existing `scan_expr_for_builtin` — the SAME structural
+pre-emit scan `first_unsupported_builtin` already uses for every other
+"well-formed but not yet lowered" construct in this crate (malformed
+`__new__`/`__def_method__`/etc. shapes) — rather than inventing a parallel
+mechanism (contrast the sibling Ruby backend, which added a dedicated
+`ScanHit::Sir22AddendumNode` variant to its own differently-shaped single
+shared scan; this crate's scan already returns a plain `Option<(String,
+Span)>`, so no new enum variant was needed). Without this, a module using
+e.g. `Reduce` would pass the capability check and panic inside
+`emit_assign`'s `unreachable!` catch-all.
+
+**New `tests/sir22_array.rs`** (13 tests, ported from the JS backend's own
+`sir22_array.rs`, cross-checked against the sibling Ruby backend's port):
+`matmul` of two 2x2 matrices (verified against a known-correct product),
+elementwise `Mul` with a bare-scalar operand (the `_sir_array_coerce`
+bare-scalar-operand regression case — MATLAB's `.* / .\` lowering can hand
+a raw scalar, not an `ArrayLit`, on one side), elementwise `Div`'s
+always-true-divide behaviour (distinguished from this backend's own bare
+`/`, which floors on two `SIR_INT`s), `transpose`, `range` (both explicit
+and default `step`), an `IndexGet` with a `Whole` selector (whole-row
+read), `Stmt::IndexSet` mutating in place (both a `Scalar` position and an
+`IndexArg::Range` sub-range overwrite), plus five compile-time-rejection
+tests: two APL-addendum nodes (`Reduce`, `Catenate` — proving the
+rejection is a real per-variant scan arm, not a fluke that only catches
+one), a ragged `ArrayLit`, and a rank-3 `IndexGet`. Every execution test
+runs against a real `cc`/`clang`/`gcc` toolchain (`SIR_CC` env var, then
+PATH probing, matching `compile_and_run_division_ops.rs`'s exact
+`find_cc`/`compile_and_link` pattern, copied verbatim including its
+unique per-process-and-atomic-counter temp filenames), skipping gracefully
+when none is present.
+
+Verified via the full `semantic-ir-to-c` test suite (all pre-existing
+integration tests still green) and `cargo clippy --all-targets -- -D
+warnings` (clean).
+
+`semantic-ir-to-c` 0.39.0 -> 0.40.0.
+
 ## 0.39.0 — SIR21 T3b-2 Slice 7: cleanup — remove dead `tdiv`/`utdiv`
 
 Part of the SIR21 T3b-2 arc's final slice. `c-to-semantic-ir` — the only

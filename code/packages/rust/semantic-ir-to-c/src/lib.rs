@@ -202,6 +202,23 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // console-output primitive every frontend now emits in place of the
     // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
     Feature::ConsoleIO,
+    // ── SIR22 array/matrix base cut (second-wave backend rollout) ────
+    // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+    // (+ `Stmt::IndexSet`) route into the `_sir_array_*` helpers appended
+    // to `runtime.rs`'s "SIR22 array/matrix domain" section — an inlined
+    // port of the already-proven `semantic-ir-to-javascript` `ArrayRt`
+    // sub-runtime, following this crate's existing inlined-runtime
+    // convention (this backend always inlines, unlike the TS/Python
+    // imported-package model). The SIR22 "APL addendum" nodes (`Reduce`/
+    // `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+    // `Ravel`/`Catenate`) share these same three features but stay
+    // deferred to a later slice — rejected cleanly by `emit.rs`'s
+    // `scan_expr_for_builtin` (folded into this crate's existing
+    // structural pre-emit scan, not a new mechanism), since the
+    // feature-flag gate alone can't distinguish them from the base cut.
+    Feature::NDArrays,
+    Feature::MatrixOps,
+    Feature::ArrayColumnMajor,
 ];
 
 impl Backend for CBackend {

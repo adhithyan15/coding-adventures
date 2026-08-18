@@ -57,7 +57,14 @@ typedef enum {
      * because their value type is `Copy`), C stores the `SirInstance *` INLINE in
      * the union: the pointer IS the handle, so pointer-identity is object
      * identity.  A dedicated tag means no built-in-type helper mis-handles it. */
-    SIR_INSTANCE
+    SIR_INSTANCE,
+    /* SIR22: a dense, rank <= 2, COLUMN-MAJOR numeric array (`SirNDArray`) —
+     * see the "SIR22 array/matrix domain" section near the end of this file
+     * for the full value model and every `_sir_array_*` op. A dedicated tag
+     * (rather than reusing `SIR_SEQ`) mirrors `SIR_INSTANCE`'s own reasoning:
+     * no built-in Sequence helper should ever mis-handle an NDArray, and the
+     * two have different storage (a flat `double*` here, not a `SirValue*`). */
+    SIR_ARRAY
 } SirTag;
 
 typedef struct SirValue SirValue;
@@ -67,6 +74,7 @@ typedef struct SirSeq SirSeq;
 typedef struct SirMap SirMap;
 typedef struct SirError SirError;
 typedef struct SirInstance SirInstance;
+typedef struct SirNDArray SirNDArray;
 
 struct SirValue {
     SirTag tag;
@@ -81,6 +89,7 @@ struct SirValue {
         SirMap *map;      /* SIR_MAP */
         SirError *err;    /* SIR_ERROR */
         SirInstance *inst;/* SIR_INSTANCE */
+        SirNDArray *arr;  /* SIR_ARRAY */
     } as;
 };
 
@@ -576,6 +585,11 @@ int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
          * default `==` on a user object is identity) — the inline pointer IS the
          * identity, so this is a plain pointer compare. */
         case SIR_INSTANCE: return a.as.inst == b.as.inst;
+        /* Reference identity only (like `SIR_CLOSURE`/`SIR_ERROR` above) —
+         * a full element-wise structural comparison is out of this slice's
+         * scope; this at least makes `a == a` true rather than silently
+         * falling to the `default: return 0` below. */
+        case SIR_ARRAY:   return a.as.arr == b.as.arr;
         default:          return 0;
     }
 }
@@ -977,6 +991,12 @@ void _sir_fmt(FILE *out, SirValue v) {
          * embed a non-reproducible pointer). */
         case SIR_INSTANCE:
             fputs("#<", out); fputs(v.as.inst->sir_class, out); fputc('>', out); break;
+        /* A full `[1 2; 3 4]`-style rendering is out of this slice's scope
+         * (see the "SIR22 array/matrix domain" section below) — every base-
+         * cut test reads a SCALAR element back out via `IndexGet` instead,
+         * exactly like the JS/Ruby references' own test suites. This
+         * placeholder mirrors `SIR_CLOSURE`'s `#<closure>` precedent. */
+        case SIR_ARRAY: fputs("#<Array>", out); break;
         default: break;
     }
     _sir_fmt_depth--;
@@ -1081,6 +1101,9 @@ char *_sir_display_str(SirValue v) {
         case SIR_INSTANCE:
             result = _sir_cat(_sir_cat("#<", v.as.inst->sir_class), ">");
             break;
+        /* See `_sir_fmt`'s matching `SIR_ARRAY` case above for why this is a
+         * placeholder, not a full `[1 2; 3 4]` rendering. */
+        case SIR_ARRAY: result = _sir_dup("#<Array>"); break;
         default: result = _sir_dup("");
     }
     _sir_display_depth--;
@@ -3127,6 +3150,7 @@ static SirValue _sir_object_equal_p(SirValue a, SirValue b) {
         case SIR_MAP:      return _sir_bool(a.as.map == b.as.map);
         case SIR_ERROR:    return _sir_bool(a.as.err == b.as.err);
         case SIR_INSTANCE: return _sir_bool(a.as.inst == b.as.inst);
+        case SIR_ARRAY:    return _sir_bool(a.as.arr == b.as.arr);
         default:           return _sir_bool(0);  /* SIR_MISSING: never user-observed */
     }
 }
@@ -3941,5 +3965,750 @@ SirValue _sir_builtin_closure(const char *name) {
 SirValue _sir_unknown_builtin(const char *name) {
     fprintf(stderr, "sir: unsupported builtin '%s'\n", name);
     exit(1);
+}
+
+/* ============================================================
+ * SIR22 array/matrix domain (Phase A Slice 2, second-wave backend
+ * rollout — see the SIR22 spec's "Backend impact" section)
+ * ============================================================
+ *
+ * `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet` (and
+ * `Stmt::IndexSet`) — the SIR22 "base cut" — lower to calls into the
+ * `_sir_array_*` helpers below: an inlined port of
+ * `semantic-ir-to-javascript`'s own already-proven `ArrayRt` sub-runtime
+ * (itself a plain-JS port of the published `@coding-adventures/
+ * sir-runtime-array` package), following this crate's existing
+ * inlined-runtime convention (this backend always inlines, unlike the
+ * TS/Python imported-package model). The 9-node SIR22 "APL addendum"
+ * (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+ * `IndexOf`/`Ravel`/`Catenate`) is a SEPARATE, later rollout slice — see
+ * `emit.rs`'s `scan_expr_for_builtin`, which rejects those nine cleanly
+ * (a compile-time error, not a reachable `unreachable!` panic) even
+ * though they share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
+ * base cut this file implements.
+ *
+ * ## Value model
+ *
+ * `SirNDArray { rank, rows, cols, data, data_len }` — dense, rectangular,
+ * COLUMN-MAJOR storage (Fortran/MATLAB order), mirroring
+ * `array_runtime::value::Array` field-for-field. `rank == 0` is a scalar
+ * (`data_len == 1`, `rows`/`cols` unused); `rank == 2` is a matrix
+ * (`rows` x `cols`, `data_len == rows * cols`) — this port's whole scope,
+ * like the JS/TS/Ruby references, is rank <= 2. (A JS/Ruby-style
+ * "rank-1 vector" shape is never actually produced by any base-cut
+ * constructor here: `range`/`indexGet`'s 1-argument form both return a
+ * `1 x n` RANK-2 row, and `fromRows` is always 2-D — so this port omits a
+ * rank-1 representation entirely rather than carrying dead code for a
+ * shape nothing constructs.)
+ *
+ * Unlike the Ruby port (which preserves native Integer/Float propagation
+ * through `+`/`-`/`*`, only forcing Float for `Div`/`Pow`), this C port
+ * follows the JS reference's ACTUAL internal representation: every
+ * element is a plain C `double`, unconditionally — not JS's cosmetic
+ * integer-display shortcut (`19` instead of `19.0`), just its real
+ * `Float64Array` storage. `SirValue` here is statically tagged
+ * (`SIR_INT` xor `SIR_FLOAT`), so an element read off an NDArray always
+ * becomes `_sir_float(d)`, and an all-integer computation like a 2x2
+ * `matmul` therefore prints WITH a trailing ".0" (`_sir_fmt_float`'s
+ * existing convention for every other Float in this backend), unlike the
+ * Ruby port's int-preserving `19`. This is the simplest correct choice
+ * for C's statically-tagged value model: it avoids a second int/float
+ * dispatch path through `_sir_array_apply_op` (which the Ruby port needs
+ * precisely because Ruby's `Numeric` types aren't statically tracked),
+ * at the cost of a cosmetic ".0" no reference backend's tests need to
+ * match (each backend's own `tests/sir22_array.rs` asserts against ITS
+ * OWN emitted output).
+ *
+ * ## The C-specific overflow hazard neither JS nor Ruby has
+ *
+ * JS `Number`s are IEEE doubles (lose precision silently past 2^53, but
+ * never WRAP), and Ruby `Integer` is arbitrary-precision (never wraps,
+ * never overflows) — so `rows * cols` computing an element count is safe
+ * in both references without an explicit overflow check. C's `int64_t`
+ * has neither property: `rows * cols` can silently wrap (undefined
+ * behaviour, in fact, for a signed overflow) BEFORE it is ever compared
+ * against the `SIR_ARRAY_MAX_ELEMENTS` cap, turning a huge requested
+ * shape into a small (or negative, or UB) computed size and then
+ * `malloc`ing too little for what the caller believes it got — a classic
+ * heap-overflow setup. `_sir_array_checked_size` below therefore checks
+ * `rows > SIR_ARRAY_MAX_ELEMENTS / cols` (rejecting) BEFORE ever
+ * computing `rows * cols`, not after — every allocation in this file
+ * routes through it (or a caller that already routed its own inputs
+ * through it) before calling `_sir_alloc`.
+ */
+
+/* SECURITY: every constructor below validates a shape/output size BEFORE
+ * allocating — a compiled program's array sizes come from potentially
+ * attacker-influenced runtime values (loop counts, parsed input, ...), not
+ * fixed compile-time constants, so an unbounded or malformed shape must fail
+ * cleanly (a `stderr` message + `exit(1)`, matching this file's existing
+ * `_sir_seq_set`/`_sir_divide_v` "trap" convention) rather than let a huge or
+ * wrapped `malloc` size corrupt the heap or exhaust memory. Mirrors the JS
+ * backend's own `MAX_ELEMENTS` bound exactly, so the cap is identical across
+ * every backend that ports this runtime. */
+#define SIR_ARRAY_MAX_ELEMENTS ((int64_t)1 << 26) /* 67,108,864 */
+
+/* Tolerance for the inclusive-stop boundary check in `_sir_array_range`,
+ * matching `matlab-runtime`'s own `eval_colon` and the JS/Ruby ports exactly
+ * — a floating step (e.g. `1:0.1:2`) can drift a few ULPs short of `stop` by
+ * the final iteration, and MATLAB's `a:step:b` is inclusive of `b`. */
+#define SIR_ARRAY_RANGE_EPSILON 1e-9
+
+struct SirNDArray {
+    int rank;            /* 0 (scalar) or 2 (matrix) — see the module doc above */
+    int64_t rows, cols;  /* valid only when rank == 2 */
+    double *data;        /* `data_len` doubles, column-major when rank == 2 */
+    int64_t data_len;
+};
+
+/* Extract a `double` out of a numeric `SirValue`, failing loudly (not
+ * silently coercing to 0.0 the way this file's general-purpose `_sir_as_num`
+ * does) on a non-numeric value — an ArrayLit element or Range bound that
+ * turns out to be, say, a String is a genuine program error in this domain,
+ * not a value this runtime should silently zero out. */
+double _sir_array_num_of(SirValue v, const char *ctx) {
+    if (v.tag == SIR_INT)   return (double)v.as.i;
+    if (v.tag == SIR_FLOAT) return v.as.f;
+    fprintf(stderr, "sir: %s: expected a number, got a non-numeric value\n", ctx);
+    exit(1);
+    return 0.0; /* unreachable; silences -Wreturn-type on toolchains that don't know exit() is noreturn */
+}
+
+/* Checked shape-size computation for a `rows` x `cols` matrix — see the
+ * module doc's "C-specific overflow hazard" section for why the overflow
+ * check happens BEFORE the multiply, not after. `rows`/`cols` are also
+ * range-checked non-negative (a negative dimension is nonsensical and would
+ * otherwise defeat the overflow check's own division). */
+int64_t _sir_array_checked_size(int64_t rows, int64_t cols, const char *ctx) {
+    if (rows < 0 || cols < 0) {
+        fprintf(stderr, "sir: %s: shape (%lld, %lld) has a negative dimension\n",
+                ctx, (long long)rows, (long long)cols);
+        exit(1);
+    }
+    if (cols != 0 && rows > SIR_ARRAY_MAX_ELEMENTS / cols) {
+        fprintf(stderr, "sir: %s: shape (%lld, %lld) exceeds the %lld-element cap\n",
+                ctx, (long long)rows, (long long)cols, (long long)SIR_ARRAY_MAX_ELEMENTS);
+        exit(1);
+    }
+    {
+        int64_t n = rows * cols;
+        if (n > SIR_ARRAY_MAX_ELEMENTS) {
+            fprintf(stderr, "sir: %s: shape (%lld, %lld) (%lld elements) exceeds the %lld-element cap\n",
+                    ctx, (long long)rows, (long long)cols, (long long)n, (long long)SIR_ARRAY_MAX_ELEMENTS);
+            exit(1);
+        }
+        return n;
+    }
+}
+
+/* Construct a rank-2 `rows` x `cols` NDArray from an already-populated
+ * `data` buffer of exactly `rows * cols` doubles (the caller's
+ * responsibility — every call site below allocates `data` via
+ * `_sir_array_checked_size`'s own return value first). Re-validates the
+ * shape (cheap, and keeps "every NDArray that exists passed validation" a
+ * true invariant regardless of which constructor built it, not just the
+ * ones that remembered to check). */
+SirValue _sir_array_new_matrix(int64_t rows, int64_t cols, double *data, const char *ctx) {
+    SirNDArray *a;
+    (void)_sir_array_checked_size(rows, cols, ctx);
+    a = (SirNDArray *)_sir_alloc(sizeof(SirNDArray));
+    a->rank = 2; a->rows = rows; a->cols = cols; a->data = data; a->data_len = rows * cols;
+    { SirValue v; v.tag = SIR_ARRAY; v.as.arr = a; return v; }
+}
+
+/* Construct a rank-0 scalar NDArray wrapping one `double`. */
+SirValue _sir_array_scalar(double x) {
+    SirNDArray *a = (SirNDArray *)_sir_alloc(sizeof(SirNDArray));
+    double *data = (double *)_sir_alloc(sizeof(double));
+    data[0] = x;
+    a->rank = 0; a->rows = 0; a->cols = 0; a->data = data; a->data_len = 1;
+    { SirValue v; v.tag = SIR_ARRAY; v.as.arr = a; return v; }
+}
+
+/* Construct a new NDArray with the SAME shape as `shape_src` but a fresh
+ * `data` buffer (already populated by the caller with `shape_src->data_len`
+ * doubles) — used by `_sir_array_elementwise`'s scalar-broadcast branches,
+ * whose result shape is whichever operand was non-scalar. */
+SirValue _sir_array_new_like(const SirNDArray *shape_src, double *data) {
+    SirNDArray *a = (SirNDArray *)_sir_alloc(sizeof(SirNDArray));
+    a->rank = shape_src->rank; a->rows = shape_src->rows; a->cols = shape_src->cols;
+    a->data = data; a->data_len = shape_src->data_len;
+    { SirValue v; v.tag = SIR_ARRAY; v.as.arr = a; return v; }
+}
+
+/* Rows, treating a scalar as `1x1`. */
+int64_t _sir_array_nrows(const SirNDArray *a) { return a->rank == 0 ? 1 : a->rows; }
+/* Columns, treating a scalar as `1x1`. */
+int64_t _sir_array_ncols(const SirNDArray *a) { return a->rank == 0 ? 1 : a->cols; }
+
+/* Coerce a `SirValue` operand that must ALREADY be an NDArray (`transpose`,
+ * `indexGet`/`indexSet`'s `target`) — unlike `_sir_array_coerce` below,
+ * there is no bare-scalar fallback here, matching the JS/Ruby references
+ * (neither calls `toArrayValue` on these operands either). */
+SirNDArray *_sir_array_require(SirValue v, const char *ctx) {
+    if (v.tag != SIR_ARRAY) {
+        fprintf(stderr, "sir: %s: expected an NDArray\n", ctx);
+        exit(1);
+    }
+    return v.as.arr;
+}
+
+/* Coerce a bare numeric `SirValue` into a rank-0 scalar NDArray; an
+ * already-NDArray value passes through unchanged. Needed because
+ * `matlab-to-semantic-ir`'s lowerer emits a mixed operand pair for
+ * `.* ./ .\` and for `* /` when exactly one side is scalar (e.g. `A .* 2`)
+ * — the BARE scalar sub-expression is passed through `ElementwiseOp`/
+ * `MatMul` unwrapped (a plain `IntLit`/`FloatLit`/arithmetic result), not
+ * wrapped in an `ArrayLit` first. `_sir_array_elementwise`/`_sir_array_matmul`
+ * both normalize through this first, so a raw `SirValue` never reaches
+ * `->data`/`->rows` and fails loudly (via `_sir_array_require`'s cousin
+ * check below) instead of dereferencing a non-`SIR_ARRAY` union member. */
+SirNDArray *_sir_array_coerce(SirValue v, const char *ctx) {
+    if (v.tag == SIR_ARRAY) return v.as.arr;
+    return _sir_array_scalar(_sir_array_num_of(v, ctx)).as.arr;
+}
+
+int _sir_array_is_scalar(const SirNDArray *a) { return a->data_len == 1; }
+
+/* Element `(r, c)` (column-major). Returns 1 and writes `*out` on success, 0
+ * (leaving `*out` untouched) if out of bounds.
+ *
+ * SECURITY: written in AND-form (`r >= 0 && c >= 0 && r < nrows && c <
+ * ncols`), matching the JS/Ruby references' own explicit warning: the
+ * negated OR-form (`r < 0 || c < 0 || ...`) is NOT equivalent under
+ * IEEE-754 if `r`/`c` ever carried a NaN (every relational comparison with
+ * NaN is false, so an OR-form check would have every branch evaluate false,
+ * silently skipping the bounds check). `r`/`c` are always already-validated
+ * `int64_t` positions by the time they reach this function (never a raw
+ * `double`), so integers can't be NaN and this specific call path is not
+ * actually reachable with one — kept in AND-form anyway for the same
+ * "don't rely on every future caller re-deriving the invariant" discipline
+ * the JS `set` doc comment states, at zero extra cost either way. */
+int _sir_array_get(const SirNDArray *a, int64_t r, int64_t c, double *out) {
+    int64_t nr = _sir_array_nrows(a), nc = _sir_array_ncols(a);
+    if (r >= 0 && c >= 0 && r < nr && c < nc) {
+        *out = a->data[c * nr + r];
+        return 1;
+    }
+    return 0;
+}
+
+/* Set element `(r, c)` IN PLACE (column-major) — mutates `a->data` directly,
+ * matching MATLAB assignment semantics (`A(i,j) = v` rebinds one element of
+ * the existing array, it does not produce a new one). This is why
+ * `Stmt::IndexSet` is a statement, not a pure expression, in the SIR22 spec.
+ * Returns 1 on success, 0 (no mutation) if out of bounds. Same AND-form
+ * bounds check as `_sir_array_get`. */
+int _sir_array_set(SirNDArray *a, int64_t r, int64_t c, double value) {
+    int64_t nr = _sir_array_nrows(a), nc = _sir_array_ncols(a);
+    if (r >= 0 && c >= 0 && r < nr && c < nc) {
+        a->data[c * nr + r] = value;
+        return 1;
+    }
+    return 0;
+}
+
+/* ── elementwise binary ops ─────────────────────────────────────────── */
+
+/* Mirrors `ElementwiseOpKind` — `emit.rs`'s `elementwise_op_c_name` emits
+ * exactly these constant names, so the two stay in lockstep by construction
+ * (a Rust `match` over the same source enum, not a hand-maintained string
+ * table the way the JS/Ruby ports' string-keyed dispatch needs). */
+typedef enum {
+    SIR_EW_ADD, SIR_EW_SUB, SIR_EW_MUL, SIR_EW_DIV, SIR_EW_POW,
+    SIR_EW_MAX, SIR_EW_MIN, SIR_EW_EQ, SIR_EW_NE,
+    SIR_EW_LT, SIR_EW_LE, SIR_EW_GE, SIR_EW_GT
+} SirElementwiseOp;
+
+/* Comparisons follow the same APL-style boolean convention
+ * `array_runtime::BinOp` uses: `1.0` for true, `0.0` for false (never a
+ * native C `_Bool`/`SIR_BOOL`), since the result must stay a plain array
+ * element like every other value here. `Div` is ALWAYS a true float divide
+ * (`a / b` over `double`s) — unlike this backend's OWN `_sir_divide_v`
+ * (bare `/`), which FLOORS when both operands happen to be `SIR_INT`; that
+ * integer-floor behaviour belongs to Ruby's `/`, not MATLAB's `./`, which
+ * always real-divides. A zero divisor here silently produces IEEE
+ * inf/nan (matching the JS/Ruby references' `applyOp` exactly), NOT this
+ * file's OWN `_sir_true_div`, which fails loudly — that divergence is
+ * deliberate: `_sir_true_div` models Python's `/` (raises), this models
+ * MATLAB's `./` over `double`s (never raises, produces `Inf`/`NaN`, which
+ * MATLAB itself does too). */
+double _sir_array_apply_op(SirElementwiseOp op, double a, double b) {
+    switch (op) {
+        case SIR_EW_ADD: return a + b;
+        case SIR_EW_SUB: return a - b;
+        case SIR_EW_MUL: return a * b;
+        case SIR_EW_DIV: return a / b;
+        case SIR_EW_POW: return pow(a, b);
+        case SIR_EW_MAX: return a > b ? a : b;
+        case SIR_EW_MIN: return a < b ? a : b;
+        case SIR_EW_EQ:  return a == b ? 1.0 : 0.0;
+        case SIR_EW_NE:  return a != b ? 1.0 : 0.0;
+        case SIR_EW_LT:  return a < b  ? 1.0 : 0.0;
+        case SIR_EW_LE:  return a <= b ? 1.0 : 0.0;
+        case SIR_EW_GE:  return a >= b ? 1.0 : 0.0;
+        case SIR_EW_GT:  return a > b  ? 1.0 : 0.0;
+    }
+    fprintf(stderr, "sir: _sir_array_apply_op: unrecognised op %d\n", (int)op);
+    exit(1);
+    return 0.0; /* unreachable */
+}
+
+/* Elementwise binary op with scalar broadcasting. Either operand may be a
+ * scalar; otherwise the shapes must match exactly (full NumPy/MATLAB
+ * broadcasting is out of scope, same as the Rust/JS/Ruby references).
+ * Result takes the non-scalar operand's shape (or the scalar's, if both
+ * are). Normalizes both operands through `_sir_array_coerce` first — see
+ * that function's doc for the bare-scalar-operand regression this guards. */
+SirValue _sir_array_elementwise(SirElementwiseOp op, SirValue av, SirValue bv) {
+    SirNDArray *a = _sir_array_coerce(av, "elementwise");
+    SirNDArray *b = _sir_array_coerce(bv, "elementwise");
+    if (_sir_array_is_scalar(a)) {
+        int64_t n = b->data_len, i;
+        double *data = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) data[i] = _sir_array_apply_op(op, a->data[0], b->data[i]);
+        return _sir_array_new_like(b, data);
+    }
+    if (_sir_array_is_scalar(b)) {
+        int64_t n = a->data_len, i;
+        double *data = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) data[i] = _sir_array_apply_op(op, a->data[i], b->data[0]);
+        return _sir_array_new_like(a, data);
+    }
+    if (a->rank != b->rank || a->rows != b->rows || a->cols != b->cols) {
+        fprintf(stderr, "sir: elementwise: non-conformable arrays: (%lld, %lld) vs (%lld, %lld)\n",
+                (long long)_sir_array_nrows(a), (long long)_sir_array_ncols(a),
+                (long long)_sir_array_nrows(b), (long long)_sir_array_ncols(b));
+        exit(1);
+    }
+    {
+        int64_t n = a->data_len, i;
+        double *data = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) data[i] = _sir_array_apply_op(op, a->data[i], b->data[i]);
+        return _sir_array_new_like(a, data);
+    }
+}
+
+/* Matrix product `[m, k] . [k, n] -> [m, n]` (column-major throughout). `m`
+ * and `n` come from two INDEPENDENT operands (each individually under
+ * `SIR_ARRAY_MAX_ELEMENTS`, but their product isn't bounded by that alone —
+ * an outer-product-shaped call could still ask for a huge output), so
+ * `_sir_array_checked_size` (inside `_sir_array_new_matrix`, via the
+ * pre-check below) validates `[m, n]` BEFORE allocating `out`, not after.
+ * Normalizes both operands through `_sir_array_coerce` first, same
+ * reasoning as `_sir_array_elementwise`. */
+SirValue _sir_array_matmul(SirValue av, SirValue bv) {
+    SirNDArray *a = _sir_array_coerce(av, "matmul");
+    SirNDArray *b = _sir_array_coerce(bv, "matmul");
+    int64_t m = _sir_array_nrows(a), ka = _sir_array_ncols(a);
+    int64_t kb = _sir_array_nrows(b), n = _sir_array_ncols(b);
+    int64_t out_len;
+    double *out;
+    if (ka != kb) {
+        fprintf(stderr, "sir: matmul: inner dimensions disagree (%lldx%lld . %lldx%lld)\n",
+                (long long)m, (long long)ka, (long long)kb, (long long)n);
+        exit(1);
+    }
+    out_len = _sir_array_checked_size(m, n, "matmul");
+    out = (out_len > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)out_len) : NULL;
+    {
+        int64_t j, i, p;
+        for (j = 0; j < n; j++) {
+            for (i = 0; i < m; i++) {
+                double acc = 0.0;
+                for (p = 0; p < ka; p++) {
+                    acc += a->data[p * m + i] * b->data[j * kb + p]; /* column-major indexing */
+                }
+                out[j * m + i] = acc;
+            }
+        }
+    }
+    return _sir_array_new_matrix(m, n, out, "matmul");
+}
+
+/* Matrix transpose. `conjugate` distinguishes MATLAB `'` (`1`) from `.'`
+ * (`0`) — this runtime has no `Complex` value type yet (matching
+ * `array-runtime`'s own real-only scope today), so a conjugate transpose of
+ * real data is identical to a plain transpose; `conjugate` is accepted only
+ * for call-shape parity with the SIR spec. `target` must already be an
+ * NDArray (`_sir_array_require`, no bare-scalar coercion — matching the
+ * JS/Ruby references, neither of which calls `toArrayValue` here either). */
+SirValue _sir_array_transpose(SirValue targetv, int conjugate) {
+    SirNDArray *a = _sir_array_require(targetv, "transpose");
+    int64_t m = _sir_array_nrows(a), n = _sir_array_ncols(a);
+    int64_t len = a->data_len;
+    double *out = (len > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)len) : NULL;
+    int64_t i, j;
+    (void)conjugate;
+    for (j = 0; j < n; j++) {
+        for (i = 0; i < m; i++) {
+            out[i * n + j] = a->data[j * m + i];
+        }
+    }
+    return _sir_array_new_matrix(n, m, out, "transpose");
+}
+
+/* Materialize a MATLAB-style range `start:step:stop` (default `step = 1`)
+ * as a `1 x n` row vector — MATLAB's `:` always produces a row, never a
+ * column. Bounded by `SIR_ARRAY_MAX_ELEMENTS` so a compiled program's
+ * `1:1e18`-style range can't exhaust memory before this function ever gets
+ * to materialize anything: a first COUNTING pass establishes exactly how
+ * many elements the range needs (failing loudly past the cap) before any
+ * allocation happens, then a second pass fills a buffer sized to that exact
+ * count — no realloc-and-grow, and no risk of the two passes disagreeing,
+ * since both walk the identical deterministic `x += step` sequence from the
+ * same `start`. */
+SirValue _sir_array_range(SirValue startv, SirValue stopv, SirValue stepv) {
+    double start = _sir_array_num_of(startv, "range");
+    double stop  = _sir_array_num_of(stopv, "range");
+    double step  = _sir_array_num_of(stepv, "range");
+    int64_t count;
+    double x;
+    double *data;
+    if (step == 0.0) {
+        fprintf(stderr, "sir: range: step cannot be zero\n");
+        exit(1);
+    }
+    /* SECURITY: reject non-finite bounds up front — the loop condition below
+     * is false on its very first check whenever start/stop/step is NaN
+     * (every relational comparison with NaN is false), so an unguarded NaN
+     * bound would silently produce an empty range instead of erroring, the
+     * same "NaN defeats a comparison-based check" hazard class the index
+     * resolution functions below also guard against. An unguarded
+     * Infinity bound would instead loop until the element cap trips, which
+     * is merely slow, not wrong — but is rejected here too for the same
+     * "fail loudly, don't fall through to a confusing downstream state"
+     * discipline the JS/Ruby references both apply uniformly to all three
+     * bounds. */
+    if (!isfinite(start) || !isfinite(stop) || !isfinite(step)) {
+        fprintf(stderr, "sir: range: start/stop/step must be finite numbers, got (%.17g, %.17g, %.17g)\n",
+                start, stop, step);
+        exit(1);
+    }
+    count = 0;
+    x = start;
+    while ((step > 0 && x <= stop + SIR_ARRAY_RANGE_EPSILON) ||
+           (step < 0 && x >= stop - SIR_ARRAY_RANGE_EPSILON)) {
+        if (count >= SIR_ARRAY_MAX_ELEMENTS) {
+            fprintf(stderr, "sir: range: produces more than %lld elements\n",
+                    (long long)SIR_ARRAY_MAX_ELEMENTS);
+            exit(1);
+        }
+        count++;
+        x += step;
+    }
+    data = (count > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)count) : NULL;
+    x = start;
+    { int64_t i; for (i = 0; i < count; i++) { data[i] = x; x += step; } }
+    return _sir_array_new_matrix(1, count, data, "range");
+}
+
+/* ── ArrayLit ────────────────────────────────────────────────────────── */
+
+/* `[1 2; 3 4]` (`Expr::ArrayLit`) — `rows_in`/`cols_in` are the literal's
+ * dimensions (known at COMPILE time from the SIR `rows: Vec<Vec<Expr>>`
+ * shape; `emit.rs`'s pre-emit scan rejects a ragged literal cleanly before
+ * this function is ever emitted, so `rows_in * cols_in` always equals the
+ * `total` varargs actually passed). Elements arrive ROW-MAJOR (matching the
+ * literal syntax and the SIR node's own field order) and are stored
+ * COLUMN-MAJOR (`Feature::ArrayColumnMajor`, per the SIR22 spec's "Storage
+ * convention"). `rows_in == 0` is the empty literal `[]` -> a `0x0` array,
+ * matching the JS/Ruby references' own special case. */
+SirValue _sir_array_from_rows(int64_t rows_in, int64_t cols_in, int total, ...) {
+    int64_t n, r, c;
+    double *data;
+    va_list ap;
+    (void)total;
+    if (rows_in == 0) {
+        return _sir_array_new_matrix(0, 0, NULL, "fromRows");
+    }
+    n = _sir_array_checked_size(rows_in, cols_in, "fromRows");
+    data = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+    va_start(ap, total);
+    for (r = 0; r < rows_in; r++) {
+        for (c = 0; c < cols_in; c++) {
+            SirValue e = va_arg(ap, SirValue);
+            data[c * rows_in + r] = _sir_array_num_of(e, "fromRows"); /* column-major store */
+        }
+    }
+    va_end(ap);
+    return _sir_array_new_matrix(rows_in, cols_in, data, "fromRows");
+}
+
+/* ── indexing ────────────────────────────────────────────────────────── */
+/* One MATLAB-style index-position argument, mirroring the SIR22 spec's
+ * `IndexArg` exactly: `Scalar(value)` / `Whole` / `Range(indices)`. `end`-
+ * relative indices are never seen here — per SIR10 discipline, the
+ * frontend resolves `end` to a concrete 0-based `Scalar` index before
+ * emitting `IndexGet`/`IndexSet`. */
+typedef enum { SIR_IDXARG_SCALAR, SIR_IDXARG_WHOLE, SIR_IDXARG_RANGE } SirIndexArgKind;
+typedef struct {
+    SirIndexArgKind kind;
+    SirValue value; /* SCALAR: the index value. RANGE: the NDArray of indices. WHOLE: unused (nil). */
+} SirIndexArg;
+
+SirIndexArg _sir_array_idx_scalar(SirValue v) { SirIndexArg a; a.kind = SIR_IDXARG_SCALAR; a.value = v; return a; }
+SirIndexArg _sir_array_idx_whole(void)        { SirIndexArg a; a.kind = SIR_IDXARG_WHOLE;  a.value = _sir_nil(); return a; }
+SirIndexArg _sir_array_idx_range(SirValue v)  { SirIndexArg a; a.kind = SIR_IDXARG_RANGE;  a.value = v; return a; }
+
+typedef struct { int64_t *pos; int64_t n; } SirArrayPositions;
+
+/* Validate one resolved position is a real, finite integer, and return it
+ * as an `int64_t`.
+ *
+ * SECURITY: unlike this file's general-purpose `_sir_as_int` (used e.g. by
+ * `ForRange`'s loop counters), which casts a `SIR_FLOAT`'s `double` to
+ * `int64_t` UNCONDITIONALLY, this function validates BEFORE ever casting —
+ * casting a NaN, or a finite-but-out-of-`int64_t`-range, `double` to
+ * `int64_t` is UNDEFINED BEHAVIOUR in C (unlike JS's `Number.isInteger`
+ * guard or Ruby's `Float#to_i`, which both fail cleanly instead). The
+ * magnitude bound (+-9.2e18, comfortably inside `int64_t`'s actual range but
+ * far enough from the exact boundary that the comparison itself can't be
+ * fooled by `double`'s limited precision at that magnitude) is checked
+ * FIRST, so the subsequent `(int64_t)d` cast only ever runs on a value
+ * already known to be in range. Every index position this array domain
+ * resolves funnels through this single choke point (mirroring the JS
+ * reference's `assertValidPosition`), so this NaN-safety fix, once made
+ * here, covers `indexGet`/`indexSet`/range-selector resolution uniformly. */
+int64_t _sir_array_assert_valid_position(SirValue v, const char *ctx) {
+    double d = _sir_array_num_of(v, ctx);
+    if (!(d == d) || d < -9.2e18 || d > 9.2e18 || d != (double)(int64_t)d) {
+        fprintf(stderr, "sir: %s: index %.17g is not a finite integer\n", ctx, d);
+        exit(1);
+    }
+    return (int64_t)d;
+}
+
+/* Resolve one `SirIndexArg` against a dimension of size `dim_size` into a
+ * flat list of 0-based positions along that dimension (arena-allocated,
+ * never freed, like every heap value in this file). */
+SirArrayPositions _sir_array_resolve_positions(SirIndexArg arg, int64_t dim_size) {
+    SirArrayPositions r;
+    switch (arg.kind) {
+        case SIR_IDXARG_SCALAR: {
+            int64_t *p = (int64_t *)_sir_alloc(sizeof(int64_t));
+            p[0] = _sir_array_assert_valid_position(arg.value, "resolvePositions");
+            r.pos = p; r.n = 1;
+            return r;
+        }
+        case SIR_IDXARG_WHOLE: {
+            int64_t *p = (dim_size > 0) ? (int64_t *)_sir_alloc(sizeof(int64_t) * (size_t)dim_size) : NULL;
+            int64_t i;
+            for (i = 0; i < dim_size; i++) p[i] = i;
+            r.pos = p; r.n = dim_size;
+            return r;
+        }
+        case SIR_IDXARG_RANGE: {
+            SirNDArray *ra;
+            int64_t n, i;
+            int64_t *p;
+            if (arg.value.tag != SIR_ARRAY) {
+                fprintf(stderr, "sir: resolvePositions: a range index argument must be an NDArray\n");
+                exit(1);
+            }
+            ra = arg.value.as.arr;
+            n = ra->data_len;
+            p = (n > 0) ? (int64_t *)_sir_alloc(sizeof(int64_t) * (size_t)n) : NULL;
+            for (i = 0; i < n; i++) {
+                /* `trunc` toward zero (matching JS's `Math.trunc` / Ruby's
+                 * `Float#truncate`); safe to call on any double (IEEE `trunc`
+                 * of NaN/Infinity is defined to yield NaN/Infinity back, no
+                 * UB) — `_sir_array_assert_valid_position` below is what
+                 * actually rejects a non-finite/non-integral result. */
+                p[i] = _sir_array_assert_valid_position(_sir_float(trunc(ra->data[i])), "resolvePositions");
+            }
+            r.pos = p; r.n = n;
+            return r;
+        }
+    }
+    fprintf(stderr, "sir: resolvePositions: unrecognised IndexArg kind %d\n", (int)arg.kind);
+    exit(1);
+    r.pos = NULL; r.n = 0; /* unreachable */
+    return r;
+}
+
+/* `A(i)` / `A(i, j)` (`Expr::IndexGet`) — read one element or a sub-array.
+ * `n` (the argument count) is a COMPILE-TIME constant baked in by
+ * `emit.rs` (`indices.len()`, from the SIR AST — never attacker-influenced
+ * at runtime) — `emit.rs`'s pre-emit scan already rejects any module whose
+ * `IndexGet`/`IndexSet` has other than 1 or 2 `IndexArg`s, so the `n != 1 &&
+ * n != 2` check below is defense-in-depth for a hand-built `Module` that
+ * bypassed that scan, not a path any compiled program can reach.
+ *
+ * A single argument indexes `target`'s underlying column-major data
+ * LINEARLY (MATLAB's own single-subscript convention, which is
+ * column-major too); two arguments index `(row, col)`. Returns a SCALAR
+ * `SirValue` (`_sir_float`) when every argument is `Scalar` (a single
+ * element), otherwise a fresh `SIR_ARRAY`. */
+SirValue _sir_array_index_get(SirValue targetv, int n, ...) {
+    SirNDArray *a = _sir_array_require(targetv, "indexGet");
+    SirIndexArg args[2];
+    va_list ap;
+    if (n != 1 && n != 2) {
+        fprintf(stderr, "sir: indexGet: only 1 or 2 index arguments are supported (rank <= 2 scope), got %d\n", n);
+        exit(1);
+    }
+    va_start(ap, n);
+    { int i; for (i = 0; i < n; i++) args[i] = va_arg(ap, SirIndexArg); }
+    va_end(ap);
+
+    if (n == 1) {
+        SirArrayPositions ps = _sir_array_resolve_positions(args[0], a->data_len);
+        if (args[0].kind == SIR_IDXARG_SCALAR) {
+            int64_t i = ps.pos[0];
+            if (i < 0 || i >= a->data_len) {
+                fprintf(stderr, "sir: indexGet: linear index %lld out of bounds\n", (long long)i);
+                exit(1);
+            }
+            return _sir_float(a->data[i]);
+        }
+        {
+            int64_t out_len = _sir_array_checked_size(1, ps.n, "indexGet");
+            double *data = (out_len > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)out_len) : NULL;
+            int64_t k;
+            for (k = 0; k < ps.n; k++) {
+                int64_t i = ps.pos[k];
+                if (i < 0 || i >= a->data_len) {
+                    fprintf(stderr, "sir: indexGet: linear index %lld out of bounds\n", (long long)i);
+                    exit(1);
+                }
+                data[k] = a->data[i];
+            }
+            return _sir_array_new_matrix(1, ps.n, data, "indexGet");
+        }
+    }
+    {
+        SirArrayPositions rows = _sir_array_resolve_positions(args[0], _sir_array_nrows(a));
+        SirArrayPositions cols = _sir_array_resolve_positions(args[1], _sir_array_ncols(a));
+        if (args[0].kind == SIR_IDXARG_SCALAR && args[1].kind == SIR_IDXARG_SCALAR) {
+            double v;
+            if (!_sir_array_get(a, rows.pos[0], cols.pos[0], &v)) {
+                fprintf(stderr, "sir: indexGet: (%lld, %lld) out of bounds for shape (%lld, %lld)\n",
+                        (long long)rows.pos[0], (long long)cols.pos[0],
+                        (long long)_sir_array_nrows(a), (long long)_sir_array_ncols(a));
+                exit(1);
+            }
+            return _sir_float(v);
+        }
+        /* SECURITY: `rows.n`/`cols.n` are each individually bounded by `a`'s
+         * own dimensions (a `Whole` selector) or by a `Range` NDArray's own
+         * `SIR_ARRAY_MAX_ELEMENTS`-checked construction — but nothing bounds
+         * their PRODUCT on its own, the exact outer-product-shaped
+         * allocation `_sir_array_matmul` guards against, one level up.
+         * Validate before allocating, not after. */
+        {
+            int64_t out_len = _sir_array_checked_size(rows.n, cols.n, "indexGet");
+            double *data = (out_len > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)out_len) : NULL;
+            int64_t ci, ri;
+            for (ci = 0; ci < cols.n; ci++) {
+                for (ri = 0; ri < rows.n; ri++) {
+                    double v;
+                    if (!_sir_array_get(a, rows.pos[ri], cols.pos[ci], &v)) {
+                        fprintf(stderr, "sir: indexGet: (%lld, %lld) out of bounds for shape (%lld, %lld)\n",
+                                (long long)rows.pos[ri], (long long)cols.pos[ci],
+                                (long long)_sir_array_nrows(a), (long long)_sir_array_ncols(a));
+                        exit(1);
+                    }
+                    data[ci * rows.n + ri] = v;
+                }
+            }
+            return _sir_array_new_matrix(rows.n, cols.n, data, "indexGet");
+        }
+    }
+}
+
+/* Broadcast a scalar-or-NDArray right-hand side to exactly `count` values
+ * (mirrors `_sir_array_elementwise`'s scalar-broadcast rule). Returns a
+ * buffer of `count` doubles — either a fresh fill (scalar / 1-element
+ * NDArray source) or, when `value` already has exactly `count` elements,
+ * the SAME buffer `value` owns (shared, not copied — matching the JS/Ruby
+ * references' identical `return value.data`; safe here because every
+ * caller only READS the returned buffer before the statement ends, never
+ * retains it). */
+double *_sir_array_broadcast_values(SirValue value, int64_t count, const char *ctx) {
+    if (value.tag == SIR_INT || value.tag == SIR_FLOAT) {
+        double x = _sir_array_num_of(value, ctx);
+        double *out = (count > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)count) : NULL;
+        int64_t i;
+        for (i = 0; i < count; i++) out[i] = x;
+        return out;
+    }
+    if (value.tag == SIR_ARRAY) {
+        SirNDArray *v = value.as.arr;
+        if (v->data_len == 1) {
+            double x = v->data[0];
+            double *out = (count > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)count) : NULL;
+            int64_t i;
+            for (i = 0; i < count; i++) out[i] = x;
+            return out;
+        }
+        if (v->data_len != count) {
+            fprintf(stderr, "sir: %s: value has %lld elements, expected %lld\n",
+                    ctx, (long long)v->data_len, (long long)count);
+            exit(1);
+        }
+        return v->data;
+    }
+    fprintf(stderr, "sir: %s: value must be a number or NDArray\n", ctx);
+    exit(1);
+    return NULL; /* unreachable */
+}
+
+/* `A(i) = v` / `A(i, j) = v` (`Stmt::IndexSet`) — write one element or a
+ * sub-array, IN PLACE (see `_sir_array_set`'s doc comment above for why
+ * this mutates rather than returns a new array). `value` may be a scalar
+ * (broadcast to every selected position) or an NDArray with exactly as
+ * many elements as positions are selected. `value` is passed BEFORE the
+ * variadic index-argument pack (C requires `...` to be the LAST parameter,
+ * so it can't sit between `target` and the indices the way the SIR node's
+ * own `target, indices, value` field order would suggest) — `emit.rs`
+ * documents this reordering at its one call site. Same `n != 1 && n != 2`
+ * defense-in-depth as `_sir_array_index_get`. */
+void _sir_array_index_set(SirValue targetv, SirValue value, int n, ...) {
+    SirNDArray *a = _sir_array_require(targetv, "indexSet");
+    SirIndexArg args[2];
+    va_list ap;
+    if (n != 1 && n != 2) {
+        fprintf(stderr, "sir: indexSet: only 1 or 2 index arguments are supported (rank <= 2 scope), got %d\n", n);
+        exit(1);
+    }
+    va_start(ap, n);
+    { int i; for (i = 0; i < n; i++) args[i] = va_arg(ap, SirIndexArg); }
+    va_end(ap);
+
+    if (n == 1) {
+        SirArrayPositions ps = _sir_array_resolve_positions(args[0], a->data_len);
+        double *values = _sir_array_broadcast_values(value, ps.n, "indexSet");
+        int64_t k;
+        for (k = 0; k < ps.n; k++) {
+            int64_t i = ps.pos[k];
+            if (i < 0 || i >= a->data_len) {
+                fprintf(stderr, "sir: indexSet: linear index %lld out of bounds\n", (long long)i);
+                exit(1);
+            }
+            a->data[i] = values[k];
+        }
+        return;
+    }
+    {
+        SirArrayPositions rows = _sir_array_resolve_positions(args[0], _sir_array_nrows(a));
+        SirArrayPositions cols = _sir_array_resolve_positions(args[1], _sir_array_ncols(a));
+        /* Same product-of-two-independent-selections gap `indexGet` closes
+         * above — validate before `_sir_array_broadcast_values` allocates. */
+        int64_t count = _sir_array_checked_size(rows.n, cols.n, "indexSet");
+        double *values = _sir_array_broadcast_values(value, count, "indexSet");
+        int64_t k = 0, ci, ri;
+        for (ci = 0; ci < cols.n; ci++) {
+            for (ri = 0; ri < rows.n; ri++) {
+                if (!_sir_array_set(a, rows.pos[ri], cols.pos[ci], values[k])) {
+                    fprintf(stderr, "sir: indexSet: (%lld, %lld) out of bounds for shape (%lld, %lld)\n",
+                            (long long)rows.pos[ri], (long long)cols.pos[ci],
+                            (long long)_sir_array_nrows(a), (long long)_sir_array_ncols(a));
+                    exit(1);
+                }
+                k++;
+            }
+        }
+    }
 }
 "####;

@@ -14,7 +14,10 @@ use std::cell::{Cell, RefCell};
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, IntSpec, IntWidth, Module, Scope, Span, Stmt};
+use semantic_ir::{
+    Block, ElementwiseOpKind, Expr, Function, Global, IndexArg, IntSpec, IntWidth, Module, Scope,
+    Span, Stmt,
+};
 
 use crate::runtime::RUNTIME;
 
@@ -821,6 +824,60 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::ModuleDef { .. } => {
             let _ = writeln!(out, "{pad}/* module declaration (no module object) */");
         }
+        // ── SIR22: array/matrix indexed assignment ────────────────────
+        // `target[indices...] = value;` — mutates the shared `SirNDArray`
+        // box IN PLACE via `_sir_array_index_set` (see `runtime.rs`'s
+        // "SIR22 array/matrix domain" section), matching the SIR22 spec's
+        // own note that `IndexSet` is a `Stmt`, not a pure `Expr`, for
+        // exactly this in-place-mutation reason. Operands (target, value,
+        // and each index arg's inner expression) are hoisted so
+        // left-to-right evaluation order holds even when one is compound —
+        // mirrors `SeqSet`/`MapSet` above. `value` is emitted BEFORE the
+        // index-argument pack (`_sir_array_index_set`'s C signature puts it
+        // there, since C requires `...` to be the LAST parameter — see that
+        // function's own doc comment for why the field order isn't
+        // `target, indices, value` at the call site).
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let mut ops: Vec<&Expr> = vec![target.as_ref(), value.as_ref()];
+            for arg in indices {
+                match arg {
+                    IndexArg::Scalar(e) | IndexArg::Range(e) => ops.push(e.as_ref()),
+                    IndexArg::Whole => {}
+                }
+            }
+            let names = hoist_operands(out, &ops, inner);
+            let mut it = names.into_iter();
+            let target_name = it.next().expect("target operand");
+            let value_name = it.next().expect("value operand");
+            let _ = write!(
+                out,
+                "{ipad}_sir_array_index_set({target_name}, {value_name}, {}",
+                indices.len()
+            );
+            for arg in indices {
+                match arg {
+                    IndexArg::Scalar(_) => {
+                        let _ = write!(out, ", _sir_array_idx_scalar({})", it.next().unwrap());
+                    }
+                    IndexArg::Whole => {
+                        out.push_str(", _sir_array_idx_whole()");
+                    }
+                    IndexArg::Range(_) => {
+                        let _ = write!(out, ", _sir_array_idx_range({})", it.next().unwrap());
+                    }
+                }
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
 }
@@ -1022,9 +1079,168 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             );
             let _ = writeln!(out, "{pad}}}");
         }
+        // ── SIR22 array/matrix base cut ────────────────────────────────
+        // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+        // route into the `_sir_array_*` helpers ported from
+        // `semantic-ir-to-javascript`'s own already-proven `ArrayRt`
+        // sub-runtime (see `runtime.rs`'s "SIR22 array/matrix domain"
+        // section). Every operand is hoisted (`hoist_operands`) so
+        // left-to-right evaluation order holds even when compound —
+        // mirrors `SeqLit`/`MapLit` above; none of these six nodes has a
+        // "simple" fast path (`is_simple` returns `false` for all of them
+        // via its catch-all), so they only ever reach the emitter here.
+        Expr::ArrayLit { rows, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let ncols = rows.first().map_or(0, |r| r.len());
+            let ops: Vec<&Expr> = rows.iter().flatten().collect();
+            let names = hoist_operands(out, &ops, inner);
+            let _ = write!(
+                out,
+                "{ipad}{dst} = _sir_array_from_rows({}, {ncols}, {}",
+                rows.len(),
+                names.len()
+            );
+            for n in &names {
+                let _ = write!(out, ", {n}");
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // Argument ORDER: the SIR node's own field order is `start, step,
+        // stop`, but `_sir_array_range(start, stop, step)` (matching the
+        // JS/Ruby references' `range(start, stop, step = 1)`) takes `stop`
+        // before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = match step {
+                Some(step) => hoist_operands(out, &[start.as_ref(), stop.as_ref(), step.as_ref()], inner),
+                None => {
+                    let mut names = hoist_operands(out, &[start.as_ref(), stop.as_ref()], inner);
+                    let one = format!("_sir_a{}", fresh_id());
+                    let _ = writeln!(out, "{ipad}SirValue {one} = _sir_int(1LL);");
+                    names.push(one);
+                    names
+                }
+            };
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_range({}, {}, {});",
+                names[0], names[1], names[2]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[lhs.as_ref(), rhs.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_matmul({}, {});",
+                names[0], names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // The enum constant must match `_sir_array_apply_op`'s `switch` in
+        // `runtime.rs` exactly (see `elementwise_op_c_name`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[lhs.as_ref(), rhs.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_elementwise({}, {}, {});",
+                elementwise_op_c_name(*op),
+                names[0],
+                names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[target.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_transpose({}, {});",
+                names[0],
+                if *conjugate { 1 } else { 0 }
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let mut ops: Vec<&Expr> = vec![target.as_ref()];
+            for arg in indices {
+                match arg {
+                    IndexArg::Scalar(e) | IndexArg::Range(e) => ops.push(e.as_ref()),
+                    IndexArg::Whole => {}
+                }
+            }
+            let names = hoist_operands(out, &ops, inner);
+            let mut it = names.into_iter();
+            let target_name = it.next().expect("target operand");
+            let _ = write!(
+                out,
+                "{ipad}{dst} = _sir_array_index_get({target_name}, {}",
+                indices.len()
+            );
+            for arg in indices {
+                match arg {
+                    IndexArg::Scalar(_) => {
+                        let _ = write!(out, ", _sir_array_idx_scalar({})", it.next().unwrap());
+                    }
+                    IndexArg::Whole => {
+                        out.push_str(", _sir_array_idx_whole()");
+                    }
+                    IndexArg::Range(_) => {
+                        let _ = write!(out, ", _sir_array_idx_range({})", it.next().unwrap());
+                    }
+                }
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
         // A call whose arguments contain control flow: hoist every argument
         // into a temp (left-to-right), then make the call.
         _ => emit_compound_call(out, dst, e, indent),
+    }
+}
+
+/// The C enum constant `_sir_array_apply_op`'s `switch` in `runtime.rs`
+/// dispatches on — exact `SirElementwiseOp` variant names (`SIR_EW_ADD`,
+/// not `.name()`'s lowercase `"add"`, used elsewhere for e.g. debug/display),
+/// since this is a real runtime dispatch key, mirroring the JS backend's
+/// `elementwise_op_js_name` / the Ruby backend's `elementwise_op_ruby_name`.
+fn elementwise_op_c_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "SIR_EW_ADD",
+        ElementwiseOpKind::Sub => "SIR_EW_SUB",
+        ElementwiseOpKind::Mul => "SIR_EW_MUL",
+        ElementwiseOpKind::Div => "SIR_EW_DIV",
+        ElementwiseOpKind::Pow => "SIR_EW_POW",
+        ElementwiseOpKind::Max => "SIR_EW_MAX",
+        ElementwiseOpKind::Min => "SIR_EW_MIN",
+        ElementwiseOpKind::Eq => "SIR_EW_EQ",
+        ElementwiseOpKind::Ne => "SIR_EW_NE",
+        ElementwiseOpKind::Lt => "SIR_EW_LT",
+        ElementwiseOpKind::Le => "SIR_EW_LE",
+        ElementwiseOpKind::Ge => "SIR_EW_GE",
+        ElementwiseOpKind::Gt => "SIR_EW_GT",
     }
 }
 
@@ -2357,7 +2573,45 @@ fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
             }
             None
         }
+        // ── SIR22: array/matrix indexed assignment ────────────────────
+        // `target[indices...] = value` — a compound statement whose
+        // sub-expressions (target, value, and each `Scalar`/`Range` index
+        // arg's inner expression) may themselves hide a deferred builtin,
+        // matching the pattern every other compound stmt above follows
+        // (`SeqSet`/`MapSet`, ...). Also enforces the "rank <= 2" scope
+        // structurally: an `indices` list of any length other than 1 or 2
+        // is rejected here at COMPILE time (the runtime's own
+        // `_sir_array_index_set` repeats this check only as
+        // defense-in-depth for a hand-built `Module` that bypassed this
+        // scan — see that function's doc comment).
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            span,
+        } => {
+            if indices.len() != 1 && indices.len() != 2 {
+                return Some((
+                    "an IndexSet with other than 1 or 2 index arguments (rank <= 2 scope)"
+                        .to_string(),
+                    span.clone(),
+                ));
+            }
+            scan_expr_for_builtin(target)
+                .or_else(|| indices.iter().find_map(scan_index_arg_for_builtin))
+                .or_else(|| scan_expr_for_builtin(value))
+        }
         _ => None,
+    }
+}
+
+/// Scan one `IndexArg`'s inner expression (`Scalar`/`Range`; `Whole` carries
+/// none) for a deferred builtin — shared by the `IndexGet`/`IndexSet` scan
+/// arms below.
+fn scan_index_arg_for_builtin(arg: &IndexArg) -> Option<(String, Span)> {
+    match arg {
+        IndexArg::Scalar(e) | IndexArg::Range(e) => scan_expr_for_builtin(e),
+        IndexArg::Whole => None,
     }
 }
 
@@ -2540,6 +2794,81 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         }
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
             scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
+        }
+        // ── SIR22 array/matrix base cut ────────────────────────────────
+        // Sub-expressions may themselves hide a deferred builtin — scan
+        // them, matching every other composite expr arm above. `ArrayLit`
+        // additionally enforces non-raggedness structurally: `emit.rs`'s
+        // `_sir_array_from_rows` call trusts `rows[0].len()` as every
+        // row's width (see that arm's own comment), so a ragged literal
+        // must be rejected here, before it can reach that trust.
+        Expr::ArrayLit { rows, span } => {
+            let ncols = rows.first().map_or(0, |r| r.len());
+            if rows.iter().any(|r| r.len() != ncols) {
+                return Some(("an ArrayLit with ragged rows".to_string(), span.clone()));
+            }
+            rows.iter().flatten().find_map(scan_expr_for_builtin)
+        }
+        Expr::Range {
+            start, step, stop, ..
+        } => scan_expr_for_builtin(start)
+            .or_else(|| step.as_deref().and_then(scan_expr_for_builtin))
+            .or_else(|| scan_expr_for_builtin(stop)),
+        Expr::MatMul { lhs, rhs, .. } => {
+            scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
+        }
+        Expr::ElementwiseOp { lhs, rhs, .. } => {
+            scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
+        }
+        Expr::Transpose { target, .. } => scan_expr_for_builtin(target),
+        // Same "rank <= 2 scope, enforced structurally at compile time" as
+        // `Stmt::IndexSet` above — see that arm's comment.
+        Expr::IndexGet {
+            target,
+            indices,
+            span,
+        } => {
+            if indices.len() != 1 && indices.len() != 2 {
+                return Some((
+                    "an IndexGet with other than 1 or 2 index arguments (rank <= 2 scope)"
+                        .to_string(),
+                    span.clone(),
+                ));
+            }
+            scan_expr_for_builtin(target).or_else(|| indices.iter().find_map(scan_index_arg_for_builtin))
+        }
+        // ── SIR22 "APL addendum" — deferred, rejected cleanly ────────────
+        // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+        // `IndexOf`/`Ravel`/`Catenate` share `NDArrays`/`MatrixOps`/
+        // `ArrayColumnMajor` with the base cut above, so they pass the
+        // ordinary feature-flag capability check — this dedicated scan arm
+        // (folded into this crate's existing single shared pre-emit scan,
+        // the SAME mechanism `first_unsupported_builtin` already uses for
+        // every other "well-formed but not yet lowered" construct, not a
+        // new one) is what actually rejects them, cleanly, until their own
+        // later rollout slice. Mirrors JS/TS's own (since-removed once
+        // THEIR addendum shipped) `find_unimplemented_sir22_addendum_node`
+        // and the sibling Ruby backend's `ScanHit::Sir22AddendumNode`.
+        Expr::Reduce { span, .. } => Some(("SIR22 addendum node Reduce".to_string(), span.clone())),
+        Expr::Scan { span, .. } => Some(("SIR22 addendum node Scan".to_string(), span.clone())),
+        Expr::OuterProduct { span, .. } => Some((
+            "SIR22 addendum node OuterProduct".to_string(),
+            span.clone(),
+        )),
+        Expr::Shape { span, .. } => Some(("SIR22 addendum node Shape".to_string(), span.clone())),
+        Expr::Reshape { span, .. } => {
+            Some(("SIR22 addendum node Reshape".to_string(), span.clone()))
+        }
+        Expr::IndexGenerator { span, .. } => Some((
+            "SIR22 addendum node IndexGenerator".to_string(),
+            span.clone(),
+        )),
+        Expr::IndexOf { span, .. } => {
+            Some(("SIR22 addendum node IndexOf".to_string(), span.clone()))
+        }
+        Expr::Ravel { span, .. } => Some(("SIR22 addendum node Ravel".to_string(), span.clone())),
+        Expr::Catenate { span, .. } => {
+            Some(("SIR22 addendum node Catenate".to_string(), span.clone()))
         }
         _ => None,
     }
