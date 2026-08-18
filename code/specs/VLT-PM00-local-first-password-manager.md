@@ -149,7 +149,7 @@ is `VLT-PM15-operation-audit.md`.
 | Phase | Deliverable | Storage | Client surface | Independently useful result |
 |---|---|---|---|---|
 | 0 | Contract and security closure | in-memory fault model | test harness | formats and invariants fixed before product code |
-| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault |
+| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault (open: §23 item 10a) |
 | 1B | Complete local CLI | filesystem + removable folder | CLI + interactive shell/local agent | practical daily local password manager |
 | 2 | Bring-your-own-cloud | Google Drive first, then WebDAV/S3 | CLI | multi-device E2EE without our server |
 | 3 | Web client | IndexedDB/OPFS + direct cloud adapters | installable PWA | browser access without a plaintext backend |
@@ -967,13 +967,19 @@ and redact item/provider payloads.
   fields.
 - Swapping/corrupting/truncating objects is detected.
 - A simulated crash at every publication step either exposes the old commit or
-  a valid new commit; never a partial logical state.
+  a valid new commit; never a partial logical state. **Verified** by
+  `VLT-PM41-cli-crash-fault-matrix.md` against a real `SIGKILL`ed process at
+  every landing point of generation zero and of the shared publication path.
+  The repository half of this criterion holds. The *local* half does not yet:
+  the tree is never torn, but a crash inside a publication leaves a vault only
+  §23 item 10a can repair.
 - Search can be deleted and rebuilt from records.
 - Password rotation rewraps the VRK without re-encrypting every item body.
 - Export followed by import into a new vault preserves supported records but
   creates new encryption/object identities.
 - CLI end-to-end tests run through the real executable with a pseudo-terminal
-  for secret prompts.
+  for secret prompts, both when it is allowed to finish and when it is killed
+  mid-write.
 - A backend conformance suite passes for in-memory and filesystem adapters.
 
 ## 15. Synchronization and multi-device behavior
@@ -1248,14 +1254,19 @@ opt-in, previewable, and structurally unable to include object bodies.
    WebDAV, S3, browser storage.
 4. **Fault model:** stale/partial/duplicate lists, delayed read-after-write,
    corruption, deletion, replay, quota, token expiry, clock skew, crash at every
-   publication step.
+   publication step. The in-process half is VLT-PM02's
+   `FaultInjectingObjectStore`; the real-process half — `SIGKILL` of the actual
+   executable at each enumerated durable write — is
+   `VLT-PM41-cli-crash-fault-matrix.md`.
 5. **Format:** canonical golden vectors, mutation tests, backward compatibility.
 6. **Crypto:** published known-answer vectors, cross-implementation differential
    tests, constant-time review, misuse-resistant APIs.
 7. **Parser fuzzing:** bootstrap, object, commit, import, CLI, native messaging.
 8. **End-to-end:** real CLI/PWA/desktop against synthetic vaults and provider
    sandbox accounts.
-9. **Recovery drills:** restore from each backup form with the primary deleted.
+9. **Recovery drills:** restore from each backup form with the primary deleted,
+   and, for the local CLI, restore of a pre-mutation platform home from an
+   ordinary file-level backup after an interrupted write (VLT-PM41 section 7).
 
 ### 22.2 Security gates before real-secret recommendation
 
@@ -1657,7 +1668,33 @@ changelog, focused build, and downstream validation.
        proof of unlock-once, re-lock, and clean end of input, using
        `VLT-PM40-cli-interactive-shell.md`. The pre-emptive idle timer remains
        Phase 1B item 12.
-10. Crash/fault matrix and local restore drill.
+10. completed crash/fault matrix and local restore drill: a deterministic
+     durable-step mechanism that assigns every local durable write two
+     landing points, `SIGKILL` of the real executable at a chosen point, and
+     a sweep that derives each ceremony's landing-point count from the code
+     under test rather than from a hand-maintained list. Generation zero and
+     the shared publication path are swept exhaustively; create, edit,
+     delete, restore, a fail-closed merge, and export are probed at their
+     characteristic points; the read-only diagnostics are pinned at every
+     stage of an interrupted vault, including recovery of a pre-mutation
+     tree from an ordinary file-level backup. Using
+     `VLT-PM41-cli-crash-fault-matrix.md`. The remaining cross-product is
+     enumerated in that document rather than left implicit.
+10a. **Open — found by item 10.** A `SIGKILL` anywhere inside the shared
+      mutation publication path leaves a durable `PendingPublication` journal
+      that is exact and replayable, that both read-only diagnostics correctly
+      report as `recovery_required`, and that
+      `vault-pm-application::recover_pending_publication` would finish — but
+      no CLI code path calls that function. Every subsequent command that
+      opens the vault therefore fails, and it fails as exit 2
+      `vault-pm: invalid command`, telling a person their command is wrong
+      about a vault that is intact. No secret is exposed and no data is lost;
+      the vault is recoverable in principle and unrecoverable in practice.
+      This is an availability defect in already-shipped code. Phase 1A does
+      not close until a recovery ceremony reaches
+      `recover_pending_publication` from the command surface, with its own
+      spec, prompt policy, audit ordering, and exit class. See
+      `VLT-PM41-cli-crash-fault-matrix.md` section 8.
 
 ### Phase 1B — daily local use
 

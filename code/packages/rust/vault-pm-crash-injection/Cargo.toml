@@ -1,0 +1,13 @@
+[package]
+name = "coding_adventures_vault_pm_crash_injection"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM41 deterministic real-process crash injection for local vault-pm hosts"
+license = "MIT"
+
+[dependencies]
+libc = "0.2"
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+coding-adventures-json-value = { path = "../json-value" }

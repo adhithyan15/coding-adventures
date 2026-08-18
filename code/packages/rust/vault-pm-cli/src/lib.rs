@@ -5,7 +5,8 @@
 
 pub mod shell;
 
-use coding_adventures_storage_fs::FsStorageBackend;
+mod crash;
+
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
     prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,
@@ -46,6 +47,7 @@ use coding_adventures_vault_records::{
 };
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
+use crash::LocalBackend;
 use shell::{run_shell, NativeShellTerminal, ShellTerminal};
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsString;
@@ -1250,7 +1252,7 @@ fn authenticated_access(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
     selected_vault: Option<&ConfigName>,
-) -> Result<(VaultAccessV1, StorageCoreApplicationStore<FsStorageBackend>), CliFailure> {
+) -> Result<(VaultAccessV1, StorageCoreApplicationStore<LocalBackend>), CliFailure> {
     let exact_config = writer
         .load_config()
         .map_err(map_local_host)?
@@ -1398,14 +1400,14 @@ fn portable_export(
         access.lock();
         operation.map_err(map_application)?
     };
-    host.write_portable_export(destination, artifact.as_bytes())
+    crash::around_export_artifact(|| host.write_portable_export(destination, artifact.as_bytes()))
         .map_err(map_host)?;
     Ok(CliOutput::success("Portable export written.\n"))
 }
 
 struct PortableImportContext {
     access: VaultAccessV1,
-    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    application_store: StorageCoreApplicationStore<LocalBackend>,
     wall_time_ms: u64,
     failure_randomness: AuditedAccessRandomnessV1,
 }
@@ -1506,7 +1508,7 @@ fn portable_import(
 
 struct PortableRestoreVerifyContext {
     access: VaultAccessV1,
-    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    application_store: StorageCoreApplicationStore<LocalBackend>,
     wall_time_ms: u64,
     randomness: AuditedAccessRandomnessV1,
 }
@@ -1696,7 +1698,7 @@ fn portable_restore_verify(
 
 struct ItemCreateContext {
     access: VaultAccessV1,
-    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    application_store: StorageCoreApplicationStore<LocalBackend>,
     now_ms: u64,
     randomness: AddItemRandomnessV1,
     item_id: ItemId,
@@ -3438,8 +3440,7 @@ fn begin_init(
         .compare_exchange(locator, None, &exact_prepared)
         .map_err(map_local_state)?;
     let config = initial_config(paths, locator, vault_name, storage_name)?;
-    writer
-        .create_config(render_config(&config).as_bytes())
+    crash::around_config_create(|| writer.create_config(render_config(&config).as_bytes()))
         .map_err(map_local_host)?;
 
     let repository_factory = repository_factory(paths.object_root());
@@ -3568,9 +3569,10 @@ fn vault_create(
     let replacement = VaultPmConfigV1::new(config.default_vault().clone(), vaults, storage)
         .map_err(|_| CliFailure::Internal)?;
     let rendered = render_config(&replacement);
-    writer
-        .compare_exchange_config(&exact_config, rendered.as_bytes())
-        .map_err(map_local_host)?;
+    crash::around_config_replace(|| {
+        writer.compare_exchange_config(&exact_config, rendered.as_bytes())
+    })
+    .map_err(map_local_host)?;
 
     let repository_factory = repository_factory(&target_root);
     complete_generation_zero(
@@ -3971,22 +3973,20 @@ fn application_locator(locator: ConfigVaultLocator) -> BootstrapLocator {
     BootstrapLocator::new(*locator.as_bytes())
 }
 
-fn application_store(paths: &LocalVaultPaths) -> StorageCoreApplicationStore<FsStorageBackend> {
-    StorageCoreApplicationStore::new(FsStorageBackend::new(paths.application_state_root()))
+fn application_store(paths: &LocalVaultPaths) -> StorageCoreApplicationStore<LocalBackend> {
+    StorageCoreApplicationStore::new(crash::backend(paths.application_state_root()))
 }
 
 fn repository_factory(
     object_root: &Path,
-) -> V1ApplicationRepositoryFactory<StorageCoreObjectStore<FsStorageBackend>> {
-    V1ApplicationRepositoryFactory::new(StorageCoreObjectStore::new(FsStorageBackend::new(
-        object_root,
-    )))
+) -> V1ApplicationRepositoryFactory<StorageCoreObjectStore<LocalBackend>> {
+    V1ApplicationRepositoryFactory::new(StorageCoreObjectStore::new(crash::backend(object_root)))
 }
 
 fn configured_repository_factory(
     config: &VaultPmConfigV1,
     vault: &VaultConfigV1,
-) -> Result<V1ApplicationRepositoryFactory<StorageCoreObjectStore<FsStorageBackend>>, CliFailure> {
+) -> Result<V1ApplicationRepositoryFactory<StorageCoreObjectStore<LocalBackend>>, CliFailure> {
     let storage = config
         .storage()
         .get(vault.local_store())

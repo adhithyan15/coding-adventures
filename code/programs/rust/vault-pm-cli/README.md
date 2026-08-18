@@ -116,9 +116,59 @@ process cleanly. Both spawn the shell with the same injected piped stdin every
 other drill uses, so a redirected stdin is proven unable to supply a command as
 well as unable to supply a secret.
 
+## The crash/fault drill
+
+`tests/local_cli_e2e.rs` proves what this executable does when it is allowed to
+finish. `tests/crash_fault_matrix.rs` proves what happens when it is not.
+
+Every test in the second file kills a real process with `SIGKILL` at a
+deterministically chosen durable write, and then asks the *next* real process
+what it can see and what it can repair. Nothing calls a recovery function
+directly; the only interface used is the one a person has — an argument vector,
+a controlling terminal, and a directory tree.
+
+The landing points come from
+`coding_adventures_vault_pm_crash_injection`, which brackets every durable
+write in a "before" and an "after" ordinal. Because each durable write is an
+atomic `write → fsync → rename`, those ordinals are not a sample of where a
+crash can land: they are the complete case analysis. A drill therefore runs a
+ceremony once with only a ledger, counts the lines to learn how many landing
+points it has, and replays it once per point from a byte-identical tree — so
+the matrix is derived from the code under test rather than from a list somebody
+has to remember to update.
+
+Generation zero (34 landing points) and the shared mutation publication path
+(20) are swept exhaustively. Item create, edit, delete, history restore, a
+fail-closed conflict merge, and portable export are probed at their
+characteristic points. A separate drill walks one vault through every stage of
+interruption and pins what `status` and `doctor` say at each, including that a
+pre-mutation tree restored from an ordinary file-level backup opens and
+verifies.
+
+Two results are worth reading before trusting the executable with anything:
+
+- An interrupted `init` is always repairable by running `init` again, and the
+  resumed vault passes authenticated `doctor --unlock`.
+- An interrupted **mutation** is not repairable from this command surface. The
+  tree is never torn and the durable journal is exact, but no verb replays it,
+  so every later command fails — as exit 2 `vault-pm: invalid command`, which
+  tells a person their command is wrong about a vault that is intact. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 and VLT-PM00 §23
+  item 10a.
+
+The drill is instrumentation-free in a released build. The crash hook is an
+optional dependency behind a non-default feature that this crate turns on
+through its `dev-dependencies`, so `cargo test` builds a `vault-pm` binary that
+can be killed on demand and `cargo build`/`cargo install` build one that has
+never heard of the idea.
+
 ## Verification
 
 ```bash
 bash BUILD
 cargo clippy --manifest-path Cargo.toml --all-targets -- -D warnings
 ```
+
+`BUILD` runs both suites. The crash drill is the slower half: each cell pays a
+production Argon2id derivation per unlock, and the generation-zero sweep runs
+its cells across worker threads for that reason.

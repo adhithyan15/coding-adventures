@@ -1115,6 +1115,7 @@ members = [
   "vault-pm-local-host",
   "vault-pm-config",
   "vault-pm-cli-host",
+  "vault-pm-crash-injection",
   "vault-pm-cli",
   "chief-of-staff-channel-epoch-activation",
 ]

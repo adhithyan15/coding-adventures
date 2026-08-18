@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Added the composition root's durable-write seam for
+  `VLT-PM41-cli-crash-fault-matrix.md`. The new `crash` module names every
+  point at which this package makes something durable, so a drill can kill the
+  real process at a chosen one: backend writes through a `LocalBackend` type
+  alias, plus the two writes that do not go through a backend — the first
+  creation of the client configuration file and the creation of an encrypted
+  portable-export artifact. The seam lives here rather than in
+  `vault-pm-application` because the application layer is deliberately
+  storage-agnostic and owns no filesystem authority, so it is not the layer
+  that knows what "durable" means.
+- Added the non-default `crash-injection` feature that selects the instrumented
+  half of that module. With the feature off — the only configuration a released
+  binary is ever built in — `LocalBackend` is exactly `FsStorageBackend`, each
+  combinator is an `#[inline]` function whose body is `action()`, and the
+  crash-injection package is an optional dependency that is not compiled at
+  all. No behavior, output, exit class, file, or on-disk format changes in
+  either configuration.
 - Added `vault-pm [--vault NAME] shell`, the foreground interactive session
   host specified by `VLT-PM40-cli-interactive-shell.md`. It adds no capability:
   every command inside a session runs through the same parser, the same

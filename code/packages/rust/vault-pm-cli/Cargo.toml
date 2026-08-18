@@ -11,11 +11,18 @@ coding_adventures_vault_pm_application = { path = "../vault-pm-application" }
 coding_adventures_vault_pm_application_storage_core = { path = "../vault-pm-application-storage-core" }
 coding_adventures_vault_pm_cli_host = { path = "../vault-pm-cli-host" }
 coding_adventures_vault_pm_config = { path = "../vault-pm-config" }
+coding_adventures_vault_pm_crash_injection = { path = "../vault-pm-crash-injection", optional = true }
 coding_adventures_vault_pm_domain = { path = "../vault-pm-domain" }
 coding_adventures_vault_pm_local_host = { path = "../vault-pm-local-host" }
 coding_adventures_vault_records = { path = "../vault-records" }
 coding_adventures_vault_pm_storage_storage_core = { path = "../vault-pm-storage-storage-core" }
 coding_adventures_zeroize = { path = "../zeroize" }
+
+[features]
+# Test-only real-process crash injection (VLT-PM41). Never enabled for a
+# released binary: the executable turns it on through its dev-dependencies, so
+# it exists in `cargo test` builds and nowhere else.
+crash-injection = ["dep:coding_adventures_vault_pm_crash_injection"]
 
 [dev-dependencies]
 libc = "0.2"
