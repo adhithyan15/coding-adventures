@@ -1258,6 +1258,153 @@
           "KA-LEX-C59-GROUND-05"
         ]
       }
+    },
+    {
+      "chapter": 60,
+      "title": "Animals of the House",
+      "label": "ch:ka-animals",
+      "canDo": "I can name five animals a Kannada household lives with, from the cow to the bird.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "KA-C60-bird",
+        "kind": "production",
+        "summary": "Complete KA-C60-bird and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C60-ANIMAL-01",
+          "KA-LEX-C60-ANIMAL-02",
+          "KA-LEX-C60-ANIMAL-03",
+          "KA-LEX-C60-ANIMAL-04",
+          "KA-LEX-C60-ANIMAL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 61,
+      "title": "In the Kitchen",
+      "label": "ch:ka-kitchen",
+      "canDo": "I can name five things in a Kannada kitchen, from the curd to the sugar.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "KA-C61-sugar",
+        "kind": "production",
+        "summary": "Complete KA-C61-sugar and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C61-KITCHEN-01",
+          "KA-LEX-C61-KITCHEN-02",
+          "KA-LEX-C61-KITCHEN-03",
+          "KA-LEX-C61-KITCHEN-04",
+          "KA-LEX-C61-KITCHEN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 62,
+      "title": "Things People Make",
+      "label": "ch:ka-made",
+      "canDo": "I can name five things a Kannada household keeps to hand, and ask politely for one.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "KA-C62-umbrella",
+        "kind": "production",
+        "summary": "Complete KA-C62-umbrella and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C62-MADE-01",
+          "KA-LEX-C62-MADE-02",
+          "KA-LEX-C62-MADE-03",
+          "KA-LEX-C62-MADE-04",
+          "KA-LEX-C62-MADE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "Hunger, Sleep and Health",
+      "label": "ch:ka-health",
+      "canDo": "I can say in Kannada how my body is, from hunger to health, and ask it back.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "KA-C63-health",
+        "kind": "production",
+        "summary": "Complete KA-C63-health and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C63-HEALTH-01",
+          "KA-LEX-C63-HEALTH-02",
+          "KA-LEX-C63-HEALTH-03",
+          "KA-LEX-C63-HEALTH-04",
+          "KA-LEX-C63-HEALTH-05"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
+      "title": "Joining Words",
+      "label": "ch:ka-joining",
+      "canDo": "I can join one Kannada answer to the next five ways, from afterwards to in that case.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "KA-C64-in-that-case",
+        "kind": "production",
+        "summary": "Complete KA-C64-in-that-case and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C64-JOIN-01",
+          "KA-LEX-C64-JOIN-02",
+          "KA-LEX-C64-JOIN-03",
+          "KA-LEX-C64-JOIN-04",
+          "KA-LEX-C64-JOIN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 65,
+      "title": "More Good Manners",
+      "label": "ch:ka-manners",
+      "canDo": "I can name what Kannada courtesy is made of, from a request to good manners.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "KA-C65-manners",
+        "kind": "production",
+        "summary": "Complete KA-C65-manners and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C65-MANNERS-01",
+          "KA-LEX-C65-MANNERS-02",
+          "KA-LEX-C65-MANNERS-03",
+          "KA-LEX-C65-MANNERS-04",
+          "KA-LEX-C65-MANNERS-05"
+        ]
+      }
+    },
+    {
+      "chapter": 66,
+      "title": "The Field",
+      "label": "ch:ka-field",
+      "canDo": "I can name a Kannada field and its crop, and take my leave of the village that grew it.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "KA-C66-harvest",
+        "kind": "production",
+        "summary": "Complete KA-C66-harvest and say all five words in order.",
+        "assesses": [
+          "KA-LEX-C66-FIELD-01",
+          "KA-LEX-C66-FIELD-02",
+          "KA-LEX-C66-FIELD-03",
+          "KA-LEX-C66-FIELD-04",
+          "KA-LEX-C66-FIELD-05"
+        ]
+      }
     }
   ]
 }

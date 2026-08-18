@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 61,
+  "title": "In the Kitchen",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2b99b6040e01c707",
+  "lessons": [
+    {
+      "id": "KA-C61-curd",
+      "sequence": 1890,
+      "title": "ಮೊಸರು (mosaru) — curd",
+      "headword": "ಮೊಸರು",
+      "romanization": "mosaru",
+      "gloss": "curd",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4222df96d2b1fed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did kāge mean, and what did hakki mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೊಸರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಸರು (mosaru) — \"curd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೊಸರು (mosaru) is what ಹಾಲು becomes when it is left overnight with a spoonful of yesterday's ಮೊಸರು (mosaru) in it. The ಹಸು from the last chapter is the front of that chain and this is the end of it."
+            },
+            {
+              "kind": "speech",
+              "text": "It closes a meal rather than opening one. ಮೊಸರು (mosaru) over ಅನ್ನ is the last thing on the plate, and a Kannada speaker will tell you the meal is not finished without it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things in a Kannada kitchen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mosaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mosaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālu, then mosaru, and say which one waits overnight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālu*, then *mosaru*, and say which one waits overnight]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೊಸರು (mosaru) mean? (\"curd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C61-ghee",
+      "sequence": 1900,
+      "title": "ತುಪ್ಪ (tuppa) — ghee",
+      "headword": "ತುಪ್ಪ",
+      "romanization": "tuppa",
+      "gloss": "ghee",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83785303bfcdf8bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mosaru mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತುಪ್ಪ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತುಪ್ಪ (tuppa) — \"ghee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ತುಪ್ಪ (tuppa) is the other thing ಹಾಲು turns into, further along the same road: cream taken off, churned, then cooked until only the fat is left. Inherited, and shared with the sisters."
+            },
+            {
+              "kind": "speech",
+              "text": "A spoonful goes on hot ಅನ್ನ, and a ದೀಪ will burn on it as readily as on any oil. It is the one item in this chapter that is food and light at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mosaru, then tuppa, and say which one is poured",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mosaru*, then *tuppa*, and say which one is poured]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತುಪ್ಪ (tuppa) mean? (\"ghee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C61-oil",
+      "sequence": 1910,
+      "title": "ಎಣ್ಣೆ (eṇṇe) — oil",
+      "headword": "ಎಣ್ಣೆ",
+      "romanization": "eṇṇe",
+      "gloss": "oil",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a62736603136fedf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tuppa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಎಣ್ಣೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಣ್ಣೆ (eṇṇe) — \"oil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಣ್ಣೆ (eṇṇe) is Kannada's own oil-word, and it owes ತುಪ್ಪ (tuppa) nothing at all. ತುಪ್ಪ (tuppa) comes out of an animal; ಎಣ್ಣೆ (eṇṇe) is pressed out of a ಬೀಜ, and the two sit in different jars on the same shelf."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a small joke in this for you. The friend-word ಸ್ನೇಹಿತ was built on a Sanskrit word whose first sense was oil — smoothness, the thing that makes two surfaces run easily on each other. That is the borrowed, figurative oil. This is the one in the jar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppa, then eṇṇe, and say which one starts as a seed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppa*, then *eṇṇe*, and say which one starts as a seed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಎಣ್ಣೆ (eṇṇe) mean? (\"oil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C61-jaggery",
+      "sequence": 1920,
+      "title": "ಬೆಲ್ಲ (bella) — jaggery",
+      "headword": "ಬೆಲ್ಲ",
+      "romanization": "bella",
+      "gloss": "jaggery",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3334b553a047db62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did eṇṇe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೆಲ್ಲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಲ್ಲ (bella) — \"jaggery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಲ್ಲ (bella) is cane juice boiled down and set in a lump, brown and sticky and sold by weight rather than by the spoon. Kannada's own word, and the older of the two sweet things in this chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "South Karnataka cooking puts a piece of it into food that is not a sweet at all — into the same dish as the uppu you already have, deliberately, so that neither taste wins. A cook who leaves it out is making somebody else's version of the dish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bella",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bella*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bella, then uppu, and say which two go into the same pot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bella*, then *uppu*, and say which two go into the same pot]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೆಲ್ಲ (bella) mean? (\"jaggery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C61-sugar",
+      "sequence": 1930,
+      "title": "ಸಕ್ಕರೆ (sakkare) — sugar",
+      "headword": "ಸಕ್ಕರೆ",
+      "romanization": "sakkare",
+      "gloss": "sugar",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf6d326bffda53c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bella mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಕ್ಕರೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಕ್ಕರೆ (sakkare) — \"sugar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಕ್ಕರೆ (sakkare) is the refined one, white and loose, and it is the traveller of this chapter. It goes back to a Sanskrit word meaning gravel or grit — a fair description of what sugar looks like beside a lump of ಬೆಲ್ಲ (bella)."
+            },
+            {
+              "kind": "speech",
+              "text": "The coffee-word and the tea-word each reached Kannada after a long journey inward. This word went the other way. It left India, crossed Arabic and Latin, turned into the English sugar, and Kannada kept the original at home the whole time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಮೊಸರು (mosaru), ತುಪ್ಪ (tuppa), ಎಣ್ಣೆ (eṇṇe), ಬೆಲ್ಲ (bella), ಸಕ್ಕರೆ (sakkare). Enough to say what is in the food you are given."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakkare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakkare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then give your name to the person cooking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then give your name to the person cooking]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಕ್ಕರೆ (sakkare) mean? (\"sugar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

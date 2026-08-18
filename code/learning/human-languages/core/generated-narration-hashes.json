@@ -4715,6 +4715,132 @@
       "jsonHash": "fnv1a64:c71c82091750e38c"
     },
     {
+      "language": "kannada",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:359b8870dcbb0314",
+      "lessonIds": [
+        "KA-C60-cow",
+        "KA-C60-goat",
+        "KA-C60-hen",
+        "KA-C60-crow",
+        "KA-C60-bird"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch60.txt",
+      "json": "kannada/narration/ch60.json",
+      "textHash": "fnv1a64:4bea8e9e97d3587d",
+      "jsonHash": "fnv1a64:af20786456c7e168"
+    },
+    {
+      "language": "kannada",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:2b99b6040e01c707",
+      "lessonIds": [
+        "KA-C61-curd",
+        "KA-C61-ghee",
+        "KA-C61-oil",
+        "KA-C61-jaggery",
+        "KA-C61-sugar"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch61.txt",
+      "json": "kannada/narration/ch61.json",
+      "textHash": "fnv1a64:baab146f054c4e56",
+      "jsonHash": "fnv1a64:59e8d8083913b10f"
+    },
+    {
+      "language": "kannada",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:ed2c11072cb1e8d8",
+      "lessonIds": [
+        "KA-C62-thread",
+        "KA-C62-needle",
+        "KA-C62-rope",
+        "KA-C62-broom",
+        "KA-C62-umbrella"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch62.txt",
+      "json": "kannada/narration/ch62.json",
+      "textHash": "fnv1a64:d9021fd5aedfa506",
+      "jsonHash": "fnv1a64:a3cf72339a1b41ee"
+    },
+    {
+      "language": "kannada",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:ba827695e2beb87a",
+      "lessonIds": [
+        "KA-C63-hunger",
+        "KA-C63-sleep",
+        "KA-C63-fever",
+        "KA-C63-pain",
+        "KA-C63-health"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch63.txt",
+      "json": "kannada/narration/ch63.json",
+      "textHash": "fnv1a64:5568f231ca170d10",
+      "jsonHash": "fnv1a64:c4d99810dd5caf72"
+    },
+    {
+      "language": "kannada",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:dfd1cafce09fbe7c",
+      "lessonIds": [
+        "KA-C64-after",
+        "KA-C64-also",
+        "KA-C64-still",
+        "KA-C64-soon",
+        "KA-C64-in-that-case"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch64.txt",
+      "json": "kannada/narration/ch64.json",
+      "textHash": "fnv1a64:e13c4e29e8644b56",
+      "jsonHash": "fnv1a64:fe0dc98362104587"
+    },
+    {
+      "language": "kannada",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:f4afe4d129b0d584",
+      "lessonIds": [
+        "KA-C65-request",
+        "KA-C65-permission",
+        "KA-C65-hesitancy",
+        "KA-C65-trust",
+        "KA-C65-manners"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch65.txt",
+      "json": "kannada/narration/ch65.json",
+      "textHash": "fnv1a64:60e2eeccffa98717",
+      "jsonHash": "fnv1a64:57cacc279dbfdca7"
+    },
+    {
+      "language": "kannada",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:cae668c73bf557db",
+      "lessonIds": [
+        "KA-C66-field",
+        "KA-C66-grass",
+        "KA-C66-paddy",
+        "KA-C66-crop",
+        "KA-C66-harvest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch66.txt",
+      "json": "kannada/narration/ch66.json",
+      "textHash": "fnv1a64:6e00b34938bc5169",
+      "jsonHash": "fnv1a64:fd07329b5ec6cb49"
+    },
+    {
       "language": "latin",
       "chapter": 1,
       "sourceHash": "fnv1a64:c50a5183e8d9432d",
