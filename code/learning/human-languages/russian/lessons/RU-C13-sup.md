@@ -76,7 +76,8 @@ Ask for the whole shelf the way you already know:
 - [YOU SAY: the loan — "French soupe, 1700s, same century as кофе"]
 - [YOU SAY: the mirror — "суп/soup: one French word, two borrowings;
   кофе/coffee: one Arabic word, two doors"]
-- [YOU SAY: the whole shelf — "молоко, сыр, сок, суп, пожалуйста"]
+- [YOU SAY: the whole shelf — "молоко, сыр, сок, суп, пожалуйста" (*malakó, syr,
+  sok, sup, pazhálusta*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SUP, RU-ETYMON-SUP-FRENCH-LOAN, RU-COMPARISON-NAMING-QUESTION-FRAMES, RU-SCRIPT-YA-NOT-R] -->

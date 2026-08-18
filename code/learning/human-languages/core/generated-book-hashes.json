@@ -4324,7 +4324,7 @@
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:4813b2d3159b96d9",
+      "sourceHash": "fnv1a64:cce85948b30a2020",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -4348,7 +4348,7 @@
     {
       "language": "russian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:5bc7160b809f4065",
+      "sourceHash": "fnv1a64:53daed5cc988927d",
       "lessonIds": [
         "RU-C07-drug",
         "RU-C07-podruga",
@@ -4404,7 +4404,7 @@
     {
       "language": "russian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:77400bcf75b3f11e",
+      "sourceHash": "fnv1a64:3071c43e143a8294",
       "lessonIds": [
         "RU-C12-mama",
         "RU-C12-papa",
@@ -4416,7 +4416,7 @@
     {
       "language": "russian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:e33f8fc7f6b068cb",
+      "sourceHash": "fnv1a64:75e5bba8e91c4f6e",
       "lessonIds": [
         "RU-C13-moloko",
         "RU-C13-syr",

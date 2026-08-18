@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:f359c6016f6ba24e",
+  "sourceHash": "fnv1a64:8253ed9209494389",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -924,7 +924,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01a9d848c5acbb2f",
+      "sourceHash": "fnv1a64:953e87b3df5651af",
       "notice": null,
       "blocks": [
         {
@@ -955,7 +955,7 @@
             },
             {
               "kind": "speech",
-              "text": "— Здравствуйте! — Как вас зовут? — Меня зовут Анна. А вас? — Меня зовут Иван. Очень приятно."
+              "text": "— Здравствуйте! — Zdrávstvuyte! — Как вас зовут? — Kak vas zovút? — Меня зовут Анна. А вас? — Menyá zovút Anna. A vas? — Меня зовут Иван. Очень приятно. — Menyá zovút Iván. Óchen priyátno."
             },
             {
               "kind": "speech",
