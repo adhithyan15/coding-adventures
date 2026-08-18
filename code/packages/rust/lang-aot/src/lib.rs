@@ -261,6 +261,14 @@ pub enum LangAotError {
     /// 9-architecture expansion following the historical-arch backend
     /// migration pattern.
     Intel8086BackendError(String),
+    /// The SPARC V8 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `sparc-v8-backend` (which
+    /// already includes the failing function name and the
+    /// unsupported op/type/operand).  Sixth lane of the
+    /// 9-architecture expansion following the historical-arch
+    /// backend migration pattern.
+    SparcV8BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -326,6 +334,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Z80BackendError(m) => write!(f, "z80: {m}"),
             LangAotError::Intel8051BackendError(m) => write!(f, "intel8051: {m}"),
             LangAotError::Intel8086BackendError(m) => write!(f, "intel8086: {m}"),
+            LangAotError::SparcV8BackendError(m) => write!(f, "sparc-v8: {m}"),
         }
     }
 }
@@ -2007,6 +2016,88 @@ pub fn compile_file_to_intel8086_bin(
     }
     if bytes.is_empty() {
         bytes.push(intel8086_encoder::HALT_BYTE);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → SPARC V8 machine code (`.bin`) on
+/// disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes a flat `.bin` of 32-bit
+/// SPARC V8 instruction words encoded as **big-endian** bytes (SPARC's
+/// byte order — see `sparc_v8_simulator::simulator::SparcV8Simulator`,
+/// which reads/writes memory big-endian, matching MIPS R2000 and
+/// unlike RISC-V/ARM/x86).  Downstream consumers:
+///
+/// * [`sparc-v8-simulator`](../sparc-v8-simulator) — load + execute
+///   in-process.
+/// * Any external SPARC V8 emulator that consumes big-endian byte
+///   streams.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Wire format
+///
+/// Each emitted SPARC V8 word is written as **big-endian** bytes,
+/// mirroring `compile_file_to_mips_r2000_bin`'s convention (SPARC and
+/// MIPS R2000 are the only two big-endian targets in this lane; every
+/// other historical-arch target here is little-endian).
+///
+/// # Why no host gating?
+///
+/// SPARC V8 (1987) predates every common modern development host —
+/// the downstream consumer is always a simulator (in-tree
+/// `sparc-v8-simulator` or external) or replica/emulated hardware.
+/// All host OSes can write a flat byte file, so the pipeline is
+/// universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `SparcV8BackendError` — the IIR contained an op or type the
+///   SPARC V8 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=sparc-v8 -o foo.bin
+/// # Then load foo.bin into sparc-v8-simulator
+/// ```
+pub fn compile_file_to_sparc_v8_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Sixth lane of the 9-architecture expansion: route through
+    // `aot_core` + `sparc-v8-backend` (which itself returns
+    // big-endian-flattened bytes), same per-function-loop pattern as
+    // `compile_file_to_arm1_bin`/`compile_file_to_mips_r2000_bin`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = sparc_v8_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::SparcV8BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&sparc_v8_encoder::HALT_WORD.to_be_bytes());
     }
 
     std::fs::write(out, &bytes)?;

@@ -1,0 +1,8 @@
+[package]
+name = "sparc-v8-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "SPARC V8 (1987) behavioral simulator -- Rust port of code/packages/python/sparc-v8-simulator (Layer 07r). Overlapping register windows (8 globals + NWINDOWS x 16 outs/locals via CWP), PSR condition codes, Y register, big-endian memory, no branch-delay slots (matches the Python original's explicit simplification). Built on the cpu-simulator crate for Memory, module split mirrors mips-r2000-simulator plus a registers.rs module for the windowed register file."
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }
