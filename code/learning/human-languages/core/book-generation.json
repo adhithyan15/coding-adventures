@@ -875,6 +875,13 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 8,
+      "output": "chinese/book/chapters/ch08-mingzi.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"

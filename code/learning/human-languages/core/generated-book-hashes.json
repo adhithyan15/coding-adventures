@@ -588,6 +588,20 @@
       "tex": "chinese/book/chapters/ch07-zaoshang.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:1999da1beffc3768",
+      "lessonIds": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "tex": "chinese/book/chapters/ch08-mingzi.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

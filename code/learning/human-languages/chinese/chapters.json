@@ -166,6 +166,28 @@
           "ZH-DIALOGUE-MORNING"
         ]
       }
+    },
+    {
+      "chapter": 8,
+      "title": "Saying Who You Are",
+      "label": "ch:zh-mingzi",
+      "canDo": "I can write 我, 名 and 字, introduce myself with 我是 and my own name, recognise 名字 as the word for a name, and I know that Mandarin never changes a word to show what job it is doing in a sentence.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C08-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange the reader cannot finish without supplying something of their own -- their name -- and the first place the book names a gap it is choosing not to fill, rather than teaching a sentence no speaker would say.",
+        "assesses": [
+          "ZH-SCRIPT-WO",
+          "ZH-LEX-WO",
+          "ZH-SCRIPT-MING",
+          "ZH-SCRIPT-ZI-CHAR",
+          "ZH-LEX-MINGZI",
+          "ZH-DIALOGUE-INTRODUCE"
+        ]
+      }
     }
   ]
 }

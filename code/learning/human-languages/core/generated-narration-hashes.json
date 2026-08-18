@@ -996,6 +996,25 @@
       "jsonHash": "fnv1a64:ab55350196beaff9"
     },
     {
+      "language": "chinese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:74196f429addec86",
+      "lessonIds": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch08.txt",
+      "json": "chinese/narration/ch08.json",
+      "textHash": "fnv1a64:4a18175e16509cd1",
+      "jsonHash": "fnv1a64:6bbf81ce2f3baef5"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",

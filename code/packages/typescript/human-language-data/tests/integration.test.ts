@@ -1247,6 +1247,9 @@ describe("real curriculum", () => {
       "ZH-C07-practice-choice",
       "ZH-C07-zaoshang-neutral",
       "ZH-C07-zaoshanghao-frame",
+      "ZH-C08-mingzi-parts",
+      "ZH-C08-practice-self",
+      "ZH-C08-wo-both",
       "ZH-W01-er-role",
       "ZH-W01-hao-build-halves",
       "ZH-W01-ni-build-halves",
@@ -1267,6 +1270,9 @@ describe("real curriculum", () => {
       "ZH-W06-zai-frame",
       "ZH-W07-shang-first",
       "ZH-W07-zao-top",
+      "ZH-W08-ming-lower",
+      "ZH-W08-wo-dot",
+      "ZH-W08-zi-meaning",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
