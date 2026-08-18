@@ -1128,6 +1128,41 @@ Left out of the Spanish round-2 tranche deliberately: relabelling ripples into e
 cross-reference that targets it, which is its own change with its own verification,
 not something to bury in a vocabulary PR.
 
+## HL-C207 — a re-teach the collision detector CANNOT see: the MORPHEME case
+
+Found authoring Tamil round 2. The candidate headword **atikam** passed every check
+we have: it appears in no lesson body, no headword, and no romanization. It was
+still a re-teach.
+
+The corpus does not contain the WORD. It contains the MORPHEME, glossed inside
+another word's etymology -- `TA-C26-kaalai` explains *ati-* as "excessive, very"
+while unpacking *atikaalai*. Teaching atikam later would have re-taught a piece the
+reader already met, and no substring search can find that, because the string
+being re-taught was never written as a string.
+
+Three collision classes are now known, in increasing order of invisibility:
+
+1. **In a lesson body** -- a plain prose scan finds it.
+2. **Inside a HEADWORD only** -- `claro` in "si, claro"; `puu` in "naay, puunai";
+   `surya` in `suryodaya`. Caught in seven straight tranches by the headword check,
+   which the prose scan alone would miss.
+3. **Inside a GLOSS of a morpheme** -- this one. No string check reaches it,
+   because the target never appears as a token anywhere.
+
+**What actually works for class 3:** an author who has read the track's etymology
+notes. It was caught here by a person recognising the morpheme, not by a tool.
+
+**Possible mechanisation, unproven:** lessons already carry `introduces.knowledge`
+and etymology notes are structured prose. If glossed morphemes were tagged when
+they are introduced, a candidate could be checked against the morpheme ledger the
+same way it is checked against the headword ledger. That is a schema change and
+should not be built speculatively -- but the class should be NAMED so the next
+author knows to read the etymology, not just grep it.
+
+Do not confuse this with a false positive. atikam is a good word and belongs in the
+curriculum; the problem is only that it must not be introduced as NEW after its
+morpheme has been explained.
+
 ## HL-C203 — corpus-wide sweep: 31 mixed-script findings, and a THIRD blind tool
 
 The Kannada round-2 audit ran HL-C202's per-word check over the WHOLE corpus, not

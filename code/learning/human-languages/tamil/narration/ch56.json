@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 56,
+  "title": "How Much",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e8cc56bd9d4b2098",
+  "lessons": [
+    {
+      "id": "TA-C56-a-little",
+      "sequence": 2010,
+      "title": "சிறிது (siṟitu) — a little",
+      "headword": "சிறிது",
+      "romanization": "siṟitu",
+      "gloss": "a little",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:055508c53aafc004",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did nakam mean, and what did elumbu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிறிது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிறிது (siṟitu) — \"a little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have siṟiya, \"small\". சிறிது is the same root turned into an amount: not a small thing but a small quantity of something. Held a dish and asked how much, you say siṟitu and you get a little."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil has a koñcam as well, which is the one you will hear across a table, and which Telugu shares as koñcem. சிறிது (siṟitu) is the more formal of the two, and the one you would write down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five answers to \"how much?\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṟitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṟitu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elumbu, then siṟitu, and keep the second one short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elumbu*, then *siṟitu*, and keep the second one short]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிறிது (siṟitu) mean? (\"a little\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C56-a-lot",
+      "sequence": 2020,
+      "title": "நிறைய (niṟaiya) — a lot",
+      "headword": "நிறைய",
+      "romanization": "niṟaiya",
+      "gloss": "a lot",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c06fb61a6ba6e95d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did siṟitu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிறைய",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிறைய (niṟaiya) — \"a lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The other end of the same question. நிறைய (niṟaiya) is built on niṟai, to fill, so a lot in Tamil is a fullness: as much as the thing will hold and no argument about it."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu says ఎక్కువ (ekkuva) and builds it out of nothing to do with filling — a reminder that two languages can land on the same everyday answer by two quite different routes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two, and they are opposite ends of one question."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟaiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟaiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siṟitu, then niṟaiya, the little and the lot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siṟitu*, then *niṟaiya*, the little and the lot]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிறைய (niṟaiya) mean? (\"a lot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C56-less",
+      "sequence": 2030,
+      "title": "குறைவு (kuṟaivu) — a shortage, less than there should be",
+      "headword": "குறைவு",
+      "romanization": "kuṟaivu",
+      "gloss": "a shortage, less than there should be",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba7a90842bfc26d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did niṟaiya mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறைவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறைவு (kuṟaivu) — \"a shortage, less than there should be\"."
+            },
+            {
+              "kind": "speech",
+              "text": "kuṟai is to fall short, and குறைவு (kuṟaivu) is the falling-short itself. That makes it a narrower word than the English \"less\": it does not merely compare two amounts, it says one of them did not come up to the mark. There is a small complaint folded inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu's word for the same ground is తక్కువ (takkuva)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three: a little, a lot, and not as much as there ought to be."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟaiya, then kuṟaivu, plenty and then not enough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟaiya*, then *kuṟaivu*, plenty and then not enough]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறைவு (kuṟaivu) mean? (\"a shortage, less than there should be\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C56-no-need",
+      "sequence": 2040,
+      "title": "தேவையில்லை (tēvaiyillai) — there is no need",
+      "headword": "தேவையில்லை",
+      "romanization": "tēvaiyillai",
+      "gloss": "there is no need",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1444d1ed3e8dbdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kuṟaivu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேவையில்லை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேவையில்லை (tēvaiyillai) — \"there is no need\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and the second one has been yours since the early writing lessons: tēvai is a need, illai is the no you learned to put on paper. Together they are how Tamil turns something down without turning the person down."
+            },
+            {
+              "kind": "speech",
+              "text": "A flat illai refuses the thing. தேவையில்லை (tēvaiyillai) says there is no call for it, which leaves everybody their footing. Telugu does the same work in one shorter piece, వద్దు (vaddu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four, and this one is the polite way out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēvaiyillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēvaiyillai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaivu, then tēvaiyillai, and let the whole of the second run as one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaivu*, then *tēvaiyillai*, and let the whole of the second run as one word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தேவையில்லை (tēvaiyillai) mean? (\"there is no need\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C56-let-it-be",
+      "sequence": 2050,
+      "title": "ஆகட்டும் (ākaṭṭum) — let it be so",
+      "headword": "ஆகட்டும்",
+      "romanization": "ākaṭṭum",
+      "gloss": "let it be so",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:565f96c0906be523",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tēvaiyillai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆகட்டும்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆகட்டும் (ākaṭṭum) — \"let it be so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "āku is to become, to come about. ஆகட்டும் (ākaṭṭum) is \"let it come about\" — what you say when somebody proposes something and you are content to let it happen. It agrees without promising to do anything."
+            },
+            {
+              "kind": "speech",
+              "text": "The ām you have been saying for yes is that same āku worn down by a great deal of use, which is why the two sit so alike in the mouth. Telugu's nearest of these is అలాగే (alāgē), \"just so, alright then\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five answers to an offer: a little, a lot, not enough, no need, and yes — let it happen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākaṭṭum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākaṭṭum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — siṟitu, niṟaiya, kuṟaivu, tēvaiyillai, ākaṭṭum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *siṟitu*, *niṟaiya*, *kuṟaivu*, *tēvaiyillai*, *ākaṭṭum*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆகட்டும் (ākaṭṭum) mean? (\"let it be so\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

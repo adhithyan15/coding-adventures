@@ -4652,6 +4652,48 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 51,
+      "output": "tamil/book/chapters/ch51-overhead.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 52,
+      "output": "tamil/book/chapters/ch52-a-tree.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 53,
+      "output": "tamil/book/chapters/ch53-the-land.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 54,
+      "output": "tamil/book/chapters/ch54-things-in-the-house.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 55,
+      "output": "tamil/book/chapters/ch55-the-rest-of-you.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 56,
+      "output": "tamil/book/chapters/ch56-how-much.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 57,
+      "output": "tamil/book/chapters/ch57-wind-and-fire.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",

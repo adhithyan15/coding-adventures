@@ -8246,7 +8246,7 @@
     {
       "language": "tamil",
       "chapter": 50,
-      "sourceHash": "fnv1a64:5e5d2f82ce010fca",
+      "sourceHash": "fnv1a64:02925d579e885207",
       "lessonIds": [
         "TA-C50-threshold",
         "TA-C50-kolam",
@@ -8255,6 +8255,97 @@
         "TA-C50-welcome"
       ],
       "tex": "tamil/book/chapters/ch50-at-the-doorway.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:9d374d3f017214c9",
+      "lessonIds": [
+        "TA-C51-sky",
+        "TA-C51-sun",
+        "TA-C51-moon",
+        "TA-C51-star",
+        "TA-C51-cloud"
+      ],
+      "tex": "tamil/book/chapters/ch51-overhead.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:4b0b2bc139cd560e",
+      "lessonIds": [
+        "TA-C52-tree",
+        "TA-C52-branch",
+        "TA-C52-shoot",
+        "TA-C52-root",
+        "TA-C52-seed"
+      ],
+      "tex": "tamil/book/chapters/ch52-a-tree.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:74e36c0e0c12d04f",
+      "lessonIds": [
+        "TA-C53-river",
+        "TA-C53-hill",
+        "TA-C53-field",
+        "TA-C53-path",
+        "TA-C53-village"
+      ],
+      "tex": "tamil/book/chapters/ch53-the-land.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:28eda0c5278a3898",
+      "lessonIds": [
+        "TA-C54-mat",
+        "TA-C54-basket",
+        "TA-C54-knife",
+        "TA-C54-bowl",
+        "TA-C54-box"
+      ],
+      "tex": "tamil/book/chapters/ch54-things-in-the-house.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:2ac72f1649060bf5",
+      "lessonIds": [
+        "TA-C55-neck",
+        "TA-C55-back",
+        "TA-C55-lip",
+        "TA-C55-nail",
+        "TA-C55-bone"
+      ],
+      "tex": "tamil/book/chapters/ch55-the-rest-of-you.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:ce15f1314006c5f7",
+      "lessonIds": [
+        "TA-C56-a-little",
+        "TA-C56-a-lot",
+        "TA-C56-less",
+        "TA-C56-no-need",
+        "TA-C56-let-it-be"
+      ],
+      "tex": "tamil/book/chapters/ch56-how-much.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:66f7063517294752",
+      "lessonIds": [
+        "TA-C57-wind",
+        "TA-C57-sand",
+        "TA-C57-mud",
+        "TA-C57-smoke",
+        "TA-C57-ember"
+      ],
+      "tex": "tamil/book/chapters/ch57-wind-and-fire.tex"
     },
     {
       "language": "telugu",

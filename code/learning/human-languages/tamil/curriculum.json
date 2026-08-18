@@ -727,6 +727,118 @@
         "TA-EXT-50-WELCOME"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-51-SKY",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TA-C51-sky",
+        "TA-C51-sun",
+        "TA-C51-moon",
+        "TA-C51-star",
+        "TA-C51-cloud"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-51-SKY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-52-TREE",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C52-tree",
+        "TA-C52-branch",
+        "TA-C52-shoot",
+        "TA-C52-root",
+        "TA-C52-seed"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-52-TREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-53-LAND",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TA-C53-river",
+        "TA-C53-hill",
+        "TA-C53-field",
+        "TA-C53-path",
+        "TA-C53-village"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-53-LAND"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-54-HOUSE",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TA-C54-mat",
+        "TA-C54-basket",
+        "TA-C54-knife",
+        "TA-C54-bowl",
+        "TA-C54-box"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-54-HOUSE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-55-BODY",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C55-neck",
+        "TA-C55-back",
+        "TA-C55-lip",
+        "TA-C55-nail",
+        "TA-C55-bone"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-55-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-56-AMOUNT",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TA-C56-a-little",
+        "TA-C56-a-lot",
+        "TA-C56-less",
+        "TA-C56-no-need",
+        "TA-C56-let-it-be"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-56-AMOUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-57-FIRE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TA-C57-wind",
+        "TA-C57-sand",
+        "TA-C57-mud",
+        "TA-C57-smoke",
+        "TA-C57-ember"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-57-FIRE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -736,7 +848,8 @@
         "TA-PATH-003",
         "TA-PATH-100",
         "TA-PATH-031",
-        "TA-PATH-50-WELCOME"
+        "TA-PATH-50-WELCOME",
+        "TA-PATH-51-SKY"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -749,7 +862,8 @@
       "segments": [
         "TA-PATH-005",
         "TA-PATH-011",
-        "TA-PATH-49-COURTESY"
+        "TA-PATH-49-COURTESY",
+        "TA-PATH-54-HOUSE"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -761,7 +875,8 @@
         "TA-PATH-002",
         "TA-PATH-004",
         "TA-PATH-006",
-        "TA-PATH-47-REPLY"
+        "TA-PATH-47-REPLY",
+        "TA-PATH-56-AMOUNT"
       ],
       "omits": [],
       "relocates": {}
@@ -774,7 +889,8 @@
         "TA-PATH-018",
         "TA-PATH-023",
         "TA-PATH-033",
-        "TA-PATH-46-ROLE"
+        "TA-PATH-46-ROLE",
+        "TA-PATH-52-TREE"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -788,7 +904,8 @@
         "TA-PATH-010",
         "TA-PATH-019",
         "TA-PATH-034",
-        "TA-PATH-45-BODY"
+        "TA-PATH-45-BODY",
+        "TA-PATH-55-BODY"
       ],
       "omits": [
         "WORD-GOOD",
@@ -801,7 +918,8 @@
         "TA-PATH-015",
         "TA-PATH-021",
         "TA-PATH-032",
-        "TA-PATH-44-ASK"
+        "TA-PATH-44-ASK",
+        "TA-PATH-53-LAND"
       ],
       "omits": [],
       "relocates": {}
@@ -810,7 +928,8 @@
       "segments": [
         "TA-PATH-012",
         "TA-PATH-035",
-        "TA-PATH-48-LEAVE"
+        "TA-PATH-48-LEAVE",
+        "TA-PATH-57-FIRE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1741,6 +1860,111 @@
         "TA-C50-flower",
         "TA-C50-betel-leaf",
         "TA-C50-welcome"
+      ]
+    },
+    {
+      "id": "TA-EXT-51-SKY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things in the Tamil sky.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C51-sky",
+        "TA-C51-sun",
+        "TA-C51-moon",
+        "TA-C51-star",
+        "TA-C51-cloud"
+      ]
+    },
+    {
+      "id": "TA-EXT-52-TREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five parts of a tree in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C52-tree",
+        "TA-C52-branch",
+        "TA-C52-shoot",
+        "TA-C52-root",
+        "TA-C52-seed"
+      ]
+    },
+    {
+      "id": "TA-EXT-53-LAND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things in a stretch of Tamil country.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C53-river",
+        "TA-C53-hill",
+        "TA-C53-field",
+        "TA-C53-path",
+        "TA-C53-village"
+      ]
+    },
+    {
+      "id": "TA-EXT-54-HOUSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Tamil house sets out for a guest.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C54-mat",
+        "TA-C54-basket",
+        "TA-C54-knife",
+        "TA-C54-bowl",
+        "TA-C54-box"
+      ]
+    },
+    {
+      "id": "TA-EXT-55-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more parts of the body in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C55-neck",
+        "TA-C55-back",
+        "TA-C55-lip",
+        "TA-C55-nail",
+        "TA-C55-bone"
+      ]
+    },
+    {
+      "id": "TA-EXT-56-AMOUNT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer \"how much?\" five ways in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C56-a-little",
+        "TA-C56-a-lot",
+        "TA-C56-less",
+        "TA-C56-no-need",
+        "TA-C56-let-it-be"
+      ]
+    },
+    {
+      "id": "TA-EXT-57-FIRE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things of wind and fire in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C57-wind",
+        "TA-C57-sand",
+        "TA-C57-mud",
+        "TA-C57-smoke",
+        "TA-C57-ember"
       ]
     }
   ]
