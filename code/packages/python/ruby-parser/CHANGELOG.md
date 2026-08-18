@@ -2,6 +2,13 @@
 
 All notable changes to the Ruby Parser package will be documented in this file.
 
+## [0.1.3] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `create_ruby_parser` now imports a pre-compiled `_grammar` module instead of reading and parsing the `ruby.grammar` file from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published PyPI package does not ship, so `pip install` + first use would raise `FileNotFoundError`.
+- **Stale grammar bug**: the pre-existing checked-in `src/ruby_parser/_grammar.py` was never imported by `parser.py` (which always read `ruby.grammar` directly from disk), so nobody noticed it had drifted drastically out of date — it only embedded 9 rules (`program`, `statement`, `assignment`, `expression_stmt`, `method_call`, and the `expression`/`term`/`factor` precedence chain) compiled from an early version of `ruby.grammar`. The current `code/grammars/ruby/ruby.grammar` defines ~97 rules and has grown to cover method definitions (`def`), classes (`class`/`module`), conditionals (`if`/`unless`/`elsif`/`else`), loops (`while`/`until`), `case`/`when`/`in` pattern matching, `begin`/`rescue`/`ensure` blocks, blocks, lambdas, and more — none of which the stale compiled file could parse. Regenerated fresh from the current grammar source; the core rule names exercised by the existing test suite (`program`, `assignment`, `method_call`, `expression`, `sum`, `term`, `factor`) were preserved, so all 21 pre-existing tests still pass unchanged.
+- Added a `TestStatementLevelConstructs` regression test class (6 tests) covering `def`, `class`, `if`, `while`, `case`, and `begin` statements, so a future regression back to a stale/truncated grammar would be caught immediately.
+
 ## [0.1.2] - 2026-06-02
 
 ### Fixed
