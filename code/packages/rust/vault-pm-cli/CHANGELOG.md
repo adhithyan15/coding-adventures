@@ -62,6 +62,18 @@
   four refused confirmations each publishing `Denied`; a login and a missing
   item; and one shell session.
 
+  A failure of the *fresh* clock reading is folded into the same channel as a
+  failure to collect the confirmation, rather than returned from an early `?`.
+  An early return would have been the one path through this command on which an
+  authenticated attempt reached the confirmation prompt and then left no audit
+  row — precisely the "an access that happened and left no trace" outcome the
+  ceremony exists to prevent. The attempt instead proceeds as unconfirmed,
+  publishes `Denied`, and only then returns the payload-free provider error.
+  Failing the *first* reading is unchanged and still leaves no row, because
+  `VLT-PM25` §3 requires that a pre-authentication failure not claim an item
+  access occurred. A test asserts both, since they return the same class to the
+  caller and differ only in the audit trail.
+
 - **Renamed `PasswordOutputMode` to `SecretOutputMode`.** It is now shared by
   the two commands whose entire output is a live credential.
 

@@ -488,17 +488,26 @@ impl TotpAlgorithm {
     /// bytes), so the tag is returned as a `Vec` and the dynamic
     /// truncation below indexes it by its actual length rather than
     /// by a hard-wired 20.
+    ///
+    /// Each arm copies the fixed-size array into the returned
+    /// `Zeroizing` buffer and then wipes the array. Writing this as
+    /// `hmac_sha1(...)?.into()` would be shorter and would leave a
+    /// live authentication tag on the stack: `into()` *copies* into a
+    /// fresh allocation, so the `Zeroizing` wrapper would own the
+    /// second copy while the first went out of scope untouched. From
+    /// a TOTP tag an observer reads the code directly, so the copy
+    /// that nobody wipes is the one that matters.
     fn mac(self, key: &[u8], message: &[u8]) -> Result<Zeroizing<Vec<u8>>, AuthError> {
-        let tag: Vec<u8> = match self {
-            Self::Sha1 => hmac_sha1(key, message)
-                .map_err(|_| AuthError::Crypto)?
-                .into(),
-            Self::Sha256 => hmac_sha256(key, message)
-                .map_err(|_| AuthError::Crypto)?
-                .into(),
-            Self::Sha512 => hmac_sha512(key, message)
-                .map_err(|_| AuthError::Crypto)?
-                .into(),
+        fn take<const N: usize>(tag: Result<[u8; N], impl Sized>) -> Result<Vec<u8>, AuthError> {
+            let mut tag = tag.map_err(|_| AuthError::Crypto)?;
+            let owned = tag.to_vec();
+            tag.zeroize();
+            Ok(owned)
+        }
+        let tag = match self {
+            Self::Sha1 => take(hmac_sha1(key, message))?,
+            Self::Sha256 => take(hmac_sha256(key, message))?,
+            Self::Sha512 => take(hmac_sha512(key, message))?,
         };
         Ok(Zeroizing::new(tag))
     }
@@ -601,11 +610,25 @@ impl TotpAuthenticator {
         // SHA-1 and 31/63 for the wider hashes; RFC 6238's reference
         // implementation indexes from the end for exactly this
         // reason, so the four bytes it selects always exist.
-        let offset = (mac[mac.len() - 1] & 0x0F) as usize;
-        let bin = ((mac[offset] as u32 & 0x7F) << 24)
-            | ((mac[offset + 1] as u32) << 16)
-            | ((mac[offset + 2] as u32) << 8)
-            | (mac[offset + 3] as u32);
+        //
+        // Both lookups are checked rather than indexed. A nibble is
+        // at most 15, and the narrowest tag here is 20 bytes, so a
+        // panic is unreachable today — but "unreachable" rests on a
+        // fact about three hash functions declared in another crate,
+        // and this function cannot see it. A `Crypto` error costs
+        // nothing and turns a future 4-byte digest from a panic in a
+        // password manager into a refusal.
+        let last = *mac.last().ok_or(AuthError::Crypto)?;
+        let offset = (last & 0x0F) as usize;
+        let window: [u8; 4] = mac
+            .get(offset..offset + 4)
+            .ok_or(AuthError::Crypto)?
+            .try_into()
+            .map_err(|_| AuthError::Crypto)?;
+        let bin = ((window[0] as u32 & 0x7F) << 24)
+            | ((window[1] as u32) << 16)
+            | ((window[2] as u32) << 8)
+            | (window[3] as u32);
         // The modulus is computed in u64, not u32. `digits` is
         // permitted up to 10 and 10^10 is 10_000_000_000, which
         // exceeds u32::MAX — `10u32.pow(10)` panics in a debug build

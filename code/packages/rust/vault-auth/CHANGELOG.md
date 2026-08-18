@@ -53,6 +53,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dynamic truncation indexes the offset nibble from the *last* byte of
   the tag rather than from a hard-wired byte 19, which is what makes it
   correct for the 32- and 64-byte tags of the wider hashes.
+- The HMAC tag no longer escapes its wipe-on-drop wrapper. `TotpAlgorithm::mac`
+  copies each fixed-size tag into the returned buffer and then zeroizes the
+  array; the shorter `hmac_sha1(...)?.into()` would have left the *first* copy
+  on the stack untouched while `Zeroizing` owned the second. A TOTP tag is not
+  merely secret-adjacent — the code is read straight out of it.
+- Dynamic truncation now uses checked lookups (`last()` and `get(o..o+4)`)
+  returning `Crypto` instead of indexing. The panic was unreachable — a nibble
+  is at most 15 and the narrowest tag is 20 bytes — but "unreachable" rested on
+  a fact about three hash functions declared in another crate, which this
+  function cannot see. A refusal is a better answer than a panic in a password
+  manager.
 
 ## [0.1.0] — 2026-05-04
 

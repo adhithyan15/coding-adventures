@@ -2910,7 +2910,22 @@ fn totp_code(
     // that a refusal and a success cost the same host calls in the same order,
     // and so that a later reordering cannot accidentally make the clock read
     // conditional on the answer.
-    let code_time_ms = host.now_ms().map_err(map_host)?;
+    //
+    // A clock failure *here* is folded into the same channel as a failure to
+    // collect the confirmation, rather than returned with `?`. An early return
+    // would be the one path through this command on which an authenticated
+    // attempt reached the confirmation prompt and then left no audit row at
+    // all — the exact "an access that happened and left no trace" outcome the
+    // ceremony exists to prevent. Instead the attempt proceeds as unconfirmed,
+    // publishes `Denied`, and only then returns the payload-free host error.
+    // `code_time_ms` is unused on that path because an unauthorized intent
+    // never reaches the selector; the placeholder is never a computed code.
+    let (code_time_ms, clock_error) = match host.now_ms() {
+        Ok(value) => (value, None),
+        Err(error) => (0, Some(error)),
+    };
+    let confirmed = confirmed && clock_error.is_none();
+    let host_error = confirmation_error.or(clock_error);
     let computed = access
         .into_unlocked()
         .map_err(map_application)?
@@ -2924,7 +2939,7 @@ fn totp_code(
         )
         .map_err(map_application)?
         .into_operation();
-    if let Some(error) = confirmation_error {
+    if let Some(error) = host_error {
         if !matches!(computed, Err(ApplicationError::InvalidInput)) {
             return Err(CliFailure::Internal);
         }
@@ -4890,6 +4905,15 @@ mod tests {
         /// Zero — the default every existing test uses — makes the clock a
         /// constant, so nothing that does not opt in can observe elapsed time.
         clock_step_ms: u64,
+        /// Readings taken so far, so a test can fail a chosen one.
+        clock_reads: AtomicU64,
+        /// Readings that succeed before the clock starts failing.
+        ///
+        /// `None` — the default — is a clock that never fails. A value lets a
+        /// test prove what a command does when the clock dies *partway
+        /// through*, which is the only way to reach an ordering bug that a
+        /// wholly-broken clock would hide behind an earlier failure.
+        clock_reads_before_failure: Option<u64>,
     }
 
     impl TestHost {
@@ -4982,7 +5006,27 @@ mod tests {
                 entropy_available,
                 clock_ms: AtomicU64::new(FIXED_TEST_TIME_MS),
                 clock_step_ms,
+                clock_reads: AtomicU64::new(0),
+                clock_reads_before_failure: None,
             }
+        }
+
+        /// A host that can answer prompts and whose clock fails after
+        /// `readings` successful readings.
+        fn with_texts_and_failing_clock(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+            readings: u64,
+        ) -> Self {
+            let mut host = Self::build(paths, secrets, texts, 1, true, 0);
+            host.clock_reads_before_failure = Some(readings);
+            host
+        }
+
+        /// How many clock readings this host has served.
+        fn clock_reads(&self) -> u64 {
+            self.clock_reads.load(Ordering::Relaxed)
         }
 
         /// Return how many scripted secrets remain unconsumed.
@@ -5251,6 +5295,13 @@ mod tests {
         }
 
         fn now_ms(&self) -> Result<u64, HostError> {
+            let taken = self.clock_reads.fetch_add(1, Ordering::Relaxed);
+            if self
+                .clock_reads_before_failure
+                .is_some_and(|limit| taken >= limit)
+            {
+                return Err(HostError::Unavailable);
+            }
             Ok(self
                 .clock_ms
                 .fetch_add(self.clock_step_ms, Ordering::Relaxed))
@@ -10683,6 +10734,79 @@ mod tests {
             4,
             "{audit:?}"
         );
+    }
+
+    /// A clock failure on the *fresh* reading still leaves an audit row.
+    ///
+    /// This command reads the clock exactly twice: once before authentication
+    /// to reserve the audit timestamp, and once after the confirmation answer
+    /// to compute the code. The second one is the interesting failure. An
+    /// authenticated attempt has by then reached the confirmation prompt, so
+    /// returning the provider error straight from a `?` would be the one path
+    /// through this command on which something happened and left no trace —
+    /// exactly what the ceremony exists to prevent. The attempt therefore
+    /// proceeds as unconfirmed and publishes `Denied` first.
+    ///
+    /// Failing the *first* reading is the control. That is a pre-authentication
+    /// failure, and VLT-PM25 §3 is explicit that it must not claim an item
+    /// access occurred — so it correctly leaves no row at all. The two cases
+    /// return the same class and differ only in the audit trail, which is why
+    /// they are asserted together.
+    #[test]
+    fn totp_code_publishes_denied_when_the_fresh_clock_reading_fails() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp clock failure passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let denied_rows = |paths: LocalVaultPaths, seed: u8| {
+            let audit = run(
+                ["audit", "list"],
+                &TestHost::with_entropy_seed(paths, [passphrase.clone()], seed),
+            );
+            assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=denied"))
+                .count()
+        };
+        assert_eq!(denied_rows(paths.clone(), 137), 0);
+
+        // Control: the pre-authentication reservation fails. No row.
+        let early = TestHost::with_texts_and_failing_clock(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            0,
+        );
+        let output = run(["totp", "code", &item, "--reveal"], &early);
+        assert_eq!(output.exit_code(), ExitCode::Provider, "{output:?}");
+        assert_eq!(early.revealed_count(), 0);
+        assert_eq!(denied_rows(paths.clone(), 139), 0);
+
+        // The fresh reading fails, after an exact-`yes` confirmation. Same
+        // class to the caller, but the access is now on the record.
+        let late = TestHost::with_texts_and_failing_clock(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            1,
+        );
+        let output = run(["totp", "code", &item, "--reveal"], &late);
+        assert_eq!(output.exit_code(), ExitCode::Provider, "{output:?}");
+        assert!(output.stdout().is_empty());
+        assert_eq!(late.revealed_count(), 0, "no code may be released");
+        assert_eq!(late.clock_reads(), 2, "the command reads the clock twice");
+        assert_eq!(denied_rows(paths, 149), 1);
     }
 
     #[test]

@@ -57,6 +57,7 @@ use coding_adventures_md5::sum_md5;
 use coding_adventures_sha1::sum1;
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha512::sum512;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use subtle::ConstantTimeEq;
 
 // ─── ipad and opad constants (RFC 2104 §2) ───────────────────────────────────
@@ -82,6 +83,31 @@ const OPAD: u8 = 0x5C;
 ///
 /// # Returns
 /// The authentication tag as `Vec<u8>`. Same length as `hash_fn`'s output.
+///
+/// The tag is the function's *output*, so its lifetime belongs to the caller;
+/// the named variants below wipe their copy of it before returning the
+/// fixed-size array. Every key-derived *intermediate* is wiped here.
+///
+/// # Why the intermediates are wipe-on-drop
+///
+/// Steps 2 and 3 below build buffers that are the key in lightly disguised
+/// form. `K' XOR ipad` is not a one-way function of the key: anyone reading the
+/// buffer recovers `K'` by XORing 0x36 back out. A `Vec<u8>` that simply goes
+/// out of scope returns its allocation to the allocator with those bytes
+/// intact, where the next allocation in the process can read them.
+///
+/// That matters more here than it looks, because of who calls this. HMAC under
+/// a *long-lived* key, invoked repeatedly on demand, is exactly the TOTP
+/// pattern: one stored seed, re-hashed every time someone asks for a code. Each
+/// call that left copies behind would scatter another recoverable image of the
+/// shared secret across freed heap.
+///
+/// The two nested inputs are also built at their **exact final capacity** and
+/// filled in place. The natural spelling — `collect()` the padded key, then
+/// `extend_from_slice(message)` — reallocates, and a reallocation copies the
+/// bytes to a new buffer and frees the old one *without* wiping it. Wrapping
+/// the final buffer in `Zeroizing` would then wipe the wrong copy: the
+/// abandoned one, holding `K' XOR ipad`, is the one nobody owns any more.
 pub fn hmac<F>(hash_fn: F, block_size: usize, key: &[u8], message: &[u8]) -> Vec<u8>
 where
     F: Fn(&[u8]) -> Vec<u8>,
@@ -89,16 +115,15 @@ where
     // Step 1 — normalize key to exactly block_size bytes
     let key_prime = normalize_key(&hash_fn, block_size, key);
 
-    // Step 2 — derive inner and outer padded keys
-    let inner_key: Vec<u8> = key_prime.iter().map(|&b| b ^ IPAD).collect();
-    let outer_key: Vec<u8> = key_prime.iter().map(|&b| b ^ OPAD).collect();
-
-    // Step 3 — nested hashes
-    let mut inner_input = inner_key;
+    // Steps 2 and 3 — derive each padded key directly into its nested input, at
+    // exact capacity, so no reallocation abandons an un-wiped copy of it.
+    let mut inner_input = Zeroizing::new(Vec::with_capacity(block_size + message.len()));
+    inner_input.extend(key_prime.iter().map(|&byte| byte ^ IPAD));
     inner_input.extend_from_slice(message);
-    let inner = hash_fn(&inner_input);
+    let inner = Zeroizing::new(hash_fn(&inner_input));
 
-    let mut outer_input = outer_key;
+    let mut outer_input = Zeroizing::new(Vec::with_capacity(block_size + inner.len()));
+    outer_input.extend(key_prime.iter().map(|&byte| byte ^ OPAD));
     outer_input.extend_from_slice(&inner);
     hash_fn(&outer_input)
 }
@@ -134,9 +159,17 @@ pub fn hmac_md5(key: &[u8], message: &[u8]) -> Result<[u8; 16], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
-    let result = hmac(|d| sum_md5(d).to_vec(), 64, key, message);
+    // The tag lands in a heap `Vec` that this function does not return. Copy it
+    // into the fixed-size array the caller gets, then wipe the allocation:
+    // `try_into` would otherwise free a buffer holding a live authentication
+    // tag. The array itself is the caller's to wipe.
+    let mut result = hmac(|d| sum_md5(d).to_vec(), 64, key, message);
     // SAFETY: sum_md5 always returns exactly 16 bytes, so try_into cannot fail.
-    Ok(result.try_into().expect("hmac_md5: internal invariant — md5 output is always 16 bytes"))
+    let tag: [u8; 16] = result[..]
+        .try_into()
+        .expect("hmac_md5: internal invariant — md5 output is always 16 bytes");
+    result.zeroize();
+    Ok(tag)
 }
 
 /// HMAC-SHA1: 20-byte authentication tag.
@@ -149,9 +182,13 @@ pub fn hmac_sha1(key: &[u8], message: &[u8]) -> Result<[u8; 20], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
-    let result = hmac(|d| sum1(d).to_vec(), 64, key, message);
+    let mut result = hmac(|d| sum1(d).to_vec(), 64, key, message);
     // SAFETY: sum1 always returns exactly 20 bytes, so try_into cannot fail.
-    Ok(result.try_into().expect("hmac_sha1: internal invariant — sha1 output is always 20 bytes"))
+    let tag: [u8; 20] = result[..]
+        .try_into()
+        .expect("hmac_sha1: internal invariant — sha1 output is always 20 bytes");
+    result.zeroize();
+    Ok(tag)
 }
 
 /// HMAC-SHA256: 32-byte authentication tag.
@@ -164,9 +201,13 @@ pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<[u8; 32], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
-    let result = hmac(|d| sha256(d).to_vec(), 64, key, message);
+    let mut result = hmac(|d| sha256(d).to_vec(), 64, key, message);
     // SAFETY: sha256 always returns exactly 32 bytes, so try_into cannot fail.
-    Ok(result.try_into().expect("hmac_sha256: internal invariant — sha256 output is always 32 bytes"))
+    let tag: [u8; 32] = result[..]
+        .try_into()
+        .expect("hmac_sha256: internal invariant — sha256 output is always 32 bytes");
+    result.zeroize();
+    Ok(tag)
 }
 
 /// HMAC-SHA512: 64-byte authentication tag.
@@ -180,9 +221,13 @@ pub fn hmac_sha512(key: &[u8], message: &[u8]) -> Result<[u8; 64], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
-    let result = hmac(|d| sum512(d).to_vec(), 128, key, message);
+    let mut result = hmac(|d| sum512(d).to_vec(), 128, key, message);
     // SAFETY: sum512 always returns exactly 64 bytes, so try_into cannot fail.
-    Ok(result.try_into().expect("hmac_sha512: internal invariant — sha512 output is always 64 bytes"))
+    let tag: [u8; 64] = result[..]
+        .try_into()
+        .expect("hmac_sha512: internal invariant — sha512 output is always 64 bytes");
+    result.zeroize();
+    Ok(tag)
 }
 
 // ─── Hex-string variants ──────────────────────────────────────────────────────
@@ -253,19 +298,23 @@ pub fn verify(expected: &[u8], actual: &[u8]) -> bool {
 
 /// Normalize key to exactly `block_size` bytes.
 /// Long keys are hashed. Short keys are zero-padded.
-fn normalize_key<F>(hash_fn: &F, block_size: usize, key: &[u8]) -> Vec<u8>
+fn normalize_key<F>(hash_fn: &F, block_size: usize, key: &[u8]) -> Zeroizing<Vec<u8>>
 where
     F: Fn(&[u8]) -> Vec<u8>,
 {
+    // `K'` is the raw key, zero-padded — or its hash when the key is longer
+    // than a block. Either way it is secret material with the same value as the
+    // key for authentication purposes, so both it and the intermediate hash are
+    // wipe-on-drop.
     let hashed;
     let key_bytes = if key.len() > block_size {
-        hashed = hash_fn(key);
+        hashed = Zeroizing::new(hash_fn(key));
         hashed.as_slice()
     } else {
         key
     };
 
-    let mut result = vec![0u8; block_size];
+    let mut result = Zeroizing::new(vec![0u8; block_size]);
     let copy_len = key_bytes.len().min(block_size);
     result[..copy_len].copy_from_slice(&key_bytes[..copy_len]);
     result
@@ -315,7 +364,10 @@ mod tests {
     fn hmac_sha256_tc6_long_key() {
         let key = vec![0xaau8; 131];
         assert_eq!(
-            hmac_sha256_hex(&key, b"Test Using Larger Than Block-Size Key - Hash Key First"),
+            hmac_sha256_hex(
+                &key,
+                b"Test Using Larger Than Block-Size Key - Hash Key First"
+            ),
             "60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54"
         );
     }
@@ -363,7 +415,10 @@ mod tests {
     #[test]
     fn hmac_md5_tc1() {
         let key = vec![0x0bu8; 16];
-        assert_eq!(hmac_md5_hex(&key, b"Hi There"), "9294727a3638bb1c13f48ef8158bfc9d");
+        assert_eq!(
+            hmac_md5_hex(&key, b"Hi There"),
+            "9294727a3638bb1c13f48ef8158bfc9d"
+        );
     }
 
     #[test]
@@ -378,7 +433,10 @@ mod tests {
     fn hmac_md5_tc6_long_key() {
         let key = vec![0xaau8; 80];
         assert_eq!(
-            hmac_md5_hex(&key, b"Test Using Larger Than Block-Size Key - Hash Key First"),
+            hmac_md5_hex(
+                &key,
+                b"Test Using Larger Than Block-Size Key - Hash Key First"
+            ),
             "6b1ab7fe4bd7bf8f0b62e6ce61b9d0cd"
         );
     }
@@ -406,7 +464,10 @@ mod tests {
     fn hmac_sha1_tc6_long_key() {
         let key = vec![0xaau8; 80];
         assert_eq!(
-            hmac_sha1_hex(&key, b"Test Using Larger Than Block-Size Key - Hash Key First"),
+            hmac_sha1_hex(
+                &key,
+                b"Test Using Larger Than Block-Size Key - Hash Key First"
+            ),
             "aa4ae5e15272d00e95705637ce8a3b55ed402112"
         );
     }
