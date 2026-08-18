@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 — 2026-08-17
+
+### Changed
+
+- `lexer.rs`/`parser.rs` no longer read `brainfuck.tokens`/`brainfuck.grammar`
+  off disk at runtime via `env!("CARGO_MANIFEST_DIR")` path-climbing. Added
+  `build.rs`, which compiles both grammar files into Rust source (via
+  `grammar_tools::compiler`) at build time, embedded with `include!` and
+  cached in a `OnceLock` — the same pattern already used by `twig-lexer`/
+  `twig-parser`. This was the last Rust crate in the repo with runtime
+  grammar-file disk I/O; fixes a real gap (a published crate would not ship
+  `code/grammars/`) and restores Miri-sandbox compatibility (Miri's default
+  isolation mode blocks filesystem access).
+
 ## 0.3.0 — 2026-04-10
 
 ### Added
