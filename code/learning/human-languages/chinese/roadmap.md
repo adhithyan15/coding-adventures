@@ -173,16 +173,18 @@ characters the vendored subset does not contain.
 The chapter carries the track's most important reading idea. 请 is 讠 + 青, and
 **青 is *qīng* while 请 is *qǐng*** — same consonant, same vowel, different tone.
 That is a phonetic component the reader can actually hear, which 尔 in 你 was
-not, and it lets the writing system stop looking like thousands of unrelated
-pictures: a character can carry **two hints at once**, one half for what it means
+not — so the claim the first chapter made in passing about 尔 becomes one the
+reader can check by ear. It lets the writing system stop looking like thousands
+of unrelated pictures: a character can carry **two hints at once**, one half for what it means
 and one for how it sounds. From here a reader meeting an unknown character has
 something to do besides look it up.
 
 It also corrects an over-translation before it sets. 请 is glossed *please*, but
-it **invites** rather than softens — it opens a sentence and hands the action
-over, where English *please* is bolted on and floats anywhere. The practical
-consequence is stated plainly: **Mandarin uses 请 far less than English uses
-please**, and omitting it is not rude.
+it **hands the action over** where English *please* softens a demand, and it
+comes before the action it invites rather than being bolted on after it. The
+practical consequence is stated plainly: **Mandarin uses 请 far less than English
+uses please** — with intimates it can read as distancing — and omitting it is not
+rude.
 
 **Still owed on this node.** 请 + a verb is the polite-request frame, and the
 reader has no verbs yet. 请再说 — *please say it again*, which would let the blunt

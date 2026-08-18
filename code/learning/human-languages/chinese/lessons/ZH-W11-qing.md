@@ -60,11 +60,12 @@ speech, body, inch. Here the right half does something else entirely.
 
 **青 is said *qīng*. The whole character is said *qǐng*.**
 
-Say those two aloud, one after the other. Same consonant, same vowel; only the
-pitch differs. **The right half is not telling you what the word means. It is
-telling you how to say it.** That is a phonetic component, and once you can spot
-one you get a genuine reading strategy: meet an unknown character, find the half
-you recognise, and you often have a guess at the sound.
+Say those two aloud, one after the other. Same consonant, same rest of the
+syllable; only the pitch differs. **The right half is not telling you what the word means. It is
+telling you how to say it.** That is a **phonetic component** — the job 尔 was
+doing inside 你, which you could only take on trust there. This time you can hear
+it. Once you can spot one you have a genuine reading strategy: meet an unknown
+character, find the half you recognise, and you often have a guess at the sound.
 
 It is a guess and not a guarantee — the sound has drifted in plenty of
 characters over a few thousand years, and the tone in particular is often

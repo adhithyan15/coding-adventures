@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "After You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c7ab8831685e842a",
+  "sourceHash": "fnv1a64:395664a6a3b64bdd",
   "lessons": [
     {
       "id": "ZH-W11-qing",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:96d9436604221a03",
+      "sourceHash": "fnv1a64:07dacaf9c61f23e7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say those two aloud, one after the other. Same consonant, same vowel; only the pitch differs. The right half is not telling you what the word means. It is telling you how to say it. That is a phonetic component, and once you can spot one you get a genuine reading strategy: meet an unknown character, find the half you recognise, and you often have a guess at the sound."
+              "text": "Say those two aloud, one after the other. Same consonant, same rest of the syllable; only the pitch differs. The right half is not telling you what the word means. It is telling you how to say it. That is a phonetic component — the job 尔 was doing inside 你, which you could only take on trust there. This time you can hear it. Once you can spot one you have a genuine reading strategy: meet an unknown character, find the half you recognise, and you often have a guess at the sound."
             },
             {
               "kind": "speech",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6696b4e9e43c1d6b",
+      "sourceHash": "fnv1a64:5b761a25bb0f5a71",
       "notice": null,
       "blocks": [
         {
@@ -214,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "That translation is close enough to use and loose enough to mislead, so here is the more accurate version: 请 (qǐng) is closer to \"I invite you to\". It hands something to the other person rather than softening a demand."
+              "text": "That translation is close enough to use and loose enough to mislead, so here is the more accurate version: 请 (qǐng) is closer to \"I ask you to\", \"I invite you to\". Where English please softens a demand, 请 (qǐng) hands the action over."
             },
             {
               "kind": "speech",
@@ -233,11 +233,11 @@
             },
             {
               "kind": "speech",
-              "text": "请 (qǐng) does not work like that. It opens a sentence and invites the action that follows. It does not float to the end, and it is not sprinkled on to be polite."
+              "text": "请 (qǐng) does not work like that. It comes before the action it invites, never bolted on after it — there is no Mandarin habit of tacking 请 (qǐng) onto the end of a request the way English tacks on please."
             },
             {
               "kind": "speech",
-              "text": "The consequence is practical, and it surprises learners: Mandarin uses 请 (qǐng) far less often than English uses please. Leaving it out is not rude the way dropping please can be in English. Warmth in Mandarin is carried more by what you say and how you say it than by a single courtesy word."
+              "text": "The consequence is practical, and it surprises learners: Mandarin uses 请 (qǐng) far less often than English uses please — and with people you are close to it can sound distant rather than polite. Leaving it out is not rude the way dropping please can be in English. Warmth in Mandarin is carried more by what you say and how you say it than by a single courtesy word."
             },
             {
               "kind": "speech",
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ebc1e1bd7b0ceca",
+      "sourceHash": "fnv1a64:3e3199553a4721f8",
       "notice": null,
       "blocks": [
         {
@@ -375,11 +375,11 @@
             },
             {
               "kind": "speech",
-              "text": "青 on the right told you roughly how to say it. That half does a different job from anything you had met: it points at the sound, not the meaning."
+              "text": "青 on the right told you roughly how to say it. You were told once before that a half could do this — 尔, on the right of 你 — but you had to take it on trust, because 尔 is ěr and nothing in it sounds like nǐ. Here you can hear it for yourself: qīng, qǐng."
             },
             {
               "kind": "speech",
-              "text": "So a Chinese character can carry two kinds of hint at once, one for what it means and one for how it is said. That is the single most useful thing to know about reading Chinese, and it is why the writing system is learnable at all rather than being thousands of unrelated pictures."
+              "text": "So the claim made in passing back then is now one you can check: a Chinese character can carry two kinds of hint at once, one for what it means and one for how it is said. That is the single most useful thing to know about reading Chinese, and it is why the writing system is learnable at all rather than being thousands of unrelated pictures."
             },
             {
               "kind": "speech",

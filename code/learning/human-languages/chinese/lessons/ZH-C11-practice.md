@@ -70,11 +70,14 @@ Consider what the two halves of this chapter's character bought you.
 meant — and it did the same in 谢. Two characters, one component, one reliable
 guess.
 
-**青 on the right** told you roughly how to say it. That half does a different
-job from anything you had met: it points at the sound, not the meaning.
+**青 on the right** told you roughly how to say it. You were told once before
+that a half could do this — 尔, on the right of 你 — but you had to take it on
+trust, because 尔 is *ěr* and nothing in it sounds like *nǐ*. Here you can hear
+it for yourself: *qīng*, *qǐng*.
 
-So a Chinese character can carry **two kinds of hint at once**, one for what it
-means and one for how it is said. That is the single most useful thing to know
+So the claim made in passing back then is now one you can check: a Chinese
+character can carry **two kinds of hint at once**, one for what it means and one
+for how it is said. That is the single most useful thing to know
 about reading Chinese, and it is why the writing system is learnable at all
 rather than being thousands of unrelated pictures.
 

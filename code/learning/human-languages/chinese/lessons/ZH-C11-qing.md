@@ -42,8 +42,8 @@ reviews_of: [ZH-W11-qing, ZH-C10-xiexie]
 **请** *qǐng* — the word a dictionary will give you as **please**.
 
 That translation is close enough to use and loose enough to mislead, so here is
-the more accurate version: 请 is closer to **"I invite you to"**. It hands
-something to the other person rather than softening a demand.
+the more accurate version: 请 is closer to **"I ask you to"**, **"I invite you
+to"**. Where English *please* softens a demand, 请 **hands the action over**.
 
 Which is why it works **on its own**. Hold a door and say 请 — that is *after
 you*, *go ahead*, *be my guest*. Offer someone a seat and say 请. No other words
@@ -56,12 +56,14 @@ English *please* is a **softener**. You bolt it onto a request to take the edge
 off, and you can put it almost anywhere: *please sit*, *sit, please*, *could you
 please sit*.
 
-请 does not work like that. It **opens** a sentence and invites the action that
-follows. It does not float to the end, and it is not sprinkled on to be polite.
+请 does not work like that. It comes **before the action it invites**, never
+bolted on after it — there is no Mandarin habit of tacking 请 onto the end of a
+request the way English tacks on *please*.
 
 The consequence is practical, and it surprises learners: **Mandarin uses 请 far
-less often than English uses please.** Leaving it out is not rude the way
-dropping *please* can be in English. Warmth in Mandarin is carried more by what
+less often than English uses please** — and with people you are close to it can
+sound distant rather than polite. Leaving it out is not rude the way dropping
+*please* can be in English. Warmth in Mandarin is carried more by what
 you say and how you say it than by a single courtesy word.
 
 So: use 请 to hand something over or to invite. Do not reach for it every time
