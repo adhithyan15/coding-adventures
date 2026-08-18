@@ -56,6 +56,10 @@ use coding_adventures_vault_pm_domain::{
     RedactedRecordView, RevisionId,
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
+use coding_adventures_vault_pm_password_policy::{
+    generate_password, CharacterClassesV1, PasswordPolicyError, PasswordPolicyV1,
+    DEFAULT_PASSWORD_LENGTH,
+};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
 use coding_adventures_vault_records::{
     AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed, API_KEY_V1, CARD_V1,
@@ -77,7 +81,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -622,6 +626,17 @@ where
     if matches!(invocation.command, Command::Help) {
         return CliOutput::success(USAGE);
     }
+    // VLT-PM44 §1. `password generate` is dispatched here, beside `help`,
+    // because it is the only other command that touches no vault: it must not
+    // resolve the platform layout, must not take the cross-process writer lock,
+    // and must work on a machine where `init` has never run — which is the most
+    // common moment to want a generated password.
+    if let Command::PasswordGenerate { policy, output } = &invocation.command {
+        return match password_generate(host, policy, *output) {
+            Ok(generated) => generated,
+            Err(error) => CliOutput::failure(error),
+        };
+    }
     // The shell is dispatched before `execute` because `execute` acquires the
     // cross-process writer lock for the whole command. A shell must not hold
     // that lock while it waits at a prompt, and its own per-command
@@ -669,6 +684,17 @@ enum Command {
     },
     /// Re-wrap the vault root key under a newly collected master passphrase.
     PassphraseRotate,
+    /// Mint one password that no vault ever stores (VLT-PM44).
+    ///
+    /// The policy is already validated by the time this variant exists: it
+    /// cannot be constructed below the entropy floor, so the ceremony never has
+    /// to re-check strength after the person has been prompted.
+    PasswordGenerate {
+        /// The validated length, alphabet, and entropy reservation.
+        policy: PasswordPolicyV1,
+        /// Where the one secret this command produces is delivered.
+        output: PasswordOutputMode,
+    },
     PortableExport {
         destination: PathBuf,
     },
@@ -754,6 +780,21 @@ enum Command {
     Help,
 }
 
+/// Where `password generate` delivers the one secret it produces.
+///
+/// There is no third arm, and in particular no "print it to standard output".
+/// VLT-PM00 §14.6 makes ordinary output redacted, and this command has nothing
+/// but a secret to say — a default stdout mode would put a live credential into
+/// shell history, terminal scrollback, `tee` pipelines, and CI logs the first
+/// time anyone redirected it. One of the two below is required.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PasswordOutputMode {
+    /// Confirm on the controlling terminal, then write there and nowhere else.
+    Reveal,
+    /// Reserved by VLT-PM00 §14.4; refused until a clipboard adapter exists.
+    Copy,
+}
+
 struct SearchQuery(Zeroizing<String>);
 
 impl SearchQuery {
@@ -836,6 +877,7 @@ where
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
         "passphrase" => parse_passphrase(tail),
+        "password" => parse_password(tail),
         "export" => parse_export(tail),
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
@@ -844,10 +886,19 @@ where
         "conflict" => parse_conflict(tail),
         _ => Err(CliFailure::InvalidCommand),
     }?;
+    // A `--vault` selector names a target for the command to operate on.
+    // `init` and `vault create` build a vault rather than opening one, `help`
+    // reads nothing, and `password generate` (VLT-PM44 §2.2) touches no vault
+    // at all — so for these four the selector would be a statement with no
+    // referent, and accepting it silently would let a person believe they had
+    // aimed a command that was never aimable.
     if selected_vault.is_some()
         && matches!(
             &command,
-            Command::Init { .. } | Command::VaultCreate { .. } | Command::Help
+            Command::Init { .. }
+                | Command::VaultCreate { .. }
+                | Command::Help
+                | Command::PasswordGenerate { .. }
         )
     {
         return Err(CliFailure::InvalidCommand);
@@ -1107,6 +1158,151 @@ fn parse_passphrase(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+/// Whether a verb refuses the leading `--vault` selector because it opens no
+/// vault.
+///
+/// The interactive shell binds one vault at session start and prefixes every
+/// delegated command with that selector, so it has to ask. `password generate`
+/// is the only verb in the grammar that a session can usefully run and that
+/// takes no target: it mints a value and hands it to the terminal, consulting
+/// neither the retained authenticator nor the bound vault. Refusing the verb in
+/// the shell instead would have been the smaller change and the worse one — a
+/// generator is exactly the thing you reach for mid-session, while adding a
+/// vault name to a command that ignores it would be a decoration that reads as
+/// a fact.
+pub(crate) fn takes_no_vault_selector(verb: &str) -> bool {
+    verb == "password"
+}
+
+/// Parse the `password` noun.
+///
+/// `generate` is the only verb, and this is the crate's one real flag parser.
+/// Every other command's arguments are positional or a single boolean, so they
+/// are matched as exhaustive slice patterns; a policy is genuinely a set of
+/// independent options and needs a loop.
+///
+/// The loop's structure carries three rules at once, and all three come out of
+/// the `_` arm:
+///
+/// | Input | Why it fails |
+/// |---|---|
+/// | `--jumble` | matches no arm |
+/// | `--reveal --copy` | the second output mode finds `output` already set |
+/// | `--no-digits --no-digits` | the second one finds `digits` already cleared |
+/// | `--length` at the end | there is no following value to take |
+/// | `--length=24` | `--length=24` is one token and matches no arm |
+///
+/// Duplicate rejection needs no bookkeeping flags because the state being built
+/// *is* the record: a class starts selected and can only be cleared once, and
+/// an output mode starts absent and can only be set once. There is nowhere for
+/// a second occurrence to go.
+///
+/// Validation deliberately happens here, at parse time, rather than in the
+/// ceremony. A policy below the entropy floor is a malformed request, not a
+/// runtime failure, and finding out before the confirmation prompt means an
+/// under-strength request costs the person no terminal interaction and this
+/// process no randomness.
+fn parse_password(arguments: &[String]) -> Result<Command, CliFailure> {
+    let Some((verb, flags)) = arguments.split_first() else {
+        return Err(CliFailure::InvalidCommand);
+    };
+    if verb != "generate" {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let mut length: Option<usize> = None;
+    let mut classes = CharacterClassesV1::all();
+    let mut exclude_ambiguous = false;
+    let mut output: Option<PasswordOutputMode> = None;
+    let mut index = 0;
+    while index < flags.len() {
+        match flags[index].as_str() {
+            "--length" if length.is_none() => {
+                let value = flags.get(index + 1).ok_or(CliFailure::InvalidCommand)?;
+                length = Some(parse_password_length(value)?);
+                index += 2;
+                continue;
+            }
+            "--no-lowercase" if classes.lowercase => classes.lowercase = false,
+            "--no-uppercase" if classes.uppercase => classes.uppercase = false,
+            "--no-digits" if classes.digits => classes.digits = false,
+            "--no-symbols" if classes.symbols => classes.symbols = false,
+            "--exclude-ambiguous" if !exclude_ambiguous => exclude_ambiguous = true,
+            "--reveal" if output.is_none() => output = Some(PasswordOutputMode::Reveal),
+            "--copy" if output.is_none() => output = Some(PasswordOutputMode::Copy),
+            _ => return Err(CliFailure::InvalidCommand),
+        }
+        index += 1;
+    }
+    let output = output.ok_or(CliFailure::InvalidCommand)?;
+    let policy = PasswordPolicyV1::new(
+        length.unwrap_or(DEFAULT_PASSWORD_LENGTH),
+        classes,
+        exclude_ambiguous,
+    )
+    .map_err(map_password_policy)?;
+    Ok(Command::PasswordGenerate { policy, output })
+}
+
+/// Read the one number this grammar accepts.
+///
+/// One to three ASCII decimal digits, no sign, no separator, no whitespace, no
+/// leading zero. `str::parse` alone would accept `+24`, `24 ` on some inputs,
+/// and `007`, and a grammar with two spellings of one number is a grammar where
+/// a typo can silently mean something else. The range itself is checked by
+/// `PasswordPolicyV1::new`, so this function's only job is the spelling.
+fn parse_password_length(value: &str) -> Result<usize, CliFailure> {
+    let digits = value.as_bytes();
+    if digits.is_empty()
+        || digits.len() > 3
+        || !digits.iter().all(u8::is_ascii_digit)
+        || (digits.len() > 1 && digits[0] == b'0')
+    {
+        return Err(CliFailure::InvalidCommand);
+    }
+    value.parse().map_err(|_| CliFailure::InvalidCommand)
+}
+
+/// Mint one password and deliver it to the controlling terminal.
+///
+/// The order of the four steps below is the contract from VLT-PM44 §5, not an
+/// implementation detail.
+///
+/// `--copy` is refused *first*, before any prompt, because a person who typed
+/// it asked for a delivery this build cannot perform; confirming a reveal they
+/// did not ask for and then failing would be worse than failing immediately.
+///
+/// Confirmation comes *before* generation. VLT-PM00 §14.6 requires an
+/// interactive confirmation before any reveal, and putting it first buys a
+/// property `item reveal` cannot have: on refusal no password is ever created,
+/// so there is no secret to wipe because none existed. Unlike a stored-secret
+/// reveal there is no audit event that must be published before the answer is
+/// known, so nothing forces the other order.
+///
+/// The randomness is reserved in one call, from the operating-system CSPRNG by
+/// way of [`CliHost::fill_entropy`], and both the reserve and the password live
+/// in wipe-on-drop buffers for their whole lifetime. The password is borrowed
+/// for the terminal write and never copied into [`CliOutput`], so ordinary
+/// standard output and standard error are empty on success.
+fn password_generate(
+    host: &dyn CliHost,
+    policy: &PasswordPolicyV1,
+    output: PasswordOutputMode,
+) -> Result<CliOutput, CliFailure> {
+    if matches!(output, PasswordOutputMode::Copy) {
+        return Err(CliFailure::Unsupported);
+    }
+    if !host.confirm_secret_reveal().map_err(map_host)? {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let mut reserve = Zeroizing::new(vec![0_u8; policy.required_entropy_bytes()]);
+    host.fill_entropy(reserve.as_mut_slice())
+        .map_err(map_host)?;
+    let password = generate_password(policy, &reserve).map_err(map_password_policy)?;
+    host.write_revealed_text(password.as_str())
+        .map_err(map_host)?;
+    Ok(CliOutput::success(""))
+}
+
 fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
@@ -1348,8 +1544,8 @@ fn dispatch(
             item_id,
             base_revision,
         } => conflict_merge_opaque(host, paths, writer, selected_vault, item_id, base_revision),
-        Command::Help | Command::Shell => {
-            unreachable!("help and shell return before writer acquisition")
+        Command::Help | Command::Shell | Command::PasswordGenerate { .. } => {
+            unreachable!("help, shell, and password generate return before writer acquisition")
         }
     }
 }
@@ -4312,6 +4508,17 @@ fn locator_hex(locator: &[u8; 32]) -> String {
 enum CliFailure {
     InvalidCommand,
     AlreadyInitialized,
+    /// A `password generate` policy worth fewer than 80 bits (VLT-PM44 §4.3).
+    ///
+    /// This is an invalid request and carries the invalid exit class, but it
+    /// gets its own fixed message. It is the one rejection in the grammar a
+    /// person will hit while doing something entirely reasonable — asking for
+    /// a shorter password, or narrowing the alphabet for a site that will not
+    /// accept symbols — and "invalid command" would send them hunting for a
+    /// typo that is not there. The message still names no length, alphabet, or
+    /// bit count: it says which rule was broken, and the specification says
+    /// what the rule is.
+    WeakPasswordPolicy,
     Locked,
     NotFound,
     Conflict,
@@ -4324,7 +4531,9 @@ enum CliFailure {
 impl CliFailure {
     const fn exit_code(self) -> ExitCode {
         match self {
-            Self::InvalidCommand | Self::AlreadyInitialized => ExitCode::InvalidInput,
+            Self::InvalidCommand | Self::AlreadyInitialized | Self::WeakPasswordPolicy => {
+                ExitCode::InvalidInput
+            }
             Self::Locked => ExitCode::Locked,
             Self::NotFound => ExitCode::NotFound,
             Self::Conflict => ExitCode::Conflict,
@@ -4339,6 +4548,7 @@ impl CliFailure {
         match self {
             Self::InvalidCommand => "vault-pm: invalid command",
             Self::AlreadyInitialized => "vault-pm: already initialized",
+            Self::WeakPasswordPolicy => "vault-pm: password policy below the minimum entropy floor",
             Self::Locked => "vault-pm: authentication required",
             Self::NotFound => "vault-pm: not found",
             Self::Conflict => "vault-pm: recovery or conflict required",
@@ -4371,6 +4581,27 @@ fn map_application(error: ApplicationError) -> CliFailure {
         ApplicationError::StorageUnavailable => CliFailure::Provider,
         ApplicationError::Unsupported => CliFailure::Unsupported,
         ApplicationError::InternalInvariant => CliFailure::Internal,
+    }
+}
+
+/// Translate a password-policy failure into a process-visible class.
+///
+/// The two internal-looking arms are deliberate rather than defensive. A
+/// randomness block of the wrong size means this crate and the policy crate
+/// disagree about a number both of them compute — a code defect, not a
+/// condition a person can cause or fix, so it is reported as an internal
+/// invariant failure rather than dressed up as bad input. An exhausted reserve
+/// is a genuine (if astronomically improbable) failure of the randomness path,
+/// so it joins the other provider failures; what it must never do is fall back
+/// to a biased draw, and the policy crate makes that impossible.
+fn map_password_policy(error: PasswordPolicyError) -> CliFailure {
+    match error {
+        PasswordPolicyError::NoCharacterClass | PasswordPolicyError::LengthOutOfRange => {
+            CliFailure::InvalidCommand
+        }
+        PasswordPolicyError::EntropyFloorNotMet => CliFailure::WeakPasswordPolicy,
+        PasswordPolicyError::EntropyExhausted => CliFailure::Provider,
+        PasswordPolicyError::EntropyBlockSizeMismatch => CliFailure::Internal,
     }
 }
 
@@ -4569,6 +4800,18 @@ mod tests {
             Self::build(paths, secrets, [], 1, false, 0)
         }
 
+        /// A host that can answer prompts but whose CSPRNG has failed.
+        ///
+        /// `password generate` confirms before it draws, so proving it fails
+        /// closed on an unavailable entropy source needs a scripted `yes` *and*
+        /// a broken source at the same time.
+        fn without_entropy_with_texts(
+            paths: LocalVaultPaths,
+            texts: impl IntoIterator<Item = String>,
+        ) -> Self {
+            Self::build(paths, [], texts, 1, false, 0)
+        }
+
         /// Build a host whose clock advances by `clock_step_ms` per reading.
         fn with_clock_step(
             paths: LocalVaultPaths,
@@ -4642,6 +4885,17 @@ mod tests {
 
         fn revealed_count(&self) -> usize {
             self.revealed.lock().unwrap().len()
+        }
+
+        /// Copy out the single value this host was asked to reveal.
+        ///
+        /// Only a test may do this, and only because the "secret" a generator
+        /// test inspects was minted by the test's own deterministic host rather
+        /// than read out of a vault.
+        fn revealed_only(&self) -> Vec<u8> {
+            let revealed = self.revealed.lock().unwrap();
+            assert_eq!(revealed.len(), 1, "expected exactly one revealed value");
+            revealed[0].as_slice().to_vec()
         }
     }
 
@@ -4959,6 +5213,57 @@ mod tests {
                 "not-a-revision",
             ],
             vec!["unlock"],
+            // VLT-PM44 §2. Every one of these must fail before a prompt, a
+            // reservation, or a single byte of randomness.
+            vec!["password"],
+            vec!["password", "make"],
+            vec!["password", "generate"],
+            vec!["password", "generate", "extra"],
+            vec!["password", "generate", "--reveal", "extra"],
+            vec!["password", "generate", "--reveal", "--copy"],
+            vec!["password", "generate", "--copy", "--reveal"],
+            vec!["password", "generate", "--reveal", "--reveal"],
+            vec!["password", "generate", "--reveal", "--jumble"],
+            vec!["password", "generate", "--reveal", "--length"],
+            vec!["password", "generate", "--reveal", "--length=24"],
+            vec![
+                "password", "generate", "--reveal", "--length", "24", "--length", "32",
+            ],
+            vec!["password", "generate", "--reveal", "--length", "+24"],
+            vec!["password", "generate", "--reveal", "--length", "-24"],
+            vec!["password", "generate", "--reveal", "--length", "024"],
+            vec!["password", "generate", "--reveal", "--length", "2_4"],
+            vec!["password", "generate", "--reveal", "--length", "24 "],
+            vec!["password", "generate", "--reveal", "--length", "twenty"],
+            vec!["password", "generate", "--reveal", "--length", ""],
+            vec!["password", "generate", "--reveal", "--length", "1024"],
+            vec!["password", "generate", "--reveal", "--length", "129"],
+            vec!["password", "generate", "--reveal", "--length", "0"],
+            vec![
+                "password",
+                "generate",
+                "--reveal",
+                "--exclude-ambiguous",
+                "--exclude-ambiguous",
+            ],
+            vec![
+                "password",
+                "generate",
+                "--reveal",
+                "--no-digits",
+                "--no-digits",
+            ],
+            vec![
+                "password",
+                "generate",
+                "--reveal",
+                "--no-lowercase",
+                "--no-uppercase",
+                "--no-digits",
+                "--no-symbols",
+            ],
+            // The selector names a target this command never opens.
+            vec!["--vault", "work", "password", "generate", "--reveal"],
         ] {
             let output = run(arguments, &host);
             assert_eq!(output.exit_code(), ExitCode::InvalidInput);
@@ -9643,5 +9948,335 @@ mod tests {
             session.authenticator(&host),
             Err(HostError::Unavailable)
         ));
+    }
+
+    /// Build the host a successful `password generate --reveal` needs: one
+    /// scripted `yes` for the confirmation, and nothing else.
+    fn confirming_host(root: &TestRoot, seed: u8) -> TestHost {
+        TestHost::with_texts_and_entropy_seed(root.paths(), [], ["yes".to_owned()], seed)
+    }
+
+    #[test]
+    fn password_generate_parses_the_whole_documented_policy_surface() {
+        assert_eq!(
+            parse(["password", "generate", "--reveal"]),
+            default_invocation(Command::PasswordGenerate {
+                policy: PasswordPolicyV1::new(
+                    DEFAULT_PASSWORD_LENGTH,
+                    CharacterClassesV1::all(),
+                    false
+                )
+                .unwrap(),
+                output: PasswordOutputMode::Reveal,
+            })
+        );
+        assert_eq!(
+            parse(["password", "generate", "--copy"]),
+            default_invocation(Command::PasswordGenerate {
+                policy: PasswordPolicyV1::new(
+                    DEFAULT_PASSWORD_LENGTH,
+                    CharacterClassesV1::all(),
+                    false
+                )
+                .unwrap(),
+                output: PasswordOutputMode::Copy,
+            })
+        );
+        // Flags compose, in any order, and each one narrows exactly one thing.
+        let narrowed = parse([
+            "password",
+            "generate",
+            "--exclude-ambiguous",
+            "--length",
+            "32",
+            "--no-symbols",
+            "--reveal",
+            "--no-uppercase",
+        ]);
+        assert_eq!(
+            narrowed,
+            default_invocation(Command::PasswordGenerate {
+                policy: PasswordPolicyV1::new(
+                    32,
+                    CharacterClassesV1 {
+                        lowercase: true,
+                        uppercase: false,
+                        digits: true,
+                        symbols: false,
+                    },
+                    true
+                )
+                .unwrap(),
+                output: PasswordOutputMode::Reveal,
+            })
+        );
+        // Lowercase 25 + digits 8, with the ambiguous characters gone.
+        let Ok(Invocation {
+            command: Command::PasswordGenerate { policy, .. },
+            ..
+        }) = narrowed
+        else {
+            panic!("the narrowed policy must parse");
+        };
+        assert_eq!(policy.alphabet().len(), 33);
+        assert_eq!(policy.length(), 32);
+        for ambiguous in b"01IOl|" {
+            assert!(!policy.alphabet().contains(ambiguous));
+        }
+    }
+
+    #[test]
+    fn password_generate_refuses_an_under_strength_policy_with_its_own_message() {
+        let root = TestRoot::new();
+        for arguments in [
+            // 12 characters over all 89 is 77.7 bits: one character short.
+            vec!["password", "generate", "--length", "12", "--reveal"],
+            // Lowercase only needs 18; 17 is 79.9 bits.
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "17",
+                "--no-uppercase",
+                "--no-digits",
+                "--no-symbols",
+                "--reveal",
+            ],
+            // A numeric PIN needs 25 digits to earn the name.
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "24",
+                "--no-lowercase",
+                "--no-uppercase",
+                "--no-symbols",
+                "--reveal",
+            ],
+        ] {
+            let host = confirming_host(&root, 1);
+            let refused = run(arguments.clone(), &host);
+            assert_eq!(
+                refused.exit_code(),
+                ExitCode::InvalidInput,
+                "{arguments:?} must be refused"
+            );
+            assert_eq!(
+                refused.stderr(),
+                "vault-pm: password policy below the minimum entropy floor\n"
+            );
+            assert!(refused.stdout().is_empty());
+            // Refused before the confirmation prompt, so nothing was consumed
+            // and nothing was minted.
+            assert_eq!(host.revealed_count(), 0);
+            assert_eq!(host.texts.lock().unwrap().len(), 1);
+        }
+        // And one character more is accepted in each case.
+        for arguments in [
+            vec!["password", "generate", "--length", "13", "--reveal"],
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "18",
+                "--no-uppercase",
+                "--no-digits",
+                "--no-symbols",
+                "--reveal",
+            ],
+            vec![
+                "password",
+                "generate",
+                "--length",
+                "25",
+                "--no-lowercase",
+                "--no-uppercase",
+                "--no-symbols",
+                "--reveal",
+            ],
+        ] {
+            let host = confirming_host(&root, 1);
+            let accepted = run(arguments.clone(), &host);
+            assert_eq!(
+                accepted.exit_code(),
+                ExitCode::Success,
+                "{arguments:?} must be accepted"
+            );
+            assert_eq!(host.revealed_count(), 1);
+        }
+    }
+
+    #[test]
+    fn password_generate_delivers_only_through_the_terminal() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        let generated = run(["password", "generate", "--reveal"], &host);
+
+        assert_eq!(generated.exit_code(), ExitCode::Success, "{generated:?}");
+        // The one secret this command produces never enters ordinary output.
+        assert!(generated.stdout().is_empty());
+        assert!(generated.stderr().is_empty());
+
+        let revealed = host.revealed_only();
+        assert_eq!(revealed.len(), DEFAULT_PASSWORD_LENGTH);
+        let alphabet =
+            PasswordPolicyV1::new(DEFAULT_PASSWORD_LENGTH, CharacterClassesV1::all(), false)
+                .unwrap();
+        for byte in &revealed {
+            assert!(
+                alphabet.alphabet().contains(byte),
+                "{byte} is outside the selected alphabet"
+            );
+        }
+        // Nothing about the request is echoed either.
+        assert!(!generated.stdout().contains("24"));
+
+        // The same host, driven again, produces the same value: the CLI adds no
+        // randomness of its own on top of what the host supplied.
+        let repeat_host = confirming_host(&root, 1);
+        assert_eq!(
+            run(["password", "generate", "--reveal"], &repeat_host).exit_code(),
+            ExitCode::Success
+        );
+        assert_eq!(repeat_host.revealed_only(), revealed);
+
+        // A different entropy source produces a different value, which is what
+        // proves the randomness is actually reaching the sampler.
+        let other_host = confirming_host(&root, 200);
+        assert_eq!(
+            run(["password", "generate", "--reveal"], &other_host).exit_code(),
+            ExitCode::Success
+        );
+        assert_ne!(other_host.revealed_only(), revealed);
+    }
+
+    #[test]
+    fn password_generate_honours_a_narrowed_alphabet() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 3);
+        let generated = run(
+            [
+                "password",
+                "generate",
+                "--length",
+                "40",
+                "--no-symbols",
+                "--exclude-ambiguous",
+                "--reveal",
+            ],
+            &host,
+        );
+        assert_eq!(generated.exit_code(), ExitCode::Success, "{generated:?}");
+        let revealed = host.revealed_only();
+        assert_eq!(revealed.len(), 40);
+        for byte in &revealed {
+            assert!(byte.is_ascii_alphanumeric(), "{byte} is not alphanumeric");
+            assert!(!b"01IOl|".contains(byte), "{byte} is ambiguous");
+        }
+    }
+
+    #[test]
+    fn password_generate_mints_nothing_when_the_reveal_is_refused() {
+        let root = TestRoot::new();
+        for answer in ["no", "", "YES", "yes please", "y"] {
+            let host = TestHost::with_texts(root.paths(), [], [answer.to_owned()]);
+            let refused = run(["password", "generate", "--reveal"], &host);
+            assert_eq!(
+                refused.exit_code(),
+                ExitCode::InvalidInput,
+                "{answer:?} must not authorize a reveal"
+            );
+            assert_eq!(refused.stderr(), "vault-pm: invalid command\n");
+            assert_eq!(host.revealed_count(), 0);
+        }
+        // A host that cannot collect the answer at all is a provider failure,
+        // and still delivers nothing.
+        let silent = TestHost::new(root.paths(), []);
+        let unavailable = run(["password", "generate", "--reveal"], &silent);
+        assert_eq!(unavailable.exit_code(), ExitCode::Provider);
+        assert_eq!(silent.revealed_count(), 0);
+    }
+
+    #[test]
+    fn password_generate_copy_is_recognized_and_refused_before_any_prompt() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        let refused = run(["password", "generate", "--copy"], &host);
+        assert_eq!(refused.exit_code(), ExitCode::Unsupported);
+        assert_eq!(refused.stderr(), "vault-pm: unsupported capability\n");
+        assert!(refused.stdout().is_empty());
+        assert_eq!(host.revealed_count(), 0);
+        // The scripted confirmation was never consumed: `--copy` fails before
+        // asking a person to authorize a delivery this build cannot perform.
+        assert_eq!(host.texts.lock().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn password_generate_fails_closed_when_the_os_csprng_is_unavailable() {
+        let root = TestRoot::new();
+        let host = TestHost::without_entropy_with_texts(root.paths(), ["yes".to_owned()]);
+        let failed = run(["password", "generate", "--reveal"], &host);
+        assert_eq!(failed.exit_code(), ExitCode::Provider);
+        assert_eq!(failed.stderr(), "vault-pm: storage unavailable\n");
+        assert!(failed.stdout().is_empty());
+        // No weaker source is substituted, so nothing is delivered.
+        assert_eq!(host.revealed_count(), 0);
+    }
+
+    #[test]
+    fn password_generate_never_touches_the_vault_layout() {
+        let root = TestRoot::new();
+        let host = confirming_host(&root, 1);
+        assert_eq!(
+            run(["password", "generate", "--reveal"], &host).exit_code(),
+            ExitCode::Success
+        );
+        // The most common moment to want a generated password is before the
+        // vault exists, so this must work on an untouched root and must leave
+        // it untouched: no config, no writer lock, no owner state.
+        assert!(!root.0.join("config").exists());
+        assert_eq!(host.remaining_secrets(), 0);
+        // And no passphrase was ever asked for: the scripted secret queue is
+        // empty, and a command that prompted would have failed instead.
+        assert_eq!(host.revealed_count(), 1);
+    }
+
+    #[test]
+    fn usage_lists_password_generate_and_the_shell_delegates_it_unprefixed() {
+        assert!(USAGE.contains("vault-pm password generate"));
+        // The one-shot table names no `--vault` prefix for this verb, because
+        // the parser refuses one.
+        assert!(!USAGE.contains("[--vault NAME] password"));
+        assert!(takes_no_vault_selector("password"));
+        for vault_scoped in ["item", "status", "audit", "search", "conflict", "history"] {
+            assert!(!takes_no_vault_selector(vault_scoped));
+        }
+        // A session must be able to run it: it is neither refused by the shell
+        // nor prefixed with the bound vault.
+        assert!(!shell::is_refused("password"));
+    }
+
+    #[test]
+    fn password_generate_runs_inside_an_interactive_shell() {
+        let root = TestRoot::new();
+        let passphrase = b"shell generate passphrase".to_vec();
+        let init_host = TestHost::new(root.paths(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let host = TestHost::with_texts(root.paths(), [], ["yes".to_owned()]);
+        let terminal = ScriptedTerminal::new(["password generate --reveal", "exit"]);
+        let session = run_with_terminal(["shell"], &host, &terminal);
+        assert_eq!(session.exit_code(), ExitCode::Success, "{session:?}");
+        // Delivered once, through the terminal adapter, without ever unlocking:
+        // the scripted passphrase queue is untouched.
+        assert_eq!(host.revealed_count(), 1);
+        assert_eq!(host.remaining_secrets(), 0);
+        // The session's rendered output never carries the value either: the
+        // shell renders exactly what the one-shot command produced, which is
+        // nothing.
+        let generated = host.revealed_only();
+        let generated = core::str::from_utf8(&generated).expect("generated passwords are ASCII");
+        assert!(!terminal.transcript().contains(generated));
+        assert_eq!(terminal.exit_codes(), vec![ExitCode::Success]);
     }
 }

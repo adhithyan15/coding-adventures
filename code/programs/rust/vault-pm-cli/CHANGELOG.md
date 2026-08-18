@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+- The shipped executable can now mint a password: `vault-pm password generate
+  [policy flags] (--reveal|--copy)`. This crate's own sources are unchanged;
+  the ceremony lives in `coding_adventures_vault_pm_cli` under
+  `code/specs/VLT-PM44-cli-password-generate.md`, and it is recorded here
+  because it changes what this binary does.
+
+  It is the first verb this executable accepts that opens no vault: it takes no
+  `--vault` selector, collects no passphrase, and runs on a home directory
+  where `init` has never happened.
+
+  Two real-process tests were added to `local_cli_e2e.rs`, and they check
+  things the in-process tests structurally cannot. The first starts from an
+  untouched home, drives the confirmation and the delivery over a real
+  pseudo-terminal, and asserts that the password arrives on `/dev/tty` while
+  captured standard output stays empty, that `config`, `data`, and `cache` are
+  all still empty afterwards, and that two runs of the identical command
+  produce *different* passwords — which is the only end-to-end evidence that
+  the operating-system CSPRNG is genuinely wired in rather than a fixed buffer
+  being formatted convincingly. It also drives a narrowed policy and checks the
+  alphabet of what comes back. The second proves the refusals: a confirmation
+  answered `no` delivers nothing, an under-strength policy fails with the
+  entropy-floor message before the terminal is touched at all, disabling every
+  character class and passing a `--vault` selector are invalid, and `--copy`
+  exits with the unsupported class.
+
+  Both send the same standard-input injection every other reveal test sends, so
+  a generated password can neither be influenced by nor leak through an
+  attacker-controlled stdin.
+
 - The shipped executable can now change its master passphrase:
   `vault-pm [--vault NAME] passphrase rotate`. This crate's own sources are
   unchanged; the ceremony lives in `coding_adventures_vault_pm_cli` under

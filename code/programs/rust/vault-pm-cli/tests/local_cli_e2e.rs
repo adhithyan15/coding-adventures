@@ -1030,6 +1030,157 @@ fn real_cli_creates_redacts_and_separately_reveals_a_totp_seed() {
     assert_tree_excludes(&home.0, TOTP_RAW_SECRET);
 }
 
+/// VLT-PM44 §8 gate 9, against the real executable.
+///
+/// The generator is the one command in this product that must work before
+/// `vault-pm init` has ever run, because the most common moment to want a
+/// generated password is while signing up for something. This test therefore
+/// starts from an untouched home, generates twice, and checks four things the
+/// unit tests cannot: that the process really does reach `/dev/tty` for both
+/// the confirmation and the delivery, that its ordinary standard output stays
+/// empty, that no vault state appears on disk, and that two runs of the same
+/// command produce different passwords — which is the only end-to-end evidence
+/// that the operating-system CSPRNG is genuinely wired in.
+#[test]
+fn real_cli_generates_a_password_without_a_vault_and_delivers_it_only_on_the_terminal() {
+    let home = TestHome::new();
+    let (status, transcript, stdout) =
+        run_password_generate_in_pty(&home, &["password", "generate", "--reveal"], b"yes");
+    assert!(status.success(), "{transcript}");
+    assert!(
+        stdout.is_empty(),
+        "a generated password must never reach standard output"
+    );
+
+    let generated = extract_revealed_secret(&transcript);
+    assert_eq!(generated.len(), 24, "{transcript}");
+    assert!(generated.is_ascii());
+    for character in generated.chars() {
+        assert!(
+            character.is_ascii_graphic() && character != '"' && character != '\\',
+            "{character} is outside the generated alphabet"
+        );
+    }
+    assert_transcript_excludes_secrets(&transcript);
+
+    // Nothing about the request is echoed, and no vault was created or opened.
+    assert!(!transcript.contains("vault-pm:"), "{transcript}");
+    for child in ["config", "data", "cache"] {
+        assert_eq!(
+            fs::read_dir(home.0.join(child)).unwrap().count(),
+            0,
+            "the generator must leave {child} untouched"
+        );
+    }
+
+    // A second run draws again from the operating-system CSPRNG.
+    let (second_status, second_transcript, second_stdout) =
+        run_password_generate_in_pty(&home, &["password", "generate", "--reveal"], b"yes");
+    assert!(second_status.success(), "{second_transcript}");
+    assert!(second_stdout.is_empty());
+    let second = extract_revealed_secret(&second_transcript);
+    assert_ne!(
+        generated, second,
+        "two runs producing the same password would mean the CSPRNG is not wired in"
+    );
+
+    // A narrowed policy is honoured end to end.
+    let (narrow_status, narrow_transcript, narrow_stdout) = run_password_generate_in_pty(
+        &home,
+        &[
+            "password",
+            "generate",
+            "--length",
+            "40",
+            "--no-symbols",
+            "--exclude-ambiguous",
+            "--reveal",
+        ],
+        b"yes",
+    );
+    assert!(narrow_status.success(), "{narrow_transcript}");
+    assert!(narrow_stdout.is_empty());
+    let narrowed = extract_revealed_secret(&narrow_transcript);
+    assert_eq!(narrowed.len(), 40);
+    for character in narrowed.chars() {
+        assert!(character.is_ascii_alphanumeric(), "{character} is a symbol");
+        assert!(!"01IOl|".contains(character), "{character} is ambiguous");
+    }
+}
+
+/// A refused confirmation mints nothing, and an under-strength policy is
+/// refused before the terminal is ever touched.
+#[test]
+fn real_cli_refuses_weak_password_policies_and_unconfirmed_reveals() {
+    let home = TestHome::new();
+
+    let (status, transcript, stdout) =
+        run_password_generate_in_pty(&home, &["password", "generate", "--reveal"], b"no");
+    assert_eq!(status.code(), Some(2), "{transcript}");
+    assert!(stdout.is_empty());
+    assert!(
+        !transcript.contains("Secret: "),
+        "a refused reveal must deliver nothing: {transcript}"
+    );
+
+    // Parse-time refusals never reach the terminal at all, so they need no
+    // pseudo-terminal to observe.
+    let weak = run_plain(
+        &home,
+        &["password", "generate", "--length", "12", "--reveal"],
+    );
+    assert_eq!(weak.status.code(), Some(2));
+    assert!(weak.stdout.is_empty());
+    assert_eq!(
+        String::from_utf8_lossy(&weak.stderr),
+        "vault-pm: password policy below the minimum entropy floor\n"
+    );
+
+    // One character more clears the 80-bit floor, so the refusal is the floor
+    // talking and not a blanket rejection of `--length`.
+    let all_classes_disabled = run_plain(
+        &home,
+        &[
+            "password",
+            "generate",
+            "--no-lowercase",
+            "--no-uppercase",
+            "--no-digits",
+            "--no-symbols",
+            "--reveal",
+        ],
+    );
+    assert_eq!(all_classes_disabled.status.code(), Some(2));
+    assert_eq!(
+        String::from_utf8_lossy(&all_classes_disabled.stderr),
+        "vault-pm: invalid command\n"
+    );
+
+    // `--copy` is recognized but has no adapter behind it yet.
+    let copied = run_plain(&home, &["password", "generate", "--copy"]);
+    assert_eq!(copied.status.code(), Some(8));
+    assert!(copied.stdout.is_empty());
+    assert_eq!(
+        String::from_utf8_lossy(&copied.stderr),
+        "vault-pm: unsupported capability\n"
+    );
+
+    // A selector names a target this command never opens.
+    let selected = run_plain(
+        &home,
+        &["--vault", "personal", "password", "generate", "--reveal"],
+    );
+    assert_eq!(selected.status.code(), Some(2));
+    assert_eq!(
+        String::from_utf8_lossy(&selected.stderr),
+        "vault-pm: invalid command\n"
+    );
+
+    for child in ["config", "data", "cache"] {
+        assert_eq!(fs::read_dir(home.0.join(child)).unwrap().count(), 0);
+    }
+}
+
 fn run_export_in_pty(home: &TestHome, destination: &Path) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
@@ -1685,6 +1836,83 @@ fn extract_audit_trace(transcript: &str, action: &str) -> String {
         .and_then(|line| line.split('\t').next())
         .expect("canonical audit trace")
         .to_string()
+}
+
+/// Run one `password generate --reveal` against a real controlling terminal.
+///
+/// Unlike every other pseudo-terminal helper here this one never sends a
+/// passphrase, because the command it drives never asks for one: VLT-PM44 §1
+/// makes the generator vault-free, so the only terminal interaction is the
+/// reveal confirmation.
+fn run_password_generate_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    confirmation: &[u8],
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    // A generated password must not be influenced by, or leak through, an
+    // attacker-controlled standard input.
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Reveal secret on this terminal? Type yes to continue: ",
+    );
+    master.write_all(confirmation).unwrap();
+    master.write_all(b"\n").unwrap();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let mut stdout = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        stdout,
+    )
+}
+
+/// Pull the one quoted secret line out of a terminal transcript.
+///
+/// The generator's alphabet contains neither `"` nor `\`, so the debug quoting
+/// the host applies is exactly a pair of quotes around the raw value and the
+/// closing quote is unambiguous.
+fn extract_revealed_secret(transcript: &str) -> String {
+    let start = transcript
+        .find("Secret: \"")
+        .expect("the terminal must receive one quoted secret line")
+        + "Secret: \"".len();
+    let rest = &transcript[start..];
+    let end = rest.find('"').expect("the secret line must be closed");
+    rest[..end].to_owned()
 }
 
 fn run_plain(home: &TestHome, arguments: &[&str]) -> std::process::Output {

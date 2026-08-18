@@ -568,9 +568,20 @@ fn dispatch(
     if tokens.first().is_some_and(|token| is_refused(token)) {
         return CliOutput::failure(CliFailure::InvalidCommand);
     }
+    // Nearly every delegated command carries the session's bound vault as an
+    // explicit selector, so a command can never be aimed somewhere the person
+    // did not authenticate against. `password generate` is the exception, and
+    // for the opposite reason: VLT-PM44 §2.2 refuses the selector because the
+    // command opens no vault, so prefixing it would turn a usable verb into an
+    // invalid one. See `crate::takes_no_vault_selector`.
+    let vault_free = tokens
+        .first()
+        .is_some_and(|token| crate::takes_no_vault_selector(token));
     let mut arguments = Vec::with_capacity(tokens.len() + 2);
-    arguments.push("--vault".to_owned());
-    arguments.push(bound.name.as_str().to_owned());
+    if !vault_free {
+        arguments.push("--vault".to_owned());
+        arguments.push(bound.name.as_str().to_owned());
+    }
     arguments.extend(tokens);
     let output = crate::run(arguments, session_host);
     if output.exit_code() == ExitCode::Locked {
