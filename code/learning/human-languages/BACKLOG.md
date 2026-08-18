@@ -1023,6 +1023,51 @@ written, every number this repository reports for that track at that level is a
 proxy for something nobody is graded on — which is HL-C184's Phase 0 restated, now
 with the item queued per track instead of listed once and forgotten.
 
+## HL-C208 — ZWNJ is NOT always a defect, and an UNASSIGNED codepoint can hide from the detector
+
+Two corrections from the Telugu round-3 sweep, the first of which is a correction to
+instructions I have been repeating.
+
+### 1. ZWNJ in Indic text is often CORRECT, and must not be stripped
+
+Every tranche brief in this session said, flatly, that U+200C/U+200D are in no script
+block and should be removed. **That is wrong as a blanket rule.**
+
+`telugu/lessons/TE-C05-undu` carries U+200C ZWNJ between  and , where it
+**deliberately blocks a  conjunct**. Removing it changes how the word renders. It is
+correct Indic orthography, not a defect, and it propagates to `narration/ch05.*` and
+`book/chapters/ch05-first-verbs.tex` as generated output should.
+
+**The real rule:**
+
+- **ZWJ/ZWNJ used to SPELL A LETTER that has an atomic codepoint is a defect** -- the
+  Malayalam chillu case, where consonant+virama+ZWJ falls through to the Latin font and
+  prints missing at exit 0. Use the atomic form (U+0D7B-U+0D7E).
+- **ZWNJ used to BLOCK or FORCE a conjunct is orthography.** Leave it.
+
+A detector cannot tell these apart by the codepoint alone; it has to look at what the
+joiner sits between. Until it can, **report ZWJ/ZWNJ findings, do not auto-remove them.**
+
+### 2. An UNASSIGNED codepoint made the sweep report clean -- ninth blind detector
+
+The tooling wrote **U+0BE3** -- unassigned, but inside the Tamil block -- into a Latin
+run, and the whole-tree sweep called the file **clean**. Two independent failures
+stacked:
+
+- `unicodedata.name()` **raises** on an unassigned codepoint, so the script classifier
+  fell through to "not a script" and the character was ignored;
+- its category is **Cn**, which the word-splitter treated as a boundary, cutting the
+  word into two **pure-Latin halves** that each passed.
+
+So a character that officially does not exist split a mixed-script word into two clean
+ones. **Fix: classify by BLOCK RANGE, not by `unicodedata.name`, and treat Cn as
+word-internal.** With that change the case is caught, and it is now part of the standard
+self-test fixture set.
+
+This is the ninth recorded blind detector and the first whose cause was the DATA being
+undefined rather than the pattern being wrong. Same lesson either way: a clean result is
+worth nothing until the detector has re-found something known to be dirty.
+
 ## HL-C207 — Hindi round two landed; Tamil and Malayalam are now the only tracks a round behind
 
 Hindi chapters 52-58, 35 headwords on pre-A1 nodes, **85/300 -> 120/300**. Hindi now

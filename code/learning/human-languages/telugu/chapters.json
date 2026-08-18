@@ -767,7 +767,7 @@
       "payoff": {
         "lesson": "TE-C37-noru",
         "kind": "production",
-        "summary": "Name కన్ను, చెవి, ముక్కు and నోరు; close the loop Chapter 32 left open on కన్ను; and say why నోరు, unlike the other three, shows no visible trace of the shared vాy root Tamil, Malayalam and Kannada all carry.",
+        "summary": "Name కన్ను, చెవి, ముక్కు and నోరు; close the loop Chapter 32 left open on కన్ను; and say why నోరు, unlike the other three, shows no visible trace of the shared vāy root Tamil, Malayalam and Kannada all carry.",
         "assesses": [
           "TE-LEX-C37-KANNU-01",
           "TE-ETYMON-C37-KANNU-02",
@@ -1244,6 +1244,153 @@
           "TE-LEX-C59-WEATHER-03",
           "TE-LEX-C59-WEATHER-04",
           "TE-LEX-C59-WEATHER-05"
+        ]
+      }
+    },
+    {
+      "chapter": 60,
+      "title": "Animals",
+      "label": "ch:te-animals",
+      "canDo": "I can name five common animals in Telugu, and greet the house that keeps them.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TE-C60-bird",
+        "kind": "production",
+        "summary": "Complete TE-C60-bird and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C60-ANIMAL-01",
+          "TE-LEX-C60-ANIMAL-02",
+          "TE-LEX-C60-ANIMAL-03",
+          "TE-LEX-C60-ANIMAL-04",
+          "TE-LEX-C60-ANIMAL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 61,
+      "title": "In the Kitchen",
+      "label": "ch:te-kitchen",
+      "canDo": "I can name five everyday things in a Telugu kitchen, and swap names with the person cooking.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C61-chilli",
+        "kind": "production",
+        "summary": "Complete TE-C61-chilli and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C61-KITCHEN-01",
+          "TE-LEX-C61-KITCHEN-02",
+          "TE-LEX-C61-KITCHEN-03",
+          "TE-LEX-C61-KITCHEN-04",
+          "TE-LEX-C61-KITCHEN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 62,
+      "title": "Things People Make",
+      "label": "ch:te-made-things",
+      "canDo": "I can name five things a Telugu household makes or keeps, and ask politely for one of them.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C62-mirror",
+        "kind": "production",
+        "summary": "Complete TE-C62-mirror and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C62-MADE-01",
+          "TE-LEX-C62-MADE-02",
+          "TE-LEX-C62-MADE-03",
+          "TE-LEX-C62-MADE-04",
+          "TE-LEX-C62-MADE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "Hunger, Sleep and Health",
+      "label": "ch:te-health",
+      "canDo": "I can say in Telugu that I am hungry, sleepy or unwell, and ask after somebody else's health.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C63-health",
+        "kind": "production",
+        "summary": "Complete TE-C63-health and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C63-HEALTH-01",
+          "TE-LEX-C63-HEALTH-02",
+          "TE-LEX-C63-HEALTH-03",
+          "TE-LEX-C63-HEALTH-04",
+          "TE-LEX-C63-HEALTH-05"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
+      "title": "Words That Join an Answer",
+      "label": "ch:te-joining-words",
+      "canDo": "I can add to a Telugu answer, limit it, put it in order, or say it is not finished.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TE-C64-still",
+        "kind": "production",
+        "summary": "Complete TE-C64-still and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C64-JOIN-01",
+          "TE-LEX-C64-JOIN-02",
+          "TE-LEX-C64-JOIN-03",
+          "TE-LEX-C64-JOIN-04",
+          "TE-LEX-C64-JOIN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 65,
+      "title": "More Good Manners",
+      "label": "ch:te-more-manners",
+      "canDo": "I can welcome somebody in Telugu, make a request, ask their leave, and thank them.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TE-C65-trust",
+        "kind": "production",
+        "summary": "Complete TE-C65-trust and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C65-MANNERS-01",
+          "TE-LEX-C65-MANNERS-02",
+          "TE-LEX-C65-MANNERS-03",
+          "TE-LEX-C65-MANNERS-04",
+          "TE-LEX-C65-MANNERS-05"
+        ]
+      }
+    },
+    {
+      "chapter": 66,
+      "title": "The Field",
+      "label": "ch:te-the-field",
+      "canDo": "I can name a Telugu field and what comes off it, and take my leave when the work is done.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TE-C66-harvest",
+        "kind": "production",
+        "summary": "Complete TE-C66-harvest and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C66-FIELD-01",
+          "TE-LEX-C66-FIELD-02",
+          "TE-LEX-C66-FIELD-03",
+          "TE-LEX-C66-FIELD-04",
+          "TE-LEX-C66-FIELD-05"
         ]
       }
     }

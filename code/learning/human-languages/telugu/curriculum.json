@@ -772,6 +772,118 @@
         "TE-EXT-59-WEATHER"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-60-ANIMAL",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TE-C60-buffalo",
+        "TE-C60-goat",
+        "TE-C60-hen",
+        "TE-C60-ant",
+        "TE-C60-bird"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-60-ANIMAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-61-KITCHEN",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C61-curd",
+        "TE-C61-ghee",
+        "TE-C61-oil",
+        "TE-C61-sugar",
+        "TE-C61-chilli"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-61-KITCHEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-62-MADE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C62-thread",
+        "TE-C62-needle",
+        "TE-C62-broom",
+        "TE-C62-umbrella",
+        "TE-C62-mirror"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-62-MADE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-63-HEALTH",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C63-hunger",
+        "TE-C63-sleep",
+        "TE-C63-cough",
+        "TE-C63-disease",
+        "TE-C63-health"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-63-HEALTH"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-64-JOIN",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TE-C64-also",
+        "TE-C64-only",
+        "TE-C64-in-that-case",
+        "TE-C64-after",
+        "TE-C64-still"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-64-JOIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-65-MANNERS",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TE-C65-welcome",
+        "TE-C65-manners",
+        "TE-C65-request",
+        "TE-C65-permission",
+        "TE-C65-trust"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-65-MANNERS"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-66-FIELD",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TE-C66-field",
+        "TE-C66-paddy",
+        "TE-C66-grass",
+        "TE-C66-threshing-floor",
+        "TE-C66-harvest"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-66-FIELD"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -780,7 +892,8 @@
         "TE-PATH-001",
         "TE-PATH-100",
         "TE-PATH-52-WELCOME",
-        "TE-PATH-53-SKY"
+        "TE-PATH-53-SKY",
+        "TE-PATH-60-ANIMAL"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -794,7 +907,8 @@
         "TE-PATH-003",
         "TE-PATH-009",
         "TE-PATH-51-COURTESY",
-        "TE-PATH-56-HOUSE"
+        "TE-PATH-56-HOUSE",
+        "TE-PATH-65-MANNERS"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -806,7 +920,8 @@
         "TE-PATH-002",
         "TE-PATH-004",
         "TE-PATH-49-REPLY",
-        "TE-PATH-58-REPLY"
+        "TE-PATH-58-REPLY",
+        "TE-PATH-64-JOIN"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -823,7 +938,8 @@
         "TE-PATH-028",
         "TE-PATH-029",
         "TE-PATH-48-ROLE",
-        "TE-PATH-54-TREE"
+        "TE-PATH-54-TREE",
+        "TE-PATH-61-KITCHEN"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -839,7 +955,8 @@
         "TE-PATH-030",
         "TE-PATH-031",
         "TE-PATH-47-BODY",
-        "TE-PATH-57-BODY"
+        "TE-PATH-57-BODY",
+        "TE-PATH-63-HEALTH"
       ],
       "omits": [
         "WORD-GOOD",
@@ -854,7 +971,8 @@
         "TE-PATH-032",
         "TE-PATH-033",
         "TE-PATH-46-ASK",
-        "TE-PATH-55-ROAD"
+        "TE-PATH-55-ROAD",
+        "TE-PATH-62-MADE"
       ],
       "omits": [],
       "relocates": {}
@@ -863,7 +981,8 @@
       "segments": [
         "TE-PATH-010",
         "TE-PATH-50-LEAVE",
-        "TE-PATH-59-WEATHER"
+        "TE-PATH-59-WEATHER",
+        "TE-PATH-66-FIELD"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1797,6 +1916,111 @@
         "TE-C59-sand",
         "TE-C59-mud",
         "TE-C59-fire"
+      ]
+    },
+    {
+      "id": "TE-EXT-60-ANIMAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five common animals in Telugu, and greet the house that keeps them.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C60-buffalo",
+        "TE-C60-goat",
+        "TE-C60-hen",
+        "TE-C60-ant",
+        "TE-C60-bird"
+      ]
+    },
+    {
+      "id": "TE-EXT-61-KITCHEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things in a Telugu kitchen, and swap names with the person cooking.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C61-curd",
+        "TE-C61-ghee",
+        "TE-C61-oil",
+        "TE-C61-sugar",
+        "TE-C61-chilli"
+      ]
+    },
+    {
+      "id": "TE-EXT-62-MADE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Telugu household makes or keeps, and ask politely for one of them.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C62-thread",
+        "TE-C62-needle",
+        "TE-C62-broom",
+        "TE-C62-umbrella",
+        "TE-C62-mirror"
+      ]
+    },
+    {
+      "id": "TE-EXT-63-HEALTH",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say in Telugu that I am hungry, sleepy or unwell, and ask after somebody else's health.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C63-hunger",
+        "TE-C63-sleep",
+        "TE-C63-cough",
+        "TE-C63-disease",
+        "TE-C63-health"
+      ]
+    },
+    {
+      "id": "TE-EXT-64-JOIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can add to a Telugu answer, limit it, put it in order, or say it is not finished.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C64-also",
+        "TE-C64-only",
+        "TE-C64-in-that-case",
+        "TE-C64-after",
+        "TE-C64-still"
+      ]
+    },
+    {
+      "id": "TE-EXT-65-MANNERS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can welcome somebody in Telugu, make a request, ask their leave, and thank them.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C65-welcome",
+        "TE-C65-manners",
+        "TE-C65-request",
+        "TE-C65-permission",
+        "TE-C65-trust"
+      ]
+    },
+    {
+      "id": "TE-EXT-66-FIELD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a Telugu field and what comes off it, and take my leave when the work is done.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C66-field",
+        "TE-C66-paddy",
+        "TE-C66-grass",
+        "TE-C66-threshing-floor",
+        "TE-C66-harvest"
       ]
     }
   ]

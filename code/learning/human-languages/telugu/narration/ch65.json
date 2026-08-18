@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 65,
+  "title": "More Good Manners",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e5ff12e7d7d62c5d",
+  "lessons": [
+    {
+      "id": "TE-C65-welcome",
+      "sequence": 2080,
+      "title": "స్వాగతం (svāgataṁ) — a welcome",
+      "headword": "స్వాగతం",
+      "romanization": "svāgataṁ",
+      "gloss": "a welcome",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fed2c9bad28164d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did iṅkā mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వాగతం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వాగతం (svāgataṁ) — \"a welcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep this well apart from పరవాలేదు. పరవాలేదు is what you say after somebody thanks you. స్వాగతం (svāgataṁ) is what you say when they walk in. English hands the one word \"welcome\" both jobs; Telugu does not."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Sanskrit, and it comes apart neatly: su- \"well\" and āgata \"come\" — \"well come\", which is what the English word is too, arrived by an entirely separate road."
+            },
+            {
+              "kind": "speech",
+              "text": "A house says it with the door open and a gauravaṁ behind it. The ముగ్గు at the step is the same sentence without any words in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first thing said at a door."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāgataṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāgataṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svāgataṁ, then paravālēdu, and say which one answers a thank-you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svāgataṁ*, then *paravālēdu*, and say which one answers a thank-you]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వాగతం (svāgataṁ) mean? (\"a welcome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C65-manners",
+      "sequence": 2090,
+      "title": "మర్యాద (maryāda) — good manners",
+      "headword": "మర్యాద",
+      "romanization": "maryāda",
+      "gloss": "good manners",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17254728f23d3ab4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did svāgataṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మర్యాద",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మర్యాద (maryāda) — \"good manners\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మర్యాద (maryāda) is the doing half of gauravaṁ. Respect is what you feel for somebody; మర్యాద (maryāda) is what you do about it — standing up, offering the కుర్చీ, serving the atithi before yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is Sanskrit and its first sense was a boundary line. Manners as a line you do not step over is a picture worth keeping hold of."
+            },
+            {
+              "kind": "speech",
+              "text": "మర్యాదగా is how it usually reaches a person: మర్యాదగా మాట్లాడు, \"speak with manners\", which sounds sterner in English than it does in Telugu. It is closer to \"be decent about it\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: what you feel and what you do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maryāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maryāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maryāda, then gauravaṁ, and say which one somebody can watch you doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maryāda*, then *gauravaṁ*, and say which one somebody can watch you doing]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మర్యాద (maryāda) mean? (\"good manners\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C65-request",
+      "sequence": 2100,
+      "title": "మనవి (manavi) — a polite request",
+      "headword": "మనవి",
+      "romanization": "manavi",
+      "gloss": "a polite request",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05c47e1f4162b5d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did maryāda mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మనవి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మనవి (manavi) — \"a polite request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మనవి (manavi) is a request made from below — not దయచేసి set in front of an instruction, but the whole thing framed as a submission. ఒక మనవి (manavi), \"one request\", is said before the request itself arrives."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word came from is not something any source consulted here settles, so nothing is invented for it. What is certain is the register it sits in, and that is the part a learner needs."
+            },
+            {
+              "kind": "speech",
+              "text": "A మనవి (manavi) goes to somebody who can say no: an official, an elder, a host. The word does half the softening before you have said what you want."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manavi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manavi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manavi, then dayacēsi, and say which one is the whole request",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manavi*, then *dayacēsi*, and say which one is the whole request]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మనవి (manavi) mean? (\"a polite request\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C65-permission",
+      "sequence": 2110,
+      "title": "అనుమతి (anumati) — permission",
+      "headword": "అనుమతి",
+      "romanization": "anumati",
+      "gloss": "permission",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92740fe8096e093f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did manavi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అనుమతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అనుమతి (anumati) — \"permission\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అనుమతి (anumati) is permission — what a మనవి (manavi) is hoping to be given. అనుమతి (anumati) ఇవ్వండి, \"give permission\", is the formal shape of it; in a house it usually comes out as a nod."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Sanskrit: anu- \"along with\" and mati \"a mind\". Permission is somebody's mind going along with yours, which is a kinder picture than the English word offers."
+            },
+            {
+              "kind": "speech",
+              "text": "Asking leave before you go is where it is most used, and it sits naturally in front of వెళ్ళొస్తాను. With అనుమతి (anumati) first, leaving stops being something you announce and becomes something you are given."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anumati, then veḷḷostānu, and take your leave properly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anumati*, then *veḷḷostānu*, and take your leave properly]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అనుమతి (anumati) mean? (\"permission\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C65-trust",
+      "sequence": 2120,
+      "title": "నమ్మకం (nammakaṁ) — trust",
+      "headword": "నమ్మకం",
+      "romanization": "nammakaṁ",
+      "gloss": "trust",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:712e5e6e134c55ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did anumati mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నమ్మకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నమ్మకం (nammakaṁ) — \"trust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "నమ్మకం (nammakaṁ) is trust, and it is the one word here that is Telugu's own. It is built on నమ్ము, \"to believe\", with the ending that turns an action into the thing itself."
+            },
+            {
+              "kind": "speech",
+              "text": "The four before it are Sanskrit and they are all about form: a welcome, manners, a request, permission. నమ్మకం (nammakaṁ) is what the form is for. A house that does all four and is still not trusted has been doing something else."
+            },
+            {
+              "kind": "speech",
+              "text": "The word also carries \"belief\" in the religious sense, and Telugu is content to let one word hold both. Trusting a person and believing a thing are the same act pointed in two directions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: స్వాగతం (svāgataṁ), మర్యాద (maryāda), మనవి (manavi), అనుమతి (anumati), నమ్మకం (nammakaṁ). Enough to bring somebody in, ask something of them, and say ధన్యవాదములు when they agree."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nammakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nammakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then say dhanyavādamulu to whoever gave you the last one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then say *dhanyavādamulu* to whoever gave you the last one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నమ్మకం (nammakaṁ) mean? (\"trust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

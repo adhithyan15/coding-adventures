@@ -14522,7 +14522,7 @@
     {
       "language": "telugu",
       "chapter": 37,
-      "sourceHash": "fnv1a64:9d15a83b89defe09",
+      "sourceHash": "fnv1a64:eb4a3f036595f3e7",
       "lessonIds": [
         "TE-C37-kannu",
         "TE-C37-cevi",
@@ -14533,8 +14533,8 @@
       "drivablePrefix": 4,
       "text": "telugu/narration/ch37.txt",
       "json": "telugu/narration/ch37.json",
-      "textHash": "fnv1a64:c5f0109d49be8d02",
-      "jsonHash": "fnv1a64:2ddc92579bbee240"
+      "textHash": "fnv1a64:4591e01f64a01889",
+      "jsonHash": "fnv1a64:84fd4266cbd60ed0"
     },
     {
       "language": "telugu",
@@ -14921,6 +14921,132 @@
       "json": "telugu/narration/ch59.json",
       "textHash": "fnv1a64:601c18a2382a53ea",
       "jsonHash": "fnv1a64:9e74006b7f39c1b5"
+    },
+    {
+      "language": "telugu",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:c81bca627d596923",
+      "lessonIds": [
+        "TE-C60-buffalo",
+        "TE-C60-goat",
+        "TE-C60-hen",
+        "TE-C60-ant",
+        "TE-C60-bird"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch60.txt",
+      "json": "telugu/narration/ch60.json",
+      "textHash": "fnv1a64:3f999173c19c13be",
+      "jsonHash": "fnv1a64:e1ff1b0f34ad8f74"
+    },
+    {
+      "language": "telugu",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:d35760e6c483a1a6",
+      "lessonIds": [
+        "TE-C61-curd",
+        "TE-C61-ghee",
+        "TE-C61-oil",
+        "TE-C61-sugar",
+        "TE-C61-chilli"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch61.txt",
+      "json": "telugu/narration/ch61.json",
+      "textHash": "fnv1a64:f30269de607aa1e0",
+      "jsonHash": "fnv1a64:238a72f4425c61ac"
+    },
+    {
+      "language": "telugu",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:810c054c05f389b8",
+      "lessonIds": [
+        "TE-C62-thread",
+        "TE-C62-needle",
+        "TE-C62-broom",
+        "TE-C62-umbrella",
+        "TE-C62-mirror"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch62.txt",
+      "json": "telugu/narration/ch62.json",
+      "textHash": "fnv1a64:362b30d75d9fbeca",
+      "jsonHash": "fnv1a64:393664a211e23497"
+    },
+    {
+      "language": "telugu",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:ca7c3be34920e255",
+      "lessonIds": [
+        "TE-C63-hunger",
+        "TE-C63-sleep",
+        "TE-C63-cough",
+        "TE-C63-disease",
+        "TE-C63-health"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch63.txt",
+      "json": "telugu/narration/ch63.json",
+      "textHash": "fnv1a64:8753690dff925282",
+      "jsonHash": "fnv1a64:74bfdb4dd8e729e1"
+    },
+    {
+      "language": "telugu",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:a642c62262ecb3f2",
+      "lessonIds": [
+        "TE-C64-also",
+        "TE-C64-only",
+        "TE-C64-in-that-case",
+        "TE-C64-after",
+        "TE-C64-still"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch64.txt",
+      "json": "telugu/narration/ch64.json",
+      "textHash": "fnv1a64:c713924511bc58b6",
+      "jsonHash": "fnv1a64:508849eb7b83fe4f"
+    },
+    {
+      "language": "telugu",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:e5ff12e7d7d62c5d",
+      "lessonIds": [
+        "TE-C65-welcome",
+        "TE-C65-manners",
+        "TE-C65-request",
+        "TE-C65-permission",
+        "TE-C65-trust"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch65.txt",
+      "json": "telugu/narration/ch65.json",
+      "textHash": "fnv1a64:f02de6cd04e4ccf6",
+      "jsonHash": "fnv1a64:6239cd9df53a56bb"
+    },
+    {
+      "language": "telugu",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:e23f6c0c2f7c4565",
+      "lessonIds": [
+        "TE-C66-field",
+        "TE-C66-paddy",
+        "TE-C66-grass",
+        "TE-C66-threshing-floor",
+        "TE-C66-harvest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch66.txt",
+      "json": "telugu/narration/ch66.json",
+      "textHash": "fnv1a64:c3b67086553f904a",
+      "jsonHash": "fnv1a64:d0d151b8ee96ee2d"
     },
     {
       "language": "urdu",

@@ -5165,6 +5165,48 @@
       "scriptSet": "telugu-comparisons"
     },
     {
+      "language": "telugu",
+      "chapter": 60,
+      "output": "telugu/book/chapters/ch60-animals.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 61,
+      "output": "telugu/book/chapters/ch61-in-the-kitchen.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 62,
+      "output": "telugu/book/chapters/ch62-things-people-make.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 63,
+      "output": "telugu/book/chapters/ch63-hunger-sleep-health.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 64,
+      "output": "telugu/book/chapters/ch64-joining-words.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 65,
+      "output": "telugu/book/chapters/ch65-more-good-manners.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 66,
+      "output": "telugu/book/chapters/ch66-the-field.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "kannada",
       "chapter": 53,
       "output": "kannada/book/chapters/ch53-the-sky.tex",
