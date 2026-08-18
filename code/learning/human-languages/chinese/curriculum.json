@@ -146,6 +146,22 @@
         "ZH-EXT-022-MINGZI"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-008",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-W09-shen",
+        "ZH-W09-me",
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-023-SHENME-SCRIPT",
+        "ZH-EXT-024-QUESTION-WHAT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -182,10 +198,10 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "ZH-PATH-007"
+        "ZH-PATH-007",
+        "ZH-PATH-008"
       ],
       "omits": [
-        "QUESTION-WHAT",
         "PRONOUN-ME",
         "PRONOUN-YOU",
         "PRONOUN-MY",
@@ -836,6 +852,34 @@
         "ZH-W08-ming",
         "ZH-W08-zi",
         "ZH-C08-mingzi"
+      ]
+    },
+    {
+      "id": "ZH-EXT-023-SHENME-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 什 and 么, and I know that 么 carries no tone even standing alone, not merely inside a word.",
+      "prerequisites": [
+        "ZH-EXT-022-MINGZI"
+      ],
+      "lessons": [
+        "ZH-W09-shen",
+        "ZH-W09-me"
+      ]
+    },
+    {
+      "id": "ZH-EXT-024-QUESTION-WHAT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "pragmatics",
+      "canDo": "I can say 什么 to ask what, use it alone to get something repeated, and I know it is blunt with a stranger -- and that its two characters carry the word's sound, not its meaning.",
+      "prerequisites": [
+        "ZH-EXT-023-SHENME-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
       ]
     }
   ]
