@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 3077,
+    "totalLessons": 3081,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -32,14 +32,14 @@
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 590,
+    "atomsNeverRevisited": 591,
     "forwardReferences": 511,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2605,
+    "drivableLessons": 2608,
     "drivablePercent": 85,
-    "chaptersWithoutDrivablePrefix": 90,
+    "chaptersWithoutDrivablePrefix": 91,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3030,13 +3030,15 @@
           1,
           2,
           3,
-          4
+          4,
+          5
         ],
         "bookChapters": [
           1,
           2,
           3,
-          4
+          4,
+          5
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3244,9 +3246,9 @@
       {
         "language": "chinese",
         "status": "version-2",
-        "lessonCount": 32,
+        "lessonCount": 36,
         "versions": {
-          "2": 32
+          "2": 36
         }
       },
       {
@@ -3806,8 +3808,8 @@
       },
       {
         "language": "chinese",
-        "bookChapters": 4,
-        "declaredChapters": 4,
+        "bookChapters": 5,
+        "declaredChapters": 5,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -3966,8 +3968,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 939,
-      "declaredChapters": 939,
+      "bookChapters": 940,
+      "declaredChapters": 940,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3979,9 +3981,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3077,
+    "totalLessons": 3081,
     "byLevel": {
-      "pre-A1": 1795,
+      "pre-A1": 1799,
       "A1": 568,
       "A2": 543,
       "B1": 40,
@@ -4024,9 +4026,9 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 32,
+        "lessonCount": 36,
         "byLevel": {
-          "pre-A1": 21,
+          "pre-A1": 25,
           "A1": 11,
           "A2": 0,
           "B1": 0,
@@ -4821,8 +4823,8 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 32,
-        "measurable": 32,
+        "lessonCount": 36,
+        "measurable": 36,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -5750,8 +5752,8 @@
           "language": "chinese",
           "script": "chinese",
           "latinScript": false,
-          "lessonCount": 32,
-          "totalGlyphs": 15,
+          "lessonCount": 36,
+          "totalGlyphs": 16,
           "lessonViolations": 1,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -31780,6 +31782,18 @@
         "revisits": 0
       },
       {
+        "atom": "ZH-SCRIPT-HAO-BUILD-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W01-hao-build",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "AR-CONCEPT-C04-AL-SALAMA-01",
         "language": "arabic",
         "introducedBy": "AR-C04-al-salama",
@@ -47664,6 +47678,17 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-LEX-NUM-YI",
+        "language": "chinese",
+        "introducedBy": "ZH-C03-yi",
+        "introducedAt": 15,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ZH-METHOD-COMPONENT-HOOK",
         "language": "chinese",
         "introducedBy": "ZH-C01-hao",
@@ -47695,17 +47720,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ZH-SCRIPT-HAO-BUILD-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W01-hao-build",
-        "introducedAt": 13,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ZH-SCRIPT-NI-BUILD-01",
@@ -47752,10 +47766,10 @@
         "revisits": 2
       },
       {
-        "atom": "ZH-TONE-SANDHI-THIRD",
+        "atom": "ZH-SCRIPT-ZI-01",
         "language": "chinese",
-        "introducedBy": "ZH-C01-tone-sandhi",
-        "introducedAt": 4,
+        "introducedBy": "ZH-W01-zi",
+        "introducedAt": 12,
         "missed": [
           "R2",
           "R3"
@@ -55473,6 +55487,26 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-DIALOGUE-NEGATE",
+        "language": "chinese",
+        "introducedBy": "ZH-C04-practice",
+        "introducedAt": 31,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ZH-LEX-BU",
+        "language": "chinese",
+        "introducedBy": "ZH-C04-bu",
+        "introducedAt": 30,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-LEX-HAO",
         "language": "chinese",
         "introducedBy": "ZH-C01-hao",
@@ -55480,7 +55514,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ZH-LEX-KOU",
@@ -55533,14 +55567,34 @@
         "revisits": 1
       },
       {
-        "atom": "ZH-LEX-NUM-YI",
+        "atom": "ZH-LEX-RI",
+        "language": "chinese",
+        "introducedBy": "ZH-C04-ri",
+        "introducedAt": 28,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ZH-METHOD-STROKE-COUNT",
         "language": "chinese",
         "introducedBy": "ZH-C03-yi",
         "introducedAt": 15,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 3
+        "revisits": 5
+      },
+      {
+        "atom": "ZH-SCRIPT-BU",
+        "language": "chinese",
+        "introducedBy": "ZH-W04-bu",
+        "introducedAt": 29,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-SCRIPT-NI",
@@ -55563,14 +55617,24 @@
         "revisits": 2
       },
       {
-        "atom": "ZH-SCRIPT-ZI-01",
+        "atom": "ZH-SCRIPT-NUM-YI",
         "language": "chinese",
-        "introducedBy": "ZH-W01-zi",
-        "introducedAt": 12,
+        "introducedBy": "ZH-W03-yi",
+        "introducedAt": 14,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ZH-TONE-SANDHI-THIRD",
+        "language": "chinese",
+        "introducedBy": "ZH-C01-tone-sandhi",
+        "introducedAt": 4,
         "missed": [
           "R2"
         ],
-        "revisits": 1
+        "revisits": 2
       }
     ],
     "forwardReferences": [
@@ -59686,12 +59750,12 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 32,
+        "lessonCount": 36,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 38,
-        "atomsNeverRevisited": 5,
+        "atomsTaught": 43,
+        "atomsNeverRevisited": 6,
         "forwardReferences": 0
       },
       {
@@ -59890,13 +59954,13 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4236,
-      "atomsNeverRevisited": 590,
+      "atomsTaught": 4241,
+      "atomsNeverRevisited": 591,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1138,
-        "R2": 3290,
-        "R3": 3110,
+        "R1": 1139,
+        "R2": 3293,
+        "R3": 3114,
         "R4": 1724
       },
       "forwardReferences": 511
@@ -59933,10 +59997,10 @@
       {
         "language": "chinese",
         "script": "chinese",
-        "lessonCount": 32,
-        "scriptLessons": 15,
-        "taughtGlyphs": 15,
-        "shownGlyphs": 15,
+        "lessonCount": 36,
+        "scriptLessons": 16,
+        "taughtGlyphs": 16,
+        "shownGlyphs": 16,
         "neverTaughtGlyphs": 0,
         "violations": 4,
         "exposureOnly": 2,
@@ -65480,16 +65544,16 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 6 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 294
+            "detail": "teaches 8 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 292
           },
           {
             "criterion": "reinforcement",
-            "detail": "9 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 9
+            "detail": "10 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 10
           }
         ],
-        "vocabulary": 11
+        "vocabulary": 13
       },
       {
         "language": "french",
@@ -65929,11 +65993,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3077,
-    "voice": 2164,
+    "totalLessons": 3081,
+    "voice": 2167,
     "sight": 588,
-    "pen": 325,
-    "coreVoice": 2605,
+    "pen": 326,
+    "coreVoice": 2608,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 85,
     "tracks": [
@@ -66706,12 +66770,12 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 32,
-        "voice": 13,
+        "lessonCount": 36,
+        "voice": 16,
         "sight": 4,
-        "pen": 15,
-        "coreVoice": 16,
-        "drivablePercent": 50,
+        "pen": 16,
+        "coreVoice": 19,
+        "drivablePercent": 53,
         "drivablePrefixTotal": 7,
         "chapters": [
           {
@@ -66775,6 +66839,22 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "ZH-W04-kou"
+          },
+          {
+            "language": "chinese",
+            "chapter": 5,
+            "lessonCount": 4,
+            "voice": 3,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 3,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ZH-W05-shi"
           }
         ]
       },
@@ -80183,7 +80263,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3077,
+    "lessons": 3081,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -80193,10 +80273,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 3004,
-    "usesBeforeIntroduction": 11489,
-    "technicalUsesBeforeIntroduction": 3134,
-    "technicalLessons": 1615,
+    "lessonsUsingTerms": 3007,
+    "usesBeforeIntroduction": 11496,
+    "technicalUsesBeforeIntroduction": 3136,
+    "technicalLessons": 1617,
     "worstTerms": [
       {
         "term": "verb",
@@ -80225,14 +80305,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3077,
+    "lessonsScanned": 3081,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1071,
+    "filesScanned": 1072,
     "mainCharacters": 126,
-    "scriptCharacters": 671,
+    "scriptCharacters": 672,
     "gaps": 0
   }
 }
