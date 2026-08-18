@@ -23,5 +23,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.nib_lexer"] = "src/coding_adventures/nib_lexer/init.lua",
+        ["coding_adventures.nib_lexer._grammar"] = "src/coding_adventures/nib_lexer/_grammar.lua",
     },
 }

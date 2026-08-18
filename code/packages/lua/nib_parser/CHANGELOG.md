@@ -1,26 +1,20 @@
-# Changelog — coding-adventures-starlark-parser
+# Changelog — coding-adventures-nib-parser
+
+## Unreleased
+
+### Fixed
+
+- Eliminated runtime grammar loading: `M.get_grammar` now requires a
+  pre-compiled `_grammar` module instead of reading and parsing the
+  `nib.grammar` file from `code/grammars/` on every call. The old code
+  walked out of the installed package's own directory to a
+  monorepo-relative path that a published LuaRocks package does not ship.
+- Corrected this file, which previously contained an unrelated package's
+  (`coding-adventures-starlark-parser`) changelog content verbatim — a
+  pre-existing copy-paste error unrelated to this fix.
 
 ## 0.1.0 — initial release
 
-- Implement `starlark_parser.parse(source)` — tokenize with `starlark_lexer`
-  and grammar-parse with `parser.GrammarParser`, returning the root ASTNode.
-- Implement `starlark_parser.create_parser(source)` — returns a `GrammarParser`
-  instance for manual control (trace mode, etc.).
-- Implement `starlark_parser.get_grammar()` — returns the cached `ParserGrammar`.
-- Grammar loaded from `code/grammars/starlark.grammar` via 6-level path traversal.
-- Grammar cached after first load to avoid repeated file I/O.
-- Root ASTNode has `rule_name == "file"` (first rule in starlark.grammar).
-- Comprehensive busted test suite covering:
-  - Module API surface
-  - Simple assignments (`x = 1`, augmented assignments, tuple unpacking)
-  - Function calls (`print("hello")`, BUILD-style `cc_library(...)`)
-  - Load statements (`load("//rules.star", "symbol")`)
-  - Function definitions with parameters, defaults, and multi-statement bodies
-  - List literals (`[1, 2, 3]`, `[]`, nested access)
-  - Dict literals (`{"key": "value"}`, `{}`)
-  - If/elif/else statements
-  - For loops (simple and tuple-unpacking)
-  - BUILD file patterns (multi-line rules, multiple rules, load + rule)
-  - Expressions (arithmetic, comparison, boolean, ternary, lambda, attribute access)
-  - `create_parser` round-trip
-  - Error handling for invalid input
+- Implement `nib_parser.parse(source)` — tokenize with `nib_lexer` and
+  grammar-parse with `parser.GrammarParser`, returning the root ASTNode.
+- Implement `nib_parser.get_grammar()` — returns the cached `ParserGrammar`.
