@@ -261,12 +261,15 @@ Emit logic gates each import on the module's manifest exactly like the
 existing `uses_oop`/`uses_exceptions` checks: a pure-numeric MATLAB module
 never imports the symbolic runtime and vice versa.
 
-Other backends (Rust/Go/Python) are **not required** to support SIR22/SIR23
-in this first wave — per SIR10's backend-capability model, a backend that
-doesn't declare a feature in `accepts_features()` cleanly rejects a module
-that needs it, rather than emitting wrong code. JS/TS is the first target
-because it's what motivated this work; other backends can add support later
-without any change to the IR or the frontends.
+Other backends (C/Go/Rust/Python/Ruby) were not required to support SIR22/
+SIR23 in the first wave — per SIR10's backend-capability model, a backend
+that doesn't declare a feature in `accepts_features()` cleanly rejects a
+module that needs it, rather than emitting wrong code. JS/TS was the first
+target because it's what motivated this work. That second wave is now
+planned (see `SIR22-array-matrix-semantic-ir.md`/
+`SIR23-symbolic-pattern-semantic-ir.md`'s own "Backend impact" sections
+for the per-backend rollout) — no change to the IR or the frontends is
+needed either way, exactly as this section always said.
 
 ## §5 Rollout — two parallel streams, one shared serialization point
 
