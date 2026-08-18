@@ -243,6 +243,8 @@ members = [
     "macsyma-runtime",
     "macsyma-wasm",
     "macsyma-to-semantic-ir",
+    "macsyma-iir-compiler",
+    "macsyma-vm",
     "matlab-lexer",
     "matlab-parser",
     "c-lexer",
