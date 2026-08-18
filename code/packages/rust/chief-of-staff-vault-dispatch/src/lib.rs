@@ -67,15 +67,25 @@
 //!
 //! Be precise about how far that reaches, because a guarantee believed to be
 //! wider than it is, is worse than none. The runtime validates `output` and
-//! **only** `output`. `artifact_refs` and `memory_refs` are copied to the
-//! result unchecked; `events` are assembled *before* validation runs and are
-//! published even on the rejection path; and the check is `if let Some(schema)`
-//! against the definition passed to `register_handler`, so it is a property of
-//! that definition rather than of the tool id — another crate registering
-//! `vault.request_direct` with `output_schema: None` would get no validation at
+//! `output` and, on the event channel, terminal event kinds. `artifact_refs` and `memory_refs` are copied to the
+//! result unchecked — except that a handler emitting a terminal event kind is
+//! refused outright. Two related holes have since been closed in the runtime,
+//! and are recorded here because this crate's guarantees used to depend on
+//! working around them: handler events are no longer published when output
+//! validation refuses a call, and a definition registered under a built-in tool
+//! id must now match the catalog — so a crate registering
+//! `vault.request_direct` with `output_schema: None` is now rejected outright
+//! rather than silently receiving no validation at
 //! all. Both handlers here therefore return empty `artifact_refs`,
-//! `memory_refs`, and `events`, and there are tests pinning that, because for
-//! those three fields handler discipline is genuinely all there is.
+//! `memory_refs`, and `events` — and [`VaultToolBridge::lease_handler`] and
+//! [`VaultToolBridge::direct_handler`] wrap the real bodies in
+//! [`forbidding_side_channels`] before anyone can register them, so a guarded
+//! handler is the only kind this type hands out. Note what that is and is not:
+//! the combinator's refusal is tested, but no behavioural test can catch an
+//! *unguarded* registration, because the real handlers never populate those
+//! channels — a reviewer verified that by removing every wrapper and watching
+//! the suite stay green. The wiring is a by-construction property, checkable by
+//! reading. See [`VaultToolBridge::lease_handler`].
 //!
 //! **V2 — bounded, secret-free errors.** Every error this crate produces
 //! carries one of a closed set of `&'static str` messages, listed in
@@ -161,8 +171,8 @@ use std::sync::Arc;
 
 use chief_of_staff_host_runtime::{HostRuntimeError, OrchestratorProfileRuntime};
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, InMemoryToolRuntime, ToolApiError, ToolCallError, ToolDefinition,
-    ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
+    builtin_tool_definition, forbidding_side_channels, InMemoryToolRuntime, ToolApiError,
+    ToolCallError, ToolDefinition, ToolErrorKind, ToolExecutionContext, ToolHandlerOutput,
 };
 use chief_of_staff_vault_runtime::{
     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
@@ -418,12 +428,50 @@ impl VaultToolBridge {
         host.register_handler(definition, self.lease_handler())
     }
 
+    /// Handler for `vault.request_lease`, guarded.
+    ///
+    /// The guard lives here rather than at each registration site.
+    ///
+    /// Be exact about what that buys, because the obvious claim is wrong. It is
+    /// **not** that a test now catches an unguarded registration: the real
+    /// handlers never populate those channels, so no behavioural test can tell
+    /// a guarded handler from an unguarded one. A reviewer confirmed that by
+    /// removing every wrapper and watching the suite stay green -- first with
+    /// the guard at six call sites, then again with it here.
+    ///
+    /// What it buys is surface. This and [`Self::direct_handler`] are the
+    /// only handlers the type hands out, and the unguarded bodies are
+    /// private, so no code outside this crate can obtain an unguarded handler
+    /// at all, and inside it someone would have to reach past two guarded
+    /// accessors for a differently-named private one. That is a reduction from
+    /// six sites that each had to be remembered to two that are hard to bypass
+    /// by accident -- and it is checkable by reading, which is the only way
+    /// this particular property can be checked.
+    ///
+    /// The combinator itself is tested — see
+    /// `the_side_channel_wrapper_refuses_a_misbehaving_handler_at_the_boundary`.
+    /// The wiring is by construction, not by test.
+    pub fn lease_handler(
+        &self,
+    ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
+    {
+        forbidding_side_channels(self.unguarded_lease_handler())
+    }
+
+    /// Handler for `vault.request_direct`, guarded. See [`Self::lease_handler`].
+    pub fn direct_handler(
+        &self,
+    ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
+    {
+        forbidding_side_channels(self.unguarded_direct_handler())
+    }
+
     /// Handler for `vault.request_lease`.
     ///
     /// Returns `{ vault_ref, expires_at_ms }` and nothing else. The `VaultRef`
     /// is intended to leave the boundary — that is the whole point of a lease —
     /// but it is a handle the trusted broker redeems, not secret material.
-    pub fn lease_handler(
+    fn unguarded_lease_handler(
         &self,
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
@@ -473,7 +521,7 @@ impl VaultToolBridge {
     /// under which a caller cleared to send one secret to a consumer is equally
     /// cleared to send every secret to it. Passing the requester and the secret
     /// name is what makes a real decision possible; see [`VaultDirectRequest`].
-    pub fn direct_handler(
+    fn unguarded_direct_handler(
         &self,
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
