@@ -276,6 +276,20 @@ function element_src(element, indent)
     elseif t == "group" then
         return '{ type="group", element=' .. element_src(element.element, i) .. ' }'
 
+    elseif t == "positive_lookahead" then
+        return '{ type="positive_lookahead", element=' .. element_src(element.element, i) .. ' }'
+
+    elseif t == "negative_lookahead" then
+        return '{ type="negative_lookahead", element=' .. element_src(element.element, i) .. ' }'
+
+    elseif t == "one_or_more" then
+        return '{ type="one_or_more", element=' .. element_src(element.element, i) .. ' }'
+
+    elseif t == "separated_repetition" then
+        return '{ type="separated_repetition", element=' .. element_src(element.element, i)
+            .. ', separator=' .. element_src(element.separator, i)
+            .. ', at_least_one=' .. tostring(element.at_least_one) .. ' }'
+
     else
         error("Unknown grammar element type: " .. tostring(t))
     end

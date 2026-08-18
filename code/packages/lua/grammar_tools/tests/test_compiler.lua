@@ -328,6 +328,45 @@ describe("compile_parser_grammar round-trip", function()
     -- Note: The Lua parser grammar library does not implement @version
     -- comment directives, so that round-trip test is omitted.
 
+    it("positive lookahead round-trips", function()
+        local original = parse_grammar("expr = &NUMBER value ;")
+        local code = grammar_tools.compile_parser_grammar(original)
+        local loaded = eval_parser_grammar(code)
+        local body = loaded.rules[1].body
+        assert.equals("sequence", body.type)
+        assert.equals("positive_lookahead", body.elements[1].type)
+        assert.equals("rule_reference", body.elements[1].element.type)
+    end)
+
+    it("negative lookahead round-trips", function()
+        local original = parse_grammar('expr = !"end" stmt ;')
+        local code = grammar_tools.compile_parser_grammar(original)
+        local loaded = eval_parser_grammar(code)
+        local body = loaded.rules[1].body
+        assert.equals("sequence", body.type)
+        assert.equals("negative_lookahead", body.elements[1].type)
+        assert.equals("literal", body.elements[1].element.type)
+        assert.equals("end", body.elements[1].element.value)
+    end)
+
+    it("one-or-more round-trips", function()
+        local original = parse_grammar("stmts = { stmt }+ ;")
+        local code = grammar_tools.compile_parser_grammar(original)
+        local loaded = eval_parser_grammar(code)
+        assert.equals("one_or_more", loaded.rules[1].body.type)
+    end)
+
+    it("separated repetition round-trips", function()
+        local original = parse_grammar("args = { expr // COMMA }+ ;")
+        local code = grammar_tools.compile_parser_grammar(original)
+        local loaded = eval_parser_grammar(code)
+        local body = loaded.rules[1].body
+        assert.equals("separated_repetition", body.type)
+        assert.equals("rule_reference", body.element.type)
+        assert.equals("rule_reference", body.separator.type)
+        assert.is_true(body.at_least_one)
+    end)
+
     it("line_number preserved in rules", function()
         local original = parse_grammar("value = NUMBER ;")
         local code = grammar_tools.compile_parser_grammar(original)
