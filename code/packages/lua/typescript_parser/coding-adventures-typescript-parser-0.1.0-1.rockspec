@@ -49,5 +49,19 @@ build = {
     modules = {
         ["coding_adventures.typescript_parser"] =
             "src/coding_adventures/typescript_parser/init.lua",
+        ["coding_adventures.typescript_parser._grammar_default"] =
+            "src/coding_adventures/typescript_parser/_grammar_default.lua",
+        ["coding_adventures.typescript_parser._grammar_ts1_0"] =
+            "src/coding_adventures/typescript_parser/_grammar_ts1_0.lua",
+        ["coding_adventures.typescript_parser._grammar_ts2_0"] =
+            "src/coding_adventures/typescript_parser/_grammar_ts2_0.lua",
+        ["coding_adventures.typescript_parser._grammar_ts3_0"] =
+            "src/coding_adventures/typescript_parser/_grammar_ts3_0.lua",
+        ["coding_adventures.typescript_parser._grammar_ts4_0"] =
+            "src/coding_adventures/typescript_parser/_grammar_ts4_0.lua",
+        ["coding_adventures.typescript_parser._grammar_ts5_0"] =
+            "src/coding_adventures/typescript_parser/_grammar_ts5_0.lua",
+        ["coding_adventures.typescript_parser._grammar_ts5_8"] =
+            "src/coding_adventures/typescript_parser/_grammar_ts5_8.lua",
     },
 }
