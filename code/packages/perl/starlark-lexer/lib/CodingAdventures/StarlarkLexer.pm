@@ -5,9 +5,10 @@ package CodingAdventures::StarlarkLexer;
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools. It reads the shared `starlark.tokens`
-# grammar file, compiles the token definitions into Perl regexes, and applies
-# them in priority order to tokenize Starlark source code.
+# by CodingAdventures::GrammarTools. It loads the `starlark.tokens` grammar
+# (compiled ahead of time into CodingAdventures::StarlarkLexer::_Grammar —
+# see "Grammar loading" below), compiles the token definitions into Perl
+# regexes, and applies them in priority order to tokenize Starlark source.
 #
 # # What is Starlark?
 # ====================
@@ -59,9 +60,15 @@ package CodingAdventures::StarlarkLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `starlark.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` requires the generated
+#    `CodingAdventures::StarlarkLexer::_Grammar` module and calls its
+#    `token_grammar()` sub, caching the result for the lifetime of the
+#    process. That module is produced ahead of time from `starlark.tokens`
+#    by `code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens`
+#    and checked into git alongside this package — no disk I/O against
+#    `code/grammars/` happens at runtime, so the package works the same way
+#    whether it's used in this monorepo checkout or installed standalone
+#    from CPAN.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
 #    into a `{ name => str, pat => qr/\G.../ }` hashref. Skip patterns become
@@ -70,23 +77,6 @@ package CodingAdventures::StarlarkLexer;
 # 3. **Tokenization** — `tokenize()` processes the source line by line,
 #    emitting NEWLINE/INDENT/DEDENT at logical line boundaries and calling
 #    the token scanner on each line's non-whitespace content.
-#
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/StarlarkLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/starlark.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → starlark-lexer/   (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/             ← repo root
-#   + /grammars/starlark.tokens
 #
 # # Token types
 # =============
@@ -127,8 +117,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -144,40 +132,24 @@ my $_rules;        # arrayref of { name => str, pat => qr// }
 my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 my $_keyword_map;  # hashref mapping keyword string → promoted token type
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/starlark-lexer/lib/CodingAdventures/StarlarkLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → starlark-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `starlark.tokens`, caching the result.
+# Load `starlark.tokens`, caching the result. The grammar is no longer read
+# from disk at runtime: `code/programs/perl/grammar-tools/grammar-tools.pl`
+# compiles `starlark.tokens` once, at dev time, into the checked-in
+# `CodingAdventures::StarlarkLexer::_Grammar` module (see
+# lib/CodingAdventures/StarlarkLexer/_Grammar.pm). That generated module
+# defines `token_grammar()`, which rebuilds the same `TokenGrammar` object
+# that used to come from parsing the `.tokens` file directly. This means a
+# real CPAN install of this package works without shipping `code/grammars/`.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'starlark', 'starlark.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::StarlarkLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::StarlarkLexer::_Grammar;
+    $_grammar = CodingAdventures::StarlarkLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::StarlarkLexer: failed to parse starlark.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 

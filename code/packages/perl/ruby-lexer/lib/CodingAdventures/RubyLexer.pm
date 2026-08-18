@@ -5,9 +5,10 @@ package CodingAdventures::RubyLexer;
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools. It reads the shared `ruby.tokens`
-# grammar file, compiles the token definitions into Perl regexes, and applies
-# them in priority order to tokenize Ruby source code.
+# by CodingAdventures::GrammarTools. It loads the `ruby.tokens` grammar
+# (compiled ahead of time into CodingAdventures::RubyLexer::_Grammar — see
+# "Grammar loading" below), compiles the token definitions into Perl regexes,
+# and applies them in priority order to tokenize Ruby source code.
 #
 # # What is Ruby tokenization?
 # ================================
@@ -29,9 +30,15 @@ package CodingAdventures::RubyLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `ruby.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` requires the generated
+#    `CodingAdventures::RubyLexer::_Grammar` module and calls its
+#    `token_grammar()` sub, caching the result for the lifetime of the
+#    process. That module is produced ahead of time from `ruby.tokens` by
+#    `code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens` and
+#    checked into git alongside this package — no disk I/O against
+#    `code/grammars/` happens at runtime, so the package works the same way
+#    whether it's used in this monorepo checkout or installed standalone
+#    from CPAN.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
 #    in the grammar into a `{ name => str, pat => qr/\G.../ }` hashref.
@@ -42,23 +49,6 @@ package CodingAdventures::RubyLexer;
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. First match wins. On no match, dies with
 #    position info.
-#
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/RubyLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/ruby.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → ruby-lexer/     (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/           ← repo root
-#   + /grammars/ruby.tokens
 #
 # # Token types
 # =============
@@ -89,8 +79,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -106,43 +94,24 @@ my $_rules;        # arrayref of { name => str, pat => qr// }
 my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 my $_keyword_map;  # hashref mapping keyword string → promoted token type
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-#
-# We use File::Spec for cross-platform path construction and
-# File::Basename::dirname to strip the filename component.
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/ruby-lexer/lib/CodingAdventures/RubyLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → ruby-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `ruby.tokens`, caching the result.
+# Load `ruby.tokens`, caching the result. The grammar is no longer read from
+# disk at runtime: `code/programs/perl/grammar-tools/grammar-tools.pl` compiles
+# `ruby.tokens` once, at dev time, into the checked-in
+# `CodingAdventures::RubyLexer::_Grammar` module (see
+# lib/CodingAdventures/RubyLexer/_Grammar.pm). That generated module defines
+# `token_grammar()`, which rebuilds the same `TokenGrammar` object that used
+# to come from parsing the `.tokens` file directly. This means a real CPAN
+# install of this package works without shipping `code/grammars/`.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'ruby', 'ruby.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::RubyLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::RubyLexer::_Grammar;
+    $_grammar = CodingAdventures::RubyLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::RubyLexer: failed to parse ruby.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 

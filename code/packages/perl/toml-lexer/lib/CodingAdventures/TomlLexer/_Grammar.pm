@@ -1,0 +1,270 @@
+# AUTO-GENERATED FILE — DO NOT EDIT
+# Source: toml.tokens
+# Regenerate with: perl code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens toml.tokens
+#
+# This file embeds a TokenGrammar as native Perl data structures.
+# Call token_grammar() instead of reading and parsing the .tokens file.
+
+package CodingAdventures::TomlLexer::_Grammar;
+use strict;
+use warnings;
+
+sub token_grammar {
+    return bless {
+        definitions => [
+            bless({
+                name => 'ML_BASIC_STRING',
+                pattern => '"""([^\\\\]|\\\\(.|\\n)|\\n)*?"""',
+                is_regex => 1,
+                line_number => 60,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'ML_LITERAL_STRING',
+                pattern => '\'\'\'[\\s\\S]*?\'\'\'',
+                is_regex => 1,
+                line_number => 61,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'BASIC_STRING',
+                pattern => '"([^"\\\\\\n]|\\\\.)*"',
+                is_regex => 1,
+                line_number => 70,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LITERAL_STRING',
+                pattern => '\'[^\'\\n]*\'',
+                is_regex => 1,
+                line_number => 71,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'OFFSET_DATETIME_FRAC_TZ',
+                pattern => '\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}\\.\\d+[+-]\\d{2}:\\d{2}',
+                is_regex => 1,
+                line_number => 91,
+                alias => 'OFFSET_DATETIME',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'OFFSET_DATETIME_FRAC_Z',
+                pattern => '\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}\\.\\d+Z',
+                is_regex => 1,
+                line_number => 92,
+                alias => 'OFFSET_DATETIME',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'OFFSET_DATETIME_TZ',
+                pattern => '\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}[+-]\\d{2}:\\d{2}',
+                is_regex => 1,
+                line_number => 93,
+                alias => 'OFFSET_DATETIME',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'OFFSET_DATETIME_Z',
+                pattern => '\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}Z',
+                is_regex => 1,
+                line_number => 94,
+                alias => 'OFFSET_DATETIME',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LOCAL_DATETIME_FRAC',
+                pattern => '\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}\\.\\d+',
+                is_regex => 1,
+                line_number => 95,
+                alias => 'LOCAL_DATETIME',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LOCAL_DATETIME',
+                pattern => '\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}',
+                is_regex => 1,
+                line_number => 96,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LOCAL_DATE',
+                pattern => '\\d{4}-\\d{2}-\\d{2}',
+                is_regex => 1,
+                line_number => 97,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LOCAL_TIME_FRAC',
+                pattern => '\\d{2}:\\d{2}:\\d{2}\\.\\d+',
+                is_regex => 1,
+                line_number => 98,
+                alias => 'LOCAL_TIME',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LOCAL_TIME',
+                pattern => '\\d{2}:\\d{2}:\\d{2}',
+                is_regex => 1,
+                line_number => 99,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'FLOAT_INF',
+                pattern => '[+-]?inf',
+                is_regex => 1,
+                line_number => 114,
+                alias => 'FLOAT',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'FLOAT_NAN',
+                pattern => '[+-]?nan',
+                is_regex => 1,
+                line_number => 115,
+                alias => 'FLOAT',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'FLOAT_EXP',
+                pattern => '[+-]?[0-9][0-9_]*\\.?[0-9_]*[eE][+-]?[0-9][0-9_]*',
+                is_regex => 1,
+                line_number => 116,
+                alias => 'FLOAT',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'FLOAT_DEC',
+                pattern => '[+-]?[0-9][0-9_]*\\.[0-9][0-9_]*',
+                is_regex => 1,
+                line_number => 117,
+                alias => 'FLOAT',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'HEX_INTEGER',
+                pattern => '0x[0-9a-fA-F][0-9a-fA-F_]*',
+                is_regex => 1,
+                line_number => 129,
+                alias => 'INTEGER',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'OCT_INTEGER',
+                pattern => '0o[0-7][0-7_]*',
+                is_regex => 1,
+                line_number => 130,
+                alias => 'INTEGER',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'BIN_INTEGER',
+                pattern => '0b[01][01_]*',
+                is_regex => 1,
+                line_number => 131,
+                alias => 'INTEGER',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'INTEGER',
+                pattern => '[+-]?[0-9][0-9_]*',
+                is_regex => 1,
+                line_number => 132,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'TRUE',
+                pattern => 'true',
+                is_regex => 0,
+                line_number => 143,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'FALSE',
+                pattern => 'false',
+                is_regex => 0,
+                line_number => 144,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'BARE_KEY',
+                pattern => '[A-Za-z0-9_-]+',
+                is_regex => 1,
+                line_number => 158,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'EQUALS',
+                pattern => '=',
+                is_regex => 0,
+                line_number => 168,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'DOT',
+                pattern => '.',
+                is_regex => 0,
+                line_number => 169,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'COMMA',
+                pattern => ',',
+                is_regex => 0,
+                line_number => 170,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LBRACKET',
+                pattern => '[',
+                is_regex => 0,
+                line_number => 171,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'RBRACKET',
+                pattern => ']',
+                is_regex => 0,
+                line_number => 172,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'LBRACE',
+                pattern => '{',
+                is_regex => 0,
+                line_number => 173,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'RBRACE',
+                pattern => '}',
+                is_regex => 0,
+                line_number => 174,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'NEWLINE',
+                pattern => '\\r?\\n',
+                is_regex => 1,
+                line_number => 175,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+        ],
+        keywords => [],
+        context_keywords => [],
+        layout_keywords => [],
+        soft_keywords => [],
+        mode => '',
+        escape_mode => 'none',
+        skip_definitions => [
+            bless({
+                name => 'COMMENT',
+                pattern => '#[^\\n]*',
+                is_regex => 1,
+                line_number => 28,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+            bless({
+                name => 'WHITESPACE',
+                pattern => '[ \\t]+',
+                is_regex => 1,
+                line_number => 29,
+                alias => '',
+            }, 'CodingAdventures::GrammarTools::TokenDefinition'),
+        ],
+        error_definitions => [],
+        reserved_keywords => [],
+        groups => {},
+        start_mode => '',
+        transitions => [],
+    }, 'CodingAdventures::GrammarTools::TokenGrammar';
+}
+
+1;

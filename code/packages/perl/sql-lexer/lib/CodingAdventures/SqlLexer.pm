@@ -5,9 +5,11 @@ package CodingAdventures::SqlLexer;
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools and CodingAdventures::Lexer.  It reads
-# the shared `sql.tokens` grammar file, compiles the token definitions into
-# Perl regexes, and applies them in priority order to tokenize SQL source.
+# by CodingAdventures::GrammarTools and CodingAdventures::Lexer.  It loads
+# the `sql.tokens` grammar (compiled ahead of time into
+# CodingAdventures::SqlLexer::_Grammar — see "Grammar loading" below),
+# compiles the token definitions into Perl regexes, and applies them in
+# priority order to tokenize SQL source.
 #
 # # What is SQL tokenization?
 # =============================
@@ -55,9 +57,15 @@ package CodingAdventures::SqlLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `sql.tokens`, parses it with
-#    `CodingAdventures::GrammarTools::parse_token_grammar`, and caches the
-#    resulting `TokenGrammar` object for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` requires the generated
+#    `CodingAdventures::SqlLexer::_Grammar` module and calls its
+#    `token_grammar()` sub, caching the result for the lifetime of the
+#    process. That module is produced ahead of time from `sql.tokens` by
+#    `code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens` and
+#    checked into git alongside this package — no disk I/O against
+#    `code/grammars/` happens at runtime, so the package works the same way
+#    whether it's used in this monorepo checkout or installed standalone
+#    from CPAN.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every `TokenDefinition`
 #    in the grammar into a `{ name => ..., pat => qr/\G.../ }` hashref.
@@ -69,23 +77,6 @@ package CodingAdventures::SqlLexer;
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order.  The first match wins.
 #
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/SqlLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we need to climb to the repo root (`code/`) then descend
-# into `grammars/sql.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → sql-lexer/        (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/             ← repo root
-#   + /grammars/sql.tokens
-#
 # ============================================================================
 
 use strict;
@@ -93,8 +84,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -111,40 +100,24 @@ my $_rules;        # arrayref of { name => str, pat => qr// }
 my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 my $_keyword_map;  # hashref mapping uppercase keyword → promoted token type
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/sql-lexer/lib/CodingAdventures/SqlLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → sql-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `sql.tokens`, caching the result.
+# Load `sql.tokens`, caching the result. The grammar is no longer read from
+# disk at runtime: `code/programs/perl/grammar-tools/grammar-tools.pl` compiles
+# `sql.tokens` once, at dev time, into the checked-in
+# `CodingAdventures::SqlLexer::_Grammar` module (see
+# lib/CodingAdventures/SqlLexer/_Grammar.pm). That generated module defines
+# `token_grammar()`, which rebuilds the same `TokenGrammar` object that used
+# to come from parsing the `.tokens` file directly. This means a real CPAN
+# install of this package works without shipping `code/grammars/`.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'sql', 'sql.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::SqlLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::SqlLexer::_Grammar;
+    $_grammar = CodingAdventures::SqlLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::SqlLexer: failed to parse sql.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 

@@ -5,9 +5,11 @@ package CodingAdventures::TomlLexer;
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools and CodingAdventures::Lexer.  It reads
-# the shared `toml.tokens` grammar file, compiles the token definitions into
-# Perl regexes, and applies them in priority order to tokenize TOML source.
+# by CodingAdventures::GrammarTools and CodingAdventures::Lexer.  It loads
+# the `toml.tokens` grammar (compiled ahead of time into
+# CodingAdventures::TomlLexer::_Grammar — see "Grammar loading" below),
+# compiles the token definitions into Perl regexes, and applies them in
+# priority order to tokenize TOML source.
 #
 # # What is TOML tokenization?
 # =============================
@@ -52,9 +54,15 @@ package CodingAdventures::TomlLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `toml.tokens`, parses it with
-#    `CodingAdventures::GrammarTools::parse_token_grammar`, and caches the
-#    resulting `TokenGrammar` object for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` requires the generated
+#    `CodingAdventures::TomlLexer::_Grammar` module and calls its
+#    `token_grammar()` sub, caching the result for the lifetime of the
+#    process. That module is produced ahead of time from `toml.tokens` by
+#    `code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens` and
+#    checked into git alongside this package — no disk I/O against
+#    `code/grammars/` happens at runtime, so the package works the same way
+#    whether it's used in this monorepo checkout or installed standalone
+#    from CPAN.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every `TokenDefinition`
 #    in the grammar into a `{ name => ..., pat => qr/\G.../ }` hashref.
@@ -67,23 +75,6 @@ package CodingAdventures::TomlLexer;
 #    The first match wins. On a match, a token hashref is pushed and position
 #    is advanced. On no match, a `die` is raised with position info.
 #
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/TomlLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we need to climb to the repo root (`code/`) then descend
-# into `grammars/toml.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → toml-lexer/       (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/             ← repo root
-#   + /grammars/toml.tokens
-#
 # ============================================================================
 
 use strict;
@@ -91,8 +82,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -108,43 +97,24 @@ my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
 my $_rules;        # arrayref of { name => str, pat => qr// }
 my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-#
-# We use File::Spec for cross-platform path construction and
-# File::Basename::dirname to strip the filename component.
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/toml-lexer/lib/CodingAdventures/TomlLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → toml-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `toml.tokens`, caching the result.
+# Load `toml.tokens`, caching the result. The grammar is no longer read from
+# disk at runtime: `code/programs/perl/grammar-tools/grammar-tools.pl` compiles
+# `toml.tokens` once, at dev time, into the checked-in
+# `CodingAdventures::TomlLexer::_Grammar` module (see
+# lib/CodingAdventures/TomlLexer/_Grammar.pm). That generated module defines
+# `token_grammar()`, which rebuilds the same `TokenGrammar` object that used
+# to come from parsing the `.tokens` file directly. This means a real CPAN
+# install of this package works without shipping `code/grammars/`.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'toml', 'toml.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::TomlLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::TomlLexer::_Grammar;
+    $_grammar = CodingAdventures::TomlLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::TomlLexer: failed to parse toml.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 

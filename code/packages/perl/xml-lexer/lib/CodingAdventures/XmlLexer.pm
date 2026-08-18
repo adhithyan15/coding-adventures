@@ -56,21 +56,22 @@ package CodingAdventures::XmlLexer;
 #   the active group's rules.  After each token, it calls `_update_group_stack`
 #   to push or pop groups.
 #
-# # Path navigation
+# # Grammar loading
 # =================
 #
-# __FILE__  = lib/CodingAdventures/XmlLexer.pm
-# dirname   = lib/CodingAdventures/
-# Up 5 levels: CodingAdventures → lib → xml-lexer → perl → packages → code
-# Then: /grammars/xml.tokens
+# The grammar is not read from disk at runtime. `_grammar()` requires the
+# generated `CodingAdventures::XmlLexer::_Grammar` module (see
+# lib/CodingAdventures/XmlLexer/_Grammar.pm) and calls its `token_grammar()`
+# sub. That module is produced ahead of time from `xml.tokens` by
+# `code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens` and
+# checked into git alongside this package, so a real CPAN install works
+# without shipping `code/grammars/`.
 
 use strict;
 use warnings;
 
 our $VERSION = '0.02';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -84,34 +85,15 @@ my $_skip_rules;    # arrayref of qr// for skip definitions
 my $_rules_built;   # flag
 
 # ============================================================================
-# Path resolution
-# ============================================================================
-
-sub _grammars_dir {
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb: CodingAdventures → lib → xml-lexer → perl → packages → code
-    for (1..5) { $dir = dirname($dir); }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
-# ============================================================================
 # Grammar loading
 # ============================================================================
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'xml', 'xml.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::XmlLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::XmlLexer::_Grammar;
+    $_grammar = CodingAdventures::XmlLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::XmlLexer: failed to parse xml.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 
