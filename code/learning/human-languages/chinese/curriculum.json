@@ -127,6 +127,25 @@
         "ZH-EXT-019-GREETING-FRAME"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-007",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-020-WO-SCRIPT",
+        "ZH-EXT-021-NO-INFLECTION",
+        "ZH-EXT-022-MINGZI"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -162,14 +181,14 @@
       "relocates": {}
     },
     "SPINE-EXCHANGE-NAMES": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-007"
+      ],
       "omits": [
         "QUESTION-WHAT",
-        "PRONOUN-I",
         "PRONOUN-ME",
         "PRONOUN-YOU",
         "PRONOUN-MY",
-        "WORD-NAME",
         "WORD-IS",
         "INTRO-MY-NAME-IS",
         "INTRO-WHATS-YOUR-NAME",
@@ -775,6 +794,48 @@
       "lessons": [
         "ZH-C07-zaoshanghao",
         "ZH-C07-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-020-WO-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 我, a seven-stroke character that does not decompose into pieces I already know, by following its stroke route and keeping its two hooked strokes unbroken.",
+      "prerequisites": [
+        "ZH-EXT-019-GREETING-FRAME"
+      ],
+      "lessons": [
+        "ZH-W08-wo"
+      ]
+    },
+    {
+      "id": "ZH-EXT-021-NO-INFLECTION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I know that Mandarin words do not change shape for grammar -- 我 serves as both 'I' and 'me' -- and I can introduce myself with 我是 plus my name.",
+      "prerequisites": [
+        "ZH-EXT-020-WO-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-C08-wo",
+        "ZH-C08-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-022-MINGZI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can write 名 and 字, recognise 名字 as the word for a name, and say why its literal reading -- name-character -- describes what a Chinese name actually is.",
+      "prerequisites": [
+        "ZH-EXT-021-NO-INFLECTION"
+      ],
+      "lessons": [
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi"
       ]
     }
   ]

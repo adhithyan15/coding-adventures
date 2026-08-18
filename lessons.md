@@ -3465,3 +3465,58 @@ hardcode the same stale `"unknown/programs/task-app"` and are presumed to have
 the identical latent gap — flagged as a follow-up rather than bundled into an
 unrelated security-alert PR, since fixing them isn't required to unblock this
 one and touches five extra files with their own test fixtures.
+
+## Verifying a package by running its tests can miss the check that actually fails CI
+
+**What happened (HL-C242).** Chinese chapter 7 was verified locally with
+`npx vitest run` in all three packages that read `human-languages`, plus the
+five `check:*` gates. All green. CI then failed on `language-ladder` with:
+
+    bundle check: largest eager chunk is 500087 bytes (limit 500000)
+
+Eighty-seven bytes over, on a chapter that added five lessons.
+
+**Why local verification could never have caught it.** `scripts/check-bundle.mjs`
+is not a vitest test. It runs in the package's BUILD, after `vite build`, and
+reads `dist/`. No amount of running the test suite reaches it. The script even
+guards against a stale `dist/` — it refuses to report if any source is newer
+than the built `index.html` — precisely because a measurement that cannot move
+reads as evidence.
+
+**Rule:** for a package whose BUILD does more than compile — bundle budgets,
+size gates, generated-artifact checks — run the build, not just the tests:
+
+    npm run build && node scripts/check-bundle.mjs
+
+## `grep "Tests "` on vitest output hides whole test FILES failing
+
+Same incident. Verification was scripted as
+`npx vitest run 2>&1 | grep -E "Tests "`, which prints:
+
+    Tests  243 passed (243)
+
+and looks clean. The line above it read `Test Files  7 failed | 27 passed (34)`.
+Seven files had failed to *load* — so their tests never ran, never failed, and
+never appeared in the count that was being read. A run reporting "243 passed"
+was actually a broken run, and the real suite is 725.
+
+**Rule:** grep `"Test Files|Tests "`, never `"Tests "` alone. A collection error
+is invisible in the passing-test count by construction.
+
+## Splitting a chunk to satisfy a "largest chunk" gate is gaming the metric
+
+The first fix for the bundle failure gave the oversized `curriculum-plans` group
+a `maxSize` so it split into four chunks, each under the ceiling. The gate went
+green. It was the wrong fix, and `main` landed the right one concurrently:
+make the per-track plans lazy so the bytes leave the preload set entirely.
+
+The tell was in the commit message that shipped it — it conceded that "the bytes
+are eager either way, so first paint downloads the same total" and argued the
+cacheability gain made it acceptable. A gate measuring the LARGEST eager chunk
+cannot see four chunks totalling the same half-megabyte. HL-C110 had written
+this exact trade down in advance as gaming the metric.
+
+**Generalisation:** when a budget is expressed as a max over a partition, any fix
+that changes the partition rather than the total satisfies the gate without
+buying the thing the gate exists to protect. Ask what the gate is a proxy for —
+here, bytes before first paint — and move that number.
