@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Please: Water, Bread, Tea, Key",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b5c1a335c3b471aa",
+  "sourceHash": "fnv1a64:badc825e34e86a15",
   "lessons": [
     {
       "id": "FA-C09-ab",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38ba1bbde851847b",
+      "sourceHash": "fnv1a64:f26a069106bfc347",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say آب (âb)، لطفاً. This chapter's second request names the other thing on every Persian table."
+              "text": "Say آب، لطفاً (âb, lotfan). This chapter's second request names the other thing on every Persian table."
             }
           ]
         },
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a26e57f7adf3801e",
+      "sourceHash": "fnv1a64:13e89f0266a2ee3c",
       "notice": null,
       "blocks": [
         {
@@ -371,7 +371,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say نان (nân)، لطفاً. Here is the drink that usually comes with it."
+              "text": "Say نان، لطفاً (nân, lotfan). Here is the drink that usually comes with it."
             }
           ]
         },

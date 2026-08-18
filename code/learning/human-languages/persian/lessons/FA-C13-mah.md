@@ -34,7 +34,7 @@ reviews_of: [FA-C13-khorshid]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHORSHID, FA-ETYMON-KHORSHID] -->
 
-[PAUSE 2s] Say **خورشید**, and the two old pieces fused inside it. The sky's
+[PAUSE 2s] Say **خورشید** (*khorshid*), and the two old pieces fused inside it. The sky's
 other light gives Persian one more word doing double duty.
 
 ## You'll want to know first — one word

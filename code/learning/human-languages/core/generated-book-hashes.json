@@ -5,7 +5,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:975f075b68b954ae",
+      "sourceHash": "fnv1a64:8cb8e93eac4de300",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -22,7 +22,7 @@
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:b6ead1e51ea1793c",
+      "sourceHash": "fnv1a64:df6fb15ff943b7f9",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -3807,7 +3807,7 @@
     {
       "language": "persian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:189ad694fcec2dda",
+      "sourceHash": "fnv1a64:10653b6e52e9b4a8",
       "lessonIds": [
         "FA-C09-ab",
         "FA-C09-nan",
@@ -3831,7 +3831,7 @@
     {
       "language": "persian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:a2e7207a4816e812",
+      "sourceHash": "fnv1a64:d4c57c48fbf24363",
       "lessonIds": [
         "FA-C11-cheshm",
         "FA-C11-dast",
@@ -3843,7 +3843,7 @@
     {
       "language": "persian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:78d09fa60f45a70c",
+      "sourceHash": "fnv1a64:b7dc258c97b8921c",
       "lessonIds": [
         "FA-C12-nam",
         "FA-C12-del",
@@ -3855,7 +3855,7 @@
     {
       "language": "persian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:f9cced230ff54588",
+      "sourceHash": "fnv1a64:d4c64a5e309e20e0",
       "lessonIds": [
         "FA-C13-aseman",
         "FA-C13-khorshid",
@@ -3868,7 +3868,7 @@
     {
       "language": "persian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:5da7cf393cf4ac91",
+      "sourceHash": "fnv1a64:ee36853a6bd77421",
       "lessonIds": [
         "FA-C14-khahar",
         "FA-C14-pesar",
