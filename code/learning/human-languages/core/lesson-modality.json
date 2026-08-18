@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:79d8e51e0b335384",
+  "sourceHash": "fnv1a64:cf70534ef7fdbaa2",
   "summary": {
     "totalLessons": 3070,
     "voice": 2161,
@@ -19525,7 +19525,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e3696b8355f72cb",
+      "sourceHash": "fnv1a64:572bd690f1dfa551",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -19567,7 +19567,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d222701aedec1af",
+      "sourceHash": "fnv1a64:52d0908b20971d13",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25671,7 +25671,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c39f2e29b360abd1",
+      "sourceHash": "fnv1a64:f359800e0ad34bc1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25692,7 +25692,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d350bffe10b8cc4",
+      "sourceHash": "fnv1a64:4704038cd28045da",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25734,7 +25734,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bd4ab774acbdc9cc",
+      "sourceHash": "fnv1a64:908a428d5d9ba832",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25776,7 +25776,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:211a5716175a85c3",
+      "sourceHash": "fnv1a64:d21dd2c664d5e91f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28419,7 +28419,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ece8edc0c8ff0a94",
+      "sourceHash": "fnv1a64:bf4ccc0cb3c4a4b6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -32329,7 +32329,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f23a1be663b2b64",
+      "sourceHash": "fnv1a64:30364ffdc03370b8",
       "detachableSegments": [
         "Script — kanji, and the readings problem"
       ]
@@ -33778,7 +33778,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:35ace1cd966ef652"
+      "sourceHash": "fnv1a64:a85c6449433ef6c2"
     },
     {
       "id": "KA-S04-vowel-sign-i",
@@ -40183,7 +40183,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5e5d3423d223860c"
+      "sourceHash": "fnv1a64:d7efb9f6cdc7e7e2"
     },
     {
       "id": "ML-S116-letter-u",
@@ -48473,7 +48473,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:edc886bfb095835d",
+      "sourceHash": "fnv1a64:ac3e35f497e92e49",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -51826,7 +51826,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:06be3f898bcc6470",
+      "sourceHash": "fnv1a64:65afbb8a807510b4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -53104,7 +53104,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cdf0549300c973c1"
+      "sourceHash": "fnv1a64:575f1f3418a0e14d"
     },
     {
       "id": "SA-C25-foot",
@@ -72614,7 +72614,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:50fec0361dfbb03f"
+      "sourceHash": "fnv1a64:d8f002c8510516bb"
     },
     {
       "id": "TE-C48-guest",
@@ -72794,7 +72794,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5498826f1751796e"
+      "sourceHash": "fnv1a64:c0f84523cc3f570c"
     },
     {
       "id": "TE-C50-farewell",
@@ -74300,7 +74300,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5db80ac0bcb513ca"
+      "sourceHash": "fnv1a64:735012b737d6b7ac"
     },
     {
       "id": "UR-C09-khandan",
@@ -74453,7 +74453,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe7ad4ec6aa386c2",
+      "sourceHash": "fnv1a64:2e7a8df8a1a0d160",
       "detachableSegments": [
         "The letters in this word"
       ]

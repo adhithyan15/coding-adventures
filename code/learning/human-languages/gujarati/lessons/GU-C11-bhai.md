@@ -34,7 +34,7 @@ reviews_of: [GU-C11-kutumb, GU-C11-mitra]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KUTUMB] -->
 
-[PAUSE 2s] **કુટુંબ** was taken up whole, close to the finished Sanskrit
+[PAUSE 2s] **કુટુંબ** (*kuṭumb*) was taken up whole, close to the finished Sanskrit
 shape. The two words for its members run the opposite way — worn all the way
 down, the ordinary path nearly every Gujarati word has followed.
 

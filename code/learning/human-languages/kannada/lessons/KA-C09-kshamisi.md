@@ -33,7 +33,7 @@ variety: standard-colloquial
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04] -->
 
-[PAUSE 2s] You already know **ದಯವಿಟ್ಟು**, "please." Kannada's "sorry" reuses
+[PAUSE 2s] You already know **ದಯವಿಟ್ಟು** (*dayaviṭṭu*), "please." Kannada's "sorry" reuses
 a trick you'll see everywhere in this language: taking a Sanskrit noun and
 turning it into a working Kannada verb.
 

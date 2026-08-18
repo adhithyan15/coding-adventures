@@ -56,7 +56,7 @@ letter **بھائی** introduced; then **ے**, broad final *e* from *kaise*.
 **چائے**'s **ئ** does the same job it did in **بھائی**: keeping **ā** and
 the vowel after it from colliding.
 
-## The word, taken apart — the same road as خدا and حافظ
+## The word, taken apart — the same road as خدا and حافظ (*hāfiz*)
 <!-- hl-knowledge: introduces=[UR-ETYMON-CHAI-SILKROAD]; assesses=[UR-LEX-CHAI, UR-ETYMON-KHUDA-PERSIAN] -->
 
 **چائے** is borrowed from Classical Persian **چای** (*chāy*), which traces

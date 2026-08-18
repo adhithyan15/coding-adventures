@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Three Writing Systems in One Doorway",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:61da3ea5036d0e14",
+  "sourceHash": "fnv1a64:9927b0eced7c6fcf",
   "lessons": [
     {
       "id": "JA-C01-hai",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8f23a1be663b2b64",
+      "sourceHash": "fnv1a64:30364ffdc03370b8",
       "notice": {
         "modality": "sight",
         "needs": [

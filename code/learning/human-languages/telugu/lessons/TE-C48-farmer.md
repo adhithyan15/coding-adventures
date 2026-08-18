@@ -42,7 +42,7 @@ reviews_of: [TE-C48-doctor]
 
 రైతు came the long way round. Arabic *raʿiyyah* meant a flock, then the people a ruler answers for. Persian and Urdu carried it into India as *raʿīyat*, the subject, the tenant; the revenue clerks of the Deccan wrote it on their rolls; and Telugu kept it for the person who works the land.
 
-That is a second arrival from the north-west, after రోజు and పుస్తకం. The words that travel are the words that follow paperwork and trade.
+That is a second arrival from the north-west, after రోజు (*rōju*) and పుస్తకం. The words that travel are the words that follow paperwork and trade.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

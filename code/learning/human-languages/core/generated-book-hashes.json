@@ -410,7 +410,7 @@
     {
       "language": "bengali",
       "chapter": 11,
-      "sourceHash": "fnv1a64:da9153764c563267",
+      "sourceHash": "fnv1a64:89cb40fe92cb7cd8",
       "lessonIds": [
         "BN-C11-bondhu",
         "BN-C11-poribar",
@@ -422,7 +422,7 @@
     {
       "language": "bengali",
       "chapter": 12,
-      "sourceHash": "fnv1a64:d262da98de3a941e",
+      "sourceHash": "fnv1a64:4a8bfadfeee7db35",
       "lessonIds": [
         "BN-C12-chokh",
         "BN-C12-mukh",
@@ -936,7 +936,7 @@
     {
       "language": "gujarati",
       "chapter": 11,
-      "sourceHash": "fnv1a64:5dd5ff86739e3787",
+      "sourceHash": "fnv1a64:90845aa5f84cb894",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
@@ -948,7 +948,7 @@
     {
       "language": "gujarati",
       "chapter": 12,
-      "sourceHash": "fnv1a64:db5e43033a15f566",
+      "sourceHash": "fnv1a64:54121385f25ba2ae",
       "lessonIds": [
         "GU-C12-aankh",
         "GU-C12-kaan",
@@ -1289,7 +1289,7 @@
     {
       "language": "hindi",
       "chapter": 36,
-      "sourceHash": "fnv1a64:3e43fc6e37fee09e",
+      "sourceHash": "fnv1a64:cc6e26d6a1c42403",
       "lessonIds": [
         "HI-C36-ghar",
         "HI-C36-darvaaza",
@@ -1874,7 +1874,7 @@
     {
       "language": "japanese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:1205af27f6675fc9",
+      "sourceHash": "fnv1a64:76726ad2b2b0b3b1",
       "lessonIds": [
         "JA-C01-hai",
         "JA-C01-iie",
@@ -1963,7 +1963,7 @@
     {
       "language": "kannada",
       "chapter": 9,
-      "sourceHash": "fnv1a64:32858450485fd597",
+      "sourceHash": "fnv1a64:ec35d557249d21ff",
       "lessonIds": [
         "KA-C09-kshamisi",
         "KA-S04-vowel-sign-i",
@@ -3126,7 +3126,7 @@
     {
       "language": "malayalam",
       "chapter": 17,
-      "sourceHash": "fnv1a64:fd01cd124320768d",
+      "sourceHash": "fnv1a64:d2e305459a1f26fc",
       "lessonIds": [
         "ML-C17-ucha-paathira",
         "ML-C17-paathira",
@@ -4246,7 +4246,7 @@
     {
       "language": "punjabi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:90434f8563da1fad",
+      "sourceHash": "fnv1a64:2eff3cda40a2abe1",
       "lessonIds": [
         "PA-C11-dost",
         "PA-C11-parivar",
@@ -4544,7 +4544,7 @@
     {
       "language": "sanskrit",
       "chapter": 12,
-      "sourceHash": "fnv1a64:96a077f1b0ce86eb",
+      "sourceHash": "fnv1a64:4bdbdac42bdd01f3",
       "lessonIds": [
         "SA-C12-akshi",
         "SA-C12-karnah",
@@ -4717,7 +4717,7 @@
     {
       "language": "sanskrit",
       "chapter": 25,
-      "sourceHash": "fnv1a64:4a1b5cabfc1c1b24",
+      "sourceHash": "fnv1a64:e4ff3ac7e40d4494",
       "lessonIds": [
         "SA-C25-hand",
         "SA-C25-foot",
@@ -8966,7 +8966,7 @@
     {
       "language": "telugu",
       "chapter": 48,
-      "sourceHash": "fnv1a64:9d9015125c43497d",
+      "sourceHash": "fnv1a64:773cdd3fd7a20474",
       "lessonIds": [
         "TE-C48-teacher",
         "TE-C48-student",
@@ -8992,7 +8992,7 @@
     {
       "language": "telugu",
       "chapter": 50,
-      "sourceHash": "fnv1a64:869a2a5ed96f0517",
+      "sourceHash": "fnv1a64:204d311254d96d78",
       "lessonIds": [
         "TE-C50-now",
         "TE-C50-day-after",
@@ -9198,7 +9198,7 @@
     {
       "language": "urdu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:933a4f5b3b96125d",
+      "sourceHash": "fnv1a64:340213801ea754ca",
       "lessonIds": [
         "UR-C09-bhai",
         "UR-C09-bahan",
@@ -9231,7 +9231,7 @@
     {
       "language": "urdu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:5206e3ae83221d48",
+      "sourceHash": "fnv1a64:7ef0e0f99ce1e9ae",
       "lessonIds": [
         "UR-C12-pani",
         "UR-C12-chai",
