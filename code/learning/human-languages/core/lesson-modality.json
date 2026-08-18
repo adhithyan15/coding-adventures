@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2d008b7af70264d0",
+  "sourceHash": "fnv1a64:ecce86212d2bd4c0",
   "summary": {
-    "totalLessons": 3143,
-    "voice": 2217,
+    "totalLessons": 3147,
+    "voice": 2221,
     "sight": 588,
     "pen": 338,
-    "drivableLessons": 2217,
+    "drivableLessons": 2221,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 953,
-    "drivablePrefixTotal": 1967,
-    "fullyDrivableChapters": 619,
+    "chapterCount": 954,
+    "drivablePrefixTotal": 1971,
+    "fullyDrivableChapters": 620,
     "unstartableChapters": 203,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -1059,12 +1059,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 114,
-      "voice": 99,
+      "lessonCount": 118,
+      "voice": 103,
       "sight": 12,
       "pen": 3,
       "drivablePercent": 87,
-      "drivablePrefixTotal": 83,
+      "drivablePrefixTotal": 87,
       "modalities": [
         "voice",
         "sight",
@@ -1636,6 +1636,25 @@
             "FR-C32-pourquoi",
             "FR-C32-inversion",
             "FR-C32-quel"
+          ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C33-vouloir",
+            "FR-C33-pouvoir",
+            "FR-C33-devoir",
+            "FR-C33-practice"
           ]
         }
       ]
@@ -23733,6 +23752,78 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:5b200dedd4a60ccf"
+    },
+    {
+      "id": "FR-C33-vouloir",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5ff8dd5065225afd"
+    },
+    {
+      "id": "FR-C33-pouvoir",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:83e40d8cbef9bb56"
+    },
+    {
+      "id": "FR-C33-devoir",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9ec79d2d8196026a"
+    },
+    {
+      "id": "FR-C33-practice",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3c0416eaf66b97ca"
     },
     {
       "id": "GE-C01-abend",

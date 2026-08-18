@@ -1596,6 +1596,23 @@
       "jsonHash": "fnv1a64:dd2457530a36d0ba"
     },
     {
+      "language": "french",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:abb9eee8ab13a632",
+      "lessonIds": [
+        "FR-C33-vouloir",
+        "FR-C33-pouvoir",
+        "FR-C33-devoir",
+        "FR-C33-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch33.txt",
+      "json": "french/narration/ch33.json",
+      "textHash": "fnv1a64:f353fa3c1f4aee07",
+      "jsonHash": "fnv1a64:c9df5a1930adc056"
+    },
+    {
       "language": "german",
       "chapter": 1,
       "sourceHash": "fnv1a64:3eb0a576892fbc9e",

@@ -165,7 +165,7 @@ describe("the real corpus", () => {
     const index = buildCousinIndex(lessons);
     const spanish = lessons.filter((entry) => entry.language === "spanish");
     const withCousins = spanish.filter((entry) => cousinsFor(index, entry).length > 0);
-    expect(withCousins.length).toBe(80); // HL-C178: +5 -- chapter 274, C2 opens
+    expect(withCousins.length).toBe(82); // HL-C247: +2 -- pouvoir and devoir now share latin-potere and debere-latin with the Spanish poder and deber, so both gain cousins; review caught the first draft minting latin-posse and latin-debere as fresh slugs, which would have fragmented the etymon instead of connecting it // HL-C178: +5 -- chapter 274, C2 opens
 
     // ...but 76 is the join's reach, NOT the number of panels worth printing.
     // A lesson's headword is often a phrase that merely CONTAINS the relative:
@@ -187,7 +187,7 @@ describe("the real corpus", () => {
     const strict = singleToken
       .filter((entry) => entry.language === "spanish")
       .filter((entry) => cousinsFor(strictIndex, entry).length > 0);
-    expect(strict.length).toBe(27);
+    expect(strict.length).toBe(28); // HL-C247: +1 -- a Spanish lesson gains a strict cousin because a french lesson now declares the same etymon slug
 
     // And the join really is etymological: every pairing names a root slug that
     // BOTH lessons declare.
