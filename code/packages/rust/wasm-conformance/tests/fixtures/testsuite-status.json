@@ -3696,6 +3696,62 @@
         "not_yet_supported": 0
       }
     },
+    "simd_i8x16_cmp.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 30,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 400,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 13
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 1
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "stack.wast": {
       "action": {
         "pass": 0,
@@ -4607,7 +4663,7 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 1501,
+      "pass": 1531,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 76
@@ -4619,10 +4675,10 @@
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 22178,
+      "pass": 22578,
       "fail": 17,
       "trap": 0,
-      "not_yet_supported": 593
+      "not_yet_supported": 606
     },
     "assert_trap": {
       "pass": 1424,
@@ -4637,10 +4693,10 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1117,
+      "pass": 1118,
       "fail": 1,
       "trap": 0,
-      "not_yet_supported": 74
+      "not_yet_supported": 75
     },
     "register": {
       "pass": 10,
