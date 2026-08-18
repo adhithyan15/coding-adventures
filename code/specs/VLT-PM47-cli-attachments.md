@@ -421,9 +421,17 @@ how the operator chooses which attachment to export. Ordinary non-ASCII names
 are untouched — the rejection is of characters that change what a name *looks
 like*, not of anybody's alphabet.
 
-The rendering layer escapes independently (§6.2). Two gates, because a
-validator must not be the only thing between peer-authored text and a
-terminal.
+The rendering layer escapes independently (§6.2), and **the escape is the
+total gate, not this list.** The list is an enumeration, so it is a statement
+about the code points named in it; Cf gains members with each Unicode revision
+and a hand-written range list cannot promise to have them all. `str::escape_debug`
+at the render site decides on the character property rather than on a list
+somebody maintained, including code points this enumeration has not heard of.
+
+Rejecting at the boundary is defence in depth on top of that, and it earns its
+place because a stored name is also read by surfaces not yet written. It is
+stated this way round so nobody later reads the enumeration as the thing
+keeping a terminal safe and deletes the escaping as redundant.
 
 The 255-byte limit is the widest name every filesystem this product targets
 accepts, so a name that survives ingest is a name that could have been a file.
@@ -656,12 +664,17 @@ records, and the import path drops the attachment set rather than producing an
 item that claims attachments the target vault has no bytes for.
 
 A backup an operator believes carries their recovery codes and does not is
-worse than no backup, so `export` from a vault holding at least one attachment
-writes a fixed sentence to standard error:
+worse than no backup, so **all three ceremonies that can observe the loss say
+so**, with one fixed sentence on standard error:
 
 ```text
 vault-pm: portable export does not carry attachments
 ```
+
+- `export`, when the vault being exported holds at least one attachment;
+- `import`, when the snapshot being imported names at least one; and
+- `restore`, for the same reason as `import` — and most importantly, because
+  that ceremony's success line contains the word *verified*.
 
 The same shape as VLT-PM42's recovery notice, and for the same reasons.
 Standard output is unchanged, so nothing that parses it has to learn a new
@@ -704,27 +717,59 @@ it, create with owner-only permissions where the platform has them, write and
 plaintext file left behind by a failed export is a leak with no owner, and the
 existing portable-export path already refuses to leave one.
 
-Three residuals, recorded rather than assumed away. On Unix `create_new` is
-`O_CREAT | O_EXCL`, which refuses an existing path including a dangling
-symbolic link, and `0600` applies from the instant the file exists; both
-statements are narrower on Windows, where `CREATE_NEW` resolves a reparse point
-and `OpenOptions` exposes no mode — a gap that matters more for this plaintext
-than for the encrypted portable artifact, and that needs a Windows security
-descriptor to close. The cleanup re-resolves the path rather than acting on the
-descriptor. And a `SIGKILL` delivered *inside* the write still leaves a partial
-file: the drill brackets the call and can prove both of its landing points
-clean, but not that one. Removing that last residual means writing to a
-temporary and renaming, which changes what the destination is during the write.
+Three residuals, recorded rather than assumed away.
+
+**Windows is weaker, and does not fail closed — that is a decision.** On Unix
+`create_new` is `O_CREAT | O_EXCL`, which refuses an existing path including a
+dangling symbolic link, and `0600` applies from the instant the file exists.
+Both statements are narrower on Windows, where `CREATE_NEW` resolves a reparse
+point unless the caller passes `FILE_FLAG_OPEN_REPARSE_POINT` and `OpenOptions`
+exposes no mode, so the file inherits the directory's ACL. Closing that needs a
+Windows security descriptor.
+
+VLT-PM46 §4.4 failed the clipboard closed on Windows, and the obvious question
+is why this does not. Because the two are not the same shape. There, the
+missing piece was the *whole guarantee*: without a console-mode reader there is
+no verified clear at all, so `--copy` would have been a promise the platform
+could not keep. Here the guarantee is delivered — the file is written, complete,
+`fsync`ed, and at the path the operator named — and what is weaker is the
+hardening around it. Refusing to export on Windows would deny a person their
+own file on a platform where the command otherwise works correctly, to avoid a
+weaker-but-real protection, and the mitigation that does exist is the one that
+matters most: the operator names the destination, so they choose the directory
+whose ACL the file inherits. Revisit when the Windows story is written, not
+before.
+
+**The cleanup is by path.** `remove_file` re-resolves `destination` rather than
+acting on the open descriptor, so in a world-writable non-sticky directory the
+entry removed need not be the one created. An attacker who can swap an entry
+there can already unlink it, and `remove_file` does not follow symbolic links,
+so this is a residual rather than a hole.
+
+**A kill inside the write leaves a partial file.** §5's drill brackets the
+whole call, so it proves both of that call's landing points clean and says
+nothing about a `SIGKILL` delivered between them. Removing this one means
+writing to a `create_new` temporary in the same directory and renaming, which
+changes what the destination *is* during the write, and is not made here.
 
 The **source** is opened `O_NONBLOCK | O_NOCTTY` on Unix, because the check
 that would reject a FIFO cannot run until the open returns and opening a FIFO
 for reading blocks until a writer appears — without the flag, naming a named
-pipe hangs the command instead of being refused. The read buffer is sized one
-byte past the file's declared length so that a file which grows between the
-metadata read and the read itself cannot make `read_to_end` reallocate: a
-reallocation copies the plaintext already read into a new allocation and frees
-the old one *unwiped*, which is exactly what the `Zeroizing` buffer exists to
-prevent.
+pipe hangs the command instead of being refused. The read is **exact**: one allocation of
+exactly the length `metadata()` declared, filled by `read_exact`, followed by a
+one-byte probe that must see end-of-file.
+
+That shape exists because `Zeroizing` wipes the allocation it owns and only
+that one. A vector holding plaintext that reallocates copies what it has
+already read into a new allocation and frees the old one *unwiped*, and nothing
+downstream ever learns it happened. Reserving extra capacity does not fix it,
+because the reservation comes from a measurement a concurrently-appended file
+has already invalidated: a hundred-byte file that grows to a megabyte during
+the read reallocates repeatedly whatever the ceiling is. So reallocation is
+made **unreachable** rather than unlikely — a file longer than it measured is
+refused by the probe, and one shorter by `read_exact`'s `UnexpectedEof`, and
+both are `InvalidAttachmentSource`, because what was read is not the file the
+operator named.
 
 The destination is validated before the passphrase prompt. A person who named a
 path that already exists should learn it immediately, not after typing their
@@ -771,12 +816,25 @@ end. Worth doing when the ceiling rises; not worth doing at 16 MiB.
 
 ### 8.3 Attachments in portable export
 
-VLT-PM17's snapshot carries records. Carrying attachments needs a snapshot
-format change, a `candidate_count`-style completeness assertion over blobs, and
-an answer to what VLT-PM19/VLT-PM20 restore verification compares. VLT-PM17's
-own acceptance criterion — that import creates new encryption identities —
-implies re-chunking under a new DEK, which is a real transformation and not a
-copy.
+VLT-PM17's snapshot carries records. An attachment's *set membership* rides
+along inside the exported item state, but the chunk and manifest objects that
+membership names are repository objects and no record snapshot carries them —
+so import drops the set rather than producing an item that claims attachments
+the target vault has no bytes for.
+
+Carrying them properly needs a snapshot format change, a `candidate_count`-style
+completeness assertion over blobs, and an answer to what VLT-PM19/VLT-PM20
+restore verification compares. VLT-PM17's own acceptance criterion — that
+import creates new encryption identities — implies re-chunking under a new key,
+which is a real transformation and not a copy.
+
+Until then the loss is **announced rather than discovered**, by §6.4's notice,
+at all three ceremonies that can observe it: `export`, `import`, and
+`restore`. The last matters most, because that ceremony's own success line
+says *verified*. It is verified — the comparison normalises attachments out of
+both sides, so it is sound about what it compares — but a person restoring a
+vault reads the word as "everything came back", and this is the sentence that
+stops that from being the only thing they are told.
 
 ### 8.4 A distinct audit action
 
@@ -824,7 +882,11 @@ distinction is wanted, it is a VLT-PM15 amendment.
     than waited on.
 9a. A portable export of a vault holding an attachment writes the fixed
     attachments-not-carried notice to standard error, one that does not writes
-    nothing there, and standard output is identical in both cases.
+    nothing there, and standard output is identical in both cases. The same
+    holds for `import` and `restore`.
+9b. A decode refused before the per-attachment key has been taken leaves no
+    live copy of that key in the decoder's field map, on every one of the
+    checks that can refuse it.
 10. `cargo fmt --check`, `cargo clippy --all-targets -D warnings`, and
     `cargo doc` are clean on every touched crate, and each crate's own `BUILD`
     line passes.

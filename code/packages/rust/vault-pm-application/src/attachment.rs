@@ -698,6 +698,10 @@ mod tests {
             "two\u{2028}rows.pdf",
             "two\u{2029}rows.pdf",
             "isolate\u{2066}name.pdf",
+            "soft\u{00AD}hyphen.pdf",
+            "mongolian\u{180E}separator.pdf",
+            "tagged\u{E0041}name.pdf",
+            "arabic\u{0600}number-sign.pdf",
         ] {
             assert_eq!(
                 expect_err(attachment_name_from_path(rejected)),

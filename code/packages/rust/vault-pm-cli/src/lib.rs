@@ -2118,6 +2118,7 @@ impl PortableImportContext {
         randomness: PortableImportRandomnessV1,
         item_count: usize,
         candidate_count: usize,
+        attachments_left_behind: bool,
     ) -> Result<CliOutput, CliFailure> {
         self.access
             .into_unlocked()
@@ -2130,9 +2131,21 @@ impl PortableImportContext {
                 &self.application_store,
             )
             .map_err(map_application)?;
-        Ok(CliOutput::success(format!(
+        let output = CliOutput::success(format!(
             "Portable import complete: items={item_count} candidates={candidate_count}.\n"
-        )))
+        ));
+        // The other half of the export notice. The snapshot's items may name
+        // attachments, but the chunk and manifest objects those names refer to
+        // are repository objects that no record snapshot carries, so import
+        // drops the membership rather than creating an item that claims
+        // attachments this vault has no bytes for. Saying so here is what
+        // makes the loss a fact the operator was told rather than one they
+        // find at the moment they need the file.
+        Ok(if attachments_left_behind {
+            output.with_attachment_notice()
+        } else {
+            output
+        })
     }
 }
 
@@ -2177,6 +2190,7 @@ fn portable_import(
     };
     let item_count = snapshot.item_count();
     let candidate_count = snapshot.candidate_count();
+    let attachments_left_behind = snapshot.attachment_bearing_item_count() > 0;
     let random_bytes = match portable_import_random_bytes(&snapshot) {
         Ok(count) => count,
         Err(error) => return context.fail(map_application(error)),
@@ -2189,7 +2203,13 @@ fn portable_import(
         Ok(randomness) => randomness,
         Err(error) => return context.fail(map_application(error)),
     };
-    context.complete(snapshot, randomness, item_count, candidate_count)
+    context.complete(
+        snapshot,
+        randomness,
+        item_count,
+        candidate_count,
+        attachments_left_behind,
+    )
 }
 
 struct PortableRestoreVerifyContext {
@@ -2291,6 +2311,7 @@ fn portable_restore(
     };
     let item_count = snapshot.item_count();
     let candidate_count = snapshot.candidate_count();
+    let attachments_left_behind = snapshot.attachment_bearing_item_count() > 0;
     let random_bytes = match portable_import_random_bytes(&snapshot) {
         Ok(count) => count,
         Err(error) => return import_context.fail(map_application(error)),
@@ -2303,7 +2324,13 @@ fn portable_restore(
         Ok(randomness) => randomness,
         Err(error) => return import_context.fail(map_application(error)),
     };
-    import_context.complete(snapshot, randomness, item_count, candidate_count)?;
+    import_context.complete(
+        snapshot,
+        randomness,
+        item_count,
+        candidate_count,
+        attachments_left_behind,
+    )?;
 
     let (mut access, application_store) =
         authenticated_access(host, paths, writer, Some(selected_vault))?;
@@ -2322,12 +2349,23 @@ fn portable_restore(
         randomness: verify_randomness,
     }
     .complete(expectation)?;
-    Ok(CliOutput::success(format!(
+    let output = CliOutput::success(format!(
         "Portable restore completed and verified: items={} candidates={} conflicts={}.\n",
         report.item_count(),
         report.candidate_count(),
         report.conflicted_item_count(),
-    )))
+    ));
+    // The word *verified* is doing real work in that sentence, and it is true:
+    // the comparison normalises attachments out of both sides, so it is
+    // sound. But an operator restoring a vault reads "verified" as "everything
+    // came back", and the attachments did not. The same fixed sentence the
+    // export and import ceremonies use is the honest amendment, and it is on
+    // standard error so the verified line stays exactly what it was.
+    Ok(if attachments_left_behind {
+        output.with_attachment_notice()
+    } else {
+        output
+    })
 }
 
 fn portable_restore_verify(

@@ -553,16 +553,39 @@ impl AttachmentManifestV1 {
     ///
     /// Every bound is applied before a buffer is sized from a declared value.
     /// A peer is free to author this object, so its numbers are input.
+    ///
+    /// # Every exit wipes the decoded fields, not just the successful one
+    ///
+    /// The decoded field map holds the per-attachment key until
+    /// `take_secret_fixed` removes it, and *three* of the checks in front of
+    /// that point can fail — a wrong version, a wrong kind, a malformed
+    /// attachment id — each of them reachable from a manifest a synchronising
+    /// peer authored. An early return there drops the map, and with it the key,
+    /// unwiped.
+    ///
+    /// The body is therefore split out and its result funnelled through one
+    /// place that wipes. That is structural: a check added to `decode_fields`
+    /// tomorrow is covered without anyone remembering to cover it, which is
+    /// the property a scatter of `zeroize` calls at each `return` would not
+    /// have.
     pub fn decode(encoded: &[u8]) -> Result<Self, ApplicationError> {
         let mut fields = closed_fields(encoded, &[1, 2, 3, 4, 5, 6, 7, 8, 9])?;
-        check_version(take_uint(&mut fields, 1)?)?;
-        check_kind(take_uint(&mut fields, 2)?, ObjectKind::AttachmentManifest)?;
-        let attachment_id = AttachmentId::new(take_fixed(&mut fields, 3)?);
-        let dek = take_secret_fixed::<ATTACHMENT_DEK_BYTES>(&mut fields, 4)?;
-        let name = take_text(&mut fields, 5)?;
-        let total_plaintext_len = take_uint(&mut fields, 6)?;
-        let content_sha256 = take_fixed(&mut fields, 7)?;
-        let chunk_values = take_array(&mut fields, 8)?;
+        let decoded = Self::decode_fields(&mut fields);
+        for value in fields.values_mut() {
+            zeroize_cbor_secrets(value);
+        }
+        decoded
+    }
+
+    fn decode_fields(fields: &mut BTreeMap<u64, CborValue>) -> Result<Self, ApplicationError> {
+        check_version(take_uint(fields, 1)?)?;
+        check_kind(take_uint(fields, 2)?, ObjectKind::AttachmentManifest)?;
+        let attachment_id = AttachmentId::new(take_fixed(fields, 3)?);
+        let dek = take_secret_fixed::<ATTACHMENT_DEK_BYTES>(fields, 4)?;
+        let name = take_text(fields, 5)?;
+        let total_plaintext_len = take_uint(fields, 6)?;
+        let content_sha256 = take_fixed(fields, 7)?;
+        let chunk_values = take_array(fields, 8)?;
         if chunk_values.len() > MAX_ATTACHMENT_CHUNKS {
             return Err(ApplicationError::BoundExceeded);
         }
@@ -570,7 +593,7 @@ impl AttachmentManifestV1 {
         for chunk in chunk_values {
             chunks.push(ObjectId::new(fixed_value(chunk)?));
         }
-        let created_at_ms = take_uint(&mut fields, 9)?;
+        let created_at_ms = take_uint(fields, 9)?;
         Self::new(
             attachment_id,
             dek,
@@ -628,6 +651,13 @@ pub(crate) fn expected_chunk_count(length: u64) -> usize {
 fn zeroize_cbor_secrets(value: &mut CborValue) {
     match value {
         CborValue::Bytes(bytes) => bytes.zeroize(),
+        // Text as well as bytes. A record's password arrives here as a UTF-8
+        // string inside a byte-string payload, but the item revision's tags
+        // and content type are text at this layer, and a codec helper that
+        // wiped only one of the two heap-owning variants would be a helper
+        // whose guarantee depended on which variant a future field happened to
+        // use.
+        CborValue::Text(text) => text.zeroize(),
         CborValue::Array(values) => values.iter_mut().for_each(zeroize_cbor_secrets),
         CborValue::Map(entries) => entries.iter_mut().for_each(|(key, value)| {
             zeroize_cbor_secrets(key);
@@ -702,21 +732,65 @@ pub(crate) fn validate_attachment_name(name: &str) -> Result<(), ApplicationErro
 }
 
 /// Whether one character may never appear in a stored attachment name.
+///
+/// # What this list is, and what it is not
+///
+/// It is an enumeration, so it is a *statement about the characters named in
+/// it* and not a categorical guarantee about Unicode `Cf`. Every code point
+/// below is one that hides, reorders, or invisibly splits the text around it,
+/// and each is refused at the boundary so such a name is never stored in the
+/// first place. But `Cf` gains members with each Unicode revision, and a
+/// hand-written range list cannot promise to have them all.
+///
+/// **The total gate is the escape at the render site**, not this function.
+/// `attachment list` renders every stored name through the CLI's `quoted`
+/// helper, which is `str::escape_debug`, which escapes on the `char` property
+/// rather than on a list somebody maintained — including the code points this
+/// enumeration has not heard of. Reject-at-ingest is defence in depth on top
+/// of that, and it is worth having because a stored name is also read by
+/// future surfaces that have not been written yet.
+///
+/// Stated plainly so nobody later reads this list as the thing keeping a
+/// terminal safe and deletes the escaping as redundant.
 const fn is_forbidden_in_attachment_name(character: char) -> bool {
     character.is_control()
         || character == '/'
         || character == '\\'
         || matches!(
             character,
-            // Cf: bidirectional marks, overrides, isolates, and the joiners
-            // and zero-width characters that hide or reorder what follows.
-            '\u{061C}'
+            // Cf: the soft hyphen, which renders as nothing or as a hyphen
+            // depending entirely on the renderer.
+            '\u{00AD}'
+                // Arabic and Syriac formatting marks, including the Arabic
+                // letter mark and the number/letter shaping controls.
+                | '\u{0600}'..='\u{0605}'
+                | '\u{061C}'
+                | '\u{06DD}'
+                | '\u{070F}'
+                | '\u{0890}'..='\u{0891}'
+                | '\u{08E2}'
+                // The Mongolian vowel separator.
+                | '\u{180E}'
+                // Zero-width characters, the bidirectional marks, and the
+                // overrides and embeddings that reorder what follows.
                 | '\u{200B}'..='\u{200F}'
                 | '\u{202A}'..='\u{202E}'
                 | '\u{2060}'..='\u{2064}'
                 | '\u{2066}'..='\u{206F}'
+                // The byte-order mark and the interlinear annotation controls.
                 | '\u{FEFF}'
                 | '\u{FFF9}'..='\u{FFFB}'
+                // Egyptian hieroglyph and Kaithi formatting controls, and the
+                // Brahmi number joiner.
+                | '\u{110BD}'
+                | '\u{110CD}'
+                | '\u{13430}'..='\u{1343F}'
+                | '\u{1BCA0}'..='\u{1BCA3}'
+                | '\u{1D173}'..='\u{1D17A}'
+                // The deprecated tag block, which encodes an entire invisible
+                // ASCII string inside one apparent character run.
+                | '\u{E0001}'
+                | '\u{E0020}'..='\u{E007F}'
                 // Zl and Zp: a line and a paragraph separator, which some
                 // renderers honour as a break and which would let one stored
                 // name look like two listing rows.
@@ -1187,28 +1261,94 @@ fn closed_fields(
     value_fields(value, expected)
 }
 
+/// Split one closed canonical CBOR map into its exact expected fields.
+///
+/// # A rejected map is wiped before it is dropped
+///
+/// This function is the single gate every object in this crate decodes
+/// through, and several of those objects are made of key material: the
+/// attachment manifest's per-attachment key, and `LocalSecretV1`'s authority
+/// and device seeds. On the failure paths — not a map, wrong arity, an
+/// unexpected key, a duplicate key, every one of them reachable from a value a
+/// synchronising peer authored — the entries decoded so far were simply
+/// dropped, leaving those bytes in freed heap.
+///
+/// So every exit funnels through one place that wipes both halves of the
+/// work in progress: the entries not yet consumed and the fields already
+/// collected. It costs a `memset` on a path that is about to return an error
+/// anyway, and it means a caller cannot leak by forgetting, which is the same
+/// reason [`AttachmentManifestV1::decode`] is shaped the way it is.
 fn value_fields(
     value: CborValue,
     expected: &[u64],
 ) -> Result<BTreeMap<u64, CborValue>, ApplicationError> {
-    let entries = match value {
+    let mut entries = match value {
         CborValue::Map(entries) => entries,
-        _ => return Err(ApplicationError::IntegrityFailure),
+        mut other => {
+            zeroize_cbor_secrets(&mut other);
+            return Err(ApplicationError::IntegrityFailure);
+        }
     };
+    let mut fields = BTreeMap::new();
+    match collect_value_fields(&mut entries, expected, &mut fields) {
+        Ok(()) => Ok(fields),
+        Err(error) => {
+            for (key, value) in &mut entries {
+                zeroize_cbor_secrets(key);
+                zeroize_cbor_secrets(value);
+            }
+            for value in fields.values_mut() {
+                zeroize_cbor_secrets(value);
+            }
+            Err(error)
+        }
+    }
+}
+
+/// Move entries into `fields`, leaving whatever it did not reach in `entries`.
+///
+/// Draining rather than consuming by value is what lets the caller above wipe
+/// the remainder: a `for` loop over an owned `Vec` drops the tail on an early
+/// return with nothing holding it.
+fn collect_value_fields(
+    entries: &mut Vec<(CborValue, CborValue)>,
+    expected: &[u64],
+    fields: &mut BTreeMap<u64, CborValue>,
+) -> Result<(), ApplicationError> {
     if entries.len() != expected.len() {
         return Err(ApplicationError::IntegrityFailure);
     }
-    let mut fields = BTreeMap::new();
-    for (key, value) in entries {
-        let key = match key {
-            CborValue::Unsigned(key) if expected.contains(&key) => key,
-            _ => return Err(ApplicationError::IntegrityFailure),
-        };
-        if fields.insert(key, value).is_some() {
-            return Err(ApplicationError::IntegrityFailure);
+    // Order is irrelevant to the result — the output is keyed by integer, and
+    // canonical ordering was already enforced by the CBOR decoder — so popping
+    // from the back is free and keeps the untouched entries owned by `entries`.
+    while let Some((key, value)) = entries.pop() {
+        match resolve_expected_key(key, expected) {
+            Ok(key) => {
+                if fields.insert(key, value).is_some() {
+                    return Err(ApplicationError::IntegrityFailure);
+                }
+            }
+            // The rejected key goes back too, not a placeholder. A key is a
+            // `CborValue` like any other and a peer chooses what it is, so it
+            // can be a byte string; handing back only the value would leave
+            // that half to be dropped unwiped, which is the whole class of bug
+            // this shape exists to close.
+            Err(key) => {
+                entries.push((key, value));
+                return Err(ApplicationError::IntegrityFailure);
+            }
         }
     }
-    Ok(fields)
+    Ok(())
+}
+
+/// Resolve one map key against the closed expected set, returning it intact on
+/// rejection so the caller can wipe it.
+fn resolve_expected_key(key: CborValue, expected: &[u64]) -> Result<u64, CborValue> {
+    match key {
+        CborValue::Unsigned(value) if expected.contains(&value) => Ok(value),
+        other => Err(other),
+    }
 }
 
 fn field(key: u64, value: CborValue) -> (CborValue, CborValue) {
@@ -1752,6 +1892,113 @@ mod tests {
         // accepted key sets rather than an open one.
         assert!(decode_item_revision(RevisionId::new([1; 32]), &without).is_ok());
         assert!(decode_item_revision(RevisionId::new([1; 32]), &with).is_ok());
+    }
+
+    /// The decoder's own copies of key material are wiped on every exit, not
+    /// only the successful one.
+    ///
+    /// A test cannot look at freed heap, so it asserts the mechanism instead:
+    /// the field map handed back from a failed `value_fields`, and the one
+    /// `AttachmentManifestV1::decode` leaves behind on each of its three
+    /// pre-key checks, must contain no live copy of the key bytes.
+    #[test]
+    fn a_rejected_decode_wipes_the_key_material_it_had_already_taken() {
+        const KEY: [u8; ATTACHMENT_DEK_BYTES] = [0xA7; ATTACHMENT_DEK_BYTES];
+
+        fn holds_key(value: &CborValue) -> bool {
+            match value {
+                CborValue::Bytes(bytes) => bytes.as_slice() == KEY.as_slice(),
+                CborValue::Array(values) => values.iter().any(holds_key),
+                CborValue::Map(entries) => entries
+                    .iter()
+                    .any(|(key, value)| holds_key(key) || holds_key(value)),
+                CborValue::Tag(_, inner) => holds_key(inner),
+                _ => false,
+            }
+        }
+
+        let manifest = |version: u64, kind: u64, id: CborValue| {
+            encode(&CborValue::Map(vec![
+                field(1, CborValue::Unsigned(version)),
+                field(2, CborValue::Unsigned(kind)),
+                field(3, id),
+                field(4, bytes(&KEY)),
+                field(5, CborValue::text("notes.txt")),
+                field(6, CborValue::Unsigned(3)),
+                field(7, bytes(&[4; 32])),
+                field(8, CborValue::Array(vec![bytes(&[5; 32])])),
+                field(9, CborValue::Unsigned(6)),
+            ]))
+        };
+
+        // The three checks that run *before* the key is taken. Each one used
+        // to drop the map, and the key with it, unwiped.
+        let good_id = bytes(&[1; 16]);
+        for (label, encoded) in [
+            (
+                "wrong version",
+                manifest(2, ObjectKind::AttachmentManifest.code(), good_id.clone()),
+            ),
+            (
+                "wrong kind",
+                manifest(VERSION, ObjectKind::Catalog.code(), good_id.clone()),
+            ),
+            (
+                "malformed attachment id",
+                manifest(
+                    VERSION,
+                    ObjectKind::AttachmentManifest.code(),
+                    bytes(&[1; 15]),
+                ),
+            ),
+        ] {
+            assert!(
+                AttachmentManifestV1::decode(&encoded).is_err(),
+                "{label} must be refused"
+            );
+            // Re-run the same split the decoder performs, and confirm the
+            // wipe leaves nothing behind for the failing path to drop.
+            let mut fields = closed_fields(&encoded, &[1, 2, 3, 4, 5, 6, 7, 8, 9]).unwrap();
+            assert!(
+                fields.values().any(holds_key),
+                "{label}: the fixture must actually contain the key"
+            );
+            let outcome = AttachmentManifestV1::decode_fields(&mut fields);
+            assert!(outcome.is_err(), "{label}");
+            for value in fields.values_mut() {
+                zeroize_cbor_secrets(value);
+            }
+            assert!(
+                !fields.values().any(holds_key),
+                "{label}: a refused decode left the key in the field map"
+            );
+        }
+
+        // And `value_fields` itself, which fails before the decoder ever sees
+        // a map: a duplicate key, with the key material already collected.
+        let duplicate = CborValue::Map(vec![
+            field(1, bytes(&KEY)),
+            field(1, CborValue::Unsigned(2)),
+        ]);
+        assert_eq!(
+            value_fields(duplicate, &[1, 2]).unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
+
+        // The wiping helper reaches text as well as bytes, so a helper whose
+        // guarantee depends on which variant a future field uses is not what
+        // this crate has.
+        let mut mixed = CborValue::Map(vec![
+            field(1, bytes(&KEY)),
+            field(2, CborValue::text("secret-name")),
+            field(3, CborValue::Array(vec![bytes(&KEY)])),
+        ]);
+        zeroize_cbor_secrets(&mut mixed);
+        assert!(!holds_key(&mixed));
+        let CborValue::Map(entries) = &mixed else {
+            panic!("still a map")
+        };
+        assert_eq!(entries[1].1, CborValue::Text(String::new()));
     }
 
     /// Every shape a peer could give the tenth field that the encoder cannot

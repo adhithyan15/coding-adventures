@@ -704,15 +704,18 @@ export.
 stays in the store until a garbage collection this product has not built would
 say something false; it lands with `gc run`.
 
-**A portable export announces what it did not carry.** A snapshot carries
-records and not blobs, so an attachment stays in the source vault. Exporting a
-vault that holds one writes a fixed sentence to standard error —
-`vault-pm: portable export does not carry attachments` — leaving standard
-output and the exit class untouched, the same shape as the recovery notice
-above. Without it the operator was told an export succeeded and later told a
-restore was *verified*, with nothing anywhere saying their attachments had not
-travelled, and a backup somebody believes carries their recovery codes and does
-not is worse than no backup.
+**Export, import, and restore announce what did not travel.** A snapshot
+carries records and not blobs, so an attachment stays in the source vault. All
+three ceremonies that can observe that write a fixed sentence to standard
+error — `vault-pm: portable export does not carry attachments` — leaving
+standard output and the exit class untouched, the same shape as the recovery
+notice above.
+
+`restore` is the one that matters most, because its own success line says
+*verified*. That word is true about what the ceremony compared — attachments
+are normalised out of both sides, so the comparison is sound — but a person
+restoring a vault reads it as "everything came back". A backup somebody
+believes carries their recovery codes and does not is worse than no backup.
 
 ## The durable-write seam
 

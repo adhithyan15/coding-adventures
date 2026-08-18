@@ -168,11 +168,16 @@ exit 7 tells a person to retry later and retrying will not conjure the file.
 On Unix the read also passes `O_NONBLOCK | O_NOCTTY`. The check that rejects a
 FIFO cannot run until the open returns, and opening a FIFO for reading blocks
 until a writer appears — so without the flag, naming a named pipe hung the
-command instead of being refused. And the buffer reserves one byte past the
-declared length, because `Zeroizing` wipes the allocation it owns and only that
-one: a file that grew between the metadata read and the read made `read_to_end`
-reallocate, copying the plaintext already read into a new allocation and
-freeing the old one unwiped.
+command instead of being refused.
+
+The read itself is **exact**: one allocation of exactly the declared length,
+`read_exact`, then a one-byte probe that must see end-of-file. `Zeroizing`
+wipes the allocation it owns and only that one, so a vector holding plaintext
+that reallocates leaves what it had already read in freed heap — and reserving
+spare capacity does not help, because the reservation comes from a measurement
+a concurrently-appended file has already invalidated. A file longer than it
+measured is refused by the probe, a shorter one by `UnexpectedEof`. The point
+is that reallocation is unreachable rather than unlikely.
 
 What the write produces *is* plaintext: that is what an export is. So the care
 is everywhere else. Create-new semantics, so an existing file, directory, or

@@ -17,14 +17,22 @@
   half-written plaintext left behind by a failed export is a leak with no
   owner.
 
-- `read_attachment_source` opens with `O_NONBLOCK | O_NOCTTY` on Unix and
-  reserves one byte past the declared length. The first because the check that
-  rejects a FIFO cannot run until the open returns, and opening a FIFO for
-  reading blocks until a writer appears — naming a named pipe used to hang the
-  command rather than be refused. The second because `Zeroizing` wipes only the
-  allocation it owns: a file that grew between the metadata read and the read
-  made `read_to_end` reallocate, copying the plaintext already read into a new
-  allocation and freeing the old one unwiped.
+- `read_attachment_source` opens with `O_NONBLOCK | O_NOCTTY` on Unix, because
+  the check that rejects a FIFO cannot run until the open returns and opening a
+  FIFO for reading blocks until a writer appears — naming a named pipe used to
+  hang the command rather than be refused.
+
+- **The read is now exact.** `Zeroizing` wipes the allocation it owns and only
+  that one, so a vector holding plaintext that reallocates leaves the bytes
+  already read in freed heap. Reserving extra capacity did not fix that,
+  because the reservation comes from a measurement a concurrently-appended file
+  has already invalidated — a hundred-byte file that grows to a megabyte during
+  the read reallocates repeatedly whatever the ceiling is, and the result was
+  still *accepted*, since the only length check compared it against the 16 MiB
+  ceiling. One allocation of exactly the declared length, `read_exact`, and a
+  one-byte probe that must see end-of-file: a file longer than it measured is
+  refused by the probe and a shorter one by `UnexpectedEof`, and reallocation is
+  unreachable rather than unlikely.
 
 - `write_attachment_export` documents what its two guarantees are worth per
   platform, that its cleanup is by path rather than by descriptor, and that a

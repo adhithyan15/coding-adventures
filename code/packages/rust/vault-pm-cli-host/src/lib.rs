@@ -572,7 +572,7 @@ pub fn read_attachment_source(
     options.read(true);
     #[cfg(unix)]
     options.custom_flags(libc::O_NONBLOCK | libc::O_NOCTTY);
-    let file = options
+    let mut file = options
         .open(source)
         .map_err(|_| CliHostError::InvalidAttachmentSource)?;
     let metadata = file
@@ -584,22 +584,53 @@ pub fn read_attachment_source(
     {
         return Err(CliHostError::InvalidAttachmentSource);
     }
-    let capacity =
+    let declared =
         usize::try_from(metadata.len()).map_err(|_| CliHostError::InvalidAttachmentSource)?;
-    let limit = u64::try_from(max_bytes)
-        .unwrap_or(u64::MAX)
-        .saturating_add(1);
-    // One byte more capacity than the file claimed to be. `Zeroizing` wipes
-    // the allocation it owns, and only that one: if the file gains bytes
-    // between `metadata()` and the read, `read_to_end` grows the vector,
-    // copies the plaintext already read into a new allocation, and frees the
-    // old one *unwiped*. The reader is capped at `max_bytes + 1`, so one spare
-    // byte is enough to make that growth unreachable for any input this
-    // function accepts, and the over-long case is refused below.
-    let mut contents = Zeroizing::new(Vec::with_capacity(capacity.saturating_add(1)));
-    file.take(limit)
-        .read_to_end(&mut contents)
-        .map_err(|_| CliHostError::AttachmentReadFailed)?;
+
+    // # The buffer never grows, and that is a structural property rather than
+    // # an argument
+    //
+    // `Zeroizing` wipes the allocation it owns and only that one. If a vector
+    // holding plaintext reallocates, the bytes already read are copied into a
+    // new allocation and the old one is freed **unwiped** — and nothing in
+    // this function ever learns that happened.
+    //
+    // `read_to_end` reallocates whenever the file turns out to be longer than
+    // the capacity reserved from `metadata()`, which a file being appended to
+    // concurrently trivially is: a 100-byte file that grows to a megabyte
+    // during the read reallocates repeatedly, and every one of those freed
+    // allocations holds the person's plaintext. Bounding the *total* read does
+    // not help, because the bound is the 16 MiB ceiling and the reservation
+    // was 100 bytes.
+    //
+    // So the read is exact instead. One allocation of exactly the declared
+    // length, filled by `read_exact`, and then a single-byte probe:
+    //
+    //   * `Ok(0)` — the file ended where it said it would. Accept.
+    //   * `Ok(_)` — the file grew while being read. Refuse: what was read is
+    //     not the file the operator named, and this is the only place that can
+    //     tell.
+    //   * `Err(_)`— a real read failure.
+    //
+    // `read_exact` covers the other direction: a file that *shrank* returns
+    // `UnexpectedEof`, which is the same "not what you named" answer.
+    //
+    // No `Vec::with_capacity` + `read_to_end`, and no `take`. Reallocation is
+    // not made unlikely here; it is made unreachable.
+    let mut contents = Zeroizing::new(vec![0_u8; declared]);
+    file.read_exact(&mut contents).map_err(|error| {
+        if error.kind() == io::ErrorKind::UnexpectedEof {
+            CliHostError::InvalidAttachmentSource
+        } else {
+            CliHostError::AttachmentReadFailed
+        }
+    })?;
+    let mut beyond = [0_u8; 1];
+    match file.read(&mut beyond) {
+        Ok(0) => {}
+        Ok(_) => return Err(CliHostError::InvalidAttachmentSource),
+        Err(_) => return Err(CliHostError::AttachmentReadFailed),
+    }
     if contents.is_empty() || contents.len() > max_bytes {
         return Err(CliHostError::InvalidAttachmentSource);
     }
@@ -1244,6 +1275,41 @@ mod tests {
                 "{path:?} must be refused"
             );
         }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// A file longer than it said it was must be refused, not read.
+    ///
+    /// This is the case the exact read exists for. Before it, the only length
+    /// check compared the result against the 16 MiB ceiling, so a short file
+    /// that grew during the read was *accepted* — and every reallocation on
+    /// the way there freed an unwiped copy of the plaintext. A test cannot
+    /// observe freed heap, so it asserts the observable half: the mismatch is
+    /// detected at all.
+    #[test]
+    fn a_source_longer_than_its_measured_length_is_refused() {
+        let root = attachment_scratch("grew");
+        let file = root.join("growing.bin");
+        fs::write(&file, b"first").unwrap();
+        fs::OpenOptions::new()
+            .append(true)
+            .open(&file)
+            .unwrap()
+            .write_all(b"-more")
+            .unwrap();
+
+        // Ten bytes now. Five is the ceiling a stale measurement would have
+        // produced, and the read must not quietly return ten bytes under it.
+        assert_eq!(
+            source_err(read_attachment_source(&file, 5)),
+            CliHostError::InvalidAttachmentSource
+        );
+        // With an honest ceiling the whole current file is read exactly, and
+        // the buffer that held it was never grown.
+        assert_eq!(
+            read_attachment_source(&file, 1_024).unwrap().as_slice(),
+            b"first-more"
+        );
         let _ = fs::remove_dir_all(&root);
     }
 

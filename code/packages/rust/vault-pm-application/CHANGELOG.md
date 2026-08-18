@@ -79,7 +79,13 @@ All notable changes to this package are documented here.
   been authored by a synchronising peer, and `char::is_control` covers only
   category Cc: a name carrying U+202E RIGHT-TO-LEFT OVERRIDE passed, and
   rendered as a *different* name in the listing an operator uses to choose
-  which attachment to export. Ordinary non-ASCII names are unaffected.
+  which attachment to export. The enumeration covers the soft hyphen, the
+  Arabic and Syriac formatting marks, the Mongolian vowel separator, the
+  zero-width and bidirectional controls, the interlinear annotation controls,
+  and the deprecated tag block. Ordinary non-ASCII names are unaffected, and
+  the doc says plainly that an enumeration is a statement about the code points
+  in it rather than a categorical guarantee — the total gate is the CLI's
+  escape at the render site, and this is defence in depth on top of it.
 
 - **`AttachmentManifestV1::encode` returns `Zeroizing<Vec<u8>>`** and wipes its
   own intermediate CBOR tree, and the manifest's key is decoded through a new
@@ -90,12 +96,30 @@ All notable changes to this package are documented here.
   zeroize-aware and that making them so is a change to a deliberately
   zero-dependency crate; this closes the half that does not need it.
 
-- **`UnlockedVaultV1::attachment_bearing_item_count`**, an aggregate the CLI
-  uses to say that a portable export left attachments behind. A backup an
-  operator believes carries their recovery codes and does not is worse than no
-  backup, and before this the export ceremony reported success and then
-  `restore verify` reported *verified*, because both sides of the comparison
-  had attachments normalised out of them.
+- **`UnlockedVaultV1::attachment_bearing_item_count`** and
+  **`OpenedPortableSnapshotV1::attachment_bearing_item_count`**, the aggregates
+  the CLI uses to say that a portable export, import, or restore left
+  attachments behind. A backup an operator believes carries their recovery
+  codes and does not is worse than no backup, and before this the export
+  ceremony reported success and the restore ceremony reported *verified* — a
+  true statement about what it compared, which reads to a person as "everything
+  came back".
+
+- **`value_fields` wipes a rejected map before dropping it.** It is the gate
+  every object in this crate decodes through, and two of those objects are made
+  of key material — the attachment manifest's key, and `LocalSecretV1`'s
+  authority and device seeds. Its four failure paths, all reachable from a
+  peer-authored value, dropped the entries decoded so far and left them in
+  freed heap. Both halves of the work in progress are now wiped on every exit,
+  and `zeroize_cbor_secrets` reaches text as well as byte strings so the
+  guarantee does not depend on which variant a future field happens to use.
+
+- **`AttachmentManifestV1::decode` wipes on every exit, not just the
+  successful one.** Three checks run before the key is taken — wrong version,
+  wrong kind, malformed attachment id — and each dropped the field map, and the
+  key with it, unwiped. The body is split out and funnelled through one place
+  that wipes, so a check added tomorrow is covered without anyone remembering
+  to cover it.
 
 ### Changed
 
