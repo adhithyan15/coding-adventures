@@ -12,9 +12,9 @@ defmodule CodingAdventures.SqlLexer do
 
   ## How It Works
 
-  1. `create_sql_lexer/1` parses `sql.tokens` into a `TokenGrammar` struct.
-     The default path points to the shared grammars directory, but you can
-     pass a custom path for testing or alternative grammar files.
+  1. `create_sql_lexer/0` returns the `TokenGrammar` struct embedded as
+     native Elixir data in `CodingAdventures.SqlLexer.Grammar`, compiled
+     ahead of time from `sql.tokens` by `grammar-tools compile-tokens`.
 
   2. `tokenize_sql/1` uses a cached grammar (via `persistent_term`) and
      delegates to `GrammarLexer.tokenize/2`.
@@ -43,45 +43,23 @@ defmodule CodingAdventures.SqlLexer do
 
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  # The shared grammars directory lives four levels above this file:
-  #   lib/sql_lexer.ex
-  #     ↑ lib
-  #       ↑ sql_lexer
-  #         ↑ elixir
-  #           ↑ packages
-  #             ↑ code  (the repo root's code/ directory)
-  #               grammars/
-  @default_grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                        |> Path.expand()
+  alias CodingAdventures.SqlLexer.Grammar, as: GrammarSource
 
   @doc """
-  Create (parse) the SQL lexer grammar from a `.tokens` file.
+  Return the SQL lexer grammar.
 
-  Accepts an optional `grammars_dir` path so tests can point at a custom
-  directory.  In normal use you never need to pass the argument — it
-  defaults to the shared `code/grammars` directory.
-
-  Returns `{:ok, grammar}` on success, `{:error, message}` on failure.
+  Kept as an `{:ok, grammar}` tuple for backwards compatibility with
+  existing callers, even though the compiled grammar module can no longer
+  fail the way a disk read could.
 
   ## Example
 
       {:ok, grammar} = CodingAdventures.SqlLexer.create_sql_lexer()
       grammar.case_insensitive  # => true
   """
-  @spec create_sql_lexer(String.t() | nil) ::
-          {:ok, TokenGrammar.t()} | {:error, String.t()}
-  def create_sql_lexer(grammars_dir \\ nil) do
-    dir = grammars_dir || @default_grammars_dir
-    tokens_path = Path.join([dir, "sql", "sql.tokens"])
-
-    case File.read(tokens_path) do
-      {:ok, text} ->
-        TokenGrammar.parse(text)
-
-      {:error, reason} ->
-        {:error, "Cannot read sql.tokens: #{:file.format_error(reason)}"}
-    end
+  @spec create_sql_lexer() :: {:ok, TokenGrammar.t()}
+  def create_sql_lexer do
+    {:ok, GrammarSource.token_grammar()}
   end
 
   @doc """

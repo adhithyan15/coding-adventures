@@ -3,8 +3,9 @@ defmodule CodingAdventures.Brainfuck.Parser do
   Brainfuck Parser — Thin wrapper around the grammar-driven parser engine.
 
   This module combines `Brainfuck.Lexer.tokenize/1` with `GrammarParser.parse/2`
-  to parse Brainfuck source code into an Abstract Syntax Tree. It reads
-  `brainfuck.grammar` from the shared grammars directory.
+  to parse Brainfuck source code into an Abstract Syntax Tree. It uses the
+  pre-compiled `brainfuck.grammar` grammar (see
+  `CodingAdventures.Brainfuck.Grammar.Parser`).
 
   ## Why a Parser?
 
@@ -37,20 +38,10 @@ defmodule CodingAdventures.Brainfuck.Parser do
   `"command"`) and `children` contains sub-nodes and tokens.
   """
 
+  alias CodingAdventures.Brainfuck.Grammar.Parser, as: GrammarSource
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.Brainfuck.Lexer
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
-
-  # Path to the shared grammars directory.
-  # This file lives at lib/brainfuck/parser.ex — two levels below the package
-  # root. From __DIR__ (lib/brainfuck/) we climb:
-  #   1 → lib/
-  #   2 → brainfuck/  (package root)
-  #   3 → elixir/
-  #   4 → packages/
-  #   5 → code/       ← repo root; grammars/ lives here
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @doc """
   Parse Brainfuck source code into an Abstract Syntax Tree.
@@ -86,15 +77,13 @@ defmodule CodingAdventures.Brainfuck.Parser do
   end
 
   @doc """
-  Parse the `brainfuck.grammar` file and return the `ParserGrammar`.
+  Return the pre-compiled `brainfuck.grammar` `ParserGrammar`.
 
   This is useful for inspecting the grammar or reusing it directly.
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join([@grammars_dir, "brainfuck", "brainfuck.grammar"])
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    grammar
+    GrammarSource.parser_grammar()
   end
 
   # Retrieve the cached ParserGrammar, building and caching it on first access.

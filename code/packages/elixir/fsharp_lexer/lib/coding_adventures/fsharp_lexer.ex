@@ -42,11 +42,44 @@ defmodule CodingAdventures.FSharpLexer do
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.FSharpLexer.Grammar.{
+    V1_0,
+    V2_0,
+    V3_0,
+    V3_1,
+    V4_0,
+    V4_1,
+    V4_5,
+    V4_6,
+    V4_7,
+    V5,
+    V6,
+    V7,
+    V8,
+    V9,
+    V10
+  }
 
   @default_version "10"
   @valid_versions ~w(1.0 2.0 3.0 3.1 4.0 4.1 4.5 4.6 4.7 5 6 7 8 9 10)
+
+  @token_grammars %{
+    "1.0" => &V1_0.token_grammar/0,
+    "2.0" => &V2_0.token_grammar/0,
+    "3.0" => &V3_0.token_grammar/0,
+    "3.1" => &V3_1.token_grammar/0,
+    "4.0" => &V4_0.token_grammar/0,
+    "4.1" => &V4_1.token_grammar/0,
+    "4.5" => &V4_5.token_grammar/0,
+    "4.6" => &V4_6.token_grammar/0,
+    "4.7" => &V4_7.token_grammar/0,
+    "5" => &V5.token_grammar/0,
+    "6" => &V6.token_grammar/0,
+    "7" => &V7.token_grammar/0,
+    "8" => &V8.token_grammar/0,
+    "9" => &V9.token_grammar/0,
+    "10" => &V10.token_grammar/0
+  }
 
   @doc """
   Return the default F# version used when no version is specified.
@@ -145,8 +178,7 @@ defmodule CodingAdventures.FSharpLexer do
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
       nil ->
-        tokens_path = Path.join([@grammars_dir, "fsharp", "fsharp#{version}.tokens"])
-        {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
+        grammar = Map.fetch!(@token_grammars, version).()
         :persistent_term.put({__MODULE__, :grammar, version}, grammar)
         grammar
 

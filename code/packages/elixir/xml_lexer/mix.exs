@@ -4,7 +4,7 @@ defmodule CodingAdventures.XmlLexer.MixProject do
   def project do
     [
       app: :coding_adventures_xml_lexer,
-      version: "0.1.1",
+      version: "0.1.2",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()

@@ -2,16 +2,14 @@ defmodule CodingAdventures.CssLexer do
   @moduledoc """
   CSS lexer backed by the shared grammar-driven lexer engine.
 
-  This package loads `css.tokens` from the repository's shared grammars
-  directory, parses it into a `TokenGrammar`, and delegates tokenization to
+  This package embeds a pre-compiled `css.tokens` grammar (see
+  `CodingAdventures.CssLexer.Grammar`) and delegates tokenization to
   `CodingAdventures.Lexer.GrammarLexer`.
   """
 
+  alias CodingAdventures.CssLexer.Grammar
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @spec tokenize(String.t()) :: {:ok, [CodingAdventures.Lexer.Token.t()]} | {:error, String.t()}
   def tokenize(source) do
@@ -21,9 +19,7 @@ defmodule CodingAdventures.CssLexer do
 
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "css", "css.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Grammar.token_grammar()
   end
 
   defp get_grammar do

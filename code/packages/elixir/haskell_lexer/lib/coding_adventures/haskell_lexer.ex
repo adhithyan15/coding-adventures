@@ -38,11 +38,20 @@ defmodule CodingAdventures.HaskellLexer do
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.HaskellLexer.Grammar.{V1_0, V1_1, V1_2, V1_3, V1_4, V98, V2010}
 
   @default_version "2010"
   @valid_versions ~w(1.0 1.1 1.2 1.3 1.4 98 2010)
+
+  @token_grammars %{
+    "1.0" => &V1_0.token_grammar/0,
+    "1.1" => &V1_1.token_grammar/0,
+    "1.2" => &V1_2.token_grammar/0,
+    "1.3" => &V1_3.token_grammar/0,
+    "1.4" => &V1_4.token_grammar/0,
+    "98" => &V98.token_grammar/0,
+    "2010" => &V2010.token_grammar/0
+  }
 
   @doc """
   Return the default Haskell version used when no version is specified.
@@ -144,8 +153,7 @@ defmodule CodingAdventures.HaskellLexer do
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
       nil ->
-        tokens_path = Path.join([@grammars_dir, "haskell", "haskell#{version}.tokens"])
-        {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
+        grammar = Map.fetch!(@token_grammars, version).()
         :persistent_term.put({__MODULE__, :grammar, version}, grammar)
         grammar
 

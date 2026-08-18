@@ -4,7 +4,7 @@ defmodule CodingAdventures.NibLexer.MixProject do
   def project do
     [
       app: :coding_adventures_nib_lexer,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),

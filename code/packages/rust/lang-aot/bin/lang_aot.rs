@@ -49,6 +49,7 @@ fn main() -> ExitCode {
     //   * Intel4004Bin → .bin (foo.bf → foo.bin), shares the `.bin` convention
     //   * Arm1Bin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
     //   * Mos6502Bin    → .bin (foo.twig → foo.bin), shares the `.bin` convention
+    //   * M68kBin       → .bin (foo.twig → foo.bin), shares the `.bin` convention
     let output = cmd.output.unwrap_or_else(|| match cmd.emit {
         EmitMode::Native       => input.with_extension(""),
         EmitMode::LlvmIr       => input.with_extension("ll"),
@@ -60,6 +61,7 @@ fn main() -> ExitCode {
         EmitMode::Ibm704Bin => input.with_extension("bin"),
         EmitMode::Arm1Bin => input.with_extension("bin"),
         EmitMode::Mos6502Bin => input.with_extension("bin"),
+        EmitMode::M68kBin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -145,6 +147,17 @@ enum EmitMode {
     /// 2A03 variant) the NES/Famicom — a byte-oriented ISA, unlike every
     /// other target above (no word endianness to flatten).
     Mos6502Bin,
+    /// Flat `.bin` of big-endian Motorola 68000 machine code bytes via
+    /// `m68k-backend`.  Cross-platform.  Downstream consumers: the
+    /// in-tree `m68k-simulator` or any external Motorola 68000 emulator.
+    /// The 68000 (1979) is the landmark 16/32-bit processor behind the
+    /// original Apple Macintosh, Commodore Amiga, Atari ST, early Sun
+    /// workstations, and the Sega Genesis/Mega Drive — unlike every
+    /// little-endian target above (ARM1, MIPS R2000, RV32I), the 68000
+    /// is big-endian, so `m68k-encoder`'s bytes are already the wire
+    /// format with no flattening step, same simplicity as MOS 6502 (for
+    /// a different reason — the 6502 has no word endianness at all).
+    M68kBin,
 }
 
 struct CliArgs {
@@ -227,9 +240,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "ibm704" | "ibm-704" | "704" => Ok(EmitMode::Ibm704Bin),
         "arm1" | "armv1" | "arm-1" => Ok(EmitMode::Arm1Bin),
         "mos6502" | "6502" | "mos-6502" => Ok(EmitMode::Mos6502Bin),
+        "m68k" | "68000" | "mc68000" | "motorola68000" => Ok(EmitMode::M68kBin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k"
         )),
     }
 }
@@ -321,6 +335,16 @@ Options:
                                                 Apple II, Commodore 64, Atari 8-bit,
                                                 BBC Micro, and — via the Ricoh 2A03
                                                 variant — the NES/Famicom)
+                             m68k | 68000 | mc68000 | motorola68000
+                                              → flat .bin of big-endian Motorola
+                                                68000 machine code bytes via
+                                                m68k-backend; cross-platform; load
+                                                into m68k-simulator or an external
+                                                Motorola 68000 emulator (the
+                                                landmark 16/32-bit processor, 1979
+                                                — original Macintosh, Commodore
+                                                Amiga, Atari ST, early Sun
+                                                workstations, Sega Genesis)
   -h, --help               Show this help.\
 ");
 }
@@ -410,6 +434,18 @@ fn dispatch(
     // mos6502-simulator or an external MOS 6502/NMOS emulator.
     if emit == EmitMode::Mos6502Bin {
         return lang_aot::compile_file_to_mos6502_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // Motorola 68000 .bin emission is also cross-platform — the 68000 is
+    // big-endian, so m68k-backend's bytes (already emitted big-endian by
+    // m68k-encoder) are written straight to disk, same no-flattening
+    // simplicity as the MOS 6502 path above (for a different reason —
+    // the 68000 has a word endianness, it's just already the wire
+    // format). No linker, no host gating (no modern dev host is 68000
+    // silicon); downstream is always m68k-simulator or an external
+    // Motorola 68000 emulator.
+    if emit == EmitMode::M68kBin {
+        return lang_aot::compile_file_to_m68k_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

@@ -3,8 +3,8 @@ defmodule CodingAdventures.JsonParser do
   JSON Parser — Thin wrapper around the grammar-driven parser engine.
 
   This module combines `JsonLexer.tokenize/1` with `GrammarParser.parse/2`
-  to parse JSON source code into an AST. It reads `json.grammar` from the
-  shared grammars directory.
+  to parse JSON source code into an AST. It embeds a pre-compiled
+  `json.grammar` (see `CodingAdventures.JsonParser.Grammar`).
 
   ## Usage
 
@@ -17,10 +17,8 @@ defmodule CodingAdventures.JsonParser do
 
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.JsonLexer
+  alias CodingAdventures.JsonParser.Grammar
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @doc """
   Parse JSON source code into an AST.
@@ -42,9 +40,7 @@ defmodule CodingAdventures.JsonParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join([@grammars_dir, "json", "json.grammar"])
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    grammar
+    Grammar.parser_grammar()
   end
 
   defp get_grammar do

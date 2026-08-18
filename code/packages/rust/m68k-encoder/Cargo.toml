@@ -1,0 +1,15 @@
+[package]
+name = "m68k-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Motorola 68000 instruction encoder.  Re-exports the canonical encode_move_l_imm_to_dn/encode_trap15 helpers from m68k-simulator (the in-tree source of truth for M68K encoding) and adds the HALT_WORD/D0 constants the LANG VM m68k-backend uses to lower CIR to M68K machine code bytes.  No IR knowledge.  Eighth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "m68k_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for M68K bit-level encoding.  We re-export rather than
+# duplicate so any future opcode fix in the simulator propagates to
+# encoder consumers automatically.
+m68k-simulator = { path = "../m68k-simulator" }
