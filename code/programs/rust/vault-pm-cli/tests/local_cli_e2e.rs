@@ -50,7 +50,15 @@ impl TestHome {
             .env("HOME", self.0.join("home"))
             .env("XDG_CONFIG_HOME", self.0.join("config"))
             .env("XDG_DATA_HOME", self.0.join("data"))
-            .env("XDG_CACHE_HOME", self.0.join("cache"));
+            .env("XDG_CACHE_HOME", self.0.join("cache"))
+            // VLT-PM46 §4.1 detects a clipboard from these two variables on
+            // every non-macOS host. Removing them makes every real-process
+            // test here deterministically clipboard-free, so a `--copy` run
+            // exercises the fail-closed path on a developer's desktop exactly
+            // as it does on a headless CI runner — and, just as importantly,
+            // never reaches out and overwrites the developer's own clipboard.
+            .env_remove("DISPLAY")
+            .env_remove("WAYLAND_DISPLAY");
     }
 }
 
@@ -1055,12 +1063,18 @@ fn real_cli_shows_the_current_totp_code_on_the_terminal_and_its_window_on_stdout
     assert!(add_status.success(), "TOTP add failed: {add_transcript}");
     let item_id = extract_item_id(&add_transcript);
 
-    // `--copy` is refused before anything else happens, so it needs no
-    // terminal at all: a plain run with no PTY would fail at the passphrase
-    // prompt if the refusal were not first.
-    let copied = run_plain(&home, &["totp", "code", &item_id, "--copy"]);
-    assert_eq!(copied.status.code(), Some(8), "{copied:?}");
-    assert!(copied.stdout.is_empty());
+    // Without a clipboard, `--copy` fails before anything else happens, so it
+    // needs no terminal at all: a plain run with no PTY would fail at the
+    // passphrase prompt instead if the availability check were not first.
+    if clipboard_is_absent() {
+        let copied = run_plain(&home, &["totp", "code", &item_id, "--copy"]);
+        assert_eq!(copied.status.code(), Some(8), "{copied:?}");
+        assert!(copied.stdout.is_empty());
+        assert_eq!(
+            String::from_utf8_lossy(&copied.stderr),
+            "vault-pm: unsupported capability\n"
+        );
+    }
 
     let before = SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -1302,14 +1316,38 @@ fn real_cli_refuses_weak_password_policies_and_unconfirmed_reveals() {
         "vault-pm: invalid command\n"
     );
 
-    // `--copy` is recognized but has no adapter behind it yet.
-    let copied = run_plain(&home, &["password", "generate", "--copy"]);
-    assert_eq!(copied.status.code(), Some(8));
-    assert!(copied.stdout.is_empty());
+    // `--copy` has an adapter behind it now (VLT-PM46), and this host has no
+    // clipboard for it to reach, so it fails closed in the same place the old
+    // blanket refusal did — before any prompt.
+    if clipboard_is_absent() {
+        let copied = run_plain(&home, &["password", "generate", "--copy"]);
+        assert_eq!(copied.status.code(), Some(8));
+        assert!(copied.stdout.is_empty());
+        assert_eq!(
+            String::from_utf8_lossy(&copied.stderr),
+            "vault-pm: unsupported capability\n"
+        );
+    }
+
+    // The detached half of `--copy` is a real verb of this grammar, and it
+    // takes its parameters from a pipe rather than from arguments. Run by
+    // hand, with nothing on standard input, it reads zero bytes and refuses.
+    let clear = run_plain(&home, &["clipboard", "clear"]);
+    assert_eq!(clear.status.code(), Some(2), "{clear:?}");
+    assert!(clear.stdout.is_empty());
     assert_eq!(
-        String::from_utf8_lossy(&copied.stderr),
-        "vault-pm: unsupported capability\n"
+        String::from_utf8_lossy(&clear.stderr),
+        "vault-pm: invalid command\n"
     );
+    for rejected in [
+        vec!["clipboard"],
+        vec!["clipboard", "wipe"],
+        vec!["clipboard", "clear", "30"],
+        vec!["--vault", "personal", "clipboard", "clear"],
+    ] {
+        let output = run_plain(&home, &rejected);
+        assert_eq!(output.status.code(), Some(2), "{rejected:?}");
+    }
 
     // A selector names a target this command never opens.
     let selected = run_plain(
@@ -2129,6 +2167,20 @@ fn extract_revealed_secret(transcript: &str) -> String {
     let rest = &transcript[start..];
     let end = rest.find('"').expect("the secret line must be closed");
     rest[..end].to_owned()
+}
+
+/// Whether a `--copy` run from these tests will find no clipboard at all.
+///
+/// [`TestHome::configure`] removes `DISPLAY` and `WAYLAND_DISPLAY`, so every
+/// non-macOS host — CI included — is deterministically clipboard-free and the
+/// fail-closed path is what runs. macOS reaches its pasteboard through
+/// `pbcopy`, which no environment variable can take away; there the
+/// fail-closed assertions are skipped rather than made to pass by writing a
+/// generated password into the developer's actual clipboard. The real
+/// platform round trip is proved in `vault-pm-cli-host`, behind an explicit
+/// `VAULT_PM_CLIPBOARD_E2E` opt-in, for the same reason.
+fn clipboard_is_absent() -> bool {
+    !cfg!(target_os = "macos")
 }
 
 fn run_plain(home: &TestHome, arguments: &[&str]) -> std::process::Output {

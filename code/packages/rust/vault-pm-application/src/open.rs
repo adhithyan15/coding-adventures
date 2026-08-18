@@ -7110,7 +7110,7 @@ mod tests {
                 item_id,
                 exact_revision,
                 SecretFieldV1::LoginPassword,
-                SecretDisclosureIntentV1::Clipboard,
+                SecretDisclosureIntentV1::Clipboard { confirmed: true },
                 745,
                 audited_access_randomness(0xe6),
                 &local,
@@ -7143,7 +7143,7 @@ mod tests {
                 item_id,
                 exact_revision,
                 SecretFieldV1::CardCvv,
-                SecretDisclosureIntentV1::Clipboard,
+                SecretDisclosureIntentV1::Clipboard { confirmed: true },
                 746,
                 audited_access_randomness(0xe7),
                 &local,
@@ -14988,7 +14988,7 @@ mod tests {
             .reveal_item_revision_field(
                 original_revision,
                 SecretFieldV1::LoginPassword,
-                SecretDisclosureIntentV1::Clipboard,
+                SecretDisclosureIntentV1::Clipboard { confirmed: true },
             )
             .unwrap();
         assert_eq!(revealed.as_bytes(), b"original-secret");
@@ -14997,7 +14997,7 @@ mod tests {
             session.reveal_item_revision_field(
                 original_revision,
                 SecretFieldV1::CardCvv,
-                SecretDisclosureIntentV1::Clipboard,
+                SecretDisclosureIntentV1::Clipboard { confirmed: true },
             ),
             Err(ApplicationError::InvalidInput)
         ));

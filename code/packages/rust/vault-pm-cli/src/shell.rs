@@ -417,8 +417,24 @@ impl CliHost for SessionHost<'_> {
         self.inner.confirm_secret_reveal()
     }
 
+    fn confirm_secret_copy(&self) -> Result<bool, HostError> {
+        self.inner.confirm_secret_copy()
+    }
+
     fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
         self.inner.write_revealed_text(value)
+    }
+
+    fn ensure_clipboard_available(&self) -> Result<(), HostError> {
+        self.inner.ensure_clipboard_available()
+    }
+
+    fn copy_revealed_text(&self, value: &str, clear_after_seconds: u32) -> Result<(), HostError> {
+        self.inner.copy_revealed_text(value, clear_after_seconds)
+    }
+
+    fn run_scheduled_clipboard_clear(&self) -> Result<(), HostError> {
+        self.inner.run_scheduled_clipboard_clear()
     }
 
     fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
@@ -623,8 +639,19 @@ fn classify(line: &str) -> ShellCommand {
 /// one, which is a retained secret this session never prompted for and cannot
 /// re-confirm. A rotation belongs to a one-shot invocation, which collects and
 /// discards its own secrets.
+///
+/// `clipboard` is refused because `clipboard clear` (VLT-PM46 §2.1) is not a
+/// command for a person at all: it is the detached process `vault-pm`
+/// re-executes itself as, and it takes its parameters from a pipe its parent
+/// wrote. A session's standard input is not that pipe — it is the person's
+/// terminal, or a redirect — so the verb could only ever read the wrong thing
+/// and then fail. `--copy` inside a session works exactly as it does outside
+/// one; it spawns its own clearer.
 pub(crate) fn is_refused(verb: &str) -> bool {
-    matches!(verb, "init" | "vault" | "shell" | "passphrase" | "--vault")
+    matches!(
+        verb,
+        "init" | "vault" | "shell" | "passphrase" | "clipboard" | "--vault"
+    )
 }
 
 /// Split one command line into the closed shell token grammar.

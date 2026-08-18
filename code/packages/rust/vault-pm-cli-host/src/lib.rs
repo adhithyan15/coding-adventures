@@ -20,6 +20,8 @@ mod platform;
 #[path = "windows.rs"]
 mod platform;
 
+pub mod clipboard;
+
 /// Maximum accepted UTF-8 passphrase or item-secret bytes.
 pub const MAX_SECRET_BYTES: usize = 1_024;
 /// Maximum accepted UTF-8 bytes for one echoed item field.
@@ -76,6 +78,18 @@ pub enum CliHostError {
     InvalidEntropyRequest,
     /// The operating-system CSPRNG failed to fill a requested buffer.
     EntropyUnavailable,
+    /// This host has no usable clipboard session or utility (VLT-PM46 §4).
+    ClipboardUnavailable,
+    /// The value is not the printable ASCII this adapter can round-trip.
+    ClipboardValueUnsupported,
+    /// A clipboard utility failed, was killed, or could not be started.
+    ClipboardWriteFailed,
+    /// The clipboard could not be read back for a verified clear.
+    ClipboardReadFailed,
+    /// The detached verified-clear process could not be started.
+    ClipboardClearScheduleFailed,
+    /// A clipboard-clear parameter block was absent or malformed.
+    InvalidClipboardClearRequest,
     /// No audited implementation exists for the current target.
     UnsupportedPlatform,
 }
@@ -100,6 +114,16 @@ impl Display for CliHostError {
             Self::ImportReadFailed => "vault-pm CLI host: import read failed",
             Self::InvalidEntropyRequest => "vault-pm CLI host: invalid entropy request",
             Self::EntropyUnavailable => "vault-pm CLI host: OS entropy unavailable",
+            Self::ClipboardUnavailable => "vault-pm CLI host: clipboard unavailable",
+            Self::ClipboardValueUnsupported => "vault-pm CLI host: unsupported clipboard value",
+            Self::ClipboardWriteFailed => "vault-pm CLI host: clipboard write failed",
+            Self::ClipboardReadFailed => "vault-pm CLI host: clipboard read failed",
+            Self::ClipboardClearScheduleFailed => {
+                "vault-pm CLI host: clipboard clear could not be scheduled"
+            }
+            Self::InvalidClipboardClearRequest => {
+                "vault-pm CLI host: invalid clipboard clear request"
+            }
             Self::UnsupportedPlatform => "vault-pm CLI host: unsupported platform",
         })
     }
@@ -160,6 +184,14 @@ pub enum TextPrompt {
     LoginUrlCount,
     /// Explicit confirmation before one audited terminal secret disclosure.
     SecretRevealConfirmation,
+    /// Explicit confirmation before one audited clipboard secret disclosure.
+    ///
+    /// A separate prompt from [`Self::SecretRevealConfirmation`] because the
+    /// two describe different consequences. Asking "reveal secret on this
+    /// terminal?" and then putting the value somewhere every process in the
+    /// session can read would manufacture a record of an agreement nobody
+    /// made. VLT-PM46 §3.1.
+    SecretCopyConfirmation,
 }
 
 impl TextPrompt {
@@ -191,6 +223,9 @@ impl TextPrompt {
             Self::SecretRevealConfirmation => {
                 "Reveal secret on this terminal? Type yes to continue: "
             }
+            Self::SecretCopyConfirmation => {
+                "Copy secret to this system's clipboard? Type yes to continue: "
+            }
         }
     }
 
@@ -221,7 +256,7 @@ impl TextPrompt {
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
             Self::LoginUrlCount => 2,
-            Self::SecretRevealConfirmation => 16,
+            Self::SecretRevealConfirmation | Self::SecretCopyConfirmation => 16,
         }
     }
 
@@ -235,6 +270,7 @@ impl TextPrompt {
                 | Self::DatabaseName
                 | Self::TotpIssuer
                 | Self::SecretRevealConfirmation
+                | Self::SecretCopyConfirmation
         )
     }
 }
@@ -402,6 +438,16 @@ impl ControllingTerminal {
     /// Require an exact echoed `yes` before a terminal secret disclosure.
     pub fn confirm_secret_reveal(&self) -> Result<bool, CliHostError> {
         let answer = self.read_text(TextPrompt::SecretRevealConfirmation)?;
+        Ok(answer.as_str() == "yes")
+    }
+
+    /// Require an exact echoed `yes` before a clipboard secret disclosure.
+    ///
+    /// Same rule, different sentence: the person is agreeing to put the value
+    /// where every process in their session can read it, not to see it on this
+    /// terminal, and the prompt says so (VLT-PM46 §3.1).
+    pub fn confirm_secret_copy(&self) -> Result<bool, CliHostError> {
+        let answer = self.read_text(TextPrompt::SecretCopyConfirmation)?;
         Ok(answer.as_str() == "yes")
     }
 
@@ -655,6 +701,17 @@ mod tests {
             TextPrompt::SecretRevealConfirmation.message(),
             "Reveal secret on this terminal? Type yes to continue: "
         );
+        // The clipboard prompt names the clipboard. VLT-PM46 §3.1: a consent
+        // ceremony that misdescribes what it consents to is worse than none.
+        assert_eq!(
+            TextPrompt::SecretCopyConfirmation.message(),
+            "Copy secret to this system's clipboard? Type yes to continue: "
+        );
+        assert_ne!(
+            TextPrompt::SecretCopyConfirmation.message(),
+            TextPrompt::SecretRevealConfirmation.message()
+        );
+        assert_eq!(TextPrompt::SecretCopyConfirmation.max_bytes(), 16);
         assert!(!TextPrompt::LoginTitle.allows_empty());
         assert!(!TextPrompt::SecureNoteTitle.allows_empty());
         assert!(!TextPrompt::CardTitle.allows_empty());
@@ -681,6 +738,7 @@ mod tests {
         assert!(!TextPrompt::LoginUrl.allows_empty());
         assert!(!TextPrompt::LoginUrlCount.allows_empty());
         assert!(TextPrompt::SecretRevealConfirmation.allows_empty());
+        assert!(TextPrompt::SecretCopyConfirmation.allows_empty());
         let expected = [
             (
                 CliHostError::TerminalUnavailable,
@@ -744,6 +802,30 @@ mod tests {
             (
                 CliHostError::UnsupportedPlatform,
                 "vault-pm CLI host: unsupported platform",
+            ),
+            (
+                CliHostError::ClipboardUnavailable,
+                "vault-pm CLI host: clipboard unavailable",
+            ),
+            (
+                CliHostError::ClipboardValueUnsupported,
+                "vault-pm CLI host: unsupported clipboard value",
+            ),
+            (
+                CliHostError::ClipboardWriteFailed,
+                "vault-pm CLI host: clipboard write failed",
+            ),
+            (
+                CliHostError::ClipboardReadFailed,
+                "vault-pm CLI host: clipboard read failed",
+            ),
+            (
+                CliHostError::ClipboardClearScheduleFailed,
+                "vault-pm CLI host: clipboard clear could not be scheduled",
+            ),
+            (
+                CliHostError::InvalidClipboardClearRequest,
+                "vault-pm CLI host: invalid clipboard clear request",
             ),
         ];
         for (error, display) in expected {

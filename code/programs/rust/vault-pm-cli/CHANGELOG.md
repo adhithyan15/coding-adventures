@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+- The shipped executable can now deliver a secret to the system clipboard:
+  `password generate --copy` and `totp code ITEM --copy` are no longer refused.
+  This crate's own sources are unchanged; the adapter lives in
+  `coding_adventures_vault_pm_cli_host` and the wiring in
+  `coding_adventures_vault_pm_cli`, under
+  `code/specs/VLT-PM46-cli-clipboard.md`. It is recorded here because it
+  changes what this binary does — including that the binary now re-executes
+  *itself*, as `vault-pm clipboard clear`, to perform the configured timed
+  clear after the original one-shot process has exited.
+
+  The real-process drills now strip `DISPLAY` and `WAYLAND_DISPLAY` from every
+  test environment. That makes each `--copy` run deterministically
+  clipboard-free on a Linux developer machine and on CI alike, so the
+  fail-closed path is what is actually exercised, and — just as important — it
+  means the suite never reaches out and overwrites the developer's own
+  clipboard with a generated password. macOS reaches its pasteboard through
+  `pbcopy`, which no environment variable can take away, so the fail-closed
+  assertions are skipped there rather than made to pass by clobbering it. The
+  real platform round trip is proved in `vault-pm-cli-host` behind an explicit
+  `VAULT_PM_CLIPBOARD_E2E` opt-in, for the same reason.
+
+  New assertions cover the `clipboard clear` verb end to end from the real
+  binary: run by hand with nothing on standard input it exits 2, and
+  `clipboard`, `clipboard wipe`, `clipboard clear 30`, and a `--vault`-prefixed
+  form are all invalid commands.
+
 - The shipped executable can now show a stored TOTP item's current code:
   `vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)`. This crate's own
   sources are unchanged; the ceremony lives in

@@ -2,6 +2,27 @@
 
 All notable changes to this package are documented here.
 
+## [0.65.0] - 2026-08-18
+
+### Changed
+
+- **`SecretDisclosureIntentV1::Clipboard` now carries and enforces
+  `confirmed`.** It previously authorized *unconditionally* and was reachable
+  only from tests, which made it a trap rather than a policy: the first caller
+  to reach for it would naturally be the first slice to implement `--copy`
+  (`VLT-PM46-cli-clipboard.md`), and reaching for it would have silently
+  deleted the application-layer confirmation gate while appearing to describe
+  the delivery channel more accurately. A destination is not an authorization,
+  and putting a secret somewhere every process in a session can read is not the
+  disclosure that needs *less* consent than one on a private terminal.
+
+  No shipped behaviour changes, because no production caller ever constructed
+  the variant. VLT-PM46 §3.0 deliberately keeps `--copy` on
+  `SecretDisclosureIntentV1::InteractiveReveal`: that contract's whole claim is
+  that `--copy` runs the same ceremony as `--reveal` and differs only in the
+  final output channel, and the audit event records the fact of an access
+  rather than the door it left by.
+
 ## [0.64.0] - 2026-08-18
 
 ### Added

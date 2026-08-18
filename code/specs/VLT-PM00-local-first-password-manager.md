@@ -893,6 +893,7 @@ vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
                            [--no-digits] [--no-symbols] [--exclude-ambiguous]
                            (--reveal|--copy)
 vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
+vault-pm clipboard clear
 
 vault-pm attachment add ITEM PATH
 vault-pm attachment list ITEM
@@ -927,9 +928,8 @@ Cloud/storage migration commands activate in Phase 2.
 `VLT-PM44-cli-password-generate.md`. It is the one command in this table that
 takes no `--vault` selector *and* opens no vault: it mints a password from the
 operating-system CSPRNG, refuses a policy below an 80-bit entropy floor, and
-delivers the result only through the §14.6 reveal path. Its `--copy` mode is
-recognized and refused with the unsupported class until item 11's clipboard
-ceremony provides an adapter.
+delivers the result only through the §14.6 reveal path or, since VLT-PM46, the
+clipboard.
 
 `totp code` has since shipped as the second of item 11, specified by
 `VLT-PM45-cli-totp-code.md`. It reads the current live revision of one stored
@@ -938,11 +938,24 @@ boundary — the decoded seed never crosses into CLI orchestration — and deliv
 it only through the §14.6 reveal path after the VLT-PM25 confirmation ceremony
 and a durable `ItemRead` event, because VLT-PM15 §2 names TOTP display as an
 access. Ordinary standard output carries only the non-secret remaining-validity
-line. Its `--copy` mode is recognized and refused exactly as the generator's
-is. Both entries in this table now write their output flag as a required
+line. Both entries in this table now write their output flag as a required
 `(--reveal|--copy)` choice rather than an optional pair, for the reason
 VLT-PM44 §2 records: a default that printed a live credential would put it into
 shell history and scrollback the first time anyone redirected it.
+
+**Clipboard delivery has since shipped** as the third of item 11, specified by
+`VLT-PM46-cli-clipboard.md`. `--copy` on both commands now writes the secret to
+the platform clipboard through a pre-installed utility's standard input — never
+argv, which `ps` publishes to every account on the host — and schedules a
+**verified** clear after `clipboard_clear_seconds`. `vault-pm clipboard clear`
+is the detached process this binary re-executes itself as to perform that
+clear, since a one-shot process has nothing for a thirty-second timer to live
+in; it takes its delay, salt, and commitment on standard input, opens no vault,
+and publishes no audit event. `--copy` is a change of output channel and not a
+new disclosure path: the confirmation ceremony, the `ItemRead` event, and their
+ordering are identical to `--reveal`, and only the final delivery differs.
+Windows and any host with no clipboard session fail closed with the
+`unsupported` class before any prompt.
 
 ### 14.5 Unlock experience
 
@@ -962,7 +975,11 @@ history, URL, or config.
 
 - Normal list/show/JSON output is redacted.
 - `--copy` is preferred and clears an owned clipboard value after the configured
-  timeout when the platform can prove it still owns that value.
+  timeout when the platform can prove it still owns that value. Implemented by
+  `VLT-PM46-cli-clipboard.md`, which reads the clipboard back and compares a
+  salted SHA-256 commitment before wiping anything — so a value the person
+  copied *after* ours is never destroyed, and a clear that cannot be verified
+  never happens.
 - `--reveal` requires an interactive TTY confirmation.
 - Non-TTY secret output requires an explicit `--unsafe-include-secrets` flag and
   emits a warning to stderr.
@@ -1430,7 +1447,12 @@ changelog, focused build, and downstream validation.
    7c-2. completed schema-specific first-party secret-field selection into a
        non-printable wipe-on-drop value, with explicit clipboard, confirmed
        interactive reveal, and warned unsafe non-interactive policy inputs;
-   7c-3. host clipboard adapter with ownership-aware timed clear;
+   7c-3. completed host clipboard adapter with ownership-aware timed clear,
+       delivering through a pre-installed platform utility's standard input
+       rather than argv, resolving that utility only from root-owned
+       directories rather than `PATH`, and clearing after the configured
+       timeout only when a salted commitment proves the clipboard still holds
+       the value this product wrote (VLT-PM46);
    7d-1. completed authenticated canonical portable export, preserving every
        current live, tombstone, and conflict candidate under a separately
        collected Argon2id passphrase with fresh salt/nonce, header-bound AEAD,
@@ -1823,10 +1845,30 @@ changelog, focused build, and downstream validation.
       display is deferred by that document's §8, which records what it would
       have to decide about idle-lock, per-redraw audit events, and terminal
       raw-mode handling.
-      Clipboard delivery and attachments remain open. Both shipped commands'
-      `--copy` modes are recognized and refused with the unsupported class
-      until the clipboard ceremony lands, since no clipboard adapter exists in
-      this product yet.
+      **Clipboard delivery has shipped**, as `VLT-PM46-cli-clipboard.md`:
+      `--copy` on both commands now writes to the platform clipboard and
+      schedules a verified clear after `clipboard_clear_seconds`, the config
+      value that had carried a validator, a default, and a round-trip test but
+      no writer since VLT-PM07. Three decisions define it. The secret reaches a
+      pre-installed utility on that utility's **standard input** and never in
+      argv, because `ps` publishes one process's arguments to every account on
+      a host; the utility is resolved only from `/usr/bin` and `/bin`, never
+      through the caller-controlled `PATH`; and the timed clear survives the
+      exit of a one-shot process by re-executing this same binary as
+      `vault-pm clipboard clear`, detached, holding a delay, a salt, and a
+      SHA-256 commitment rather than the value. The clear is conditional on
+      that commitment still matching, which is §14.6's own "when the platform
+      can prove it still owns that value" — an unconditional timed clear would
+      wipe whatever the person copied thirty seconds later. `--copy` is a
+      change of channel and not a new disclosure path: the ceremony above it is
+      unchanged, and only the confirmation prompt's wording differs, because
+      asking "reveal secret on this terminal?" before putting a value on a
+      clipboard would misdescribe what is being consented to. Windows fails
+      closed — it ships `clip.exe` but no console-mode clipboard reader, so a
+      verified clear is not available there.
+      Attachments and packing remain open, and `--copy` on the VLT-PM25 reveal
+      commands (`item reveal`, `item show --field`, `history show`) is deferred
+      to those ceremonies by VLT-PM46 §8.1.
 12. local agent/IPC and auto-lock.
 13. Bitwarden/KDBX/browser CSV import adapters.
 14. removable/synced-folder mode and mirror decorator.

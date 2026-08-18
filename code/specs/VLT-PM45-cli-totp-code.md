@@ -30,8 +30,9 @@ from the outside and is not.
 Out of scope, and each for its own reason:
 
 - **A live refreshing display.** Deferred to a follow-up contract; see §8.
-- **Clipboard delivery.** No clipboard adapter exists anywhere in this product.
-  `--copy` is recognized and refused; see §2.3.
+- **Clipboard delivery.** No clipboard adapter existed anywhere in this product
+  when this document was written; `--copy` was recognized and refused. See
+  §2.3, and `VLT-PM46-cli-clipboard.md`, which has since supplied one.
 - **`otpauth://` parsing, QR scanning, HOTP counters, issuer discovery.**
   VLT-PM29 §1 excluded them from creation and this document does not reopen
   them: a command that reads a stored record cannot be the place where new
@@ -90,6 +91,19 @@ command", and deserves it without first typing their master passphrase.
 
 This is deliberately identical to VLT-PM44 §2.3. When a clipboard adapter
 lands, it lands once, and both commands stop refusing on the same day.
+
+**Amended by `VLT-PM46-cli-clipboard.md`.** The adapter landed, once, and both
+commands stopped refusing on the same day. The check keeps its position — still
+before any prompt, unlock, clock reading, or entropy reservation — and still
+returns `unsupported` (exit 8); only its condition narrowed from "always" to
+"this host has no clipboard". Everything else in this document is untouched,
+and that is the point: §3's ceremony, §3.1's outcome table, §4.1's two clock
+readings, and §5.2's non-secret validity line are identical under `--copy`. The
+one visible change is the confirmation prompt, which reads "Copy secret to this
+system's clipboard?" rather than naming a terminal the value is not going to.
+The clear delay is the selected vault's configured `clipboard_clear_seconds`,
+which this command — unlike `password generate` — already holds, because it
+opened the vault.
 
 ## 3. The audit decision
 

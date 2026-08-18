@@ -35,7 +35,20 @@ pub enum SecretFieldV1 {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SecretDisclosureIntentV1 {
     /// Copy through a host clipboard adapter without writing secret stdout.
-    Clipboard,
+    ///
+    /// Carries the confirmation flag for the same reason
+    /// [`Self::InteractiveReveal`] does. Until VLT-PM46 this variant
+    /// authorized *unconditionally* and was reachable only from tests, which
+    /// made it a trap rather than a policy: the first caller to reach for it —
+    /// naturally, the first slice to implement `--copy` — would have silently
+    /// deleted the application-layer confirmation gate while appearing to
+    /// describe the delivery channel more accurately. A destination is not an
+    /// authorization, and putting a secret somewhere every process in a
+    /// session can read is not the disclosure that needs *less* consent.
+    Clipboard {
+        /// Whether the user completed the explicit confirmation ceremony.
+        confirmed: bool,
+    },
     /// Reveal after a host confirmed an interactive controlling-TTY prompt.
     InteractiveReveal {
         /// Whether the user completed the explicit confirmation ceremony.
@@ -53,13 +66,14 @@ pub enum SecretDisclosureIntentV1 {
 impl SecretDisclosureIntentV1 {
     pub(crate) const fn authorize(self) -> Result<(), ApplicationError> {
         match self {
-            Self::Clipboard => Ok(()),
-            Self::InteractiveReveal { confirmed: true }
+            Self::Clipboard { confirmed: true }
+            | Self::InteractiveReveal { confirmed: true }
             | Self::UnsafeNonInteractiveReveal {
                 unsafe_include_secrets: true,
                 warning_emitted: true,
             } => Ok(()),
-            Self::InteractiveReveal { confirmed: false }
+            Self::Clipboard { confirmed: false }
+            | Self::InteractiveReveal { confirmed: false }
             | Self::UnsafeNonInteractiveReveal { .. } => Err(ApplicationError::InvalidInput),
         }
     }
@@ -163,7 +177,15 @@ mod tests {
 
     #[test]
     fn disclosure_policy_requires_complete_reveal_ceremonies() {
-        assert_eq!(SecretDisclosureIntentV1::Clipboard.authorize(), Ok(()));
+        assert_eq!(
+            SecretDisclosureIntentV1::Clipboard { confirmed: true }.authorize(),
+            Ok(())
+        );
+        // The arm that used to authorize unconditionally.
+        assert_eq!(
+            SecretDisclosureIntentV1::Clipboard { confirmed: false }.authorize(),
+            Err(ApplicationError::InvalidInput)
+        );
         assert_eq!(
             SecretDisclosureIntentV1::InteractiveReveal { confirmed: true }.authorize(),
             Ok(())

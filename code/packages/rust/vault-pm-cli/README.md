@@ -511,10 +511,10 @@ command has nothing but a secret to say, and a default stdout mode would put a
 live credential into shell history, scrollback, `tee` pipelines, and CI logs
 the first time anyone redirected it. `--reveal` confirms on the controlling
 terminal and writes there and nowhere else, reusing the `item reveal` prompt
-and adapter unchanged. `--copy` is recognized and refused with the unsupported
-class until the clipboard ceremony ships — VLT-PM00 §14.4 documents the flag,
-so someone who reads the spec and types it deserves "not yet" rather than
-"invalid command".
+and adapter unchanged. `--copy` confirms with its own prompt and writes to the
+system clipboard, scheduling a verified clear — see *Copying to the clipboard*
+below. Because this command may not read config, its clear delay is the product
+default of 30 seconds rather than a configured value.
 
 Confirmation happens *before* generation, which buys a property `item reveal`
 cannot have: on refusal no password is ever created, so there is no secret to
@@ -522,6 +522,66 @@ wipe.
 
 The interactive shell can run this verb, and is the one place it is delegated
 *without* the session's bound-vault prefix — see `takes_no_vault_selector`.
+
+## Copying to the clipboard
+
+`--copy` on `password generate` and `totp code` delivers the secret to the
+system clipboard instead of the controlling terminal, and schedules its clear.
+`VLT-PM46-cli-clipboard.md` is the contract; the adapter itself lives in
+`vault-pm-cli-host`.
+
+**It is not a new disclosure path.** Every step of both ceremonies — grammar,
+audit reservation, unlock, confirmation, durable `ItemRead` publication before
+release, the non-secret standard-output line — happens in the same order with
+the same consequences. Only the last step differs. That is the whole claim, and
+it is what makes `--copy` a change of channel rather than a second, quieter way
+to get a secret out of a vault.
+
+The confirmation prompt is the one visible difference:
+
+```text
+Copy secret to this system's clipboard? Type yes to continue:
+```
+
+Reusing the reveal prompt would be a false statement to the person being asked
+to consent — the value is not going to their terminal, it is going somewhere
+every process in their session can read. A consent ceremony that misdescribes
+what it consents to manufactures a record of an agreement nobody made.
+
+**Availability is checked first**, before any prompt, unlock, clock reading,
+entropy reservation, or audit event — exactly where the old blanket `--copy`
+refusal sat. Only the condition narrowed, from "always" to "when this host has
+no clipboard", so a headless runner still gets `unsupported` (exit 8) without
+being asked for a passphrase first.
+
+**Which timeout is used is forced by each command, not chosen.** `totp code`
+opens a vault, so the selected vault's `clipboard_clear_seconds` is already in
+hand and is used. `password generate` may not read config at all — VLT-PM44 §1
+requires it to resolve no platform layout and to work where `init` has never
+run — so it uses the product default. VLT-PM46 §6 states that consequence
+rather than hiding it.
+
+### `vault-pm clipboard clear`
+
+```text
+vault-pm clipboard clear
+```
+
+The detached half of `--copy`, and not a command for people: it is what
+`vault-pm` re-executes *itself* as, so that a clear scheduled thirty seconds
+out survives the exit of a one-shot process. It is listed in the usage text
+anyway, because a closed grammar with a secret verb in it is not a closed
+grammar.
+
+It opens no vault, resolves no platform layout, takes no writer lock — a
+background process that slept for the timeout while holding the cross-process
+writer lock would block every other `vault-pm` invocation for that whole window
+— prompts for nothing, and publishes no audit event. Its parameters (a delay, a
+salt, and a commitment to the copied value) arrive on **standard input**,
+because argv is readable by every account on the host through `ps`. Typed by
+hand with nothing on standard input it reads zero bytes and exits 2. An
+interactive session refuses the verb outright: a shell's standard input is a
+person's terminal, not the pipe a parent wrote.
 
 ## Showing a TOTP code
 
@@ -566,7 +626,7 @@ Output is split by sensitivity, which is why this command's standard output is
 not empty the way `item reveal`'s is:
 
 - the **code** goes only to the controlling terminal, through the §14.6 reveal
-  adapter;
+  adapter — or, with `--copy`, only to the clipboard;
 - the **window** — one line, `Code valid for N more seconds` — goes to ordinary
   standard output, because it is a function of the clock and the stored period
   and anyone with a watch can reproduce it. Hiding a public number on the

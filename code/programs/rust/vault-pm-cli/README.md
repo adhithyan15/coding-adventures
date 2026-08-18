@@ -37,6 +37,7 @@ vault-pm [--vault NAME] item list
 vault-pm [--vault NAME] item show ITEM
 vault-pm [--vault NAME] item reveal ITEM FIELD
 vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
+vault-pm clipboard clear
 vault-pm [--vault NAME] search QUERY
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
@@ -121,11 +122,43 @@ is against the published algorithm rather than against this product's opinion
 of it. The drill also proves the two output channels never swap — the code
 arrives on `/dev/tty` and the non-secret "valid for N more seconds" line on
 captured standard output, with neither carrying the other's content — that
-`--copy` is refused with the unsupported class before any prompt at all (so it
-needs no terminal), that two runs inside one step agree, that a refused
-confirmation releases nothing on either channel, and that the audit chain gains
-one `item_read` row per disclosure while containing neither the code nor the
-seed.
+`--copy` on a host with no clipboard fails with the unsupported class before
+any prompt at all (so it needs no terminal), that two runs inside one step
+agree, that a refused confirmation releases nothing on either channel, and that
+the audit chain gains one `item_read` row per disclosure while containing
+neither the code nor the seed.
+
+## Clipboard delivery, and what the drills can and cannot prove
+
+`--copy` now has an adapter behind it (`VLT-PM46-cli-clipboard.md`), which also
+means this binary re-executes *itself* — as `vault-pm clipboard clear` — to
+perform the configured timed clear after the original one-shot process has
+exited. That detached child is given a delay, a random salt, and a commitment
+to the copied value on a pipe; it is never given the value, and nothing
+sensitive ever appears in an argument, because `ps` publishes one process's
+argument vector to every account on the host.
+
+The drills here strip `DISPLAY` and `WAYLAND_DISPLAY` from every test
+environment. That does two things at once: it makes each `--copy` run
+deterministically clipboard-free on a Linux developer machine and on CI alike,
+so the fail-closed path is what actually gets exercised; and it stops the suite
+from reaching out and overwriting the developer's own clipboard with a
+generated password. macOS reaches its pasteboard through `pbcopy`, which no
+environment variable can take away, so those assertions are skipped there
+rather than made to pass by clobbering it.
+
+The real platform round trip — write, read back, verify, clear — is proved in
+`vault-pm-cli-host` against the actual utilities, behind an explicit
+`VAULT_PM_CLIPBOARD_E2E=1` opt-in, for exactly the same reason. Everything that
+can be tested without a display server is: tool selection, trusted-directory
+resolution, the value contract, the parameter block, the detached spawn, and
+the clear-only-if-still-ours rule all run against a clipboard test double on
+every CI run.
+
+The `clipboard clear` verb is covered here from the real binary: run by hand
+with nothing on standard input it reads zero bytes and exits 2, and
+`clipboard`, `clipboard wipe`, `clipboard clear 30`, and a `--vault`-prefixed
+form are all invalid commands.
 
 `vault-pm shell` is the same binary in its second host shape: one foreground
 process that reads command lines from the controlling terminal and runs them
