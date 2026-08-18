@@ -929,6 +929,46 @@ rather than `violations` because deleting a lesson would otherwise count as
 progress. That choice is still right, and it means the queue will under-report
 this family until ordering is measured separately.
 
+## HL-C210 — a "largest chunk" gate can be satisfied by SPLITTING, which fixes nothing
+
+While PR #11983 was blocked on
+
+    bundle check: largest eager chunk is 502251 bytes (limit 500000)
+
+a concurrent session pushed `5a2ede0` "fix(ci): cap curriculum-plans chunk size",
+adding `maxSize: 250_000` to that chunk group. **CI went green.** The browser still
+downloaded the same ~500 kB before first paint -- as four chunks instead of one.
+
+Nothing was fixed. The metric was satisfied.
+
+**The gate's own shape is what allows this.** It measures the LARGEST eager chunk,
+so splitting one oversized chunk into N smaller ones always passes, no matter how
+much total bytes the page eagerly loads. HL-C110 had already written this down as
+the predictable evasion, which is why the real fix was known in advance.
+
+**The real fix, now landed:** `src/curriculum.ts` used
+`import.meta.glob(..., { eager: true })`, welding all 22 tracks' `curriculum.json`
+into the entry graph. Nothing on the first-paint path reads them -- every consumer
+runs after an await the app already performs. The glob is now lazy, one chunk per
+track, and the plans load inside the corpus refresh. Largest eager chunk
+**502,251 -> 287,353 bytes**, and no `curriculum.json` byte is eager at all, so
+corpus growth lands only in lazy chunks. That is structural, not headroom a tranche
+can eat.
+
+**Two things to do:**
+
+1. **Add a TOTAL eager-bytes assertion** beside the per-chunk one. Without it the
+   gate cannot distinguish "made the page lighter" from "cut the same payload into
+   smaller pieces". A limit on the sum is the property actually wanted.
+2. Treat `maxSize` on an eager group as a smell in review. It is a legitimate tool
+   for shaping lazy chunks; on an EAGER group it usually means a size gate is being
+   routed around rather than met.
+
+The superseded `maxSize: 250_000` was left in place with a comment saying so, since
+the group it applied to no longer exists in the eager graph. It is inert, not
+load-bearing -- but it should be deleted whenever that file is next touched, so no
+future reader mistakes it for the thing keeping the build green.
+
 ## HL-C209 — Chinese teaches its script; one glyph per lesson, two of them assemblies
 
 Seven writing lessons, Chapter 2. 人 → 亻 → 尔 → 你, then 女 → 子 → 好. Five teach a
