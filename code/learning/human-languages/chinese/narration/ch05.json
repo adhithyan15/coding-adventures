@@ -1,0 +1,630 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 5,
+  "title": "Yes, No, and a Tone That Moves",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f6afa7902660bb25",
+  "lessons": [
+    {
+      "id": "ZH-W05-shi",
+      "sequence": 370,
+      "title": "是 (shì) — finish the sun, then build under it",
+      "headword": "是",
+      "romanization": "shì",
+      "gloss": "nine strokes, and the first four are a character you already own",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9b2c30a9607e826b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 日. Four strokes, middle bar before the bottom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "是 (shì)."
+            },
+            {
+              "kind": "speech",
+              "text": "Nine strokes. That is more than double anything you have written, and it is the point at which counting strokes stops being useful and structure takes over."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the structure, and it makes the character easy: 是 (shì) is 日 sitting on top of a body. You have written the top already."
+            },
+            {
+              "kind": "speech",
+              "text": "1-4. 日, complete. Left vertical; top and right in one turning stroke; the middle bar; the bottom bar closing it. Exactly as you learned it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then, underneath:"
+            },
+            {
+              "kind": "speech",
+              "text": "a wide horizontal, wider than the 日 above it."
+            },
+            {
+              "kind": "speech",
+              "text": "a central vertical coming down."
+            },
+            {
+              "kind": "speech",
+              "text": "a short horizontal at the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "a falling stroke to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "a long finishing stroke down to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Finish 日 before you begin the body. This is the same instinct as the box rule and the middle bar: complete an enclosed unit before moving on. Chinese stroke order is a small number of habits applied over and over, and you now have three of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Eight pen lifts. Take it slowly; nobody writes this quickly at first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "日 on its own, then 是 (shì) — and notice the first four strokes are identical",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 日 on its own, then 是 — and notice the first four strokes are identical]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "是 (shì) again, saying \"sun first\" before you start",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 是 again, saying \"sun first\" before you start]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many of the nine strokes did you already know? (Four.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W05-shi-top",
+              "prompt": "Which character sits on top of this one, and must be finished first?",
+              "assesses": [
+                "ZH-SCRIPT-SHI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the sun character",
+                "日",
+                "ri",
+                "the sun",
+                "sun"
+              ],
+              "feedback": {
+                "correct": "日 — complete it before starting the body underneath.",
+                "incorrect": "日, the sun. Finish it before beginning the lower body."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C05-shi",
+      "sequence": 380,
+      "title": "是 (shì) — \"is\", and the nearest thing to \"yes\"",
+      "headword": "是",
+      "romanization": "shì",
+      "gloss": "to be — and how Mandarin says yes",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df836738edd547ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 是 (shì). Sun first, then the body."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "是 shì means is — am, is, are, all one word with no changes for person or number."
+            },
+            {
+              "kind": "speech",
+              "text": "shì is fourth tone, falling. The initial is the same retroflex position you met on rì: tongue tip curled back, and this time unvoiced — closer to the sh of English shirt than to s."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: yes by echo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already know that Mandarin has no single word for no — you negate the word you were asked about. The other half of that rule is now available to you:"
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin has no single word for \"yes\" either. You echo the word back."
+            },
+            {
+              "kind": "speech",
+              "text": "Asked whether something 是 (shì), you answer 是 (shì). That is the yes. It is not a separate word meaning agreement; it is the word you were asked about, returned."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not the only way Mandarin says yes — spoken Mandarin has other affirmatives you will meet in time. It is the one that follows from what you already know, and the one that works whenever the question hands you a word to give back."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither half of the pair is the word an English speaker goes looking for. This is worth holding onto, because it is the shape of a great many Mandarin answers: the reply is the question's own word, kept or turned. You have the keeping half now; the turning half is the next lesson, and you already own the character it needs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shì — falling, tongue curled back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shì** — falling, tongue curled back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shì as an answer meaning \"yes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shì** as an answer meaning \"yes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "是 (shì)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 是]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is the yes, asked about 是 (shì)? (是 (shì) — the same word, returned.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C05-shi-yes",
+              "prompt": "Mandarin has no separate word for 'yes'. So how do you say it?",
+              "assesses": [
+                "ZH-LEX-SHI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "echo the word back",
+                "repeat it",
+                "say it again",
+                "echo the word you were asked about"
+              ],
+              "feedback": {
+                "correct": "You echo it back — asked about 是, you answer 是.",
+                "incorrect": "You ECHO BACK the word you were asked about. Asked about 是, the yes is 是."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C05-bushi",
+      "sequence": 390,
+      "title": "不是 (bú shì) — \"is not\", and the second tone that moves",
+      "headword": "不是",
+      "romanization": "bú shì",
+      "gloss": "is not — and a pitch that moves to get out of the way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6edc101b256070d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say shì. Then say bù. Both fall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不是 (bú shì)."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new on the page: 不 in front of 是 (shì), exactly the rule you already have. It means is not."
+            },
+            {
+              "kind": "speech",
+              "text": "But say the two words you just warmed up with, one after the other, and something is wrong. bù falls. shì falls. Two sharp drops in a row, back to back, and your mouth does not want to make them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — 不 gets out of the way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mandarin does not make you do it. 不 changes its own tone rather than collide."
+            },
+            {
+              "kind": "speech",
+              "text": "written: 不是 — bù + shì spoken: bú shì — bú rises."
+            },
+            {
+              "kind": "speech",
+              "text": "不 becomes second tone, rising, whenever a fourth tone follows it. Before anything else it stays bù, falling — which is why 不好 was bù hǎo, unchanged, with 好 in the third tone."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met this exact machinery once before. When two third tones met in 你好, the first one moved and became rising, so nǐ hǎo came out as ní hǎo. Same problem, same kind of solution: when two tones would clash, the first one gives way, and the spelling never records it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the second rule of this kind you have been taught in full, and both share one warning: the page will not tell you. You were also warned about a third, on 一, which shifts its own tone in front of certain syllables — that one is still waiting, and it will arrive with the words that need it. 不是 (bú shì) is written with the falling-tone 不 every time. The change lives in the mouth, and you have to carry it yourself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bù, then shì, deliberately clashing. Hear why it is awkward.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bù**, then **shì**, deliberately clashing. Hear why it is awkward.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bú shì — the first one rising now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bú shì** — the first one rising now]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bù hǎo, then bú shì — falling, then rising, and say why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bù hǎo**, then **bú shì** — falling, then rising, and say why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does the writing change when the tone does? (No — 不是 (bú shì) is written the same way every time.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C05-bushi-sandhi",
+              "prompt": "不 changes tone before one particular kind of syllable. Which, and what does 不 become?",
+              "assesses": [
+                "ZH-TONE-SANDHI-BU"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "before a fourth tone it becomes rising",
+                "before a falling tone, it rises",
+                "before 4th tone it becomes 2nd",
+                "it becomes second tone before a fourth tone",
+                "rising, before a fourth tone"
+              ],
+              "feedback": {
+                "correct": "Before a fourth tone, 不 becomes second tone -- rising.",
+                "incorrect": "Before a FOURTH tone. 不 becomes SECOND tone, rising."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C05-practice",
+      "sequence": 400,
+      "title": "Practice — answering either way",
+      "headword": "是 不是",
+      "romanization": "shì, bú shì",
+      "gloss": "yes and no, at last, and both of them built from one word",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00c0944790750cb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 是 (shì). Sun first, then the body underneath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two voices, and for the first time the second one has a real choice:"
+            },
+            {
+              "kind": "speech",
+              "text": "A: 你好 ní hǎo B: 你好 ní hǎo A: 是 shì — is it? B: 是 shì — yes."
+            },
+            {
+              "kind": "speech",
+              "text": "And the same exchange, refused:"
+            },
+            {
+              "kind": "speech",
+              "text": "A: 是 shì B: 不是 bú shì — no."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the last line twice and listen to the first syllable. It rises. Write it and it falls. That gap between the page and the mouth is the whole lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One character, and with it both answers."
+            },
+            {
+              "kind": "speech",
+              "text": "是 (shì) is nine strokes, the longest thing you have written — but four of them were 日, finished before the body began, and that is why it was manageable. The habit of completing an enclosed piece before moving on has now carried you through a box, a box with a bar, and a nine-stroke character built on top of one."
+            },
+            {
+              "kind": "speech",
+              "text": "And the pair is closed. Mandarin gives you neither a word for yes nor a word for no; it gives you one word and two things to do with it. 是 keeps it. 不是 (bú shì) turns it. Every yes-or-no answer you learn from here will work the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "The tone rule is the part to carry away, because nothing on the page will remind you: 不 rises before a falling tone. That is the second such rule taught in full, after the one on 你好, and a third — on 一 — has been flagged and not yet taught. Every one of them is invisible in the writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shì, then bú shì — yes, then no",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shì**, then **bú shì** — yes, then no]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bù hǎo, then bú shì — and say which one moved, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bù hǎo**, then **bú shì** — and say which one moved, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "是, then 不是 (bú shì)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 是, then 不是]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do either of the rules you have been taught show up in the writing? (Neither.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode CJK Unified Ideographs chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C05-practice-pair",
+              "prompt": "Mandarin gives you no word for yes and none for no. What does it give you instead?",
+              "assesses": [
+                "ZH-DIALOGUE-IDENTIFY"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "a word you keep or turn",
+                "the word, kept or negated",
+                "you echo it or negate it",
+                "one word and two things to do with it"
+              ],
+              "feedback": {
+                "correct": "One word, kept or turned -- 是 and 不是.",
+                "incorrect": "One WORD, which you either echo back or negate."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

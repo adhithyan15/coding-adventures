@@ -100,6 +100,28 @@
           "ZH-DIALOGUE-NEGATE"
         ]
       }
+    },
+    {
+      "chapter": 5,
+      "title": "Yes, No, and a Tone That Moves",
+      "label": "ch:zh-shi",
+      "canDo": "I can write 是 by finishing 日 before the body underneath, answer a yes-or-no question either way by keeping or negating the verb, and apply the rule that 不 rises before a falling tone even though the writing never shows it.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ZH-C05-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange in which the reader can answer either way -- 是 for yes, 不是 for no -- and hear the negator's pitch rise on a page that records no such thing.",
+        "assesses": [
+          "ZH-SCRIPT-SHI",
+          "ZH-LEX-SHI",
+          "ZH-LEX-BUSHI",
+          "ZH-TONE-SANDHI-BU",
+          "ZH-GRAMMAR-NEGATE",
+          "ZH-DIALOGUE-IDENTIFY"
+        ]
+      }
     }
   ]
 }

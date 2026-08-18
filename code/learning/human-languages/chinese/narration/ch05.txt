@@ -1,0 +1,137 @@
+Mandarin Chinese, chapter 5: Yes, No, and a Tone That Moves.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 4.
+是 (shì) — finish the sun, then build under it.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 日. Four strokes, middle bar before the bottom.
+
+Script — the shape.
+是 (shì).
+Nine strokes. That is more than double anything you have written, and it is the point at which counting strokes stops being useful and structure takes over.
+Here is the structure, and it makes the character easy: 是 (shì) is 日 sitting on top of a body. You have written the top already.
+1-4. 日, complete. Left vertical; top and right in one turning stroke; the middle bar; the bottom bar closing it. Exactly as you learned it.
+Then, underneath:
+a wide horizontal, wider than the 日 above it.
+a central vertical coming down.
+a short horizontal at the lower right.
+a falling stroke to the lower left.
+a long finishing stroke down to the right.
+Finish 日 before you begin the body. This is the same instinct as the box rule and the middle bar: complete an enclosed unit before moving on. Chinese stroke order is a small number of habits applied over and over, and you now have three of them.
+Eight pen lifts. Take it slowly; nobody writes this quickly at first.
+
+Guided Practice.
+[once you have stopped driving — write: 日 on its own, then 是 (shì) — and notice the first four strokes are identical]
+[once you have stopped driving — write: 是 (shì) again, saying "sun first" before you start]
+
+Wrap-up Recall.
+How many of the nine strokes did you already know? (Four.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 10 seconds]
+Which character sits on top of this one, and must be finished first?
+
+
+Lesson 2 of 4.
+是 (shì) — "is", and the nearest thing to "yes".
+
+Warm-up.
+[pause 2 seconds]
+Write 是 (shì). Sun first, then the body.
+
+Sounds you'll need.
+是 shì means is — am, is, are, all one word with no changes for person or number.
+shì is fourth tone, falling. The initial is the same retroflex position you met on rì: tongue tip curled back, and this time unvoiced — closer to the sh of English shirt than to s.
+[repeat that twice]
+
+Grammar Lens: yes by echo.
+You already know that Mandarin has no single word for no — you negate the word you were asked about. The other half of that rule is now available to you:
+Mandarin has no single word for "yes" either. You echo the word back.
+Asked whether something 是 (shì), you answer 是 (shì). That is the yes. It is not a separate word meaning agreement; it is the word you were asked about, returned.
+It is not the only way Mandarin says yes — spoken Mandarin has other affirmatives you will meet in time. It is the one that follows from what you already know, and the one that works whenever the question hands you a word to give back.
+Neither half of the pair is the word an English speaker goes looking for. This is worth holding onto, because it is the shape of a great many Mandarin answers: the reply is the question's own word, kept or turned. You have the keeping half now; the turning half is the next lesson, and you already own the character it needs.
+
+Guided Practice.
+[your turn — say: shì — falling, tongue curled back]
+[pause 8 seconds for the answer]
+[your turn — say: shì as an answer meaning "yes"]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 是 (shì)]
+
+Wrap-up Recall.
+What is the yes, asked about 是 (shì)? (是 (shì) — the same word, returned.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+Mandarin has no separate word for 'yes'. So how do you say it?
+
+
+Lesson 3 of 4.
+不是 (bú shì) — "is not", and the second tone that moves.
+
+Warm-up.
+[pause 2 seconds]
+Say shì. Then say bù. Both fall.
+
+The word, taken apart.
+不是 (bú shì).
+Nothing new on the page: 不 in front of 是 (shì), exactly the rule you already have. It means is not.
+But say the two words you just warmed up with, one after the other, and something is wrong. bù falls. shì falls. Two sharp drops in a row, back to back, and your mouth does not want to make them.
+
+Why it's said this way — 不 gets out of the way.
+Mandarin does not make you do it. 不 changes its own tone rather than collide.
+written: 不是 — bù + shì spoken: bú shì — bú rises.
+不 becomes second tone, rising, whenever a fourth tone follows it. Before anything else it stays bù, falling — which is why 不好 was bù hǎo, unchanged, with 好 in the third tone.
+You have met this exact machinery once before. When two third tones met in 你好, the first one moved and became rising, so nǐ hǎo came out as ní hǎo. Same problem, same kind of solution: when two tones would clash, the first one gives way, and the spelling never records it.
+That is the second rule of this kind you have been taught in full, and both share one warning: the page will not tell you. You were also warned about a third, on 一, which shifts its own tone in front of certain syllables — that one is still waiting, and it will arrive with the words that need it. 不是 (bú shì) is written with the falling-tone 不 every time. The change lives in the mouth, and you have to carry it yourself.
+
+Guided Practice.
+[your turn — say: bù, then shì, deliberately clashing. Hear why it is awkward.]
+[pause 8 seconds for the answer]
+[your turn — say: bú shì — the first one rising now]
+[pause 8 seconds for the answer]
+[your turn — say: bù hǎo, then bú shì — falling, then rising, and say why]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Does the writing change when the tone does? (No — 不是 (bú shì) is written the same way every time.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 15 seconds]
+不 changes tone before one particular kind of syllable. Which, and what does 不 become?
+
+
+Lesson 4 of 4.
+Practice — answering either way.
+
+Warm-up.
+[pause 2 seconds]
+Write 是 (shì). Sun first, then the body underneath.
+
+The exchange.
+Two voices, and for the first time the second one has a real choice:
+A: 你好 ní hǎo B: 你好 ní hǎo A: 是 shì — is it? B: 是 shì — yes.
+And the same exchange, refused:
+A: 是 shì B: 不是 bú shì — no.
+Say the last line twice and listen to the first syllable. It rises. Write it and it falls. That gap between the page and the mouth is the whole lesson.
+
+What you've built this chapter.
+One character, and with it both answers.
+是 (shì) is nine strokes, the longest thing you have written — but four of them were 日, finished before the body began, and that is why it was manageable. The habit of completing an enclosed piece before moving on has now carried you through a box, a box with a bar, and a nine-stroke character built on top of one.
+And the pair is closed. Mandarin gives you neither a word for yes nor a word for no; it gives you one word and two things to do with it. 是 keeps it. 不是 (bú shì) turns it. Every yes-or-no answer you learn from here will work the same way.
+The tone rule is the part to carry away, because nothing on the page will remind you: 不 rises before a falling tone. That is the second such rule taught in full, after the one on 你好, and a third — on 一 — has been flagged and not yet taught. Every one of them is invisible in the writing.
+
+Guided Practice.
+[your turn — say: shì, then bú shì — yes, then no]
+[pause 8 seconds for the answer]
+[your turn — say: bù hǎo, then bú shì — and say which one moved, and why]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 是, then 不是 (bú shì)]
+
+Wrap-up Recall.
+Do either of the rules you have been taught show up in the writing? (Neither.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+Mandarin gives you no word for yes and none for no. What does it give you instead?
