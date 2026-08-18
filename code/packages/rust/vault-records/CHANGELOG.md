@@ -18,8 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `encode_record` now reports a record too large to encode through a new
-  `Result`, instead of panicking, closing the last of the four panicking
-  encodes in this crate. The two ceilings either side of this layer disagree:
+  `Result`, instead of panicking. This is the last of the three panicking
+  encodes this crate had; the other two — `encode_opaque` and `decode_record`'s
+  opaque arm — were closed just before it, and needed no signature change.
+  The two ceilings either side of this layer disagree:
   vault-pm's `MAX_PLAINTEXT_BYTES` is 16 MiB while canonical-CBOR's
   `MAX_ENCODED_SIZE` is 1 MiB, so records between them are legal to hold and
   legal to decode but illegal to encode. A peer device with a larger framing
