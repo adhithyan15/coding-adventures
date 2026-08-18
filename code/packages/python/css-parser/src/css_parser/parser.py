@@ -86,43 +86,30 @@ Two convenience functions:
 - ``parse_css(source)`` — the all-in-one function. Pass in CSS text, get
   back an AST.
 
-Locating the Grammar File
---------------------------
+Grammar Source
+--------------
 
-The ``css.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
-
-    parser.py
-    └── css_parser/        (parent)
-        └── src/           (parent)
-            └── css-parser/  (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── css.grammar
+The ``css.grammar`` file lives in ``code/grammars/css/`` at the
+repository root, but this package does not read it at runtime. It is
+pre-compiled into ``css_parser._grammar`` (see that module's header for
+regeneration instructions), so parsing CSS requires no file I/O.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from css_lexer import tokenize_css
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 
+from css_parser._grammar import PARSER_GRAMMAR
+
 # ---------------------------------------------------------------------------
-# Grammar File Location
+# Grammar Source
 # ---------------------------------------------------------------------------
 #
-# Navigate from this file's location up to the repository root's grammars/
-# directory. The path is:
-#   src/css_parser/parser.py -> src/css_parser -> src -> css-parser
-#   -> python -> packages -> code -> code/grammars
+# The CSS parser grammar (``code/grammars/css/css.grammar``) is
+# pre-compiled into ``css_parser._grammar`` — see that module's header for
+# regeneration instructions.
 # ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-CSS_GRAMMAR_PATH = GRAMMAR_DIR / "css" / "css.grammar"
 
 
 def create_css_parser(source: str) -> GrammarParser:
@@ -131,8 +118,8 @@ def create_css_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the CSS lexer.
-    2. Reads and parses the ``css.grammar`` file.
-    3. Creates a ``GrammarParser`` with those tokens and grammar.
+    2. Creates a ``GrammarParser`` with those tokens and the pre-compiled
+       CSS parser grammar.
 
     Args:
         source: The CSS text to parse.
@@ -142,7 +129,6 @@ def create_css_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -151,8 +137,7 @@ def create_css_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_css(source)
-    grammar = parse_parser_grammar(CSS_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_css(source: str) -> ASTNode:
@@ -178,7 +163,6 @@ def parse_css(source: str) -> ASTNode:
         ``rule_name`` is ``"stylesheet"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors according
             to the CSS grammar.
