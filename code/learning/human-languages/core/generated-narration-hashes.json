@@ -1017,7 +1017,7 @@
     {
       "language": "chinese",
       "chapter": 9,
-      "sourceHash": "fnv1a64:44f3b93eb6e0edb3",
+      "sourceHash": "fnv1a64:6afc07226f1a9596",
       "lessonIds": [
         "ZH-W09-shen",
         "ZH-W09-me",
@@ -1028,8 +1028,8 @@
       "drivablePrefix": 0,
       "text": "chinese/narration/ch09.txt",
       "json": "chinese/narration/ch09.json",
-      "textHash": "fnv1a64:fe9937669a2b04c6",
-      "jsonHash": "fnv1a64:f8aff91f5ccb02b5"
+      "textHash": "fnv1a64:f179d1dd4a9d6d5f",
+      "jsonHash": "fnv1a64:423a29571793f8fc"
     },
     {
       "language": "french",

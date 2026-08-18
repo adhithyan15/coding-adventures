@@ -111,9 +111,11 @@ name?" and not yet the rest of it, which the lessons say plainly rather than
 implying the question is available.
 
 That chapter also does two things worth keeping when the rest of the question
-lands. It refuses a decomposition: 什 and 么 are there for **sound**, and reading
-"ten-person" out of 什么 would be inventing a story of exactly the kind this track
-otherwise labels as a hook. And it flags **register** — a bare 什么? is blunt,
+lands. It refuses a decomposition **at the word level**, and is careful to say so
+at that level: 什 and 么 carry the word's **sound**, while the pieces inside the
+character 什 belong to that character and explain nothing about *what*. Reading
+"person plus ten" out of 什么 would be inventing a story of exactly the kind this
+track otherwise labels as a hook. And it flags **register** — a bare 什么? is blunt,
 fine with friends and heavy with a stranger — which is the first time the book
 has told the reader that a correct sentence can still be the wrong move.
 

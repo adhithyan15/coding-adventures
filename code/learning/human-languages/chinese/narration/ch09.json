@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "What?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:44f3b93eb6e0edb3",
+  "sourceHash": "fnv1a64:6afc07226f1a9596",
   "lessons": [
     {
       "id": "ZH-W09-shen",
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5518151ffad90535",
+      "sourceHash": "fnv1a64:d63b464a95fb10c9",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,11 @@
             },
             {
               "kind": "speech",
-              "text": "Here the honest note this book owes you: the two halves of 什么 (shénme) do not add up the way 再见's did. 什 and 么 are here for sound, not for meaning. Trying to read \"ten-person\" out of it would be inventing a story, and you would be worse off for believing it. Some words are built; some are just words."
+              "text": "Here the honest note this book owes you: the two halves of 什么 (shénme) do not add up the way 再见's did. 再 and 见 each brought their meaning into the word. 什 and 么 bring only their sound — 什 is standing in for how this word is pronounced, not for anything it means."
+            },
+            {
+              "kind": "speech",
+              "text": "And keep the levels apart. The pieces you drew inside 什 (shén) — the person and the ten — belong to that character, not to this word. \"Person plus ten\" explains nothing about what. Some words are built; some are just words."
             }
           ]
         },
@@ -500,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d6abbabae2cb283",
+      "sourceHash": "fnv1a64:a8e10f6c3e57e6ab",
       "notice": null,
       "blocks": [
         {
@@ -575,11 +579,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "shénme? three times — once to a friend, once to a stranger, and notice it is the same word and not the same act",
+              "instruction": "shénme? twice — once flat and clipped, once softened and drawn out on the rise. Same word; the second is the one you would risk on a stranger",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **shénme?** three times — once to a friend, once to a stranger, and notice it is the same word and not the same act]"
+              "source": "[YOU SAY: **shénme?** twice — once flat and clipped, once softened and drawn out on the rise. Same word; the second is the one you would risk on a stranger]"
             }
           ]
         },

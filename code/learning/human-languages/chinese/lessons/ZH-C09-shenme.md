@@ -49,9 +49,13 @@ This one is different in kind from everything before it. 你好, 是, 不是, �
 first word in this book whose job is to get something back from the other person.
 
 Here the honest note this book owes you: the two halves of 什么 do **not** add up
-the way 再见's did. 什 and 么 are here for sound, not for meaning. Trying to read
-"ten-person" out of it would be inventing a story, and you would be worse off for
-believing it. Some words are built; some are just words.
+the way 再见's did. 再 and 见 each brought their meaning into the word. 什 and 么
+bring only their **sound** — 什 is standing in for how this word is pronounced,
+not for anything it means.
+
+And keep the levels apart. The pieces you drew *inside* 什 — the person and the
+ten — belong to that **character**, not to this **word**. "Person plus ten"
+explains nothing about *what*. Some words are built; some are just words.
 
 ## Why it's said this way — 什么 on its own
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHENME] -->

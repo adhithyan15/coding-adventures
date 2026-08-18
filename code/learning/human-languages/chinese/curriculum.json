@@ -873,7 +873,7 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "pragmatics",
-      "canDo": "I can say 什么 to ask what, use it alone to get something repeated, and I know it is blunt with a stranger -- and that its two characters are there for sound, not meaning.",
+      "canDo": "I can say 什么 to ask what, use it alone to get something repeated, and I know it is blunt with a stranger -- and that its two characters carry the word's sound, not its meaning.",
       "prerequisites": [
         "ZH-EXT-023-SHENME-SCRIPT"
       ],

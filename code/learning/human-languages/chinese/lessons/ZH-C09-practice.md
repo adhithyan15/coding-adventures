@@ -90,7 +90,7 @@ above, and a piece of a question you will finish later.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-ASK] -->
 
 - [YOU SAY: the whole exchange, both parts, including the mishearing]
-- [YOU SAY: **shénme?** three times — once to a friend, once to a stranger, and notice it is the same word and not the same act]
+- [YOU SAY: **shénme?** twice — once flat and clipped, once softened and drawn out on the rise. Same word; the second is the one you would risk on a stranger]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-ASK] -->
