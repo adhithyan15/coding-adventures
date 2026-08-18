@@ -439,7 +439,7 @@ Implementations MUST expose these exact portable codes:
 | `conflicting_grant` | an immutable receiver-grant slot contains different bytes |
 | `unexpected_epoch` | a selected plan is not exactly active_epoch + 1 |
 | `decreasing_epoch` | activation or recovery targeted an older epoch |
-| `epoch_exhausted` | active_epoch is u64::MAX |
+| `epoch_exhausted` | `active_epoch`, or a candidate preparation's `base_epoch`, is u64::MAX |
 | `concurrent_update` | 16 state CAS attempts did not converge |
 | `storage_error` | the injected public backend failed |
 | `custody_error` | the injected secret-custody backend failed |
@@ -448,6 +448,36 @@ Implementations MUST expose these exact portable codes:
 Errors may include public channel/epoch/plan commitments where useful, but MUST
 NOT include CMKs, private keys, shared secrets, wrapping keys, nonces,
 plaintext, raw custody locators, or complete D18G bodies.
+
+### Epoch exhaustion is about the successor, not only the current epoch
+
+An earlier revision defined `epoch_exhausted` as "active_epoch is u64::MAX"
+alone. That wording covered the channel's own epoch but said nothing about a
+*candidate preparation* whose `base_epoch` is already u64::MAX, and both
+situations mean the same thing: there is no successor epoch, so no rotation can
+proceed.
+
+Implementations diverged in exactly that gap. Faced with a preparation at
+u64::MAX they variously reported `invalid_plan` (the candidate is malformed),
+`unexpected_epoch` (it is not `active_epoch + 1`), or `epoch_exhausted` — each
+defensible under the old text, none of them normative. Every one of those
+readings is a stretch, because a preparation's `base_epoch` was simply not a
+case the roster addressed.
+
+The amended line above resolves it: exhaustion is reported whenever *any* epoch
+under consideration has no successor, whether that epoch is the channel's
+current one or a candidate's base. Concretely, both of these are
+`epoch_exhausted`:
+
+- plan validation observing `base_epoch == u64::MAX`;
+- candidate construction observing `base_epoch == u64::MAX`.
+
+`unexpected_epoch` remains reserved for a plan that *has* a successor but names
+the wrong one, and `invalid_plan` for candidates that violate D18T/D18Q or
+authorization invariants for reasons unrelated to epoch arithmetic. Checking
+exhaustion before the successor comparison is what keeps the three codes
+disjoint, since `base_epoch + 1` is not meaningful once `base_epoch` is
+saturated.
 
 ---
 
