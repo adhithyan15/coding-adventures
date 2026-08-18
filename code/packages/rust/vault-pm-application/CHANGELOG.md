@@ -2,6 +2,96 @@
 
 All notable changes to this package are documented here.
 
+## [0.66.0] - 2026-08-18
+
+### Added
+
+- **Chunked encrypted attachments**, the last of `VLT-PM00` §23 item 11.
+  Specified by `VLT-PM47-cli-attachments.md`.
+
+  - A new `attachment` module splits one plaintext into fixed 64 KiB pieces,
+    seals each with VLT14's chunk AEAD under a per-attachment key, and
+    reassembles them again. `ATTACHMENT_CHUNK_BYTES`, `MAX_ATTACHMENT_BYTES`,
+    `MAX_ATTACHMENT_CHUNKS`, and `MAX_ATTACHMENT_NAME_BYTES` are the bounds,
+    and three of the four are *derived* rather than written: the chunk size is
+    VLT14's, the attachment ceiling is `MAX_PLAINTEXT_BYTES` itself, and the
+    chunk cap is the quotient. A second literal is a second thing that can
+    drift, which is the failure this whole design is about.
+
+  - The chunk size is chosen against `canonical-cbor`'s 1 MiB
+    `MAX_ENCODED_SIZE`, not against the 16 MiB frame bound. §13.1 of
+    `VLT-PM05-application.md` records why that is the ceiling that binds: the
+    gap between the two is a range of values legal to hold, legal to decode,
+    and illegal to re-encode, and every encode in it used to abort the
+    process. One sealed chunk object encodes to about 65,600 bytes; two
+    compile-time assertions hold the sixteen-fold margin under
+    `MAX_ENCODED_SIZE` and hold the chunk cap plus four under
+    `MAX_PUBLICATION_OBJECTS`, so neither relation can drift silently.
+
+  - `MAX_ATTACHMENT_BYTES` equals `MAX_PLAINTEXT_BYTES` deliberately, and the
+    equality is the argument: an attachment can never be larger than a
+    plaintext this product already accepts in one sealed frame, so attachments
+    do not become a bigger door than records.
+
+  - `ObjectKind` gains `AttachmentManifest` (6) and `AttachmentChunk` (7).
+    `AttachmentManifestV1` carries one attachment's name, plaintext length,
+    content hash, VLT14 key, and ordered chunk object references; the item
+    revision's live-state map gains an optional tenth field mapping each
+    retained `AttachmentId` to its manifest object. That field is emitted only
+    when the attachment set is non-empty, so a revision without attachments
+    encodes exactly the nine keys it encoded before this change, byte for
+    byte, and every revision written earlier still decodes. Storing manifests
+    inline instead would have cost up to 570 KiB of revision and put the
+    revision encode back in the range §13.1 is about.
+
+  - The attachment identity *is* the VLT14 blob id — one 128-bit value with
+    both meanings — so the chunk AEAD's associated data binds each chunk to
+    the attachment identity a person sees rather than to a private alias, and
+    there is no state in which the two disagree.
+
+  - `UnlockedVaultV1::audited_attach_attachment`, `audited_list_attachments`,
+    and `audited_export_attachment`. Attaching publishes `ItemUpdate` inside
+    the mutation's own commit, with failed preconditions publishing a failed
+    `ItemUpdate` first; listing and exporting publish `ItemRead`. Export runs
+    `VLT-PM25`'s disclosure ceremony unchanged — the `InteractiveReveal`
+    intent, the same outcome table, and publish-before-release — with the
+    reassembled plaintext held in a local binding across publication so a
+    publication failure drops and wipes it without the caller ever seeing it.
+
+  - `AttachmentRandomnessV1` and `attachment_random_bytes`, the
+    variable-length entropy block one attach requires. Its size depends on the
+    chunk count, the same situation `PortableImportRandomnessV1` is in, and it
+    is validated at construction so a short or long block is an `InvalidInput`
+    before the vault is touched rather than a partition that reads the wrong
+    offsets.
+
+  - Every peer-authorable malformation is a closed error and none is a panic:
+    an oversized declared length is refused before it can size a buffer, and
+    reordered, cross-blob, promoted-final, tampered, and truncated chunks are
+    refused by VLT14's associated data and tag. The reassembled length and
+    SHA-256 are re-derived, because VLT14 v1 commits `0` rather than the real
+    total in chunk associated data and names verifying it as the caller's duty.
+
+### Changed
+
+- **`prepare_item_publication` gained a content-object parameter** rather than
+  a third copy of the commit-and-announce sequence. Sealed chunk and manifest
+  frames are simply more objects in the same `PendingPublication` journal and
+  the same commit, which is what makes an attachment write inherit
+  `VLT-PM41`'s crash matrix and `VLT-PM42`'s recovery instead of needing a
+  resumable-upload protocol beside them. An interrupted attach leaves only the
+  unreachable immutable objects `VLT-PM00` §10.4 already describes.
+
+- **Portable import now drops attachments.** `VLT-PM17`'s snapshot carries
+  records and not blobs, so carrying an attachment *reference* across would
+  produce an item claiming attachments no export in the target could ever
+  find. `portable_semantic_root` normalises source and target through the same
+  function, so restore verification compares the same closure on both sides
+  and is unweakened.
+
+- Randomness partitioning now works on slices throughout; the fixed-array
+  helpers it duplicated were removed.
+
 ## [0.65.0] - 2026-08-18
 
 ### Changed

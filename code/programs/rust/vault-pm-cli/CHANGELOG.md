@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- The shipped executable now stores, lists, and exports file attachments:
+  `attachment add ITEM FILE`, `attachment list ITEM`, and
+  `attachment export ITEM ATTACHMENT FILE`. This crate's own sources are
+  unchanged; the storage lives in `coding_adventures_vault_pm_application`,
+  the file I/O in `coding_adventures_vault_pm_cli_host`, and the grammar in
+  `coding_adventures_vault_pm_cli`. Specified by
+  `VLT-PM47-cli-attachments.md`.
+
+- A real-process end-to-end test round-trips a payload of two 64 KiB chunks
+  plus 1,234 bytes — deliberately not a chunk multiple, so the short final
+  chunk is exercised — through a pseudo-terminal and compares the exported
+  file byte for byte, checks that neither an interior run of the plaintext nor
+  the file's name appears anywhere under the platform roots, and proves a
+  refused export writes no file while still leaving a denied row in the audit
+  chain.
+
 - The shipped executable can now deliver a secret to the system clipboard:
   `password generate --copy` and `totp code ITEM --copy` are no longer refused.
   This crate's own sources are unchanged; the adapter lives in

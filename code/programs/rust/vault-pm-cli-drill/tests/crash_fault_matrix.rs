@@ -758,6 +758,7 @@ fn the_ledger_names_only_ordinals_phases_and_a_closed_step_vocabulary() {
                     | "config.create"
                     | "config.replace"
                     | "export.artifact"
+                    | "attachment.artifact"
             ),
             "unexpected durable step name {name}"
         );
@@ -1734,4 +1735,202 @@ fn init_finishes_an_interrupted_publication_instead_of_refusing_it() {
     unlocked(&home, &["audit", "verify"], Injection::default())
         .assert_succeeded("audit verify after an init-driven recovery");
     assert_tree_excludes_secrets(home.path());
+}
+
+/// VLT-PM47 §5 and §9.8. An attachment write is one ordinary mutation, so the
+/// claim under test is that it *inherits* this matrix rather than needing one
+/// of its own.
+///
+/// It publishes more objects than any other ceremony here — a three-chunk file
+/// adds four content objects on top of the revision, catalog and audit event —
+/// which makes it the ceremony with the most landing points, and therefore the
+/// one where "a crash leaves the vault either untouched or one command from
+/// healthy" is least obviously true. Every kill still lands on the same
+/// `publish_mutation` compare-exchange pair every other mutation uses.
+#[test]
+fn an_interrupted_attachment_add_is_clean_or_resumable() {
+    let (home, item) = initialized_vault("attach");
+    let source = home.path().join("attachment-source.bin");
+    fs::write(&source, attachment_payload()).unwrap();
+    let source = source.to_str().unwrap().to_owned();
+    let snapshot = Snapshot::capture(&home);
+    assert_ceremony_survives_its_characteristic_kills(
+        "attachment add",
+        &home,
+        &snapshot,
+        |home, injection| {
+            drive(
+                home,
+                &["attachment", "add", &item, &source],
+                &unlock_script(),
+                injection,
+            )
+        },
+    );
+    // After the last restore the vault is the one we snapshotted, so a fresh
+    // attach still works end to end — and its bytes still come back identical,
+    // which is the property a torn write would have destroyed silently.
+    let added = drive(
+        &home,
+        &["attachment", "add", &item, &source],
+        &unlock_script(),
+        Injection::default(),
+    );
+    added.assert_succeeded("attachment add after drill");
+    let attachment = added
+        .transcript
+        .lines()
+        .find_map(|line| {
+            line.trim_end_matches('\r')
+                .strip_prefix("Attachment added: ")
+        })
+        .expect("the ceremony announces the new attachment identity")
+        .to_owned();
+
+    let destination = home.path().join("attachment-export.bin");
+    let exported = drive(
+        &home,
+        &[
+            "attachment",
+            "export",
+            &item,
+            &attachment,
+            destination.to_str().unwrap(),
+        ],
+        &attachment_export_script(),
+        Injection::default(),
+    );
+    exported.assert_succeeded("attachment export after drill");
+    assert_eq!(
+        fs::read(&destination).unwrap(),
+        attachment_payload(),
+        "the attachment survived the drill byte for byte"
+    );
+}
+
+/// VLT-PM47 §6.5. The exported file is the one durable write this ceremony
+/// makes outside the storage backend, and the property is that neither side of
+/// it leaves a partial plaintext: killed before, no file exists; killed after,
+/// the file is the complete plaintext. A file that exists and is neither is
+/// the torn class this matrix forbids.
+///
+/// The two landing points are found by name rather than by position, because
+/// the ordinal of `attachment.artifact` depends on how many objects the
+/// preceding audit publication wrote and pinning it as a number would make
+/// this test a statement about arithmetic.
+#[test]
+fn an_interrupted_attachment_export_never_leaves_a_partial_plaintext() {
+    let (home, item) = initialized_vault("attach-export");
+    let source = home.path().join("attachment-source.bin");
+    let payload = attachment_payload();
+    fs::write(&source, &payload).unwrap();
+    drive(
+        &home,
+        &["attachment", "add", &item, source.to_str().unwrap()],
+        &unlock_script(),
+        Injection::default(),
+    )
+    .assert_succeeded("attachment add");
+    let listed = drive(
+        &home,
+        &["attachment", "list", &item],
+        &unlock_script(),
+        Injection::default(),
+    );
+    listed.assert_succeeded("attachment list");
+    let attachment = listed
+        .transcript
+        .lines()
+        .map(|line| line.trim_end_matches('\r'))
+        .find(|line| line.contains("name=attachment-source.bin"))
+        .and_then(|line| line.split('\t').next())
+        .expect("the listing names the attachment")
+        .to_owned();
+
+    let snapshot = Snapshot::capture(&home);
+    let destination = home.path().join("partial-export.bin");
+    let run = |home: &TestHome, injection: Injection<'_>| {
+        let _ = fs::remove_file(&destination);
+        drive(
+            home,
+            &[
+                "attachment",
+                "export",
+                &item,
+                &attachment,
+                destination.to_str().unwrap(),
+            ],
+            &attachment_export_script(),
+            injection,
+        )
+    };
+
+    let ledger = home.ledger_path();
+    let _ = fs::remove_file(&ledger);
+    run(
+        &home,
+        Injection {
+            trace: Some(&ledger),
+            crash_at: None,
+        },
+    )
+    .assert_succeeded("uninjured export");
+    let entries = read_ledger(&ledger);
+    assert_contiguous(&entries);
+    let artifact_points: Vec<u64> = entries
+        .iter()
+        .filter(|entry| entry.step == "attachment.artifact")
+        .map(|entry| entry.ordinal)
+        .collect();
+    assert_eq!(
+        artifact_points.len(),
+        2,
+        "the export artifact must be bracketed exactly once"
+    );
+    let _ = fs::remove_file(&ledger);
+    snapshot.restore(&home);
+
+    for point in artifact_points {
+        run(
+            &home,
+            Injection {
+                trace: None,
+                crash_at: Some(point),
+            },
+        )
+        .assert_killed(point);
+        match fs::read(&destination) {
+            Err(_) => {}
+            Ok(bytes) => assert_eq!(
+                bytes, payload,
+                "landing point {point} left a partial export"
+            ),
+        }
+        snapshot.restore(&home);
+    }
+    let _ = fs::remove_file(&destination);
+}
+
+/// A deterministic multi-chunk attachment payload.
+///
+/// Three chunks rather than one, because the point of the drill is that a
+/// ceremony publishing many objects still lands cleanly, and a single chunk
+/// would make the object count indistinguishable from an ordinary edit.
+fn attachment_payload() -> Vec<u8> {
+    (0..(2 * 65_536 + 777))
+        .map(|index| (index % 251) as u8)
+        .collect()
+}
+
+fn attachment_export_script() -> Vec<Turn<'static>> {
+    vec![
+        turn(
+            b"Vault passphrase: ",
+            b"crash matrix correct horse battery staple\n",
+        ),
+        turn(
+            b"Write this attachment's contents to a plaintext file? Type yes to continue: ",
+            b"yes\n",
+        ),
+    ]
 }

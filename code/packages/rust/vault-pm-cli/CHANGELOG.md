@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- **`attachment add`, `attachment list`, and `attachment export`**, the last
+  piece of `VLT-PM00` §23 item 11. Specified by
+  `VLT-PM47-cli-attachments.md`. The verbs are spelled as §14.4 already
+  published them.
+
+  One deviation from that table, recorded there: the export destination is
+  required rather than bracketed. The only available default was the stored
+  attachment name resolved against the working directory, and in a synced
+  vault that name is authored by whoever attached the file. Nothing in this
+  product turns a stored name into a filesystem path.
+
+  `add` validates the base name and reads the source *before* the passphrase
+  prompt, so a missing file, a directory, or one over the ceiling costs no
+  terminal interaction — the position `VLT-PM44` §2.3, `VLT-PM45` §2.3, and
+  `VLT-PM46` §3.2 all put a pre-flight check in, for the same reason. The
+  entropy block is sized from the file's length and reserved before
+  authentication, like every other mutation's.
+
+  `export` runs `VLT-PM25`'s ceremony with a third confirmation sentence, for
+  `VLT-PM46` §3.1's reason: neither existing prompt describes writing vault
+  content into an ordinary unencrypted file this product will not track,
+  clear, or know about again. The intent stays `InteractiveReveal`
+  (`VLT-PM46` §3.0). Refusal, or a host failure collecting the answer,
+  publishes `Denied` and writes nothing.
+
+  `attachment remove` is deferred to `gc run` by that document's §2.2:
+  removing a reference while every byte stays in the store is not the removal
+  the word promises.
+
+- `DurableStep::AttachmentArtifact` is bracketed around the exported file, the
+  one durable write this ceremony makes outside the storage backend.
+
 - **`--copy` now works** on `password generate` and `totp code`, the third
   piece of `VLT-PM00` §23 item 11. Specified by `VLT-PM46-cli-clipboard.md`.
   Both commands have parsed `--copy` and then refused it with the unsupported

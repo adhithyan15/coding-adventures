@@ -529,6 +529,75 @@ still cause. That residual is pre-existing and tracked; it needs a decision
 about what a partly-unreadable item looks like to every ceremony, not a local
 fix. See VLT-PM05 section 13.3 and VLT02 *Decoding never re-encodes*.
 
+## Attachments, and why they are chunked
+
+An attachment is the one thing a vault-pm item holds that cannot be a field.
+Everything else — a password, a note body, a card number, a TOTP seed — is
+small enough to sit inside one item revision. A scanned recovery sheet is not,
+and the bound that stops it is the *inner* of the two ceilings above.
+
+`MAX_ENCODED_SIZE` is 1 MiB and applies to every single CBOR value this product
+emits. So an attachment is stored as fixed 64 KiB pieces, and the number the
+design turns on is that one sealed chunk object encodes to about 65,600 bytes —
+sixteen times under the ceiling, on a value whose size is a constant of the
+format and cannot vary with the file. Two `const` assertions hold that margin
+and the publication-object budget, so neither can drift without stopping the
+build.
+
+Each piece is sealed twice, and the layers authenticate different things:
+
+```text
+  plaintext[i*64KiB ..]
+       |  VLT14 chunk AEAD  (per-attachment DEK)
+       |  nonce = blob_id || index_be || 0000
+       |  aad   = "VAT1" || blob_id || index_be || is_final || 0
+       v
+  EncryptedChunk
+       |  canonical CBOR, kind = AttachmentChunk
+       |  this crate's object envelope (fresh random DEK, wrapped under the
+       |  vault object-wrap key; aad binds suite, vault, kind)
+       v
+  ObjectFrameV1  ->  ObjectId = SHA256("VPM-OBJECT-ID-v1" || frame)
+```
+
+The outer layer binds the bytes to this vault and this kind, and gives them an
+address. It says nothing about which attachment a chunk belongs to or where in
+it the chunk sits. The inner layer binds the bytes to this blob at this index
+with this finality, which is what makes "chunk 4 of attachment A substituted
+for chunk 4 of attachment B" a tag failure rather than a silent wrong answer.
+Content addressing does not supply that: it guarantees an object's bytes, not
+that a manifest lists the right objects in the right order. The cost is sixteen
+bytes per 64 KiB.
+
+VLT14's counter nonces do not break this crate's rule that every nonce is
+caller-injected independent randomness, because the two live at different
+layers: the object frames keep their random nonces, and both the blob id and
+the per-attachment key come fresh out of the caller's entropy block on every
+attach, so no two streams can share a `(blob_id, dek)` pair. `from_dek` is used
+rather than `new_random`, which would reach for the OS CSPRNG and break this
+crate's determinism.
+
+One manifest object per attachment carries the name, length, content hash, key,
+and ordered chunk references; the item revision carries a forty-eight-byte
+pointer to it in an optional tenth live-state field, present exactly when the
+item has attachments. So a revision without any encodes exactly the nine keys
+it encoded before attachments existed, byte for byte, and every revision
+written earlier still decodes. Storing manifests inline would have cost up to
+570 KiB of revision.
+
+**An attachment write is one ordinary mutation.** Every sealed chunk, the
+manifest, the new revision, the rebuilt catalog, the audit event, the commit,
+and the announcement go into one `PendingPublication` journal and through the
+same compare-exchange pair every other mutation uses. That is what makes
+VLT-PM41's crash matrix and VLT-PM42's recovery apply here with no new
+argument, and why an interrupted attach leaves only the unreachable immutable
+objects VLT-PM00 section 10.4 already describes rather than an orphaned partial
+blob. `MAX_ATTACHMENT_BYTES` is set below what one publication can carry on
+purpose, so the resumable-upload protocol that would need its own recovery path
+is not needed and does not exist.
+
+See `VLT-PM47-cli-attachments.md`.
+
 ## Two doors into an unlocked vault
 
 `VaultAccessV1` offers two named unlocks, and choosing between them is a

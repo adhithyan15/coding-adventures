@@ -29,6 +29,28 @@ add and removal operations. The present-only `values` projection deliberately
 cannot be used for lossless persistence because it would discard tombstones
 and could resurrect removed membership after a merge.
 
+## Attachments are two facts that must agree
+
+`ItemDocument` carries both `attachments`, the observed-remove set of
+`AttachmentId`s, and `attachment_manifests`, a map from each of those ids to
+the `AttachmentManifestId` naming where its bytes are. Those are one fact
+stored twice, so the only legal relation between them is equality, and
+`validate` enforces it in both directions: membership with no manifest names
+bytes nobody can find, and a manifest with no membership points at bytes
+nothing claims. Neither is a state with a meaning, so both are
+`AttachmentManifestMismatch`.
+
+The key set is `retained_values()` rather than `values()`. An observed-remove
+set keeps a removed value on the wire so a later merge cannot resurrect it
+silently; if the manifest reference were dropped at removal, the resurrected
+attachment would name bytes nothing could find.
+
+Concurrent auto-merge unions the two maps. A disagreement about one id is a
+fault rather than a conflict a person could resolve: an `AttachmentId` is a
+random 128-bit value drawn once and the manifest it names is an immutable
+content address, so two replicas that both know the id necessarily know the
+same manifest, and one of them is simply wrong.
+
 ## Development
 
 ```bash

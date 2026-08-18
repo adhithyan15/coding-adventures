@@ -2579,3 +2579,215 @@ fn assert_tree_excludes(root: &Path, forbidden: &[u8]) {
         }
     }
 }
+
+/// One deterministic attachment payload larger than a single 64 KiB chunk.
+///
+/// The length is deliberately not a chunk multiple, so the short final chunk
+/// is exercised. A payload that happened to be an exact multiple would leave
+/// the tail path untested and make "it round-tripped" a weaker statement than
+/// it looks (VLT-PM47 §9.1).
+fn attachment_payload() -> Vec<u8> {
+    (0..(2 * 65_536 + 1_234))
+        .map(|index| (index % 251) as u8)
+        .collect()
+}
+
+fn run_attachment_add_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    source: &Path,
+) -> (ExitStatus, String, Vec<u8>) {
+    run_attachment_command_in_pty(
+        home,
+        &[
+            "attachment",
+            "add",
+            item_id,
+            source.to_str().expect("UTF-8 attachment source"),
+        ],
+        None,
+    )
+}
+
+fn run_attachment_list_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String, Vec<u8>) {
+    run_attachment_command_in_pty(home, &["attachment", "list", item_id], None)
+}
+
+fn run_attachment_export_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    attachment_id: &str,
+    destination: &Path,
+    answer: &[u8],
+) -> (ExitStatus, String, Vec<u8>) {
+    run_attachment_command_in_pty(
+        home,
+        &[
+            "attachment",
+            "export",
+            item_id,
+            attachment_id,
+            destination.to_str().expect("UTF-8 attachment destination"),
+        ],
+        Some(answer),
+    )
+}
+
+/// Drive one attachment command through the real executable.
+///
+/// Standard output stays a clean pipe and the controlling terminal is on
+/// standard error, the same split `run_totp_code_in_pty` uses, so the test can
+/// assert on what a shell would capture separately from what the person sees.
+fn run_attachment_command_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    confirmation: Option<&[u8]>,
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut stdout = child.stdout.take().unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    if let Some(answer) = confirmation {
+        read_until(
+            &mut master,
+            &mut transcript,
+            b"Write this attachment's contents to a plaintext file? Type yes to continue: ",
+        );
+        master.write_all(answer).unwrap();
+        master.write_all(b"\n").unwrap();
+    }
+    let mut captured = Vec::new();
+    stdout.read_to_end(&mut captured).unwrap();
+    drain_pty(&mut master, &mut transcript);
+    let status = child.wait().unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        captured,
+    )
+}
+
+/// VLT-PM47 §9. The whole attachment ceremony through the real executable: a
+/// multi-chunk file goes in, its metadata comes back, and the bytes come out
+/// identical — with nothing of the file or its name on disk in clear, and the
+/// refusal path releasing nothing.
+#[test]
+fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+    let (add_status, add_transcript) = run_add_login_in_pty(&home);
+    assert!(add_status.success(), "login add failed: {add_transcript}");
+    let item_id = extract_item_id(&add_transcript);
+
+    let payload = attachment_payload();
+    let source = home.0.join("recovery-codes.bin");
+    fs::write(&source, &payload).unwrap();
+
+    let (status, transcript, stdout) = run_attachment_add_in_pty(&home, &item_id, &source);
+    assert!(status.success(), "{transcript}");
+    let announced = String::from_utf8(stdout).unwrap();
+    let attachment_id = announced
+        .strip_prefix("Attachment added: ")
+        .and_then(|rest| rest.strip_suffix('\n'))
+        .unwrap_or_else(|| panic!("unexpected standard output: {announced:?}"))
+        .to_owned();
+
+    // The listing is metadata, so it belongs on ordinary standard output.
+    let (list_status, list_transcript, list_stdout) =
+        run_attachment_list_in_pty(&home, &item_id);
+    assert!(list_status.success(), "{list_transcript}");
+    let listed = String::from_utf8(list_stdout).unwrap();
+    assert!(listed.contains(&attachment_id), "{listed:?}");
+    assert!(listed.contains("name=recovery-codes.bin"), "{listed:?}");
+    assert!(
+        listed.contains(&format!("bytes={}", payload.len())),
+        "{listed:?}"
+    );
+
+    // A refusal at the prompt writes no file at all.
+    let refused_destination = home.0.join("refused.bin");
+    let (refused_status, refused_transcript, refused_stdout) = run_attachment_export_in_pty(
+        &home,
+        &item_id,
+        &attachment_id,
+        &refused_destination,
+        b"no",
+    );
+    assert_eq!(refused_status.code(), Some(2), "{refused_transcript}");
+    assert!(refused_stdout.is_empty());
+    assert!(!refused_destination.exists(), "a refused export wrote a file");
+
+    let destination = home.0.join("exported.bin");
+    let (export_status, export_transcript, export_stdout) =
+        run_attachment_export_in_pty(&home, &item_id, &attachment_id, &destination, b"yes");
+    assert!(export_status.success(), "{export_transcript}");
+    assert_eq!(
+        String::from_utf8(export_stdout).unwrap(),
+        "Attachment written.\n"
+    );
+    assert_eq!(
+        fs::read(&destination).unwrap(),
+        payload,
+        "the exported file must be byte-identical to the source"
+    );
+
+    // The store holds ciphertext: a distinctive interior run of the payload,
+    // and the file name, appear nowhere under the platform roots. The exported
+    // copy is deliberately outside those roots.
+    for child in ["config", "data", "cache"] {
+        assert_tree_excludes(&home.0.join(child), &payload[65_536..65_536 + 64]);
+        assert_tree_excludes(&home.0.join(child), b"recovery-codes.bin");
+    }
+
+    // Every access is recorded, and the chain carries neither the name nor any
+    // byte of the file.
+    let (audit_status, audit) =
+        run_unlock_in_pty(&home, &["audit", "list"], b"action=item_read\toutcome=denied");
+    assert!(audit_status.success(), "{audit}");
+    assert!(
+        audit.contains("action=item_update\toutcome=succeeded"),
+        "{audit}"
+    );
+    assert!(
+        audit.contains("action=item_read\toutcome=denied"),
+        "the refused export must leave a row: {audit}"
+    );
+    assert_eq!(
+        audit
+            .lines()
+            .filter(|row| row.contains("action=item_read\toutcome=succeeded"))
+            .count(),
+        2,
+        "{audit}"
+    );
+    assert!(!audit.contains("recovery-codes.bin"), "{audit}");
+    assert_audit_rows_have_only_closed_fields(&audit);
+
+    let (verify_status, verify) =
+        run_unlock_in_pty(&home, &["audit", "verify"], b"Audit: verified");
+    assert!(verify_status.success(), "{verify}");
+}

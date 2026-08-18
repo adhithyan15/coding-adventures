@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- **Added `read_attachment_source` and `write_attachment_export`**, the
+  filesystem halves of `VLT-PM47-cli-attachments.md`. The read returns
+  `Zeroizing` bytes because what it holds is the person's file rather than an
+  already-encrypted artifact, so a refused or failed attach leaves no copy in
+  freed heap; it bounds the metadata length before allocating and caps the
+  reader at one byte past the ceiling, so a file that grows between the two
+  cannot force an unbounded allocation. A path that will not open is
+  `InvalidAttachmentSource` and exit 2 rather than a provider failure: exit 7
+  tells a person to retry later, and retrying will not conjure the file.
+
+  The write refuses to replace an existing destination, creates owner-only on
+  Unix, `fsync`s, and removes the incomplete file if anything fails — a
+  half-written plaintext left behind by a failed export is a leak with no
+  owner.
+
+- **Added `TextPrompt::AttachmentExportConfirmation`** and
+  `ControllingTerminal::confirm_attachment_export`. A third sentence for the
+  same reason there is a second: an export puts vault-held content into a
+  plaintext file, neither of the other two prompts says so, and a consent
+  ceremony that misdescribes what it is consenting to manufactures a record of
+  an agreement nobody made.
+
 - **Added `clipboard`**, the platform clipboard adapter with a verified timed
   clear, specified by `VLT-PM46-cli-clipboard.md`. `VLT-PM00` §14.6 has always
   called `--copy` the *preferred* secret-output mode and `VLT-PM07` has always

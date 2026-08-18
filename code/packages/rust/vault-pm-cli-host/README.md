@@ -151,6 +151,33 @@ Windows adds three target-specific tests for console names and strict bounded
 UTF-16 conversion; cross-target Clippy validates the native Windows API
 surface from Unix.
 
+## The attachment file pair
+
+`read_attachment_source` returns `Zeroizing` bytes and
+`write_attachment_export` writes plaintext. The asymmetry is deliberate and it
+is the whole security shape of the pair.
+
+What the read holds is the *person's file*, not an already-encrypted artifact
+like a portable export, so a refused or failed attach must not leave a copy of
+it in freed heap. It bounds the metadata length before allocating and caps the
+reader at one byte past the ceiling, so a file that grows between those two
+observations cannot force an unbounded allocation. A path that will not open is
+`InvalidAttachmentSource` — exit 2 — rather than a provider failure, because
+exit 7 tells a person to retry later and retrying will not conjure the file.
+
+What the write produces *is* plaintext: that is what an export is. So the care
+is everywhere else. Create-new semantics, so an existing file, directory, or
+symbolic link is never followed or replaced; owner-only mode at creation on
+Unix; write, `fsync`; and removal of the incomplete file if either step fails,
+because a half-written plaintext left behind by a failed export is a leak with
+no owner.
+
+`AttachmentExportConfirmation` is a third confirmation sentence rather than a
+reuse of the reveal or copy one. An export puts vault content into an ordinary
+file this product will not track, clear, or know about again; neither existing
+sentence says that, and a consent ceremony that misdescribes what it is
+consenting to manufactures a record of an agreement nobody made.
+
 ## Verification
 
 ```bash
