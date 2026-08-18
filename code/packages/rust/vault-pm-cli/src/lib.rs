@@ -1109,7 +1109,19 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
     // command finished an interrupted publication.
     let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
     let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
-    let after = observed_vault_state(prepared.paths(), &writer, selected_vault);
+    // The second reading is taken only when the first one found something that
+    // could be repaired, and that condition is load-bearing rather than an
+    // optimization. `LocalStateStore::load` initializes its backend, and a
+    // backend initialization is itself a durable step — one VLT-PM41's ledger
+    // names and kills processes at. Reading unconditionally would therefore
+    // append durable writes *after* every ceremony's own last one, making
+    // "the portable-export artifact is the last thing this command makes
+    // durable" false. An observation about a command must not move the command.
+    let after = if matches!(before, Some(VaultStatusStateV1::RecoveryRequired)) {
+        observed_vault_state(prepared.paths(), &writer, selected_vault)
+    } else {
+        None
+    };
     if !observed_a_repair(before, after) {
         return result;
     }
@@ -1131,24 +1143,35 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
 ///
 /// | before | after | repair announced | why |
 /// |---|---|---|---|
-/// | `RecoveryRequired` | anything else, observed | **yes** | only this command held the writer lock, so only this command can have moved it |
+/// | `RecoveryRequired` | `Locked` | **yes** | the journal was replayed and the owner state is `Active`, and only this command held the writer lock |
 /// | `RecoveryRequired` | `RecoveryRequired` | no | still wedged; nothing was finished |
 /// | `RecoveryRequired` | `None` | no | the observation could not be taken, which is not evidence of anything |
+/// | `RecoveryRequired` | `Absent` or `Prepared` | no | not a repair — owner state went missing or backwards |
 /// | anything else | anything | no | there was nothing to repair |
 ///
-/// The third row is the one worth stating out loud. `None` means the state
-/// could not be read — an owner-state file that just became unreadable, a store
-/// that went away mid-command — and `None != Some(RecoveryRequired)` is
-/// perfectly true while proving nothing. Reading it as "no longer recovery
-/// required" would announce a repair on a vault that is still wedged, which is
-/// precisely the false claim [`observed_vault_state`] exists to avoid. Both
-/// ends therefore fail toward silence.
+/// Two rows are worth stating out loud.
+///
+/// `None` means the state could not be read — an owner-state file that just
+/// became unreadable, a store that went away mid-command. `None` is not
+/// `RecoveryRequired`, which makes "the state is no longer `RecoveryRequired`"
+/// perfectly true and completely uninformative; believing it would announce a
+/// repair on a vault that is still wedged, precisely the false claim
+/// [`observed_vault_state`] exists to avoid.
+///
+/// `Absent` and `Prepared` are named rather than lumped into "anything else"
+/// for the same reason. Neither is reachable today — the owner-state store
+/// exposes no delete, and both `PreparedInit` writers demand absence — but if
+/// one ever appeared it would mean the owner state was lost or rolled back, and
+/// calling that "recovered an interrupted write" would be a worse lie than
+/// saying nothing. `Unlocked` cannot appear either, since the observation
+/// always builds a fresh locked handle. So the affirmative row names the one
+/// state a completed repair actually leaves behind.
 const fn observed_a_repair(
     before: Option<VaultStatusStateV1>,
     after: Option<VaultStatusStateV1>,
 ) -> bool {
     matches!(before, Some(VaultStatusStateV1::RecoveryRequired))
-        && matches!(after, Some(state) if !matches!(state, VaultStatusStateV1::RecoveryRequired))
+        && matches!(after, Some(VaultStatusStateV1::Locked))
 }
 
 /// Read the durable lifecycle state of the vault this invocation targets.
@@ -8305,14 +8328,9 @@ mod tests {
     fn a_repair_is_announced_only_when_both_observations_prove_one() {
         use VaultStatusStateV1::{Absent, Locked, Prepared, RecoveryRequired, Unlocked};
 
-        // The only row that speaks: wedged before, demonstrably not wedged
-        // after. Every state the projection can report counts as "not wedged".
-        for after in [Absent, Prepared, Locked, Unlocked] {
-            assert!(
-                observed_a_repair(Some(RecoveryRequired), Some(after)),
-                "{after:?}"
-            );
-        }
+        // The one row that speaks: wedged before, `Active` on disk after,
+        // which a fresh locked handle reports as `Locked`.
+        assert!(observed_a_repair(Some(RecoveryRequired), Some(Locked)));
 
         // Still wedged, so nothing was finished.
         assert!(!observed_a_repair(
@@ -8321,10 +8339,18 @@ mod tests {
         ));
 
         // An observation that could not be taken proves nothing, and
-        // `None != Some(RecoveryRequired)` is exactly the true-but-meaningless
-        // comparison that would otherwise announce a repair on a vault that is
-        // still wedged.
+        // "not `RecoveryRequired`" is exactly the true-but-meaningless claim
+        // that would otherwise announce a repair on a still-wedged vault.
         assert!(!observed_a_repair(Some(RecoveryRequired), None));
+
+        // Owner state that went missing or backwards is the opposite of a
+        // repair, and `Unlocked` cannot come from a freshly locked handle.
+        for after in [Absent, Prepared, Unlocked] {
+            assert!(
+                !observed_a_repair(Some(RecoveryRequired), Some(after)),
+                "{after:?}"
+            );
+        }
 
         // Nothing to repair in the first place.
         for before in [None, Some(Absent), Some(Prepared), Some(Locked)] {

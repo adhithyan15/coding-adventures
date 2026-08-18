@@ -395,9 +395,18 @@ vault-pm: recovered an interrupted write
 ```
 
 `execute` decides that by reading the durable lifecycle state immediately
-before and immediately after the command, both inside the cross-process writer
-lock the command already holds. That lock is what makes the inference sound —
-no other local writer can move the state between the two reads.
+before the command and — only if that reading found `recovery_required` —
+again immediately after, both inside the cross-process writer lock the command
+already holds. That lock is what makes the inference sound: no other local
+writer can move the state between the two reads.
+
+The second reading is conditional for a reason worth knowing. Reading owner
+state initializes its storage backend, and a backend initialization is itself a
+durable step that VLT-PM41's drill names and kills processes at. Reading after
+*every* command would append durable writes past each ceremony's own last one,
+so "the portable-export artifact is the last thing this command makes durable"
+would stop being true. An observation about a command must not move the
+command.
 
 `observed_a_repair` states the whole rule, and the row worth knowing is the
 quiet one: if the after-state cannot be *observed*, no notice is emitted. "Not

@@ -227,11 +227,12 @@ A repair that happens silently is indistinguishable from no repair, and this is
 a password manager: a write completing later than the user watched it complete
 is exactly the kind of thing they are entitled to know.
 
-The composition root observes the durable owner state immediately before and
-immediately after the command runs, both reads under the same cross-process
-writer lock the command already holds. When the state was `RecoveryRequired`
-before and is not after, one fixed payload-free line is added to standard
-error:
+The composition root observes the durable owner state immediately before the
+command runs and, **only if that reading found `RecoveryRequired`**, again
+immediately after. Both reads happen under the same cross-process writer lock
+the command already holds. When the state was `RecoveryRequired` before and is
+observably something else after, one fixed payload-free line is added to
+standard error:
 
 ```text
 vault-pm: recovered an interrupted write
@@ -244,10 +245,18 @@ The complete rule, because the interesting rows are the silent ones:
 
 | before | after | notice | why |
 |---|---|---|---|
-| `RecoveryRequired` | anything else, observed | **yes** | only this command held the writer lock |
+| `RecoveryRequired` | `Locked` | **yes** | owner state is `Active`, and only this command held the writer lock |
 | `RecoveryRequired` | `RecoveryRequired` | no | still wedged; nothing was finished |
 | `RecoveryRequired` | unobservable | no | an observation that could not be taken is not evidence |
+| `RecoveryRequired` | `Absent` or `Prepared` | no | not a repair — owner state went missing or backwards |
 | anything else | anything | no | there was nothing to repair |
+
+The affirmative row names one state rather than "anything else" on purpose.
+`Absent` and `Prepared` are unreachable after a repair today — the owner-state
+store exposes no delete and both `PreparedInit` writers demand absence — but if
+either ever appeared it would mean owner state was lost or rolled back, and
+calling that "recovered an interrupted write" would be a worse lie than
+silence.
 
 Three notes on why this is trustworthy:
 
@@ -265,6 +274,16 @@ Three notes on why this is trustworthy:
 - **It says "recovered", not "your command did something extra".** The
   observation is of the vault, not of the verb, so the same sentence is correct
   for `item list`, for `init`, and for a shell command.
+
+The conditional second reading is a requirement, not an optimization. Reading
+owner state initializes its storage backend, and a backend initialization is a
+*durable step* — one VLT-PM41's ledger names and kills real processes at. An
+unconditional second reading therefore appends durable writes after every
+ceremony's own last one, which makes "the portable-export artifact is the last
+thing this command makes durable" false and invalidates the landing-point
+sweeps. An observation about a command must not move the command.
+VLT-PM41's `an_interrupted_portable_export_never_publishes_a_partial_artifact`
+is what enforces this, and it is the test that caught the mistake.
 
 ## 7. Security analysis
 

@@ -43,7 +43,12 @@
   unobservable after-state satisfies "not `RecoveryRequired`" while proving
   nothing, so reading it that way would announce a repair on a vault that is
   still wedged. `observed_a_repair` states the whole truth table and is pinned
-  by a test. Standard output and every exit class are unchanged, and the notice
+  by a test. The second reading is also *conditional* on the first having found
+  `recovery_required`, which is a requirement rather than an optimization:
+  reading owner state initializes its backend, a backend initialization is a
+  durable step VLT-PM41 kills processes at, and reading after every command
+  would append durable writes past each ceremony's own last one. An observation
+  about a command must not move the command. Standard output and every exit class are unchanged, and the notice
   is attached to a failing command too, because a repair is worth saying even
   when the verb that triggered it went on to report `not found`.
 - No change to the crash-injection isolation. The `crash-injection` feature is
