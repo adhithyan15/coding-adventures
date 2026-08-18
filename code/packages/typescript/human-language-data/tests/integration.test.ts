@@ -1235,6 +1235,10 @@ describe("real curriculum", () => {
       "ZH-C03-si-tone",
       "ZH-C03-wu-derive",
       "ZH-C03-yi-count",
+      "ZH-C04-bu-no",
+      "ZH-C04-kou-meaning",
+      "ZH-C04-practice-double",
+      "ZH-C04-ri-two",
       "ZH-W01-er-role",
       "ZH-W01-hao-build-halves",
       "ZH-W01-ni-build-halves",
@@ -1247,6 +1251,9 @@ describe("real curriculum", () => {
       "ZH-W03-si-last",
       "ZH-W03-wu-strokes",
       "ZH-W03-yi-strokes",
+      "ZH-W04-bu-lifts",
+      "ZH-W04-kou-last",
+      "ZH-W04-ri-order",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
