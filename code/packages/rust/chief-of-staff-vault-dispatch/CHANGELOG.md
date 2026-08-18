@@ -5,6 +5,28 @@ All notable changes to `chief-of-staff-vault-dispatch` are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- `VaultToolBridge::register_lease_only_into_host`, for deployments with no
+  trusted `VaultDirectDelivery`. `request_direct` without one has nowhere to
+  deliver, and registering it against a permissive stub would be strictly worse
+  than leaving it out — the agent would see a working direct-delivery tool while
+  the secret went nowhere. This is not a hole in the pair registration's
+  all-or-nothing rule: that rule is about partial FAILURE, while this is a
+  deliberate subset, chosen up front and complete in itself. They are separate
+  named operations so a reader can tell which one a call site meant. D18D 7.1 V4
+  amended to match.
+
+### Changed
+
+- The crate now has its first non-test consumer. `weather-agent-e2e` registers
+  through the bridge instead of its own `vault.request_lease` handler, which had
+  drifted in two ways that mattered: it accepted any TTL the lease layer would
+  take (ninety days, versus the bridge's fifteen-minute agent ceiling) and built
+  its error with `format!`, which V2 forbids.
+
 ## [0.1.0] — 2026-08-17
 
 Initial release. Closes the gap between the D18D vault tool *declarations* and
@@ -88,7 +110,11 @@ the D18 vault *runtime*: the two tools were catalogued but had no handlers, so
   one vault instance may serve several users and an adapter otherwise cannot
   tell whose session asked.
 
-### Known gaps (documented, not fixed here)
+### Known gaps as of 0.1.0
+
+These describe the state at 0.1.0. The first has since been closed -- per-secret
+policy shipped in the vault runtime (VLT06, PR #11982) -- and is kept here as a
+record of what this release did not do, not as a current statement.
 
 - There is no per-secret policy. `privilege_tier`, `allowed_agents`, and
   `allowed_mode` are unimplemented, and the tier and capability checks are
