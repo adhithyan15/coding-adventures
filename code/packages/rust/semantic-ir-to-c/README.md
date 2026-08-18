@@ -290,8 +290,31 @@ validator before this backend ever sees them) baked in as C int constants —
 never source-derived text reaching a dynamic file-handle lookup. See
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
+And the SIR22 array/matrix **base cut** — `NDArrays`/`MatrixOps`/
+`ArrayColumnMajor` — `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+`Transpose`/`IndexGet` (+ `Stmt::IndexSet`, the mutating counterpart) route
+into a new `_sir_array_*` sub-runtime (a `SirNDArray` — dense, rank <= 2,
+column-major — behind a new `SIR_ARRAY` tag), an inlined port of
+`semantic-ir-to-javascript`'s own already-proven `ArrayRt` sub-runtime.
+Every element is stored as a plain `double` (this backend's `SirValue` is
+statically tagged, unlike Ruby's dynamic numeric tower, so an NDArray read
+always comes back `_sir_float`); every shape-size computation is checked
+for `int64_t` overflow BEFORE multiplying, not after — the one hazard
+class neither the JS (`Number`) nor Ruby (`Integer`) ports had to guard
+against — and every index position is bounds-checked before the
+`(double)`→`int64_t` cast that would otherwise be undefined behaviour on a
+NaN or out-of-range value. The 9-node SIR22 "APL addendum" (`Reduce`/
+`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+`Ravel`/`Catenate`) shares these same three features but stays deferred to
+a later slice — rejected cleanly by the SAME structural pre-emit scan
+`first_unsupported_builtin` already uses for every other well-formed-but-
+unimplemented construct, not a new mechanism. See
+[SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
+
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, a `class << self` singleton, and
+`Intrinsics`, a `class << self` singleton, the SIR22 "APL addendum" nodes
+(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+`IndexOf`/`Ravel`/`Catenate`), and
 every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.
