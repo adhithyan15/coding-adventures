@@ -545,6 +545,64 @@ interrupted mid-publication was intact, exactly journalled, correctly
 diagnosed — and unopenable by any command. A recovery routine nobody reaches is
 a receipt for a repair that never happens.
 
+Since VLT-PM43 that same door also finishes a `PendingRotation`, and the
+difference is worth knowing: **the rotation roll-forward consumes no
+passphrase**, so the duplicate above is constructed only on the publication
+branch.
+
+## Changing the passphrase without re-encrypting anything
+
+`VLT-PM00` §14.8 requires that "password rotation rewraps the VRK without
+re-encrypting every item body". That is a claim about cost and blast radius,
+and it is true here by construction rather than by effort:
+
+```text
+   passphrase ──argon2id(salt, m, t, p)──▶ KEK
+                                            │  XChaCha20-Poly1305
+                                            ▼
+                       BootstrapV1.passphrase_root_wrap   (32 bytes)
+                                            │  unwraps
+                                            ▼
+                                       VRK (random 256-bit)
+                                            │  HKDF, closed purpose labels
+            ┌───────────────┬───────────────┼───────────────┐
+            ▼               ▼               ▼               ▼
+       locator key    object wrap key  local state key   audit key
+                            │
+                            ▼
+                 per-object random DEKs ──▶ every ObjectFrameV1
+```
+
+Everything below the VRK is reached *only* through the VRK, so the `rotate`
+module unwraps the root under the old KEK, wraps the same root under a KEK
+derived from the new passphrase with a fresh salt, and re-signs the bootstrap
+under the unchanged vault authority. One derivation, one open, one seal, on 32
+bytes.
+
+Three details carry the weight:
+
+- **The current passphrase is taken again.** An `UnlockedVaultV1` retains
+  derived subkeys and not the root, deliberately — rotation is the only
+  operation that needs the root, so it is the only one that pays for it,
+  instead of every session holding it longer. The unwrapped root is then proved
+  to be *this session's* root by opening `ActiveStateV1::local_secret` with keys
+  derived from it and requiring the identical owner secret, which compares no
+  key bytes.
+- **The retired generation is deleted.** `BootstrapStore::supersede_generation`
+  removes it and refuses to remove the live one. Advancing the latest pointer
+  alone would leave the old passphrase able to unwrap the unchanged root key
+  from a record still on disk.
+- **Recovery rolls forward.** `PendingRotationV1` is the commit point; every
+  step after it is a pure function of it, which is why the roll-forward needs
+  no secret. Rolling back would have to decide without a passphrase whether the
+  person still knows the old one.
+
+The structural claim is measured rather than asserted: a unit test compares the
+object store's complete change feed across a rotation of a pre-audit vault and
+requires it to be identical — not one repository write.
+
+See `code/specs/VLT-PM43-cli-passphrase-rotation.md`.
+
 ## Verification
 
 The package tests cover exact canonical and cryptographic vectors,

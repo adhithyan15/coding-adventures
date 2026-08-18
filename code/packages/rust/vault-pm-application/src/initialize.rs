@@ -861,7 +861,10 @@ fn root_wrap_aad(vault_id: VaultId) -> Vec<u8> {
     aad
 }
 
-pub(crate) fn sign_bootstrap(value: BootstrapV1, secret: &[u8; 64]) -> Result<BootstrapV1, ApplicationError> {
+pub(crate) fn sign_bootstrap(
+    value: BootstrapV1,
+    secret: &[u8; 64],
+) -> Result<BootstrapV1, ApplicationError> {
     let preimage = value
         .signing_preimage()
         .map_err(|_| ApplicationError::InternalInvariant)?;

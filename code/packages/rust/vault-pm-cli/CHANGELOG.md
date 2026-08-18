@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+- **Added `vault-pm [--vault NAME] passphrase rotate`**, the ceremony
+  `VLT-PM00` §14.8 has required since before there was any code and that
+  nothing performed. Specified by `VLT-PM43-cli-passphrase-rotation.md`; closes
+  §23 item 10b.
+
+  The order of the two prompts is the whole safety argument. The *current*
+  passphrase comes first, because it is the authentication and because someone
+  who cannot produce it must be told so before being asked to invent a
+  replacement. The *new* one is collected and confirmed second, against an
+  already unlocked vault, so a typo is caught while the old passphrase is still
+  the only one that means anything. Nothing durable happens until both are in
+  hand and the next bootstrap is built and signed, so every failure up to that
+  point leaves a vault the current passphrase still opens.
+
+  The verb takes no arguments at all. §14.5 forbids a passphrase reaching this
+  process through argv, an environment variable, command history, a URL, or
+  config, and a flag naming a file or a policy would be the first step toward
+  one that named a secret.
+
+- **The interactive shell refuses `passphrase`**, joining `init`, `vault`,
+  `shell`, and `--vault`. The reason is sharper than for the others: a session's
+  entire premise is that the authenticator it collected once still opens the
+  vault, and a successful rotation is precisely the event that makes that
+  false. Permitting it would leave two bad options — keep using a passphrase
+  that no longer works, turning every later command into an authentication
+  failure the person cannot explain, or silently adopt the new one, which is a
+  retained secret the session never prompted for and cannot re-confirm.
+
+- `init` and `vault create` resume an interrupted *rotation* as well as an
+  interrupted publication, through the renamed `resume_interrupted_write`. A
+  person reaching that path after a crashed rotation must type the **new**
+  passphrase — the one they had just confirmed when the machine stopped —
+  because the roll-forward itself consumes none.
+
 - **Fixed the availability defect `VLT-PM41-cli-crash-fault-matrix.md` §8
   found.** A process killed inside the shared mutation publication path left a
   vault that was intact and one journal replay from healthy, and that every

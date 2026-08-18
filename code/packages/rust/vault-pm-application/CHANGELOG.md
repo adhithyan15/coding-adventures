@@ -2,6 +2,79 @@
 
 All notable changes to this package are documented here.
 
+## [0.63.0] - 2026-08-18
+
+### Added
+
+- **Passphrase rotation**, closing `VLT-PM00` §14.8's "password rotation
+  rewraps the VRK without re-encrypting every item body" and §23 item 10b.
+  Specified by `VLT-PM43-cli-passphrase-rotation.md`.
+
+  The new `rotate` module is a workflow, not a new cryptographic capability.
+  The passphrase already protected exactly one thing — the 32 bytes of
+  `BootstrapV1.passphrase_root_wrap` that hold the vault root key — so a
+  rotation is one Argon2id derivation, one AEAD open, and one AEAD seal on
+  those 32 bytes, plus a re-signature by the unchanged vault authority.
+  Nothing below the root key is read, opened, or rewritten.
+
+  - `prepare_passphrase_rotation` is pure and performs no external write. It
+    takes the current passphrase a second time, because an `UnlockedVaultV1`
+    deliberately retains derived subkeys and not the root: rotation is the one
+    operation that needs the root, so it is the one operation that pays for it,
+    rather than every session holding it longer. It then proves the unwrapped
+    root is the session's root by opening `ActiveStateV1::local_secret` with
+    keys derived from it and requiring the identical owner secret — a binding
+    check that compares no key bytes.
+  - `commit_passphrase_rotation` and `recover_pending_rotation` perform the
+    durable half through a new `LocalVaultStateV1::PendingRotation` journal.
+  - `UnlockedVaultV1::rotate_passphrase`,
+    `::audited_rotate_passphrase`, and
+    `::record_audited_passphrase_rotation_host_failure` are the session
+    boundaries, with the audited one publishing its event *before* the effect
+    through the existing audit-only publication path.
+
+- `BootstrapStore::supersede_generation`, a **required** trait method.
+  Advancing the latest pointer is not enough to retire a passphrase: the
+  superseded generation still wraps the *same, unchanged* root key under the
+  *old* passphrase-derived key, so anyone who later obtained a copy of the
+  state directory and the retired passphrase could open the vault through it.
+  Implementations must refuse to remove the generation the latest pointer names
+  — deleting the live bootstrap would leave a vault no passphrase opens — and
+  must treat an already-absent record as success, because recovery replays the
+  call.
+
+- `PendingRotationV1` and the `LocalVaultStateV1::PendingRotation` variant
+  (state tag 4). It holds the last stable owner state and the exact signed next
+  bootstrap; the intended next state is *derived* rather than stored, so the
+  journal cannot disagree with itself. `UnlockRecoveryV1` gains
+  `RecoveredPendingRotation`, and both read-only projections report the new
+  state as `recovery_required` without distinguishing which journal it is.
+
+### Changed
+
+- `VaultAccessV1::unlock_recovering_pending_publication` now finishes an
+  interrupted *rotation* as well. Its name is kept because the contract is
+  unchanged from a caller's point of view — finish whatever an interrupted
+  process left, then open — but the two journals are finished differently, and
+  the difference is the point: **a rotation roll-forward consumes no
+  passphrase.** Every step after the journal is a pure function of the journal,
+  so a person who types the pre-crash passphrase still gets their vault
+  repaired, and then an honest `AuthenticationFailed` from the open that
+  follows, which names the state the vault is actually in.
+
+  Rolling *back* was considered and rejected: it would have to decide without a
+  passphrase whether the person still knows the old one, un-install an
+  immutable generation record, and explain why someone who just confirmed a new
+  passphrase twice ended up with the old one.
+
+### Security
+
+- The KEK derived from the *retired* passphrase is wiped inside
+  `unwrap_root_key` before the new one is derived, and the root key exists only
+  between that unwrap and the re-wrap. The prepared rotation value carries the
+  next bootstrap's public signed bytes and no live secret, which is why it is
+  safe to journal.
+
 ## [0.62.0] - 2026-08-18
 
 ### Added

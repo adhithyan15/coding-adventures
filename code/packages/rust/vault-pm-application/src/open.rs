@@ -4459,10 +4459,11 @@ mod tests {
                     {
                         return Err(BootstrapStoreError::Conflict);
                     }
-                    self.retired
-                        .lock()
-                        .unwrap()
-                        .push(current.encode().map_err(|_| BootstrapStoreError::Corruption)?);
+                    self.retired.lock().unwrap().push(
+                        current
+                            .encode()
+                            .map_err(|_| BootstrapStoreError::Corruption)?,
+                    );
                 }
                 None => {
                     if expected_previous.is_some() || intended.generation != 0 {
@@ -15682,7 +15683,6 @@ mod tests {
     }
 
     fn prepared_rotation(
-        locator: BootstrapLocator,
         local: &MemoryLocalStateStore,
         bootstrap: &MemoryBootstrapStore,
         seed: u8,
@@ -15698,20 +15698,15 @@ mod tests {
             &rotation_randomness(seed),
             &local_secret,
         )
-        .map(|prepared| {
-            let _ = locator;
-            prepared
-        })
         .unwrap()
     }
 
     fn install_pending_rotation(
-        locator: BootstrapLocator,
         local: &MemoryLocalStateStore,
         bootstrap: &MemoryBootstrapStore,
         seed: u8,
     ) {
-        let prepared = prepared_rotation(locator, local, bootstrap, seed);
+        let prepared = prepared_rotation(local, bootstrap, seed);
         let journal =
             PendingRotationV1::new(durable_active(local), prepared.bootstrap().to_vec()).unwrap();
         *local.0.lock().unwrap() = Some(
@@ -15882,7 +15877,7 @@ mod tests {
     #[test]
     fn a_rotation_that_reaches_the_journal_rolls_forward_without_a_passphrase() {
         let (locator, local, bootstrap, factory, _backend, item_id) = vault_with_one_item();
-        install_pending_rotation(locator, &local, &bootstrap, 0x47);
+        install_pending_rotation(&local, &bootstrap, 0x47);
 
         // A locked reader sees a state the next command finishes, and says so
         // without asking for anything.
@@ -15929,7 +15924,7 @@ mod tests {
     #[test]
     fn a_replayed_roll_forward_reaches_the_same_state_it_already_installed() {
         let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
-        install_pending_rotation(locator, &local, &bootstrap, 0x4b);
+        install_pending_rotation(&local, &bootstrap, 0x4b);
         let exact_pending = local.0.lock().unwrap().clone().unwrap();
 
         let first = crate::recover_pending_rotation(locator, &local, &bootstrap).unwrap();
@@ -15944,10 +15939,7 @@ mod tests {
             Some(ApplicationError::InvalidInput)
         );
         assert_ne!(settled, exact_pending);
-        assert_eq!(
-            settled,
-            LocalVaultStateV1::Active(first).encode().unwrap()
-        );
+        assert_eq!(settled, LocalVaultStateV1::Active(first).encode().unwrap());
 
         // And re-running the *interrupted* half twice is sound: reinstall the
         // journal and finish it again against the already-advanced store.
@@ -15967,7 +15959,7 @@ mod tests {
     #[test]
     fn an_interrupted_rotation_is_finished_by_an_ordinary_recovering_unlock() {
         let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
-        install_pending_rotation(locator, &local, &bootstrap, 0x53);
+        install_pending_rotation(&local, &bootstrap, 0x53);
 
         let mut access = crate::VaultAccessV1::locked(locator);
         assert_eq!(
@@ -15987,7 +15979,7 @@ mod tests {
     #[test]
     fn the_old_passphrase_still_finishes_an_interrupted_rotation_then_is_refused() {
         let (locator, local, bootstrap, factory, _backend, _) = vault_with_one_item();
-        install_pending_rotation(locator, &local, &bootstrap, 0x59);
+        install_pending_rotation(&local, &bootstrap, 0x59);
 
         // The roll-forward consumes no passphrase, so a person who types the
         // one they had before the crash still gets their vault repaired — and
@@ -16193,7 +16185,7 @@ mod tests {
 
     #[test]
     fn a_rotation_journal_round_trips_and_refuses_a_non_successor() {
-        let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+        let (_locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
         let before_bootstrap = exact_bootstrap(&bootstrap);
         let active = durable_active(&local);
 
@@ -16208,7 +16200,7 @@ mod tests {
             Some(ApplicationError::IntegrityFailure)
         );
 
-        let prepared = prepared_rotation(locator, &local, &bootstrap, 0x97);
+        let prepared = prepared_rotation(&local, &bootstrap, 0x97);
         let journal = PendingRotationV1::new(active, prepared.bootstrap().to_vec()).unwrap();
         let encoded = LocalVaultStateV1::PendingRotation(journal.clone())
             .encode()

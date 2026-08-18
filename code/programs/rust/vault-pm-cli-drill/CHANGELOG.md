@@ -2,6 +2,28 @@
 
 All notable changes to this package are documented here.
 
+## [0.3.0] - 2026-08-18
+
+### Added
+
+- `every_passphrase_rotation_landing_point_leaves_exactly_one_working_passphrase`,
+  an exhaustive sweep of `vault-pm passphrase rotate` for
+  `VLT-PM43-cli-passphrase-rotation.md` §7 gate 5. VLT-PM41 §6.3 anticipated
+  needing rows like this; a rotation is the ceremony that most needed one.
+
+  The property under test is stronger than this file's usual "clean or
+  resumable", because a rotation is the one ceremony whose failure modes are
+  *asymmetric*. It moves a single durable fact — which signed bootstrap the
+  owner state accepts — across two independent stores, and the pin is checked
+  absolutely on every open. So every landing point must leave **exactly one**
+  working passphrase: a cell where both work would mean the retired wrap
+  survived, and a cell where neither works would mean the vault was bricked.
+  Both are named as explicit panics rather than left to a generic assertion,
+  so a regression says which of the two failures it is.
+
+  Each cell then confirms that the vault behind the surviving passphrase is the
+  whole vault, by requiring the fixture's item to still be listed.
+
 ## [0.2.0] - 2026-08-18
 
 ### Changed

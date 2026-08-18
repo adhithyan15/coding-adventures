@@ -30,16 +30,15 @@ use coding_adventures_vault_pm_application::{
     BootstrapStoreError, CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1,
     DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
     LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
-    PortableExportPolicyV1, PortableExportRandomnessV1, PortableImportRandomnessV1,
-    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableOpenPolicyV1,
-    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1, RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1,
-    SecretFieldV1, SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1,
-    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
-    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
-    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PASSPHRASE_ROTATION_RANDOM_BYTES,
-    PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableExportPolicyV1,
+    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
+    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
+    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    PASSPHRASE_ROTATION_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
@@ -8878,7 +8877,11 @@ mod tests {
         let init_host = TestHost::new(paths.clone(), [old.clone()]);
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
         assert_eq!(
-            run(["audit", "enable"], &TestHost::new(paths.clone(), [old.clone()])).exit_code(),
+            run(
+                ["audit", "enable"],
+                &TestHost::new(paths.clone(), [old.clone()])
+            )
+            .exit_code(),
             ExitCode::Success
         );
         let before = object_tree(paths.object_root());
@@ -8914,7 +8917,11 @@ mod tests {
         let init_host = TestHost::new(paths.clone(), [old.clone()]);
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
         assert_eq!(
-            run(["audit", "enable"], &TestHost::new(paths.clone(), [old.clone()])).exit_code(),
+            run(
+                ["audit", "enable"],
+                &TestHost::new(paths.clone(), [old.clone()])
+            )
+            .exit_code(),
             ExitCode::Success
         );
 

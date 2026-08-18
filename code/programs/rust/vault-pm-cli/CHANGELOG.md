@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- The shipped executable can now change its master passphrase:
+  `vault-pm [--vault NAME] passphrase rotate`. This crate's own sources are
+  unchanged; the ceremony lives in `coding_adventures_vault_pm_cli` under
+  `code/specs/VLT-PM43-cli-passphrase-rotation.md`, and it is recorded here
+  because it changes what this binary does.
+
+  Its end-to-end coverage is the part worth naming. `local_cli_e2e.rs` snapshots
+  every encrypted object on disk before the rotation and requires each of them
+  to still be present and byte-for-byte unchanged afterwards — the direct
+  measurement of §14.8's "without re-encrypting every item body" — then proves
+  across process restarts that the retired passphrase is refused with exit 3,
+  that the new one lists the same item, and that the audit chain carried the
+  rotation across and still verifies.
+
 - The shipped executable now survives a crash inside a mutation. This crate's
   own sources are unchanged; the repair is in
   `coding_adventures_vault_pm_cli` under

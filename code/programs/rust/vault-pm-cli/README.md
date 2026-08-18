@@ -17,6 +17,7 @@ vault-pm [--vault NAME] audit verify
 vault-pm [--vault NAME] audit list
 vault-pm [--vault NAME] audit show TRACE
 vault-pm [--vault NAME] doctor [--unlock]
+vault-pm [--vault NAME] passphrase rotate
 vault-pm [--vault NAME] export FILE
 vault-pm [--vault NAME] import FILE
 vault-pm --vault NAME restore FILE
@@ -160,6 +161,15 @@ with anything:
   `vault-pm: invalid command`. See
   `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 for the finding and
   VLT-PM00 §23 item 10a for its closure.
+
+- An interrupted **passphrase rotation** leaves exactly one working passphrase,
+  at every landing point of the ceremony. Never both, which would mean the
+  retired wrap survived the rotation that was supposed to retire it; never
+  neither, which would mean the vault was bricked. Which of the two it is
+  depends on one durable fact — whether the rotation journal landed — and the
+  next ordinary command finishes whatever remains without asking for a secret,
+  so a person who types the passphrase they had before the crash still gets
+  their vault repaired, and then an honest `authentication required`.
 
 `status` and `doctor` are the exception, deliberately. Both report an
 interrupted vault as `recovery_required` — `doctor` with exit class 5 — without

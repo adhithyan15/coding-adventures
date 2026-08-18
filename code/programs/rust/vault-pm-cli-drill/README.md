@@ -71,7 +71,7 @@ and that the advisory writer lock was released by the kernel.
 
 | Coverage | Ceremony |
 |---|---|
-| every landing point | generation zero (34), the shared mutation publication path (20), portable export |
+| every landing point | generation zero (34), the shared mutation publication path (20), portable export, passphrase rotation |
 | first / middle / last | item create, item edit, item delete, history restore |
 | first / last | a fail-closed conflict merge |
 | every stage | the read-only diagnostics drill, including file-level backup restore |
@@ -102,6 +102,28 @@ The read-only diagnostics are still not repairs. `status` and `doctor` — with
 or without `--unlock` — report a wedged vault and leave it wedged, however many
 times they are run, which is what keeps restoring a pre-mutation file-level
 backup a real option rather than a race.
+
+## The asymmetric ceremony
+
+Passphrase rotation gets a stronger property than "clean or resumable", because
+it is the one ceremony whose two failure modes are *different kinds of wrong*.
+A rotation moves a single durable fact — which signed bootstrap the owner state
+accepts — across two independent stores, and the pin is checked absolutely on
+every open. So
+`every_passphrase_rotation_landing_point_leaves_exactly_one_working_passphrase`
+requires precisely that at every landing point:
+
+- **both passphrases working** would mean the retired wrap survived the
+  rotation that existed to retire it — a security failure that a "the vault
+  still opens" assertion would happily call success; and
+- **neither working** would mean the vault was bricked — an availability
+  failure of the exact shape VLT-PM41 section 8 already found once.
+
+Both are explicit panics naming which of the two happened, rather than one
+generic assertion, so a regression says what it broke. Each cell then confirms
+that the vault behind the surviving passphrase is the whole vault, by requiring
+the fixture's item still to be listed. See
+`code/specs/VLT-PM43-cli-passphrase-rotation.md` §7 gate 5.
 
 ## Verification
 

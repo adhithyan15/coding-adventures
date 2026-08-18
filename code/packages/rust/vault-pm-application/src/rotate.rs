@@ -259,7 +259,8 @@ pub fn prepare_passphrase_rotation(
         return Err(ApplicationError::IntegrityFailure);
     }
 
-    let (authority_public, authority_secret) = generate_keypair(observed_local_secret.authority_seed());
+    let (authority_public, authority_secret) =
+        generate_keypair(observed_local_secret.authority_seed());
     let mut authority_secret = Zeroizing::new(authority_secret);
     if PublicKey::new(authority_public) != bootstrap.authority_public_key {
         authority_secret.zeroize();

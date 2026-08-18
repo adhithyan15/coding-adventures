@@ -1,5 +1,6 @@
 #![cfg(unix)]
 
+use std::collections::BTreeMap;
 use std::fs::{self, File};
 use std::io::{self, Read, Write};
 use std::os::fd::FromRawFd;
@@ -11,6 +12,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
 const TARGET_PASSPHRASE: &[u8] = b"e2e separate restore target passphrase";
+const ROTATED_PASSPHRASE: &[u8] = b"e2e rotated correct horse battery staple";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
 const LOGIN_NOTES: &[u8] = b"e2e login notes stay encrypted 91d603be";
@@ -1904,6 +1906,167 @@ fn drain_pty(master: &mut File, transcript: &mut Vec<u8>) {
             Err(error) => panic!("pseudo-terminal drain failed: {error}"),
         }
     }
+}
+
+/// Every encrypted repository object under `root`, keyed by absolute path.
+///
+/// VLT-PM43 §7 gate 1. The `objects` directory is `LocalVaultPaths`' object
+/// root, and it holds nothing but sealed `ObjectFrameV1` records: item
+/// revisions, catalogs, commits, device certificates, and audit events. The
+/// walk starts from the whole test home rather than a computed path because
+/// `LocalVaultPaths::resolve` is platform-dependent, and a gate that quietly
+/// looked at an empty directory would pass for the wrong reason — which is why
+/// the caller also asserts the map is non-empty.
+fn encrypted_object_tree(root: &Path) -> BTreeMap<PathBuf, Vec<u8>> {
+    let mut tree = BTreeMap::new();
+    let Ok(entries) = fs::read_dir(root) else {
+        return tree;
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            tree.extend(encrypted_object_tree(&path));
+        } else if path
+            .components()
+            .any(|component| component.as_os_str() == "objects")
+        {
+            tree.insert(path.clone(), fs::read(&path).unwrap());
+        }
+    }
+    tree
+}
+
+fn run_passphrase_rotate_in_pty(
+    home: &TestHome,
+    current: &[u8],
+    replacement: &[u8],
+) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["passphrase", "rotate"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(current).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"New vault passphrase: ");
+    master.write_all(replacement).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Confirm vault passphrase: ");
+    master.write_all(replacement).unwrap();
+    master.write_all(b"\n").unwrap();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+/// VLT-PM43. The real executable, over a real pseudo-terminal, across process
+/// restarts.
+///
+/// The load-bearing assertion is the object-tree comparison: §14.8 does not ask
+/// only that a rotation *work*, it asks that it not re-encrypt every item body,
+/// and the only way to know that is to look at the bytes on disk. Every object
+/// present before the rotation must still be present and byte-for-byte
+/// unchanged; a CLI vault is audit-first from generation zero, so the rotation's
+/// own audit-only commit is the one thing allowed to appear.
+#[test]
+fn real_cli_rotates_the_passphrase_without_re_encrypting_item_bodies() {
+    let home = TestHome::new();
+    let (status, transcript) = run_init_in_pty(&home);
+    assert!(status.success(), "{transcript}");
+    let (status, transcript) = run_add_login_in_pty(&home);
+    assert!(status.success(), "{transcript}");
+    let item_id = extract_item_id(&transcript);
+
+    let before = encrypted_object_tree(&home.0);
+    assert!(
+        !before.is_empty(),
+        "the fixture must have written encrypted objects"
+    );
+
+    let (status, transcript) = run_passphrase_rotate_in_pty(&home, PASSPHRASE, ROTATED_PASSPHRASE);
+    assert!(status.success(), "{transcript}");
+    assert!(
+        transcript.contains("Vault passphrase rotated."),
+        "{transcript}"
+    );
+    assert_transcript_excludes_secrets(&transcript);
+    assert!(!transcript.contains("e2e rotated"), "{transcript}");
+
+    let after = encrypted_object_tree(&home.0);
+    for (path, bytes) in &before {
+        assert_eq!(
+            after.get(path),
+            Some(bytes),
+            "rotation rewrote an encrypted object: {path:?}"
+        );
+    }
+    assert!(after.len() > before.len(), "the audit commit must appear");
+
+    // A new process, the retired passphrase: refused with the authentication
+    // class, and nothing about the vault disclosed.
+    let (status, transcript) =
+        run_unlock_with_passphrase_in_pty(&home, &["item", "list"], b"vault-pm: ", PASSPHRASE);
+    assert_eq!(status.code(), Some(3), "{transcript}");
+    assert!(!transcript.contains("Example account"), "{transcript}");
+
+    // A new process, the new passphrase: the same item, decrypted by the same
+    // unchanged root key.
+    let (status, transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["item", "list"],
+        b"Example account",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(status.success(), "{transcript}");
+    assert!(transcript.contains(&item_id), "{transcript}");
+
+    // And the audit chain carried across the rotation, with the rotation in it.
+    let (status, transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=passphrase_rotate",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(status.success(), "{transcript}");
+    assert!(
+        transcript.contains("action=passphrase_rotate\toutcome=succeeded"),
+        "{transcript}"
+    );
+    assert_audit_rows_have_only_closed_fields(&transcript);
+
+    let (status, transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["audit", "verify"],
+        b"Audit: verified",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(status.success(), "{transcript}");
+
+    assert_tree_excludes(&home.0, PASSPHRASE);
+    assert_tree_excludes(&home.0, ROTATED_PASSPHRASE);
+    assert_tree_excludes(&home.0, ITEM_PASSWORD);
 }
 
 fn assert_tree_excludes(root: &Path, forbidden: &[u8]) {

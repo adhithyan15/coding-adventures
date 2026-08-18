@@ -980,8 +980,15 @@ and redact item/provider payloads.
   point leaves a vault any command refuses.
 - Search can be deleted and rebuilt from records.
 - Password rotation rewraps the VRK without re-encrypting every item body.
-  **Not met.** Nothing implements passphrase rotation, so this criterion has
-  never been exercised; see §23 item 10b.
+  **Met** since §23 item 10b, by `VLT-PM43-cli-passphrase-rotation.md`.
+  `vault-pm passphrase rotate` unwraps the VRK under the old passphrase-derived
+  KEK, re-wraps *the same VRK* under a KEK derived from the new passphrase with
+  a fresh salt, and durably supersedes the retired wrap. The structural half of
+  the criterion is measured rather than asserted, twice: on a pre-audit vault
+  the object store's complete change feed is identical across the rotation — not
+  one repository write — and on a real CLI vault, whose rotation publishes its
+  own audit-only commit, every encrypted object present beforehand is still
+  present and byte-for-byte unchanged on disk afterwards.
 - Export followed by import into a new vault preserves supported records but
   creates new encryption/object identities.
 - CLI end-to-end tests run through the real executable with a pseudo-terminal
@@ -1714,17 +1721,36 @@ changelog, focused build, and downstream validation.
       `VLT-PM42-cli-pending-publication-recovery.md`, with real-process
       pseudo-terminal proof in the VLT-PM41 drill that an interrupted
       `item add` comes back as the item it was.
-10b. **Open — found while verifying §14.8 for item 10a.** §14.8 requires that
-      "password rotation rewraps the VRK without re-encrypting every item
-      body", and nothing implements it. There is no rotation command in §14.4's
-      surface, no rotation use case in `vault-pm-application`, and no Phase 1A
-      item that would have added one, so the criterion has never been
-      exercised. The property the criterion describes is a consequence of the
-      key hierarchy — the VRK is wrapped under a passphrase-derived KEK, so
-      re-wrapping it touches no item body — but a property nothing performs is
-      a property nothing tests. Phase 1A does not close until a passphrase
-      rotation ceremony exists, with its own spec, prompt policy, crash
-      journal, audit ordering, and exit class.
+10b. completed passphrase rotation — **done**, the gap item 10a's verification
+      of §14.8 found. §14.8 required that "password rotation rewraps the VRK
+      without re-encrypting every item body" and nothing implemented it: no
+      rotation command in §14.4's surface, no rotation use case in
+      `vault-pm-application`, and no Phase 1A item that would have added one.
+      The property the criterion describes was always a consequence of §8.1's
+      key hierarchy, but a property nothing performs is a property nothing
+      tests.
+      `vault-pm passphrase rotate` now performs it: the current passphrase
+      authenticates and is then used a second time to unwrap the VRK — an
+      unlocked session deliberately retains derived subkeys and not the root —
+      the new passphrase is collected and confirmed against an already open
+      vault, and the same VRK is re-wrapped under a KEK derived with a fresh
+      salt into a `generation + 1` bootstrap re-signed by the unchanged vault
+      authority. Nothing below the VRK is read or rewritten.
+      Two properties are load-bearing beyond "it works". The retired generation
+      is **deleted**, through a new `BootstrapStore::supersede_generation` that
+      refuses to remove the live one: advancing the latest pointer alone would
+      have left the old passphrase able to unwrap the unchanged root key from a
+      record still on disk. And a new `PendingRotation` owner state makes the
+      swap crash-resumable in the one direction that is answerable without a
+      secret — the journal is the commit point, and every step after it is a
+      pure function of the journal, so recovery **rolls forward and consumes no
+      passphrase**. The interactive shell refuses the verb, because a session's
+      retained authenticator is precisely what a rotation invalidates.
+      Using `VLT-PM43-cli-passphrase-rotation.md`, with the VLT-PM41 drill
+      sweeping every landing point of the ceremony and requiring that exactly
+      one passphrase opens the vault at each — never both, which would mean the
+      retired wrap survived, and never neither, which would mean the vault was
+      bricked.
 10c. **Open — found alongside 10b.** §14.4 states that Phase 1A implements
       "password generation", while §23 item 11 places the password generator in
       Phase 1B. The two statements contradict each other and the shipped

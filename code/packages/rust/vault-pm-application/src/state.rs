@@ -646,7 +646,9 @@ impl PendingRotationV1 {
     /// the bootstrap and a separately built "intended" state could disagree
     /// with itself, and the disagreement would only surface after a crash.
     pub fn intended_active(&self) -> Result<ActiveStateV1, ApplicationError> {
-        self.active.clone().with_bootstrap_id(self.next_bootstrap_id()?)
+        self.active
+            .clone()
+            .with_bootstrap_id(self.next_bootstrap_id()?)
     }
 
     fn validate(&self) -> Result<(), ApplicationError> {
