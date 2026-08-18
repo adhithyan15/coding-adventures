@@ -318,6 +318,8 @@ members = [
     "axiom-runtime",
     "axiom-repl",
     "axiom-to-semantic-ir",
+    "axiom-iir-compiler",
+    "axiom-vm",
     "logic-gates",
     "logic-core",
     "lookup-core",
