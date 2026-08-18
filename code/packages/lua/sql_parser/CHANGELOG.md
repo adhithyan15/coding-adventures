@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed
+
+- Eliminated runtime grammar loading: `get_grammar` now requires a
+  pre-compiled `_grammar` module instead of reading and parsing the
+  `sql.grammar` file from `code/grammars/` on every call. The old code
+  walked out of the installed package's own directory to a
+  monorepo-relative path that a published LuaRocks package does not ship.
+
 ### Changed
 
 - Removed `test_error_on_incomplete_select_missing_from` test. The `sql.grammar`
