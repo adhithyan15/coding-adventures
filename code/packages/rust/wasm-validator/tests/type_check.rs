@@ -673,6 +673,26 @@ fn valid_i32x4_arith2_widening() {
 }
 
 #[test]
+fn valid_i32x4_from_i16x8_widening() {
+    // SIMD widening (task #121-124): extadd_pairwise_i16x8_s/_u
+    // (v128->v128, UNARY, same shape as neg/abs) and dot_i16x8_s plus
+    // extmul_low/high_i16x8_s/_u (v128,v128->v128, same shape as
+    // sub/mul/min/max) -- these read their operands as `i16x8`
+    // internally, but the TYPE CHECKER only sees plain `v128`s, same as
+    // every other SIMD op in this widening arc.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i32x4.extadd_pairwise_i16x8_s (local.get 0)))
+             (func (param v128) (result v128) (i32x4.extadd_pairwise_i16x8_u (local.get 0)))
+             (func (param v128 v128) (result v128) (i32x4.dot_i16x8_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.extmul_low_i16x8_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.extmul_high_i16x8_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.extmul_low_i16x8_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i32x4.extmul_high_i16x8_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

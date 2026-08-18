@@ -27,7 +27,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                simd_i32x4_cmp.wast, i32x4 SIMD opcode widening, same
                pinned commit, no re-pin),
                extended 2026-08-18 (task #118-120 -- simd_i32x4_arith2.wast,
-               i32x4 abs/min/max widening, same pinned commit, no re-pin)
+               i32x4 abs/min/max widening, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #121-124 -- simd_i32x4_extadd_
+               pairwise_i16x8.wast/simd_i32x4_dot_i16x8.wast/
+               simd_i32x4_extmul_i16x8.wast, i32x4-from-i16x8 widening,
+               same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -149,6 +153,17 @@ every widening pass above. 100% pass on every directive kind with zero
 `NotYetSupported` at all (2/2 modules, 121/121 assert_return, 14/14
 assert_invalid, 12/12 assert_malformed) -- the first SIMD file this repo
 vendors with no partial-credit directives whatsoever.
+
+`simd_i32x4_extadd_pairwise_i16x8.wast`/`simd_i32x4_dot_i16x8.wast`/
+`simd_i32x4_extmul_i16x8.wast` (task #121-124) widen this arc once more:
+`i32x4.extadd_pairwise_i16x8_s`/`_u`, `i32x4.dot_i16x8_s`, and
+`i32x4.extmul_low`/`high_i16x8_s`/`_u` -- the first opcodes this repo
+implements whose INPUT lane width (16-bit `i16x8`) differs from their
+OUTPUT lane width (32-bit `i32x4`), each sub-opcode fetched live from
+`BinarySIMD.md` and cross-checked against the already-implemented
+`i32x4.eq`/`i32x4.add` entries, same discipline as every widening pass
+above. 100% pass on every directive kind across all three files (3/3
+modules, 148/148 assert_return, 19/19 assert_invalid).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

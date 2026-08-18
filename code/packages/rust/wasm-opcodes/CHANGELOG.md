@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.8] - 2026-08-18 - SIMD widening: i32x4-from-i16x8 family (task #121-124)
+
+### Added
+
+- 7 new `SIMD_OPS` entries -- the first opcodes in this table whose INPUT
+  lane width (16-bit `i16x8`) differs from their OUTPUT lane width
+  (32-bit `i32x4`): `i32x4.extadd_pairwise_i16x8_s` (`0x7E`)/`_u`
+  (`0x7F`) (pairwise-add adjacent `i16x8` lanes into `i32x4`),
+  `i32x4.dot_i16x8_s` (`0xBA`) (pairwise signed multiply-accumulate
+  across all 8 `i16x8` lanes into 4 `i32x4` results), and
+  `i32x4.extmul_low_i16x8_s` (`0xBC`)/`extmul_high_i16x8_s` (`0xBD`)/
+  `extmul_low_i16x8_u` (`0xBE`)/`extmul_high_i16x8_u` (`0xBF`) (widening
+  multiply over only the low or high 4 `i16x8` lanes of each operand) --
+  29 SIMD opcodes total, up from 22. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked against
+  the already-implemented `i32x4.eq` (`0x37`)/`i32x4.add` (`0xAE`)
+  entries (both matched exactly), same verification discipline as every
+  widening pass above.
+- `SimdOpKind::ExtaddPairwiseI16x8S`/`ExtaddPairwiseI16x8U`/`DotI16x8S`/
+  `ExtmulLowI16x8S`/`ExtmulHighI16x8S`/`ExtmulLowI16x8U`/
+  `ExtmulHighI16x8U`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i32x4_extadd_pairwise_i16x8.wast`/`simd_i32x4_dot_i16x8.wast`/
+`simd_i32x4_extmul_i16x8.wast` corpus files this widening unblocks.
+
 ## [0.2.7] - 2026-08-18 - SIMD widening: i32x4 abs/min/max family (task #118-120)
 
 ### Added

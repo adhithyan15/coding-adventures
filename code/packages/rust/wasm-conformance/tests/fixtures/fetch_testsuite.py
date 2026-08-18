@@ -235,6 +235,17 @@ TESTSUITE_FILES = [
     # coverage this repo's upstream corpus itself splits into a separate
     # file, same real-verified-sub-opcode discipline as the pass above.
     "simd_i32x4_arith2.wast",
+    # SIMD widening (task #121-124): i32x4.extadd_pairwise_i16x8_s/_u,
+    # i32x4.dot_i16x8_s, i32x4.extmul_low/high_i16x8_s/_u -- the first
+    # opcodes in this repo whose INPUT lane width (i16x8) differs from
+    # their OUTPUT lane width (i32x4). Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-implemented
+    # i32x4.eq/i32x4.add entries (both matched exactly), same discipline
+    # as every widening pass above. Three separate upstream files, one per
+    # opcode family, same as this repo's own opcode-family split.
+    "simd_i32x4_extadd_pairwise_i16x8.wast",
+    "simd_i32x4_dot_i16x8.wast",
+    "simd_i32x4_extmul_i16x8.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
