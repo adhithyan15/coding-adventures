@@ -62,58 +62,36 @@ Two convenience functions:
 Both functions handle locating and parsing the ``starlark.tokens`` file
 automatically.
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-The ``starlark.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``. This works regardless of where
-the package is installed, as long as the repository structure is intact.
+The ``starlark.tokens`` file is compiled ahead of time by the
+``grammar-tools`` compiler into ``starlark_lexer/_grammar.py``, which
+embeds the ``TokenGrammar`` as native Python data structures. This module
+imports ``TOKEN_GRAMMAR`` from it directly — no file I/O or grammar
+parsing happens at runtime, and the package works correctly when
+installed as a site-package (it does not depend on the
+``code/grammars/`` directory existing on disk).
 
-The path traversal is::
+To regenerate after editing ``code/grammars/starlark/starlark.tokens``:
 
-    tokenizer.py
-    └── starlark_lexer/     (parent)
-        └── src/            (parent)
-            └── starlark-lexer/ (parent)
-                └── python/     (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── starlark.tokens
+    grammar-tools compile-tokens code/grammars/starlark/starlark.tokens \\
+        -o code/packages/python/starlark-lexer/src/starlark_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path is:
-#   src/starlark_lexer/tokenizer.py -> src/starlark_lexer -> src ->
-#   starlark-lexer -> python -> packages -> code -> code/grammars
-#
-# Using Path(__file__) makes this work regardless of the current working
-# directory, which is important for testing and for use as an installed
-# package.
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-STARLARK_TOKENS_PATH = GRAMMAR_DIR / "starlark" / "starlark.tokens"
+from starlark_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_starlark_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for Starlark source code.
 
-    This function reads the ``starlark.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source code.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``starlark_lexer._grammar``) to create a ``GrammarLexer`` ready to
+    tokenize the given source code. No file I/O is performed.
 
     Use this when you want access to the lexer object itself — for example,
     to inspect its internal state or to integrate with a custom pipeline.
@@ -126,17 +104,12 @@ def create_starlark_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with Starlark token
         definitions. Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``starlark.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_starlark_lexer('print("hello")')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(STARLARK_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_starlark(source: str) -> list[Token]:
@@ -164,8 +137,8 @@ def tokenize_starlark(source: str) -> list[Token]:
 
     to be tokenized without spurious INDENT/DEDENT/NEWLINE tokens.
 
-    The function handles all the setup internally: locating the grammar
-    file, parsing it, creating the lexer, and running the tokenization.
+    The function handles all the setup internally: creating the lexer from
+    the pre-compiled grammar and running the tokenization.
 
     Args:
         source: The Starlark source code to tokenize.
@@ -175,7 +148,6 @@ def tokenize_starlark(source: str) -> list[Token]:
         of the input. The last token is always ``Token(EOF, ...)``.
 
     Raises:
-        FileNotFoundError: If the ``starlark.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the Starlark grammar, or if a reserved
             keyword is encountered.
