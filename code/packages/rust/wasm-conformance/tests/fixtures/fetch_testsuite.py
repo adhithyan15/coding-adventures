@@ -319,6 +319,49 @@ TESTSUITE_FILES = [
     # prior addition.
     "simd_i16x8_extadd_pairwise_i8x16.wast",
     "simd_i16x8_extmul_i8x16.wast",
+    # SIMD widen PR11 (task #150-152): simd_bitwise.wast -- v128.not/
+    # and/andnot/or/xor/bitselect, the lane-width-agnostic raw-byte
+    # bitwise family. A strategic pivot from "widen the next narrow
+    # per-lane-width family" (PR1-PR10's pattern) to "close the
+    # highest-real-world-impact remaining gap", identified via a
+    # broader prioritization survey now that i8x16/i16x8/i32x4 all
+    # have complete arith+cmp+arith2+widening coverage. bitselect is
+    # the first TERNARY SIMD op in this interpreter. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against
+    # the already-implemented i8x16.add/i32x4.add entries, same
+    # discipline as every prior addition.
+    "simd_bitwise.wast",
+    # SIMD widen PR12 (task #153-155): simd_boolean.wast -- v128.any_true
+    # + ixNxM.all_true/bitmask across all 4 lane widths (i8x16/i16x8/
+    # i32x4/i64x2). The first v128-in/i32-out reduction shape besides
+    # extract_lane (no lane-index immediate -- reduces over ALL lanes),
+    # and the first opcodes in this interpreter to read the operand as
+    # 8-byte (i64) lanes. Chosen over the shift-op and i64x2-arithmetic
+    # candidates in a broader prioritization survey: highest opcode
+    # count (9) behind a single new operand shape and a single 72KB
+    # corpus file, and unlocks real use of the comparison families from
+    # PR1/PR6/PR7 (a v128 mask result is otherwise inert without a
+    # reduction op to consume it). Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-
+    # implemented v128.bitselect/i8x16.popcnt/i16x8.abs/neg/i32x4.abs/
+    # neg entries, same discipline as every prior addition.
+    "simd_boolean.wast",
+    # SIMD widen PR13 (task #156-158): simd_i64x2_arith.wast/
+    # simd_i64x2_arith2.wast/simd_i64x2_cmp.wast -- i64x2.abs/neg/add/
+    # sub/mul/eq/ne/lt_s/gt_s/le_s/ge_s, i64x2's first REAL ARITHMETIC
+    # family (PR12 only added the all_true/bitmask reduction ops). No
+    # lt_u/gt_u/le_u/ge_u -- the SIMD proposal never defines unsigned
+    # i64x2 comparisons, unlike every narrower lane width. Reuses the
+    # existing v128,v128->v128 / v128->v128 shapes already implemented
+    # for every other lane width -- this closes a lane-width coverage
+    # gap, not a new operand shape. Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-
+    # implemented i64x2.all_true/bitmask entries plus the identical
+    # abs/neg/[gap]/all_true/bitmask cluster layout already confirmed
+    # for i8x16/i16x8/i32x4.
+    "simd_i64x2_arith.wast",
+    "simd_i64x2_arith2.wast",
+    "simd_i64x2_cmp.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

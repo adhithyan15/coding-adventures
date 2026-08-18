@@ -2,6 +2,73 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.25] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms for i64x2's first REAL
+  ARITHMETIC family: `SimdOpKind::AbsI64x2` (UNARY, `wrapping_abs` so
+  `i64::MIN` maps to itself, not a panic), `NegI64x2` (UNARY,
+  `wrapping_neg`), `AddI64x2 | SubI64x2 | MulI64x2` (BINARY, wrapping
+  arithmetic over 2 `i64` lanes), and `EqI64x2 | NeI64x2 | LtSI64x2 |
+  GtSI64x2 | LeSI64x2 | GeSI64x2` (BINARY, boolean-mask-per-lane,
+  `-1i64`/`0i64` -- SIGNED ONLY, since the SIMD proposal never defines
+  unsigned `i64x2` comparisons). Verified with dedicated tests proving
+  `abs`/`neg` wrap `i64::MIN` instead of panicking,
+  `add`/`sub`/`mul` wrap on overflow (`i64::MAX + 1` -> `i64::MIN`),
+  and the comparison family reads lanes as SIGNED (using `i64::MIN` vs
+  a small positive value, where an unsigned mix-up would flip the
+  result since `i64::MIN`'s bit pattern is the largest unsigned
+  value).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.24] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family)
+
+### Added
+
+- `register_simd` gains three new dispatch arms: `SimdOpKind::AnyTrue`
+  (pops one v128, pushes i32 `1` if ANY of the 128 bits is set, else
+  `0` -- reduces over the WHOLE operand, no lane interpretation
+  needed), `AllTrueI8x16 | AllTrueI16x8 | AllTrueI32x4 | AllTrueI64x2`
+  (pops one v128, pushes i32 `1` only if EVERY lane at that width is
+  nonzero -- chunks the 16 raw bytes into 1/2/4/8-byte lanes and
+  checks each chunk for any nonzero byte), and `BitmaskI8x16 |
+  BitmaskI16x8 | BitmaskI32x4 | BitmaskI64x2` (pops one v128, pushes
+  an i32 whose bit `i` is the sign bit of lane `i`, packed low-to-high
+  -- a lane's sign bit is the MSB of its last, most-significant,
+  little-endian byte). `i64x2`'s two variants are the first opcodes in
+  this crate to read the operand as 8-byte lanes. Verified with
+  dedicated tests proving `any_true` distinguishes all-zero from a
+  single nonzero byte anywhere, `all_true` flips to false when exactly
+  one lane (at that op's own width) is zeroed out even though the
+  surrounding bytes are nonzero, and `bitmask` packs an alternating
+  sign-bit pattern correctly at every width.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.23] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family)
+
+### Added
+
+- `register_simd` gains three new dispatch arms for the
+  lane-width-agnostic raw-byte bitwise family: `SimdOpKind::Not`
+  (UNARY -- flips every bit of the popped v128), `And | AndNot | Or |
+  Xor` (BINARY -- pops rhs then lhs, computes the bytewise operation
+  lane-by-lane over all 16 bytes, `AndNot` being `lhs & !rhs`), and
+  `Bitselect` (TERNARY -- the first three-operand SIMD op in this
+  interpreter: pops `c` then `b` then `a`, computes `(a[i] & c[i]) |
+  (b[i] & !c[i])` per byte, i.e. select bits from `a` where the
+  corresponding `c` bit is 1, else from `b`). Every handler resolves
+  its `v128_heap` handle(s) via `.get(...).ok_or_else(...)` --
+  never raw indexing -- so a malformed handle produces a clean typed
+  `VMError`, not a panic. Verified with dedicated tests covering
+  `not`'s full-bit-flip, each of `and`/`andnot`/`or`/`xor`'s real
+  boundary-value semantics, and `bitselect` selecting an exact mask
+  pattern from two maximally-different operands.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.22] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening family)
 
 ### Added

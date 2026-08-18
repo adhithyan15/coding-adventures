@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.27] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for i64x2's first REAL
+  ARITHMETIC family: the pop-two-push-one binary arm extended to also
+  cover `AddI64x2 | SubI64x2 | MulI64x2`; the comparison arm extended
+  to also cover `EqI64x2 | NeI64x2 | LtSI64x2 | GtSI64x2 | LeSI64x2 |
+  GeSI64x2`; the pop-one-push-one unary arm extended to also cover
+  `AbsI64x2 | NegI64x2`. All reuse the same `v128,v128->v128`/
+  `v128->v128` type shapes already used for every other lane width --
+  this is a new LANE WIDTH, not a new operand shape, so no new
+  type-checker plumbing.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.26] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family type rules)
+
+### Added
+
+- New `0xFD` SIMD type-check arm for `AnyTrue | AllTrueI8x16 |
+  AllTrueI16x8 | AllTrueI32x4 | AllTrueI64x2 | BitmaskI8x16 |
+  BitmaskI16x8 | BitmaskI32x4 | BitmaskI64x2`: same `v128`-in/`i32`-out
+  shape as the existing `ExtractLane` arm, but with NO lane-index
+  immediate to consume (these reduce over ALL lanes, not select one).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.25] - 2026-08-18 (task #150-152 — SIMD: v128 bitwise family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for the lane-width-agnostic
+  raw-byte bitwise family: the pop-two-push-one binary arm extended
+  to also cover `And | AndNot | Or | Xor`; the pop-one-push-one unary
+  arm extended to also cover `Not`. A brand-new arm added for
+  `Bitselect` -- the first TERNARY SIMD op in this crate -- which
+  pops three `v128`s and pushes one `v128`; at the type level it's
+  just three `V128` pops, the runtime's byte-level `(a AND c) OR (b
+  AND (NOT c))` semantics are invisible to the type checker.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.24] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening type rules)
 
 ### Added

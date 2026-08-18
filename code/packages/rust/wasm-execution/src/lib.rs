@@ -5279,6 +5279,262 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::Not => {
+                // v128.not: UNARY, but unlike `Neg`/`Abs` above this
+                // operates on the raw bytes directly -- lane-width-
+                // agnostic, since bitwise NOT never depends on how the
+                // 128 bits are interpreted as lanes.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    result[i] = !bytes[i];
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::And | SimdOpKind::AndNot | SimdOpKind::Or | SimdOpKind::Xor => {
+                // v128.and/andnot/or/xor: BINARY, bytewise rather than
+                // per-lane -- same pop-two-push-one shape as `Add`/`Sub`
+                // above, but lane-width-agnostic. `andnot(a, b)` is
+                // `a AND (NOT b)`.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    result[i] = match op.kind {
+                        SimdOpKind::And => lhs[i] & rhs[i],
+                        SimdOpKind::AndNot => lhs[i] & !rhs[i],
+                        SimdOpKind::Or => lhs[i] | rhs[i],
+                        SimdOpKind::Xor => lhs[i] ^ rhs[i],
+                        _ => unreachable!("only And/AndNot/Or/Xor reach this arm"),
+                    };
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Bitselect => {
+                // v128.bitselect: the first TERNARY SIMD op in this
+                // interpreter -- pops THREE v128s (mask `c` on top,
+                // then `b`, then `a`, matching WASM's usual left-to-
+                // right push order), computes `(a AND c) OR (b AND
+                // (NOT c))` bytewise, pushes one. For each BIT position,
+                // this selects from `a` where the corresponding mask
+                // bit is 1, otherwise from `b`.
+                let c_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let c = *ctx
+                    .v128_heap
+                    .get(c_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let b = *ctx
+                    .v128_heap
+                    .get(b_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    result[i] = (a[i] & c[i]) | (b[i] & !c[i]);
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::AnyTrue => {
+                // v128.any_true: pops one v128, pushes i32 1 if ANY of
+                // the 128 bits is set (any raw byte nonzero), else 0.
+                // Reduces over the WHOLE operand regardless of lane
+                // width -- unlike `AllTrueI8x16`/etc below, no lane
+                // interpretation is needed at all.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let any_true = bytes.iter().any(|&b| b != 0);
+                push_wasm(vm, WasmValue::I32(if any_true { 1 } else { 0 }));
+            }
+            SimdOpKind::AllTrueI8x16 | SimdOpKind::AllTrueI16x8 | SimdOpKind::AllTrueI32x4 | SimdOpKind::AllTrueI64x2 => {
+                // ixNxM.all_true: pops one v128, pushes i32 1 if EVERY
+                // lane (at this op's lane width) is nonzero, else 0.
+                // Chunks the 16 raw bytes into lanes of 1/2/4/8 bytes
+                // depending on width -- a lane is "true" if ANY of its
+                // bytes is nonzero (matches WASM's own semantics: a
+                // lane's integer value is nonzero iff at least one of
+                // its bytes is).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_bytes = match op.kind {
+                    SimdOpKind::AllTrueI8x16 => 1,
+                    SimdOpKind::AllTrueI16x8 => 2,
+                    SimdOpKind::AllTrueI32x4 => 4,
+                    SimdOpKind::AllTrueI64x2 => 8,
+                    _ => unreachable!("only AllTrueI8x16/I16x8/I32x4/I64x2 reach this arm"),
+                };
+                let all_true = bytes.chunks(lane_bytes).all(|lane| lane.iter().any(|&b| b != 0));
+                push_wasm(vm, WasmValue::I32(if all_true { 1 } else { 0 }));
+            }
+            SimdOpKind::BitmaskI8x16 | SimdOpKind::BitmaskI16x8 | SimdOpKind::BitmaskI32x4 | SimdOpKind::BitmaskI64x2 => {
+                // ixNxM.bitmask: pops one v128, pushes an i32 whose bit
+                // `i` is the sign bit (MSB) of lane `i`, packed low-to-
+                // high. A lane's sign bit is the MSB of its LAST byte
+                // (little-endian: the most significant byte comes last).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_bytes = match op.kind {
+                    SimdOpKind::BitmaskI8x16 => 1,
+                    SimdOpKind::BitmaskI16x8 => 2,
+                    SimdOpKind::BitmaskI32x4 => 4,
+                    SimdOpKind::BitmaskI64x2 => 8,
+                    _ => unreachable!("only BitmaskI8x16/I16x8/I32x4/I64x2 reach this arm"),
+                };
+                let mut mask: i32 = 0;
+                for (lane_idx, lane) in bytes.chunks(lane_bytes).enumerate() {
+                    let sign_byte = lane[lane.len() - 1];
+                    if sign_byte & 0x80 != 0 {
+                        mask |= 1 << lane_idx;
+                    }
+                }
+                push_wasm(vm, WasmValue::I32(mask));
+            }
+            SimdOpKind::AbsI64x2 => {
+                // i64x2.abs: UNARY, same shape as i8x16/i16x8/i32x4's own
+                // `abs` -- pops exactly ONE v128, takes the absolute
+                // value of each of the 2 `i64` lanes, pushes one.
+                // `i64::MIN.wrapping_abs() == i64::MIN` is the same
+                // two's-complement wrapping edge case every narrower
+                // lane width's own `abs` test already established --
+                // the first i64x2 REAL ARITHMETIC opcode (PR12 only
+                // added the all_true/bitmask reduction ops).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = i64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v.wrapping_abs();
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::NegI64x2 => {
+                // i64x2.neg: UNARY, same shape as `i64x2.abs` above.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = i64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v.wrapping_neg();
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::AddI64x2 | SimdOpKind::SubI64x2 | SimdOpKind::MulI64x2 => {
+                // i64x2.add/sub/mul: BINARY, same wrapping-arithmetic
+                // shape as every other lane width's own `add`/`sub`/
+                // `mul`, but over 2 `i64` (8-byte) lanes instead of the
+                // narrower widths this interpreter already handles.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = i64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = i64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::AddI64x2 => l.wrapping_add(r),
+                        SimdOpKind::SubI64x2 => l.wrapping_sub(r),
+                        SimdOpKind::MulI64x2 => l.wrapping_mul(r),
+                        _ => unreachable!("only AddI64x2/SubI64x2/MulI64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::EqI64x2
+            | SimdOpKind::NeI64x2
+            | SimdOpKind::LtSI64x2
+            | SimdOpKind::GtSI64x2
+            | SimdOpKind::LeSI64x2
+            | SimdOpKind::GeSI64x2 => {
+                // i64x2's own comparison family: same lane-wise BINARY
+                // shape and boolean-mask convention as every other lane
+                // width's comparison family, but over 2 `i64` lanes and
+                // SIGNED ONLY -- the SIMD proposal never defines unsigned
+                // i64x2 comparisons, unlike every narrower lane width.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mask = |b: bool| if b { -1i64 } else { 0i64 };
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = i64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = i64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::EqI64x2 => mask(l == r),
+                        SimdOpKind::NeI64x2 => mask(l != r),
+                        SimdOpKind::LtSI64x2 => mask(l < r),
+                        SimdOpKind::GtSI64x2 => mask(l > r),
+                        SimdOpKind::LeSI64x2 => mask(l <= r),
+                        SimdOpKind::GeSI64x2 => mask(l >= r),
+                        _ => unreachable!("only EqI64x2/NeI64x2/LtSI64x2/GtSI64x2/LeSI64x2/GeSI64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8193,6 +8449,17 @@ mod tests {
         lanes.iter().map(|&l| l as u8).collect()
     }
 
+    /// Same v128 literal encoding as [`v128_const_bytes`], but for the
+    /// 2-lane `i64x2` shape PR13's arith/cmp family reads/writes -- the
+    /// first opcodes in this crate to read the operand as 8-byte lanes.
+    fn v128_const_bytes_i64x2(lanes: [i64; 2]) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(16);
+        for lane in lanes {
+            bytes.extend_from_slice(&lane.to_le_bytes());
+        }
+        bytes
+    }
+
     /// `v128.const` + `i32x4.extract_lane` round-trip: proves the const
     /// pool (`ctx.simd_consts`) and the v128 heap handle mechanism both
     /// work end to end, not just that the code compiles.
@@ -8954,6 +9221,293 @@ mod tests {
         let mut high_u_engine = simd_engine_returning_v128(code);
         let (_, high_u_bytes) = high_u_engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([255; 8]).try_into().unwrap())), "extmul_high_u(0xFF, 1) must be 255 (unsigned), not -1");
+    }
+
+    /// `v128.not`: bitwise complement of all 128 bits, lane-width-
+    /// agnostic -- proves it flips every bit regardless of the lane
+    /// interpretation used to construct the operand.
+    #[test]
+    fn v128_not_flips_every_bit() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([0, -1, 0x0F0F_0F0Fu32 as i32, 0x5555_5555u32 as i32]));
+        code.extend([0xFD, 0x4D]); // v128.not (sub-opcode 0x4D, single-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(v128_const_bytes([-1, 0, 0xF0F0_F0F0u32 as i32, 0xAAAA_AAAAu32 as i32]).try_into().unwrap())),
+            "not(0) must be all-1s, not(-1) must be 0, and each nibble/bit pattern must flip exactly"
+        );
+    }
+
+    /// `v128.and`/`or`/`xor`/`andnot`: bytewise (not per-lane) binary
+    /// bitwise ops -- verified against a real 0xF0/0x0F mask pair where
+    /// each operator's result is textbook-distinguishable from the
+    /// others (all four would coincidentally agree on an all-0s/all-1s
+    /// operand pair, so this uses a genuine mixed pattern).
+    #[test]
+    fn v128_and_or_xor_andnot_bitwise_semantics() {
+        let lhs = [0xF0F0_F0F0u32 as i32; 4];
+        let rhs = [0x0FF0_0FF0u32 as i32; 4];
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes(rhs));
+            code.extend([0xFD, sub_opcode]); // 0x4E-0x51 are < 128 -- single-byte LEB128
+            code.push(0x0B);
+            code
+        };
+        let mut and_engine = simd_engine_returning_v128(code_for(0x4E)); // v128.and
+        let (_, and_bytes) = and_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(and_bytes[0], Some(V128Bytes(v128_const_bytes([0x00F0_00F0u32 as i32; 4]).try_into().unwrap())), "0xF0F0F0F0 AND 0x0FF00FF0 must be 0x00F000F0");
+
+        let mut andnot_engine = simd_engine_returning_v128(code_for(0x4F)); // v128.andnot
+        let (_, andnot_bytes) = andnot_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(andnot_bytes[0], Some(V128Bytes(v128_const_bytes([0xF000_F000u32 as i32; 4]).try_into().unwrap())), "0xF0F0F0F0 ANDNOT 0x0FF00FF0 (lhs AND NOT rhs) must be 0xF000F000");
+
+        let mut or_engine = simd_engine_returning_v128(code_for(0x50)); // v128.or
+        let (_, or_bytes) = or_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(or_bytes[0], Some(V128Bytes(v128_const_bytes([0xFFF0_FFF0u32 as i32; 4]).try_into().unwrap())), "0xF0F0F0F0 OR 0x0FF00FF0 must be 0xFFF0FFF0");
+
+        let mut xor_engine = simd_engine_returning_v128(code_for(0x51)); // v128.xor
+        let (_, xor_bytes) = xor_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(xor_bytes[0], Some(V128Bytes(v128_const_bytes([0xFF00_FF00u32 as i32; 4]).try_into().unwrap())), "0xF0F0F0F0 XOR 0x0FF00FF0 must be 0xFF00FF00");
+    }
+
+    /// `v128.bitselect`: the first TERNARY SIMD op in this interpreter.
+    /// With `a` = all-1s and `b` = all-0s, `(a AND c) OR (b AND NOT c)`
+    /// collapses to exactly `c` -- proving the mask operand controls
+    /// per-BIT selection (not per-lane), and that the THREE popped
+    /// operands are read in the correct `a`/`b`/`c` roles rather than
+    /// accidentally swapped.
+    #[test]
+    fn v128_bitselect_selects_bits_per_mask() {
+        let mask = [0x5A5A_5A5Au32 as i32; 4]; // arbitrary non-uniform bit pattern
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([-1; 4])); // a: all-1s
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes([0; 4])); // b: all-0s
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(mask)); // c: the mask
+        code.extend([0xFD, 0x52]); // v128.bitselect (sub-opcode 0x52, single-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes(mask).try_into().unwrap())), "bitselect(all-1s, all-0s, mask) must equal the mask exactly");
+    }
+
+    fn boolean_code_for(v128_bytes: [u8; 16], sub_opcode_bytes: &[u8]) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend_from_slice(&v128_bytes);
+        code.push(0xFD);
+        code.extend_from_slice(sub_opcode_bytes);
+        code.push(0x0B);
+        code
+    }
+
+    /// `v128.any_true`: pushes 1 if ANY of the 128 bits is set, else 0 --
+    /// reduces over the WHOLE operand regardless of how it's later
+    /// interpreted as lanes.
+    #[test]
+    fn v128_any_true_detects_any_nonzero_byte() {
+        let mut all_zero = simd_engine(boolean_code_for([0u8; 16], &[0x53])); // v128.any_true, single-byte LEB128
+        assert_eq!(all_zero.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "all-zero v128 must be any_true=0");
+
+        let mut one_lane = [0u8; 16];
+        one_lane[9] = 1; // a single nonzero byte, deliberately not lane 0
+        let mut some_nonzero = simd_engine(boolean_code_for(one_lane, &[0x53]));
+        assert_eq!(some_nonzero.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "one nonzero byte anywhere must be any_true=1");
+    }
+
+    /// `ixNxM.all_true` across all 4 lane widths: pushes 1 only if EVERY
+    /// lane (at that width) is nonzero. A single zero LANE must flip the
+    /// result to 0 even though most of the operand is nonzero -- and a
+    /// byte pattern that's "all nonzero bytes" at a coarser width but
+    /// happens to have a zero sub-byte within a wider lane (tested via
+    /// i16x8/i32x4/i64x2 using genuinely all-nonzero wide lanes) must
+    /// still read correctly per this op's OWN lane width, not i8x16's.
+    #[test]
+    fn boolean_all_true_family_requires_every_lane_nonzero() {
+        // i8x16.all_true (sub-opcode 0x63, single-byte LEB128)
+        let mut every_byte_nonzero = simd_engine(boolean_code_for([0x11u8; 16], &[0x63]));
+        assert_eq!(every_byte_nonzero.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "i8x16.all_true: every byte nonzero");
+        let mut one_byte_zero = [0x11u8; 16];
+        one_byte_zero[7] = 0;
+        let mut with_a_zero_lane = simd_engine(boolean_code_for(one_byte_zero, &[0x63]));
+        assert_eq!(with_a_zero_lane.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "i8x16.all_true: one zero byte must flip to false");
+
+        // i16x8.all_true (sub-opcode 0x83 -- >= 128, 2-byte LEB128 [0x83, 0x01])
+        let mut every_i16_nonzero = simd_engine(boolean_code_for([0x01u8; 16], &[0x83, 0x01]));
+        assert_eq!(every_i16_nonzero.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "i16x8.all_true: every 2-byte lane nonzero");
+        let mut one_i16_zero = [0x01u8; 16]; // each i16 lane = 0x0101 (LE bytes 01 01)
+        one_i16_zero[4] = 0;
+        one_i16_zero[5] = 0; // zero out the third i16 lane entirely
+        let mut i16_with_a_zero_lane = simd_engine(boolean_code_for(one_i16_zero, &[0x83, 0x01]));
+        assert_eq!(i16_with_a_zero_lane.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "i16x8.all_true: one zero 2-byte lane must flip to false");
+
+        // i32x4.all_true (sub-opcode 0xA3 -- >= 128, 2-byte LEB128 [0xA3, 0x01])
+        let mut every_i32_nonzero = simd_engine(boolean_code_for([0x01u8; 16], &[0xA3, 0x01]));
+        assert_eq!(every_i32_nonzero.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "i32x4.all_true: every 4-byte lane nonzero");
+        let mut one_i32_zero = [0x01u8; 16];
+        one_i32_zero[8..12].copy_from_slice(&[0, 0, 0, 0]); // zero out the third i32 lane entirely
+        let mut i32_with_a_zero_lane = simd_engine(boolean_code_for(one_i32_zero, &[0xA3, 0x01]));
+        assert_eq!(i32_with_a_zero_lane.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "i32x4.all_true: one zero 4-byte lane must flip to false");
+
+        // i64x2.all_true (sub-opcode 0xC3 -- >= 128, 2-byte LEB128 [0xC3, 0x01]) -- the
+        // first opcode in this crate to read the operand as 8-byte (i64) lanes.
+        let mut every_i64_nonzero = simd_engine(boolean_code_for([0x01u8; 16], &[0xC3, 0x01]));
+        assert_eq!(every_i64_nonzero.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)], "i64x2.all_true: both 8-byte lanes nonzero");
+        let mut one_i64_zero = [0x01u8; 16];
+        one_i64_zero[8..16].copy_from_slice(&[0u8; 8]); // zero out the second i64 lane entirely
+        let mut i64_with_a_zero_lane = simd_engine(boolean_code_for(one_i64_zero, &[0xC3, 0x01]));
+        assert_eq!(i64_with_a_zero_lane.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "i64x2.all_true: one zero 8-byte lane must flip to false");
+    }
+
+    /// `ixNxM.bitmask` across all 4 lane widths: bit `i` of the result is
+    /// the sign bit (MSB) of lane `i`. Uses a genuine mixed pattern (not
+    /// all-1s/all-0s) at each width so the packed result is uniquely
+    /// distinguishable from "all bits set"/"all bits clear" mistakes.
+    #[test]
+    fn boolean_bitmask_family_packs_one_sign_bit_per_lane() {
+        // i8x16.bitmask (sub-opcode 0x64, single-byte LEB128): alternate
+        // lanes 0,2,4,... negative (MSB set), 1,3,5,... positive -> the
+        // low 16 bits of the result should be 0b0101_0101_0101_0101.
+        let mut i8_bytes = [0u8; 16];
+        for i in (0..16).step_by(2) {
+            i8_bytes[i] = 0x80; // negative i8 lane (sign bit set)
+        }
+        let mut i8_bitmask = simd_engine(boolean_code_for(i8_bytes, &[0x64]));
+        assert_eq!(i8_bitmask.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0b0101_0101_0101_0101)], "i8x16.bitmask: alternating sign bits");
+
+        // i16x8.bitmask (sub-opcode 0x84 -- 2-byte LEB128 [0x84, 0x01]):
+        // same alternating pattern, but the sign bit is the MSB of each
+        // i16 lane's LAST (high) byte.
+        let mut i16_bytes = [0u8; 16];
+        for lane in (0..8).step_by(2) {
+            i16_bytes[lane * 2 + 1] = 0x80; // high byte of the i16 lane
+        }
+        let mut i16_bitmask = simd_engine(boolean_code_for(i16_bytes, &[0x84, 0x01]));
+        assert_eq!(i16_bitmask.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0b0101_0101)], "i16x8.bitmask: alternating sign bits");
+
+        // i32x4.bitmask (sub-opcode 0xA4 -- 2-byte LEB128 [0xA4, 0x01]):
+        // lanes 0 and 2 negative, 1 and 3 positive -> 0b0101.
+        let mut i32_bytes = [0u8; 16];
+        i32_bytes[3] = 0x80; // lane 0's high byte
+        i32_bytes[11] = 0x80; // lane 2's high byte
+        let mut i32_bitmask = simd_engine(boolean_code_for(i32_bytes, &[0xA4, 0x01]));
+        assert_eq!(i32_bitmask.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0b0101)], "i32x4.bitmask: lanes 0 and 2 negative");
+
+        // i64x2.bitmask (sub-opcode 0xC4 -- 2-byte LEB128 [0xC4, 0x01]):
+        // lane 0 negative, lane 1 positive -> 0b01.
+        let mut i64_bytes = [0u8; 16];
+        i64_bytes[7] = 0x80; // lane 0's high byte
+        let mut i64_bitmask = simd_engine(boolean_code_for(i64_bytes, &[0xC4, 0x01]));
+        assert_eq!(i64_bitmask.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0b01)], "i64x2.bitmask: lane 0 negative, lane 1 positive");
+    }
+
+    /// `i64x2.abs`/`neg`: same two's-complement wrapping edge case every
+    /// narrower lane width's own `abs`/`neg` test already established --
+    /// `i64::MIN` has no positive counterpart in `i64`, so both wrap
+    /// back to `i64::MIN` instead of panicking or overflowing. i64x2's
+    /// first REAL ARITHMETIC opcodes (PR12 only added the all_true/
+    /// bitmask reduction ops).
+    #[test]
+    fn i64x2_abs_and_neg_wrap_i64_min_instead_of_panicking() {
+        let mut abs_code = vec![0xFD, 0x0C];
+        abs_code.extend(v128_const_bytes_i64x2([i64::MIN; 2]));
+        abs_code.extend([0xFD, 0xC0, 0x01]); // i64x2.abs (sub-opcode 0xC0, 2-byte LEB128)
+        abs_code.push(0x0B);
+        let mut abs_engine = simd_engine_returning_v128(abs_code);
+        let (_, abs_bytes) = abs_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(abs_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MIN; 2]).try_into().unwrap())), "i64::MIN.abs() must wrap back to i64::MIN, not panic");
+
+        let mut neg_code = vec![0xFD, 0x0C];
+        neg_code.extend(v128_const_bytes_i64x2([i64::MIN; 2]));
+        neg_code.extend([0xFD, 0xC1, 0x01]); // i64x2.neg (sub-opcode 0xC1, 2-byte LEB128)
+        neg_code.push(0x0B);
+        let mut neg_engine = simd_engine_returning_v128(neg_code);
+        let (_, neg_bytes) = neg_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(neg_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MIN; 2]).try_into().unwrap())), "-(i64::MIN) must wrap back to i64::MIN, not panic");
+    }
+
+    /// `i64x2.add`/`sub`/`mul`: BINARY lane-wise wrapping arithmetic over
+    /// 2 `i64` lanes -- verifies real wrap-on-overflow behavior
+    /// (`i64::MAX + 1` must wrap to `i64::MIN`, not panic), same
+    /// discipline as every other lane width's own arith family.
+    #[test]
+    fn i64x2_add_sub_mul_wrap_on_overflow() {
+        let code_for = |sub_opcode: u8, lhs: [i64; 2], rhs: [i64; 2]| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i64x2(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i64x2(rhs));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0xCE/0xD1/0xD5 are >= 128 -- 2-byte LEB128
+            code.push(0x01);
+            code.push(0x0B);
+            code
+        };
+
+        let mut add_engine = simd_engine_returning_v128(code_for(0xCE, [i64::MAX, 5], [1, 7])); // i64x2.add
+        let (_, add_bytes) = add_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(add_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MIN, 12]).try_into().unwrap())), "i64::MAX + 1 must wrap to i64::MIN");
+
+        let mut sub_engine = simd_engine_returning_v128(code_for(0xD1, [i64::MIN, 10], [1, 3])); // i64x2.sub
+        let (_, sub_bytes) = sub_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(sub_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MAX, 7]).try_into().unwrap())), "i64::MIN - 1 must wrap to i64::MAX");
+
+        let mut mul_engine = simd_engine_returning_v128(code_for(0xD5, [3, 4], [5, 6])); // i64x2.mul
+        let (_, mul_bytes) = mul_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(mul_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([15, 24]).try_into().unwrap())), "3*5=15, 4*6=24");
+    }
+
+    /// `i64x2.eq`/`ne`/`lt_s`/`gt_s`/`le_s`/`ge_s`: same lane-wise
+    /// boolean-mask convention as every other lane width's comparison
+    /// family, but SIGNED ONLY -- the SIMD proposal never defines
+    /// unsigned `i64x2` comparisons. Uses `i64::MIN` vs a small positive
+    /// value so a signed-vs-unsigned confusion bug would flip the
+    /// result (unsigned would read `i64::MIN`'s bit pattern as the
+    /// LARGEST unsigned value).
+    #[test]
+    fn i64x2_cmp_family_is_signed_and_correctly_ordered() {
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i64x2([i64::MIN, 5]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i64x2([1, 5]));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0xD6-0xDB are >= 128 -- 2-byte LEB128
+            code.push(0x01);
+            code.push(0x0B);
+            code
+        };
+        let mask = |b: bool| if b { -1i64 } else { 0i64 };
+
+        let mut eq_engine = simd_engine_returning_v128(code_for(0xD6)); // i64x2.eq
+        let (_, eq_bytes) = eq_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(eq_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(true)]).try_into().unwrap())), "eq: lane 0 differs, lane 1 equal");
+
+        let mut ne_engine = simd_engine_returning_v128(code_for(0xD7)); // i64x2.ne
+        let (_, ne_bytes) = ne_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(ne_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(true), mask(false)]).try_into().unwrap())), "ne: lane 0 differs, lane 1 equal");
+
+        let mut lt_s_engine = simd_engine_returning_v128(code_for(0xD8)); // i64x2.lt_s
+        let (_, lt_s_bytes) = lt_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(lt_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(true), mask(false)]).try_into().unwrap())), "lt_s: i64::MIN < 1 (signed), 5 not < 5");
+
+        let mut gt_s_engine = simd_engine_returning_v128(code_for(0xD9)); // i64x2.gt_s
+        let (_, gt_s_bytes) = gt_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(gt_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(false)]).try_into().unwrap())), "gt_s: i64::MIN not > 1 (signed), 5 not > 5");
+
+        let mut le_s_engine = simd_engine_returning_v128(code_for(0xDA)); // i64x2.le_s
+        let (_, le_s_bytes) = le_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(le_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(true), mask(true)]).try_into().unwrap())), "le_s: i64::MIN <= 1, 5 <= 5");
+
+        let mut ge_s_engine = simd_engine_returning_v128(code_for(0xDB)); // i64x2.ge_s
+        let (_, ge_s_bytes) = ge_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(ge_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(true)]).try_into().unwrap())), "ge_s: i64::MIN not >= 1 (signed), 5 >= 5");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve
