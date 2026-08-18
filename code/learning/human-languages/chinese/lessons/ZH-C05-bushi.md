@@ -69,8 +69,9 @@ gives way, and the spelling never records it.**
 That is the **second** rule of this kind you have been taught in full, and both
 share one warning: **the page will not tell you.** You were also warned about a
 third, on 一, which shifts its own tone in front of certain syllables — that one
-is still waiting, and it will arrive with the words that need it. 不是 is written with the falling-tone 不 every time. The change lives
-in the mouth, and you have to carry it yourself.
+is still waiting, and it will arrive with the words that need it. 不是 is
+written with the falling-tone 不 every time. The change lives in the mouth, and
+you have to carry it yourself.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-SANDHI-BU, ZH-LEX-BUSHI] -->

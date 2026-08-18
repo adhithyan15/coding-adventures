@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes, No, and a Tone That Moves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f6afa7902660bb25",
+  "sourceHash": "fnv1a64:708538f4098aa533",
   "lessons": [
     {
       "id": "ZH-W05-shi",
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6edc101b256070d1",
+      "sourceHash": "fnv1a64:e4c90d8496c3c06f",
       "notice": null,
       "blocks": [
         {

@@ -946,7 +946,7 @@
     {
       "language": "chinese",
       "chapter": 5,
-      "sourceHash": "fnv1a64:f6afa7902660bb25",
+      "sourceHash": "fnv1a64:708538f4098aa533",
       "lessonIds": [
         "ZH-W05-shi",
         "ZH-C05-shi",
@@ -958,7 +958,7 @@
       "text": "chinese/narration/ch05.txt",
       "json": "chinese/narration/ch05.json",
       "textHash": "fnv1a64:86e47e62d04a010b",
-      "jsonHash": "fnv1a64:b924ee111feb994d"
+      "jsonHash": "fnv1a64:0b738cd121d2d253"
     },
     {
       "language": "french",

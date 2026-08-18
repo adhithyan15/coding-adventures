@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:07cc73ce654e6c41",
+  "sourceHash": "fnv1a64:ca09b2f742bb0687",
   "summary": {
     "totalLessons": 3081,
     "voice": 2167,
@@ -20870,7 +20870,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6edc101b256070d1"
+      "sourceHash": "fnv1a64:e4c90d8496c3c06f"
     },
     {
       "id": "ZH-C05-practice",
