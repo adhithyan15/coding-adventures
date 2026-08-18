@@ -4427,6 +4427,23 @@
       "tex": "russian/book/chapters/ch14-script-eleven.tex"
     },
     {
+      "language": "russian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:16aa4ad297a16db0",
+      "lessonIds": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
+      ],
+      "tex": "russian/book/chapters/ch15-script-eight.tex"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "sourceHash": "fnv1a64:10bd5188ff1351bd",
