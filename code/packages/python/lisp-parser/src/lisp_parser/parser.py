@@ -1,7 +1,7 @@
 """Lisp Parser — parses Lisp text into ASTs using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarParser``. It loads
-the ``lisp.grammar`` file from the ``code/grammars/`` directory, tokenizes
+This module is a thin wrapper around the generic ``GrammarParser``. It uses
+a pre-compiled ``PARSER_GRAMMAR`` (see ``lisp_parser._grammar``), tokenizes
 the input using the Lisp lexer, and produces a generic ``ASTNode`` tree.
 
 Lisp's Grammar is Simple
@@ -52,43 +52,23 @@ Parsing ``(define x 42)`` produces::
         ])
     ])
 
-Locating the Grammar File
---------------------------
+The Lisp parser grammar is compiled into ``_grammar.py`` by the
+grammar-tools compiler from ``code/grammars/lisp/lisp.grammar``. Importing
+the pre-built ``PARSER_GRAMMAR`` constant means no file I/O at startup and
+no runtime grammar parsing overhead.
 
-The ``lisp.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
+To regenerate after editing ``code/grammars/lisp/lisp.grammar``::
 
-    parser.py
-    └── lisp_parser/       (parent)
-        └── src/           (parent)
-            └── lisp-parser/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── lisp.grammar
+    grammar-tools compile-grammar code/grammars/lisp/lisp.grammar \\
+        > code/packages/python/lisp-parser/src/lisp_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from lisp_lexer import tokenize_lisp
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate from this file's location up to the repository root's grammars/
-# directory. The path is:
-#   src/lisp_parser/parser.py -> src/lisp_parser -> src -> lisp-parser
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LISP_GRAMMAR_PATH = GRAMMAR_DIR / "lisp" / "lisp.grammar"
+from lisp_parser._grammar import PARSER_GRAMMAR
 
 
 def create_lisp_parser(source: str) -> GrammarParser:
@@ -97,7 +77,7 @@ def create_lisp_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source text using the Lisp lexer.
-    2. Reads and parses the ``lisp.grammar`` file.
+    2. Uses the pre-compiled ``PARSER_GRAMMAR`` (from ``lisp_parser._grammar``).
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Args:
@@ -108,7 +88,6 @@ def create_lisp_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -117,8 +96,7 @@ def create_lisp_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_lisp(source)
-    grammar = parse_parser_grammar(LISP_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_lisp(source: str) -> ASTNode:
@@ -143,7 +121,6 @@ def parse_lisp(source: str) -> ASTNode:
         An ``ASTNode`` representing the parse tree.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors.
 
