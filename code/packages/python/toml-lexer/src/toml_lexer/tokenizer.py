@@ -73,58 +73,41 @@ TOML has significantly more token types than JSON (which has only 11):
 
 Plus the two tokens every grammar produces: NEWLINE and EOF.
 
-Locating the Grammar File
---------------------------
+Grammar Source
+--------------
 
-The ``toml.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``::
-
-    tokenizer.py
-    └── toml_lexer/        (parent)
-        └── src/           (parent)
-            └── toml-lexer/  (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── toml.tokens
+The ``toml.tokens`` file lives in the ``code/grammars/toml/`` directory at
+the root of the coding-adventures repository, but this package does not
+read it at runtime. It is pre-compiled into ``toml_lexer._grammar`` (see
+that module's header for regeneration instructions), so tokenizing TOML
+requires no file I/O.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
+from toml_lexer._grammar import TOKEN_GRAMMAR
+
 # ---------------------------------------------------------------------------
-# Grammar File Location
+# Grammar Source
 # ---------------------------------------------------------------------------
 #
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path is:
-#   src/toml_lexer/tokenizer.py -> src/toml_lexer -> src -> toml-lexer
-#   -> python -> packages -> code -> code/grammars
+# The TOML token grammar (``code/grammars/toml/toml.tokens``) is
+# pre-compiled into ``toml_lexer._grammar`` — see that module's header for
+# regeneration instructions.
 # ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TOML_TOKENS_PATH = GRAMMAR_DIR / "toml" / "toml.tokens"
 
 
 def create_toml_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for TOML text.
 
-    This function reads the ``toml.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
-
     Why a factory function instead of a class?
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Because the lexer *engine* already exists — ``GrammarLexer`` does all the
-    work. This function's only job is to load the right ``.tokens`` file and
-    wire it up. A class would add ceremony without adding capability.
+    work. This function's only job is to wire up the compiled token grammar.
+    A class would add ceremony without adding capability.
 
     Args:
         source: The TOML text to tokenize.
@@ -133,17 +116,12 @@ def create_toml_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with TOML token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``toml.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_toml_lexer('name = "TOML"')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(TOML_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_toml(source: str) -> list[Token]:
