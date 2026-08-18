@@ -156,6 +156,21 @@ become permissive by omission. The safe-by-default direction is unavailable
 here: a permissive default is silent, and a restrictive default would be
 discovered only when a legitimate caller is refused.
 
+**P6 — rotation revokes.** Re-registering a secret revokes every outstanding
+lease over the previous value. A lease holds its own copy of the payload, taken
+when it was issued, so overwriting the stored value alone would leave the old
+one redeemable — and a secret rotated *because it was compromised* would keep
+handing out the compromised value for the remaining lease lifetime. Tightening a
+policy has the same shape: refusing new requests is worth little while an
+already-minted reference sails past the new rule. Revocation is best-effort: a
+lease already consumed or expired is simply gone. What must not survive is
+anything still live.
+
+**P7 — check the agent before the mode.** Both orders refuse the same requests.
+Checking mode first tells a caller who is not permitted at all what the secret's
+delivery mode is, which is a fact about the policy they have no access to. Order
+the checks so the denial reveals less.
+
 ### Denials
 
 Denial reasons are bounded and secret-free, per D18D section 7.1 V2, and carry
@@ -172,6 +187,23 @@ It does not authorize the *consumer* of a direct delivery — that remains the
 trusted adapter's decision, on the facts the D18D binding forwards. It does not
 replace VLT06's engine, which still governs path-level operations. And it does
 not make an unattested identity trustworthy; see P3.
+
+Three limits worth stating plainly, because each is the kind of thing a reader
+would otherwise assume works:
+
+- **`privilege_tier` enforces nothing.** It is recorded and no component reads
+  it. Enforcing it needs the caller's tier threaded down from the tool boundary,
+  which no path does today. A field named like a control that gates nothing is
+  a hazard, so it is called out here rather than left to be discovered.
+- **The allow-list discriminates at host granularity.** On the real paths the
+  attested identity is a host or package identity, so `allowed_agents` cannot
+  separate two agents that share a host. Where that distinction matters, the
+  agents must not share a host.
+- **Denials are informative by construction.** A caller can tell "no such
+  secret" from "wrong mode" from "not permitted", which reveals that a secret
+  exists and something about its policy. That is the accepted trade — the caller
+  supplied the name, and collapsing the cases costs debuggability. P7 limits the
+  leak to callers who are at least admissible.
 
 ## Out of scope (future PRs)
 

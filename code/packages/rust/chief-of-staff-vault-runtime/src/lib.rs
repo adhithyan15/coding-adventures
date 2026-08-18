@@ -126,8 +126,13 @@ impl AllowedAgents {
 /// requires the policy at the call site (VLT06 P5).
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SecretPolicy {
-    /// Minimum approval tier, 0–3. Carried for the approval layer; the vault
-    /// records it rather than interpreting it.
+    /// Minimum approval tier, 0–3.
+    ///
+    /// **Nothing reads this yet.** It is recorded so the value has somewhere to
+    /// live, and named here so the gap is visible rather than implied — a `u8`
+    /// called `privilege_tier` on a policy struct reads as a control, and this
+    /// one enforces nothing. Enforcing it needs the caller tier threaded down
+    /// from the tool boundary, which no path does today.
     pub privilege_tier: u8,
     /// Which agents may request this secret.
     pub allowed_agents: AllowedAgents,
@@ -298,6 +303,38 @@ impl From<VaultDirectDeliveryError> for VaultRuntimeError {
     }
 }
 
+/// Decide whether a request is admissible, given only the policy.
+///
+/// Deliberately a free function over `&SecretPolicy` rather than a method that
+/// can reach a payload: it *cannot* leak a secret, because it is never handed
+/// one. That is what makes VLT06 P4 checkable — the ordering "decide, then
+/// clone" is enforced by which function has access to what, not by the order of
+/// two statements inside one body.
+///
+/// Agent admissibility is checked **before** delivery mode. Both orders refuse
+/// the same requests, but the reverse order tells a caller who is not permitted
+/// at all what the secret's delivery mode is, which is a fact about the policy
+/// they have no business learning. The cheaper denial is the one that reveals
+/// less.
+fn check_admission(
+    policy: &SecretPolicy,
+    requesting_agent_id: Option<&str>,
+    wants_lease: bool,
+) -> Result<(), VaultRuntimeError> {
+    if !policy.allowed_agents.admits(requesting_agent_id) {
+        return Err(VaultRuntimeError::AgentNotPermitted);
+    }
+    let admitted = if wants_lease {
+        policy.allowed_mode.admits_lease()
+    } else {
+        policy.allowed_mode.admits_direct()
+    };
+    if !admitted {
+        return Err(VaultRuntimeError::DeliveryModeNotPermitted);
+    }
+    Ok(())
+}
+
 /// One registered secret: the bytes, and the policy governing who gets them.
 ///
 /// Kept together in one map value rather than in two parallel maps, so a secret
@@ -312,6 +349,13 @@ struct StoredSecret {
 pub struct ChiefVaultRuntime {
     secrets: Mutex<HashMap<String, StoredSecret>>,
     leases: InMemoryLeaseManager,
+    /// Lease ids issued per secret name, so rotation can revoke them.
+    ///
+    /// The lease manager is keyed by lease id and holds no back-reference to
+    /// the secret a lease came from, so without this index there is no way to
+    /// answer "which capabilities are outstanding over *this* secret" — and
+    /// therefore no way to make rotation revoke them.
+    issued: Mutex<HashMap<String, Vec<LeaseId>>>,
 }
 
 impl Default for ChiefVaultRuntime {
@@ -326,6 +370,7 @@ impl ChiefVaultRuntime {
         Self {
             secrets: Mutex::new(HashMap::new()),
             leases: InMemoryLeaseManager::new(),
+            issued: Mutex::new(HashMap::new()),
         }
     }
 
@@ -336,16 +381,58 @@ impl ChiefVaultRuntime {
     /// would surface only as a refused legitimate caller. Use
     /// [`SecretPolicy::unrestricted`] when a secret genuinely has no
     /// constraints, so that fact is written down and greppable.
+    /// Rotating or re-registering a secret **revokes every outstanding lease
+    /// over the previous value**, which is the only behaviour that makes
+    /// rotation mean anything.
+    ///
+    /// A lease holds its own copy of the payload, taken when it was issued.
+    /// Overwriting the map entry alone would leave that copy redeemable — so a
+    /// secret rotated *because it was compromised* would keep handing out the
+    /// compromised value for as long as the lease lived, which the lease layer
+    /// allows to be ninety days. Tightening a policy has the same shape: new
+    /// requests get refused while an already-minted reference sails past.
+    ///
+    /// Revocation is best-effort by design: a lease already consumed or expired
+    /// is simply gone, and its error is discarded. What matters is that nothing
+    /// *live* survives the rotation.
     pub fn register_secret(
         &self,
         name: impl Into<String>,
         payload: LeasePayload,
         policy: SecretPolicy,
     ) {
+        let name = name.into();
+
+        // Revoke first, and hold no other lock while doing it. If this ran
+        // after the insert there would be a window where the new policy was
+        // visible but the old capabilities were still redeemable.
+        for lease_id in self
+            .issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned")
+            .remove(&name)
+            .unwrap_or_default()
+        {
+            let _ = self.leases.revoke(&lease_id);
+        }
+
         self.secrets
             .lock()
             .expect("vault secret mutex poisoned")
-            .insert(name.into(), StoredSecret { payload, policy });
+            .insert(name, StoredSecret { payload, policy });
+    }
+
+    /// Count the leases this runtime still tracks for a secret.
+    ///
+    /// Tracking is pruned on rotation and on redemption, so this is the number
+    /// of references that rotation would have to revoke — not a live count of
+    /// unexpired leases.
+    pub fn tracked_lease_count(&self, secret_name: &str) -> usize {
+        self.issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned")
+            .get(secret_name)
+            .map_or(0, Vec::len)
     }
 
     /// Read the policy recorded for a secret, without touching the payload.
@@ -360,9 +447,17 @@ impl ChiefVaultRuntime {
     /// Apply the admission policy and hand back the payload only if it passes.
     ///
     /// Every read of the secret map goes through here, which is what makes
-    /// VLT06 P4 — "refuse before materializing" — true by construction rather
-    /// than by remembering. A refused request never clones the payload, so a
-    /// later mistake on a refusal path has nothing to leak.
+    /// VLT06 P4 — "refuse before materializing" — hold at one place instead of
+    /// at each call site. The decision itself lives in [`check_admission`], a
+    /// free function that never sees a payload; this method's only job is to
+    /// run it and then clone.
+    ///
+    /// Splitting them is not tidiness. P4 is an *ordering* property, and an
+    /// ordering inside one function is invisible to tests: a reviewer found
+    /// that moving the clone above the checks left the whole suite green,
+    /// because "the adapter never saw it" is a consequence of refusal, not of
+    /// ordering. With the decision extracted, the clone is syntactically the
+    /// last thing that can happen and the decision is unit-testable on its own.
     fn admit(
         &self,
         secret_name: &str,
@@ -374,18 +469,7 @@ impl ChiefVaultRuntime {
             .get(secret_name)
             .ok_or(VaultRuntimeError::SecretNotFound)?;
 
-        let mode = stored.policy.allowed_mode;
-        let admitted = if wants_lease {
-            mode.admits_lease()
-        } else {
-            mode.admits_direct()
-        };
-        if !admitted {
-            return Err(VaultRuntimeError::DeliveryModeNotPermitted);
-        }
-        if !stored.policy.allowed_agents.admits(requesting_agent_id) {
-            return Err(VaultRuntimeError::AgentNotPermitted);
-        }
+        check_admission(&stored.policy, requesting_agent_id, wants_lease)?;
 
         // Only now does the payload leave storage.
         Ok(stored.payload.clone())
@@ -403,6 +487,17 @@ impl ChiefVaultRuntime {
         let payload = self.admit(request.secret_name, request.requesting_agent_id, true)?;
         let lease_id = self.leases.issue(payload, request.ttl_ms)?;
         let info = self.leases.lookup(&lease_id)?;
+
+        // Index the capability against its secret so a later rotation can
+        // revoke it. Recorded after issue succeeds, so a failed issue leaves
+        // nothing to revoke later.
+        self.issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned")
+            .entry(request.secret_name.to_string())
+            .or_default()
+            .push(lease_id.clone());
+
         Ok(VaultLeaseReceipt {
             vault_ref: VaultRef::trusted(format!("{VAULT_REF_PREFIX}{}", lease_id.as_hex())),
             expires_at_ms: info.expires_at_ms,
@@ -674,11 +769,167 @@ mod tests {
     }
 
     #[test]
-    fn a_refused_request_never_materializes_the_payload() {
-        // VLT06 P4. Proven through the adapter: the delivery boundary is the
-        // only place the payload can be observed, and a refused request must
-        // not reach it. The mode and agent refusals above assert the same
-        // thing; this pins the ordering explicitly.
+    fn rotating_a_secret_revokes_every_outstanding_lease_over_the_old_value() {
+        // Rotation is the compromise response. If the pre-rotation bytes stay
+        // redeemable, rotating a leaked secret does not un-leak it — it just
+        // adds a second value alongside the one the attacker already holds.
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "weather-api-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
+        let receipt = vault
+            .request_lease(lease_request("weather-api-key", 600_000))
+            .expect("lease should issue");
+
+        vault.register_secret(
+            "weather-api-key",
+            LeasePayload::new(b"rotated-value".to_vec()),
+            SecretPolicy::unrestricted(1),
+        );
+
+        assert!(
+            vault.consume(&receipt.vault_ref).is_err(),
+            "a lease over the pre-rotation value must not survive rotation"
+        );
+        assert_eq!(vault.tracked_lease_count("weather-api-key"), 0);
+    }
+
+    #[test]
+    fn tightening_a_policy_revokes_references_minted_under_the_looser_one() {
+        // Same mechanism, different motivation: new requests being refused is
+        // worth little while an already-minted reference sails past the new
+        // rule.
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "finance-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
+        let receipt = vault
+            .request_lease(lease_request("finance-key", 600_000))
+            .expect("lease should issue under the loose policy");
+
+        vault.register_secret(
+            "finance-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy {
+                privilege_tier: 3,
+                allowed_agents: AllowedAgents::only(["agent:finance"]),
+                allowed_mode: VaultDeliveryMode::Direct,
+                rotated_at_ms: 1,
+            },
+        );
+
+        assert!(vault.consume(&receipt.vault_ref).is_err());
+        assert!(matches!(
+            vault.request_lease(lease_request("finance-key", 600_000)),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+    }
+
+    #[test]
+    fn rotation_leaves_other_secrets_leases_alone() {
+        let vault = ChiefVaultRuntime::new();
+        for name in ["first", "second"] {
+            vault.register_secret(
+                name,
+                LeasePayload::new(SECRET.to_vec()),
+                SecretPolicy::unrestricted(0),
+            );
+        }
+        let untouched = vault
+            .request_lease(lease_request("second", 600_000))
+            .expect("lease should issue");
+
+        vault.register_secret(
+            "first",
+            LeasePayload::new(b"rotated".to_vec()),
+            SecretPolicy::unrestricted(1),
+        );
+
+        vault
+            .consume(&untouched.vault_ref)
+            .expect("rotating one secret must not revoke another's leases");
+    }
+
+    #[test]
+    fn the_admission_decision_refuses_before_it_can_see_a_payload() {
+        // VLT06 P4 as a property of the type signature rather than of statement
+        // order. `check_admission` takes a `&SecretPolicy` and returns unit —
+        // it is handed no payload, so it cannot leak one, and the clone in
+        // `admit` is necessarily downstream of it.
+        //
+        // The previous version of this test asserted only that a refused
+        // request never reached the delivery adapter, which is a consequence of
+        // refusal and not of ordering: moving the clone above the checks left
+        // it green.
+        let restrictive = SecretPolicy {
+            privilege_tier: 3,
+            allowed_agents: AllowedAgents::only(["agent:finance"]),
+            allowed_mode: VaultDeliveryMode::Direct,
+            rotated_at_ms: 0,
+        };
+
+        assert!(matches!(
+            check_admission(&restrictive, Some("agent:other"), false),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+        assert!(matches!(
+            check_admission(&restrictive, None, false),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+        assert!(matches!(
+            check_admission(&restrictive, Some("agent:finance"), true),
+            Err(VaultRuntimeError::DeliveryModeNotPermitted)
+        ));
+        assert!(check_admission(&restrictive, Some("agent:finance"), false).is_ok());
+    }
+
+    #[test]
+    fn a_non_admitted_caller_is_not_told_the_delivery_mode() {
+        // Agent admissibility is checked first on purpose. Both orders refuse
+        // the same requests, but checking mode first hands someone with no
+        // access at all a fact about the policy — cheapest possible denial is
+        // the one that reveals least.
+        let policy = SecretPolicy {
+            privilege_tier: 3,
+            allowed_agents: AllowedAgents::only(["agent:finance"]),
+            allowed_mode: VaultDeliveryMode::Direct,
+            rotated_at_ms: 0,
+        };
+
+        assert!(
+            matches!(
+                check_admission(&policy, Some("agent:other"), true),
+                Err(VaultRuntimeError::AgentNotPermitted)
+            ),
+            "an outsider must not learn that the mode would also have refused"
+        );
+    }
+
+    #[test]
+    fn an_empty_allow_list_refuses_everyone() {
+        // `Only(empty)` is the natural way to express "nobody, for now". It
+        // must fail closed rather than degenerate into `Any`.
+        let policy = SecretPolicy {
+            privilege_tier: 0,
+            allowed_agents: AllowedAgents::only(Vec::<String>::new()),
+            allowed_mode: VaultDeliveryMode::Both,
+            rotated_at_ms: 0,
+        };
+
+        assert!(check_admission(&policy, Some("agent:anyone"), true).is_err());
+        assert!(check_admission(&policy, None, true).is_err());
+    }
+
+    #[test]
+    fn a_refused_request_never_reaches_the_delivery_adapter() {
+        // Narrower than its old name suggested: this shows a refused request
+        // does not reach the adapter, which is a consequence of refusal rather
+        // than proof of clone ordering. P4 itself is pinned by
+        // `the_admission_decision_refuses_before_it_can_see_a_payload`.
         let vault = ChiefVaultRuntime::new();
         vault.register_secret(
             "bank-password",
@@ -697,7 +948,7 @@ mod tests {
             .is_err());
         assert!(
             delivery.deliveries.lock().unwrap().is_empty(),
-            "the payload must not have been cloned out of storage"
+            "a refused request must not reach the delivery boundary"
         );
     }
 
