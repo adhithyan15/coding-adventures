@@ -854,6 +854,20 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 5,
+      "output": "chinese/book/chapters/ch05-shi.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 6,
+      "output": "chinese/book/chapters/ch06-zaijian.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"

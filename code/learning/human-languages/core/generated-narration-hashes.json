@@ -944,6 +944,40 @@
       "jsonHash": "fnv1a64:94a24189944d033d"
     },
     {
+      "language": "chinese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:708538f4098aa533",
+      "lessonIds": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch05.txt",
+      "json": "chinese/narration/ch05.json",
+      "textHash": "fnv1a64:86e47e62d04a010b",
+      "jsonHash": "fnv1a64:0b738cd121d2d253"
+    },
+    {
+      "language": "chinese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:e13cc96d46eb5e01",
+      "lessonIds": [
+        "ZH-W06-zai",
+        "ZH-W06-jian",
+        "ZH-C06-zaijian",
+        "ZH-C06-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch06.txt",
+      "json": "chinese/narration/ch06.json",
+      "textHash": "fnv1a64:fb679382ec496d0f",
+      "jsonHash": "fnv1a64:ed373a3383bc170a"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",

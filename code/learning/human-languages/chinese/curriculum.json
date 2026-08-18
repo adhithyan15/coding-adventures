@@ -77,6 +77,38 @@
         "ZH-EXT-012-NEGATE-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-013-SHI-BUILD",
+        "ZH-EXT-014-BU-SANDHI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-005",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ZH-W06-zai",
+        "ZH-W06-jian",
+        "ZH-C06-zaijian",
+        "ZH-C06-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-015-ZAIJIAN-LITERAL",
+        "ZH-EXT-016-CONVERSATION-CLOSE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -102,10 +134,10 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "ZH-PATH-003"
+        "ZH-PATH-003",
+        "ZH-PATH-004"
       ],
       "omits": [
-        "RESPONSE-YES",
         "RESPONSE-YESNO",
         "RESPONSE-OKAY"
       ],
@@ -147,9 +179,10 @@
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-005"
+      ],
       "omits": [
-        "FAREWELL",
         "FAREWELL-CASUAL",
         "FAREWELL-LATER",
         "FAREWELL-SOON",
@@ -626,6 +659,62 @@
       ],
       "lessons": [
         "ZH-C04-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-013-SHI-BUILD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write a nine-stroke character by finishing the piece I already know on top before starting the body underneath.",
+      "prerequisites": [
+        "ZH-EXT-012-NEGATE-CONSOLIDATION"
+      ],
+      "lessons": [
+        "ZH-W05-shi",
+        "ZH-C05-shi"
+      ]
+    },
+    {
+      "id": "ZH-EXT-014-BU-SANDHI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can apply the second tone-sandhi rule taught in this book -- 不 rises before a falling tone -- and I know that no sandhi rule appears in the writing.",
+      "prerequisites": [
+        "ZH-EXT-013-SHI-BUILD"
+      ],
+      "lessons": [
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-015-ZAIJIAN-LITERAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can read a two-character word literally, piece by piece, in the case where the pieces genuinely add up to the meaning -- and I can tell that case apart from a memory hook.",
+      "prerequisites": [
+        "ZH-EXT-014-BU-SANDHI"
+      ],
+      "lessons": [
+        "ZH-W06-zai",
+        "ZH-C06-zaijian"
+      ]
+    },
+    {
+      "id": "ZH-EXT-016-CONVERSATION-CLOSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "discourse",
+      "canDo": "I can carry a short exchange from greeting through an answer to a parting, and say which of its expressions are spoken differently from how they are written.",
+      "prerequisites": [
+        "ZH-EXT-015-ZAIJIAN-LITERAL"
+      ],
+      "lessons": [
+        "ZH-W06-jian",
+        "ZH-C06-practice"
       ]
     }
   ]

@@ -1239,6 +1239,11 @@ describe("real curriculum", () => {
       "ZH-C04-kou-meaning",
       "ZH-C04-practice-double",
       "ZH-C04-ri-two",
+      "ZH-C05-bushi-sandhi",
+      "ZH-C05-practice-pair",
+      "ZH-C05-shi-yes",
+      "ZH-C06-practice-close",
+      "ZH-C06-zaijian-literal",
       "ZH-W01-er-role",
       "ZH-W01-hao-build-halves",
       "ZH-W01-ni-build-halves",
@@ -1254,6 +1259,9 @@ describe("real curriculum", () => {
       "ZH-W04-bu-lifts",
       "ZH-W04-kou-last",
       "ZH-W04-ri-order",
+      "ZH-W05-shi-top",
+      "ZH-W06-jian-legs",
+      "ZH-W06-zai-frame",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);

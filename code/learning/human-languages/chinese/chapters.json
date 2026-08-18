@@ -100,6 +100,50 @@
           "ZH-DIALOGUE-NEGATE"
         ]
       }
+    },
+    {
+      "chapter": 5,
+      "title": "Yes, No, and a Tone That Moves",
+      "label": "ch:zh-shi",
+      "canDo": "I can write 是 by finishing 日 before the body underneath, answer a yes-or-no question either way by keeping or negating the word I was asked about, and apply the rule that 不 rises before a falling tone even though the writing never shows it.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ZH-C05-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange in which the reader can answer either way -- 是 for yes, 不是 for no -- and hear the negator's pitch rise on a page that records no such thing.",
+        "assesses": [
+          "ZH-SCRIPT-SHI",
+          "ZH-LEX-SHI",
+          "ZH-LEX-BUSHI",
+          "ZH-TONE-SANDHI-BU",
+          "ZH-GRAMMAR-NEGATE",
+          "ZH-DIALOGUE-IDENTIFY"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "See You Again",
+      "label": "ch:zh-zaijian",
+      "canDo": "I can write 再 and 见, say goodbye with 再见, read the word literally as \"see again\" because its two pieces genuinely add up, and name which expressions I know are spoken differently from how they are written.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ZH-C06-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange in the track that opens, turns and closes -- greeting, an answer either way, and a parting -- with every line built from characters the reader has written rather than a phrase memorised whole.",
+        "assesses": [
+          "ZH-SCRIPT-ZAI",
+          "ZH-SCRIPT-JIAN",
+          "ZH-LEX-ZAIJIAN",
+          "ZH-LEX-BUSHI",
+          "ZH-TONE-SANDHI-BU",
+          "ZH-DIALOGUE-PART"
+        ]
+      }
     }
   ]
 }
