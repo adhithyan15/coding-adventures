@@ -961,6 +961,23 @@
       "jsonHash": "fnv1a64:0b738cd121d2d253"
     },
     {
+      "language": "chinese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:d61449521b478335",
+      "lessonIds": [
+        "ZH-W06-zai",
+        "ZH-W06-jian",
+        "ZH-C06-zaijian",
+        "ZH-C06-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch06.txt",
+      "json": "chinese/narration/ch06.json",
+      "textHash": "fnv1a64:a49cab14dd9ccf71",
+      "jsonHash": "fnv1a64:5dd902de9c52c452"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",
