@@ -2717,8 +2717,7 @@ fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
         .to_owned();
 
     // The listing is metadata, so it belongs on ordinary standard output.
-    let (list_status, list_transcript, list_stdout) =
-        run_attachment_list_in_pty(&home, &item_id);
+    let (list_status, list_transcript, list_stdout) = run_attachment_list_in_pty(&home, &item_id);
     assert!(list_status.success(), "{list_transcript}");
     let listed = String::from_utf8(list_stdout).unwrap();
     assert!(listed.contains(&attachment_id), "{listed:?}");
@@ -2730,16 +2729,14 @@ fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
 
     // A refusal at the prompt writes no file at all.
     let refused_destination = home.0.join("refused.bin");
-    let (refused_status, refused_transcript, refused_stdout) = run_attachment_export_in_pty(
-        &home,
-        &item_id,
-        &attachment_id,
-        &refused_destination,
-        b"no",
-    );
+    let (refused_status, refused_transcript, refused_stdout) =
+        run_attachment_export_in_pty(&home, &item_id, &attachment_id, &refused_destination, b"no");
     assert_eq!(refused_status.code(), Some(2), "{refused_transcript}");
     assert!(refused_stdout.is_empty());
-    assert!(!refused_destination.exists(), "a refused export wrote a file");
+    assert!(
+        !refused_destination.exists(),
+        "a refused export wrote a file"
+    );
 
     let destination = home.0.join("exported.bin");
     let (export_status, export_transcript, export_stdout) =
@@ -2765,8 +2762,11 @@ fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
 
     // Every access is recorded, and the chain carries neither the name nor any
     // byte of the file.
-    let (audit_status, audit) =
-        run_unlock_in_pty(&home, &["audit", "list"], b"action=item_read\toutcome=denied");
+    let (audit_status, audit) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_read\toutcome=denied",
+    );
     assert!(audit_status.success(), "{audit}");
     assert!(
         audit.contains("action=item_update\toutcome=succeeded"),
