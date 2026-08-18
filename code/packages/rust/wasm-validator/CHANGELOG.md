@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.15] - 2026-08-18 (task #113-117 — SIMD widening: i32x4 arithmetic + comparison family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened with two new arms: `Add | Sub |
+  Mul` (pop two `v128`, push one) and `Eq | Ne | LtS | LtU | GtS | GtU |
+  LeS | LeU | GeS | GeU` (same pop-two-push-one shape, but the result is
+  still a `v128` boolean mask, not a plain `i32` -- same rule `Eq` alone
+  already established). New `Neg` arm: pop one `v128`, push one --
+  UNARY, unlike every other kind in this match.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.14] - 2026-08-17 (task #92/#111 — real multi-memory memidx bounds check)
 
 ### Added
