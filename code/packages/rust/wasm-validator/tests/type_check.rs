@@ -693,6 +693,20 @@ fn valid_i32x4_from_i16x8_widening() {
 }
 
 #[test]
+fn valid_i8x16_first_slice() {
+    // SIMD widen PR4: i8x16.add/sub (v128,v128->v128, same shape as
+    // i32x4.add/sub) and i8x16.neg (v128->v128, UNARY, same shape as
+    // i32x4.neg/abs) -- this lane width's first slice, same "type
+    // checker only sees plain v128" pattern as every other SIMD op.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i8x16.add (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.sub (local.get 0) (local.get 1)))
+             (func (param v128) (result v128) (i8x16.neg (local.get 0))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

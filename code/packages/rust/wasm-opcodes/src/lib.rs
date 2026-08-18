@@ -878,6 +878,21 @@ pub enum SimdOpKind {
     /// `i32x4.extmul_high_i16x8_u` -- same HIGH-4-lanes widening multiply
     /// as [`Self::ExtmulHighI16x8S`], but zero-extended, not sign-extended.
     ExtmulHighI16x8U,
+    /// `i8x16.add` -- lane-wise wrapping addition over 16 `i8` lanes. The
+    /// first opcode in this table for the `i8x16` lane width -- unlike
+    /// `i32x4`'s first slice, no `i8x16.splat`/`extract_lane` are needed
+    /// alongside it, since `v128.const i8x16 ...` (already supported for
+    /// all 6 shapes) covers both operand construction and result
+    /// comparison for this first `i8x16` slice's own test corpus.
+    AddI8x16,
+    /// `i8x16.sub` -- lane-wise wrapping subtraction over 16 `i8` lanes.
+    SubI8x16,
+    /// `i8x16.neg` -- lane-wise arithmetic negation over 16 `i8` lanes.
+    /// UNARY, same shape as `i32x4`'s own `Neg`/`Abs`. WASM SIMD defines
+    /// no `i8x16.mul` (8-bit lanes are too narrow for a useful lane-wise
+    /// multiply in this proposal), so this first `i8x16` slice is
+    /// deliberately just these 3 opcodes, not a 4th "mul" entry.
+    NegI8x16,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -916,6 +931,13 @@ pub struct SimdOpInfo {
 /// whose INPUT lane width (16-bit `i16x8`) differs from their OUTPUT lane
 /// width (32-bit `i32x4`), same live-fetched-and-cross-checked
 /// verification discipline as every widening above.
+/// `i8x16.add`/`sub`/`neg` are this table's first entries for the
+/// `i8x16` lane width -- a brand-new "first slice" (following the same
+/// pattern `i32x4` itself started with), not a widening of an existing
+/// lane width. Each sub-opcode byte fetched live from `BinarySIMD.md`
+/// and cross-checked against the already-implemented `i32x4.add`
+/// (`0xAE`)/`i32x4.abs` (`0xA0`) entries (both matched exactly), same
+/// discipline as every prior addition.
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -946,6 +968,9 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.extmul_high_i16x8_s", sub_opcode: 0xBD, kind: SimdOpKind::ExtmulHighI16x8S },
     SimdOpInfo { name: "i32x4.extmul_low_i16x8_u", sub_opcode: 0xBE, kind: SimdOpKind::ExtmulLowI16x8U },
     SimdOpInfo { name: "i32x4.extmul_high_i16x8_u", sub_opcode: 0xBF, kind: SimdOpKind::ExtmulHighI16x8U },
+    SimdOpInfo { name: "i8x16.neg", sub_opcode: 0x61, kind: SimdOpKind::NegI8x16 },
+    SimdOpInfo { name: "i8x16.add", sub_opcode: 0x6E, kind: SimdOpKind::AddI8x16 },
+    SimdOpInfo { name: "i8x16.sub", sub_opcode: 0x71, kind: SimdOpKind::SubI8x16 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1364,8 +1389,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_29_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 29);
+    fn simd_ops_table_has_the_expected_32_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 32);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1482,5 +1507,27 @@ mod tests {
             assert_eq!(op.kind, kind);
             assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
         }
+    }
+
+    #[test]
+    fn simd_i8x16_first_slice_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i32x4.add (0xAE)/i32x4.abs (0xA0) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. This is a brand-new lane width's first slice (like
+        // i32x4's own original 5-opcode slice), not a widening of an
+        // existing one -- no i8x16.mul exists in the spec (8-bit lanes
+        // are too narrow for a useful lane-wise multiply).
+        for (name, sub_opcode, kind) in [
+            ("i8x16.neg", 0x61, SimdOpKind::NegI8x16),
+            ("i8x16.add", 0x6E, SimdOpKind::AddI8x16),
+            ("i8x16.sub", 0x71, SimdOpKind::SubI8x16),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        assert!(get_simd_op_by_name("i8x16.mul").is_none(), "WASM SIMD defines no i8x16.mul");
     }
 }
