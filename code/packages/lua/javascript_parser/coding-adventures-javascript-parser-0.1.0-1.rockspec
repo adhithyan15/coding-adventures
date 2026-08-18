@@ -47,5 +47,35 @@ build = {
     modules = {
         ["coding_adventures.javascript_parser"] =
             "src/coding_adventures/javascript_parser/init.lua",
+        ["coding_adventures.javascript_parser._grammar_default"] =
+            "src/coding_adventures/javascript_parser/_grammar_default.lua",
+        ["coding_adventures.javascript_parser._grammar_es1"] =
+            "src/coding_adventures/javascript_parser/_grammar_es1.lua",
+        ["coding_adventures.javascript_parser._grammar_es3"] =
+            "src/coding_adventures/javascript_parser/_grammar_es3.lua",
+        ["coding_adventures.javascript_parser._grammar_es5"] =
+            "src/coding_adventures/javascript_parser/_grammar_es5.lua",
+        ["coding_adventures.javascript_parser._grammar_es2015"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2015.lua",
+        ["coding_adventures.javascript_parser._grammar_es2016"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2016.lua",
+        ["coding_adventures.javascript_parser._grammar_es2017"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2017.lua",
+        ["coding_adventures.javascript_parser._grammar_es2018"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2018.lua",
+        ["coding_adventures.javascript_parser._grammar_es2019"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2019.lua",
+        ["coding_adventures.javascript_parser._grammar_es2020"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2020.lua",
+        ["coding_adventures.javascript_parser._grammar_es2021"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2021.lua",
+        ["coding_adventures.javascript_parser._grammar_es2022"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2022.lua",
+        ["coding_adventures.javascript_parser._grammar_es2023"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2023.lua",
+        ["coding_adventures.javascript_parser._grammar_es2024"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2024.lua",
+        ["coding_adventures.javascript_parser._grammar_es2025"] =
+            "src/coding_adventures/javascript_parser/_grammar_es2025.lua",
     },
 }
