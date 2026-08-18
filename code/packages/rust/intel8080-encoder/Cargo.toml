@@ -1,0 +1,12 @@
+[package]
+name = "intel8080-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Intel 8080 instruction encoder.  Covers the subset of 8080 opcodes the LANG VM intel8080-backend uses to lower CIR to 8-bit-data Intel 8080 machine code.  No IR knowledge.  Third lane of the 9-architecture expansion."
+
+[lib]
+name = "intel8080_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+intel8080-simulator = { path = "../intel8080-simulator" }
