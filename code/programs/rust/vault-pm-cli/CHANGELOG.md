@@ -2,37 +2,28 @@
 
 ## Unreleased
 
-- Added `tests/crash_fault_matrix.rs`, the VLT-PM41 crash/fault matrix and
-  local restore drill. Where `tests/local_cli_e2e.rs` proves what this
-  executable does when it is allowed to finish, this suite proves what happens
-  when it is not: every test kills a real process with `SIGKILL` at a
-  deterministically chosen durable write and then asks the next real process
-  what it can see and what it can repair, through nothing but an argument
-  vector, a controlling terminal, and a directory tree. Generation zero (34
-  landing points) and the shared mutation publication path (20) are swept
-  exhaustively; item create, edit, delete, history restore, a fail-closed
-  conflict merge, and portable export are probed at their characteristic
-  points; and a separate drill walks one vault through every stage of
-  interruption, pinning what `status` and `doctor` report at each and proving
-  that a pre-mutation tree restored from an ordinary file-level backup opens
-  and verifies. Each ceremony's landing-point count is measured from a ledger
-  the run itself emits, so the matrix is derived from the code under test
-  rather than from a list somebody has to remember to update.
-- Enabled `coding_adventures_vault_pm_cli`'s non-default `crash-injection`
-  feature through this crate's `dev-dependencies`. Cargo unifies features
-  across normal and dev dependencies only when dev-dependencies are in the
-  graph, so `cargo test` and `cargo clippy --all-targets` build a `vault-pm`
-  binary that can be killed on demand while `cargo build` and `cargo install`
-  build one in which the strings `VAULT_PM_CRASH_AT` and
-  `VAULT_PM_CRASH_TRACE` do not appear at all.
-- **Found by the drill, not fixed here:** an interrupted mutation leaves a
-  vault this command surface cannot repair. The tree is never torn, the durable
-  `PendingPublication` journal is exact, and both read-only diagnostics
-  correctly report `recovery_required` — but no verb replays it, so every later
-  command fails, and it fails as exit 2 `vault-pm: invalid command`, telling a
-  person their command is wrong about a vault that is intact and one journal
-  replay from healthy. See `code/specs/VLT-PM41-cli-crash-fault-matrix.md`
-  section 8 and VLT-PM00 §23 item 10a.
+- Added `the_shipped_executable_contains_no_crash_injection` to
+  `tests/local_cli_e2e.rs`, and kept this crate free of any mention of
+  `coding_adventures_vault_pm_cli`'s `crash-injection` feature. VLT-PM41 needs
+  a binary it can kill at a chosen durable write, and the obvious way to get
+  one — enabling that feature through this crate's `dev-dependencies` — is a
+  trap: Cargo resolves features per package across a build graph, so
+  `cargo build --release --all-targets` pulls dev-dependencies in and uplifts
+  the instrumented binary to `target/release/vault-pm`, the exact path a
+  packaging step copies from. The instrumented twin therefore lives in
+  `code/programs/rust/vault-pm-cli-drill` as `vault-pm-drill`, and the new test
+  reads the binary this crate produced — in a build that does have
+  dev-dependencies resolved — and fails if either injection variable name
+  appears anywhere in it.
+- **Found by the VLT-PM41 drill, not fixed here:** an interrupted mutation
+  leaves a vault this command surface cannot repair. The tree is never torn,
+  the durable `PendingPublication` journal is exact, and both read-only
+  diagnostics correctly report `recovery_required` — but no verb replays it, so
+  every later command fails, and it fails as exit 2
+  `vault-pm: invalid command`, telling a person their command is wrong about a
+  vault that is intact and one journal replay from healthy. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 and VLT-PM00 §23
+  item 10a.
 
 - Exposed `vault-pm [--vault NAME] shell`, the foreground interactive session
   host, through the unchanged thin executable. Two real-process

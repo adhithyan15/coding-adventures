@@ -119,33 +119,25 @@ well as unable to supply a secret.
 ## The crash/fault drill
 
 `tests/local_cli_e2e.rs` proves what this executable does when it is allowed to
-finish. `tests/crash_fault_matrix.rs` proves what happens when it is not.
+finish. `code/programs/rust/vault-pm-cli-drill` proves what happens when it is
+not: its `tests/crash_fault_matrix.rs` kills a real process with `SIGKILL` at a
+deterministically chosen durable write and then asks the next real process what
+it can see and what it can repair.
 
-Every test in the second file kills a real process with `SIGKILL` at a
-deterministically chosen durable write, and then asks the *next* real process
-what it can see and what it can repair. Nothing calls a recovery function
-directly; the only interface used is the one a person has — an argument vector,
-a controlling terminal, and a directory tree.
+That drill lives in a separate crate on purpose, and this crate carries the
+guard rail. VLT-PM41 needs a binary built with
+`coding_adventures_vault_pm_cli`'s `crash-injection` feature, and the obvious
+way to get one — enabling it through this crate's `dev-dependencies` — is a
+trap. Cargo resolves features per package across a build graph, so
+`cargo build --release --all-targets` pulls dev-dependencies in and uplifts the
+instrumented binary to `target/release/vault-pm`, the exact path a packaging
+step copies from. This crate therefore names that feature in no section, the
+instrumented twin is `vault-pm-drill` in its own workspace, and
+`the_shipped_executable_contains_no_crash_injection` reads the binary this
+crate produced and fails if either injection variable name appears in it.
 
-The landing points come from
-`coding_adventures_vault_pm_crash_injection`, which brackets every durable
-write in a "before" and an "after" ordinal. Because each durable write is an
-atomic `write → fsync → rename`, those ordinals are not a sample of where a
-crash can land: they are the complete case analysis. A drill therefore runs a
-ceremony once with only a ledger, counts the lines to learn how many landing
-points it has, and replays it once per point from a byte-identical tree — so
-the matrix is derived from the code under test rather than from a list somebody
-has to remember to update.
-
-Generation zero (34 landing points) and the shared mutation publication path
-(20) are swept exhaustively. Item create, edit, delete, history restore, a
-fail-closed conflict merge, and portable export are probed at their
-characteristic points. A separate drill walks one vault through every stage of
-interruption and pins what `status` and `doctor` say at each, including that a
-pre-mutation tree restored from an ordinary file-level backup opens and
-verifies.
-
-Two results are worth reading before trusting the executable with anything:
+Two results from the drill are worth reading before trusting this executable
+with anything:
 
 - An interrupted `init` is always repairable by running `init` again, and the
   resumed vault passes authenticated `doctor --unlock`.
@@ -156,12 +148,6 @@ Two results are worth reading before trusting the executable with anything:
   `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 and VLT-PM00 §23
   item 10a.
 
-The drill is instrumentation-free in a released build. The crash hook is an
-optional dependency behind a non-default feature that this crate turns on
-through its `dev-dependencies`, so `cargo test` builds a `vault-pm` binary that
-can be killed on demand and `cargo build`/`cargo install` build one that has
-never heard of the idea.
-
 ## Verification
 
 ```bash
@@ -169,6 +155,4 @@ bash BUILD
 cargo clippy --manifest-path Cargo.toml --all-targets -- -D warnings
 ```
 
-`BUILD` runs both suites. The crash drill is the slower half: each cell pays a
-production Argon2id derivation per unlock, and the generation-zero sweep runs
-its cells across worker threads for that reason.
+The crash drill has its own `BUILD`, next to its own crate.

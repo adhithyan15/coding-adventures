@@ -10,18 +10,15 @@ license = "MIT"
 [dependencies]
 coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli" }
 
+# This crate must never name `coding_adventures_vault_pm_cli`'s
+# `crash-injection` feature, in any section. Cargo resolves features per
+# package across a build graph, so naming it even in `dev-dependencies` would
+# let `cargo build --all-targets` uplift an instrumented binary to
+# `target/release/vault-pm` — the path a packaging step copies from. The
+# VLT-PM41 drill therefore lives in a separate crate,
+# `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
 [dev-dependencies]
 libc = "0.2"
-# Cargo unifies the feature sets of a package reached through both
-# `dependencies` and `dev-dependencies` whenever dev-dependencies are in the
-# graph. `cargo test`/`cargo clippy --all-targets` therefore build the
-# `vault-pm` binary with VLT-PM41 crash injection compiled in, while a plain
-# `cargo build`/`cargo install` — which never resolves dev-dependencies —
-# builds it without. That is the whole mechanism keeping the drill's kill
-# switch out of a released executable.
-coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli", features = [
-    "crash-injection",
-] }
 
 [[bin]]
 name = "vault-pm"

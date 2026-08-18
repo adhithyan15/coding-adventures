@@ -1,0 +1,34 @@
+[package]
+name = "vault-pm-cli-drill"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM41 instrumented vault-pm executable and its real-process crash/fault drill"
+license = "MIT"
+
+[workspace]
+
+# This crate exists so the *shipped* executable never can be instrumented.
+#
+# Cargo unifies features per package across a build graph, so a single crate
+# cannot produce both an instrumented and an uninstrumented `vault-pm` binary;
+# `cargo build --all-targets` would pull dev-dependency features into the
+# graph and uplift the instrumented artifact to `target/release/vault-pm` —
+# exactly the path a packaging step copies from.
+#
+# Splitting removes the ambiguity entirely. `code/programs/rust/vault-pm-cli`
+# never names the `crash-injection` feature in any section, so no cargo
+# invocation can produce an instrumented `vault-pm`. This crate always enables
+# it, as a plain dependency feature, and its binary is called `vault-pm-drill`
+# so it cannot be mistaken for the product. The two crates are separate
+# workspaces, so their feature resolution never meets.
+[dependencies]
+coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli", features = [
+    "crash-injection",
+] }
+
+[dev-dependencies]
+libc = "0.2"
+
+[[bin]]
+name = "vault-pm-drill"
+path = "src/main.rs"

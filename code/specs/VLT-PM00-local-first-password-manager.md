@@ -818,7 +818,11 @@ code/packages/rust/vault-pm-application-storage-core
 code/packages/rust/vault-pm-local-host    secure roots and process exclusion
 code/packages/rust/vault-pm-config        strict storage-neutral client config
 code/packages/rust/vault-pm-cli          product parser/driver/renderer
+code/packages/rust/vault-pm-crash-injection
+                                         VLT-PM41 test-only durable-step
+                                         instrumentation, never in a release
 code/programs/rust/vault-pm-cli          executable composition root
+code/programs/rust/vault-pm-cli-drill    VLT-PM41 instrumented twin and drill
 ```
 
 The first storage adapter is

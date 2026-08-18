@@ -394,6 +394,10 @@ cargo clippy -p coding_adventures_vault_pm_cli --features crash-injection \
 RUSTDOCFLAGS="-D warnings" cargo doc -p coding_adventures_vault_pm_cli --no-deps
 ```
 
-The real-process crash drill lives with the executable, in
-`code/programs/rust/vault-pm-cli/tests/crash_fault_matrix.rs`, because only
-there is there a process to remove.
+The real-process crash drill lives in
+`code/programs/rust/vault-pm-cli-drill`, because only there is there a process
+to remove — and because keeping it out of the product crate is what makes the
+"never in a released binary" claim structural rather than conventional. Cargo
+resolves features per package, so a product crate that named
+`crash-injection` even in `dev-dependencies` would hand
+`cargo build --all-targets` an instrumented `target/release/vault-pm`.

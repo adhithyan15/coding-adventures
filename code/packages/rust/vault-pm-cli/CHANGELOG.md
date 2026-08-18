@@ -13,12 +13,16 @@
   storage-agnostic and owns no filesystem authority, so it is not the layer
   that knows what "durable" means.
 - Added the non-default `crash-injection` feature that selects the instrumented
-  half of that module. With the feature off — the only configuration a released
-  binary is ever built in — `LocalBackend` is exactly `FsStorageBackend`, each
-  combinator is an `#[inline]` function whose body is `action()`, and the
-  crash-injection package is an optional dependency that is not compiled at
-  all. No behavior, output, exit class, file, or on-disk format changes in
-  either configuration.
+  half of that module. With the feature off — the only configuration the
+  product executable is ever built in — `LocalBackend` is exactly
+  `FsStorageBackend`, each combinator is an `#[inline]` function whose body is
+  `action()`, and the crash-injection package is an optional dependency that is
+  not compiled at all. No behavior, output, exit class, file, or on-disk format
+  changes in either configuration. Only `code/programs/rust/vault-pm-cli-drill`
+  enables the feature; the product crate names it in no section, because Cargo
+  resolves features per package and naming it even in `dev-dependencies` would
+  let `cargo build --all-targets` uplift an instrumented binary to
+  `target/release/vault-pm`.
 - Added `vault-pm [--vault NAME] shell`, the foreground interactive session
   host specified by `VLT-PM40-cli-interactive-shell.md`. It adds no capability:
   every command inside a session runs through the same parser, the same

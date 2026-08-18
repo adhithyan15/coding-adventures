@@ -31,7 +31,17 @@ All notable changes to this package are documented here.
   panics rather than degrading, since a silently short ledger would make a
   sweep believe a ceremony performs fewer durable writes than it does and the
   missing landing points would never be tested.
-- Eight unit tests covering vocabulary distinctness, the ledger format,
-  owner-only append, ordinal monotonicity, bracketing order, write wrapping
-  versus read pass-through, the wrapper accessors, and the production-shaped
-  path where no policy is configured.
+- Untrusted-path handling for the ledger. The path must be absolute so a
+  working directory cannot redirect it, is opened with `O_NOFOLLOW` so a
+  symlink at the final component is refused rather than followed, is created
+  `0600`, and is refused outright if it already exists as anything other than a
+  regular file this user owns privately - a creation mode says nothing about a
+  file that is already there.
+- A `kill(2)` fallback. A sandbox that filters the syscall must not turn a
+  crash drill into a process that spins forever, so a failed `kill` falls back
+  to `abort`, and the post-kill loop parks rather than spinning.
+- Eleven unit tests covering vocabulary distinctness, the ledger format,
+  owner-only append, refusal of relative, symlinked, and world-readable ledger
+  paths, ordinal monotonicity, bracketing order, write wrapping versus read
+  pass-through, the wrapper accessors, and the production-shaped path where no
+  policy is configured.

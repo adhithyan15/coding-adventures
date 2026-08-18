@@ -16,9 +16,13 @@
 //! real process can open. Those are different claims, and only the second one
 //! is what a user experiences when a laptop battery dies.
 //!
-//! This package closes that gap. It is **test-only scaffolding**, compiled
-//! into the executable only when the host enables its `crash-injection`
-//! feature. A shipped `vault-pm` binary contains none of this code.
+//! This package closes that gap. It is **test-only scaffolding**, reachable
+//! only through `coding_adventures_vault_pm_cli`'s non-default
+//! `crash-injection` feature, which only `vault-pm-cli-drill` enables. The
+//! product executable `code/programs/rust/vault-pm-cli` names that feature in
+//! no manifest section, so no cargo invocation can build a `vault-pm` that
+//! contains this code — and its own test suite reads the binary it produced
+//! and fails if it ever does.
 //!
 //! # The model: a durable step is a countable event
 //!
@@ -92,9 +96,20 @@
 //!
 //! Only an ordinal, a phase, and a value from the closed [`DurableStep`]
 //! vocabulary. No key, namespace, object identifier, path, item title,
-//! ciphertext, or byte count is ever recorded. The ledger of a vault holding
-//! ten thousand secrets is indistinguishable from the ledger of a vault
-//! holding none with the same shape, and the file is created owner-only.
+//! ciphertext, or byte count is ever recorded, so no vault *content* can reach
+//! the file.
+//!
+//! Be precise about what that does and does not hide. Each object write emits
+//! one `storage.put` pair, so the ledger's *length* correlates with how much a
+//! ceremony wrote — it is a shape and activity oracle, not a content oracle.
+//! Two vaults running the same ceremony over the same number of objects
+//! produce identical ledgers; a larger vault produces a longer one. That is
+//! acceptable because the ledger only exists when a drill asks for it by name,
+//! and the drill's whole purpose is to count those writes.
+//!
+//! The file must be an absolute path, is created owner-only, is opened with
+//! `O_NOFOLLOW`, and is refused outright if it already exists as something
+//! other than a regular file this user owns privately.
 
 #![deny(missing_docs)]
 
@@ -256,41 +271,98 @@ pub fn ledger_line(ordinal: u64, step: DurableStep, phase: Phase) -> String {
     format!("{ordinal}\t{}\t{}\n", phase.label(), step.label())
 }
 
+/// Append one ledger line, refusing any path that is not plainly a file this
+/// caller owns.
+///
+/// The path comes from the environment, so it is treated as untrusted even
+/// though only a process that already controls this one's environment can set
+/// it. Three rules:
+///
+/// - the path must be absolute, so a working directory cannot redirect it;
+/// - `O_NOFOLLOW` refuses a symlink at the final component, so the ledger can
+///   never be appended through a link to somewhere else; and
+/// - an existing file must already be owner-only, because `mode(0o600)`
+///   applies to creation and would otherwise silently keep a world-readable
+///   file world-readable.
 fn append_ledger_line(path: &Path, ordinal: u64, step: DurableStep, phase: Phase) {
     let line = ledger_line(ordinal, step, phase);
+    let refuse =
+        |reason: &str| -> ! { panic!("crash trace {} is unusable: {reason}", path.display()) };
+    if !path.is_absolute() {
+        refuse("the path must be absolute");
+    }
     let mut options = OpenOptions::new();
     options.create(true).append(true);
     #[cfg(unix)]
     {
         use std::os::unix::fs::OpenOptionsExt;
-        options.mode(0o600);
+        options.mode(0o600).custom_flags(libc::O_NOFOLLOW);
     }
     // A ledger that cannot be written is a broken drill, not a degraded one:
     // a silent failure here would make a sweep believe an operation performs
     // fewer durable writes than it does, and the missing landing points would
     // never be tested.
-    let mut file = options
-        .open(path)
-        .unwrap_or_else(|error| panic!("crash trace {} is unwritable: {error}", path.display()));
-    file.write_all(line.as_bytes())
+    let Ok(mut file) = options.open(path) else {
+        refuse("it could not be opened as an owned regular file");
+    };
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        use std::os::unix::fs::PermissionsExt;
+        let Ok(metadata) = file.metadata() else {
+            refuse("its metadata could not be read");
+        };
+        if !metadata.is_file() {
+            refuse("it is not a regular file");
+        }
+        if metadata.permissions().mode() & 0o077 != 0 {
+            refuse("it is readable or writable by somebody else");
+        }
+        // A hard link to a file this user does not own would defeat the mode
+        // check above, so confirm ownership as well.
+        if metadata.uid() != unsafe_current_uid() {
+            refuse("it is owned by another user");
+        }
+    }
+    if file
+        .write_all(line.as_bytes())
         .and_then(|()| file.flush())
-        .unwrap_or_else(|error| panic!("crash trace {} is unwritable: {error}", path.display()));
+        .is_err()
+    {
+        refuse("it could not be appended to");
+    }
+}
+
+#[cfg(unix)]
+fn unsafe_current_uid() -> u32 {
+    // SAFETY: `getuid` takes no arguments, touches no memory the compiler
+    // knows about, and cannot fail.
+    unsafe { libc::getuid() }
 }
 
 /// Remove this process immediately, the way a power cut would.
 fn crash_now() -> ! {
     #[cfg(unix)]
     {
-        // SAFETY: `kill` with the caller's own PID and `SIGKILL` has no
+        // SAFETY: `kill` with the caller's own process id and `SIGKILL` has no
         // preconditions and touches no memory the compiler knows about. The
-        // signal is neither catchable nor blockable, so control never returns.
-        unsafe {
-            libc::kill(libc::getpid(), libc::SIGKILL);
+        // signal is neither catchable nor blockable, so on success control
+        // never returns.
+        let sent = unsafe { libc::kill(libc::getpid(), libc::SIGKILL) };
+        if sent != 0 {
+            // A sandbox that filters `kill(2)` must not turn a crash drill
+            // into a process that spins forever: fall back to the strongest
+            // termination still available. `abort` runs no destructor and
+            // flushes nothing, so the only fidelity lost is that the drill's
+            // parent sees `SIGABRT` instead of `SIGKILL` — a loud, visible
+            // difference rather than a hang.
+            std::process::abort();
         }
-        // The kernel has already scheduled this process for death; the loop
-        // exists only so the function's `!` return type is honest.
+        // The kernel has already scheduled this process for death. Park rather
+        // than spin, so the few instructions before it lands cost nothing; the
+        // loop exists only so the function's `!` return type is honest.
         loop {
-            std::thread::yield_now();
+            std::thread::park();
         }
     }
     #[cfg(not(unix))]
@@ -415,10 +487,23 @@ mod tests {
         .expect("valid put input")
     }
 
+    /// A scratch path no other test, run, or recycled process id can collide
+    /// with.
+    ///
+    /// Three of the tests below assert a *refusal*, so they end by panicking
+    /// and never clean up after themselves. Process ids are recycled, so a
+    /// name built from the pid alone would eventually meet a leftover file
+    /// from a previous run — and since two of those leftovers are deliberately
+    /// hostile (a dangling symlink, a world-readable file), meeting one would
+    /// flip an unrelated test's result. A monotonic counter makes each name
+    /// unique within a run, and the leading `remove_file` clears anything a
+    /// recycled pid left behind.
     fn scratch_path(name: &str) -> PathBuf {
+        static NEXT: AtomicU64 = AtomicU64::new(0);
         let path = std::env::temp_dir().join(format!(
-            "vault-pm-crash-injection-{}-{name}",
-            std::process::id()
+            "vault-pm-crash-injection-{}-{}-{name}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::SeqCst)
         ));
         let _ = std::fs::remove_file(&path);
         path
@@ -481,6 +566,44 @@ mod tests {
             assert_eq!(mode & 0o777, 0o600);
         }
         std::fs::remove_file(&path).unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected = "the path must be absolute")]
+    fn a_relative_ledger_path_is_refused() {
+        append_ledger_line(
+            Path::new("relative-ledger.tsv"),
+            1,
+            DurableStep::StoragePut,
+            Phase::Before,
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    #[should_panic(expected = "could not be opened")]
+    fn a_symlinked_ledger_path_is_refused() {
+        // Without `O_NOFOLLOW` this would append through the link and quietly
+        // write into whatever the link names.
+        let target = scratch_path("symlink-target");
+        let link = scratch_path("symlink-ledger");
+        std::fs::write(&target, b"").unwrap();
+        let _ = std::fs::remove_file(&link);
+        std::os::unix::fs::symlink(&target, &link).unwrap();
+        append_ledger_line(&link, 1, DurableStep::StoragePut, Phase::Before);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    #[should_panic(expected = "readable or writable by somebody else")]
+    fn a_world_readable_ledger_is_refused() {
+        // `mode(0o600)` only applies at creation, so an existing loose file
+        // has to be rejected explicitly rather than silently kept loose.
+        use std::os::unix::fs::PermissionsExt;
+        let path = scratch_path("loose-ledger");
+        std::fs::write(&path, b"").unwrap();
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
+        append_ledger_line(&path, 1, DurableStep::StoragePut, Phase::Before);
     }
 
     #[test]

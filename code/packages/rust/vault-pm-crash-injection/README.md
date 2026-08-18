@@ -93,22 +93,48 @@ loudly rather than quietly measuring nothing.
 ## What the ledger may contain
 
 An ordinal, a phase, and a name from the closed vocabulary. Never a key,
-namespace, object identifier, path, item title, ciphertext, or length. The
-ledger of a vault holding ten thousand secrets is indistinguishable from the
-ledger of an empty vault running the same ceremony. The file is created
-owner-only and is never read back by the executable.
+namespace, object identifier, path, item title, ciphertext, or length, so no
+vault *content* can reach it.
+
+Be precise about what that does and does not hide. Each object write emits one
+`storage.put` pair, so the ledger's *length* correlates with how much a
+ceremony wrote — it is a shape and activity oracle, not a content oracle. Two
+vaults running the same ceremony over the same number of objects produce
+identical ledgers; a larger vault produces a longer one. That is acceptable
+because the ledger exists only when a drill names it, and counting those writes
+is the drill's whole purpose.
+
+The path is treated as untrusted even though only something that already
+controls this process's environment can set it. It must be absolute, is opened
+with `O_NOFOLLOW` so a symlink at the final component is refused rather than
+followed, is created `0600`, and is refused outright if it already exists as
+anything other than a regular file this user owns privately — a creation mode
+says nothing about a file that is already there. The executable never reads the
+ledger back.
 
 ## How it stays out of a release
 
 The package is an *optional* dependency of `coding_adventures_vault_pm_cli`
-behind that crate's non-default `crash-injection` feature. The executable
-`code/programs/rust/vault-pm-cli` enables the feature through its
-`dev-dependencies`, and Cargo unifies features across normal and dev
-dependencies only when dev-dependencies are in the graph. So `cargo test` and
-`cargo clippy --all-targets` build the binary with injection compiled in, while
-`cargo build` and `cargo install` build it without — the strings
-`VAULT_PM_CRASH_AT` and `VAULT_PM_CRASH_TRACE` do not appear in a released
-executable at all.
+behind that crate's non-default `crash-injection` feature.
+
+The tempting way to reach it is to enable the feature through the product
+executable's own `dev-dependencies`: `cargo build` and `cargo install` never
+resolve dev-dependencies, so they would produce an uninstrumented binary. That
+is a trap. Cargo resolves features per *package* across a build graph, and
+`cargo build --all-targets` does pull dev-dependencies in; cargo then uplifts
+the feature-unified binary to `target/release/vault-pm`, the exact path a
+packaging step copies from. Whether a password manager shipped with a kill
+switch would depend on which cargo command ran last.
+
+So the product crate `code/programs/rust/vault-pm-cli` names the feature in no
+section at all, and the instrumented twin lives in its own crate and its own
+workspace — `code/programs/rust/vault-pm-cli-drill`, producing a binary called
+`vault-pm-drill`. An instrumented `vault-pm` is unreachable by construction
+rather than by convention, and
+`the_shipped_executable_contains_no_crash_injection` in the product crate's own
+suite reads the binary that crate produced and fails if either variable name
+appears in it — running, deliberately, in a build that *does* have
+dev-dependencies resolved.
 
 ## Relationship to `FaultInjectingObjectStore`
 
@@ -123,10 +149,12 @@ other.
 
 ## Verification
 
-Eight unit tests cover the step vocabulary and its distinctness, the ledger
-line format, owner-only append behavior, ordinal allocation and monotonicity,
-the before/action/after bracketing order, write wrapping and read pass-through
-over the in-memory backend, wrapper accessors, and the production-shaped path
-where no policy is configured. The kill itself is exercised by
-`code/programs/rust/vault-pm-cli/tests/crash_fault_matrix.rs`, which is where a
-real process is available to remove.
+Eleven unit tests cover the step vocabulary and its distinctness, the ledger
+line format, owner-only append behavior, refusal of a relative path, refusal of
+a symlinked path, refusal of an existing world-readable file, ordinal
+allocation and monotonicity, the before/action/after bracketing order, write
+wrapping and read pass-through over the in-memory backend, wrapper accessors,
+and the production-shaped path where no policy is configured. The kill itself
+is exercised by
+`code/programs/rust/vault-pm-cli-drill/tests/crash_fault_matrix.rs`, which is
+where a real process is available to remove.

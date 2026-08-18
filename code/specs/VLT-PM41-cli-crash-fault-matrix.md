@@ -43,7 +43,8 @@ This contract closes both gaps.
 
 ## 2. What "a crash" means here
 
-The drill injects `SIGKILL` into the real `vault-pm` executable. `SIGKILL`
+The drill injects `SIGKILL` into a real `vault-pm` process — specifically
+`vault-pm-drill`, the instrumented twin described in section 4.6. `SIGKILL`
 cannot be caught, blocked, or handled. The kernel removes the process
 immediately: no `atexit`, no `Drop`, no flush, no cleanup. This is deliberately
 stronger than `exit()` (which runs handlers and flushes) and than `abort()`
@@ -149,9 +150,23 @@ typo must not silently turn a crash drill into an ordinary successful run.
 
 A ledger line is `ordinal \t phase \t step`. Nothing else may ever appear in
 it: no key, namespace, object identifier, path, title, ciphertext, or length.
-The ledger of a vault holding ten thousand secrets is indistinguishable from
-the ledger of an empty vault with the same ceremony. The file is created
-owner-only and is never read back by the executable.
+No vault *content* can reach the file.
+
+Be precise about what that does and does not hide. Each object write emits one
+`storage.put` pair, so the ledger's *length* correlates with how much a
+ceremony wrote — it is a shape and activity oracle, not a content oracle. Two
+vaults running the same ceremony over the same number of objects produce
+identical ledgers; a larger vault produces a longer one. That is acceptable
+because the ledger exists only when a drill names it, and counting those writes
+is the drill's whole purpose.
+
+The path is treated as untrusted even though only something that already
+controls the process environment can set it. It must be absolute, so a working
+directory cannot redirect it. It is opened with `O_NOFOLLOW`, so a symlink at
+the final component is refused rather than followed. It is created `0600`, and
+an *existing* file is refused unless it is a regular file, owned by this user,
+and already owner-only — because a creation mode says nothing about a file that
+already exists. The executable never reads the ledger back.
 
 ### 4.5 The drill derives the matrix from the code
 
@@ -164,26 +179,51 @@ alongside the code; it is *computed from the code under test*. A slice that
 adds a durable write to a ceremony grows that ceremony's sweep automatically,
 and cannot quietly escape it.
 
-### 4.6 The shipped binary contains none of this
+### 4.6 The shipped binary cannot contain any of this
 
 The instrumentation is an **optional** dependency of `vault-pm-cli` behind a
-non-default `crash-injection` feature. `code/programs/rust/vault-pm-cli`
-enables that feature through its `dev-dependencies`. Cargo unifies the feature
-sets of a package reached through both `dependencies` and `dev-dependencies`
-whenever dev-dependencies are in the graph, so:
+non-default `crash-injection` feature. With the feature off, `LocalBackend` is
+exactly `FsStorageBackend` and each `around_*` combinator is an `#[inline]`
+function whose whole body is `action()`. There is no counter, no environment
+read, and no kill switch.
 
-- `cargo test` / `cargo clippy --all-targets` build the `vault-pm` binary
-  *with* crash injection compiled in;
-- `cargo build` / `cargo install` — which never resolve dev-dependencies —
-  build it *without*.
+The question is which builds get the feature, and the obvious answer is wrong.
+Enabling it through the executable's own `dev-dependencies` *appears* to work —
+`cargo build` and `cargo install` do not resolve dev-dependencies, so they
+build an uninstrumented binary. But Cargo resolves features per *package*
+across a build graph, and `cargo build --all-targets` (or `--tests`) does pull
+dev-dependencies in. Cargo then uplifts the feature-unified binary to the
+conventional `target/release/vault-pm` path — the exact path a packaging step
+copies from. Last command wins, so the artifact's safety would depend on
+invocation order. A password manager would ship an environment-variable kill
+switch that fires between durable writes.
 
-With the feature off, `LocalBackend` is exactly `FsStorageBackend` and each
-`around_*` combinator is an `#[inline]` function whose whole body is
-`action()`. There is no counter, no environment read, and no kill switch: the
-symbols `VAULT_PM_CRASH_AT` and `VAULT_PM_CRASH_TRACE` do not appear in a
-released executable. `the_released_binary_shape_is_the_only_thing_the_drill_changes`
-asserts the observable half of that; the build-configuration half is asserted
-by the release build itself containing no such string.
+So the drill does not share a crate with the product. The shipped executable at
+`code/programs/rust/vault-pm-cli` **never names the feature in any section**,
+which makes an instrumented `vault-pm` unreachable by construction rather than
+by convention. The instrumented twin lives at
+`code/programs/rust/vault-pm-cli-drill`, is byte-identical in composition,
+enables the feature as an ordinary dependency feature, and produces a binary
+called `vault-pm-drill` that cannot be mistaken for the product. The two are
+separate cargo workspaces, so their feature resolution never meets.
+
+The drill twin also carries a larger declared capability profile than the
+product — it adds `env: read` for the two injection variables, `proc: signal`
+for removing its own process, and `fs: create` for the ledger — so the extra
+authority is visible in a manifest rather than implied.
+
+Three checks hold this down:
+
+- `the_shipped_executable_contains_no_crash_injection`, in the *product*
+  crate's own suite, reads the binary that crate produced and fails if either
+  variable name appears in it. It runs in a build that has dev-dependencies
+  resolved, which is exactly the configuration the mistake shows up in.
+- `the_released_binary_shape_is_the_only_thing_the_drill_changes`, in the
+  drill, asserts that an uninstrumented process writes no ledger and behaves
+  as the end-to-end suite observes it.
+- Manual verification across `cargo build`, `cargo build --release`,
+  `cargo install --path .`, `--all-features`, and `--release --all-targets`:
+  the shipped binary contains neither string in any of them.
 
 ## 5. Pass criteria
 
@@ -387,7 +427,10 @@ collection is VLT-PM00 §19.4 and Phase 2 work; this is one more input to it.
 1. The instrumentation package builds, is `deny(missing_docs)` clean, and its
    own tests cover the step vocabulary, the ledger format, ordinal allocation,
    the before/after bracketing, and read pass-through.
-2. A released binary configuration contains neither environment-variable name.
+2. A released binary contains neither environment-variable name, asserted by
+   the product crate's own suite in a build with dev-dependencies resolved.
+   The instrumented twin is a separate crate producing a differently named
+   binary, and the product crate names the feature in no section.
 3. An uninstrumented process writes no ledger and behaves exactly as
    `local_cli_e2e.rs` observes it.
 4. Every ledger is dense from ordinal one, alternates `before`/`after`, pairs
@@ -404,8 +447,9 @@ collection is VLT-PM00 §19.4 and Phase 2 work; this is one more input to it.
 9. A portable export publishes no artifact before its single artifact write
    completes.
 10. No cell leaves any drill secret readable under the platform home.
-11. The drill never hangs: every prompt wait is bounded, and a wait that
-    expires kills the child and fails the test.
+11. The drill never hangs: every prompt wait is bounded, a wait that expires
+    kills the child and fails the test, and a `kill(2)` that a sandbox refuses
+    falls back to `abort` rather than to a spin.
 12. The whole file runs in the same process-per-command, pseudo-terminal style
     as `local_cli_e2e.rs`, with the same stdin-injection negative control.
 
@@ -452,9 +496,11 @@ VLT-PM02's.
 
 - `code/packages/rust/vault-pm-crash-injection/` — the mechanism
 - `code/packages/rust/vault-pm-cli/src/crash.rs` — the seam
-- `code/programs/rust/vault-pm-cli/tests/crash_fault_matrix.rs` — the drill
-- `code/programs/rust/vault-pm-cli/tests/local_cli_e2e.rs` — the
-  finish-the-command suite this one is the counterpart to
+- `code/programs/rust/vault-pm-cli-drill/` — the instrumented twin and the
+  drill itself, in `tests/crash_fault_matrix.rs`
+- `code/programs/rust/vault-pm-cli/` — the product executable, whose
+  `tests/local_cli_e2e.rs` is both the finish-the-command counterpart to the
+  drill and the guard rail proving the product binary is uninstrumented
 
 ---
 

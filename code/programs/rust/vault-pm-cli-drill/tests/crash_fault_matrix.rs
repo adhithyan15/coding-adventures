@@ -12,6 +12,15 @@
 //! recovery function directly; the only interface used is the one a person has
 //! — an argument vector, a controlling terminal, and a directory tree.
 //!
+//! The process being killed is `vault-pm-drill`, not `vault-pm`. They are the
+//! same composition over the same library; the drill twin differs only by
+//! `coding_adventures_vault_pm_cli`'s `crash-injection` feature, which turns
+//! `LocalBackend` into an instrumented decorator and the three `around_*`
+//! combinators into real landing points. The split exists so that no cargo
+//! invocation — `--all-targets` included — can produce a `vault-pm` with a
+//! kill switch in it. `local_cli_e2e.rs` drives the shipped binary; this file
+//! drives the twin.
+//!
 //! # The matrix
 //!
 //! `coding_adventures_vault_pm_crash_injection` gives every durable write two
@@ -90,8 +99,12 @@ impl TestHome {
             "vault-pm-crash-matrix-{tag}-{}-{sequence}",
             std::process::id()
         ));
-        let _ = fs::remove_dir_all(&path);
-        fs::create_dir_all(&path).unwrap();
+        // `create_dir`, not `create_dir_all`: the name is predictable, and the
+        // fixture's `Drop` deletes this tree recursively. Failing when
+        // anything already occupies the name — including a symlink somebody
+        // planted — is the difference between a confusing test failure and a
+        // recursive delete somewhere else.
+        fs::create_dir(&path).unwrap();
         let path = fs::canonicalize(path).unwrap();
         for child in ["home", "config", "data", "cache"] {
             fs::create_dir(path.join(child)).unwrap();
@@ -135,7 +148,7 @@ struct Snapshot {
 impl Snapshot {
     fn capture(home: &TestHome) -> Self {
         let inside = home.0.with_extension("snapshot");
-        let _ = fs::remove_dir_all(&inside);
+        fs::create_dir(&inside).unwrap();
         copy_tree(home.path(), &inside);
         Self { inside }
     }
@@ -259,7 +272,7 @@ fn drive(
     injection: Injection<'_>,
 ) -> Outcome {
     let (mut master, slave) = open_pty();
-    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm-drill"));
     command.args(arguments);
     home.configure(&mut command);
     if let Some(trace) = injection.trace {
