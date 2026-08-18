@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+- The shipped executable can now show a stored TOTP item's current code:
+  `vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)`. This crate's own
+  sources are unchanged; the ceremony lives in
+  `coding_adventures_vault_pm_cli` under `code/specs/VLT-PM45-cli-totp-code.md`,
+  and it is recorded here because it changes what this binary does.
+
+  Unlike `password generate`, this command opens a vault, requires the
+  passphrase, and publishes an audit event — `VLT-PM15` §2 names TOTP display
+  as an access. The code goes only to the controlling terminal; ordinary
+  standard output carries one non-secret line, `Code valid for N more seconds`.
+  `--copy` is refused with the unsupported class before any prompt, exactly as
+  the generator's is.
+
+  A new pseudo-terminal drill covers it end to end. It cannot hard-code the
+  expected code, because the real binary reads the real clock, so it brackets
+  the run between two of its own clock readings, recomputes the code for every
+  second the process could have been in — against the RFC 6238 Appendix B seed,
+  so the comparison is with the published algorithm — and requires the
+  executable's answer to be one of them. It also proves the two output channels
+  never swap, that `--copy` needs no terminal at all, that two runs inside one
+  step agree, that a refusal releases nothing, and that the audit chain gains
+  one `item_read` row per disclosure while carrying neither the code nor the
+  seed.
+
 - The shipped executable can now mint a password: `vault-pm password generate
   [policy flags] (--reveal|--copy)`. This crate's own sources are unchanged;
   the ceremony lives in `coding_adventures_vault_pm_cli` under

@@ -19,6 +19,14 @@ coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli" 
 # `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
 [dev-dependencies]
 libc = "0.2"
+# VLT-PM45 gate 11. The real-process TOTP test cannot hard-code an expected
+# code, because the real executable reads the real clock. It recomputes the
+# code for the step the process must have been in — from the same VLT05 engine
+# the product uses, which is itself proven against the full RFC 6238 Appendix B
+# table in its own crate — and checks the executable agrees. That closes the
+# wiring question this test exists to answer: right seed, right algorithm,
+# right period, right digits, real clock, all the way through a real PTY.
+coding_adventures_vault_auth = { path = "../../../packages/rust/vault-auth" }
 
 [[bin]]
 name = "vault-pm"

@@ -2,6 +2,69 @@
 
 ## Unreleased
 
+- **Added `vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)`**, the
+  second of `VLT-PM00` §23 item 11. Specified by
+  `VLT-PM45-cli-totp-code.md`.
+
+  `item add totp` could store a seed and `item reveal ITEM totp-secret` could
+  hand it back for re-provisioning; neither is the reason anyone puts a TOTP
+  seed in a password manager. This command computes the six digits that are
+  valid right now.
+
+  It is the opposite of `password generate` in nearly every respect: it opens a
+  vault, requires the passphrase, resolves an item, and publishes an audit
+  event. `VLT-PM15` §2 already names "TOTP display" in its list of accesses, so
+  the ceremony is `item reveal`'s unchanged — the same exact-`yes` terminal
+  prompt, the same `Denied`/`Failed`/`Succeeded` outcomes on the same
+  `ItemRead` action, the same publish-before-release ordering. VLT-PM45 §3
+  records the argument for a lighter treatment (a code lives ~30 seconds and
+  does not yield the next one) and rejects it as an argument about the
+  consequence of a disclosure rather than the fact of one.
+
+  **The clock is read twice.** The audit timestamp is reserved before
+  authentication as usual; the code time is read again after unlock and after
+  the confirmation answer. An Argon2id derivation and a human reading a prompt
+  sit between the two, so several seconds is ordinary and a whole period is
+  reachable — a command that reused the reserved reading would routinely return
+  the *previous* code, correct-looking and rejected by the site. There is no
+  NTP query and no drift correction; TOTP correctness depends on the host
+  clock, as it does for every TOTP client.
+
+  Output is split by sensitivity, so unlike `item reveal` this command's
+  standard output is not empty: the code goes only to the controlling terminal
+  through the §14.6 adapter, while one non-secret line — `Code valid for N more
+  seconds` — goes to standard output, because it is a function of the clock and
+  the stored period that anyone with a watch can reproduce. When `N` is small
+  the command reports the small number and returns rather than sleeping (which
+  would hold an unlocked vault open for a duration nobody chose) or handing
+  back the next step's code (which is not valid yet).
+
+  The code is computed inside `vault-pm-application`; the decoded seed never
+  reaches this crate. Building the command as "reveal the seed, then compute"
+  would have materialized the seed in the outermost layer, next to the argument
+  parser and the terminal.
+
+  `--copy` is recognized and refused with the unsupported class before any
+  prompt, unlock, clock reading, or entropy reservation — identical to the
+  generator's refusal, so both stop refusing on the day a clipboard adapter
+  lands. A live refreshing display is deferred by VLT-PM45 §8.
+
+  The verb is delegated inside the interactive shell *with* the session's bound
+  vault prefix, unlike `password generate`, because it does have a target.
+
+  Tests cover the closed grammar (thirteen rejected spellings, including a
+  missing output flag, both flags, a repeated flag, and a lowercase selector);
+  the exact RFC 6238 answer `921300` against the frozen test clock, which sits
+  at a step the RFC publishes for the Appendix B seed; that the code comes from
+  the *fresh* reading rather than the reserved one, using a host whose clock
+  advances a whole period per reading; the `--copy` refusal with no scripted
+  passphrase or confirmation at all, so a prompt would have failed differently;
+  four refused confirmations each publishing `Denied`; a login and a missing
+  item; and one shell session.
+
+- **Renamed `PasswordOutputMode` to `SecretOutputMode`.** It is now shared by
+  the two commands whose entire output is a live credential.
+
 - **Added `vault-pm password generate`**, the first of `VLT-PM00` §23 item 11
   and the first command in this grammar that opens no vault. Specified by
   `VLT-PM44-cli-password-generate.md`.

@@ -1030,6 +1030,152 @@ fn real_cli_creates_redacts_and_separately_reveals_a_totp_seed() {
     assert_tree_excludes(&home.0, TOTP_RAW_SECRET);
 }
 
+/// VLT-PM45 §9 gates 2, 3, 7, and 11, against the real executable.
+///
+/// The unit tests pin the code against a frozen clock; this one cannot, because
+/// the real binary reads the real one. So it recomputes the answer for the step
+/// the process must have been in, from the same VLT05 engine — which is proven
+/// against the full RFC 6238 Appendix B table in its own crate — and checks the
+/// executable agrees. What that adds over the unit tests is the wiring: that
+/// the stored seed, algorithm, period, and digit count survive encryption,
+/// storage, decryption, and a real PTY unchanged.
+///
+/// It also checks the one property no in-process test can: that the two output
+/// channels really are separate file descriptors, with the code on `/dev/tty`
+/// and the validity line on standard output, and that neither carries the
+/// other's content.
+#[test]
+fn real_cli_shows_the_current_totp_code_on_the_terminal_and_its_window_on_stdout() {
+    use coding_adventures_vault_auth::{TotpAlgorithm, TotpAuthenticator};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+    let (add_status, add_transcript) = run_add_totp_in_pty(&home);
+    assert!(add_status.success(), "TOTP add failed: {add_transcript}");
+    let item_id = extract_item_id(&add_transcript);
+
+    // `--copy` is refused before anything else happens, so it needs no
+    // terminal at all: a plain run with no PTY would fail at the passphrase
+    // prompt if the refusal were not first.
+    let copied = run_plain(&home, &["totp", "code", &item_id, "--copy"]);
+    assert_eq!(copied.status.code(), Some(8), "{copied:?}");
+    assert!(copied.stdout.is_empty());
+
+    let before = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let (status, transcript, stdout) = run_totp_code_in_pty(&home, &item_id, b"yes", true);
+    let after = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    assert!(status.success(), "{transcript}");
+
+    let code = extract_revealed_secret(&transcript);
+    assert_eq!(code.len(), 6, "{transcript}");
+    assert!(code.bytes().all(|byte| byte.is_ascii_digit()), "{code}");
+
+    // The process read its clock somewhere between these two readings, so the
+    // acceptable answers are the codes for every second it could have been in.
+    // Comparing against a window rather than a point is what keeps this test
+    // from failing once every thirty seconds on a period boundary.
+    let authenticator =
+        TotpAuthenticator::new(TOTP_RAW_SECRET.to_vec(), TotpAlgorithm::Sha1, 30, 6, 0).unwrap();
+    let acceptable: Vec<String> = (before..=after)
+        .map(|second| authenticator.formatted_code_at(second).unwrap().to_string())
+        .collect();
+    assert!(
+        acceptable.contains(&code),
+        "the executable produced {code}, which is no code for {before}..={after}"
+    );
+
+    // Standard output carries the window and only the window.
+    let line = String::from_utf8(stdout).unwrap();
+    let remaining: u64 = line
+        .strip_prefix("Code valid for ")
+        .and_then(|rest| rest.strip_suffix(" more seconds\n"))
+        .unwrap_or_else(|| panic!("unexpected standard output: {line:?}"))
+        .parse()
+        .unwrap();
+    assert!(
+        (1..=30).contains(&remaining),
+        "a window outside 1..=30 is not a window into a 30-second step"
+    );
+    assert!(!line.contains(&code), "the code must never reach stdout");
+    assert_transcript_excludes_secrets(&transcript);
+    assert!(!transcript.contains(core::str::from_utf8(TOTP_BASE32).unwrap()));
+
+    // Two runs inside one step agree, which is the observable difference
+    // between computing from a clock and drawing from a random source.
+    let repeat_before = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let (repeat_status, repeat_transcript, repeat_stdout) =
+        run_totp_code_in_pty(&home, &item_id, b"yes", true);
+    let repeat_after = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    assert!(repeat_status.success(), "{repeat_transcript}");
+    let repeat = extract_revealed_secret(&repeat_transcript);
+    if before / 30 == repeat_after / 30 {
+        assert_eq!(
+            code, repeat,
+            "two runs inside one step must produce the same code"
+        );
+    }
+    let repeat_acceptable: Vec<String> = (repeat_before..=repeat_after)
+        .map(|second| authenticator.formatted_code_at(second).unwrap().to_string())
+        .collect();
+    assert!(repeat_acceptable.contains(&repeat), "{repeat_transcript}");
+    assert!(String::from_utf8(repeat_stdout)
+        .unwrap()
+        .starts_with("Code valid for "));
+
+    // Refusal releases nothing on either channel.
+    let (denied_status, denied_transcript, denied_stdout) =
+        run_totp_code_in_pty(&home, &item_id, b"no", false);
+    assert_eq!(denied_status.code(), Some(2), "{denied_transcript}");
+    assert!(denied_stdout.is_empty());
+    assert!(
+        !denied_transcript.contains("Secret: \""),
+        "{denied_transcript}"
+    );
+
+    // The audit chain records the reads and refuses to record their content.
+    let (audit_status, audit) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_read\toutcome=denied",
+    );
+    assert!(audit_status.success(), "{audit}");
+    assert_eq!(
+        audit
+            .lines()
+            .filter(|row| row.contains("action=item_read\toutcome=succeeded"))
+            .count(),
+        2,
+        "{audit}"
+    );
+    for forbidden in [
+        code.as_str(),
+        repeat.as_str(),
+        core::str::from_utf8(TOTP_BASE32).unwrap(),
+        "GitHub ada@example.com",
+        "SHA1",
+    ] {
+        assert!(
+            !audit.contains(forbidden),
+            "{forbidden} leaked into the audit"
+        );
+    }
+    assert_audit_rows_have_only_closed_fields(&audit);
+    assert_tree_excludes(&home.0, TOTP_RAW_SECRET);
+}
+
 /// VLT-PM44 §8 gate 9, against the real executable.
 ///
 /// The generator is the one command in this product that must work before
@@ -1844,6 +1990,76 @@ fn extract_audit_trace(transcript: &str, action: &str) -> String {
 /// passphrase, because the command it drives never asks for one: VLT-PM44 §1
 /// makes the generator vault-free, so the only terminal interaction is the
 /// reveal confirmation.
+/// Drive `vault-pm totp code ITEM --reveal` through a real controlling
+/// terminal, with standard output captured separately.
+///
+/// Standard output is piped rather than pointed at the terminal because this
+/// command deliberately writes to both channels — the code to `/dev/tty` and
+/// the non-secret validity line to stdout — and the whole point of the test is
+/// that the two never swap.
+fn run_totp_code_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    confirmation: &[u8],
+    expect_code: bool,
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["totp", "code", item_id, "--reveal"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Reveal secret on this terminal? Type yes to continue: ",
+    );
+    master.write_all(confirmation).unwrap();
+    master.write_all(b"\n").unwrap();
+    if expect_code {
+        // The code cannot be predicted here, so wait for the opening of the
+        // quoted line rather than for a known value.
+        read_until(&mut master, &mut transcript, b"Secret: \"");
+    }
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let mut stdout = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        stdout,
+    )
+}
+
 fn run_password_generate_in_pty(
     home: &TestHome,
     arguments: &[&str],

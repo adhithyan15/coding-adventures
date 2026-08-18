@@ -36,6 +36,7 @@ vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
 vault-pm [--vault NAME] item show ITEM
 vault-pm [--vault NAME] item reveal ITEM FIELD
+vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
 vault-pm [--vault NAME] search QUERY
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
@@ -109,6 +110,22 @@ restarts into algorithm/digits/period metadata with explicit secret redaction,
 reveals canonical Base32 only after a separate audited confirmation, verifies
 the closed audit-row grammar, and excludes both encoded and raw seed bytes from
 the profile tree.
+
+A second TOTP drill covers `totp code`, the command that turns a stored seed
+into the six digits a person actually types. It cannot hard-code the expected
+answer, because the real executable reads the real clock; instead it brackets
+the run between two of its own clock readings, recomputes the code for every
+second the process could have been in, and requires the executable's answer to
+be one of them. The seed is the RFC 6238 Appendix B vector, so that comparison
+is against the published algorithm rather than against this product's opinion
+of it. The drill also proves the two output channels never swap — the code
+arrives on `/dev/tty` and the non-secret "valid for N more seconds" line on
+captured standard output, with neither carrying the other's content — that
+`--copy` is refused with the unsupported class before any prompt at all (so it
+needs no terminal), that two runs inside one step agree, that a refused
+confirmation releases nothing on either channel, and that the audit chain gains
+one `item_read` row per disclosure while containing neither the code nor the
+seed.
 
 `vault-pm shell` is the same binary in its second host shape: one foreground
 process that reads command lines from the controlling terminal and runs them

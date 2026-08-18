@@ -81,7 +81,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -693,7 +693,7 @@ enum Command {
         /// The validated length, alphabet, and entropy reservation.
         policy: PasswordPolicyV1,
         /// Where the one secret this command produces is delivered.
-        output: PasswordOutputMode,
+        output: SecretOutputMode,
     },
     PortableExport {
         destination: PathBuf,
@@ -726,6 +726,10 @@ enum Command {
     ItemReveal {
         item_id: ItemId,
         field: SecretFieldV1,
+    },
+    TotpCode {
+        item_id: ItemId,
+        output: SecretOutputMode,
     },
     Search {
         query: SearchQuery,
@@ -780,15 +784,19 @@ enum Command {
     Help,
 }
 
-/// Where `password generate` delivers the one secret it produces.
+/// Where a command that produces exactly one live credential delivers it.
+///
+/// Shared by `password generate` (VLT-PM44) and `totp code` (VLT-PM45), which
+/// are the two commands in this grammar whose entire output is a secret.
 ///
 /// There is no third arm, and in particular no "print it to standard output".
-/// VLT-PM00 §14.6 makes ordinary output redacted, and this command has nothing
-/// but a secret to say — a default stdout mode would put a live credential into
-/// shell history, terminal scrollback, `tee` pipelines, and CI logs the first
-/// time anyone redirected it. One of the two below is required.
+/// VLT-PM00 §14.6 makes ordinary output redacted, and a default stdout mode
+/// would put a live credential into shell history, terminal scrollback, `tee`
+/// pipelines, and CI logs the first time anyone redirected it. One of the two
+/// below is required, which also means the delivery is never chosen on the
+/// person's behalf.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum PasswordOutputMode {
+enum SecretOutputMode {
     /// Confirm on the controlling terminal, then write there and nowhere else.
     Reveal,
     /// Reserved by VLT-PM00 §14.4; refused until a clipboard adapter exists.
@@ -878,6 +886,7 @@ where
         "doctor" => parse_doctor(tail),
         "passphrase" => parse_passphrase(tail),
         "password" => parse_password(tail),
+        "totp" => parse_totp(tail),
         "export" => parse_export(tail),
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
@@ -1212,7 +1221,7 @@ fn parse_password(arguments: &[String]) -> Result<Command, CliFailure> {
     let mut length: Option<usize> = None;
     let mut classes = CharacterClassesV1::all();
     let mut exclude_ambiguous = false;
-    let mut output: Option<PasswordOutputMode> = None;
+    let mut output: Option<SecretOutputMode> = None;
     let mut index = 0;
     while index < flags.len() {
         match flags[index].as_str() {
@@ -1227,8 +1236,8 @@ fn parse_password(arguments: &[String]) -> Result<Command, CliFailure> {
             "--no-digits" if classes.digits => classes.digits = false,
             "--no-symbols" if classes.symbols => classes.symbols = false,
             "--exclude-ambiguous" if !exclude_ambiguous => exclude_ambiguous = true,
-            "--reveal" if output.is_none() => output = Some(PasswordOutputMode::Reveal),
-            "--copy" if output.is_none() => output = Some(PasswordOutputMode::Copy),
+            "--reveal" if output.is_none() => output = Some(SecretOutputMode::Reveal),
+            "--copy" if output.is_none() => output = Some(SecretOutputMode::Copy),
             _ => return Err(CliFailure::InvalidCommand),
         }
         index += 1;
@@ -1241,6 +1250,41 @@ fn parse_password(arguments: &[String]) -> Result<Command, CliFailure> {
     )
     .map_err(map_password_policy)?;
     Ok(Command::PasswordGenerate { policy, output })
+}
+
+/// Parse the `totp` noun.
+///
+/// `code` is the only verb, and the shape is fixed at exactly three tokens:
+/// `code ITEM (--reveal|--copy)`. That is short enough to match as a slice
+/// pattern rather than through a flag loop, and matching it exhaustively is
+/// what makes every near-miss below fall out for free:
+///
+/// | Input | Why it fails |
+/// |---|---|
+/// | `totp code ABC` | no output flag; the delivery is never defaulted |
+/// | `totp code ABC --reveal --copy` | four tokens, no arm |
+/// | `totp code ABC --reveal --reveal` | four tokens, no arm |
+/// | `totp code --reveal` | `--reveal` is not a canonical item selector |
+/// | `totp code abc --reveal` | lowercase; `ItemId::from_user_string` refuses |
+/// | `totp show ABC --reveal` | the verb is closed |
+/// | `totp code ABC --json` | matches no output flag |
+///
+/// The output flag is required rather than defaulted for the reason VLT-PM44 §2
+/// gave for the generator and VLT-PM45 §2.2 repeats: the interesting half of
+/// this command's output is a live second factor, and a default that printed it
+/// would put it into shell history the first time anyone redirected the command.
+fn parse_totp(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, item, flag] if action == "code" => Ok(Command::TotpCode {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+            output: match flag.as_str() {
+                "--reveal" => SecretOutputMode::Reveal,
+                "--copy" => SecretOutputMode::Copy,
+                _ => return Err(CliFailure::InvalidCommand),
+            },
+        }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
 }
 
 /// Read the one number this grammar accepts.
@@ -1286,9 +1330,9 @@ fn parse_password_length(value: &str) -> Result<usize, CliFailure> {
 fn password_generate(
     host: &dyn CliHost,
     policy: &PasswordPolicyV1,
-    output: PasswordOutputMode,
+    output: SecretOutputMode,
 ) -> Result<CliOutput, CliFailure> {
-    if matches!(output, PasswordOutputMode::Copy) {
+    if matches!(output, SecretOutputMode::Copy) {
         return Err(CliFailure::Unsupported);
     }
     if !host.confirm_secret_reveal().map_err(map_host)? {
@@ -1478,6 +1522,9 @@ fn dispatch(
         Command::ItemShow { item_id } => item_show(host, paths, writer, selected_vault, item_id),
         Command::ItemReveal { item_id, field } => {
             item_reveal(host, paths, writer, selected_vault, item_id, field)
+        }
+        Command::TotpCode { item_id, output } => {
+            totp_code(host, paths, writer, selected_vault, item_id, output)
         }
         Command::Search { query } => item_search(host, paths, writer, selected_vault, query),
         Command::HistoryList { item_id } => {
@@ -2808,6 +2855,88 @@ fn item_reveal(
     let secret = disclosed.map_err(map_application)?;
     deliver_revealed_secret(host, field, secret)?;
     Ok(CliOutput::success(""))
+}
+
+/// Show the current one-time code for one stored TOTP item.
+///
+/// The step order is VLT-PM45 §3.2, §4.1, and §5.3, not an implementation
+/// detail, and three of the steps are where they are on purpose.
+///
+/// **`--copy` is refused first**, before the audit reservation and before the
+/// passphrase prompt. A person who typed it asked for a delivery this build
+/// cannot perform; making them unlock the vault and confirm a reveal before
+/// telling them so would be worse than telling them immediately. This matches
+/// `password_generate`, and when a clipboard adapter lands both stop refusing
+/// on the same day.
+///
+/// **The audit inputs are reserved before authentication**, unchanged from
+/// `item_reveal`: VLT-PM15's ceremony requires the complete advisory time and
+/// randomness for an attempt to exist before the attempt does.
+///
+/// **The clock is read a second time**, after unlock and after the confirmation
+/// answer, immediately before the computation. The reserved reading is stale by
+/// construction — an Argon2id derivation and a human reading a prompt sit
+/// between the two, so several seconds is ordinary and a whole thirty-second
+/// period is entirely reachable. Reusing the reserved reading would routinely
+/// produce the *previous* code: six digits, correct-looking, and rejected by
+/// the site. This is the single most likely way for this command to be subtly
+/// and intermittently wrong, so the second reading is explicit here rather than
+/// hidden inside the application.
+///
+/// Output is split by sensitivity. The code goes only to the controlling
+/// terminal through the §14.6 reveal path. The remaining-validity line goes to
+/// ordinary standard output, because it is a function of the clock and the
+/// stored period and anyone with a watch can reproduce it — hiding a public
+/// number on the private channel would make the command's non-secret output
+/// invisible to a script and buy nothing.
+fn totp_code(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    output: SecretOutputMode,
+) -> Result<CliOutput, CliFailure> {
+    if matches!(output, SecretOutputMode::Copy) {
+        return Err(CliFailure::Unsupported);
+    }
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let (confirmed, confirmation_error) = match host.confirm_secret_reveal() {
+        Ok(confirmed) => (confirmed, None),
+        Err(error) => (false, Some(error)),
+    };
+    // VLT-PM45 §4.1. The fresh reading. It is taken even on the refusal path so
+    // that a refusal and a success cost the same host calls in the same order,
+    // and so that a later reordering cannot accidentally make the clock read
+    // conditional on the answer.
+    let code_time_ms = host.now_ms().map_err(map_host)?;
+    let computed = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_current_item_totp_code(
+            item_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed },
+            code_time_ms,
+            wall_time_ms,
+            randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation();
+    if let Some(error) = confirmation_error {
+        if !matches!(computed, Err(ApplicationError::InvalidInput)) {
+            return Err(CliFailure::Internal);
+        }
+        return Err(map_host(error));
+    }
+    let code = computed.map_err(map_application)?;
+    host.write_revealed_text(code.code()).map_err(map_host)?;
+    let remaining = code.remaining_seconds();
+    drop(code);
+    Ok(CliOutput::success(format!(
+        "Code valid for {remaining} more seconds\n"
+    )))
 }
 
 fn deliver_revealed_secret(
@@ -4819,6 +4948,21 @@ mod tests {
             clock_step_ms: u64,
         ) -> Self {
             Self::build(paths, secrets, [], 1, true, clock_step_ms)
+        }
+
+        /// A host that can answer prompts *and* whose clock moves.
+        ///
+        /// `totp code` needs both at once: proving it computes from a second,
+        /// fresher clock reading requires a scripted `yes` to get past the
+        /// confirmation and a clock that has visibly moved by the time the
+        /// second reading happens.
+        fn with_texts_and_clock_step(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+            clock_step_ms: u64,
+        ) -> Self {
+            Self::build(paths, secrets, texts, 1, true, clock_step_ms)
         }
 
         fn build(
@@ -9276,6 +9420,21 @@ mod tests {
             }
         }
 
+        /// A terminal scripted with lines built at run time.
+        ///
+        /// `new` takes `&'static str` because almost every scripted line is a
+        /// literal. A command line naming an item selector cannot be, because
+        /// the selector is minted by the `item add` that precedes it.
+        fn owned(lines: impl IntoIterator<Item = String>) -> Self {
+            Self {
+                lines: Mutex::new(lines.into_iter().collect()),
+                rendered: Mutex::new(Vec::new()),
+                readable: true,
+                idle_host: None,
+                idle_ms: 0,
+            }
+        }
+
         /// A terminal whose user takes `idle_ms` to type each line.
         fn idle(
             lines: impl IntoIterator<Item = &'static str>,
@@ -9967,7 +10126,7 @@ mod tests {
                     false
                 )
                 .unwrap(),
-                output: PasswordOutputMode::Reveal,
+                output: SecretOutputMode::Reveal,
             })
         );
         assert_eq!(
@@ -9979,7 +10138,7 @@ mod tests {
                     false
                 )
                 .unwrap(),
-                output: PasswordOutputMode::Copy,
+                output: SecretOutputMode::Copy,
             })
         );
         // Flags compose, in any order, and each one narrows exactly one thing.
@@ -10007,7 +10166,7 @@ mod tests {
                     true
                 )
                 .unwrap(),
-                output: PasswordOutputMode::Reveal,
+                output: SecretOutputMode::Reveal,
             })
         );
         // Lowercase 25 + digits 8, with the ambiguous characters gone.
@@ -10254,6 +10413,356 @@ mod tests {
         // A session must be able to run it: it is neither refused by the shell
         // nor prefixed with the bound vault.
         assert!(!shell::is_refused("password"));
+    }
+
+    // ── VLT-PM45 — `totp code` ────────────────────────────────────────────
+
+    /// Add one TOTP item carrying the RFC 6238 Appendix B SHA-1 seed and
+    /// return its canonical selector.
+    ///
+    /// `GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ` is the Base32 spelling of the ASCII
+    /// bytes `12345678901234567890`, which is exactly the seed the RFC
+    /// publishes its answers for. That is why the codes asserted below are
+    /// checkable against the RFC rather than against this implementation.
+    fn totp_item(paths: &LocalVaultPaths, passphrase: &[u8]) -> String {
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [
+                passphrase.to_vec(),
+                b"GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ".to_vec(),
+            ],
+            [
+                "GitHub ada@example.com".to_owned(),
+                "GitHub".to_owned(),
+                "SHA1".to_owned(),
+                "6".to_owned(),
+                "30".to_owned(),
+            ],
+            97,
+        );
+        let added = run(["item", "add", "totp"], &host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap()
+            .to_owned()
+    }
+
+    #[test]
+    fn totp_code_grammar_is_closed() {
+        let item = ItemId::new([0x11; 16]);
+        let rendered = item.to_user_string();
+        assert_eq!(
+            parse(["totp", "code", &rendered, "--reveal"]),
+            default_invocation(Command::TotpCode {
+                item_id: item,
+                output: SecretOutputMode::Reveal,
+            })
+        );
+        assert_eq!(
+            parse(["totp", "code", &rendered, "--copy"]),
+            default_invocation(Command::TotpCode {
+                item_id: item,
+                output: SecretOutputMode::Copy,
+            })
+        );
+        // Unlike `password generate`, this command opens a vault, so the
+        // command-scoped selector is meaningful and is accepted.
+        assert_eq!(
+            parse(["--vault", "work", "totp", "code", &rendered, "--reveal"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::TotpCode {
+                    item_id: item,
+                    output: SecretOutputMode::Reveal,
+                },
+            })
+        );
+        assert!(!takes_no_vault_selector("totp"));
+        assert!(USAGE.contains("vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n"));
+
+        for rejected in [
+            vec!["totp"],
+            vec!["totp", "code"],
+            // No default delivery: the output flag is required.
+            vec!["totp", "code", rendered.as_str()],
+            vec!["totp", "code", rendered.as_str(), "--reveal", "--copy"],
+            vec!["totp", "code", rendered.as_str(), "--reveal", "--reveal"],
+            vec!["totp", "code", rendered.as_str(), "--json"],
+            vec![
+                "totp",
+                "code",
+                rendered.as_str(),
+                "--unsafe-include-secrets",
+            ],
+            vec!["totp", "code", "--reveal"],
+            vec!["totp", "code", &rendered.to_lowercase(), "--reveal"],
+            vec!["totp", "code", "not-an-item-id", "--reveal"],
+            vec!["totp", "show", rendered.as_str(), "--reveal"],
+            vec!["totp", "codes", rendered.as_str(), "--reveal"],
+            vec!["totp", "code", rendered.as_str(), "--reveal", "extra"],
+        ] {
+            assert_eq!(
+                parse(rejected.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{rejected:?}"
+            );
+        }
+    }
+
+    /// The one end-to-end assertion that the code is right rather than merely
+    /// six digits: the fixed test clock sits at 1 700 000 000 000 ms, and RFC
+    /// 6238 says the Appendix B SHA-1 seed produces `921300` at that step,
+    /// with ten seconds left in it.
+    #[test]
+    fn totp_code_delivers_the_published_code_only_through_the_terminal() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp code passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            101,
+        );
+        let output = run(["totp", "code", &item, "--reveal"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        assert!(host.revealed_equals(b"921300"));
+        // Standard output carries the non-secret window and nothing else. The
+        // code is nowhere in it.
+        assert_eq!(output.stdout(), "Code valid for 10 more seconds\n");
+        assert_eq!(output.stderr(), "");
+        assert!(!output.stdout().contains("921300"));
+
+        // The access is audited, and the audit trail carries the fact of the
+        // read without the code, the algorithm, the period, or the label.
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 103),
+        );
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=succeeded"))
+                .count(),
+            1,
+            "{audit:?}"
+        );
+        for forbidden in [
+            "921300",
+            "GEZDGNBVGY3TQOJQ",
+            "12345678901234567890",
+            "GitHub",
+            "SHA1",
+            "valid for",
+        ] {
+            assert!(!audit.stdout().contains(forbidden), "{forbidden}");
+        }
+    }
+
+    /// The code comes from a *fresh* clock reading, not from the one reserved
+    /// for the audit event before authentication.
+    ///
+    /// The test host's first reading is always the fixed base time, and here
+    /// every later reading is a whole period further on — so a command that
+    /// reused the reserved reading would return the base-time code `921300`,
+    /// and one that reads again cannot. This is VLT-PM45 §4.1, and it is the
+    /// single most likely way for this command to be quietly wrong in
+    /// production, where an Argon2id unlock and a human typing `yes` really do
+    /// put seconds between the two readings.
+    #[test]
+    fn totp_code_computes_from_a_fresh_clock_reading() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp fresh clock passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        let host =
+            TestHost::with_texts_and_clock_step(paths, [passphrase], ["yes".to_owned()], 30_000);
+        let output = run(["totp", "code", &item, "--reveal"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        let revealed = host.revealed_only();
+        assert_eq!(revealed.len(), 6);
+        assert!(revealed.iter().all(u8::is_ascii_digit));
+        assert_ne!(
+            revealed.as_slice(),
+            b"921300",
+            "the code must not come from the pre-authentication reading"
+        );
+        // Whole-period steps land on the same phase, so the window is
+        // unchanged — which is what makes the code the only thing that moved.
+        assert_eq!(output.stdout(), "Code valid for 10 more seconds\n");
+    }
+
+    #[test]
+    fn totp_code_copy_is_recognized_and_refused_before_any_prompt() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp copy passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        // No passphrase and no confirmation are scripted. A command that
+        // prompted for either would fail with a different class, so the
+        // `Unsupported` result is itself the evidence that neither happened.
+        let host = TestHost::new(paths, []);
+        let output = run(["totp", "code", &item, "--copy"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Unsupported, "{output:?}");
+        assert!(output.stdout().is_empty());
+        assert_eq!(host.revealed_count(), 0);
+    }
+
+    #[test]
+    fn totp_code_refusal_releases_nothing_and_still_audits() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp refusal passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        // Anything but an exact lowercase `yes` refuses.
+        for answer in ["no", "YES", "y", ""] {
+            let host = TestHost::with_texts_and_entropy_seed(
+                paths.clone(),
+                [passphrase.clone()],
+                [answer.to_owned()],
+                107,
+            );
+            let output = run(["totp", "code", &item, "--reveal"], &host);
+            assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{answer:?}");
+            assert!(output.stdout().is_empty());
+            assert_eq!(host.revealed_count(), 0);
+        }
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 109),
+        );
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_read\toutcome=denied"))
+                .count(),
+            4,
+            "{audit:?}"
+        );
+    }
+
+    #[test]
+    fn totp_code_on_a_non_totp_item_is_invalid_and_missing_items_are_not_found() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp wrong kind passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let login_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), b"login password".to_vec(), Vec::new()],
+            [
+                "Not a TOTP item".to_owned(),
+                "ada@example.com".to_owned(),
+                "0".to_owned(),
+            ],
+            113,
+        );
+        let added = run(["item", "add", "login"], &login_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let login = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap()
+            .to_owned();
+
+        let host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            127,
+        );
+        let output = run(["totp", "code", &login, "--reveal"], &host);
+        assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{output:?}");
+        assert_eq!(host.revealed_count(), 0);
+
+        let missing = ItemId::new([0x5b; 16]).to_user_string();
+        let missing_host =
+            TestHost::with_texts_and_entropy_seed(paths, [passphrase], ["yes".to_owned()], 131);
+        let output = run(["totp", "code", &missing, "--reveal"], &missing_host);
+        assert_eq!(output.exit_code(), ExitCode::NotFound, "{output:?}");
+        assert_eq!(missing_host.revealed_count(), 0);
+    }
+
+    #[test]
+    fn totp_code_runs_inside_an_interactive_shell() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp shell passphrase".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let item = totp_item(&paths, &passphrase);
+
+        // The verb is not refused by the shell, and unlike `password generate`
+        // it is prefixed with the session's bound vault.
+        assert!(!shell::is_refused("totp"));
+        let host = TestHost::with_texts(paths, [passphrase], ["yes".to_owned()]);
+        let terminal =
+            ScriptedTerminal::owned([format!("totp code {item} --reveal"), "exit".to_owned()]);
+        let session = run_with_terminal(["shell"], &host, &terminal);
+        assert_eq!(session.exit_code(), ExitCode::Success, "{session:?}");
+        assert!(host.revealed_equals(b"921300"));
+        // The window reaches the session transcript; the code does not.
+        assert_eq!(terminal.transcript(), "Code valid for 10 more seconds\n");
+        assert!(!terminal.transcript().contains("921300"));
+        assert_eq!(terminal.exit_codes(), vec![ExitCode::Success]);
     }
 
     #[test]

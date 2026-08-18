@@ -523,6 +523,75 @@ wipe.
 The interactive shell can run this verb, and is the one place it is delegated
 *without* the session's bound-vault prefix — see `takes_no_vault_selector`.
 
+## Showing a TOTP code
+
+```text
+vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)
+```
+
+`item add totp` stores a seed and `item reveal ITEM totp-secret` hands the seed
+back for re-provisioning another device. Neither is the reason anyone puts a
+TOTP seed in a password manager. This command is: it computes the six digits
+that are valid right now.
+
+It is the *opposite* of `password generate` in almost every respect, and
+deliberately so. It opens a vault, requires the passphrase, resolves an item,
+and publishes an audit event, because `VLT-PM15` §2 already names "TOTP
+display" in its list of accesses. `VLT-PM45-cli-totp-code.md` §3 writes down the
+argument for treating it more lightly — a six-digit code lives about thirty
+seconds and, unlike the seed, does not let its holder produce the next one —
+and rejects it: that is an argument about the consequence of a disclosure,
+while the audit trail records the fact of one, and an access log whose
+completeness depends on how long the disclosed value stays useful is not an
+access log.
+
+The ceremony is therefore `item reveal`'s, unchanged: the same exact-`yes`
+terminal prompt, the same `Denied`/`Failed`/`Succeeded` outcomes on the same
+`ItemRead` action, the same publish-before-release ordering. The event records
+that a code was viewed and never the code, the algorithm, the period, or the
+window.
+
+**The clock is read twice, and that is the load-bearing detail.** The audit
+timestamp is reserved before authentication, as every audited access reserves
+it. The *code* time is read again after unlock and after the confirmation
+answer, immediately before the computation — because an Argon2id derivation and
+a human reading a prompt sit between the two readings, so several seconds is
+ordinary and a whole thirty-second period is entirely reachable. A command that
+reused the reserved reading would routinely return the previous code: six
+digits, correct-looking, and rejected by the site. There is no NTP query and no
+drift correction, so TOTP correctness depends on the host clock being roughly
+right, exactly as it does for every other TOTP client.
+
+Output is split by sensitivity, which is why this command's standard output is
+not empty the way `item reveal`'s is:
+
+- the **code** goes only to the controlling terminal, through the §14.6 reveal
+  adapter;
+- the **window** — one line, `Code valid for N more seconds` — goes to ordinary
+  standard output, because it is a function of the clock and the stored period
+  and anyone with a watch can reproduce it. Hiding a public number on the
+  private channel would make the command's non-secret output invisible to a
+  script and buy nothing.
+
+`N` exists because a person handed `123456` with two seconds left will type it
+into a form that rejects it and blame the vault. When `N` is small the command
+reports the small number and returns; it does not sleep until the next step,
+which would hold an unlocked vault open with decrypted seed material live for a
+duration nobody chose, and it does not hand back the next step's code, which is
+not valid yet.
+
+The computation happens inside `vault-pm-application`, not here. Building this
+as "reveal the seed, then compute" would have worked and would have
+materialized the seed in this outermost layer, next to the argument parser and
+the terminal. What crosses the boundary is the finished code and the countdown.
+
+`--copy` is recognized and refused with the unsupported class before any
+prompt, unlock, clock reading, or entropy reservation — identical to the
+generator's refusal, so both stop refusing on the day a clipboard adapter
+lands. A live refreshing display is deferred by `VLT-PM45` §8, which records
+what it would first have to decide about the idle-lock bound, per-redraw audit
+events, and terminal raw-mode handling.
+
 ## The durable-write seam
 
 This package is the layer that knows what "durable" means. `vault-pm-application`
