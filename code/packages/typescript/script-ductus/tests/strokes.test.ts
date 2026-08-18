@@ -313,8 +313,12 @@ describe("handwriting ductus", () => {
         const paths = letter.strokes.map((s) => penPath(s));
         const nearest = (x: number, y: number) => Math.min(...paths.map((p) => distanceToPath(x, y, p)));
         // Every inked point must be within ~a pen-stroke's width of the path.
-      // 100 units: the reviewer measured every real ink point within 67 of the
-      // authored path, so this keeps margin while still catching a dropped feature.
+      // 100 units. The original note here said every real ink point measured within
+      // 67 of its path; that went stale as the table grew and is corrected rather
+      // than repeated -- sixteen Chinese entries already exceed 67, the worst being
+      // 讠 at 92.8. The threshold still has margin and still catches a dropped
+      // feature: leaving out any ONE stroke of any numeral pushes the stray ratio to
+      // 0.093-0.576, an order of magnitude past the 0.02 limit.
         const strayed = pts.filter(([x, y]) => nearest(x, y) > 100);
         expect(strayed.length / pts.length, "large parts of the letter are never traced").toBeLessThan(0.02);
       });

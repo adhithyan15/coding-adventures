@@ -1980,6 +1980,444 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("上"),
   },
+  // Hanzi Writer Data draws 一 with a single left-to-right héng. There is nothing
+  // to lift between, so the ductus is one stroke of one segment -- the shortest
+  // entry in this table, and the reason the lesson can say the stroke count IS
+  // the number.
+  [ductusKey("chinese", "一")]: {
+    script: "chinese",
+    glyph: "一",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the horizontal héng stroke straight across the middle, left to right",
+            path: [
+              { x: 52, y: 390 },
+              { x: 127, y: 390 },
+              { x: 202, y: 390 },
+              { x: 277, y: 390 },
+              { x: 352, y: 390 },
+              { x: 427, y: 390 },
+              { x: 502, y: 390 },
+              { x: 577, y: 390 },
+              { x: 652, y: 390 },
+              { x: 727, y: 390 },
+              { x: 802, y: 390 },
+              { x: 877, y: 390 },
+              { x: 952, y: 390 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("一"),
+  },
+  // Two héng strokes, top before bottom, the lower one markedly wider. The source's
+  // ordered medians give the same two runs; the widths are read off the vendored
+  // Noto Sans SC outline rather than the Arphic-derived source graphics.
+  [ductusKey("chinese", "二")]: {
+    script: "chinese",
+    glyph: "二",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the upper, shorter horizontal héng stroke from left to right",
+            path: [
+              { x: 152, y: 656 },
+              { x: 210, y: 656 },
+              { x: 268, y: 656 },
+              { x: 326, y: 656 },
+              { x: 384, y: 656 },
+              { x: 442, y: 656 },
+              { x: 500, y: 656 },
+              { x: 558, y: 656 },
+              { x: 616, y: 656 },
+              { x: 674, y: 656 },
+              { x: 732, y: 656 },
+              { x: 790, y: 656 },
+              { x: 848, y: 656 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the lower, longer horizontal héng stroke from left to right",
+            path: [
+              { x: 66, y: 62 },
+              { x: 139, y: 61 },
+              { x: 211, y: 62 },
+              { x: 284, y: 61 },
+              { x: 356, y: 62 },
+              { x: 429, y: 61 },
+              { x: 501, y: 62 },
+              { x: 574, y: 61 },
+              { x: 646, y: 62 },
+              { x: 719, y: 61 },
+              { x: 791, y: 62 },
+              { x: 864, y: 61 },
+              { x: 936, y: 62 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("二"),
+  },
+  // Three héng strokes, ordered top, middle, bottom. The middle is the shortest and
+  // the base the widest -- the proportions that stop 三 reading as a tally, and the
+  // reason this is the last numeral whose strokes can be counted for its value.
+  [ductusKey("chinese", "三")]: {
+    script: "chinese",
+    glyph: "三",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top horizontal héng stroke from left to right",
+            path: [
+              { x: 172, y: 704 },
+              { x: 224, y: 705 },
+              { x: 276, y: 704 },
+              { x: 329, y: 705 },
+              { x: 381, y: 704 },
+              { x: 433, y: 705 },
+              { x: 485, y: 704 },
+              { x: 537, y: 705 },
+              { x: 589, y: 704 },
+              { x: 642, y: 705 },
+              { x: 694, y: 704 },
+              { x: 746, y: 705 },
+              { x: 798, y: 704 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle horizontal héng stroke, the shortest of the three",
+            path: [
+              { x: 212, y: 378 },
+              { x: 258, y: 378 },
+              { x: 303, y: 378 },
+              { x: 349, y: 378 },
+              { x: 394, y: 378 },
+              { x: 440, y: 378 },
+              { x: 485, y: 378 },
+              { x: 531, y: 378 },
+              { x: 576, y: 378 },
+              { x: 622, y: 378 },
+              { x: 667, y: 378 },
+              { x: 713, y: 378 },
+              { x: 758, y: 378 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the bottom horizontal héng stroke, the longest of the three",
+            path: [
+              { x: 74, y: 31 },
+              { x: 145, y: 30 },
+              { x: 216, y: 31 },
+              { x: 287, y: 30 },
+              { x: 358, y: 31 },
+              { x: 429, y: 30 },
+              { x: 500, y: 31 },
+              { x: 571, y: 30 },
+              { x: 642, y: 31 },
+              { x: 713, y: 30 },
+              { x: 784, y: 31 },
+              { x: 855, y: 30 },
+              { x: 926, y: 31 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("三"),
+  },
+  // Five strokes. Medians 1-2 build the box -- the left wall, then the top and right
+  // side in ONE turning héngzhé traced here as two joined segments, which is why the
+  // corner counts as one stroke and not two. Medians 3-4 are the two inner pieces,
+  // and median 5 closes the bottom last.
+  [ductusKey("chinese", "四")]: {
+    script: "chinese",
+    glyph: "四",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left vertical shù stroke from top to bottom",
+            path: [
+              { x: 135, y: 690 },
+              { x: 126, y: 629 },
+              { x: 125, y: 568 },
+              { x: 126, y: 508 },
+              { x: 125, y: 447 },
+              { x: 126, y: 386 },
+              { x: 125, y: 325 },
+              { x: 126, y: 264 },
+              { x: 125, y: 203 },
+              { x: 126, y: 143 },
+              { x: 134, y: 82 },
+              { x: 125, y: 21 },
+              { x: 126, y: -40 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the horizontal-turning héngzhé stroke across the top",
+            path: [
+              { x: 100, y: 706 },
+              { x: 164, y: 717 },
+              { x: 229, y: 716 },
+              { x: 293, y: 717 },
+              { x: 357, y: 707 },
+              { x: 421, y: 702 },
+              { x: 486, y: 717 },
+              { x: 550, y: 716 },
+              { x: 614, y: 707 },
+              { x: 678, y: 716 },
+              { x: 743, y: 717 },
+              { x: 807, y: 716 },
+              { x: 871, y: 707 },
+            ],
+          },
+          {
+            label: "and down the right side without lifting",
+            path: [
+              { x: 871, y: 707 },
+              { x: 870, y: 630 },
+              { x: 870, y: 570 },
+              { x: 870, y: 510 },
+              { x: 870, y: 450 },
+              { x: 870, y: 390 },
+              { x: 870, y: 330 },
+              { x: 870, y: 270 },
+              { x: 870, y: 210 },
+              { x: 870, y: 150 },
+              { x: 862, y: 90 },
+              { x: 858, y: 30 },
+              { x: 870, y: -30 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the short inner left-falling piě stroke",
+            path: [
+              { x: 388, y: 670 },
+              { x: 386, y: 630 },
+              { x: 385, y: 591 },
+              { x: 383, y: 551 },
+              { x: 379, y: 512 },
+              { x: 375, y: 472 },
+              { x: 368, y: 433 },
+              { x: 358, y: 393 },
+              { x: 344, y: 353 },
+              { x: 328, y: 314 },
+              { x: 308, y: 274 },
+              { x: 281, y: 235 },
+              { x: 241, y: 195 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the inner stroke down",
+            path: [
+              { x: 600, y: 670 },
+              { x: 600, y: 643 },
+              { x: 600, y: 615 },
+              { x: 600, y: 588 },
+              { x: 600, y: 560 },
+              { x: 600, y: 533 },
+              { x: 600, y: 505 },
+              { x: 600, y: 478 },
+              { x: 600, y: 450 },
+              { x: 600, y: 423 },
+              { x: 600, y: 395 },
+              { x: 600, y: 368 },
+              { x: 602, y: 340 },
+            ],
+          },
+          {
+            label: "and turning up to the right at its foot",
+            path: [
+              { x: 602, y: 340 },
+              { x: 618, y: 312 },
+              { x: 635, y: 312 },
+              { x: 652, y: 290 },
+              { x: 669, y: 289 },
+              { x: 686, y: 288 },
+              { x: 703, y: 289 },
+              { x: 720, y: 288 },
+              { x: 737, y: 289 },
+              { x: 754, y: 288 },
+              { x: 771, y: 289 },
+              { x: 788, y: 290 },
+              { x: 805, y: 292 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then close the bottom with a horizontal héng stroke from left to right",
+            path: [
+              { x: 175, y: 65 },
+              { x: 229, y: 65 },
+              { x: 283, y: 65 },
+              { x: 337, y: 65 },
+              { x: 391, y: 65 },
+              { x: 445, y: 65 },
+              { x: 499, y: 65 },
+              { x: 553, y: 65 },
+              { x: 607, y: 65 },
+              { x: 661, y: 65 },
+              { x: 715, y: 65 },
+              { x: 769, y: 65 },
+              { x: 823, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("四"),
+  },
+  // Four strokes for the number five. The top bar, then a shù descending from it and
+  // leaning left, then a héngzhé that crosses right and turns down, then the widest
+  // stroke in the character closing it along the bottom. Where the descender crosses
+  // the middle bar the traced band is clamped to one stroke's width, or its centre
+  // would land between the two.
+  [ductusKey("chinese", "五")]: {
+    script: "chinese",
+    glyph: "五",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top horizontal héng stroke from left to right",
+            path: [
+              { x: 130, y: 706 },
+              { x: 191, y: 706 },
+              { x: 253, y: 706 },
+              { x: 314, y: 706 },
+              { x: 375, y: 706 },
+              { x: 436, y: 697 },
+              { x: 498, y: 705 },
+              { x: 559, y: 705 },
+              { x: 620, y: 705 },
+              { x: 681, y: 705 },
+              { x: 743, y: 705 },
+              { x: 804, y: 705 },
+              { x: 865, y: 705 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the shù stroke descending from the top bar, leaning left",
+            path: [
+              { x: 446, y: 665 },
+              { x: 440, y: 615 },
+              { x: 432, y: 564 },
+              { x: 425, y: 514 },
+              { x: 416, y: 463 },
+              { x: 416, y: 413 },
+              { x: 400, y: 363 },
+              { x: 391, y: 312 },
+              { x: 382, y: 262 },
+              { x: 373, y: 211 },
+              { x: 365, y: 161 },
+              { x: 355, y: 110 },
+              { x: 345, y: 60 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the horizontal-turning héngzhé stroke across to the right",
+            path: [
+              { x: 190, y: 414 },
+              { x: 235, y: 414 },
+              { x: 281, y: 414 },
+              { x: 326, y: 414 },
+              { x: 372, y: 405 },
+              { x: 417, y: 405 },
+              { x: 463, y: 414 },
+              { x: 508, y: 414 },
+              { x: 553, y: 414 },
+              { x: 599, y: 414 },
+              { x: 644, y: 414 },
+              { x: 690, y: 414 },
+              { x: 735, y: 406 },
+            ],
+          },
+          {
+            label: "and then down",
+            path: [
+              { x: 735, y: 406 },
+              { x: 724, y: 390 },
+              { x: 733, y: 360 },
+              { x: 730, y: 330 },
+              { x: 727, y: 300 },
+              { x: 725, y: 270 },
+              { x: 723, y: 240 },
+              { x: 720, y: 210 },
+              { x: 716, y: 180 },
+              { x: 714, y: 150 },
+              { x: 710, y: 120 },
+              { x: 708, y: 90 },
+              { x: 704, y: 60 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the long bottom horizontal héng stroke, the widest in the character",
+            path: [
+              { x: 62, y: 12 },
+              { x: 135, y: 12 },
+              { x: 208, y: 12 },
+              { x: 281, y: 12 },
+              { x: 354, y: 21 },
+              { x: 427, y: 11 },
+              { x: 500, y: 11 },
+              { x: 573, y: 11 },
+              { x: 646, y: 11 },
+              { x: 719, y: 20 },
+              { x: 792, y: 12 },
+              { x: 865, y: 12 },
+              { x: 938, y: 12 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("五"),
+  },
   // The four-frame Commons sequence writes the complete left body in one
   // continuous run, lifts for the middle shoulder, descends the right stem,
   // then closes with the short shirorekha: four strokes and three lifts.
