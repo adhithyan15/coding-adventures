@@ -33,7 +33,7 @@ reviews_of: [ML-C17-ucha-paathira]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] **ഉച്ച** named noon by the sun’s height. Malayalam builds midnight
+[PAUSE 2s] **ഉച്ച** (*ucca*) named noon by the sun’s height. Malayalam builds midnight
 with a different spatial idea: cut the night in half.
 
 ## You'll want to know

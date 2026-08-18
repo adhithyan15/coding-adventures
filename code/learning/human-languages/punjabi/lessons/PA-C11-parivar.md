@@ -34,7 +34,7 @@ reviews_of: [PA-C11-dost, PA-C10-roti]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE] -->
 
-[PAUSE 2s] **ਦੋਸਤ** named one person, chosen. This word names the group you
+[PAUSE 2s] **ਦੋਸਤ** (*dost*) named one person, chosen. This word names the group you
 never chose at all.
 
 ## You'll want to know first — one word

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c2e5f8208860ac10",
+  "sourceHash": "fnv1a64:71d9e91f007f92f2",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06be3f898bcc6470",
+      "sourceHash": "fnv1a64:65afbb8a807510b4",
       "notice": {
         "modality": "sight",
         "needs": [

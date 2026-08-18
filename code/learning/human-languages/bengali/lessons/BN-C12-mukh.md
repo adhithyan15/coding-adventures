@@ -34,7 +34,7 @@ reviews_of: [BN-C12-chokh, BN-C11-bon]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-CHOKH-01] -->
 
-[PAUSE 2s] চোখ was half old sound, half new. This word is a full tatsama again
+[PAUSE 2s] চোখ (*chokh*) was half old sound, half new. This word is a full tatsama again
 — and its own history is a real, unresolved argument among linguists.
 
 ## You'll want to know: মুখ

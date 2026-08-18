@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Hand and the Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:af646fe1e249bbd9",
+  "sourceHash": "fnv1a64:68be4c4a02fc726e",
   "lessons": [
     {
       "id": "SA-C25-hand",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdf0549300c973c1",
+      "sourceHash": "fnv1a64:575f1f3418a0e14d",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have अक्षि, कर्णः, मुखम्, नासिका and हृदयम्. हस्तः (hastaḥ) adds the hand."
+              "text": "You have अक्षि, कर्णः, मुखम्, नासिका and हृदयम् (akṣi, karṇaḥ, mukham, nāsikā, hṛdayam). हस्तः (hastaḥ) adds the hand."
             },
             {
               "kind": "speech",

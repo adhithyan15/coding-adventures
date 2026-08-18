@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Eye, Mouth, Nose, and Heart",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4917f65a4dae0f72",
+  "sourceHash": "fnv1a64:6f56ed66ba6d8ddf",
   "lessons": [
     {
       "id": "BN-C12-chokh",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d222701aedec1af",
+      "sourceHash": "fnv1a64:52d0908b20971d13",
       "notice": {
         "modality": "sight",
         "needs": [

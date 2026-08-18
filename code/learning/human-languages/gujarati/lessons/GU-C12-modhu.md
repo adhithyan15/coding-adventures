@@ -34,7 +34,7 @@ reviews_of: [GU-C12-kaan, GU-C07-jaanvun]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KAAN] -->
 
-[PAUSE 2s] **કાન**'s own gender shifted away from Sanskrit's. The next body
+[PAUSE 2s] **કાન** (*kān*)'s own gender shifted away from Sanskrit's. The next body
 part wears its gender in plain sight — the same nasalized ending you have
 heard on nearly every verb in this book.
 
