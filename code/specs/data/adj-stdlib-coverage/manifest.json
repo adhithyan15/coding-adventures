@@ -1444,6 +1444,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.science.3to5.animal_habitat_definition",
+      "title": "Derive what an animal's habitat actually is, by combining the biome it lives in with the already-shipped biome-definition table",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "infer",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/biology/animal-habitat-definition.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.science.k2.season_start_month_number",
       "title": "Derive which numbered month a meteorological season starts in, by bridging a season fact to a calendar fact",
       "band": "K-2",

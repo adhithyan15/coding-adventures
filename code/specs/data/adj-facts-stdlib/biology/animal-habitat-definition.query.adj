@@ -1,0 +1,21 @@
+% ============================================================================
+% animal-habitat-definition.query.adj — worked recall over the biology
+% animal-habitat/biome-definition causal-composition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a giraffe's
+% habitat actually like?" — it states no biology fact of its own — it only
+% `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, composing animal-habitat's specific animal→biome assignment with
+% biome-type's general biome→definition fact, so every answer carries BOTH
+% citations in its `steps` trail.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-habitat-definition.query.adj
+% ============================================================================
+
+import "animal-habitat-definition.adj"
+
+? animal_habitat_definition(bactrian_camel, $D)   % expect dry_areas_where_rainfall_is_less_than_50_centimeters_20_inches_per_year
+? animal_habitat_definition(giraffe, $D)          % expect open_regions_dominated_by_grass_with_a_warm_dry_climate
+? animal_habitat_definition($A, open_regions_dominated_by_grass_with_a_warm_dry_climate)   % expect giraffe (reverse)
+? animal_habitat_definition(polar_bear, $D)       % expect abstain -- "arctic" is not one of biome_type's four keyed biomes
