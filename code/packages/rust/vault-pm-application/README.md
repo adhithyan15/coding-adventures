@@ -208,6 +208,19 @@ attribute, so the whole schema is authored and nothing carries over from the
 base candidate. Successful TOTP merges retain only the base's non-form metadata
 and never return the prior seed to the host.
 
+Opaque-record authored merges close that family, and they are the one case where
+the ceremony is shaped by having no schema at all. An opaque record is whatever
+`decode_record` could not recognise, so there is no field list to collect: the
+authored value is the whole canonical-CBOR payload, arriving as a lowercase
+hexadecimal line. The closed rules — an even-length `0-9a-f` line of at most
+1,024 characters, decoding to CBOR with no trailing bytes, whose re-encoding
+inside the record envelope reproduces the typed bytes — publish their failed
+`ItemConflictMerge` event before returning. The content type is inherited rather
+than authored, because an item's schema is immutable across its history, so
+exactly one field of the merged record is authored where the TOTP merge authored
+every one. Successful opaque merges retain the base's content type and non-form
+metadata and never return the prior payload to the host.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct

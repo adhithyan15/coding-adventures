@@ -22,7 +22,8 @@ use coding_adventures_vault_pm_domain::{
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
 use coding_adventures_vault_records::{
-    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed,
+    decode_record, encode_opaque, AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote,
+    TotpSeed,
 };
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
@@ -50,6 +51,12 @@ const MAX_DATABASE_ENGINE_BYTES: usize = 32;
 const MAX_TOTP_SECRET_BASE32_CHARS: usize = 256;
 /// Largest TOTP time step accepted behind the audited boundary, in seconds.
 const MAX_TOTP_PERIOD_SECONDS: u32 = 3_600;
+/// Largest authored opaque-record payload line, in lowercase hex characters.
+///
+/// This matches the host's fixed 1,024-byte hidden-secret line ceiling. Two
+/// characters spell one byte, so the same bound also caps a stored authored
+/// payload at 512 bytes, and no separate byte limit is needed.
+const MAX_OPAQUE_PAYLOAD_HEX_CHARS: usize = 1_024;
 
 /// Owned wipe-on-drop caller fields for one complete login edit.
 pub struct LoginEditInputV1 {
@@ -203,6 +210,31 @@ impl TotpConflictMergeInputV1 {
             digits,
             period,
         }
+    }
+}
+
+/// Owned wipe-on-drop caller field for one complete opaque-record merge.
+///
+/// An opaque record is the one record type this product has no schema for, so
+/// there is no field list to collect: the whole canonical-CBOR payload is the
+/// authored value. It arrives exactly as the terminal collected it — as a
+/// lowercase hexadecimal line rather than as decoded bytes — so that the closed
+/// shape rules of `VLT-PM39-cli-authored-opaque-record-conflict-merge.md` are
+/// checked behind the audited boundary rather than being trusted from the host.
+///
+/// The record's content type is deliberately absent. An item's schema is
+/// immutable across its whole history, so the merged record can only carry the
+/// base candidate's content type, and offering it as an authored field would
+/// only offer a value that must be rejected.
+pub struct OpaqueConflictMergeInputV1 {
+    payload: Zeroizing<String>,
+}
+
+impl OpaqueConflictMergeInputV1 {
+    /// Take the complete bounded opaque payload line collected by a trusted
+    /// host.
+    pub const fn new(payload: Zeroizing<String>) -> Self {
+        Self { payload }
     }
 }
 
@@ -538,6 +570,42 @@ pub enum AuditedTotpConflictMergePreparationV1 {
 impl AuditedTotpConflictMergePreparationV1 {
     /// Return the opaque preparation or its already-durable operation failure.
     pub fn into_preparation(self) -> Result<TotpConflictMergePreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
+/// Opaque application-owned state for one validated authored opaque-record
+/// conflict merge.
+///
+/// "Opaque" is doing two unrelated jobs in that sentence, and both are
+/// deliberate: the preparation is opaque to the CLI in the same way every other
+/// merge preparation is, and the record it will replace is opaque to this
+/// product because its content type is not one of the six first-party schemas.
+pub struct OpaqueConflictMergePreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    base: Zeroizing<ItemDocument>,
+    failure_audit: ConflictMergeFailureAuditV1,
+}
+
+/// Audited result of validating one authored opaque-record conflict merge
+/// target.
+pub enum AuditedOpaqueConflictMergePreparationV1 {
+    /// The application retains the base document and complete conflict set.
+    Ready(Box<OpaqueConflictMergePreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedOpaqueConflictMergePreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(self) -> Result<OpaqueConflictMergePreparationV1, ApplicationError> {
         match self {
             Self::Ready(preparation) => Ok(*preparation),
             Self::Failed(failure) => match failure.into_operation() {
@@ -1280,6 +1348,191 @@ fn replacement_totp_document(
             digits,
             period,
         }),
+        current.attachments().clone(),
+    )
+    .map_err(|_| ApplicationError::InvalidInput)
+}
+
+impl OpaqueConflictMergePreparationV1 {
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    /// Complete the authored opaque-record merge and its atomic event.
+    pub fn complete_audited(
+        self,
+        input: OpaqueConflictMergeInputV1,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let document =
+            match replacement_opaque_document(&self.base, input, self.failure_audit.wall_time_ms) {
+                Ok(document) => document,
+                Err(error) => return self.publish_audited_failure(error, local_state_store),
+            };
+        let active = self.session.merge_item_conflict(
+            document,
+            self.failure_audit.wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.session.finish_audited_access(
+            AuditActionV1::ItemConflictMerge,
+            Some(self.item_id),
+            None,
+            self.failure_audit.wall_time_ms,
+            self.failure_audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
+
+/// Decode one already-bounded opaque-record payload line from lowercase hex.
+///
+/// Hexadecimal is the transport for this ceremony because an opaque payload is
+/// arbitrary binary — canonical CBOR of a schema this product cannot read — and
+/// a terminal line has to carry it losslessly. Two characters spell one byte:
+///
+/// ```text
+///   characters  a  1  0  0  4  2
+///   nibbles     1010 0001 0000 0000 0100 0010
+///   bytes       0xa1      0x00      0x42
+/// ```
+///
+/// Requiring lowercase and an even length makes the encoding canonical by
+/// construction: every byte string has exactly one spelling, so unlike the
+/// Base32 of `decode_totp_secret_line` there are no unused trailing bits to
+/// check and no re-encode comparison to make. Canonicality still has to be
+/// decided one level down, for the CBOR these bytes spell, and
+/// [`canonical_opaque_payload`] does that.
+///
+/// The output accumulates into a wipe-on-drop buffer sized so that it never
+/// reallocates — `n` hex characters decode to exactly `n / 2` bytes — so a
+/// rejected line can leave no intact copy of a partially decoded payload behind
+/// in a stale allocation. The pending high nibble is wiped on every exit for the
+/// same reason.
+fn decode_opaque_payload_line(line: &str) -> Result<Zeroizing<Vec<u8>>, ApplicationError> {
+    if line.is_empty() || line.len() > MAX_OPAQUE_PAYLOAD_HEX_CHARS || !line.len().is_multiple_of(2)
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let mut output = Zeroizing::new(Vec::with_capacity(line.len() / 2));
+    let mut high = 0_u8;
+    let mut have_high = false;
+    for byte in line.bytes() {
+        let nibble = match byte {
+            b'0'..=b'9' => byte - b'0',
+            b'a'..=b'f' => byte - b'a' + 10,
+            _ => {
+                high.zeroize();
+                return Err(ApplicationError::InvalidInput);
+            }
+        };
+        if have_high {
+            output.push((high << 4) | nibble);
+            have_high = false;
+        } else {
+            high = nibble;
+            have_high = true;
+        }
+    }
+    // The even-length check above already guarantees this, but stating it as a
+    // fact the reader can check keeps the invariant local to the loop it
+    // constrains.
+    debug_assert!(!have_high, "an even-length line leaves no pending nibble");
+    high.zeroize();
+    Ok(output)
+}
+
+/// Require that decoded payload bytes are already canonical CBOR under one
+/// inherited content type, and return them back as the accepted payload.
+///
+/// The check is a round trip through the same two functions the storage codec
+/// uses: `encode_opaque` wraps the typed bytes in the base's content type,
+/// which rejects anything that is not decodable CBOR or that carries trailing
+/// bytes, and `decode_record` returns the canonical re-encoding of what was
+/// wrapped. Requiring that re-encoding to equal the typed bytes is what makes
+/// one stored payload have exactly one accepted spelling, and it is also the
+/// property the codec needs, since the codec will re-encode this value again
+/// every time the revision is sealed.
+///
+/// A round trip that does not come back as an opaque record means the content
+/// type was one of the six first-party schemas, which cannot happen for a base
+/// that decoded as opaque in the first place. Refusing it anyway makes it
+/// structurally impossible to author a first-party record — a login, say —
+/// through the one command that performs no schema validation.
+fn canonical_opaque_payload(
+    content_type: &str,
+    typed: &[u8],
+) -> Result<Zeroizing<Vec<u8>>, ApplicationError> {
+    let wire = Zeroizing::new(
+        encode_opaque(content_type, typed).map_err(|_| ApplicationError::InvalidInput)?,
+    );
+    let mut round_tripped = decode_record(&wire).map_err(|_| ApplicationError::InvalidInput)?;
+    // The payload is moved out into wipe-on-drop ownership before anything can
+    // return, and whatever remains — including a wrong-variant record's secret
+    // fields on the refused path — is wiped unconditionally.
+    let accepted = match &mut round_tripped {
+        AnyRecord::Opaque {
+            content_type: round_tripped_type,
+            payload_bytes,
+        } if round_tripped_type == content_type => {
+            Some(Zeroizing::new(core::mem::take(payload_bytes)))
+        }
+        _ => None,
+    };
+    round_tripped.zeroize();
+    let accepted = accepted.ok_or(ApplicationError::InternalInvariant)?;
+    if accepted.as_slice() != typed {
+        return Err(ApplicationError::InvalidInput);
+    }
+    Ok(accepted)
+}
+
+fn replacement_opaque_document(
+    current: &ItemDocument,
+    input: OpaqueConflictMergeInputV1,
+    updated_at_ms: u64,
+) -> Result<ItemDocument, ApplicationError> {
+    let AnyRecord::Opaque { content_type, .. } = current.payload() else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    let typed = decode_opaque_payload_line(&input.payload)?;
+    let payload_bytes = canonical_opaque_payload(content_type, &typed)?;
+    ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        updated_at_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        // The content type is inherited from the base rather than authored. An
+        // item's schema is immutable across its whole history: the document
+        // validator requires the record's content type to equal the document
+        // schema, and `merge_item_conflict` requires that schema to equal every
+        // retained live candidate's. Exactly one field of this record is
+        // therefore authored, which is the mirror image of VLT-PM38's TOTP
+        // merge, where every field was.
+        AnyRecord::Opaque {
+            content_type: content_type.clone(),
+            payload_bytes: payload_bytes.into_inner(),
+        },
         current.attachments().clone(),
     )
     .map_err(|_| ApplicationError::InvalidInput)
@@ -3303,6 +3556,59 @@ impl UnlockedVaultV1 {
         Ok(base)
     }
 
+    /// Validate one exact current live opaque record as the metadata base for
+    /// an authored conflict merge, or publish the failed precondition.
+    pub fn prepare_audited_opaque_conflict_merge(
+        self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedOpaqueConflictMergePreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        match self.opaque_conflict_merge_precondition(item_id, base_revision) {
+            Ok(base) => Ok(AuditedOpaqueConflictMergePreparationV1::Ready(Box::new(
+                OpaqueConflictMergePreparationV1 {
+                    session: self,
+                    item_id,
+                    base,
+                    failure_audit: ConflictMergeFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    },
+                },
+            ))),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemConflictMerge,
+                    Some(item_id),
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| AuditedOpaqueConflictMergePreparationV1::Failed(Box::new(failure))),
+        }
+    }
+
+    fn opaque_conflict_merge_precondition(
+        &self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let base = self.conflict_merge_base_precondition(item_id, base_revision)?;
+        // Every first-party schema has its own authored merge with its own
+        // closed field rules, so an item this product does understand is
+        // refused here rather than being routed through the one ceremony that
+        // validates no fields.
+        let AnyRecord::Opaque { .. } = base.payload() else {
+            return Err(ApplicationError::Unsupported);
+        };
+        Ok(base)
+    }
+
     fn conflict_merge_base_precondition(
         &self,
         item_id: ItemId,
@@ -4705,6 +5011,80 @@ mod tests {
                     digits: 6,
                     period: 30,
                 }),
+                ObservedSet::new(),
+            )
+            .unwrap();
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                [],
+                ItemState::Live(Box::new(document)),
+            )
+            .unwrap();
+            let base = 0xf1u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revisions.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revisions.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revisions.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xf7; 32], [0xf8; 24], [0xf9; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revisions,
+        )
+    }
+
+    /// Content type for the opaque-record fixtures.
+    ///
+    /// It is deliberately not one of the six first-party types, which is the
+    /// whole reason `decode_record` would hand these documents back as
+    /// `AnyRecord::Opaque`.
+    const FIXTURE_OPAQUE_CONTENT_TYPE: &str = "example/future/v1";
+
+    fn pending_opaque_conflict_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revisions = Vec::new();
+        // Each payload is canonical CBOR for a one-entry map: `a1` is a map of
+        // one pair, `61 76` is the text key "v", and the value is a text
+        // string. Written as bytes rather than through an encoder so that the
+        // fixture states the exact wire form the ceremony has to preserve.
+        for (index, payload) in [
+            vec![0xa1, 0x61, b'v', 0x64, b'l', b'e', b'f', b't'],
+            vec![0xa1, 0x61, b'v', 0x65, b'r', b'i', b'g', b'h', b't'],
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let document = ItemDocument::new(
+                item_id,
+                ContentType::new(FIXTURE_OPAQUE_CONTENT_TYPE).unwrap(),
+                500,
+                500,
+                LwwRegister::new(true, 500, OperationId::new([0xf0; 32])),
+                ObservedSet::new(),
+                ObservedSet::new(),
+                AnyRecord::Opaque {
+                    content_type: FIXTURE_OPAQUE_CONTENT_TYPE.to_owned(),
+                    payload_bytes: payload,
+                },
                 ObservedSet::new(),
             )
             .unwrap();
@@ -11305,6 +11685,477 @@ mod tests {
             RevisionId::new([0x9d; 32]),
             539,
             audited_access_randomness(0x9e),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(result.is_err());
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn authored_opaque_payload_lines_are_closed() {
+        // The hexadecimal layer: two lowercase characters spell one byte, and
+        // nothing else is a spelling of anything.
+        for (line, bytes) in [
+            ("00", [0x00_u8].as_slice()),
+            ("a0", [0xa0].as_slice()),
+            ("ff", [0xff].as_slice()),
+            (
+                "a2616b016176666d6572676564",
+                [
+                    0xa2, 0x61, b'k', 0x01, 0x61, b'v', 0x66, b'm', b'e', b'r', b'g', b'e', b'd',
+                ]
+                .as_slice(),
+            ),
+        ] {
+            assert_eq!(decode_opaque_payload_line(line).unwrap().as_slice(), bytes);
+        }
+        for rejected in [
+            "",                                            // a payload is required
+            "a",                                           // a lone nibble spells no byte
+            "a0b",   // odd length, so the last byte is incomplete
+            "A0",    // uppercase is a second spelling of the same byte
+            "a0zz",  // not hexadecimal at all
+            "a0 00", // odd length first, and a space is not a hex digit either
+            "0xa0",  // no radix prefix
+            &"0".repeat(MAX_OPAQUE_PAYLOAD_HEX_CHARS + 2), // oversized line
+        ] {
+            assert!(
+                matches!(
+                    decode_opaque_payload_line(rejected),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "payload line must be rejected: {rejected}"
+            );
+        }
+        // The longest accepted line carries exactly the 512-byte payload
+        // ceiling that the host's 1,024-byte secret line can spell.
+        assert_eq!(
+            decode_opaque_payload_line(&"0".repeat(MAX_OPAQUE_PAYLOAD_HEX_CHARS))
+                .unwrap()
+                .len(),
+            512
+        );
+
+        // The CBOR layer: an accepted payload comes back from the envelope
+        // round trip byte for byte.
+        for accepted in ["00", "a0", "a2616b016176666d6572676564"] {
+            let typed = decode_opaque_payload_line(accepted).unwrap();
+            assert_eq!(
+                canonical_opaque_payload(FIXTURE_OPAQUE_CONTENT_TYPE, &typed)
+                    .unwrap()
+                    .as_slice(),
+                typed.as_slice()
+            );
+        }
+        for rejected in [
+            "ff",             // simple value 31 is not a canonical CBOR value
+            "a0a0",           // one value per payload; the second is trailing
+            "a2617601616b01", // map keys "v" then "k" are out of canonical order
+            "1800",           // a one-byte argument for 0 is not the minimal form
+            "a16176",         // a map header with no value for its key
+        ] {
+            let typed = decode_opaque_payload_line(rejected).unwrap();
+            assert!(
+                matches!(
+                    canonical_opaque_payload(FIXTURE_OPAQUE_CONTENT_TYPE, &typed),
+                    Err(ApplicationError::InvalidInput)
+                ),
+                "payload must be rejected: {rejected}"
+            );
+        }
+        // A payload nested exactly as deep as the decoder allows is one level
+        // too deep once the content-type envelope is wrapped around it. The
+        // ceremony refuses it rather than letting the encoder fail.
+        let too_deep = decode_opaque_payload_line(&format!(
+            "{}00",
+            "81".repeat(coding_adventures_canonical_cbor::MAX_DECODE_DEPTH)
+        ))
+        .unwrap();
+        assert!(matches!(
+            canonical_opaque_payload(FIXTURE_OPAQUE_CONTENT_TYPE, &too_deep),
+            Err(ApplicationError::InvalidInput)
+        ));
+
+        // A payload that round trips as a first-party record cannot reach here
+        // from a base that decoded as opaque, and is refused as an invariant
+        // failure if it ever does, so this command can never author a login or
+        // a note without their own closed field rules.
+        let secure_note_payload = [
+            0xa2, 0x64, b'b', b'o', b'd', b'y', 0x61, b'b', 0x65, b't', b'i', b't', b'l', b'e',
+            0x61, b't',
+        ];
+        assert!(matches!(
+            canonical_opaque_payload(
+                coding_adventures_vault_records::SECURE_NOTE_V1,
+                &secure_note_payload,
+            ),
+            Err(ApplicationError::InternalInvariant)
+        ));
+    }
+
+    #[test]
+    fn audited_authored_opaque_merge_records_failure_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x36; 16]);
+        let (publication, revisions) = pending_opaque_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(540, audited_access_randomness(0xa0), &local)
+        .unwrap();
+
+        let base_revision = revisions[0];
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_opaque_conflict_merge(
+            item_id,
+            base_revision,
+            541,
+            audited_access_randomness(0xa1),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .record_audited_host_failure(&local)
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        // An uppercase line and a non-canonical CBOR map are both caught behind
+        // the audited boundary, so each closed failure is already durable when
+        // the caller learns of it.
+        for (line, seed) in [("A0", 0xa2_u8), ("a2617601616b01", 0xa4)] {
+            let session = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            assert_eq!(session.conflicted_item_count(), 1);
+            session
+                .prepare_audited_opaque_conflict_merge(
+                    item_id,
+                    base_revision,
+                    542,
+                    audited_access_randomness(seed),
+                    &local,
+                )
+                .unwrap()
+                .into_preparation()
+                .unwrap()
+                .complete_audited(
+                    OpaqueConflictMergeInputV1::new(Zeroizing::new(line.to_owned())),
+                    resolve_item_conflict_randomness(seed + 1),
+                    &local,
+                )
+                .unwrap()
+                .into_operation()
+                .expect_err("an invalid opaque payload must remain a closed failed operation");
+            let reopened = open_active_vault(
+                Zeroizing::new(b"active passphrase".to_vec()),
+                locator,
+                &local,
+                &bootstrap,
+                &factory,
+            )
+            .unwrap();
+            assert_eq!(
+                latest_audit_facts(&reopened),
+                (
+                    AuditActionV1::ItemConflictMerge,
+                    AuditOutcomeV1::Failed,
+                    Some(item_id),
+                    None,
+                )
+            );
+        }
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        let base_document = session.current_catalog.items[&item_id]
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .and_then(|candidate| match candidate.state() {
+                ItemState::Live(document) => Some(document),
+                ItemState::Tombstone(_) => None,
+            })
+            .unwrap();
+        let expected_favorite = base_document.favorite().clone();
+        let expected_collections = base_document.collection_ids().clone();
+        let expected_tags = base_document.tags().clone();
+        let expected_attachments = base_document.attachments().clone();
+        let expected_schema = base_document.schema().clone();
+
+        session
+            .prepare_audited_opaque_conflict_merge(
+                item_id,
+                base_revision,
+                543,
+                audited_access_randomness(0xa6),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                OpaqueConflictMergeInputV1::new(Zeroizing::new(
+                    "a2616b016176666d6572676564".to_owned(),
+                )),
+                resolve_item_conflict_randomness(0xa7),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored opaque merge must be the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions.iter().copied().collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored opaque merge must publish a live document")
+        };
+        assert_eq!(document.created_at_ms(), 500);
+        assert_eq!(document.updated_at_ms(), 543);
+        assert_eq!(document.favorite(), &expected_favorite);
+        assert_eq!(document.collection_ids(), &expected_collections);
+        assert_eq!(document.tags(), &expected_tags);
+        assert_eq!(document.attachments(), &expected_attachments);
+        assert_eq!(document.schema(), &expected_schema);
+        let AnyRecord::Opaque {
+            content_type,
+            payload_bytes,
+        } = document.payload()
+        else {
+            panic!("authored opaque merge must retain its schema")
+        };
+        // The content type is inherited from the base rather than authored,
+        // and the payload is exactly the bytes the line spelled.
+        assert_eq!(content_type, FIXTURE_OPAQUE_CONTENT_TYPE);
+        assert_eq!(
+            payload_bytes.as_slice(),
+            [0xa2, 0x61, b'k', 0x01, 0x61, b'v', 0x66, b'm', b'e', b'r', b'g', b'e', b'd']
+        );
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_opaque_merge_rejects_a_first_party_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x37; 16]);
+        let (publication, revisions) = pending_secure_note_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(544, audited_access_randomness(0xa8), &local)
+        .unwrap();
+
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_opaque_conflict_merge(
+            item_id,
+            revisions[0],
+            545,
+            audited_access_randomness(0xa9),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(result, Err(ApplicationError::Unsupported)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+    }
+
+    #[test]
+    fn audited_authored_opaque_merge_requires_an_exact_current_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x38; 16]);
+        let (publication, _) = pending_opaque_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(546, audited_access_randomness(0xaa), &local)
+        .unwrap();
+
+        // A revision that is not a current candidate of this item is refused,
+        // and the refusal is durable before the caller ever sees it.
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_opaque_conflict_merge(
+            item_id,
+            RevisionId::new([0xab; 32]),
+            547,
+            audited_access_randomness(0xac),
             &local,
         )
         .unwrap()

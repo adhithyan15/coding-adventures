@@ -2,6 +2,32 @@
 
 All notable changes to this package are documented here.
 
+## [0.61.0] - 2026-08-17
+
+### Added
+
+- Add an opaque audited authored opaque-record conflict merge preparation with a
+  wipe-on-drop replacement payload line, exact-current opaque base, and
+  application-owned closed hexadecimal and CBOR-canonicality validation. The
+  payload is decoded behind the audited boundary and accepted only when its
+  canonical re-encoding inside the record envelope reproduces the typed bytes.
+  The record's content type is inherited from the base rather than authored,
+  because an item's schema is immutable across its history, so this is the one
+  merge where a single field is authored and everything else carries over.
+
+### Security
+
+- Keep the payload line, decoded payload bytes, envelope round-trip
+  intermediates, and prior candidate documents inside application ownership,
+  decode into a wipe-on-drop buffer that cannot reallocate, wipe the partial
+  nibble and the round-tripped record on every exit including the refused
+  non-opaque one, publish host and closed form-validation failures before
+  returning them, and publish success atomically with the all-current-parent
+  revision.
+- Refuse a payload that round trips as a first-party record, so the one merge
+  command that validates no fields cannot be used to author a login, note,
+  card, API key, database credential, or TOTP seed around its own closed rules.
+
 ## [0.60.0] - 2026-08-17
 
 ### Added

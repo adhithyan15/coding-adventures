@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge opaque ITEM BASE_REVISION`, the last
+  authored merge ceremony, which retains the exact current opaque record
+  together with the content type it must keep, collects the whole
+  canonical-CBOR payload as one hidden lowercase hexadecimal line, forwards that
+  line verbatim for application-owned closed validation, durably records host
+  and validation failures, and publishes one authored all-current-parent record
+  without exposing prior candidate values.
 - Added audit-required `conflict merge totp ITEM BASE_REVISION`, which retains
   the exact current TOTP seed opaquely, collects the Base32 seed through a
   hidden prompt, forwards the seed and parameter lines verbatim for

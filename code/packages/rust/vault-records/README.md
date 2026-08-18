@@ -56,7 +56,14 @@ are stable regardless of which order the encoder builds them.
 App code can register additional types by implementing `VaultRecord`.
 `decode_record` returns `AnyRecord::Opaque` for content types this
 crate doesn't recognise, so older clients don't crash on records
-produced by newer ones.
+produced by newer ones. `encode_opaque` puts such a record back into
+its `{t, d}` envelope. Both directions re-encode the payload, and both
+report an envelope the encoder declines to represent through their
+`Result` rather than panicking: wrapping costs one level of nesting, so
+a payload nested exactly as deep as the decoder permits does not fit,
+and a caller's own framing bound need not be the encoder's size
+ceiling. Failing closed there loses one record; panicking loses the
+process.
 
 `AnyRecord::summary()` exposes value-redacted inventory data for
 host/store planning: record family, secret-field counts, optional/list

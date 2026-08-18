@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add a fixed hidden wipe-on-drop opaque-record payload prompt, collecting the
+  whole canonical-CBOR payload as lowercase hexadecimal under the existing
+  1,024-byte secret-line bound. It is hidden rather than echoed because an
+  opaque record's schema is unknown, so no part of its payload can be shown to
+  be non-secret.
 - Add a fixed canonical URL-count prompt, repeated required URL input, and
   optional hidden wipe-on-drop login-notes input for complete login forms.
 - Add fixed bounded TOTP label, issuer, algorithm, digits, and period prompts

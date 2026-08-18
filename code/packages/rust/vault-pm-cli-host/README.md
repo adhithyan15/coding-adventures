@@ -38,14 +38,18 @@ running is outside an in-process library's guarantees.
 
 Accepted passphrases, login passwords, optional login notes, secure-note bodies, card numbers, card
 verification codes, and API-key tokens are non-empty and at most 1,024 bytes.
-Database passwords and TOTP Base32 seeds use the same bound. Echoed login,
+Database passwords, TOTP Base32 seeds, and opaque-record hexadecimal payloads
+use the same bound. That 1,024-byte line carries at most a 512-byte payload,
+since hexadecimal spends two characters per byte. Echoed login,
 secure-note, payment-card, API-key, database, and TOTP metadata have fixed
 per-field bounds up to 2,048 UTF-8 bytes and reject control characters; only
 username, billing postal code, scopes, API-key expiry, database name, and TOTP
 issuer may be empty. Login URL count is a required canonical decimal value and
 drives repeated required URL prompts; optional notes use a fixed hidden prompt
 where an empty line means absence. PAN, CVV, API-key token, database password,
-and TOTP seed use the same hidden wipe-on-drop input path as other secrets.
+TOTP seed, and opaque-record payload use the same hidden wipe-on-drop input path
+as other secrets. The opaque payload is hidden because an unknown schema offers
+no way to show that any part of it is not a secret.
 Prompt strings and every public error are fixed and
 contain no secret, OS error, terminal path, user name, or caller payload.
 This crate deliberately does not parse commands, choose vault storage, persist
