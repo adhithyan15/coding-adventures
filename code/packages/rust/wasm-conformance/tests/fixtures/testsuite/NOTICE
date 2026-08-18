@@ -50,7 +50,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-18 (task #147-149 --
                simd_i16x8_extadd_pairwise_i8x16.wast/
                simd_i16x8_extmul_i8x16.wast, i16x8-from-i8x16 widening,
-               same pinned commit, no re-pin)
+               same pinned commit, no re-pin),
+               extended 2026-08-18 (task #150-152 -- simd_bitwise.wast,
+               v128.not/and/andnot/or/xor/bitselect bitwise family, same
+               pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -285,6 +288,25 @@ cross-checked against the already-implemented `i8x16.add`/
 same discipline as every prior addition. 100% pass on EVERY directive
 kind across both files (2/2 modules, 120/120 assert_return, 16/16
 assert_invalid).
+
+`simd_bitwise.wast` (task #150-152) covers `v128.not`/`and`/`andnot`/
+`or`/`xor`/`bitselect` -- the lane-width-agnostic raw-byte bitwise
+family, unlike every prior `simd_*` file which was scoped to one lane
+width. Represents a strategic pivot from "widen the next narrow
+per-lane-width family" (the pattern used in every prior SIMD PR) to
+"close the highest-real-world-impact remaining gap", identified via a
+broader prioritization survey now that `i8x16`/`i16x8`/`i32x4` all have
+complete arith+cmp+arith2+widening coverage relative to each other.
+`bitselect` is the first TERNARY SIMD op implemented in this
+interpreter (pops three `v128`s, pushes one): `(a AND c) OR (b AND
+(NOT c))`, i.e. select bits from `a` where the corresponding `c` bit is
+1, else from `b`. Each sub-opcode byte fetched live from `BinarySIMD.md`
+and cross-checked against the already-implemented `i8x16.add`/
+`i32x4.add` entries, same discipline as every prior addition. 100%
+pass on every gradeable directive kind (1/1 modules, 126/126
+assert_return, 28/28 assert_invalid; 13 assert_return directives grade
+`NotYetSupported` because they depend on `v128.load`, not a real
+failure).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

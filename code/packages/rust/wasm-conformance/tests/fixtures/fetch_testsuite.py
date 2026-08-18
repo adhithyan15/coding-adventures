@@ -319,6 +319,18 @@ TESTSUITE_FILES = [
     # prior addition.
     "simd_i16x8_extadd_pairwise_i8x16.wast",
     "simd_i16x8_extmul_i8x16.wast",
+    # SIMD widen PR11 (task #150-152): simd_bitwise.wast -- v128.not/
+    # and/andnot/or/xor/bitselect, the lane-width-agnostic raw-byte
+    # bitwise family. A strategic pivot from "widen the next narrow
+    # per-lane-width family" (PR1-PR10's pattern) to "close the
+    # highest-real-world-impact remaining gap", identified via a
+    # broader prioritization survey now that i8x16/i16x8/i32x4 all
+    # have complete arith+cmp+arith2+widening coverage. bitselect is
+    # the first TERNARY SIMD op in this interpreter. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against
+    # the already-implemented i8x16.add/i32x4.add entries, same
+    # discipline as every prior addition.
+    "simd_bitwise.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

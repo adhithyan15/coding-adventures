@@ -1038,6 +1038,34 @@ pub enum SimdOpKind {
     /// `i16x8.extmul_high_i8x16_u` -- same HIGH-8-lanes widening multiply
     /// as [`Self::ExtmulHighI8x16S`], but zero-extended, not sign-extended.
     ExtmulHighI8x16U,
+    /// `v128.not` -- bitwise NOT of all 128 bits, lane-width-agnostic (the
+    /// result doesn't depend on how the bits are interpreted as lanes).
+    /// UNARY, same shape as [`Self::Neg`]/[`Self::Abs`], but operates on
+    /// the raw bytes rather than per-lane integers -- first bitwise op in
+    /// this table, closing the gap between the narrow per-lane-width
+    /// arithmetic families done so far and the far more universally-used
+    /// masking/blending idioms every real SIMD program relies on.
+    Not,
+    /// `v128.and` -- bitwise AND of both operands' 128 bits,
+    /// lane-width-agnostic. BINARY, same shape as [`Self::Add`]/
+    /// [`Self::Sub`], but bytewise rather than per-lane.
+    And,
+    /// `v128.andnot` -- `a AND (NOT b)`, i.e. clears the bits in `a` that
+    /// are set in `b`. BINARY, same shape as [`Self::And`].
+    AndNot,
+    /// `v128.or` -- bitwise OR of both operands' 128 bits,
+    /// lane-width-agnostic. BINARY, same shape as [`Self::And`].
+    Or,
+    /// `v128.xor` -- bitwise XOR of both operands' 128 bits,
+    /// lane-width-agnostic. BINARY, same shape as [`Self::And`].
+    Xor,
+    /// `v128.bitselect` -- ternary bitwise select: for each bit position,
+    /// takes the bit from `a` where the corresponding bit of the mask `c`
+    /// is `1`, otherwise the bit from `b` -- computed as
+    /// `(a AND c) OR (b AND (NOT c))`. Pops THREE `v128`s, pushes one --
+    /// the first ternary SIMD op in this interpreter, unlike every UNARY
+    /// (pop one) or BINARY (pop two) kind above.
+    Bitselect,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1135,6 +1163,16 @@ pub struct SimdOpInfo {
 /// `i32x4.dot_i16x8_s` (`0xBA`)/`i8x16.popcnt` (`0x62`)/
 /// `i32x4.extadd_pairwise_i16x8_s` (`0x7E`) entries (all six matched
 /// exactly).
+/// `v128.not`/`and`/`andnot`/`or`/`xor`/`bitselect` -- the SIMD bitwise
+/// family, lane-width-agnostic (the result never depends on how the
+/// bits are interpreted as lanes). Closes the gap between the narrow
+/// per-lane-width arithmetic families done so far (PR1-10) and the far
+/// more universally-used masking/blending idioms every real SIMD
+/// program relies on. `bitselect` is the first TERNARY SIMD op in this
+/// table (pops three `v128`s, pushes one). Each sub-opcode byte fetched
+/// live from `BinarySIMD.md` and cross-checked against the
+/// already-implemented `i8x16.add` (`0x6E`)/`i32x4.add` (`0xAE`)
+/// entries (both matched exactly).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1211,6 +1249,12 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i16x8.extmul_high_i8x16_s", sub_opcode: 0x9D, kind: SimdOpKind::ExtmulHighI8x16S },
     SimdOpInfo { name: "i16x8.extmul_low_i8x16_u", sub_opcode: 0x9E, kind: SimdOpKind::ExtmulLowI8x16U },
     SimdOpInfo { name: "i16x8.extmul_high_i8x16_u", sub_opcode: 0x9F, kind: SimdOpKind::ExtmulHighI8x16U },
+    SimdOpInfo { name: "v128.not", sub_opcode: 0x4D, kind: SimdOpKind::Not },
+    SimdOpInfo { name: "v128.and", sub_opcode: 0x4E, kind: SimdOpKind::And },
+    SimdOpInfo { name: "v128.andnot", sub_opcode: 0x4F, kind: SimdOpKind::AndNot },
+    SimdOpInfo { name: "v128.or", sub_opcode: 0x50, kind: SimdOpKind::Or },
+    SimdOpInfo { name: "v128.xor", sub_opcode: 0x51, kind: SimdOpKind::Xor },
+    SimdOpInfo { name: "v128.bitselect", sub_opcode: 0x52, kind: SimdOpKind::Bitselect },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1629,8 +1673,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_75_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 75);
+    fn simd_ops_table_has_the_expected_81_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 81);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1915,6 +1959,31 @@ mod tests {
             ("i16x8.extmul_high_i8x16_s", 0x9D, SimdOpKind::ExtmulHighI8x16S),
             ("i16x8.extmul_low_i8x16_u", 0x9E, SimdOpKind::ExtmulLowI8x16U),
             ("i16x8.extmul_high_i8x16_u", 0x9F, SimdOpKind::ExtmulHighI8x16U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_bitwise_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i8x16.add (0x6E)/i32x4.add (0xAE) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. Closes the gap between the narrow per-lane-width
+        // arithmetic families done in PR1-10 and the far more
+        // universally-used masking/blending idioms every real SIMD
+        // program relies on. `bitselect` is the first TERNARY SIMD op
+        // in this table.
+        for (name, sub_opcode, kind) in [
+            ("v128.not", 0x4D, SimdOpKind::Not),
+            ("v128.and", 0x4E, SimdOpKind::And),
+            ("v128.andnot", 0x4F, SimdOpKind::AndNot),
+            ("v128.or", 0x50, SimdOpKind::Or),
+            ("v128.xor", 0x51, SimdOpKind::Xor),
+            ("v128.bitselect", 0x52, SimdOpKind::Bitselect),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

@@ -1,5 +1,23 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.35 — 2026-08-18 — SIMD: v128 bitwise family text-form (task #150-152)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover the lane-width-agnostic raw-byte
+  bitwise family: `v128.not`/`and`/`andnot`/`or`/`xor`/`bitselect` --
+  same "no immediate beyond the opcode byte itself" shape every prior
+  SIMD op in this family has, so no new parsing logic, just a wider
+  match-arm pattern list. `bitselect`'s new ternary (3-operand) shape
+  needs zero special-casing here -- operand count is driven entirely
+  by whatever S-expression recursion already ran before the encoder
+  emits `[0xFD, LEB128(sub_opcode)]`. Verified via a dedicated test
+  asserting the real single-byte LEB128-encoded sub-opcode bytes
+  (`[0xFD, 0x4D]` through `[0xFD, 0x52]` -- all < 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.34 — 2026-08-18 — SIMD: i16x8-from-i8x16 widening text-form (task #147-149)
 
 ### Added

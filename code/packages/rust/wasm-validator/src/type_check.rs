@@ -1448,17 +1448,23 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtmulLowI8x16S
                     | wasm_opcodes::SimdOpKind::ExtmulHighI8x16S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI8x16U
-                    | wasm_opcodes::SimdOpKind::ExtmulHighI8x16U => {
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI8x16U
+                    | wasm_opcodes::SimdOpKind::And
+                    | wasm_opcodes::SimdOpKind::AndNot
+                    | wasm_opcodes::SimdOpKind::Or
+                    | wasm_opcodes::SimdOpKind::Xor => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
                         // `i16x8.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
-                        // `extmul_low`/`high_i8x16_s`/`_u` all read/write
-                        // a narrower-than-`v128` lane width internally,
-                        // but AT THE TYPE LEVEL they're the same
-                        // pop-two-push-one `v128` shape as `Add`/`Sub`/
-                        // `Mul` above -- the type-checker only sees
-                        // `v128`, never the narrower lane interpretation.
+                        // `extmul_low`/`high_i8x16_s`/`_u`/`and`/`andnot`/
+                        // `or`/`xor` all read/write a narrower-than-`v128`
+                        // (or, for the bitwise ops, lane-width-agnostic)
+                        // shape internally, but AT THE TYPE LEVEL they're
+                        // the same pop-two-push-one `v128` shape as
+                        // `Add`/`Sub`/`Mul` above -- the type-checker
+                        // only sees `v128`, never the narrower lane
+                        // interpretation.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
@@ -1512,14 +1518,28 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::PopcntI8x16
                     | wasm_opcodes::SimdOpKind::AbsI16x8
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16S
-                    | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16U => {
+                    | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16U
+                    | wasm_opcodes::SimdOpKind::Not => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
-                        // `extadd_pairwise_i8x16_s`/`_u` read their
-                        // operand as a narrower lane width internally,
-                        // but are still just pop-one-`v128`-push-one-
-                        // `v128` at the type level, same as `Neg`/`Abs`.
+                        // `extadd_pairwise_i8x16_s`/`_u`/`v128.not` read
+                        // their operand as a narrower lane width (or,
+                        // for `not`, lane-width-agnostic bytes)
+                        // internally, but are still just pop-one-`v128`-
+                        // push-one-`v128` at the type level, same as
+                        // `Neg`/`Abs`.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Bitselect => {
+                        // The first TERNARY SIMD op in this crate: pops
+                        // THREE v128s, pushes one. See
+                        // `SimdOpKind::Bitselect`'s own doc comment in
+                        // wasm-opcodes for the runtime semantics -- at
+                        // the type level it's just three V128 pops.
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
