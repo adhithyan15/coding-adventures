@@ -1,5 +1,116 @@
 # Changelog
 
+## 0.42.0 — SIR22 array/matrix base cut (Phase A Slice 2, second-wave backend rollout)
+
+Opens this backend to `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}` and
+implements the SIR22 array/matrix "base cut": `Expr::ArrayLit`/`Range`/
+`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet` and `Stmt::IndexSet` (the
+9-node "APL addendum" — `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` — stays out of scope for this
+slice; see below). Part of the SIR22/SIR23 second-wave backend-expansion
+initiative (see the SIR22 spec's "Backend impact" section, amended for this
+exact rollout).
+
+**Runtime port** (`runtime.rs`, new "SIR22 array/matrix domain" section):
+an inlined port of `semantic-ir-to-javascript`'s already-proven `ArrayRt`
+sub-runtime, following this backend's existing "self-contained, no external
+crate" convention (the same reason `seq_*`/`map_*` are inlined rather than
+imported — this backend shells out to bare `rustc` on a single generated
+`.rs` file, with no `Cargo.toml`/dependency graph for the generated
+program, so a real crate dependency on a hypothetical `array-runtime` was
+never an option). New `Value::NDArray(Rc<RefCell<SirNDArray>>)` variant and
+`SirNDArray { shape: Vec<usize>, data: Vec<f64> }` struct, plus
+`array_checked_shape_size`/`array_ndarray`/`array_from_rows`/`array_coerce`/
+`array_get`/`array_set`/`array_apply_op`/`array_elementwise`/`array_matmul`/
+`array_transpose`/`array_range`/`array_assert_valid_position`/
+`array_resolve_positions`/`array_index_get`/`array_broadcast_values`/
+`array_index_set` — a 1:1 port of the JS reference's `checkedShapeSize`/
+`ndarray`/`fromRows`/`toArrayValue`/`get`/`set`/`applyOp`/`elementwise`/
+`matmul`/`transpose`/`range`/`assertValidPosition`/`resolvePositions`/
+`indexGet`/`broadcastValues`/`indexSet`.
+
+**Value-model decision**: array data is stored uniformly as `f64` (mirroring
+the JS backend's `Float64Array`), NOT `semantic-ir-to-ruby`'s deliberate
+Int/Float-preserving choice — a considered divergence from that sibling PR,
+not an oversight. This backend's `Value` already distinguishes `Int`/
+`Float` at the scalar level, but threading that distinction element-by-
+element through every array op would multiply the arithmetic-dispatch
+surface for a domain whose own spec maps 1:1 onto `array_runtime::execute()`
+(itself f64-only) — not worth it for a slice whose own reference
+implementation (JS) is f64-only to begin with. A consequence: `Expr::IndexGet`
+on a scalar position always yields `Value::Float`, so an all-integer `matmul`
+prints with a trailing `.0` (`"19.0"`, not `"19"`) — documented in
+`tests/sir22_array.rs` and expected in its assertions, not a bug.
+
+**IndexSet / ownership decision** (the one place this port is genuinely
+harder than JS's or Ruby's — see `runtime.rs`'s own doc for the long-form
+version): `Value::NDArray` reuses the EXACT `Rc<RefCell<…>>` shared-mutable-
+handle shape `Value::Seq`/`Value::Map` already establish in this same file.
+`Stmt::IndexSet` mutates through `RefCell::borrow_mut()`, so every alias of
+an array binding observes an in-place write — exactly the same mechanism
+`Stmt::SeqSet`/`Stmt::MapSet` already use for sequences/maps. No new
+ownership strategy was needed; SIR16 sequences had already forced this
+backend to solve "mutate the very value the caller's binding holds, visible
+through every alias" once, and this slice just applies that same answer to
+a new variant.
+
+**Security discipline**: every allocation (`array_checked_shape_size`) uses
+`checked_mul` so a shape product can never silently wrap on overflow before
+an unvalidated size reaches `Vec::with_capacity`-shaped allocations, mirroring
+the DoS discipline every other backend in this slice uses. Every index
+position is funneled through `array_assert_valid_position` before it is
+allowed to become a `usize` — the one place a NaN could otherwise defeat a
+bounds check (every IEEE-754 relational comparison with NaN is `false`, so an
+OR-negated bounds check's every branch would go `false` too). This backend
+gets a *stronger* guarantee than JS/Ruby's own "written defensively" AND-form
+checks: because `usize` cannot represent NaN or a negative value at all, once
+a position clears `array_assert_valid_position` every downstream bounds check
+(`array_get`/`array_set`) is NaN-safe *by construction*, not merely by
+comparison order — though they are still written in AND-form
+(`r < nrows && c < ncols`) for readability and consistency with every other
+backend's port of this same runtime. Every array/matrix error raises a
+catchable `RuntimeError` (via this backend's existing `raise`/`catch_unwind`
+machinery), never a bare, uncatchable Rust panic.
+
+**Addendum rejection** (`lib.rs`, new `reject_sir22_addendum`): the 9-node
+APL addendum shares `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base
+cut, so the ordinary feature-flag capability check alone cannot reject a
+module using one of those nine. Mirrors `semantic-ir-to-ruby`'s own
+`ScanHit::Sir22AddendumNode` (implemented for this same rollout wave), but
+uses `semantic_ir`'s shared `Visitor`/`walk_expr_default` walker rather than
+a hand-rolled recursive match — with ~40 `Expr` variants, a hand-picked-
+subset walk (this crate's existing style for `reject_stateful_class`/
+`reject_const_ref`) is exactly the kind of check that can silently drift out
+of sync with the emitter as new node kinds are added; the shared walker
+guarantees every position the validator itself visits is covered here too.
+
+**Emitter** (`emit.rs`): six new `Expr` arms plus `Stmt::IndexSet`, each
+emitting a call into the new `__sir::array_*` helpers; new
+`elementwise_op_rs_name`/`emit_index_arg`/`emit_index_args` helpers
+(the `IndexArg` → `__sir::SirIndexArg` translation). `collect_stmt_assigned`/
+`collect_expr_assigned` (used to pre-declare `let mut` locals) now recurse
+into the base cut's real sub-expressions instead of the previous
+"nothing reachable, rejected before emit" no-op — the addendum's 9 nodes
+keep that no-op treatment (still rejected before emit, by
+`reject_sir22_addendum`).
+
+**Tests**: new `tests/sir22_array.rs` (8 tests, ported from the JS backend's
+own `tests/sir22_array.rs`, cross-checked against `semantic-ir-to-ruby`'s
+port of the same suite) — hand-builds `Module`s directly (no frontend
+targets this backend for SIR22 yet), compiles with a real `rustc`, and
+asserts stdout: 2×2 `matmul` against a known product, an `ElementwiseOp`
+with a bare-scalar operand (the `array_coerce`/`toArrayValue`-coercion
+regression case — MATLAB's `.* / .\` lowering can hand a raw scalar, not an
+`ArrayLit`, on one side), `Div`'s always-true-divide behavior, `transpose`,
+`range`, a `Whole`-selector `IndexGet` (reads a whole row), `Stmt::IndexSet`
+mutating in place, and a compile-time-rejection test proving `Expr::Reduce`
+(an addendum node) is cleanly rejected with a real `Err`, not a panic.
+Skips (does not fail) when no `rustc`/usable linker is on the host, matching
+every other `compile_and_run_*` test in this crate; unique temp-file names
+per test run (PID + a monotonic `AtomicUsize` counter), avoiding the
+same-path collision race this crate's test suite has hit before when a
+temp-file name was not unique across concurrently-running test threads.
+
 ## 0.41.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive-only: adds the four new division builtin names from SIR21 T3b-2
