@@ -329,6 +329,60 @@ describe("D18T orchestration", () => {
       .rejects.toMatchObject({ code: "epoch_exhausted" });
   });
 
+  // Custody slots are keyed by (channelId, epoch) and the first writer wins
+  // permanently. If the import ran before the definition were validated, a
+  // caller presenting a mismatched definition could claim an unclaimed slot and
+  // then fail -- after which the legitimate create hits conflicting_active_key
+  // forever. Fail closed, but unrecoverable.
+  //
+  // The reachable state is a channel whose definition is durable but whose D18T
+  // custody import never completed: a crash between the two, or a D18P channel
+  // awaiting migration.
+  it("a mismatched definition cannot wedge the custody slot", async () => {
+    const fixture = await new Fixture().initialize();
+    const store = await fixture.store();
+    expect(fixture.custody.retainedKeyCount).toBe(0);
+
+    // Same channel and epoch, different membership, and crucially a DIFFERENT
+    // CMK -- reusing the real one would make the pre-fix import merely
+    // idempotent and this would pass either way.
+    const impostor = new ChannelDefinition({
+      channelId: channelId(),
+      originator: { agentId: utf8("originator"), publicKey: fixture.signer.publicKey },
+      receivers: [fixture.receiverA],
+      createdAtNs: 1_725_000_000_000_000_000n,
+      keyEpoch: 0n,
+    });
+    await expect(
+      store.createEpochChannel(impostor, ChannelMasterKey.fromBytes(new Uint8Array(32).fill(0x99))),
+    ).rejects.toMatchObject({ code: "invalid_plan" });
+
+    // The slot was never claimed, so the legitimate owner can still open it.
+    expect(fixture.custody.retainedKeyCount).toBe(0);
+    const state = await store.createEpochChannel(
+      fixture.definition, ChannelMasterKey.fromBytes(CURRENT_CMK),
+    );
+    expect(state.activeEpoch).toBe(0n);
+  });
+
+  it("a refused create still erases the caller's key", async () => {
+    const fixture = await new Fixture().initialize();
+    const store = await fixture.store();
+    const foreign = new ChannelDefinition({
+      channelId: messageId(0x09),
+      originator: { agentId: utf8("originator"), publicKey: fixture.signer.publicKey },
+      receivers: [fixture.receiverA],
+      createdAtNs: 1_725_000_000_000_000_000n,
+      keyEpoch: 0n,
+    });
+    const cmk = ChannelMasterKey.fromBytes(CURRENT_CMK);
+    await expect(store.createEpochChannel(foreign, cmk)).rejects.toMatchObject({
+      code: "invalid_plan",
+    });
+    // A destroyed key refuses to hand its bytes back.
+    expect(() => cmk.bytes).toThrow();
+  });
+
 });
 
 class StateCasConflictBackend implements ChannelStorageBackend {

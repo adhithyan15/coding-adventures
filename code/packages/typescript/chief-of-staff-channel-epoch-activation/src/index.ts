@@ -138,31 +138,49 @@ export class EpochActivationStore {
     return new EpochActivationStore(backend, custody, channelId);
   }
 
-  /** Custody-first creation of a D18T-aware channel and its initial v2 state. */
+  /**
+   * Custody-first creation of a D18T-aware channel and its initial v2 state.
+   *
+   * The definition is settled *before* the custody import, and that ordering
+   * matters. Custody slots are keyed by (channelId, epoch) and the first writer
+   * wins permanently, so importing first would let a caller presenting a
+   * mismatched definition claim an unclaimed slot and then fail -- leaving the
+   * legitimate import to hit conflicting_active_key forever. Fail closed, but
+   * permanently wedged. D18T only requires custody before *state*, so
+   * validating the definition first costs nothing and removes the wedge.
+   */
   async createEpochChannel(
     definition: ChannelDefinition,
     initialCmk: ChannelMasterKey,
   ): Promise<EpochState> {
-    if (!bytesEqual(definition.channelId, this.#channelId) || definition.lifecycle !== "active") {
-      initialCmk.destroy();
-      fail("invalid_plan");
-    }
-    await this.#importInitialKey(definition.keyEpoch, initialCmk);
-    const definitions = new ChannelDefinitionStore(this.#backend);
+    let consumed = false;
     try {
-      const existing = await definitions.load(this.#channelId);
-      if (existing === undefined) await definitions.create(definition);
-      else if (existing.lifecycle === "destroyed") fail("channel_destroyed");
-      else if (!existing.equals(definition)) fail("invalid_plan");
-    }
-    catch (error) {
-      if (error instanceof EpochActivationError) throw error;
-      if (error instanceof ChannelProfileError) {
-        if (error.code === "channel_destroyed") fail("channel_destroyed");
-        if (error.code === "conflicting_definition") fail("invalid_plan");
-        fail("corrupt_record");
+      if (!bytesEqual(definition.channelId, this.#channelId) || definition.lifecycle !== "active") {
+        fail("invalid_plan");
       }
-      throw storageError(error);
+      const definitions = new ChannelDefinitionStore(this.#backend);
+      try {
+        const existing = await definitions.load(this.#channelId);
+        if (existing === undefined) await definitions.create(definition);
+        else if (existing.lifecycle === "destroyed") fail("channel_destroyed");
+        else if (!existing.equals(definition)) fail("invalid_plan");
+      }
+      catch (error) {
+        if (error instanceof EpochActivationError) throw error;
+        if (error instanceof ChannelProfileError) {
+          if (error.code === "channel_destroyed") fail("channel_destroyed");
+          if (error.code === "conflicting_definition") fail("invalid_plan");
+          fail("corrupt_record");
+        }
+        throw storageError(error);
+      }
+      consumed = true;
+      await this.#importInitialKey(definition.keyEpoch, initialCmk);
+    }
+    finally {
+      // #importInitialKey owns the erase once it runs; every earlier exit must
+      // still erase, so an unused secret never outlives the call.
+      if (!consumed) initialCmk.destroy();
     }
     return this.migrateEpochState(definition);
   }

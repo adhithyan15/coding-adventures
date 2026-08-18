@@ -245,6 +245,14 @@ pub enum LangAotError {
     /// Spectrum, MSX, the original Game Boy (via a variant core), and
     /// countless CP/M machines.
     Z80BackendError(String),
+    /// The Intel 8051 (MCS-51) backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `intel8051-backend`
+    /// (which already includes the failing function name and the
+    /// unsupported op/type/operand).  Fourth lane of the
+    /// 9-architecture expansion following the historical-arch
+    /// backend migration pattern.
+    Intel8051BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -308,6 +316,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Intel8080BackendError(m) => write!(f, "intel8080: {m}"),
             LangAotError::MipsR2000BackendError(m) => write!(f, "mips-r2000: {m}"),
             LangAotError::Z80BackendError(m) => write!(f, "z80: {m}"),
+            LangAotError::Intel8051BackendError(m) => write!(f, "intel8051: {m}"),
         }
     }
 }
@@ -1839,6 +1848,82 @@ pub fn compile_file_to_z80_bin(
     }
     if bytes.is_empty() {
         bytes.push(z80_encoder::HALT);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 8051 (MCS-51) machine code
+/// (`.bin`) on disk.
+///
+/// Unlike the native-executable pipelines, this one does **not** link
+/// or run any toolchain — it just writes the flat byte sequence
+/// `intel8051-backend` emits (no endianness conversion needed; every
+/// 8051 instruction is a byte sequence, like Intel 8008/4004, not a
+/// fixed-width word like ARM1/ARMv7/RV32I).  Downstream consumers:
+///
+/// * [`intel8051-simulator`](../intel8051-simulator) — load + execute
+///   in-process.
+/// * Any external 8051/MCS-51 emulator or in-circuit debugger that
+///   consumes a flat byte stream.
+/// * An EPROM/flash burner for a real 8051-family part (AT89S52 and
+///   similar dev boards remain in production).
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Why no host gating?
+///
+/// The 8051 (1980) is a microcontroller architecture, not a
+/// workstation CPU — no modern development host is 8051 silicon. The
+/// downstream consumer is always a simulator (in-tree
+/// `intel8051-simulator` or external) or physical MCS-51-family
+/// hardware. All host OSes can write a flat byte file, so the
+/// pipeline is universally available.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Intel8051BackendError` — the IIR contained an op or type the
+///   Intel 8051 backend does not yet handle (the message names the
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=intel8051 -o foo.bin
+/// # Then load foo.bin into intel8051-simulator
+/// ```
+pub fn compile_file_to_intel8051_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Fourth lane of the 9-architecture expansion: route through
+    // `aot_core` + `intel8051-backend`, same per-function-loop pattern
+    // as `compile_file_to_arm1_bin`/`compile_file_to_intel8008_bin`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = intel8051_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Intel8051BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.push(intel8051_encoder::encode_halt());
     }
 
     std::fs::write(out, &bytes)?;
