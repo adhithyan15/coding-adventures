@@ -1414,6 +1414,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.science.6to8.earth_layer_matter_behavior",
+      "title": "Derive why an Earth layer behaves the way it does, by combining its physical state with the already-shipped states-of-matter table",
+      "band": "6-8",
+      "domain": "science",
+      "competency": "infer",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/geology/earth-layer-matter-behavior.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.science.k2.season_start_month_number",
       "title": "Derive which numbered month a meteorological season starts in, by bridging a season fact to a calendar fact",
       "band": "K-2",
