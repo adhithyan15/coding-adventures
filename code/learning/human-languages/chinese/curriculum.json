@@ -814,7 +814,7 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "grammar",
-      "canDo": "I know that Mandarin words do not change shape for grammar -- 我 serves as both 'I' and 'me' -- and I can introduce myself with 我是 plus my name.",
+      "canDo": "I know that Mandarin never changes a word to show what job it is doing in a sentence -- 我 serves as both 'I' and 'me' -- and I can introduce myself with 我是 plus my name.",
       "prerequisites": [
         "ZH-EXT-020-WO-SCRIPT"
       ],

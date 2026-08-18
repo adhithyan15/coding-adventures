@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Saying Who You Are",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3df233d8ad792188",
+  "sourceHash": "fnv1a64:74196f429addec86",
   "lessons": [
     {
       "id": "ZH-W08-wo",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:118af0f0623dc074",
+      "sourceHash": "fnv1a64:e5c3a274a4533678",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -66,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every character so far has come apart into pieces you already had: 你 into 亻 and 尔, 是 into 日 and a body, 早 into 日 and 十. 我 (wǒ) does not. Its right side is a shape called 戈 — there it is, but naming it is all this lesson will do with it, because you have not been taught to write it. Its left side is a squeezed hand. Neither is a piece you own."
+              "text": "Every character so far has had at least one piece you already owned: 你 is 亻 beside 尔, 是 sits on 日, 早 sits on 日. 我 (wǒ) has none. Its right side is a shape called 戈 — there it is, but naming it is all this lesson will do with it, because you have not been taught to write it. Its left side is a squeezed hand. Neither is a piece you own."
             },
             {
               "kind": "speech",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8e082902bb871bc",
+      "sourceHash": "fnv1a64:bbf9ff9e05cd068c",
       "notice": null,
       "blocks": [
         {
@@ -230,7 +230,11 @@
             },
             {
               "kind": "speech",
-              "text": "English uses two words there and swaps between them depending on the job: I saw her, she saw me. Mandarin uses 我 (wǒ) for both, and this is your first sight of something that will save you a great deal of work: Mandarin words do not change shape for grammar. No endings, no cases, no agreement. 我 (wǒ) is 我 (wǒ) wherever it stands."
+              "text": "English uses two words there and swaps between them depending on the job: I saw her, she saw me. Mandarin uses 我 (wǒ) for both, and this is your first sight of something that will save you a great deal of work: Mandarin never changes a word to show what job it is doing in a sentence. No I/me swap, no case endings, no agreeing with a subject. 我 (wǒ) is 我 (wǒ) in either seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Mandarin does bolt small extra pieces onto words for other jobs, and you will meet them — but never to mark who is doing what to whom."
             },
             {
               "kind": "speech",
@@ -243,6 +247,10 @@
             {
               "kind": "speech",
               "text": "是 is the word you learned for answering yes. Its actual job is to link two things: 我是 (wǒ shì) and then who you are. Say your own name after it and you have introduced yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second way to say this, built on a word you do not have yet. 我是 (wǒ shì) is not a stand-in for it — both are real, and this is the one you can write today."
             },
             {
               "kind": "speech",

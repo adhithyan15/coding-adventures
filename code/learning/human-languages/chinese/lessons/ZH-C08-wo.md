@@ -43,9 +43,12 @@ reviews_of: [ZH-W08-wo, ZH-C05-shi]
 
 English uses two words there and swaps between them depending on the job: *I saw
 her*, *she saw me*. **Mandarin uses 我 for both**, and this is your first sight of
-something that will save you a great deal of work: **Mandarin words do not change
-shape for grammar.** No endings, no cases, no agreement. 我 is 我 wherever it
-stands.
+something that will save you a great deal of work: **Mandarin never changes a
+word to show what job it is doing in a sentence.** No I/me swap, no case endings,
+no agreeing with a subject. 我 is 我 in either seat.
+
+Mandarin does bolt small extra pieces onto words for *other* jobs, and you will
+meet them — but never to mark who is doing what to whom.
 
 Now put it to work with a word you already have:
 
@@ -54,6 +57,9 @@ Now put it to work with a word you already have:
 是 is the word you learned for answering yes. Its actual job is to link two
 things: **我是** and then who you are. Say your own name after it and you have
 introduced yourself.
+
+There is a second way to say this, built on a word you do not have yet. **我是 is
+not a stand-in for it** — both are real, and this is the one you can write today.
 
 Two third tones meet in *wǒ shì*? No — 是 is **fourth** tone. Nothing moves.
 

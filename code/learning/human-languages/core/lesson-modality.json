@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:9e9b4bc18bf0b851",
+  "sourceHash": "fnv1a64:cd109d64c41d3611",
   "summary": {
     "totalLessons": 3131,
     "voice": 2210,
@@ -21277,7 +21277,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:118af0f0623dc074",
+      "sourceHash": "fnv1a64:e5c3a274a4533678",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -21299,7 +21299,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d8e082902bb871bc"
+      "sourceHash": "fnv1a64:bbf9ff9e05cd068c"
     },
     {
       "id": "ZH-W08-ming",

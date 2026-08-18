@@ -43,11 +43,11 @@ reviews_of: [ZH-C07-practice, ZH-W05-shi]
 
 **Seven strokes**, and here this book owes you a straight answer.
 
-Every character so far has come apart into pieces you already had: 你 into 亻
-and 尔, 是 into 日 and a body, 早 into 日 and 十. **我 does not.** Its right side
-is a shape called 戈 — there it is, but naming it is all this lesson will do with
-it, because you have not been taught to write it. Its left side is a squeezed
-hand. Neither is a piece you own.
+Every character so far has had **at least one piece you already owned**: 你 is 亻
+beside 尔, 是 sits on 日, 早 sits on 日. **我 has none.** Its right side is a shape
+called 戈 — there it is, but naming it is all this lesson will do with it, because
+you have not been taught to write it. Its left side is a squeezed hand. Neither
+is a piece you own.
 
 So learn it as a **route**, not as a sum. Follow the order and it holds together:
 
