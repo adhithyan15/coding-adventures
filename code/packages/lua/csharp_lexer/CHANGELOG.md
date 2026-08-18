@@ -2,6 +2,32 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- Eliminated runtime grammar loading. Previously, `get_grammar(version)`
+  read `code/grammars/csharp/csharp<version>.tokens` off disk at runtime
+  using a path that walked outside this package's own directory into the
+  monorepo (`debug.getinfo`-based directory walk-up). That works inside a
+  checkout of the monorepo, but a published LuaRocks package does not
+  include `code/grammars/` — installing this rock and calling
+  `tokenize_csharp` would raise a file-not-found error.
+- Each of the 12 supported C# versions' `.tokens` grammar is now compiled
+  ahead of time (via `grammar-tools compile-tokens`) into a
+  `_grammar_<version>.lua` sibling module (e.g. `_grammar_12_0.lua`) that
+  embeds the parsed `TokenGrammar` as native Lua data. `init.lua` now
+  `require`s the appropriate precompiled module and calls its
+  `token_grammar()` constructor (cached per version) instead of reading
+  and parsing a `.tokens` file from disk.
+- The rockspec's `build.modules` table now lists every `_grammar_*.lua`
+  submodule explicitly so `luarocks install` actually packages them —
+  without this, the compiled grammar files, while present in the source
+  tree, would not be installed alongside `init.lua`, silently reproducing
+  the same file-not-found failure via a different missing-file path.
+- Public API (`tokenize_csharp`, `create_csharp_lexer`, `get_grammar`),
+  version validation, and error message text are unchanged.
+
 ## [0.1.0] — 2026-04-11
 
 ### Added
