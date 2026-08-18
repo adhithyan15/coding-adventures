@@ -30,12 +30,14 @@ use chief_of_staff_tool_api::{
     builtin_tool_definition, ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier,
     RequestedBy, SchemaProperty, ToolApiError, ToolApprovalChallenge, ToolApprovalGrant,
     ToolAuditRecordQuery, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind,
-    ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary, ToolHandlerOutput,
-    ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects, ToolStability,
-    ToolStreaming,
+    ToolEventKind, ToolExecutionContext, ToolExecutionJournal, ToolExecutionJournalHealthSummary,
+    ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects,
+    ToolStability, ToolStreaming,
 };
 use chief_of_staff_tool_audit_store::{ToolAuditStore, ToolAuditStoreInventorySummary};
-use chief_of_staff_vault_runtime::ChiefVaultRuntime;
+use chief_of_staff_vault_runtime::{
+    AllowedAgents, ChiefVaultRuntime, SecretPolicy, VaultDeliveryMode, VaultLeaseRequest,
+};
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeasePayload;
 use context_store::{
@@ -937,9 +939,19 @@ impl UmbrellaPipeline {
     fn new(config: UmbrellaAgentConfig) -> UmbrellaResult<Self> {
         let mut tool_runtime = OrchestratorProfileRuntime::from_json(WEATHER_ORCHESTRATOR_PROFILE)?;
         let vault = Arc::new(ChiefVaultRuntime::new());
+        // Registered with a real policy rather than an unrestricted one, so the
+        // end-to-end exercise actually crosses the VLT06 admission check. An
+        // API key the agent uses itself is leased, never direct-delivered, and
+        // only this agent may ask for it.
         vault.register_secret(
             WEATHER_SECRET_NAME,
             LeasePayload::new(WEATHER_SECRET_FIXTURE.to_vec()),
+            SecretPolicy {
+                privilege_tier: 1,
+                allowed_agents: AllowedAgents::only([AGENT_ID]),
+                allowed_mode: VaultDeliveryMode::Leased,
+                rotated_at_ms: 0,
+            },
         );
         register_vault_lease_tool(&mut tool_runtime, vault.clone())?;
         let http_client = generated_operations::generated_http_client()?;
@@ -1614,26 +1626,38 @@ fn register_vault_lease_tool(
 ) -> Result<(), HostRuntimeError> {
     let definition = builtin_tool_definition(VAULT_TOOL_ID)
         .expect("the canonical vault lease built-in must be present");
-    runtime.register_handler(definition, move |arguments, _context| {
-        let secret_name = field_string(&arguments, "secret_name")?;
-        let ttl_ms = field_i64(&arguments, "ttl_ms")?;
-        let ttl_ms = u64::try_from(ttl_ms).map_err(|_| {
-            ToolCallError::new(
-                ToolErrorKind::ToolValidationError,
-                "ttl_ms must be a positive integer",
-            )
-        })?;
-        let receipt = vault.request_lease(&secret_name, ttl_ms).map_err(|error| {
-            ToolCallError::new(
-                ToolErrorKind::ToolPermissionDenied,
-                format!("vault lease request rejected: {error}"),
-            )
-        })?;
-        Ok(ToolHandlerOutput::new(object(vec![
-            ("vault_ref", string(receipt.vault_ref.as_str())),
-            ("expires_at_ms", int(receipt.expires_at_ms as i64)),
-        ])))
-    })
+    runtime.register_handler(
+        definition,
+        move |arguments, context: ToolExecutionContext| {
+            let secret_name = field_string(&arguments, "secret_name")?;
+            let ttl_ms = field_i64(&arguments, "ttl_ms")?;
+            let ttl_ms = u64::try_from(ttl_ms).map_err(|_| {
+                ToolCallError::new(
+                    ToolErrorKind::ToolValidationError,
+                    "ttl_ms must be a positive integer",
+                )
+            })?;
+            // The requesting identity has to reach the vault, or the secret's
+            // `allowed_agents` rule has nothing to decide on and refuses every
+            // caller. `agent_id` is the only identity field the host attests.
+            let receipt = vault
+                .request_lease(VaultLeaseRequest {
+                    requesting_agent_id: context.agent_id.as_deref(),
+                    secret_name: &secret_name,
+                    ttl_ms,
+                })
+                .map_err(|error| {
+                    ToolCallError::new(
+                        ToolErrorKind::ToolPermissionDenied,
+                        format!("vault lease request rejected: {error}"),
+                    )
+                })?;
+            Ok(ToolHandlerOutput::new(object(vec![
+                ("vault_ref", string(receipt.vault_ref.as_str())),
+                ("expires_at_ms", int(receipt.expires_at_ms as i64)),
+            ])))
+        },
+    )
 }
 
 fn fetch_weather_from_source(

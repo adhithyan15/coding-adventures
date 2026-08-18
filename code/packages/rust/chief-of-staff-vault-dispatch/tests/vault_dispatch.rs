@@ -23,7 +23,8 @@ use chief_of_staff_vault_dispatch::{
     VAULT_REQUEST_DIRECT_TOOL_ID, VAULT_REQUEST_LEASE_TOOL_ID,
 };
 use chief_of_staff_vault_runtime::{
-    ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
+    AllowedAgents, ChiefVaultRuntime, SecretPolicy, VaultDeliveryMode, VaultDirectDelivery,
+    VaultDirectDeliveryError, VaultDirectRequest,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeasePayload;
@@ -125,7 +126,11 @@ impl VaultDirectDelivery for RecordingDelivery {
 
 fn vault_with_secret() -> Arc<ChiefVaultRuntime> {
     let vault = Arc::new(ChiefVaultRuntime::new());
-    vault.register_secret(SECRET_NAME, LeasePayload::new(SECRET_BYTES.to_vec()));
+    vault.register_secret(
+        SECRET_NAME,
+        LeasePayload::new(SECRET_BYTES.to_vec()),
+        SecretPolicy::unrestricted(0),
+    );
     vault
 }
 
@@ -269,6 +274,172 @@ fn direct_returns_null_and_the_bytes_go_only_to_the_adapter() {
     );
 
     assert_no_secret_escaped(&trace);
+}
+
+// ===========================================================================
+// Per-secret admission policy (VLT06), as seen through the tool boundary
+// ===========================================================================
+
+/// Register one secret under an explicit policy and wire both tools over it.
+fn runtime_with_policy(policy: SecretPolicy) -> InMemoryToolRuntime {
+    let vault = Arc::new(ChiefVaultRuntime::new());
+    vault.register_secret(
+        SECRET_NAME,
+        LeasePayload::new(SECRET_BYTES.to_vec()),
+        policy,
+    );
+    let bridge = VaultToolBridge::new(vault, RecordingDelivery::accepting());
+    let mut runtime = InMemoryToolRuntime::new();
+    bridge
+        .register_all(&mut runtime)
+        .expect("both vault tools should register");
+    runtime
+}
+
+#[test]
+fn a_direct_only_secret_cannot_be_leased_through_the_tool_boundary() {
+    // The inversion the whole check exists to stop, reached the way an agent
+    // would reach it. The runtime-level test proves the rule; this proves the
+    // rule is actually on the path a tool call takes.
+    let runtime = runtime_with_policy(SecretPolicy {
+        privilege_tier: 3,
+        allowed_agents: AllowedAgents::Any,
+        allowed_mode: VaultDeliveryMode::Direct,
+        rotated_at_ms: 0,
+    });
+
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolPermissionDenied);
+    assert_eq!(error.message, errors::MODE_NOT_PERMITTED);
+    assert_no_secret_escaped(&trace);
+}
+
+#[test]
+fn a_leased_only_secret_cannot_be_direct_delivered_through_the_tool_boundary() {
+    let runtime = runtime_with_policy(SecretPolicy {
+        privilege_tier: 1,
+        allowed_agents: AllowedAgents::Any,
+        allowed_mode: VaultDeliveryMode::Leased,
+        rotated_at_ms: 0,
+    });
+
+    let trace = runtime.invoke_with_events(&request(
+        VAULT_REQUEST_DIRECT_TOOL_ID,
+        direct_arguments(SECRET_NAME, "agent:printer"),
+    ));
+
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolPermissionDenied);
+    assert_eq!(error.message, errors::MODE_NOT_PERMITTED);
+    assert_no_secret_escaped(&trace);
+}
+
+#[test]
+fn the_attested_agent_identity_decides_admission() {
+    // `request()` speaks as "agent:weather". The allow-list names someone else,
+    // so the call is refused; naming the caller admits it. This is what makes
+    // the handler's forwarding of `context.agent_id` load-bearing rather than
+    // decorative — without it every allow-listed secret would refuse everyone.
+    let refused = runtime_with_policy(SecretPolicy {
+        privilege_tier: 2,
+        allowed_agents: AllowedAgents::only(["agent:finance"]),
+        allowed_mode: VaultDeliveryMode::Both,
+        rotated_at_ms: 0,
+    });
+    let trace = refused.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+    assert!(!trace.result.ok, "{trace:?}");
+    let error = trace
+        .result
+        .error
+        .as_ref()
+        .expect("a refusal carries an error");
+    assert_eq!(error.kind, ToolErrorKind::ToolPermissionDenied);
+    assert_eq!(error.message, errors::AGENT_NOT_PERMITTED);
+    assert_no_secret_escaped(&trace);
+
+    let admitted = runtime_with_policy(SecretPolicy {
+        privilege_tier: 2,
+        allowed_agents: AllowedAgents::only(["agent:weather"]),
+        allowed_mode: VaultDeliveryMode::Both,
+        rotated_at_ms: 0,
+    });
+    let trace = admitted.invoke_with_events(&request(
+        VAULT_REQUEST_LEASE_TOOL_ID,
+        lease_arguments(SECRET_NAME, 60_000),
+    ));
+    assert!(
+        trace.result.ok,
+        "the allow-listed agent must be admitted: {trace:?}"
+    );
+}
+
+#[test]
+fn a_refusal_says_no_more_than_the_two_static_messages() {
+    // The admission refusals join the closed error set of D18D 7.1 V2: bounded,
+    // static, and with no details payload. A denial that named the allow-list
+    // would hand the caller a map of who *can* reach the secret.
+    for (policy, tool_id, arguments) in [
+        (
+            SecretPolicy {
+                privilege_tier: 2,
+                allowed_agents: AllowedAgents::only(["agent:finance"]),
+                allowed_mode: VaultDeliveryMode::Both,
+                rotated_at_ms: 0,
+            },
+            VAULT_REQUEST_LEASE_TOOL_ID,
+            lease_arguments(SECRET_NAME, 60_000),
+        ),
+        (
+            SecretPolicy {
+                privilege_tier: 3,
+                allowed_agents: AllowedAgents::Any,
+                allowed_mode: VaultDeliveryMode::Direct,
+                rotated_at_ms: 0,
+            },
+            VAULT_REQUEST_LEASE_TOOL_ID,
+            lease_arguments(SECRET_NAME, 60_000),
+        ),
+    ] {
+        let runtime = runtime_with_policy(policy);
+        let trace = runtime.invoke_with_events(&request(tool_id, arguments));
+        let error = trace
+            .result
+            .error
+            .as_ref()
+            .expect("a refusal carries an error");
+
+        assert!(
+            error.message == errors::AGENT_NOT_PERMITTED
+                || error.message == errors::MODE_NOT_PERMITTED,
+            "unexpected refusal message: {}",
+            error.message
+        );
+        assert_eq!(error.details, JsonValue::Null);
+        assert!(
+            !error.message.contains("agent:finance"),
+            "a denial must not enumerate the allow-list: {}",
+            error.message
+        );
+        assert_no_secret_escaped(&trace);
+    }
 }
 
 /// The adapter must be told enough to refuse for a reason.
@@ -790,8 +961,9 @@ fn an_agent_cannot_mint_a_lease_that_outlives_the_sweep_horizon() {
     // The lease layer permits 90 days and bounds its table. Together those are
     // a squat: fill the shared table at the maximum TTL and every other
     // consumer — including trusted host paths — is locked out for a quarter.
-    // Capping the agent-facing TTL well under the sweep horizon makes the
-    // attack self-healing rather than durable.
+    // Capping the agent-facing TTL bounds how long a squat can hold slots in
+    // the shared lease table; the runtime index reclaims them via its own
+    // usability sweep.
     let over = i64::try_from(MAX_AGENT_LEASE_TTL_MS).expect("ceiling fits in i64") + 1;
     let error = lease_direct_call(lease_arguments(SECRET_NAME, over))
         .expect_err("a TTL past the agent ceiling must be refused");
@@ -812,7 +984,11 @@ fn a_secret_name_at_the_length_bound_is_accepted() {
     // is a quieter failure and therefore worth pinning.
     let name = "b".repeat(MAX_SECRET_NAME_BYTES);
     let vault = Arc::new(ChiefVaultRuntime::new());
-    vault.register_secret(name.clone(), LeasePayload::new(SECRET_BYTES.to_vec()));
+    vault.register_secret(
+        name.clone(),
+        LeasePayload::new(SECRET_BYTES.to_vec()),
+        SecretPolicy::unrestricted(0),
+    );
     let bridge = VaultToolBridge::new(vault, RecordingDelivery::accepting());
     let handler = bridge.lease_handler();
 

@@ -100,11 +100,14 @@
 //! pair is registered all-or-nothing, via a pre-flight that is co-total with
 //! the registration path — profile checks *and* the registry's own.
 //!
-//! Note what this gate is not. It runs once, at registration, per host. It is
-//! not a per-call check, and the default runtime policy admits everything, so
-//! there is presently no per-call authorization at all and no per-secret
-//! policy. An agent that clears this gate can request any registered secret in
-//! either mode. See D18D section 7.2.
+//! Note what this gate is not. It runs once, at registration, per host, and is
+//! a statement about a *tool*, not a *secret* — it cannot express "this host
+//! may lease the weather key but not the bank password". The per-secret half of
+//! that question is answered below the handlers, by the vault runtime's
+//! admission policy (VLT06): each secret carries `allowed_agents` and
+//! `allowed_mode`, and both handlers forward the attested `agent_id` so the
+//! vault can apply them. What remains absent is a *per-call* policy engine —
+//! the default runtime policy still admits everything.
 //!
 //! # Example
 //!
@@ -113,7 +116,8 @@
 //!
 //! use chief_of_staff_vault_dispatch::VaultToolBridge;
 //! use chief_of_staff_vault_runtime::{
-//!     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
+//!     ChiefVaultRuntime, SecretPolicy, VaultDirectDelivery, VaultDirectDeliveryError,
+//!     VaultDirectRequest,
 //! };
 //! use coding_adventures_vault_leases::LeasePayload;
 //!
@@ -133,7 +137,11 @@
 //! }
 //!
 //! let vault = Arc::new(ChiefVaultRuntime::new());
-//! vault.register_secret("weather-api-key", LeasePayload::new(b"s3cret".to_vec()));
+//! vault.register_secret(
+//!     "weather-api-key",
+//!     LeasePayload::new(b"s3cret".to_vec()),
+//!     SecretPolicy::unrestricted(0),
+//! );
 //!
 //! let bridge = VaultToolBridge::new(vault, Arc::new(Sink));
 //! let mut tools = chief_of_staff_tool_api::InMemoryToolRuntime::new();
@@ -152,7 +160,7 @@ use chief_of_staff_tool_api::{
 };
 use chief_of_staff_vault_runtime::{
     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
-    VaultRuntimeError,
+    VaultLeaseRequest, VaultRuntimeError,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeaseError;
@@ -222,6 +230,14 @@ pub mod errors {
     pub const CONSUMER_INVALID: &str = "consumer_agent_id is not a valid identifier";
     /// No secret is registered under the requested name.
     pub const SECRET_NOT_FOUND: &str = "vault secret is not registered";
+    /// The secret already has as many tracked leases as the vault will revoke
+    /// on rotation. Transient: slots free as leases are redeemed or expire.
+    pub const TOO_MANY_LEASES: &str = "secret has too many outstanding leases";
+    /// The secret forbids the requested delivery mode (VLT06 P1).
+    pub const MODE_NOT_PERMITTED: &str = "secret does not permit this delivery mode";
+    /// The requesting agent is not on the secret's allow-list, or brought no
+    /// attested identity at all (VLT06 P2, P3).
+    pub const AGENT_NOT_PERMITTED: &str = "agent may not request this secret";
     /// The trusted adapter has no route to the named consumer.
     pub const DELIVERY_CONSUMER_NOT_FOUND: &str = "direct-delivery consumer not found";
     /// The trusted adapter refused to accept the delivery.
@@ -353,12 +369,16 @@ impl VaultToolBridge {
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
         let vault = Arc::clone(&self.vault);
-        move |arguments, _context| {
+        move |arguments, context| {
             let secret_name = required_secret_name(&arguments)?;
             let ttl_ms = required_ttl_ms(&arguments)?;
 
             let receipt = vault
-                .request_lease(&secret_name, ttl_ms)
+                .request_lease(VaultLeaseRequest {
+                    requesting_agent_id: context.agent_id.as_deref(),
+                    secret_name: &secret_name,
+                    ttl_ms,
+                })
                 .map_err(lease_error)?;
 
             Ok(ToolHandlerOutput::new(JsonValue::Object(vec![
@@ -536,6 +556,23 @@ fn execution_error(message: &'static str) -> ToolCallError {
 fn lease_error(error: VaultRuntimeError) -> ToolCallError {
     match error {
         VaultRuntimeError::SecretNotFound => execution_error(errors::SECRET_NOT_FOUND),
+        // Unlike the admission refusals below, this one IS worth retrying —
+        // slots free as leases are redeemed or expire — so it is a conflict
+        // rather than a denial.
+        VaultRuntimeError::TooManyOutstandingLeases => {
+            ToolCallError::new(ToolErrorKind::ToolConflict, errors::TOO_MANY_LEASES)
+        }
+        // An admission refusal is the vault exercising authority the caller
+        // does not have, so it is a permission denial rather than an execution
+        // fault — the caller should not read it as "retry".
+        VaultRuntimeError::DeliveryModeNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::MODE_NOT_PERMITTED,
+        ),
+        VaultRuntimeError::AgentNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::AGENT_NOT_PERMITTED,
+        ),
         VaultRuntimeError::InvalidConsumerAgentId => {
             // Unreachable on this path: request_lease takes no consumer. Mapped
             // rather than panicked because a handler that aborts the process on
@@ -559,6 +596,23 @@ fn lease_error(error: VaultRuntimeError) -> ToolCallError {
 fn direct_error(error: VaultRuntimeError) -> ToolCallError {
     match error {
         VaultRuntimeError::SecretNotFound => execution_error(errors::SECRET_NOT_FOUND),
+        // Unlike the admission refusals below, this one IS worth retrying —
+        // slots free as leases are redeemed or expire — so it is a conflict
+        // rather than a denial.
+        VaultRuntimeError::TooManyOutstandingLeases => {
+            ToolCallError::new(ToolErrorKind::ToolConflict, errors::TOO_MANY_LEASES)
+        }
+        // An admission refusal is the vault exercising authority the caller
+        // does not have, so it is a permission denial rather than an execution
+        // fault — the caller should not read it as "retry".
+        VaultRuntimeError::DeliveryModeNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::MODE_NOT_PERMITTED,
+        ),
+        VaultRuntimeError::AgentNotPermitted => ToolCallError::new(
+            ToolErrorKind::ToolPermissionDenied,
+            errors::AGENT_NOT_PERMITTED,
+        ),
         VaultRuntimeError::InvalidConsumerAgentId => validation_error(errors::CONSUMER_INVALID),
         VaultRuntimeError::InvalidVaultRef => execution_error(errors::UNEXPECTED_REFERENCE),
         VaultRuntimeError::DirectDelivery(error) => delivery_error(error),
