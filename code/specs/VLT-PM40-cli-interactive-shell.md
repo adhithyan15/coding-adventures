@@ -326,6 +326,10 @@ The slice is complete only when tests prove:
    without a readable terminal, using the closed classes;
 9. the tokenizer's accepted and rejected forms are exactly as tabulated;
 10. the retained authenticator is unreachable through `Debug`;
+10a. every session-host authority except the unlock prompt reaches the real
+    host unchanged, proved by a host whose every answer names the method that
+    produced it, so a same-signature delegation swap is a wrong value rather
+    than plausible output;
 11. end of input on a real pseudo-terminal ends a real process cleanly, and a
     real process unlocks once, runs several commands with no second prompt,
     performs a hidden item-creation ceremony inside the session, re-authenticates
