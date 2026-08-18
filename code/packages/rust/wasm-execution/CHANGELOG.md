@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.26] - 2026-08-18 (task #159-161 — SIMD: shift family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms (one per lane width)
+  for the FIRST mixed-type binary SIMD op family:
+  `ShlI8x16 | ShrSI8x16 | ShrUI8x16`, `ShlI16x8 | ShrSI16x8 |
+  ShrUI16x8`, `ShlI32x4 | ShrSI32x4 | ShrUI32x4`, and `ShlI64x2 |
+  ShrSI64x2 | ShrUI64x2`. Each pops the scalar `i32` shift amount
+  FIRST (it's pushed LAST per `(ixNxM.shl (v128 $a) (i32 $amount))`,
+  so it's on top of stack), then the `v128` operand, and masks the
+  shift amount MODULO the lane's bit width (8/16/32/64 respectively)
+  before shifting -- both spec-mandated and required for Rust safety,
+  since shifting a primitive by >= its bit width panics. `shl` is a
+  plain logical left shift (signedness-independent); `shr_s` reads
+  each lane as its signed type before shifting (sign-extending);
+  `shr_u` reads each lane as its unsigned type (zero-extending).
+  Verified with dedicated tests proving the shift amount is correctly
+  masked (shifting by exactly the lane's bit width, or bit-width + k,
+  must behave identically to shifting by 0, or k, not panic) and that
+  `shr_s`/`shr_u` disagree on sign extension across all 4 lane widths
+  (an operand with the sign bit set, shifted right by 1, keeps
+  propagating the sign bit under `shr_s` but shifts in a zero under
+  `shr_u`).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.25] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family)
 
 ### Added

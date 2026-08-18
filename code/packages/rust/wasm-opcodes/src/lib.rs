@@ -1145,6 +1145,54 @@ pub enum SimdOpKind {
     /// `i64x2.ge_s` -- lane-wise SIGNED greater-than-or-equal, boolean
     /// mask. BINARY, same shape as [`Self::EqI64x2`].
     GeSI64x2,
+    /// `i8x16.shl` -- lane-wise logical shift LEFT by a SCALAR `i32`
+    /// shift amount. The FIRST mixed-type binary op in this table: pops
+    /// the `i32` shift amount (pushed LAST, so popped FIRST), then the
+    /// `v128` operand, pushes one `v128` -- every prior binary op pops
+    /// two `v128`s or one `v128`. Per the SIMD spec, the shift amount is
+    /// taken MODULO the lane's bit width (8 here) before shifting --
+    /// this is spec-mandated masking, not just a Rust safety necessity
+    /// (shifting a Rust primitive by >= its bit width panics).
+    ShlI8x16,
+    /// `i8x16.shr_s` -- lane-wise ARITHMETIC (sign-extending) shift
+    /// RIGHT by a scalar `i32` amount, masked modulo 8. Same
+    /// mixed-type shape as [`Self::ShlI8x16`].
+    ShrSI8x16,
+    /// `i8x16.shr_u` -- lane-wise LOGICAL (zero-extending) shift RIGHT
+    /// by a scalar `i32` amount, masked modulo 8. Same mixed-type shape
+    /// as [`Self::ShlI8x16`]. Reinterprets each lane as `u8` before
+    /// shifting so no sign bit is propagated in.
+    ShrUI8x16,
+    /// `i16x8.shl` -- same as [`Self::ShlI8x16`], but over 8 `i16`
+    /// lanes, masked modulo 16.
+    ShlI16x8,
+    /// `i16x8.shr_s` -- same as [`Self::ShrSI8x16`], but over 8 `i16`
+    /// lanes, masked modulo 16.
+    ShrSI16x8,
+    /// `i16x8.shr_u` -- same as [`Self::ShrUI8x16`], but over 8 `i16`
+    /// lanes, masked modulo 16.
+    ShrUI16x8,
+    /// `i32x4.shl` -- same as [`Self::ShlI8x16`], but over 4 `i32`
+    /// lanes, masked modulo 32.
+    ShlI32x4,
+    /// `i32x4.shr_s` -- same as [`Self::ShrSI8x16`], but over 4 `i32`
+    /// lanes, masked modulo 32.
+    ShrSI32x4,
+    /// `i32x4.shr_u` -- same as [`Self::ShrUI8x16`], but over 4 `i32`
+    /// lanes, masked modulo 32.
+    ShrUI32x4,
+    /// `i64x2.shl` -- same as [`Self::ShlI8x16`], but over 2 `i64`
+    /// lanes, masked modulo 64.
+    ShlI64x2,
+    /// `i64x2.shr_s` -- same as [`Self::ShrSI8x16`], but over 2 `i64`
+    /// lanes, masked modulo 64.
+    ShrSI64x2,
+    /// `i64x2.shr_u` -- same as [`Self::ShrUI8x16`], but over 2 `i64`
+    /// lanes, masked modulo 64. Unlike `i64x2`'s comparison family
+    /// (which has no unsigned variants), the shift family DOES define
+    /// `shr_u` for `i64x2` -- shifting has no notion of "unsigned
+    /// magnitude comparison" to omit.
+    ShrUI64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1354,6 +1402,18 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i64x2.gt_s", sub_opcode: 0xD9, kind: SimdOpKind::GtSI64x2 },
     SimdOpInfo { name: "i64x2.le_s", sub_opcode: 0xDA, kind: SimdOpKind::LeSI64x2 },
     SimdOpInfo { name: "i64x2.ge_s", sub_opcode: 0xDB, kind: SimdOpKind::GeSI64x2 },
+    SimdOpInfo { name: "i8x16.shl", sub_opcode: 0x6B, kind: SimdOpKind::ShlI8x16 },
+    SimdOpInfo { name: "i8x16.shr_s", sub_opcode: 0x6C, kind: SimdOpKind::ShrSI8x16 },
+    SimdOpInfo { name: "i8x16.shr_u", sub_opcode: 0x6D, kind: SimdOpKind::ShrUI8x16 },
+    SimdOpInfo { name: "i16x8.shl", sub_opcode: 0x8B, kind: SimdOpKind::ShlI16x8 },
+    SimdOpInfo { name: "i16x8.shr_s", sub_opcode: 0x8C, kind: SimdOpKind::ShrSI16x8 },
+    SimdOpInfo { name: "i16x8.shr_u", sub_opcode: 0x8D, kind: SimdOpKind::ShrUI16x8 },
+    SimdOpInfo { name: "i32x4.shl", sub_opcode: 0xAB, kind: SimdOpKind::ShlI32x4 },
+    SimdOpInfo { name: "i32x4.shr_s", sub_opcode: 0xAC, kind: SimdOpKind::ShrSI32x4 },
+    SimdOpInfo { name: "i32x4.shr_u", sub_opcode: 0xAD, kind: SimdOpKind::ShrUI32x4 },
+    SimdOpInfo { name: "i64x2.shl", sub_opcode: 0xCB, kind: SimdOpKind::ShlI64x2 },
+    SimdOpInfo { name: "i64x2.shr_s", sub_opcode: 0xCC, kind: SimdOpKind::ShrSI64x2 },
+    SimdOpInfo { name: "i64x2.shr_u", sub_opcode: 0xCD, kind: SimdOpKind::ShrUI64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1772,8 +1832,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_101_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 101);
+    fn simd_ops_table_has_the_expected_113_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 113);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2150,6 +2210,42 @@ mod tests {
             ("i64x2.gt_s", 0xD9, SimdOpKind::GtSI64x2),
             ("i64x2.le_s", 0xDA, SimdOpKind::LeSI64x2),
             ("i64x2.ge_s", 0xDB, SimdOpKind::GeSI64x2),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_shift_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md. Each width's shl/shr_s/shr_u
+        // triple sits immediately BEFORE that width's already-implemented
+        // `add` sub-opcode (e.g. i8x16.shl=0x6B, shr_s=0x6C, shr_u=0x6D,
+        // then i8x16.add=0x6E; i16x8.shl=0x8B/../shr_u=0x8D, then
+        // i16x8.add=0x8E; i32x4.shl=0xAB/../shr_u=0xAD, then
+        // i32x4.add=0xAE; i64x2.shl=0xCB/../shr_u=0xCD, then
+        // i64x2.add=0xCE) -- the same regular numbering scheme already
+        // confirmed for every other family in this table. This is the
+        // FIRST mixed-type binary SIMD op family: pops a scalar `i32`
+        // shift amount (masked modulo the lane's bit width per the SIMD
+        // spec) then a `v128`, pushes one `v128` -- every op before this
+        // one pops only `v128`s (or, for `splat`/`extract_lane`, exactly
+        // one `i32`/`v128`, never a MIX of both types in one op).
+        for (name, sub_opcode, kind) in [
+            ("i8x16.shl", 0x6B, SimdOpKind::ShlI8x16),
+            ("i8x16.shr_s", 0x6C, SimdOpKind::ShrSI8x16),
+            ("i8x16.shr_u", 0x6D, SimdOpKind::ShrUI8x16),
+            ("i16x8.shl", 0x8B, SimdOpKind::ShlI16x8),
+            ("i16x8.shr_s", 0x8C, SimdOpKind::ShrSI16x8),
+            ("i16x8.shr_u", 0x8D, SimdOpKind::ShrUI16x8),
+            ("i32x4.shl", 0xAB, SimdOpKind::ShlI32x4),
+            ("i32x4.shr_s", 0xAC, SimdOpKind::ShrSI32x4),
+            ("i32x4.shr_u", 0xAD, SimdOpKind::ShrUI32x4),
+            ("i64x2.shl", 0xCB, SimdOpKind::ShlI64x2),
+            ("i64x2.shr_s", 0xCC, SimdOpKind::ShrSI64x2),
+            ("i64x2.shr_u", 0xCD, SimdOpKind::ShrUI64x2),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

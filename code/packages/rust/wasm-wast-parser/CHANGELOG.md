@@ -1,5 +1,24 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.38 — 2026-08-18 — SIMD: shift family text-form (task #159-161)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover `ixNxM.shl`/`shr_s`/`shr_u`
+  across all 4 lane widths -- same "no immediate beyond the opcode
+  byte itself" shape every prior SIMD op has, so no new parsing logic;
+  the mixed `v128`+`i32` operand TYPES are invisible to this encoder
+  (a type-checker concern -- see `wasm-validator`), since operand
+  count/values are driven entirely by the S-expression recursion that
+  already ran. Verified via a dedicated test asserting the real
+  single-byte LEB128 bytes for `i8x16`'s triple (`[0xFD, 0x6B]`
+  through `[0xFD, 0x6D]`, all < 128) and the 2-byte LEB128 bytes for
+  `i16x8`/`i32x4`/`i64x2`'s own triples (`[0xFD, 0x8B, 0x01]` through
+  `[0xFD, 0xCD, 0x01]`, all >= 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.37 — 2026-08-18 — SIMD: i64x2 arith+cmp family text-form (task #156-158)
 
 ### Added

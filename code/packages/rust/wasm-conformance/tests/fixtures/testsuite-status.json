@@ -3136,6 +3136,62 @@
         "not_yet_supported": 0
       }
     },
+    "simd_bit_shift.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 24,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 15,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 187,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 24
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 1,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 1
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "simd_bitwise.wast": {
       "action": {
         "pass": 0,
@@ -5167,22 +5223,22 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 1646,
+      "pass": 1670,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 76
     },
     "assert_malformed": {
-      "pass": 253,
+      "pass": 268,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 23750,
+      "pass": 23937,
       "fail": 17,
       "trap": 0,
-      "not_yet_supported": 597
+      "not_yet_supported": 621
     },
     "assert_trap": {
       "pass": 1424,
@@ -5197,10 +5253,10 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1133,
+      "pass": 1134,
       "fail": 1,
       "trap": 0,
-      "not_yet_supported": 75
+      "not_yet_supported": 76
     },
     "register": {
       "pass": 10,

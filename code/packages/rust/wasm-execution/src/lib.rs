@@ -5535,6 +5535,109 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::ShlI8x16 | SimdOpKind::ShrSI8x16 | SimdOpKind::ShrUI8x16 => {
+                // ixNxM.shl/shr_s/shr_u: the FIRST mixed-type binary SIMD
+                // op family -- pops a scalar i32 shift amount (pushed
+                // LAST, so popped FIRST, per WASM's usual stack-order
+                // convention), then a v128, pushes one v128. Per the
+                // SIMD spec, the shift amount is taken MODULO the lane's
+                // bit width (8 here) before shifting -- both spec-
+                // mandated AND required for Rust safety, since shifting
+                // a primitive by >= its bit width panics.
+                let shift_amount = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let amount = (shift_amount as u32) % 8;
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    result[i] = match op.kind {
+                        SimdOpKind::ShlI8x16 => bytes[i] << amount,
+                        SimdOpKind::ShrSI8x16 => ((bytes[i] as i8) >> amount) as u8,
+                        SimdOpKind::ShrUI8x16 => bytes[i] >> amount,
+                        _ => unreachable!("only ShlI8x16/ShrSI8x16/ShrUI8x16 reach this arm"),
+                    };
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ShlI16x8 | SimdOpKind::ShrSI16x8 | SimdOpKind::ShrUI16x8 => {
+                // Same mixed-type shift shape as `ShlI8x16` above, but
+                // over 8 `i16` lanes, masked modulo 16.
+                let shift_amount = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let amount = (shift_amount as u32) % 16;
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let v = u16::from_le_bytes(bytes[i * 2..i * 2 + 2].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::ShlI16x8 => v << amount,
+                        SimdOpKind::ShrSI16x8 => ((v as i16) >> amount) as u16,
+                        SimdOpKind::ShrUI16x8 => v >> amount,
+                        _ => unreachable!("only ShlI16x8/ShrSI16x8/ShrUI16x8 reach this arm"),
+                    };
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ShlI32x4 | SimdOpKind::ShrSI32x4 | SimdOpKind::ShrUI32x4 => {
+                // Same mixed-type shift shape as `ShlI8x16` above, but
+                // over 4 `i32` lanes, masked modulo 32.
+                let shift_amount = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let amount = (shift_amount as u32) % 32;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = u32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::ShlI32x4 => v << amount,
+                        SimdOpKind::ShrSI32x4 => ((v as i32) >> amount) as u32,
+                        SimdOpKind::ShrUI32x4 => v >> amount,
+                        _ => unreachable!("only ShlI32x4/ShrSI32x4/ShrUI32x4 reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ShlI64x2 | SimdOpKind::ShrSI64x2 | SimdOpKind::ShrUI64x2 => {
+                // Same mixed-type shift shape as `ShlI8x16` above, but
+                // over 2 `i64` lanes, masked modulo 64. Unlike i64x2's
+                // comparison family (no unsigned variants), the shift
+                // family DOES define `shr_u` for i64x2 -- shifting has
+                // no notion of "unsigned magnitude comparison" to omit.
+                let shift_amount = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let amount = (shift_amount as u32) % 64;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = u64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::ShlI64x2 => v << amount,
+                        SimdOpKind::ShrSI64x2 => ((v as i64) >> amount) as u64,
+                        SimdOpKind::ShrUI64x2 => v >> amount,
+                        _ => unreachable!("only ShlI64x2/ShrSI64x2/ShrUI64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -9508,6 +9611,82 @@ mod tests {
         let mut ge_s_engine = simd_engine_returning_v128(code_for(0xDB)); // i64x2.ge_s
         let (_, ge_s_bytes) = ge_s_engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(ge_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(true)]).try_into().unwrap())), "ge_s: i64::MIN not >= 1 (signed), 5 >= 5");
+    }
+
+    fn shift_code_for(operand: Vec<u8>, shift_amount: i32, sub_opcode_bytes: &[u8]) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(operand);
+        code.push(0x41); // i32.const
+        code.extend(wasm_leb128::encode_signed(shift_amount as i64));
+        code.push(0xFD);
+        code.extend_from_slice(sub_opcode_bytes);
+        code.push(0x0B);
+        code
+    }
+
+    /// The FIRST mixed-type binary SIMD op family: proves the shift
+    /// amount is taken MODULO the lane's bit width, not used raw --
+    /// shifting by exactly the lane width (or lane-width + k) must
+    /// behave identically to shifting by 0 (or k), not panic and not
+    /// silently zero out the operand the way a raw unmasked shift
+    /// would on most hardware. Also proves the operand-popping order
+    /// is correct (scalar shift amount popped FIRST, v128 popped
+    /// SECOND) -- a swapped pop order would read the v128 handle as
+    /// an i32 or vice versa and fail loudly, not silently.
+    #[test]
+    fn shift_family_masks_amount_modulo_lane_bit_width() {
+        // i8x16.shl (sub-opcode 0x6B, single-byte LEB128): shift by 8
+        // (== lane width) must equal shift by 0 -- operand unchanged.
+        let operand = v128_const_bytes_i8x16([-1i8; 16]);
+        let mut shift_by_8 = simd_engine_returning_v128(shift_code_for(operand.clone(), 8, &[0x6B]));
+        let (_, by_8_bytes) = shift_by_8.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(by_8_bytes[0], Some(V128Bytes(operand.clone().try_into().unwrap())), "i8x16.shl by 8 (== lane width) must be a no-op");
+
+        // i16x8.shl (sub-opcode 0x8B, 2-byte LEB128): shift by 17
+        // (== lane width + 1) must equal shift by 1.
+        let operand16 = v128_const_bytes_i16x8([1i16; 8]);
+        let mut shift_by_17 = simd_engine_returning_v128(shift_code_for(operand16.clone(), 17, &[0x8B, 0x01]));
+        let (_, by_17_bytes) = shift_by_17.call_function_with_v128(0, &[]).unwrap();
+        let mut shift_by_1 = simd_engine_returning_v128(shift_code_for(operand16, 1, &[0x8B, 0x01]));
+        let (_, by_1_bytes) = shift_by_1.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(by_17_bytes[0], by_1_bytes[0], "i16x8.shl by 17 (lane width 16 + 1) must equal shl by 1");
+    }
+
+    /// `ixNxM.shr_s`/`shr_u` across all 4 lane widths: same
+    /// signed/unsigned disagreement pattern as every other `_s`/`_u`
+    /// pair in this interpreter -- an operand with the sign bit set
+    /// shifted right ARITHMETICALLY (`shr_s`) keeps propagating the
+    /// sign bit in, while LOGICALLY (`shr_u`) shifts in zeros.
+    #[test]
+    fn shift_family_shr_s_and_shr_u_disagree_on_sign_extension() {
+        // i8x16.shr_s/shr_u (0x6C/0x6D, single-byte LEB128).
+        let operand8 = v128_const_bytes_i8x16([-1i8; 16]); // 0xFF -- sign bit set
+        let mut shr_s8 = simd_engine_returning_v128(shift_code_for(operand8.clone(), 1, &[0x6C]));
+        let (_, shr_s8_bytes) = shr_s8.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(shr_s8_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([-1i8; 16]).try_into().unwrap())), "i8x16.shr_s(-1, 1) must stay -1 (sign bit propagates)");
+        let mut shr_u8 = simd_engine_returning_v128(shift_code_for(operand8, 1, &[0x6D]));
+        let (_, shr_u8_bytes) = shr_u8.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(shr_u8_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([0x7Fi8; 16]).try_into().unwrap())), "i8x16.shr_u(0xFF, 1) must be 0x7F (zero shifted in)");
+
+        // i32x4.shr_s/shr_u (0xAC/0xAD, 2-byte LEB128).
+        let operand32 = v128_const_bytes([-1; 4]);
+        let mut shr_s32 = simd_engine_returning_v128(shift_code_for(operand32.clone(), 1, &[0xAC, 0x01]));
+        let (_, shr_s32_bytes) = shr_s32.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(shr_s32_bytes[0], Some(V128Bytes(v128_const_bytes([-1; 4]).try_into().unwrap())), "i32x4.shr_s(-1, 1) must stay -1");
+        let mut shr_u32 = simd_engine_returning_v128(shift_code_for(operand32, 1, &[0xAD, 0x01]));
+        let (_, shr_u32_bytes) = shr_u32.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(shr_u32_bytes[0], Some(V128Bytes(v128_const_bytes([i32::MAX; 4]).try_into().unwrap())), "i32x4.shr_u(0xFFFFFFFF, 1) must be i32::MAX (zero shifted in)");
+
+        // i64x2.shr_s/shr_u (0xCC/0xCD, 2-byte LEB128) -- the shift
+        // family DOES define shr_u for i64x2, unlike its comparison
+        // family (which has no unsigned variants).
+        let operand64 = v128_const_bytes_i64x2([-1i64; 2]);
+        let mut shr_s64 = simd_engine_returning_v128(shift_code_for(operand64.clone(), 1, &[0xCC, 0x01]));
+        let (_, shr_s64_bytes) = shr_s64.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(shr_s64_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([-1i64; 2]).try_into().unwrap())), "i64x2.shr_s(-1, 1) must stay -1");
+        let mut shr_u64 = simd_engine_returning_v128(shift_code_for(operand64, 1, &[0xCD, 0x01]));
+        let (_, shr_u64_bytes) = shr_u64.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(shr_u64_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MAX; 2]).try_into().unwrap())), "i64x2.shr_u(-1, 1) must be i64::MAX (zero shifted in)");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve

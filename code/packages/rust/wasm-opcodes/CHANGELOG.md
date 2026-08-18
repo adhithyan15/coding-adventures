@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.19] - 2026-08-18 - SIMD: shift family (task #159-161)
+
+### Added
+
+- 12 new `SIMD_OPS` entries -- the FIRST mixed-type binary SIMD op
+  family: `ixNxM.shl`/`shr_s`/`shr_u` across all 4 lane widths --
+  `i8x16.shl` (`0x6B`), `shr_s` (`0x6C`), `shr_u` (`0x6D`), `i16x8.shl`
+  (`0x8B`), `shr_s` (`0x8C`), `shr_u` (`0x8D`), `i32x4.shl` (`0xAB`),
+  `shr_s` (`0xAC`), `shr_u` (`0xAD`), `i64x2.shl` (`0xCB`), `shr_s`
+  (`0xCC`), `shr_u` (`0xCD`) -- 113 SIMD opcodes total, up from 101.
+  Chosen over closing any remaining narrower per-lane-width gap:
+  shifts are load-bearing in nearly all real SIMD code (packing,
+  masking, bit-manipulation) and every prior 101 opcodes are pure
+  `v128`-to-`v128`/`v128`-to-`i32` -- none pop a MIX of both types.
+  Every width's `shl`/`shr_s`/`shr_u` triple sits immediately BEFORE
+  that width's already-implemented `add` sub-opcode (e.g.
+  `i8x16.add`=`0x6E`, `i16x8.add`=`0x8E`, `i32x4.add`=`0xAE`,
+  `i64x2.add`=`0xCE`), the same regular numbering scheme already
+  confirmed for every other family in this table. Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against those already-implemented `add` entries.
+- `SimdOpKind::ShlI8x16`/`ShrSI8x16`/`ShrUI8x16`/`ShlI16x8`/
+  `ShrSI16x8`/`ShrUI16x8`/`ShlI32x4`/`ShrSI32x4`/`ShrUI32x4`/
+  `ShlI64x2`/`ShrSI64x2`/`ShrUI64x2`. Per the SIMD spec, the shift
+  amount is taken MODULO the lane's bit width (8/16/32/64
+  respectively) before shifting -- both spec-mandated and required
+  for Rust safety, since shifting a primitive by >= its bit width
+  panics.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_bit_shift.wast` and the resulting baseline delta.
+
 ## [0.2.18] - 2026-08-18 - SIMD: i64x2 arith+cmp family (task #156-158)
 
 ### Added

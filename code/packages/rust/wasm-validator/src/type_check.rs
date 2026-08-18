@@ -1581,6 +1581,28 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::I32);
                     }
+                    wasm_opcodes::SimdOpKind::ShlI8x16
+                    | wasm_opcodes::SimdOpKind::ShrSI8x16
+                    | wasm_opcodes::SimdOpKind::ShrUI8x16
+                    | wasm_opcodes::SimdOpKind::ShlI16x8
+                    | wasm_opcodes::SimdOpKind::ShrSI16x8
+                    | wasm_opcodes::SimdOpKind::ShrUI16x8
+                    | wasm_opcodes::SimdOpKind::ShlI32x4
+                    | wasm_opcodes::SimdOpKind::ShrSI32x4
+                    | wasm_opcodes::SimdOpKind::ShrUI32x4
+                    | wasm_opcodes::SimdOpKind::ShlI64x2
+                    | wasm_opcodes::SimdOpKind::ShrSI64x2
+                    | wasm_opcodes::SimdOpKind::ShrUI64x2 => {
+                        // The FIRST mixed-type binary SIMD op family:
+                        // `(ixNxM.shl (v128 $a) (i32 $amount))` pushes
+                        // the v128 first, the i32 shift amount second --
+                        // so the i32 is on TOP of stack and must be
+                        // popped FIRST, then the v128, matching
+                        // wasm-execution's own pop order.
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
                 }
             }
 
