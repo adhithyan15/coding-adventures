@@ -730,7 +730,7 @@ mod tests {
         }
     }
 
-    /// VLT-PM43 §5.4. The wrap is destroyed by a durable *write*, not only by
+    /// VLT-PM43 §5.4.1. The wrap is destroyed by a durable *write*, not only by
     /// the unlink that follows it.
     ///
     /// Every other durable step in a rotation is a write, and a lost write is

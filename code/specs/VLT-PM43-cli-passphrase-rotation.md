@@ -383,7 +383,7 @@ predecessor by hash, so the chain remains linked and a rollback remains
 detectable; what is removed is the ability to *re-open the vault through* a
 retired credential. Nothing in the product reads a non-latest generation.
 
-### 5.4.0 Destroying the wrap is a write, not only an unlink
+#### 5.4.1 Destroying the wrap is a write, not only an unlink
 
 An unlink is a weaker guarantee than it looks, and the asymmetry matters here
 more than anywhere else in the product. Every *other* durable step of a rotation
@@ -409,7 +409,7 @@ whether or not the unlink survives. The unlink still happens, and the filesystem
 adapter's `delete` now `fsync`s the containing directory the way its writes do;
 the overwrite is what makes the guarantee not depend on that.
 
-### 5.4.1 The window between install and delete
+#### 5.4.2 The window between install and delete
 
 Two records cannot be swapped atomically, so step 7b's install necessarily
 precedes step 7c's delete, and between them both wraps exist on disk. That
