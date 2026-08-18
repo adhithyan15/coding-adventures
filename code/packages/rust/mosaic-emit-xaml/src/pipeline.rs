@@ -1653,6 +1653,20 @@ fn is_color_setter(setter: &str) -> bool {
 /// vs `DarkGray` â€” also normalise to PascalCase.
 fn normalize_xaml_color_value(s: &str) -> Option<String> {
     let trimmed = s.trim();
+    // Defence in depth. Several arms below fall through to returning the
+    // stylesheet value verbatim, and the base-style-fragment path that
+    // consumes it does not XML-escape (unlike the `<Setter>` path, which
+    // wraps values in `escape_xaml_attr`). A value carrying `"`, `<`, `>`
+    // or `&` can therefore terminate the attribute it is written into and
+    // inject markup. mosstyle's own token validation permits all four.
+    //
+    // No legitimate colour literal contains any of them, so refusing them
+    // here costs nothing and closes this function as an injection source.
+    // The general fix — escaping at every attribute sink — is broader than
+    // this change and tracked separately.
+    if trimmed.contains(['"', '<', '>', '&']) {
+        return None;
+    }
     if trimmed.starts_with('#') {
         return Some(s.to_string());
     }
@@ -1717,7 +1731,12 @@ fn css_rgb_function_to_xaml_hex(s: &str) -> Option<String> {
         .or_else(|| lower.strip_prefix("rgb("))?
         .strip_suffix(')')?;
 
-    let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+    // `splitn(5, ..)` caps the allocation: a hostile value like
+    // `rgb(` + 100k commas + `)` would otherwise materialize one slice per
+    // field before the arity check rejects it. Commas are legal in mosstyle
+    // token values, so this input is reachable from a third-party package.
+    // Five is enough to still distinguish "4 fields" from "too many".
+    let parts: Vec<&str> = inner.splitn(5, ',').map(str::trim).collect();
     if parts.len() != 3 && parts.len() != 4 {
         return None;
     }
@@ -12509,6 +12528,34 @@ mod tests {
             normalize_xaml_color_value("rgba(20,17,13,.28)").as_deref(),
             Some("#4714110D")
         );
+    }
+
+    /// A colour value carrying XML metacharacters is refused rather than
+    /// echoed into an attribute. Several arms of the normalizer return the
+    /// stylesheet value verbatim, and the base-style-fragment sink does not
+    /// XML-escape, so a value like `x" Foo="bar` would otherwise close the
+    /// attribute and inject markup. mosstyle token validation permits these
+    /// characters, so a third-party package can supply them.
+    #[test]
+    fn color_values_with_xml_metacharacters_are_refused() {
+        assert_eq!(normalize_xaml_color_value(r#"x" Foo="bar"#), None);
+        assert_eq!(normalize_xaml_color_value("a<b"), None);
+        assert_eq!(normalize_xaml_color_value("a>b"), None);
+        assert_eq!(normalize_xaml_color_value("a&b"), None);
+        // A quoted value (mosstyle STRING tokens retain their quotes) is
+        // refused for the same reason.
+        assert_eq!(normalize_xaml_color_value("\"red\""), None);
+        // Legitimate literals are unaffected.
+        assert_eq!(normalize_xaml_color_value("#1e1e1e").as_deref(), Some("#1e1e1e"));
+        assert_eq!(normalize_xaml_color_value("Transparent").as_deref(), Some("Transparent"));
+    }
+
+    /// A hostile `rgb(` value with a huge field count must not allocate one
+    /// slice per field before the arity check rejects it.
+    #[test]
+    fn rgb_parser_bounds_its_field_split() {
+        let hostile = format!("rgb({})", ",".repeat(100_000));
+        assert_eq!(css_rgb_function_to_xaml_hex(&hostile), None);
     }
 
     // â”€â”€ unused-flag placeholders â”€â”€
