@@ -257,7 +257,7 @@ pub struct SessionKind {
 /// A family whose programs are not all present is skipped rather than chosen,
 /// so `wl-copy` without `wl-paste` falls through to X11 instead of producing a
 /// copy whose clear could never be verified.
-pub fn select_tooling(
+pub(crate) fn select_tooling(
     session: SessionKind,
     trusted: &dyn Fn(&Path) -> bool,
 ) -> Option<ClipboardTooling> {
@@ -292,7 +292,7 @@ pub fn select_tooling(
 /// claim about a host's layout, and a claim this module can check for itself is
 /// better than a claim it merely assumes. Tests pass a set-membership closure,
 /// which is why the predicate is injected rather than called directly.
-pub fn resolve_program(program: &str, trusted: &dyn Fn(&Path) -> bool) -> Option<PathBuf> {
+pub(crate) fn resolve_program(program: &str, trusted: &dyn Fn(&Path) -> bool) -> Option<PathBuf> {
     TRUSTED_TOOL_DIRECTORIES
         .iter()
         .map(|directory| Path::new(directory).join(program))
@@ -315,7 +315,7 @@ pub fn resolve_program(program: &str, trusted: &dyn Fn(&Path) -> bool) -> Option
 /// root-owned, non-world-writable directory, which is already root — so closing
 /// it with `fexecve` would buy nothing this check has not already bought.
 #[cfg(unix)]
-pub fn is_trusted_program(path: &Path) -> bool {
+pub(crate) fn is_trusted_program(path: &Path) -> bool {
     use std::os::unix::fs::MetadataExt;
     let Ok(metadata) = std::fs::symlink_metadata(path) else {
         return false;
@@ -325,7 +325,7 @@ pub fn is_trusted_program(path: &Path) -> bool {
 
 /// No target outside Unix has an audited clipboard, so nothing is trusted.
 #[cfg(not(unix))]
-pub fn is_trusted_program(_path: &Path) -> bool {
+pub(crate) fn is_trusted_program(_path: &Path) -> bool {
     false
 }
 
@@ -380,7 +380,13 @@ impl PlatformClipboard {
     }
 
     /// Detection against an injected session and program-trust test.
-    pub fn detect_for(
+    ///
+    /// Crate-private, and that is a security boundary rather than tidiness: a
+    /// caller who could pass `&|_| true` would skip the ownership, mode, and
+    /// symlink checks. The directory allowlist inside [`resolve_program`] would
+    /// still contain the damage, but there is no reason to leave a second lock
+    /// on the same door openable from outside.
+    pub(crate) fn detect_for(
         session: SessionKind,
         trusted: &dyn Fn(&Path) -> bool,
     ) -> Result<Self, CliHostError> {
@@ -576,7 +582,9 @@ impl ClipboardClearRequest {
 /// parent into an anonymous pipe — and it arrives that way *because* argv is
 /// world-readable through `ps`.
 pub fn read_clear_request_from_stdin() -> Result<ClipboardClearRequest, CliHostError> {
-    let mut block = Zeroizing::new(Vec::with_capacity(CLIPBOARD_CLEAR_REQUEST_BYTES));
+    // One byte of headroom, so reading the over-long case cannot reallocate
+    // and leave a copy of salt-and-digest behind (see `run_tool_capturing`).
+    let mut block = Zeroizing::new(Vec::with_capacity(CLIPBOARD_CLEAR_REQUEST_BYTES + 1));
     std::io::stdin()
         .take(u64::try_from(CLIPBOARD_CLEAR_REQUEST_BYTES).unwrap_or(u64::MAX) + 1)
         .read_to_end(&mut block)
@@ -784,7 +792,11 @@ fn run_tool_capturing(
         .stderr(Stdio::null())
         .spawn()
         .map_err(|_| CliHostError::ClipboardReadFailed)?;
-    let mut captured = Zeroizing::new(Vec::new());
+    // Pre-sized past the ceiling on purpose: `Zeroize for Vec<u8>` scrubs the
+    // capacity it currently owns, so a growth reallocation would abandon a
+    // plaintext copy of the clipboard in freed heap. Never growing means never
+    // abandoning one.
+    let mut captured = Zeroizing::new(Vec::with_capacity(MAX_CLIPBOARD_READ_BYTES + 512));
     if capture_bounded(&mut child, &mut captured).is_err() {
         let _ = child.kill();
         let _ = child.wait();
@@ -839,7 +851,15 @@ fn capture_bounded(child: &mut Child, captured: &mut Vec<u8>) -> Result<(), ()> 
                 }
                 continue;
             }
-            Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {}
+            // `Interrupted` sits beside `WouldBlock` deliberately. Treating a
+            // signal-interrupted read as a hard failure would make the
+            // verified clear give up and leave the secret on the clipboard —
+            // failing *open* on the one thing this module exists to close.
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    std::io::ErrorKind::WouldBlock | std::io::ErrorKind::Interrupted
+                ) => {}
             Err(_) => return Err(()),
         }
         if Instant::now() >= deadline {
@@ -1359,7 +1379,36 @@ mod tests {
         use std::os::unix::fs::symlink;
 
         // A real root-owned binary in a trusted directory is accepted.
-        assert!(is_trusted_program(Path::new("/bin/sh")));
+        //
+        // The probe is a list rather than one path, and `/bin/sh` in
+        // particular is not on it: it is a regular file on macOS but a symlink
+        // to `dash` on Debian and Ubuntu, and this predicate refuses symlinks
+        // by design. Every candidate that *is* a regular file must be
+        // accepted, and at least one must exist, so the test proves the
+        // positive case without asserting anything about a given host's
+        // layout.
+        let regular: Vec<&str> = [
+            "/bin/cat",
+            "/usr/bin/cat",
+            "/bin/ls",
+            "/usr/bin/ls",
+            "/usr/bin/env",
+        ]
+        .into_iter()
+        .filter(|candidate| {
+            std::fs::symlink_metadata(candidate).is_ok_and(|metadata| metadata.is_file())
+        })
+        .collect();
+        assert!(
+            !regular.is_empty(),
+            "no standard utility resolved to a regular file on this host"
+        );
+        for candidate in regular {
+            assert!(
+                is_trusted_program(Path::new(candidate)),
+                "{candidate} is a root-owned regular file and must be accepted"
+            );
+        }
 
         // A directory is not a program, and an absent path is not one either.
         assert!(!is_trusted_program(Path::new("/usr/bin")));

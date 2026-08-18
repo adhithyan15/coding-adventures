@@ -119,6 +119,25 @@ the prompt still publishes `Denied`. `password generate --copy` still publishes
 nothing, because VLT-PM44 §1 established that minting a password that no vault
 ever stores is not a vault access.
 
+### 3.0 The disclosure intent stays `InteractiveReveal`, and a trap is disarmed
+
+`SecretDisclosureIntentV1` has a `Clipboard` variant, and `--copy` deliberately
+does **not** use it. The variant would name the channel more precisely, but this
+contract's entire claim is that the ceremony is the same one, and the audit
+trail records the *fact* of an access rather than the door it left by — the same
+reasoning VLT-PM45 §3 used to reject a lighter treatment for a short-lived code.
+A reader of the chain learns that an item was read, which is what the chain is
+for.
+
+That variant was, however, a trap, and this is the slice that would have sprung
+it: it authorized **unconditionally**, with no confirmation flag, and was
+reachable only from tests. The obvious "improvement" — switching `--copy` to the
+intent that names clipboards — would have silently deleted the application-layer
+confirmation gate while looking like an increase in fidelity. It now carries
+`confirmed` and enforces it exactly as `InteractiveReveal` does. A destination
+is not an authorization, and a secret placed where every process in the session
+can read it is not the disclosure that needs *less* consent.
+
 ### 3.1 The confirmation prompt tells the truth
 
 The reveal prompt reads:
