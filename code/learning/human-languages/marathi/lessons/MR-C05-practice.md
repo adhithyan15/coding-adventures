@@ -20,11 +20,11 @@ reviews_of: [MR-C05-bolne, MR-C05-mi-marathi-bolto, MR-C05-rahne, MR-C05-kaam-ka
 
 ## Sentences about yourself
 
-| Marathi | English |
-|---|---|
-| मी मराठी बोलतो / बोलते. | I speak Marathi. |
-| मी पुण्यात राहतो / राहते. | I live in Pune. |
-| मी काम करतो / करते. | I work. |
+| Marathi | Say it | English |
+|---|---|---|
+| मी मराठी बोलतो / बोलते. | *mī marāṭhī bolto / bolte.* | I speak Marathi. |
+| मी पुण्यात राहतो / राहते. | *mī puṇyāt rāhto / rāhte.* | I live in Pune. |
+| मी काम करतो / करते. | *mī kām karto / karte.* | I work. |
 
 ## The engine, in one look
 

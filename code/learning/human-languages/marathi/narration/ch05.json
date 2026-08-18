@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:03f79a98594f4da1",
+  "sourceHash": "fnv1a64:2c216f7d781a9d9b",
   "lessons": [
     {
       "id": "MR-C05-bolne",
@@ -405,7 +405,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:360f39186883773c",
+      "sourceHash": "fnv1a64:73fed83793c9bc8c",
       "notice": null,
       "blocks": [
         {
@@ -434,14 +434,15 @@
               "kind": "table",
               "headers": [
                 "Marathi",
+                "Say it",
                 "English"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "मी मराठी बोलतो / बोलते. means I speak Marathi.",
-                "मी पुण्यात राहतो / राहते. means I live in Pune.",
-                "मी काम करतो / करते. means I work."
+                "Marathi: मी मराठी बोलतो / बोलते. Say it: mī marāṭhī bolto / bolte. English: I speak Marathi.",
+                "Marathi: मी पुण्यात राहतो / राहते. Say it: mī puṇyāt rāhto / rāhte. English: I live in Pune.",
+                "Marathi: मी काम करतो / करते. Say it: mī kām karto / karte. English: I work."
               ]
             }
           ]

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4698352cdd6ad6ca",
+  "sourceHash": "fnv1a64:b3107d9fc5cfb536",
   "lessons": [
     {
       "id": "MR-C03-kaahi-harkat-nahi",
@@ -534,7 +534,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb7818167410db6b",
+      "sourceHash": "fnv1a64:70dd374d59aaf09d",
       "notice": null,
       "blocks": [
         {
@@ -563,14 +563,15 @@
               "kind": "table",
               "headers": [
                 "Marathi",
+                "Say it",
                 "English"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "तुम्ही कसे आहात? means How are you?",
-                "मी बरा आहे, धन्यवाद. means I'm well, thank you.",
-                "काही हरकत नाही. means No problem / you're welcome."
+                "Marathi: तुम्ही कसे आहात? Say it: tumhī kase āhāt? English: How are you?",
+                "Marathi: मी बरा आहे, धन्यवाद. Say it: mī barā āhe, dhanyavād. English: I'm well, thank you.",
+                "Marathi: काही हरकत नाही. Say it: kāhī harkat nāhī. English: No problem / you're welcome."
               ]
             }
           ]
@@ -598,7 +599,7 @@
             },
             {
               "kind": "speech",
-              "text": "Copula forms: मी आहे / तू आहेस / तुम्ही आहात — one verb, reshaped per person."
+              "text": "Copula forms: मी आहे / तू आहेस / तुम्ही आहात (mī āhe / tū āhes / tumhī āhāt) — one verb, reshaped per person."
             }
           ]
         },

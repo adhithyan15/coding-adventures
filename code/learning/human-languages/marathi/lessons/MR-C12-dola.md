@@ -34,7 +34,8 @@ reviews_of: [MR-C11-bahin, MR-C11-bhau, MR-C07-pahne]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BAHIN, MR-LEX-BHAU] -->
 
-[PAUSE 2s] **मित्र, कुटुंब, भाऊ, बहीण** — the people you'd introduce. This
+[PAUSE 2s] **मित्र, कुटुंब, भाऊ, बहीण** (*mitra, kuṭumb, bhāū, bahīṇ*) — the
+people you'd introduce. This
 chapter turns to the body you'd ask after when you check how someone is.
 
 ## You'll want to know: डोळा

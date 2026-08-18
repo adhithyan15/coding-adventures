@@ -104,9 +104,9 @@ Three verbs, one engine — sentences about yourself.
 
 Sentences about yourself.
 [a table of 3 rows, read aloud]
-मी मराठी बोलतो / बोलते. means I speak Marathi.
-मी पुण्यात राहतो / राहते. means I live in Pune.
-मी काम करतो / करते. means I work.
+Marathi: मी मराठी बोलतो / बोलते. Say it: mī marāṭhī bolto / bolte. English: I speak Marathi.
+Marathi: मी पुण्यात राहतो / राहते. Say it: mī puṇyāt rāhto / rāhte. English: I live in Pune.
+Marathi: मी काम करतो / करते. Say it: mī kām karto / karte. English: I work.
 
 The engine, in one look.
 Infinitive ends in -णे (-ṇe): bolṇe, rāhṇe, karṇe.
