@@ -2,10 +2,12 @@ defmodule CodingAdventures.FSharpParser do
   @moduledoc """
   F# parser backed by the shared grammar-driven parser engine.
 
-  The parser reads `fsharp<version>.grammar` from `code/grammars/fsharp/`,
-  parses the file into a `ParserGrammar`, caches the parsed grammar in
-  `:persistent_term`, tokenizes F# source with `CodingAdventures.FSharpLexer`,
-  and delegates AST construction to `CodingAdventures.Parser.GrammarParser`.
+  The parser fetches the pre-compiled `ParserGrammar` for the requested
+  version from `CodingAdventures.FSharpParser.Grammar.V<version>` (generated
+  from `fsharp<version>.grammar` via `grammar-tools compile-grammar`),
+  caches it in `:persistent_term`, tokenizes F# source with
+  `CodingAdventures.FSharpLexer`, and delegates AST construction to
+  `CodingAdventures.Parser.GrammarParser`.
 
   ## Version Support
 
@@ -41,11 +43,44 @@ defmodule CodingAdventures.FSharpParser do
   alias CodingAdventures.FSharpLexer
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.FSharpParser.Grammar.{
+    V1_0,
+    V2_0,
+    V3_0,
+    V3_1,
+    V4_0,
+    V4_1,
+    V4_5,
+    V4_6,
+    V4_7,
+    V5,
+    V6,
+    V7,
+    V8,
+    V9,
+    V10
+  }
 
   @default_version "10"
   @valid_versions ~w(1.0 2.0 3.0 3.1 4.0 4.1 4.5 4.6 4.7 5 6 7 8 9 10)
+
+  @parser_grammars %{
+    "1.0" => &V1_0.parser_grammar/0,
+    "2.0" => &V2_0.parser_grammar/0,
+    "3.0" => &V3_0.parser_grammar/0,
+    "3.1" => &V3_1.parser_grammar/0,
+    "4.0" => &V4_0.parser_grammar/0,
+    "4.1" => &V4_1.parser_grammar/0,
+    "4.5" => &V4_5.parser_grammar/0,
+    "4.6" => &V4_6.parser_grammar/0,
+    "4.7" => &V4_7.parser_grammar/0,
+    "5" => &V5.parser_grammar/0,
+    "6" => &V6.parser_grammar/0,
+    "7" => &V7.parser_grammar/0,
+    "8" => &V8.parser_grammar/0,
+    "9" => &V9.parser_grammar/0,
+    "10" => &V10.parser_grammar/0
+  }
 
   @doc """
   Return the default F# version used when no version is specified.
@@ -129,8 +164,7 @@ defmodule CodingAdventures.FSharpParser do
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
       nil ->
-        grammar_path = Path.join([@grammars_dir, "fsharp", "fsharp#{version}.grammar"])
-        {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
+        grammar = Map.fetch!(@parser_grammars, version).()
         :persistent_term.put({__MODULE__, :grammar, version}, grammar)
         grammar
 

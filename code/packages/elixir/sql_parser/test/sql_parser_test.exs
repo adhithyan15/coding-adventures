@@ -5,13 +5,13 @@ defmodule CodingAdventures.SqlParserTest do
   alias CodingAdventures.Parser.ASTNode
 
   # ---------------------------------------------------------------------------
-  # create_sql_parser/1
+  # create_sql_parser/0
   # ---------------------------------------------------------------------------
   #
-  # The function parses sql.grammar and returns a ParserGrammar.  We verify
+  # The function returns the compiled sql.grammar ParserGrammar.  We verify
   # that the grammar contains the expected top-level rules.
 
-  describe "create_sql_parser/1" do
+  describe "create_sql_parser/0" do
     test "returns {:ok, grammar} for the default grammar" do
       {:ok, grammar} = SqlParser.create_sql_parser()
       assert grammar != nil
@@ -71,9 +71,6 @@ defmodule CodingAdventures.SqlParserTest do
       assert "expr" in names
     end
 
-    test "returns {:error, _} for a non-existent grammar path" do
-      {:error, _msg} = SqlParser.create_sql_parser("/tmp/does_not_exist_xyz/")
-    end
   end
 
   # ---------------------------------------------------------------------------

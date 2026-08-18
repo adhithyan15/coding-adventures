@@ -38,17 +38,7 @@ defmodule CodingAdventures.SqlParser do
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.SqlLexer
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
-
-  # The shared grammars directory lives four levels above this file:
-  #   lib/sql_parser.ex
-  #     ↑ lib
-  #       ↑ sql_parser
-  #         ↑ elixir
-  #           ↑ packages
-  #             ↑ code
-  #               grammars/
-  @default_grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                        |> Path.expand()
+  alias CodingAdventures.SqlParser.Grammar, as: GrammarSource
 
   @doc """
   Parse SQL source code into an AST.
@@ -75,26 +65,15 @@ defmodule CodingAdventures.SqlParser do
   end
 
   @doc """
-  Parse the sql.grammar file and return the `ParserGrammar`.
+  Return the compiled sql.grammar `ParserGrammar`.
 
   Useful for inspecting the grammar or running the parser directly.
-  Accepts an optional `grammars_dir` path for testing.
-
-  Returns `{:ok, grammar}` on success, `{:error, message}` on failure.
+  Kept as an `{:ok, grammar}` tuple for backwards compatibility with
+  existing callers.
   """
-  @spec create_sql_parser(String.t() | nil) ::
-          {:ok, ParserGrammar.t()} | {:error, String.t()}
-  def create_sql_parser(grammars_dir \\ nil) do
-    dir = grammars_dir || @default_grammars_dir
-    grammar_path = Path.join([dir, "sql", "sql.grammar"])
-
-    case File.read(grammar_path) do
-      {:ok, text} ->
-        ParserGrammar.parse(text)
-
-      {:error, reason} ->
-        {:error, "Cannot read sql.grammar: #{:file.format_error(reason)}"}
-    end
+  @spec create_sql_parser() :: {:ok, ParserGrammar.t()}
+  def create_sql_parser do
+    {:ok, GrammarSource.parser_grammar()}
   end
 
   # ---------------------------------------------------------------------------

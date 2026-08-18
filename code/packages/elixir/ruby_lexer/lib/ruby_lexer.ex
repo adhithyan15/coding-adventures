@@ -2,16 +2,14 @@ defmodule CodingAdventures.RubyLexer do
   @moduledoc """
   Ruby lexer backed by the shared grammar-driven lexer engine.
 
-  This package loads `ruby.tokens` from the repository's shared grammars
-  directory, parses it into a `TokenGrammar`, and delegates tokenization to
-  `CodingAdventures.Lexer.GrammarLexer`.
+  This package imports a pre-compiled `CodingAdventures.RubyLexer.Grammar`
+  module (generated from `ruby.tokens` via `grammar-tools compile-tokens`)
+  and delegates tokenization to `CodingAdventures.Lexer.GrammarLexer`.
   """
 
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.RubyLexer.Grammar
 
   @spec tokenize(String.t()) :: {:ok, [CodingAdventures.Lexer.Token.t()]} | {:error, String.t()}
   def tokenize(source) do
@@ -21,9 +19,7 @@ defmodule CodingAdventures.RubyLexer do
 
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "ruby", "ruby.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Grammar.token_grammar()
   end
 
   defp get_grammar do

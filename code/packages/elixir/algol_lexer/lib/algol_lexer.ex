@@ -44,8 +44,9 @@ defmodule CodingAdventures.AlgolLexer do
 
   ## How It Works
 
-  1. `create_lexer/0` reads `algol.tokens` from the shared grammars directory
-     and parses it into a `TokenGrammar` struct.
+  1. `create_lexer/0` fetches the pre-compiled `TokenGrammar` struct from
+     `CodingAdventures.AlgolLexer.Grammar.Algol60` (generated from
+     `algol60.tokens` via `grammar-tools compile-tokens`).
 
   2. `tokenize/1` passes the source and grammar to `GrammarLexer.tokenize/2`,
      which does the actual work: scanning the source character by character,
@@ -53,18 +54,17 @@ defmodule CodingAdventures.AlgolLexer do
      that match keywords, and skipping whitespace and comment blocks.
 
   3. The grammar is cached in a `persistent_term` so that repeated calls pay
-     the file-read cost only once.
+     the (now in-memory) lookup cost only once.
   """
 
+  alias CodingAdventures.AlgolLexer.Grammar.Algol60
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
 
-  # Path to the shared grammars directory, resolved at compile time relative
-  # to this source file. Walking up four levels: lib → algol_lexer → elixir
-  # → packages → code, then into grammars.
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
   @valid_versions ~w(algol60)
+  @token_grammars %{
+    "algol60" => &Algol60.token_grammar/0
+  }
 
   @doc """
   Tokenize ALGOL 60 source code.
@@ -107,7 +107,7 @@ defmodule CodingAdventures.AlgolLexer do
   end
 
   @doc """
-  Parse the `algol.tokens` grammar file and return the `TokenGrammar`.
+  Return the pre-compiled `TokenGrammar` for the given ALGOL version.
 
   Useful for inspecting the set of token definitions or for passing the
   grammar directly to `GrammarLexer.tokenize/2` in performance-sensitive
@@ -115,24 +115,20 @@ defmodule CodingAdventures.AlgolLexer do
   """
   @spec create_lexer(String.t()) :: TokenGrammar.t()
   def create_lexer(version \\ "algol60") do
-    tokens_path = resolve_tokens_path(version)
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    case Map.fetch(@token_grammars, version) do
+      {:ok, grammar_fun} ->
+        grammar_fun.()
+
+      :error ->
+        raise ArgumentError,
+              "Unknown ALGOL version #{inspect(version)}. Valid versions: #{Enum.join(@valid_versions, ", ")}"
+    end
   end
 
-  defp resolve_tokens_path(version) when version in @valid_versions do
-    Path.join([@grammars_dir, "algol", "#{version}.tokens"])
-  end
-
-  defp resolve_tokens_path(version) do
-    raise ArgumentError,
-          "Unknown ALGOL version #{inspect(version)}. Valid versions: #{Enum.join(@valid_versions, ", ")}"
-  end
-
-  # Cache the parsed grammar in a persistent_term so the file is read and
-  # parsed only once per BEAM node lifetime. persistent_term is faster than
-  # ETS for read-heavy, write-once data because the value lives directly in
-  # the process heap on read (no copy needed for immutable terms).
+  # Cache the grammar in a persistent_term so the lookup happens only once
+  # per BEAM node lifetime. persistent_term is faster than ETS for
+  # read-heavy, write-once data because the value lives directly in the
+  # process heap on read (no copy needed for immutable terms).
   defp get_grammar(version) do
     key = {__MODULE__, :grammar, version}
 

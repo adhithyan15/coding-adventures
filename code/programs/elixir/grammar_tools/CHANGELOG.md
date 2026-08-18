@@ -1,5 +1,20 @@
 # Changelog — grammar-tools (Elixir program)
 
+## [2.0.1] - 2026-08-17
+
+### Added
+- `--force` / `-f` flag on `compile-tokens`/`compile-grammar` — skip
+  grammar validation and compile anyway (mirrors the flag the
+  Ruby/Go/Rust/TypeScript ports already had). Needed because several
+  `.grammar` files in `code/grammars/` (java1.0.grammar through
+  java21.grammar — all 10 versions trip a pre-existing false-positive
+  "unreachable rule" warning on their `compilation_unit` start rule) block
+  compilation of their downstream `_grammar.ex` files without it.
+
+### Fixed
+- Corrected `mix.exs`'s `version` field, which had drifted to `1.0.0`
+  while this CHANGELOG had already reached `2.0.0`.
+
 ## [2.0.0] - 2026-03-26
 
 ### Added

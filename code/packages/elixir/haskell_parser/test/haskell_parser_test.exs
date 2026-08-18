@@ -54,4 +54,14 @@ defmodule CodingAdventures.HaskellParserTest do
       HaskellParser.create_parser(98)
     end
   end
+
+  test "every supported version compiles and parses" do
+    for version <- HaskellParser.supported_versions() do
+      grammar = HaskellParser.create_parser(version)
+      assert is_map(grammar), "#{version} grammar should be a map"
+
+      {:ok, ast} = HaskellParser.parse("x", version)
+      assert ast.rule_name == "file", "#{version} should parse a bare name"
+    end
+  end
 end

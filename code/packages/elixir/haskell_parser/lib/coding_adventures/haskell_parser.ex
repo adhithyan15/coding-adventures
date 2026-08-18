@@ -36,11 +36,20 @@ defmodule CodingAdventures.HaskellParser do
   alias CodingAdventures.HaskellLexer
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.HaskellParser.Grammar.{V1_0, V1_1, V1_2, V1_3, V1_4, V98, V2010}
 
   @default_version "2010"
   @valid_versions ~w(1.0 1.1 1.2 1.3 1.4 98 2010)
+
+  @parser_grammars %{
+    "1.0" => &V1_0.parser_grammar/0,
+    "1.1" => &V1_1.parser_grammar/0,
+    "1.2" => &V1_2.parser_grammar/0,
+    "1.3" => &V1_3.parser_grammar/0,
+    "1.4" => &V1_4.parser_grammar/0,
+    "98" => &V98.parser_grammar/0,
+    "2010" => &V2010.parser_grammar/0
+  }
 
   @doc """
   Return the default Haskell version used when no version is specified.
@@ -150,8 +159,7 @@ defmodule CodingAdventures.HaskellParser do
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
       nil ->
-        grammar_path = Path.join([@grammars_dir, "haskell", "haskell#{version}.grammar"])
-        {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
+        grammar = Map.fetch!(@parser_grammars, version).()
         :persistent_term.put({__MODULE__, :grammar, version}, grammar)
         grammar
 

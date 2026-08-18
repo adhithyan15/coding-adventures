@@ -169,9 +169,10 @@ defmodule CodingAdventures.DartmouthBasicLexer do
 
   ## How It Works
 
-  1. `create_lexer/0` reads `dartmouth_basic.tokens` from the shared grammars
-     directory and parses it into a `TokenGrammar` struct — a data structure
-     that holds all the regex/literal patterns in priority order.
+  1. `create_lexer/0` fetches the pre-compiled `dartmouth_basic.tokens` grammar
+     from `CodingAdventures.DartmouthBasicLexer.Grammar.token_grammar/0` — a
+     `TokenGrammar` struct that holds all the regex/literal patterns in
+     priority order, generated ahead of time from the `.tokens` source file.
 
   2. `tokenize/1` passes the source and grammar to `GrammarLexer.tokenize/3`,
      which scans the source character by character, matching the highest-priority
@@ -179,43 +180,13 @@ defmodule CodingAdventures.DartmouthBasicLexer do
      `relabel_line_numbers/1` then `suppress_rem_content/1`.
 
   3. The grammar is cached in `:persistent_term` (a BEAM-level key-value store
-     for read-heavy immutable data). The first call pays the file-read cost;
+     for read-heavy immutable data). The first call builds the struct;
      every subsequent call finds the cached grammar in O(1) with zero copying.
-
-  ## Grammar File Location
-
-  The grammar lives at `code/grammars/dartmouth_basic.tokens`, five directories
-  up from this source file (`lib/coding_adventures/`) — one more than a module
-  at `lib/` would need, because this file is in a subdirectory.
   """
 
+  alias CodingAdventures.DartmouthBasicLexer.Grammar, as: GrammarSource
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  # -------------------------------------------------------------------------
-  # Grammar path resolution
-  # -------------------------------------------------------------------------
-  #
-  # __DIR__ is the directory of THIS source file at compile time:
-  #   .../code/packages/elixir/dartmouth_basic_lexer/lib/coding_adventures
-  #
-  # Walking up with ".." five times:
-  #   (1) lib/coding_adventures  →  lib
-  #   (2) lib                    →  dartmouth_basic_lexer
-  #   (3) dartmouth_basic_lexer  →  elixir
-  #   (4) elixir                 →  packages
-  #   (5) packages               →  code
-  #   then append "grammars"     →  code/grammars
-  #
-  # Note: this module is nested one directory deeper than modules like
-  # algol_lexer (which live at lib/algol_lexer.ex, not
-  # lib/coding_adventures/algol_lexer.ex), so we need five ".." steps
-  # instead of four.
-  #
-  # Path.expand/1 resolves all ".." components into an absolute path so that
-  # File.read! works regardless of the working directory at runtime.
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   # -------------------------------------------------------------------------
   # Public API
@@ -285,15 +256,16 @@ defmodule CodingAdventures.DartmouthBasicLexer do
   end
 
   @doc """
-  Parse the `dartmouth_basic.tokens` grammar file and return the `TokenGrammar`.
+  Return the pre-compiled `dartmouth_basic.tokens` `TokenGrammar`.
 
   The `TokenGrammar` struct holds all token definitions in priority order.
   You can inspect it to see the full set of token names, patterns, and
   keywords.
 
-  This function always reads the grammar fresh from disk — it does NOT use
-  the cached copy. Use it for introspection and testing. For tokenisation,
-  `tokenize/1` is more efficient because it reuses the cached grammar.
+  This function rebuilds the struct from the pre-compiled grammar module
+  each call — it does NOT use the cached copy. Use it for introspection
+  and testing. For tokenisation, `tokenize/1` is more efficient because
+  it reuses the cached grammar.
 
   ## Example
 
@@ -304,9 +276,7 @@ defmodule CodingAdventures.DartmouthBasicLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "dartmouth_basic", "dartmouth_basic.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    GrammarSource.token_grammar()
   end
 
   # -------------------------------------------------------------------------

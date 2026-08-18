@@ -19,11 +19,19 @@ defmodule CodingAdventures.PythonLexer do
   alias CodingAdventures.GrammarTools.TokenGrammar
   alias CodingAdventures.Lexer.GrammarLexer
 
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.PythonLexer.Grammar.{V2_7, V3_0, V3_6, V3_8, V3_10, V3_12}
 
   @default_version "3.12"
   @supported_versions ["2.7", "3.0", "3.6", "3.8", "3.10", "3.12"]
+
+  @token_grammars %{
+    "2.7" => &V2_7.token_grammar/0,
+    "3.0" => &V3_0.token_grammar/0,
+    "3.6" => &V3_6.token_grammar/0,
+    "3.8" => &V3_8.token_grammar/0,
+    "3.10" => &V3_10.token_grammar/0,
+    "3.12" => &V3_12.token_grammar/0
+  }
 
   @doc """
   The default Python version used when no version is specified.
@@ -58,18 +66,12 @@ defmodule CodingAdventures.PythonLexer do
   @spec create_lexer(String.t() | nil) :: TokenGrammar.t()
   def create_lexer(version \\ nil) do
     v = resolve_version(version)
-    tokens_path = grammar_path(v)
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Map.fetch!(@token_grammars, v).()
   end
 
   defp resolve_version(nil), do: @default_version
   defp resolve_version(""), do: @default_version
   defp resolve_version(v), do: v
-
-  defp grammar_path(version) do
-    Path.join([@grammars_dir, "python", "python#{version}.tokens"])
-  end
 
   defp get_grammar(version) do
     case :persistent_term.get({__MODULE__, :grammar, version}, nil) do

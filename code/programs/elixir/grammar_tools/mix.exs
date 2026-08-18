@@ -4,7 +4,7 @@ defmodule GrammarTools.MixProject do
   def project do
     [
       app: :grammar_tools_program,
-      version: "1.0.0",
+      version: "2.0.1",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       escript: [main_module: GrammarTools.CLI],

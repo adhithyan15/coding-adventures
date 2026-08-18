@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `LatticeLexer.create_lexer/0` now imports a pre-compiled grammar module (`CodingAdventures.LatticeLexer.Grammar`) instead of `File.read!`-ing `lattice.tokens` from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published Hex package does not ship, so `mix deps.get` + first use would raise `File.Error` (enoent).
+- Removed the `strip_errors_section/1` helper and its stale comment claiming the Elixir `TokenGrammar` parser "does not support" an `errors:` directive — `TokenGrammar.parse/1` already handles `errors:` sections directly (see `code/packages/elixir/grammar_tools/lib/grammar_tools/token_grammar.ex`). In practice `lattice.tokens` has no `errors:` section at all, so this was dead code with a misleading comment; the compiled grammar's `error_definitions` is simply `[]`.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
