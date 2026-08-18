@@ -614,6 +614,19 @@
       "tex": "chinese/book/chapters/ch09-shenme.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:079835a614667e60",
+      "lessonIds": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "tex": "chinese/book/chapters/ch10-xiexie.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

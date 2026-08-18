@@ -32,11 +32,33 @@ language, on the smallest possible vocabulary:
 The chapter deliberately teaches two characters and one greeting. The ramp is
 slow on purpose: the new machinery, not the vocabulary, is the load.
 
-## Thanks, and the speech radical *(planned)*
+## Thanks, and the speech radical *(delivered, HL-C245)*
 
-**谢谢** *xièxie*. Introduces the 讠 "speech" component and the reduplication
-that turns 谢 into an everyday thank-you, plus the neutral tone on the second
-syllable. Realises `SPINE-COURTESY-THANK`.
+**谢谢** *xièxie*. Introduces the 讠 "speech" component and the reduplication that
+turns 谢 into an everyday thank-you, plus the neutral tone on the second syllable.
+`SPINE-COURTESY-THANK` is realised: `COURTESY-THANKS` on 谢谢 and
+`COURTESY-YOUREWELCOME` on **不谢**. Only `COURTESY-THANKS-CASUAL` remains
+omitted, and it has no Mandarin realisation to claim — the taxonomy defines it as
+the Perso-Arabic alternative some Indic tracks carry.
+
+The chapter is built around one economy: **谢 is the only new character, and it
+buys both halves of the exchange.** Doubled it gives the thanks; negated with the
+不 the reader has had since 不好 it gives the reply. That is also where the track
+first asks the reader to *predict* a tone rather than be told one — 谢 is fourth
+tone, so 不 must rise, and 不谢 is *bú xiè* before anyone says it aloud.
+
+讠 is the second meaning-carrying component the track owns, after 亻, and the two
+are taught as a pair: a person on the left, or speech on the left. 身 and 寸 are
+shown inside 谢 without being taught, the same no-cost route used for 十 in 早, 儿
+in 见 and 夕 in 名.
+
+谢 is twelve strokes, the longest character in the book, and the lesson uses that
+deliberately: it is *easier* than the seven-stroke 我, because it comes apart into
+three pieces where 我 came apart into none. That is the argument for structure
+over stroke-counting, made where the reader can feel it.
+
+**Still owed:** 不客气, the commoner reply, needs 客 and 气 — both absent from the
+vendored subset.
 
 ## Yes, no, and 不 — *delivered across two chapters*
 

@@ -162,6 +162,24 @@
         "ZH-EXT-024-QUESTION-WHAT"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-009",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-025-YAN-RADICAL",
+        "ZH-EXT-026-REDUPLICATION",
+        "ZH-EXT-027-PREDICT-SANDHI"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -177,11 +195,11 @@
       "relocates": {}
     },
     "SPINE-COURTESY-THANK": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-009"
+      ],
       "omits": [
-        "COURTESY-THANKS",
-        "COURTESY-THANKS-CASUAL",
-        "COURTESY-YOUREWELCOME"
+        "COURTESY-THANKS-CASUAL"
       ],
       "relocates": {}
     },
@@ -880,6 +898,47 @@
       "lessons": [
         "ZH-C09-shenme",
         "ZH-C09-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-025-YAN-RADICAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢 that carries it, and I can name the two meaning-carrying components I now own -- 亻 for a person, 讠 for speech.",
+      "prerequisites": [
+        "ZH-EXT-024-QUESTION-WHAT"
+      ],
+      "lessons": [
+        "ZH-W10-yan",
+        "ZH-W10-xie"
+      ]
+    },
+    {
+      "id": "ZH-EXT-026-REDUPLICATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can build a word by doubling a character, as 谢 doubles into 谢谢, and I know the second copy goes neutral -- so the light syllable belongs to the position, not to the character.",
+      "prerequisites": [
+        "ZH-EXT-025-YAN-RADICAL"
+      ],
+      "lessons": [
+        "ZH-C10-xiexie"
+      ]
+    },
+    {
+      "id": "ZH-EXT-027-PREDICT-SANDHI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can predict a tone change before hearing a word said, applying the 不 rule to 不谢 from knowing only that 谢 is fourth tone.",
+      "prerequisites": [
+        "ZH-EXT-026-REDUPLICATION"
+      ],
+      "lessons": [
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
       ]
     }
   ]
