@@ -551,6 +551,50 @@ Every invocation follows the same pipeline:
 Tools must not implement bespoke approval or audit side channels. If a tool needs
 approval, it declares metadata and the runtime performs the approval flow.
 
+### What a rejected call may publish
+
+A handler returns four caller-observable things: `output`, `artifact_refs`,
+`memory_refs`, and `events`. Only `output` is validated, against the
+definition's `output_schema`.
+
+**A call that fails output validation must publish nothing the handler
+produced.** Handler events are assembled during step 7 but must not reach the
+event stream unless step 10 is reached with a passing result. Publishing them on
+the rejection path is the worst of both worlds: the runtime declares the call
+invalid and forwards the invalid call's side effects anyway, so a handler whose
+output was refused can still say whatever it likes to every event sink.
+
+The framing events the runtime emits itself — the started event and the terminal
+event — are not affected; they describe the call, not its result.
+
+### Built-in definitions are canonical
+
+A tool id in the built-in catalog names one definition. Registering a *different*
+definition under a built-in id is rejected.
+
+Without this, the schema a tool is validated against is a property of whichever
+`ToolDefinition` value reached `register_handler`, not of the tool id. Anything
+holding a registry could re-register `vault.request_direct` with
+`output_schema: None` and silently disable the output validation that the vault
+binding's V1 depends on — and nothing about the resulting registry would look
+wrong. Pinning the id to its catalog entry makes "this tool has these
+guarantees" a fact about the id.
+
+This constrains only ids the catalog claims. Tools outside it — smart-home
+device tools, host-local tools — are unaffected.
+
+### The three unvalidated fields
+
+`artifact_refs`, `memory_refs`, and `events` are passed through unchecked on the
+success path, and deliberately so: a tool that creates an artifact is supposed to
+reference it. There is no general rule making them empty.
+
+For tools that handle secrets there *is* such a rule, and because it cannot come
+from the runtime it must come from the binding. A binding whose handlers must
+not use those channels is required to enforce that at registration rather than
+by convention, so the property is checked on every call instead of asserted in a
+comment. See section 7.1 V1.
+
 ---
 
 ## Policy, Approval, and Tier Integration
