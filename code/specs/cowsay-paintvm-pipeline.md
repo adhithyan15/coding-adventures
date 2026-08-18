@@ -61,7 +61,7 @@ written. The state below was verified directly against the repository
 | kotlin     | ❌     | ✅                   | ❌               | —                                        |
 | dart       | ❌     | ✅                   | ❌               | —                                        |
 | lua        | ❌     | ❌                   | ❌               | —                                        |
-| swift      | ❌     | ❌                   | ❌               | —                                        |
+| swift      | ❌     | ✅                   | ❌               | —                                        |
 
 Notes on the issue's original matrix:
 
@@ -171,13 +171,14 @@ steps," and the general small-PR discipline in `CLAUDE.md`).
   as C#, no backend work needed); **Perl** and **Haskell** (need `glyph_run`
   added to their existing rect-only `paint-vm-ascii` packages first, then
   cowsay on top).
-- **Phase 3** — **Java, Kotlin, Dart**. These have `paint-instructions`
-  already but no `paint-vm-ascii` package at all — build one from scratch
-  implementing the full `P2D02-paint-vm-ascii.md` contract (not just rect),
-  then add cowsay.
-- **Phase 4** — **Lua, Swift**. Neither has `paint-instructions` nor
+- **Phase 3** — **Java, Kotlin, Dart, Swift**. These have `paint-instructions`
+  already (Swift's is `PaintInstructions`, following Swift's PascalCase
+  package-naming convention) but no `paint-vm-ascii` package at all — build
+  one from scratch implementing the full `P2D02-paint-vm-ascii.md` contract
+  (not just rect), then add cowsay.
+- **Phase 4** — **Lua**. Has neither `paint-instructions` nor
   `paint-vm-ascii` — both packages need to be built from scratch before
-  cowsay can land.
+  cowsay can land. The only language in this position.
 
 ---
 
