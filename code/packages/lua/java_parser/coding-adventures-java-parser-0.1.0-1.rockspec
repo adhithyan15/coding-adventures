@@ -40,5 +40,15 @@ build = {
     modules = {
         ["coding_adventures.java_parser"] =
             "src/coding_adventures/java_parser/init.lua",
+        ["coding_adventures.java_parser._grammar_1_0"] = "src/coding_adventures/java_parser/_grammar_1_0.lua",
+        ["coding_adventures.java_parser._grammar_1_1"] = "src/coding_adventures/java_parser/_grammar_1_1.lua",
+        ["coding_adventures.java_parser._grammar_1_4"] = "src/coding_adventures/java_parser/_grammar_1_4.lua",
+        ["coding_adventures.java_parser._grammar_5"] = "src/coding_adventures/java_parser/_grammar_5.lua",
+        ["coding_adventures.java_parser._grammar_7"] = "src/coding_adventures/java_parser/_grammar_7.lua",
+        ["coding_adventures.java_parser._grammar_8"] = "src/coding_adventures/java_parser/_grammar_8.lua",
+        ["coding_adventures.java_parser._grammar_10"] = "src/coding_adventures/java_parser/_grammar_10.lua",
+        ["coding_adventures.java_parser._grammar_14"] = "src/coding_adventures/java_parser/_grammar_14.lua",
+        ["coding_adventures.java_parser._grammar_17"] = "src/coding_adventures/java_parser/_grammar_17.lua",
+        ["coding_adventures.java_parser._grammar_21"] = "src/coding_adventures/java_parser/_grammar_21.lua",
     },
 }
