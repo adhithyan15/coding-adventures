@@ -158,8 +158,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -182,35 +180,16 @@ my $_keywords;     # hashref of uppercase_word => TOKEN_TYPE
 # relative to this module file.  Uses File::Spec for cross-platform
 # path construction and File::Basename::dirname to strip filename components.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/dartmouth-basic-lexer/lib/CodingAdventures/DartmouthBasicLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → dartmouth-basic-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse dartmouth_basic.tokens, caching the result.
+# Load the compiled dartmouth_basic.tokens grammar, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'dartmouth_basic', 'dartmouth_basic.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::DartmouthBasicLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::DartmouthBasicLexer: failed to parse dartmouth_basic.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
+    require CodingAdventures::DartmouthBasicLexer::_Grammar;
+    $_grammar = CodingAdventures::DartmouthBasicLexer::_Grammar::token_grammar();
     return $_grammar;
 }
 

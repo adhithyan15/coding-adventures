@@ -1,5 +1,16 @@
 # Changelog — CodingAdventures::ExcelLexer
 
+## 0.02 — 2026-08-17
+
+### Changed
+- Grammar is now loaded from the compiled `CodingAdventures::ExcelLexer::_Grammar`
+  module instead of reading and parsing `excel.tokens` off disk at runtime. A
+  published CPAN distribution would not include the monorepo's
+  `code/grammars/` tree, so the old path-climbing `open()` would fail after
+  install. The compiled module is generated via `grammar-tools
+  compile-tokens` and checked into git. Dropped the now-unused
+  `File::Basename`/`File::Spec` dependencies.
+
 ## 0.01 — 2026-03-29
 
 ### Added

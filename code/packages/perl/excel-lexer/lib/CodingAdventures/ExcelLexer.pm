@@ -91,8 +91,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -113,35 +111,16 @@ my $_keyword_map;  # hashref mapping lowercased keyword → promoted token type
 # Return the absolute path to the shared `grammars/` directory in the
 # monorepo, computed relative to this module's file path.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/excel-lexer/lib/CodingAdventures/ExcelLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels to reach code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `excel.tokens`, caching the TokenGrammar object.
+# Load the compiled `excel.tokens` grammar, caching the TokenGrammar object.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'excel', 'excel.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::ExcelLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::ExcelLexer: failed to parse excel.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
+    require CodingAdventures::ExcelLexer::_Grammar;
+    $_grammar = CodingAdventures::ExcelLexer::_Grammar::token_grammar();
     return $_grammar;
 }
 

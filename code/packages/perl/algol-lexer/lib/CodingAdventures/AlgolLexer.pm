@@ -122,8 +122,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -149,20 +147,15 @@ my $_grammar_version;
 # We use File::Spec for cross-platform path construction and
 # File::Basename::dirname to strip the filename component.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/algol-lexer/lib/CodingAdventures/AlgolLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → algol-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `algol.tokens`, caching the result.
+# Load the compiled `algol60.tokens` grammar, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
+#
+# There is currently only one supported ALGOL version (algol60), so there is
+# only one compiled grammar module — `_normalize_version` still validates
+# the `$version` argument so a future second version can be added the same
+# way the versioned lexers (C#, Java, ...) dispatch on version.
 
 sub _normalize_version {
     my ($version) = @_;
@@ -177,17 +170,8 @@ sub _grammar {
     $version = _normalize_version($version);
     return $_grammar if $_grammar && defined $_grammar_version && $_grammar_version eq $version;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'algol', "$version.tokens" );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::AlgolLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::AlgolLexer: failed to parse $version.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
+    require CodingAdventures::AlgolLexer::_Grammar;
+    $_grammar = CodingAdventures::AlgolLexer::_Grammar::token_grammar();
     $_grammar_version = $version;
     return $_grammar;
 }
