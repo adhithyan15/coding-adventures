@@ -67,6 +67,12 @@ impl std::error::Error for VaultDirectDeliveryError {}
 pub struct VaultDirectRequest<'a> {
     /// Identity of the agent that invoked the tool, if the host attested one.
     pub requesting_agent_id: Option<&'a str>,
+    /// User on whose behalf the request was made, if any.
+    ///
+    /// Carried separately from the agent because one vault instance may serve
+    /// several users; without it an adapter cannot tell *whose* session asked
+    /// for a delivery, only which agent process did.
+    pub requesting_user_id: Option<&'a str>,
     /// Session the request arrived on, if any.
     pub session_id: Option<&'a str>,
     /// Name of the secret being moved.
@@ -304,6 +310,7 @@ mod tests {
     ) -> VaultDirectRequest<'a> {
         VaultDirectRequest {
             requesting_agent_id: Some("agent:test"),
+            requesting_user_id: Some("user:test"),
             session_id: Some("session:test"),
             secret_name,
             consumer_agent_id,

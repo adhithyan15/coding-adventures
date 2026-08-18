@@ -71,6 +71,23 @@ the D18 vault *runtime*: the two tools were catalogued but had no handlers, so
   schema validator reads. Taking the last would let a caller show one value to
   validation and a different one to the vault.
 
+- `MAX_AGENT_LEASE_TTL_MS` (15 minutes) caps the TTL an *agent* may request.
+  The lease layer permits 90 days and bounds its table at 4096 rows; together
+  those are a squat — fill the shared table at the maximum TTL and every other
+  consumer of that manager, trusted host paths included, is locked out for a
+  quarter. Capping the agent-facing TTL well under the sweep horizon makes the
+  attack self-healing rather than durable.
+- Repeated argument keys are rejected rather than resolved. `JsonValue::Object`
+  preserves duplicates and the schema validator checks every occurrence, so
+  nothing type-invalid slips past — but the schema constrains types, not values.
+  Since D18D V4 puts per-call authorization in the policy engine, a policy
+  parsing arguments with map or last-wins semantics would authorize one name
+  while the handler fetched another, both components individually correct.
+  Rejecting removes the category rather than betting on two parsers agreeing.
+- `VaultDirectRequest` carries `requesting_user_id` as well as the agent, since
+  one vault instance may serve several users and an adapter otherwise cannot
+  tell whose session asked.
+
 ### Known gaps (documented, not fixed here)
 
 - There is no per-secret policy. `privilege_tier`, `allowed_agents`, and

@@ -15,12 +15,12 @@ use chief_of_staff_host_runtime::{
     HostProfile, HostRuntimeError, OrchestratorProfile, OrchestratorProfileRuntime,
 };
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolErrorKind,
-    ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
+    builtin_tool_definition, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
+    ToolErrorKind, ToolExecutionTrace, ToolHandlerOutput, ToolInvocationRequest,
 };
 use chief_of_staff_vault_dispatch::{
-    errors, VaultToolBridge, MAX_SECRET_NAME_BYTES, VAULT_REQUEST_DIRECT_TOOL_ID,
-    VAULT_REQUEST_LEASE_TOOL_ID,
+    errors, VaultToolBridge, MAX_AGENT_LEASE_TTL_MS, MAX_SECRET_NAME_BYTES,
+    VAULT_REQUEST_DIRECT_TOOL_ID, VAULT_REQUEST_LEASE_TOOL_ID,
 };
 use chief_of_staff_vault_runtime::{
     ChiefVaultRuntime, VaultDirectDelivery, VaultDirectDeliveryError, VaultDirectRequest,
@@ -32,11 +32,18 @@ const SECRET_NAME: &str = "weather-api-key";
 const SECRET_BYTES: &[u8] = b"pk_live_do_not_leak_me_0123456789";
 
 /// An owned snapshot of one `VaultDirectRequest`, as the adapter saw it:
-/// `(requesting_agent_id, session_id, secret_name, consumer_agent_id)`.
+/// `(requesting_agent_id, requesting_user_id, session_id, secret_name,
+/// consumer_agent_id)`.
 ///
 /// Owned rather than borrowed because the descriptor is recorded and outlives
 /// the call that produced it.
-type SeenRequest = (Option<String>, Option<String>, String, String);
+type SeenRequest = (
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    String,
+    String,
+);
 
 // ===========================================================================
 // Fixtures
@@ -100,6 +107,7 @@ impl VaultDirectDelivery for RecordingDelivery {
         // a handler that forwarded context on the happy path alone.
         self.descriptors.lock().expect("descriptors mutex").push((
             request.requesting_agent_id.map(str::to_string),
+            request.requesting_user_id.map(str::to_string),
             request.session_id.map(str::to_string),
             request.secret_name.to_string(),
             request.consumer_agent_id.to_string(),
@@ -285,6 +293,7 @@ fn the_adapter_learns_who_asked_and_what_for() {
         delivery.descriptors(),
         vec![(
             Some("agent:weather".to_string()),
+            Some("user:test".to_string()),
             Some("session-vault".to_string()),
             SECRET_NAME.to_string(),
             "agent:printer".to_string(),
@@ -305,8 +314,8 @@ fn a_refusing_adapter_still_received_the_facts_it_refused_on() {
     assert!(!trace.result.ok, "{trace:?}");
     let descriptors = delivery.descriptors();
     assert_eq!(descriptors.len(), 1);
-    assert_eq!(descriptors[0].2, SECRET_NAME);
-    assert_eq!(descriptors[0].3, "agent:printer");
+    assert_eq!(descriptors[0].3, SECRET_NAME);
+    assert_eq!(descriptors[0].4, "agent:printer");
     assert!(
         delivery.deliveries().is_empty(),
         "a refused delivery must not hand over the payload"
@@ -346,16 +355,20 @@ fn neither_handler_uses_the_unvalidated_side_channels() {
             "{tool_id} must not emit memory refs: {trace:?}"
         );
 
-        // The runtime frames every call with its own started/terminal events.
-        // What must be empty is the handler's own contribution, so assert on
-        // the payloads rather than on the count.
-        for event in &trace.events {
-            let rendered = format!("{event:?}");
-            assert!(
-                !rendered.contains(SECRET_NAME),
-                "{tool_id} emitted an event naming the secret: {rendered}"
-            );
-        }
+        // The runtime frames every call with exactly two events of its own —
+        // Started and a terminal one — so "the handler contributed nothing" is
+        // expressible as a count, and that is the assertion worth making.
+        //
+        // Scanning payloads for the secret instead would be too weak: an event
+        // carrying the `vault_ref` (a live bearer capability, per D18D 7.1) or
+        // any other derived value contains neither the secret bytes nor the
+        // secret's name, so it would sail through while the docs claim a test
+        // pins this channel.
+        assert_eq!(
+            trace.events.len(),
+            2,
+            "{tool_id} must contribute no events of its own: {trace:?}"
+        );
         assert_no_secret_escaped(&trace);
     }
 }
@@ -720,21 +733,53 @@ fn the_direct_handler_rejects_every_malformed_argument_shape() {
 }
 
 #[test]
-fn a_duplicated_argument_key_resolves_to_the_first_occurrence() {
-    // `JsonValue::Object` preserves duplicates. The schema validator reads the
-    // first, so the handler must too — otherwise a caller could show one value
-    // to validation and a different one to the vault.
-    let arguments = object(vec![
-        ("secret_name", string(SECRET_NAME)),
-        ("secret_name", string("absent")),
-        ("ttl_ms", integer(60_000)),
-    ]);
+fn a_duplicated_argument_key_is_rejected_rather_than_resolved() {
+    // `JsonValue::Object` preserves duplicates, and the schema validator checks
+    // *every* occurrence against the property schema — so both names below are
+    // individually valid and nothing type-invalid slips past.
+    //
+    // The hazard is disagreement, not validation. D18D V4 puts per-call
+    // authorization in the policy engine; a policy parsing these arguments with
+    // map or last-wins semantics would authorize one name while this handler
+    // fetched the other, with both components individually correct. Rejecting
+    // removes the category instead of betting on two parsers agreeing forever.
+    for arguments in [
+        object(vec![
+            ("secret_name", string(SECRET_NAME)),
+            ("secret_name", string("absent")),
+            ("ttl_ms", integer(60_000)),
+        ]),
+        object(vec![
+            ("secret_name", string(SECRET_NAME)),
+            ("ttl_ms", integer(60_000)),
+            ("ttl_ms", integer(1)),
+        ]),
+    ] {
+        let error = lease_direct_call(arguments.clone())
+            .expect_err(&format!("a repeated key must be refused: {arguments:?}"));
+        assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
+        assert_eq!(error.message, errors::DUPLICATE_ARGUMENT);
+    }
+}
 
-    let output = lease_direct_call(arguments).expect("first occurrence names a real secret");
-    let JsonValue::Object(fields) = output.output else {
-        panic!("lease output must be an object");
-    };
-    assert_eq!(fields.len(), 2);
+#[test]
+fn an_agent_cannot_mint_a_lease_that_outlives_the_sweep_horizon() {
+    // The lease layer permits 90 days and bounds its table. Together those are
+    // a squat: fill the shared table at the maximum TTL and every other
+    // consumer — including trusted host paths — is locked out for a quarter.
+    // Capping the agent-facing TTL well under the sweep horizon makes the
+    // attack self-healing rather than durable.
+    let over = i64::try_from(MAX_AGENT_LEASE_TTL_MS).expect("ceiling fits in i64") + 1;
+    let error = lease_direct_call(lease_arguments(SECRET_NAME, over))
+        .expect_err("a TTL past the agent ceiling must be refused");
+    assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
+    assert_eq!(error.message, errors::TTL_TOO_LONG);
+
+    // And the boundary itself is allowed, so the check is a ceiling and not an
+    // off-by-one that quietly shortens every legitimate lease.
+    let at = i64::try_from(MAX_AGENT_LEASE_TTL_MS).expect("ceiling fits in i64");
+    lease_direct_call(lease_arguments(SECRET_NAME, at))
+        .expect("a TTL exactly at the ceiling is in range");
 }
 
 #[test]
@@ -852,6 +897,48 @@ fn a_rejected_registration_leaves_nothing_registered() {
         host.summary().registered_tool_count,
         0,
         "a refused pair must leave the host untouched, not half-wired"
+    );
+}
+
+#[test]
+fn the_preflight_covers_the_registry_checks_too_not_only_the_profile_ones() {
+    // A pre-flight that checks fewer things than the real call is worse than
+    // none: it turns "this will fail" into "this will succeed" immediately
+    // before it fails anyway, which is exactly the half-wired state the
+    // pre-flight exists to prevent. The profile checks are the obvious three;
+    // the registry's duplicate-id check is the one a caller trips over.
+    let mut host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID, VAULT_REQUEST_DIRECT_TOOL_ID],
+        &["vault:lease", "vault:direct"],
+    ));
+
+    // Something else already owns one of the two ids.
+    let squatted =
+        builtin_tool_definition(VAULT_REQUEST_DIRECT_TOOL_ID).expect("built-in must exist");
+    host.register_handler(squatted, |_arguments, _context| {
+        Ok(ToolHandlerOutput::new(JsonValue::Null))
+    })
+    .expect("the squatter registers first");
+
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+    let error = bridge
+        .register_into_host(&mut host)
+        .expect_err("the occupied id must be caught during pre-flight");
+    assert!(
+        matches!(
+            error,
+            HostRuntimeError::ToolApi(ToolApiError::DuplicateToolId(ref tool))
+                if tool == VAULT_REQUEST_DIRECT_TOOL_ID
+        ),
+        "expected a duplicate-id rejection, got {error:?}"
+    );
+
+    // Only the squatter is registered: the bridge added neither of its own.
+    assert_eq!(
+        host.summary().registered_tool_count,
+        1,
+        "the refused pair must not have wired request_lease on the way past"
     );
 }
 

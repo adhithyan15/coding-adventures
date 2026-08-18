@@ -96,7 +96,15 @@
 //! and `required_capabilities`. Registration failure is returned to the caller
 //! rather than swallowed, because a silently unregistered vault tool is
 //! indistinguishable — from the agent's side — from a denied one, and the
-//! operator deserves to learn about it at startup instead of at first use.
+//! operator deserves to learn about it at startup instead of at first use. The
+//! pair is registered all-or-nothing, via a pre-flight that is co-total with
+//! the registration path — profile checks *and* the registry's own.
+//!
+//! Note what this gate is not. It runs once, at registration, per host. It is
+//! not a per-call check, and the default runtime policy admits everything, so
+//! there is presently no per-call authorization at all and no per-secret
+//! policy. An agent that clears this gate can request any registered secret in
+//! either mode. See D18D section 7.2.
 //!
 //! # Example
 //!
@@ -163,6 +171,25 @@ pub const VAULT_REQUEST_DIRECT_TOOL_ID: &str = "vault.request_direct";
 /// approaching this size is a probe rather than a lookup.
 pub const MAX_SECRET_NAME_BYTES: usize = 512;
 
+/// Longest lease an *agent* may request, in milliseconds (15 minutes).
+///
+/// The lease layer permits up to 90 days and bounds the table at
+/// `MAX_OUTSTANDING_LEASES`. Those two facts together are a denial-of-service
+/// waiting to happen on the agent-facing path: an agent that asks for the
+/// maximum TTL in a loop fills the shared table with rows that cannot be swept
+/// for three months, and the trusted host paths that share the same manager are
+/// locked out for the duration. The memory bound is still worth having — it is
+/// the squat's *persistence* that turns it from noisy into effective.
+///
+/// Capping the agent-facing TTL well below the sweep horizon makes the attack
+/// self-healing: the rows expire, `issue`'s inline sweep reclaims them, and the
+/// worst an agent achieves is a fifteen-minute nuisance rather than a quarter.
+///
+/// 15 minutes is chosen against what a lease is *for*: a handle a trusted host
+/// tool redeems shortly after it is minted. A workflow that genuinely needs
+/// longer should be re-requesting, not holding.
+pub const MAX_AGENT_LEASE_TTL_MS: u64 = 15 * 60 * 1_000;
+
 /// Every static error message this crate can produce.
 ///
 /// Collected in one module so that V2 — "bounded, secret-free errors" — is
@@ -181,12 +208,16 @@ pub mod errors {
     pub const TTL_TYPE: &str = "ttl_ms must be an integer";
     /// `ttl_ms` was negative, which cannot denote a duration.
     pub const TTL_NEGATIVE: &str = "ttl_ms must not be negative";
+    /// `ttl_ms` exceeded [`super::MAX_AGENT_LEASE_TTL_MS`].
+    pub const TTL_TOO_LONG: &str = "ttl_ms exceeds the agent lease ceiling";
     /// `consumer_agent_id` was absent from the arguments object.
     pub const CONSUMER_REQUIRED: &str = "consumer_agent_id is required";
     /// `consumer_agent_id` was present but not a JSON string.
     pub const CONSUMER_TYPE: &str = "consumer_agent_id must be a string";
     /// The arguments value was not a JSON object.
     pub const ARGUMENTS_NOT_OBJECT: &str = "arguments must be an object";
+    /// The arguments object repeated a key this handler reads.
+    pub const DUPLICATE_ARGUMENT: &str = "arguments must not repeat a key";
     /// The vault runtime rejected the consumer identifier's shape.
     pub const CONSUMER_INVALID: &str = "consumer_agent_id is not a valid identifier";
     /// No secret is registered under the requested name.
@@ -377,6 +408,7 @@ impl VaultToolBridge {
                 .request_direct(
                     VaultDirectRequest {
                         requesting_agent_id: context.agent_id.as_deref(),
+                        requesting_user_id: context.user_id.as_deref(),
                         session_id: context.session_id.as_deref(),
                         secret_name: &secret_name,
                         consumer_agent_id: &consumer_agent_id,
@@ -407,37 +439,58 @@ fn object_fields(value: &JsonValue) -> Result<&[(String, JsonValue)], ToolCallEr
     }
 }
 
-/// First occurrence of `field`, or `None`.
+/// The sole occurrence of `field`, or `None`. A repeated key is an error.
 ///
 /// `JsonValue::Object` preserves duplicate keys, so `{"secret_name": "a",
-/// "secret_name": "b"}` is representable and something has to choose.
+/// "secret_name": "b"}` is representable, and every consumer of that object has
+/// to pick one. `JsonSchema::validate_value_at` iterates *every* field and
+/// checks each duplicate against the property schema, so nothing type-invalid
+/// slips past — but the schema constrains types, not values, and both names
+/// above are valid strings.
 ///
-/// The choice is safe for a stronger reason than "it matches the validator":
-/// `JsonSchema::validate_value_at` iterates *every* field and checks each
-/// duplicate against the property schema, so all occurrences must type-check
-/// and neither first nor last could smuggle an unvalidated value past it. First
-/// is taken because it is the stable, obvious reading — and because if anyone
-/// ever optimises the validator to stop at the first match, this side already
-/// agrees with it.
+/// So the danger is not validation, it is *disagreement*. D18D V4 puts per-call
+/// authorization in the policy engine. A policy that parsed these arguments
+/// with map or last-wins semantics would authorize `"a"` while this handler
+/// fetched `"b"`, and both components would be individually correct. No shipped
+/// policy engine reads arguments today, which makes this the cheapest possible
+/// moment to remove the category rather than bet on two parsers agreeing
+/// forever.
+///
+/// Rejecting is strictly safer than resolving: a duplicate key has no
+/// legitimate sender, and the caller learns immediately instead of receiving
+/// whichever value this side happened to prefer.
 fn field<'a>(value: &'a JsonValue, name: &str) -> Result<Option<&'a JsonValue>, ToolCallError> {
-    Ok(object_fields(value)?
-        .iter()
-        .find(|(key, _)| key == name)
-        .map(|(_, value)| value))
+    let mut found = None;
+    for (key, entry) in object_fields(value)? {
+        if key != name {
+            continue;
+        }
+        if found.is_some() {
+            return Err(validation_error(errors::DUPLICATE_ARGUMENT));
+        }
+        found = Some(entry);
+    }
+    Ok(found)
 }
 
 fn required_secret_name(arguments: &JsonValue) -> Result<String, ToolCallError> {
     let name = match field(arguments, "secret_name")? {
-        Some(JsonValue::String(name)) => name.clone(),
+        Some(JsonValue::String(name)) => name.as_str(),
         Some(JsonValue::Null) | None => return Err(validation_error(errors::SECRET_NAME_REQUIRED)),
         Some(_) => return Err(validation_error(errors::SECRET_NAME_TYPE)),
     };
+    // Bound before cloning, not after. The saving is only a transient copy of
+    // bytes already resident in the request, but "check, then allocate" is the
+    // habit that stays correct if the bound is ever tightened.
     if name.is_empty() || name.len() > MAX_SECRET_NAME_BYTES {
         return Err(validation_error(errors::SECRET_NAME_LENGTH));
     }
-    Ok(name)
+    Ok(name.to_string())
 }
 
+// The upper bound on this one lives in the vault runtime
+// (MAX_CONSUMER_AGENT_ID_BYTES, 4 KiB), which rejects before touching the
+// secret map, so there is nothing to re-check here.
 fn required_consumer_agent_id(arguments: &JsonValue) -> Result<String, ToolCallError> {
     match field(arguments, "consumer_agent_id")? {
         Some(JsonValue::String(value)) => Ok(value.clone()),
@@ -449,10 +502,15 @@ fn required_consumer_agent_id(arguments: &JsonValue) -> Result<String, ToolCallE
 fn required_ttl_ms(arguments: &JsonValue) -> Result<u64, ToolCallError> {
     match field(arguments, "ttl_ms")? {
         Some(JsonValue::Number(JsonNumber::Integer(value))) => {
-            // `u64::try_from` on an i64 fails exactly for the negatives, which
-            // is the whole check — the lease layer bounds the upper end with
-            // its own MAX_TTL_MS and reports that as an InvalidParameter.
-            u64::try_from(*value).map_err(|_| validation_error(errors::TTL_NEGATIVE))
+            // `u64::try_from` on an i64 fails exactly for the negatives.
+            let ttl_ms =
+                u64::try_from(*value).map_err(|_| validation_error(errors::TTL_NEGATIVE))?;
+            // The lease layer's own ceiling is 90 days, which is far too long
+            // for an agent-issued handle to squat a bounded shared table with.
+            if ttl_ms > MAX_AGENT_LEASE_TTL_MS {
+                return Err(validation_error(errors::TTL_TOO_LONG));
+            }
+            Ok(ttl_ms)
         }
         // A float is a type error rather than something to round. `ttl_ms: 1.5`
         // has no defensible interpretation and the schema declares Integer.

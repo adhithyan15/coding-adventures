@@ -772,7 +772,7 @@ invariant a reviewer trusts too far is worse than one they do not trust at all:
 
 | Field | Enforced by | Notes |
 |---|---|---|
-| `output` | the runtime | validated against `output_schema` after the handler returns |
+| `output` | the runtime — *shape* only | validated against `output_schema` after the handler returns; content is excluded only where that schema is `null` |
 | `artifact_refs` | the handler | copied to the result unchecked |
 | `memory_refs` | the handler | copied to the result unchecked |
 | `events` | the handler | assembled *before* validation; published even when validation rejects the call |

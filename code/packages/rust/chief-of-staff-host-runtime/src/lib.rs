@@ -334,6 +334,14 @@ impl HostProfileRuntime {
     /// whole set and avoid leaving a host half-wired when a later one is
     /// refused. `register_handler` calls it rather than repeating the checks, so
     /// the dry run and the real thing cannot drift apart.
+    ///
+    /// The walk must stay **co-total** with the registration path: a pre-flight
+    /// that checks fewer things than the real call is worse than none, because
+    /// it converts "this will fail" into "this will succeed" right before it
+    /// fails anyway. That is why the registry-level checks below are repeated
+    /// here and not just the profile ones — the profile checks were the obvious
+    /// three, and the registry's own two are exactly the ones a caller would be
+    /// surprised by.
     pub fn check_registration(&self, definition: &ToolDefinition) -> Result<(), HostRuntimeError> {
         if !self.profile.allows_tool(&definition.tool_id) {
             return Err(HostRuntimeError::ToolNotAllowed(definition.tool_id.clone()));
@@ -352,6 +360,21 @@ impl HostProfileRuntime {
                     capability: capability.clone(),
                 });
             }
+        }
+
+        // Mirror `InMemoryToolRegistry::register`, in its order, returning the
+        // same error variants so a caller cannot tell a refused pre-flight from
+        // a refused registration.
+        let report = definition.validate();
+        if !report.ok {
+            return Err(HostRuntimeError::ToolApi(ToolApiError::InvalidDefinition(
+                report.errors,
+            )));
+        }
+        if self.runtime.get(&definition.tool_id).is_some() {
+            return Err(HostRuntimeError::ToolApi(ToolApiError::DuplicateToolId(
+                definition.tool_id.clone(),
+            )));
         }
         Ok(())
     }
