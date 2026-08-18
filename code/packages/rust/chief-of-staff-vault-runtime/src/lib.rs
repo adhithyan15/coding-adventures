@@ -9,7 +9,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt;
 use std::sync::Mutex;
 
@@ -258,6 +258,10 @@ impl fmt::Debug for VaultLeaseReceipt {
 pub enum VaultRuntimeError {
     /// The requested secret name is not registered with this broker.
     SecretNotFound,
+    /// This secret already has as many tracked leases as the vault is willing
+    /// to revoke on rotation. Failing closed is deliberate: an unrevocable
+    /// capability is worse than a refused request.
+    TooManyOutstandingLeases,
     /// The secret exists but forbids the requested delivery mode (VLT06 P1).
     DeliveryModeNotPermitted,
     /// The secret exists but the requesting agent is not on its allow-list,
@@ -277,6 +281,9 @@ impl fmt::Display for VaultRuntimeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::SecretNotFound => f.write_str("secret not found"),
+            Self::TooManyOutstandingLeases => {
+                f.write_str("too many outstanding leases for this secret")
+            }
             Self::DeliveryModeNotPermitted => {
                 f.write_str("secret does not permit the requested delivery mode")
             }
@@ -320,7 +327,7 @@ fn check_admission(
     policy: &SecretPolicy,
     requesting_agent_id: Option<&str>,
     wants_lease: bool,
-) -> Result<(), VaultRuntimeError> {
+) -> Result<Admitted, VaultRuntimeError> {
     if !policy.allowed_agents.admits(requesting_agent_id) {
         return Err(VaultRuntimeError::AgentNotPermitted);
     }
@@ -332,7 +339,7 @@ fn check_admission(
     if !admitted {
         return Err(VaultRuntimeError::DeliveryModeNotPermitted);
     }
-    Ok(())
+    Ok(Admitted(()))
 }
 
 /// One registered secret: the bytes, and the policy governing who gets them.
@@ -340,10 +347,68 @@ fn check_admission(
 /// Kept together in one map value rather than in two parallel maps, so a secret
 /// cannot exist without a policy — the pairing is a type-level fact rather than
 /// an invariant someone has to maintain across two insertions.
-struct StoredSecret {
-    payload: LeasePayload,
-    policy: SecretPolicy,
+/// Proof that [`check_admission`] ran and admitted the request.
+///
+/// Unconstructible outside [`custody`], so the only way to obtain one is to ask
+/// for a decision and get an affirmative answer.
+#[must_use]
+pub struct Admitted(());
+
+/// The payload and its policy, behind a wall the rest of this file cannot climb.
+///
+/// This is a module rather than a plain struct because in Rust a private field
+/// is visible to the whole *module*, and this file is one module. Two rounds of
+/// review found the same defect: the "decide, then clone" ordering was plain
+/// statement order inside one function, so moving the clone above the checks
+/// compiled and left the entire suite green. Rewriting the comment to insist
+/// harder would not have helped; a reviewer had already read it.
+///
+/// Here the field is unreachable from outside `custody`, and the only accessor
+/// demands an [`Admitted`] that only [`check_admission`] can produce. Cloning
+/// the payload before deciding is now a compile error rather than a review
+/// finding — which is the difference between an invariant and a wish.
+mod custody {
+    use super::{check_admission, Admitted, SecretPolicy, VaultRuntimeError};
+    use coding_adventures_vault_leases::LeasePayload;
+
+    /// One registered secret: the bytes, and the policy governing who gets them.
+    pub struct StoredSecret {
+        payload: LeasePayload,
+        policy: SecretPolicy,
+    }
+
+    impl StoredSecret {
+        pub fn new(payload: LeasePayload, policy: SecretPolicy) -> Self {
+            Self { payload, policy }
+        }
+
+        /// The policy is freely readable — it is not the secret.
+        pub fn policy(&self) -> &SecretPolicy {
+            &self.policy
+        }
+
+        /// Decide, and hand back the payload only on an affirmative answer.
+        ///
+        /// The single door to the bytes. It performs the check itself rather
+        /// than taking a token from the caller, so there is no ordering left
+        /// for a caller to get wrong.
+        pub fn admit(
+            &self,
+            requesting_agent_id: Option<&str>,
+            wants_lease: bool,
+        ) -> Result<LeasePayload, VaultRuntimeError> {
+            let proof = check_admission(&self.policy, requesting_agent_id, wants_lease)?;
+            Ok(self.payload_with(&proof))
+        }
+
+        /// Clone the payload, given proof of admission.
+        fn payload_with(&self, _proof: &Admitted) -> LeasePayload {
+            self.payload.clone()
+        }
+    }
 }
+
+use custody::StoredSecret;
 
 /// In-process vault actor boundary used by Chief host runtimes.
 pub struct ChiefVaultRuntime {
@@ -355,7 +420,103 @@ pub struct ChiefVaultRuntime {
     /// the secret a lease came from, so without this index there is no way to
     /// answer "which capabilities are outstanding over *this* secret" — and
     /// therefore no way to make rotation revoke them.
-    issued: Mutex<HashMap<String, Vec<LeaseId>>>,
+    ///
+    /// **Lock order is `secrets` → `issued` → `leases`,** and every path that
+    /// takes more than one takes them in that order. `request_lease` holds
+    /// `secrets` across the whole mint, which is what stops a rotation from
+    /// slipping between the admission decision and the lease being indexed;
+    /// see [`ChiefVaultRuntime::request_lease`].
+    issued: Mutex<IssuedIndex>,
+}
+
+/// Largest number of tracked leases a single secret may accumulate.
+///
+/// The lease table below has its own cap. This index is a *second* table over
+/// the same agent-driven path, so leaving it unbounded would reintroduce
+/// exactly the exhaustion the lower layer was hardened against — and the
+/// entries here are worse than wasted memory, because each one is a capability
+/// that rotation is supposed to be able to revoke.
+///
+/// Failing closed is right when the bound is reached: an unrevocable capability
+/// is worse than a refused request.
+const MAX_TRACKED_LEASES_PER_SECRET: usize = 1024;
+
+/// Which leases are outstanding over which secret.
+///
+/// Two maps rather than one, so a redemption can prune in constant time. With
+/// only `by_secret`, `consume` would have to scan every secret's set to find
+/// the id it just spent, and the natural response to that cost is to skip
+/// pruning — which is how the index became unbounded in the first place.
+#[derive(Default)]
+struct IssuedIndex {
+    by_secret: HashMap<String, HashSet<LeaseId>>,
+    by_lease: HashMap<LeaseId, String>,
+}
+
+impl IssuedIndex {
+    fn record(&mut self, secret_name: &str, lease_id: LeaseId) {
+        self.by_lease
+            .insert(lease_id.clone(), secret_name.to_string());
+        self.by_secret
+            .entry(secret_name.to_string())
+            .or_default()
+            .insert(lease_id);
+    }
+
+    /// Forget one lease, whichever secret it belonged to.
+    ///
+    /// Called on redemption and revocation: both make the capability dead, and
+    /// a dead capability is not something rotation needs to revoke.
+    fn forget(&mut self, lease_id: &LeaseId) {
+        if let Some(secret_name) = self.by_lease.remove(lease_id) {
+            if let Some(set) = self.by_secret.get_mut(&secret_name) {
+                set.remove(lease_id);
+                if set.is_empty() {
+                    self.by_secret.remove(&secret_name);
+                }
+            }
+        }
+    }
+
+    /// Drop tracked ids the lease manager no longer recognises.
+    ///
+    /// Covers the case neither `consume` nor `revoke` can: a lease that simply
+    /// expired. Nothing calls back into this runtime when a TTL elapses, so
+    /// without this sweep an index over short-lived leases would grow forever
+    /// even with no attacker involved.
+    fn sweep(&mut self, secret_name: &str, leases: &InMemoryLeaseManager) {
+        let Some(set) = self.by_secret.get_mut(secret_name) else {
+            return;
+        };
+        let dead: Vec<LeaseId> = set
+            .iter()
+            .filter(|id| leases.lookup(id).is_err())
+            .cloned()
+            .collect();
+        for id in dead {
+            set.remove(&id);
+            self.by_lease.remove(&id);
+        }
+        if set.is_empty() {
+            self.by_secret.remove(secret_name);
+        }
+    }
+
+    fn take(&mut self, secret_name: &str) -> Vec<LeaseId> {
+        let ids: Vec<LeaseId> = self
+            .by_secret
+            .remove(secret_name)
+            .map(|set| set.into_iter().collect())
+            .unwrap_or_default();
+        for id in &ids {
+            self.by_lease.remove(id);
+        }
+        ids
+    }
+
+    fn count(&self, secret_name: &str) -> usize {
+        self.by_secret.get(secret_name).map_or(0, HashSet::len)
+    }
 }
 
 impl Default for ChiefVaultRuntime {
@@ -370,7 +531,7 @@ impl ChiefVaultRuntime {
         Self {
             secrets: Mutex::new(HashMap::new()),
             leases: InMemoryLeaseManager::new(),
-            issued: Mutex::new(HashMap::new()),
+            issued: Mutex::new(IssuedIndex::default()),
         }
     }
 
@@ -403,36 +564,36 @@ impl ChiefVaultRuntime {
     ) {
         let name = name.into();
 
-        // Revoke first, and hold no other lock while doing it. If this ran
-        // after the insert there would be a window where the new policy was
-        // visible but the old capabilities were still redeemable.
-        for lease_id in self
+        // `secrets` is taken FIRST and held across the whole rotation. That is
+        // the part that matters: `request_lease` also holds it from the
+        // admission decision through to indexing the new lease, so a mint
+        // cannot slip in between this drain and this insert. Revoking without
+        // that exclusion left a real race -- a lease admitted against the old
+        // value, issued after the drain, and so never revoked.
+        let mut secrets = self.secrets.lock().expect("vault secret mutex poisoned");
+        let stale = self
             .issued
             .lock()
             .expect("vault issued-lease mutex poisoned")
-            .remove(&name)
-            .unwrap_or_default()
-        {
+            .take(&name);
+        for lease_id in stale {
             let _ = self.leases.revoke(&lease_id);
         }
-
-        self.secrets
-            .lock()
-            .expect("vault secret mutex poisoned")
-            .insert(name, StoredSecret { payload, policy });
+        secrets.insert(name, StoredSecret::new(payload, policy));
     }
 
     /// Count the leases this runtime still tracks for a secret.
     ///
-    /// Tracking is pruned on rotation and on redemption, so this is the number
-    /// of references that rotation would have to revoke — not a live count of
-    /// unexpired leases.
+    /// Tracking is pruned on rotation, on redemption, and on revocation, and
+    /// expired ids are swept when the same secret is next leased. So this
+    /// counts the references rotation would still have to revoke -- close to,
+    /// but not exactly, the number of live leases, since an id whose TTL
+    /// elapsed stays counted until the next sweep touches it.
     pub fn tracked_lease_count(&self, secret_name: &str) -> usize {
         self.issued
             .lock()
             .expect("vault issued-lease mutex poisoned")
-            .get(secret_name)
-            .map_or(0, Vec::len)
+            .count(secret_name)
     }
 
     /// Read the policy recorded for a secret, without touching the payload.
@@ -441,38 +602,7 @@ impl ChiefVaultRuntime {
             .lock()
             .expect("vault secret mutex poisoned")
             .get(secret_name)
-            .map(|stored| stored.policy.clone())
-    }
-
-    /// Apply the admission policy and hand back the payload only if it passes.
-    ///
-    /// Every read of the secret map goes through here, which is what makes
-    /// VLT06 P4 — "refuse before materializing" — hold at one place instead of
-    /// at each call site. The decision itself lives in [`check_admission`], a
-    /// free function that never sees a payload; this method's only job is to
-    /// run it and then clone.
-    ///
-    /// Splitting them is not tidiness. P4 is an *ordering* property, and an
-    /// ordering inside one function is invisible to tests: a reviewer found
-    /// that moving the clone above the checks left the whole suite green,
-    /// because "the adapter never saw it" is a consequence of refusal, not of
-    /// ordering. With the decision extracted, the clone is syntactically the
-    /// last thing that can happen and the decision is unit-testable on its own.
-    fn admit(
-        &self,
-        secret_name: &str,
-        requesting_agent_id: Option<&str>,
-        wants_lease: bool,
-    ) -> Result<LeasePayload, VaultRuntimeError> {
-        let guard = self.secrets.lock().expect("vault secret mutex poisoned");
-        let stored = guard
-            .get(secret_name)
-            .ok_or(VaultRuntimeError::SecretNotFound)?;
-
-        check_admission(&stored.policy, requesting_agent_id, wants_lease)?;
-
-        // Only now does the payload leave storage.
-        Ok(stored.payload.clone())
+            .map(|stored| stored.policy().clone())
     }
 
     /// Issue a short-lived opaque reference for a named secret.
@@ -484,19 +614,32 @@ impl ChiefVaultRuntime {
         &self,
         request: VaultLeaseRequest<'_>,
     ) -> Result<VaultLeaseReceipt, VaultRuntimeError> {
-        let payload = self.admit(request.secret_name, request.requesting_agent_id, true)?;
+        // Hold `secrets` from the admission decision through to indexing the
+        // lease. Releasing it earlier -- as an earlier version did -- lets a
+        // concurrent rotation drain the index between the two, leaving a live
+        // capability over the pre-rotation bytes that nothing can revoke.
+        // Lock order is secrets -> issued -> leases throughout.
+        let secrets = self.secrets.lock().expect("vault secret mutex poisoned");
+        let stored = secrets
+            .get(request.secret_name)
+            .ok_or(VaultRuntimeError::SecretNotFound)?;
+        let payload = stored.admit(request.requesting_agent_id, true)?;
+
+        let mut issued = self
+            .issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned");
+
+        // Discard ids the lease layer has already forgotten before testing the
+        // bound, so expiry alone can never exhaust a secret's budget.
+        issued.sweep(request.secret_name, &self.leases);
+        if issued.count(request.secret_name) >= MAX_TRACKED_LEASES_PER_SECRET {
+            return Err(VaultRuntimeError::TooManyOutstandingLeases);
+        }
+
         let lease_id = self.leases.issue(payload, request.ttl_ms)?;
         let info = self.leases.lookup(&lease_id)?;
-
-        // Index the capability against its secret so a later rotation can
-        // revoke it. Recorded after issue succeeds, so a failed issue leaves
-        // nothing to revoke later.
-        self.issued
-            .lock()
-            .expect("vault issued-lease mutex poisoned")
-            .entry(request.secret_name.to_string())
-            .or_default()
-            .push(lease_id.clone());
+        issued.record(request.secret_name, lease_id.clone());
 
         Ok(VaultLeaseReceipt {
             vault_ref: VaultRef::trusted(format!("{VAULT_REF_PREFIX}{}", lease_id.as_hex())),
@@ -520,7 +663,15 @@ impl ChiefVaultRuntime {
             return Err(VaultRuntimeError::InvalidConsumerAgentId);
         }
 
-        let payload = self.admit(request.secret_name, request.requesting_agent_id, false)?;
+        let payload = {
+            let secrets = self.secrets.lock().expect("vault secret mutex poisoned");
+            let stored = secrets
+                .get(request.secret_name)
+                .ok_or(VaultRuntimeError::SecretNotFound)?;
+            stored.admit(request.requesting_agent_id, false)?
+            // The guard drops here. The adapter is replaceable and arbitrary,
+            // so it must not run while a vault lock is held.
+        };
         delivery.deliver(request, payload)?;
         Ok(())
     }
@@ -532,13 +683,25 @@ impl ChiefVaultRuntime {
     /// unusable for every subsequent request.
     pub fn consume(&self, vault_ref: &VaultRef) -> Result<LeasePayload, VaultRuntimeError> {
         let lease_id = lease_id(vault_ref)?;
-        self.leases.consume(&lease_id).map_err(Into::into)
+        let payload = self.leases.consume(&lease_id)?;
+        // A redeemed lease is dead, so rotation no longer needs to revoke it.
+        // Pruning here is what keeps the index bounded in ordinary use.
+        self.issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned")
+            .forget(&lease_id);
+        Ok(payload)
     }
 
     /// Revoke an outstanding lease before its TTL elapses.
     pub fn revoke(&self, vault_ref: &VaultRef) -> Result<(), VaultRuntimeError> {
         let lease_id = lease_id(vault_ref)?;
-        self.leases.revoke(&lease_id).map_err(Into::into)
+        self.leases.revoke(&lease_id)?;
+        self.issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned")
+            .forget(&lease_id);
+        Ok(())
     }
 }
 

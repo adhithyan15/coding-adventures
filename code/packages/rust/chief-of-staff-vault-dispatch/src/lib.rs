@@ -230,6 +230,9 @@ pub mod errors {
     pub const CONSUMER_INVALID: &str = "consumer_agent_id is not a valid identifier";
     /// No secret is registered under the requested name.
     pub const SECRET_NOT_FOUND: &str = "vault secret is not registered";
+    /// The secret already has as many tracked leases as the vault will revoke
+    /// on rotation. Transient: slots free as leases are redeemed or expire.
+    pub const TOO_MANY_LEASES: &str = "secret has too many outstanding leases";
     /// The secret forbids the requested delivery mode (VLT06 P1).
     pub const MODE_NOT_PERMITTED: &str = "secret does not permit this delivery mode";
     /// The requesting agent is not on the secret's allow-list, or brought no
@@ -553,6 +556,12 @@ fn execution_error(message: &'static str) -> ToolCallError {
 fn lease_error(error: VaultRuntimeError) -> ToolCallError {
     match error {
         VaultRuntimeError::SecretNotFound => execution_error(errors::SECRET_NOT_FOUND),
+        // Unlike the admission refusals below, this one IS worth retrying —
+        // slots free as leases are redeemed or expire — so it is a conflict
+        // rather than a denial.
+        VaultRuntimeError::TooManyOutstandingLeases => {
+            ToolCallError::new(ToolErrorKind::ToolConflict, errors::TOO_MANY_LEASES)
+        }
         // An admission refusal is the vault exercising authority the caller
         // does not have, so it is a permission denial rather than an execution
         // fault — the caller should not read it as "retry".
@@ -587,6 +596,12 @@ fn lease_error(error: VaultRuntimeError) -> ToolCallError {
 fn direct_error(error: VaultRuntimeError) -> ToolCallError {
     match error {
         VaultRuntimeError::SecretNotFound => execution_error(errors::SECRET_NOT_FOUND),
+        // Unlike the admission refusals below, this one IS worth retrying —
+        // slots free as leases are redeemed or expire — so it is a conflict
+        // rather than a denial.
+        VaultRuntimeError::TooManyOutstandingLeases => {
+            ToolCallError::new(ToolErrorKind::ToolConflict, errors::TOO_MANY_LEASES)
+        }
         // An admission refusal is the vault exercising authority the caller
         // does not have, so it is a permission denial rather than an execution
         // fault — the caller should not read it as "retry".
