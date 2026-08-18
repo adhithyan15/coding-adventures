@@ -54,8 +54,8 @@
 -- # Architecture
 --
 -- 1. **Tokenize** — call `algol_lexer.tokenize(source)` to get a token list.
--- 2. **Load grammar** — call `grammar_tools.parse_parser_grammar(content)`
---    to get a `ParserGrammar` with `.rules`.
+-- 2. **Load grammar** — require the pre-compiled `_grammar` module and call
+--    its `parser_grammar()` function to get a `ParserGrammar` with `.rules`.
 -- 3. **Parse** — construct a `GrammarParser` (from the `parser` package)
 --    and call `:parse()`.  The engine interprets the grammar rules against
 --    the token stream, producing an AST.
@@ -73,84 +73,29 @@
 --   node:is_leaf()   — true when the node wraps exactly one token
 --   node:token()     — the wrapped token (only valid when is_leaf() is true)
 --
--- # Path navigation
+-- # Grammar source
 --
--- This file lives at:
---   code/packages/lua/algol_parser/src/coding_adventures/algol_parser/init.lua
---
--- `debug.getinfo(1, "S").source` gives the absolute path (prefixed with "@").
--- Stripping the prefix and walking up 6 levels reaches `code/`, the repo root.
---
--- Directory structure from script_dir upward:
---   algol_parser/        (1)  ← inner module dir
---   coding_adventures/   (2)
---   src/                 (3)
---   algol_parser/        (4)  ← the package directory
---   lua/                 (5)
---   packages/            (6)
---   code/                → then /grammars/algol.grammar
+-- The parser grammar is no longer read from `code/grammars/` at runtime.
+-- A published LuaRocks package does not ship the monorepo's `code/grammars/`
+-- directory, so walking out of the package's own directory to find it would
+-- fail after installation. Instead, `algol60.grammar` is pre-compiled (via
+-- `grammar-tools compile-grammar`) into `_grammar.lua`, a plain Lua module
+-- that embeds the ParserGrammar as native Lua data structures. That module
+-- ships as part of this package, so `require()` always finds it.
 
-local grammar_tools = require("coding_adventures.grammar_tools")
-local algol_lexer   = require("coding_adventures.algol_lexer")
-local parser_pkg    = require("coding_adventures.parser")
+local algol_lexer = require("coding_adventures.algol_lexer")
+local parser_pkg  = require("coding_adventures.parser")
 
 local M = {}
 M.VERSION = "0.1.0"
 
 -- =========================================================================
--- Path helpers
--- =========================================================================
---
--- These helpers mirror the pattern used by algol_lexer (which navigates
--- to algol.tokens).  We do the same to reach algol.grammar.
-
---- Return the directory portion of a file path (no trailing slash).
--- Example:  "/a/b/c/init.lua"  →  "/a/b/c"
--- @param path string
--- @return string
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- Lua prepends "@" to the source path in debug info — we strip it.
--- When busted runs tests with a relative path containing ".." the
--- dirname-only approach produces a path that collapses to "." after
--- up() steps, so the grammar file cannot be found.  We resolve to an
--- absolute path via "cd <dir> && pwd" to give up() an absolute anchor.
--- @return string Absolute directory of this init.lua file.
-local function get_script_dir()
-    local info = debug.getinfo(1, "S")
-    local src  = info.source
-    if src:sub(1, 1) == "@" then
-        src = src:sub(2)
-    end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
-    src = src:gsub("\\", "/")
-    local dir = src:match("(.+)/[^/]+$") or "."
-    return dir
-end
-
---- Walk up `levels` directory levels from `path`.
--- @param path   string  Starting directory.
--- @param levels number  How many levels to climb.
--- @return string
-local function up(path, levels)
-    local result = path
-    for _ = 1, levels do
-        result = result .. "/.."
-    end
-    return result
-end
-
--- =========================================================================
 -- Grammar loading
 -- =========================================================================
 --
--- The parser grammar is loaded from disk once and cached.  Repeated calls
--- to `parse()` or `create_parser()` reuse the cached grammar, avoiding
--- repeated file I/O and repeated rule compilation.
+-- The compiled grammar module is required exactly once and its
+-- `parser_grammar()` result cached in a module-level table. Repeated calls
+-- to `parse()` or `create_parser()` reuse the cached grammar.
 
 local _grammar_cache = {}
 
@@ -164,42 +109,20 @@ local function normalize_version(version)
     return version
 end
 
---- Load and parse `algol.grammar`, with caching.
--- On the first call, opens the file, parses it with
--- `grammar_tools.parse_parser_grammar`, and caches the result.
--- @return ParserGrammar  The parsed ALGOL 60 parser grammar.
--- @error                 Raises an error if the file cannot be opened or parsed.
+--- Return the (cached) ParserGrammar for the given ALGOL version.
+-- On the first call, requires the pre-compiled `_grammar` module and
+-- invokes `parser_grammar()`.  On subsequent calls, returns the cached
+-- ParserGrammar object immediately.
+-- @return ParserGrammar  The ALGOL 60 parser grammar.
 local function get_grammar(version)
     version = normalize_version(version)
     if _grammar_cache[version] then
         return _grammar_cache[version]
     end
 
-    -- Navigate: 6 levels up from this file's directory → code/ root.
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/algol/" .. version .. ".grammar"
-
-    local f, open_err = io.open(grammar_path, "r")
-    if not f then
-        error(
-            "algol_parser: cannot open grammar file: " .. grammar_path ..
-            " (" .. (open_err or "unknown error") .. ")"
-        )
-    end
-    local content = f:read("*all")
-    f:close()
-
-    local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
-    if not grammar then
-        error(
-            "algol_parser: failed to parse " .. version .. ".grammar: " ..
-            (parse_err or "unknown error")
-        )
-    end
-
-    _grammar_cache[version] = grammar
-    return grammar
+    local compiled = require("coding_adventures.algol_parser._grammar")
+    _grammar_cache[version] = compiled.parser_grammar()
+    return _grammar_cache[version]
 end
 
 -- =========================================================================

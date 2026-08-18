@@ -48,5 +48,7 @@ build = {
     modules = {
         ["coding_adventures.algol_parser"] =
             "src/coding_adventures/algol_parser/init.lua",
+        ["coding_adventures.algol_parser._grammar"] =
+            "src/coding_adventures/algol_parser/_grammar.lua",
     },
 }
