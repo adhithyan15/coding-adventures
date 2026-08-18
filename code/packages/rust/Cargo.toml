@@ -269,6 +269,8 @@ members = [
     "wolfram-runtime",
     "wolfram-repl",
     "wolfram-to-semantic-ir",
+    "wolfram-iir-compiler",
+    "wolfram-vm",
     "derive-lexer",
     "derive-parser",
     "derive-runtime",
