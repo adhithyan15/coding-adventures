@@ -251,9 +251,17 @@ pub fn decode_record(bytes: &[u8]) -> Result<AnyRecord, VaultRecordError> {
         }
         // Unknown / app-specific / future-version: re-encode the
         // payload bytes verbatim and return as opaque.
+        //
+        // The re-encode is reported through this function's existing
+        // error channel rather than by panicking. A caller decodes
+        // bytes it did not produce, and the size ceiling its own
+        // framing enforces need not be the one the encoder enforces,
+        // so a record that decodes may still be one the encoder
+        // declines to represent. Failing closed there loses one
+        // record; panicking loses the process.
         _ => AnyRecord::Opaque {
             content_type,
-            payload_bytes: encode(&payload),
+            payload_bytes: try_encode(&payload)?,
         },
     })
 }
@@ -1769,6 +1777,31 @@ mod tests {
         let mut deepest_wrappable = vec![0x81_u8; MAX_DECODE_DEPTH - 1];
         deepest_wrappable.push(0x00);
         assert!(encode_opaque("vault/custom-app/v1", &deepest_wrappable).is_ok());
+    }
+
+    #[test]
+    fn decode_record_reports_an_unencodable_opaque_payload_instead_of_panicking() {
+        use coding_adventures_canonical_cbor::MAX_ENCODED_SIZE;
+
+        // A caller's own framing bound need not match the encoder's, so a
+        // record can arrive that decodes and yet is larger than the encoder
+        // will re-emit. The opaque arm re-encodes the payload, so that record
+        // must fail closed rather than abort the process.
+        // The envelope is larger than the checked encoder will emit, so the
+        // wire bytes are built directly, the way a peer with a larger frame
+        // budget would have written them. Canonical map order puts the
+        // equal-length key "d" before "t".
+        let mut wire = vec![0xa2, 0x61, b'd', 0x5a];
+        wire.extend_from_slice(&(MAX_ENCODED_SIZE as u32).to_be_bytes());
+        wire.extend(std::iter::repeat_n(0x5a_u8, MAX_ENCODED_SIZE));
+        wire.extend_from_slice(&[0x61, b't', 0x73]);
+        wire.extend_from_slice(b"vault/custom-app/v1");
+
+        assert!(decode(&wire).is_ok(), "the peer's record must decode");
+        assert!(matches!(
+            decode_record(&wire),
+            Err(VaultRecordError::Cbor(CborError::EncodeTooLarge))
+        ));
     }
 
     // --- Schema mismatch rejection ---

@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   deep as the decoder permits used to abort the process on the way back out.
   That was unreachable while every payload came off the wire, and becomes
   reachable as soon as a caller authors one.
+- `decode_record` now reports an opaque payload it cannot re-encode through its
+  existing `Result` too, instead of panicking. Its unknown-content-type arm
+  re-encodes the decoded payload, and a caller's own framing bound need not be
+  the encoder's, so a record from a peer with a larger frame budget could decode
+  and then abort the process on the way back out. Failing closed there loses one
+  record; panicking loses the process, including every later command against the
+  same store.
 
 ### Added
 
