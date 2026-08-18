@@ -967,6 +967,41 @@ built had a meaning half and a sound half"), so the atom was declared because it
 is exercised. Widening a declaration to clear a floor is how a floor stops
 measuring anything.
 
+## HL-C209 — the tranche-merge resolution is now a fixed procedure; make it a script
+
+Three tranches in a row have hit the SAME four-file conflict when main advanced
+mid-flight: `core/lesson-modality.json` plus the three test-pin files. The
+resolution is identical every time and is NOT "pick a side" -- both branches add
+lessons, so the correct value is the SUM, which neither side carries.
+
+**The procedure, which works:**
+
+1. `git checkout --theirs core/lesson-modality.json` then REGENERATE it
+   (`generate:modality`, `:narration`, `:books`, `:progress`) from the merged lesson
+   tree. It is a generated artifact; only the merged tree knows the answer.
+2. Clear the conflict markers keeping OUR side, which preserves the pin ledger
+   comments.
+3. Read every object pin from the regenerated `summary`, never from either branch.
+4. `R2` cannot be predicted -- extending a track makes previously unjudgeable tail
+   atoms judgeable -- so read it from the failing assertion.
+
+**Two constraints that must be built in, both learned by breaking them:**
+
+- Confine the object-pin patcher to lines past the corpus block. The synthetic
+  fixture at `modality-manifest.test.ts:359` shares field NAMES with the corpus pin
+  at line 998, and HL-C196 records the patcher oscillating between them for 60
+  rounds.
+- Target the chapter ledger by the line mentioning `ledgers.flatMap`, never the
+  first `toHaveLength` in the file -- a count-limited regex once clobbered
+  `expect(modalityFiles).toHaveLength(22)`, which counts TRACKS.
+
+**Why it should be a script rather than a remembered procedure:** on the third
+run I still got it wrong once, because my hand-written field list omitted
+`drivablePercent`, so the suite failed on a field I had simply forgotten to
+include. A checked-in helper -- alongside `repin_tests.py` -- would enumerate the
+summary keys from the manifest itself rather than from memory, and would carry the
+two constraints above as code instead of as care.
+
 ## HL-C208 — the backlog is now a function; and the head of it is SCRIPT, not vocabulary
 
 The prioritization header on this file was three days stale on the day it was read:

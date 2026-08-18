@@ -915,6 +915,30 @@ pub enum SimdOpKind {
     /// `i16x8.neg` -- lane-wise arithmetic negation over 8 `i16` lanes.
     /// UNARY, same shape as `i8x16.neg`/`i32x4.neg`/`.abs`.
     NegI16x8,
+    /// `i16x8.eq` -- lane-wise equality over 8 `i16` lanes; each lane
+    /// becomes all-1s if equal, all-0s otherwise (same boolean-mask
+    /// convention as `Eq`/`Ne`/etc. above, but for `i16x8` -- the first
+    /// comparison family for a lane width other than `i32x4`).
+    EqI16x8,
+    /// `i16x8.ne` -- lane-wise inequality, same boolean-mask convention as
+    /// [`Self::EqI16x8`].
+    NeI16x8,
+    /// `i16x8.lt_s` -- lane-wise signed less-than, boolean-mask convention.
+    LtSI16x8,
+    /// `i16x8.lt_u` -- lane-wise unsigned less-than, boolean-mask convention.
+    LtUI16x8,
+    /// `i16x8.gt_s` -- lane-wise signed greater-than, boolean-mask convention.
+    GtSI16x8,
+    /// `i16x8.gt_u` -- lane-wise unsigned greater-than, boolean-mask convention.
+    GtUI16x8,
+    /// `i16x8.le_s` -- lane-wise signed less-than-or-equal, boolean-mask convention.
+    LeSI16x8,
+    /// `i16x8.le_u` -- lane-wise unsigned less-than-or-equal, boolean-mask convention.
+    LeUI16x8,
+    /// `i16x8.ge_s` -- lane-wise signed greater-than-or-equal, boolean-mask convention.
+    GeSI16x8,
+    /// `i16x8.ge_u` -- lane-wise unsigned greater-than-or-equal, boolean-mask convention.
+    GeUI16x8,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -967,6 +991,15 @@ pub struct SimdOpInfo {
 /// sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
 /// against the already-implemented `i32x4.add` (`0xAE`)/`i8x16.add`
 /// (`0x6E`) entries (both matched exactly).
+/// `i16x8.eq`/`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/`le_u`/`ge_s`/`ge_u`
+/// widen `i16x8` further with its own comparison family, closing the gap
+/// left when `i16x8.add`/`sub`/`mul`/`neg` landed without one (unlike
+/// `i32x4`, which got arith+cmp together) -- same boolean-mask
+/// convention and signed/unsigned split as `i32x4`'s own comparison
+/// family, just at the narrower lane width. Each sub-opcode byte fetched
+/// live from `BinarySIMD.md` and cross-checked against the already-
+/// implemented `i16x8.add` (`0x8E`)/`i32x4.eq` (`0x37`) entries (both
+/// matched exactly).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1004,6 +1037,16 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i16x8.add", sub_opcode: 0x8E, kind: SimdOpKind::AddI16x8 },
     SimdOpInfo { name: "i16x8.sub", sub_opcode: 0x91, kind: SimdOpKind::SubI16x8 },
     SimdOpInfo { name: "i16x8.mul", sub_opcode: 0x95, kind: SimdOpKind::MulI16x8 },
+    SimdOpInfo { name: "i16x8.eq", sub_opcode: 0x2D, kind: SimdOpKind::EqI16x8 },
+    SimdOpInfo { name: "i16x8.ne", sub_opcode: 0x2E, kind: SimdOpKind::NeI16x8 },
+    SimdOpInfo { name: "i16x8.lt_s", sub_opcode: 0x2F, kind: SimdOpKind::LtSI16x8 },
+    SimdOpInfo { name: "i16x8.lt_u", sub_opcode: 0x30, kind: SimdOpKind::LtUI16x8 },
+    SimdOpInfo { name: "i16x8.gt_s", sub_opcode: 0x31, kind: SimdOpKind::GtSI16x8 },
+    SimdOpInfo { name: "i16x8.gt_u", sub_opcode: 0x32, kind: SimdOpKind::GtUI16x8 },
+    SimdOpInfo { name: "i16x8.le_s", sub_opcode: 0x33, kind: SimdOpKind::LeSI16x8 },
+    SimdOpInfo { name: "i16x8.le_u", sub_opcode: 0x34, kind: SimdOpKind::LeUI16x8 },
+    SimdOpInfo { name: "i16x8.ge_s", sub_opcode: 0x35, kind: SimdOpKind::GeSI16x8 },
+    SimdOpInfo { name: "i16x8.ge_u", sub_opcode: 0x36, kind: SimdOpKind::GeUI16x8 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1422,8 +1465,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_36_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 36);
+    fn simd_ops_table_has_the_expected_46_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 46);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1578,6 +1621,34 @@ mod tests {
             ("i16x8.add", 0x8E, SimdOpKind::AddI16x8),
             ("i16x8.sub", 0x91, SimdOpKind::SubI16x8),
             ("i16x8.mul", 0x95, SimdOpKind::MulI16x8),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i16x8_cmp_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i16x8.add (0x8E)/i32x4.eq (0x37) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. Closes the gap left when i16x8.add/sub/mul/neg landed
+        // without a comparison family (unlike i32x4, which got arith+cmp
+        // together) -- same boolean-mask convention and signed/unsigned
+        // split as i32x4's own comparison family, just at i16x8's width.
+        for (name, sub_opcode, kind) in [
+            ("i16x8.eq", 0x2D, SimdOpKind::EqI16x8),
+            ("i16x8.ne", 0x2E, SimdOpKind::NeI16x8),
+            ("i16x8.lt_s", 0x2F, SimdOpKind::LtSI16x8),
+            ("i16x8.lt_u", 0x30, SimdOpKind::LtUI16x8),
+            ("i16x8.gt_s", 0x31, SimdOpKind::GtSI16x8),
+            ("i16x8.gt_u", 0x32, SimdOpKind::GtUI16x8),
+            ("i16x8.le_s", 0x33, SimdOpKind::LeSI16x8),
+            ("i16x8.le_u", 0x34, SimdOpKind::LeUI16x8),
+            ("i16x8.ge_s", 0x35, SimdOpKind::GeSI16x8),
+            ("i16x8.ge_u", 0x36, SimdOpKind::GeUI16x8),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.18] - 2026-08-18 (task #133-136 — SIMD: i16x8 comparison family)
+
+### Added
+
+- `register_simd` gains a new dispatch arm for `i16x8`'s own comparison
+  family (`EqI16x8 | NeI16x8 | LtSI16x8 | LtUI16x8 | GtSI16x8 |
+  GtUI16x8 | LeSI16x8 | LeUI16x8 | GeSI16x8 | GeUI16x8`): same
+  lane-wise BINARY shape and boolean-mask convention as `i32x4`'s own
+  comparison family, but over 8 `i16` lanes instead of 4 `i32` lanes --
+  each lane becomes all-1s (`-1i16`, i.e. `0xFFFF`) if true, all-0s
+  otherwise (the mask width tracks the LANE width, not a fixed `i32`).
+  Verified with a dedicated test proving `-1 <_s 1` (true, signed) and
+  `-1 <_u 1` i.e. `0xFFFF <_u 1` (false, unsigned) actually disagree --
+  the same signed/unsigned discipline `i32x4`'s own comparison test
+  already established.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.17] - 2026-08-18 (task #129-132 — SIMD: i16x8 first primary-lane slice)
 
 ### Added

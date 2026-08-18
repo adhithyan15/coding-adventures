@@ -1456,11 +1456,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::LeS
                     | wasm_opcodes::SimdOpKind::LeU
                     | wasm_opcodes::SimdOpKind::GeS
-                    | wasm_opcodes::SimdOpKind::GeU => {
+                    | wasm_opcodes::SimdOpKind::GeU
+                    | wasm_opcodes::SimdOpKind::EqI16x8
+                    | wasm_opcodes::SimdOpKind::NeI16x8
+                    | wasm_opcodes::SimdOpKind::LtSI16x8
+                    | wasm_opcodes::SimdOpKind::LtUI16x8
+                    | wasm_opcodes::SimdOpKind::GtSI16x8
+                    | wasm_opcodes::SimdOpKind::GtUI16x8
+                    | wasm_opcodes::SimdOpKind::LeSI16x8
+                    | wasm_opcodes::SimdOpKind::LeUI16x8
+                    | wasm_opcodes::SimdOpKind::GeSI16x8
+                    | wasm_opcodes::SimdOpKind::GeUI16x8 => {
                         // WASM's SIMD comparison convention: the RESULT is
                         // still a v128 (a per-lane boolean mask), not a
                         // plain i32 -- see `SimdOpKind::Eq`'s own doc
-                        // comment in wasm-opcodes.
+                        // comment in wasm-opcodes. Same convention for
+                        // i16x8's own comparison family.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
