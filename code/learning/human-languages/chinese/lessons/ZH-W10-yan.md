@@ -55,8 +55,8 @@ the frame of 再, the leg of 见, the turn in 么.
 speaking, and it does the same job 亻 does: it tells you what the character is
 *about* before you know how to say it.
 
-This is the second component you have met that carries meaning rather than
-sound, and the pair is worth holding together:
+讠 joins 亻 as a component that carries **meaning** rather than sound, and the
+pair is worth holding together:
 
 - **亻** at the left edge → the character is about a **person**
 - **讠** at the left edge → the character is about **speech**

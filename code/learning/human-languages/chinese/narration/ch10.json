@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "One Character, Two Courtesies",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:818f64dd667b02cd",
+  "sourceHash": "fnv1a64:973a39a8619cdb55",
   "lessons": [
     {
       "id": "ZH-W10-yan",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ef2e30f8789c91d1",
+      "sourceHash": "fnv1a64:d21eaf5ba42c9141",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the second component you have met that carries meaning rather than sound, and the pair is worth holding together:"
+              "text": "讠 (yán) joins 亻 as a component that carries meaning rather than sound, and the pair is worth holding together:"
             },
             {
               "kind": "speech",
@@ -175,7 +175,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f527dce48bec18c2",
+      "sourceHash": "fnv1a64:4ede712559267b3f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a137c1b276432a5",
+      "sourceHash": "fnv1a64:9399b653410e48df",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,11 @@
             },
             {
               "kind": "speech",
-              "text": "This is new, and it is not a quirk. Mandarin builds a great many words by saying a piece twice, and doubling usually softens something — it makes an action smaller, lighter, more everyday. A single 谢 is closer to to thank, the bare idea. 谢谢 (xièxie) is the ordinary thing you say to a person who handed you something."
+              "text": "This is new, and it is not a quirk. Mandarin builds a great many words by saying a piece twice, and doubling usually softens something — it makes an action smaller, lighter, more everyday. That pattern is worth knowing; you will meet it again."
+            },
+            {
+              "kind": "speech",
+              "text": "Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean \"to thank briefly\". And 谢 is not said on its own: it lives inside words, so do not reach for a bare 谢 and expect it to work."
             }
           ]
         },
@@ -404,7 +408,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the useful lesson: the light syllable is not a property of the character, it is a property of the position. 谢 (xiè) falls on the left and goes light on the right, in the same word, on the same day."
+              "text": "That is the useful lesson: the light syllable is not a property of the character, it is a property of the word. 谢 (xiè) falls in this word's first half and goes light in its second — and you will meet 谢 (xiè) falling again, in its second position, before this chapter is out."
             },
             {
               "kind": "repeat",
@@ -495,14 +499,14 @@
       "title": "不谢 (bú xiè) — answering thanks",
       "headword": "不谢",
       "romanization": "bú xiè",
-      "gloss": "you're welcome — and the tone rule fires for the second time",
+      "gloss": "you're welcome — real and understood everywhere, though not the commonest reply, which needs characters this book cannot yet print",
       "script": "chinese",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d934a88a832a591c",
+      "sourceHash": "fnv1a64:a7e1862970bcf35d",
       "notice": null,
       "blocks": [
         {

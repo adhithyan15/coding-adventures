@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:155032e4b0f4f065",
+  "sourceHash": "fnv1a64:4acdbc83b1516a23",
   "summary": {
     "totalLessons": 3140,
     "voice": 2215,
@@ -21514,7 +21514,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ef2e30f8789c91d1",
+      "sourceHash": "fnv1a64:d21eaf5ba42c9141",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -21537,7 +21537,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f527dce48bec18c2",
+      "sourceHash": "fnv1a64:4ede712559267b3f",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -21559,7 +21559,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0a137c1b276432a5"
+      "sourceHash": "fnv1a64:9399b653410e48df"
     },
     {
       "id": "ZH-C10-buxie",
@@ -21577,7 +21577,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d934a88a832a591c"
+      "sourceHash": "fnv1a64:a7e1862970bcf35d"
     },
     {
       "id": "ZH-C10-practice",

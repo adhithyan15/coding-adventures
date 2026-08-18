@@ -12,7 +12,7 @@ gloss: twelve strokes, three pieces — and this is where counting stops matteri
 prerequisites: [ZH-W10-yan]
 sounds: [tone-4]
 roots: []
-etymology_hook: 谢 is the longest character in this book so far, and it is easier than 我 was, because it comes apart cleanly into three pieces where 我 came apart into none.
+etymology_hook: 谢 is the longest character in this book so far, and it is easier than 我 was, because it comes apart cleanly into three pieces where 我 came apart into no pieces the reader owned.
 duration:
   max_seconds: 260
 requires:

@@ -18,7 +18,7 @@ a dot at the top, pressed down and to the right.
 a short horizontal, which turns down and then finishes rising to the upper right — all one stroke, no lift.
 That second stroke does three things without stopping. You have handled worse: the frame of 再, the leg of 见, the turn in 么.
 讠 (yán) means speech. It is the squeezed form of 言, the character for words and speaking, and it does the same job 亻 does: it tells you what the character is about before you know how to say it.
-This is the second component you have met that carries meaning rather than sound, and the pair is worth holding together:
+讠 (yán) joins 亻 as a component that carries meaning rather than sound, and the pair is worth holding together:
 亻 at the left edge becomes the character is about a person.
 讠 (yán) at the left edge becomes the character is about speech.
 You will meet 讠 (yán) often. Every time you do, you can guess something true about the word before anyone tells you.
@@ -81,12 +81,13 @@ Say xiè — falling, from high to low.
 The word, taken apart.
 谢谢 xièxie — thank you.
 It is 谢 (xiè) written twice. Nothing else. You learned one character and you have the word.
-This is new, and it is not a quirk. Mandarin builds a great many words by saying a piece twice, and doubling usually softens something — it makes an action smaller, lighter, more everyday. A single 谢 is closer to to thank, the bare idea. 谢谢 (xièxie) is the ordinary thing you say to a person who handed you something.
+This is new, and it is not a quirk. Mandarin builds a great many words by saying a piece twice, and doubling usually softens something — it makes an action smaller, lighter, more everyday. That pattern is worth knowing; you will meet it again.
+Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean "to thank briefly". And 谢 is not said on its own: it lives inside words, so do not reach for a bare 谢 and expect it to work.
 
 Sounds you'll need — the second one goes light.
 xièxie, not xièxiè.
 The first 谢 (xiè) falls. The second goes neutral — short, light, no tone mark. You have seen this twice already, on 上 inside 早上 and on 字 inside 名字, and now on a syllable that is the same character as the one before it.
-That is the useful lesson: the light syllable is not a property of the character, it is a property of the position. 谢 (xiè) falls on the left and goes light on the right, in the same word, on the same day.
+That is the useful lesson: the light syllable is not a property of the character, it is a property of the word. 谢 (xiè) falls in this word's first half and goes light in its second — and you will meet 谢 (xiè) falling again, in its second position, before this chapter is out.
 [repeat that twice]
 Say it: xiè dropping, then xie small and quick behind it.
 

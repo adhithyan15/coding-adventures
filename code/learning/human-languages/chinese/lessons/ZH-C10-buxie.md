@@ -7,7 +7,7 @@ chapter: 10
 type: word
 headword: 不谢
 romanization: bú xiè
-gloss: you're welcome — and the tone rule fires for the second time
+gloss: you're welcome — real and understood everywhere, though not the commonest reply, which needs characters this book cannot yet print
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [ZH-C10-xiexie]
 sounds: [tone-4, tone-2, tone-sandhi-bu]

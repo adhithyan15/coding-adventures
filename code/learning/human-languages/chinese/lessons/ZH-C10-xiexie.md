@@ -46,9 +46,13 @@ the word.
 
 This is new, and it is not a quirk. Mandarin builds a great many words by
 **saying a piece twice**, and doubling usually softens something — it makes an
-action smaller, lighter, more everyday. A single 谢 is closer to *to thank*, the
-bare idea. **谢谢** is the ordinary thing you say to a person who handed you
-something.
+action smaller, lighter, more everyday. That pattern is worth knowing; you will
+meet it again.
+
+Two cautions about this particular word, so you do not over-apply it. **谢谢 is a
+fixed expression**, not something you assemble fresh each time — it does not mean
+"to thank briefly". And **谢 is not said on its own**: it lives inside words, so
+do not reach for a bare 谢 and expect it to work.
 
 ## Sounds you'll need — the second one goes light
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-NEUTRAL, ZH-LEX-XIEXIE] -->
@@ -60,8 +64,9 @@ have seen this twice already, on 上 inside 早上 and on 字 inside 名字, and
 syllable that is the *same character* as the one before it.
 
 That is the useful lesson: **the light syllable is not a property of the
-character, it is a property of the position.** 谢 falls on the left and goes light
-on the right, in the same word, on the same day. [REPEAT x2]
+character, it is a property of the word.** 谢 falls in this word's first half and
+goes light in its second — and you will meet 谢 falling again, in its second
+position, before this chapter is out. [REPEAT x2]
 
 Say it: *xiè* dropping, then *xie* small and quick behind it.
 

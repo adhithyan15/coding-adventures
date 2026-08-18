@@ -905,7 +905,7 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢 that carries it, and I can name the two meaning-carrying components I now own -- 亻 for a person, 讠 for speech.",
+      "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢 that carries it, and I can name 亻 for a person and 讠 for speech, two components that carry meaning rather than sound.",
       "prerequisites": [
         "ZH-EXT-024-QUESTION-WHAT"
       ],
@@ -919,7 +919,7 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "lexis",
-      "canDo": "I can build a word by doubling a character, as 谢 doubles into 谢谢, and I know the second copy goes neutral -- so the light syllable belongs to the position, not to the character.",
+      "canDo": "I can build a word by doubling a character, as 谢 doubles into 谢谢, and I know the second copy goes neutral -- so the light syllable belongs to the word, not to the character.",
       "prerequisites": [
         "ZH-EXT-025-YAN-RADICAL"
       ],
