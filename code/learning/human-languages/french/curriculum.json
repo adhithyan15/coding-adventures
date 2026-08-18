@@ -546,7 +546,6 @@
         "VERB-SEE",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-GIVE",
         "VERB-BRING",
         "VERB-GET",
@@ -559,7 +558,9 @@
         "VERB-MEET",
         "VERB-BUY"
       ],
-      "relocates": {}
+      "relocates": {
+        "VERB-CAN": "SPINE-SAY-WHAT-I-WANT"
+      }
     },
     "SPINE-NEGATE-AND-ASK": {
       "segments": [],
@@ -948,7 +949,7 @@
       "category": "grammar",
       "canDo": "I can put a plain unchanged verb after veux, peux or dois, and I know the three singular persons of each are one sound apart only in spelling.",
       "prerequisites": [
-        "FR-EXT-029-ASKING"
+        "FR-EXT-031-REQUEST-REGISTER"
       ],
       "lessons": [
         "FR-C33-pouvoir",
@@ -963,7 +964,7 @@
       "category": "pragmatics",
       "canDo": "I can choose between je veux and je voudrais by whether I am stating a want or asking for something, and I can ask someone to act by questioning their ability with tu peux or vous pouvez.",
       "prerequisites": [
-        "FR-EXT-030-MODAL-CHAIN"
+        "FR-EXT-029-ASKING"
       ],
       "lessons": [
         "FR-C33-vouloir"

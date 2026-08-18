@@ -1598,7 +1598,7 @@
     {
       "language": "french",
       "chapter": 33,
-      "sourceHash": "fnv1a64:4421c06910b7a39b",
+      "sourceHash": "fnv1a64:abb9eee8ab13a632",
       "lessonIds": [
         "FR-C33-vouloir",
         "FR-C33-pouvoir",
@@ -1609,8 +1609,8 @@
       "drivablePrefix": 4,
       "text": "french/narration/ch33.txt",
       "json": "french/narration/ch33.json",
-      "textHash": "fnv1a64:01a92b80d5c5f2d0",
-      "jsonHash": "fnv1a64:aa6417b7ba1163d8"
+      "textHash": "fnv1a64:f353fa3c1f4aee07",
+      "jsonHash": "fnv1a64:c9df5a1930adc056"
     },
     {
       "language": "german",

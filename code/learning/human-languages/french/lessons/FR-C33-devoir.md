@@ -7,10 +7,10 @@ chapter: 33
 type: word
 headword: devoir
 gloss: "must — the third of the set, and the one with a debt inside it"
-concept_tag: FR-LEX-DEVOIR
+concept_tag: FR-VERB-DEVOIR
 prerequisites: [FR-C33-pouvoir]
 sounds: []
-roots: [latin-debere]
+roots: [debere-latin]
 etymology_hook: "devoir still carries the Latin debere, 'to owe', which is why the same French word means both must and owe -- and why English debt is its cousin."
 duration:
   max_seconds: 240
@@ -48,24 +48,29 @@ the point worth carrying away: in the French present singular, the three persons
 are routinely one sound, and the pronoun is what tells them apart. This is not a
 quirk of these three words.
 
+The exceptions are the three verbs you learned earliest, and they are exceptions
+because they are used constantly: *suis / es / est*, *ai / as / a*, *vais / vas /
+va*. Everywhere else, expect one sound.
+
 A plain verb follows, exactly as after *peux*:
 
 - **Je dois partir.** — I must leave.
-- **Tu dois attendre.** — You must wait.
+- **Tu dois entendre.** — You must hear.
 
 ## Why it's said this way — the debt inside it
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-DEVOIR-03] -->
 
-*devoir* comes from Latin ***debere***, **to owe** — and it never stopped meaning
+*devoir* comes from Latin ***dēbēre***, **to owe** — and it never stopped meaning
 that. The same French verb still does both jobs:
 
 - **Je dois partir.** — I must leave.
 - **Je te dois dix euros.** — I owe you ten euros.
 
-One word, an obligation of time and an obligation of money, because to French
-they are the same idea: something is owed.
+One word, two obligations — and the order matters. The owing came first: the
+Latin verb meant *to owe*, and the sense of *must* grew out of it, exactly as
+English *ought* grew out of *owed*.
 
-That Latin *debere* is also where English gets **debt**, **debit** and
+That Latin *dēbēre* is also where English gets **debt**, **debit** and
 **due** — so a word you have never seen has been sitting in your own vocabulary
 all along, spelled differently and meaning the half of *devoir* that involves
 money.

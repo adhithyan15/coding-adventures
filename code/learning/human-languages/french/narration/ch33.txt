@@ -20,7 +20,7 @@ Tu veux le pain? — Do you want the bread?
 
 Why it's said this way — the form to be careful with.
 Now the part a phrasebook will not tell you, and the reason this word needs a warning where parler did not.
-Je veux is blunt. Said to a waiter or a shopkeeper it lands close to English I want, which is to say it lands badly. French has a softened form built for exactly this, and it is the one you should reach for by default:
+Je veux is blunt in a request. Said to a waiter or a shopkeeper it lands close to English I want, which is to say it lands badly. It is perfectly ordinary elsewhere — je veux dire is "I mean", and je veux bien is a cheerful "gladly" — so the problem is not the word, it is the counter. French has a softened form built for exactly this, and it is the one you should reach for by default:
 je voudrais — I would like.
 Same verb, different shape. Je voudrais un café is what a French speaker actually says across a counter, and it is no harder to say than je veux.
 So learn both, and learn when each belongs. Je veux is for a want you are simply stating — to a friend, to a child, about yourself. Je voudrais is for asking anyone for anything. If you are unsure which you are doing, you are asking, and you want voudrais.
@@ -49,18 +49,21 @@ The word, taken apart.
 pouvoir — to be able, and in practice can. The singular:
 Same chant, three beats:
 je peux — tu peux — il peut.
-I can, you can, he can. The same pattern you just met: all three sound alike, and the pronoun carries the person. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically.
+I can, you can, he can. The same pattern you just met: all three sound alike, and the pronoun carries the person.
+That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically.
 What follows pouvoir is a plain, unchanged verb:
 Je peux parler français. — I can speak French.
 Tu peux aider? — Can you help?
-Nothing happens to parler or aider. They arrive in the dictionary form and stay there, which makes this one of the cheapest structures in French: every verb you already know can be put behind peux with no change at all.
+Nothing happens to parler or aider. They arrive in the dictionary form and stay there, which makes this one of the cheapest structures in French: every plain verb you know can be put behind peux with no change at all.
+One group does change, and you already own two of them. A verb that carries se keeps it, and the se matches the person: je peux m'asseoir, tu peux te lever. The verb itself is still untouched; only its little pronoun follows you.
 
 Why it's said this way — asking somebody else.
 The reason pouvoir matters early has little to do with ability.
 Asking someone to do something by telling them to do it is abrupt in French, as it is in English. What French reaches for instead is a question about ability — the same move English makes with can you:
 Tu peux fermer la porte? — Can you close the door?
-Nobody is really asking whether the other person is capable. The question is the politeness, and it is why pouvoir buys you more than a translation would suggest. Pair it with the softened form you already know and you get the version for a stranger:
-Vous pouvez fermer la porte?
+Nobody is really asking whether the other person is capable. The question is the politeness, and it is why pouvoir buys you more than a translation would suggest.
+For a stranger, soften it the same way vouloir softened into voudrais — the identical shift, on this verb:
+Pourriez-vous fermer la porte?
 
 Guided Practice.
 [your turn — say: je peux, tu peux, il peut — again, one sound between them]
@@ -86,16 +89,17 @@ The word, taken apart.
 devoir — to have to, must. The singular, and by now you can predict the shape of the problem:
 je dois — tu dois — il doit.
 I must, you must, he must. All three sound alike again. Three verbs in a row have done this, which is the point worth carrying away: in the French present singular, the three persons are routinely one sound, and the pronoun is what tells them apart. This is not a quirk of these three words.
+The exceptions are the three verbs you learned earliest, and they are exceptions because they are used constantly: suis / es / est, ai / as / a, vais / vas / va. Everywhere else, expect one sound.
 A plain verb follows, exactly as after peux:
 Je dois partir. — I must leave.
-Tu dois attendre. — You must wait.
+Tu dois entendre. — You must hear.
 
 Why it's said this way — the debt inside it.
-devoir comes from Latin debere, to owe — and it never stopped meaning that. The same French verb still does both jobs:
+devoir comes from Latin dēbēre, to owe — and it never stopped meaning that. The same French verb still does both jobs:
 Je dois partir. — I must leave.
 Je te dois dix euros. — I owe you ten euros.
-One word, an obligation of time and an obligation of money, because to French they are the same idea: something is owed.
-That Latin debere is also where English gets debt, debit and due — so a word you have never seen has been sitting in your own vocabulary all along, spelled differently and meaning the half of devoir that involves money.
+One word, two obligations — and the order matters. The owing came first: the Latin verb meant to owe, and the sense of must grew out of it, exactly as English ought grew out of owed.
+That Latin dēbēre is also where English gets debt, debit and due — so a word you have never seen has been sitting in your own vocabulary all along, spelled differently and meaning the half of devoir that involves money.
 
 Guided Practice.
 [your turn — say: je dois, tu dois, il doit]

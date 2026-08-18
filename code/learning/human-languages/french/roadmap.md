@@ -349,6 +349,33 @@ named in the `paradigmTables` ceiling: a grid would have pushed that ceiling
 past its limit, and the chant is what a reader can say aloud anyway. All four
 lessons are drivable, and the chapter is drivable end to end.
 
+## What the A1 exam inventory actually says *(recorded because the number misleads)*
+
+`npm run plan` reports **49 of 74 DELF A1 points uncovered**. Do not author
+against that number. **All 49 carry `probe: null`**, and the inventory's own
+`probeSemantics` says a null probe is *"a finding rather than a gap in the data"*
+— it means no atom is mapped, not that nothing is taught. Several are demonstrably
+taught already: the definite article (`FR-C01-le-la`), *être* (`FR-C16-etre`),
+*avoir* (`FR-C14-avoir`), the cedilla (`FR-W02-cedille`), the clock
+(`FR-C08-heure`), the weather (`FR-C21-le-temps`).
+
+Checked by headword instead, these are the **genuine** gaps — roughly twenty, not
+the three an earlier note implied:
+
+| Area | Missing |
+|---|---|
+| Determiners | indefinite *un/une/des*; partitive *du/de la*; *pas de* after negation; possessives *mon/ma/mes*; demonstratives *ce/cet/cette*; numbers past 20 |
+| Adjectives | position after the noun; the pre-posed set *grand, petit, bon, beau* |
+| Pronouns | *on*; tonic *moi/toi/lui*; **interrogative *qui/que/quoi*** |
+| Verbs | regular *-ir* (*finir*); near future *aller* + infinitive; the imperative; *il y a*; *c'est / ce sont* |
+| Negation | dropping *ne* in speech |
+| Prepositions | *à/de* and the contractions; place; countries; time |
+| Adverbs | quantity; time; place |
+
+***qui/que/quoi*** is the standout: the questions chapter taught *où, quand,
+comment, combien, pourquoi* and *quel* and skipped exactly these three, so it is a
+one-lesson patch to a chapter that just shipped.
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

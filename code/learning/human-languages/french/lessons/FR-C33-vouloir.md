@@ -6,11 +6,11 @@ sequence: 1190
 chapter: 33
 type: word
 headword: vouloir
-gloss: "to want — and the form you should almost never use"
+gloss: "to want — and why je voudrais is the form you will actually use"
 concept_tag: VERB-WANT
 prerequisites: [FR-C32-quel]
 sounds: []
-roots: [latin-velle]
+roots: [latin-volere]
 etymology_hook: "vouloir is the first verb in this book whose plain present tense is the wrong thing to say to a stranger, so the polite form has to arrive with it."
 duration:
   max_seconds: 250
@@ -63,8 +63,10 @@ Then a *want* needs something wanted, and it follows directly:
 Now the part a phrasebook will not tell you, and the reason this word needs a
 warning where *parler* did not.
 
-**Je veux is blunt.** Said to a waiter or a shopkeeper it lands close to English
-*I want*, which is to say it lands badly. French has a softened form built for
+**Je veux is blunt in a request.** Said to a waiter or a shopkeeper it lands
+close to English *I want*, which is to say it lands badly. It is perfectly
+ordinary elsewhere — *je veux dire* is "I mean", and *je veux bien* is a cheerful
+"gladly" — so the problem is not the word, it is the counter. French has a softened form built for
 exactly this, and it is the one you should reach for by default:
 
 > **je voudrais** — *I would like*

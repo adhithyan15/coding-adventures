@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Want, Can, Must",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4421c06910b7a39b",
+  "sourceHash": "fnv1a64:abb9eee8ab13a632",
   "lessons": [
     {
       "id": "FR-C33-vouloir",
@@ -12,14 +12,14 @@
       "title": "vouloir — to want",
       "headword": "vouloir",
       "romanization": "vouloir",
-      "gloss": "to want — and the form you should almost never use",
+      "gloss": "to want — and why je voudrais is the form you will actually use",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d230d8f909632e0",
+      "sourceHash": "fnv1a64:5ff8dd5065225afd",
       "notice": null,
       "blocks": [
         {
@@ -85,7 +85,7 @@
             },
             {
               "kind": "speech",
-              "text": "Je veux is blunt. Said to a waiter or a shopkeeper it lands close to English I want, which is to say it lands badly. French has a softened form built for exactly this, and it is the one you should reach for by default:"
+              "text": "Je veux is blunt in a request. Said to a waiter or a shopkeeper it lands close to English I want, which is to say it lands badly. It is perfectly ordinary elsewhere — je veux dire is \"I mean\", and je veux bien is a cheerful \"gladly\" — so the problem is not the word, it is the counter. French has a softened form built for exactly this, and it is the one you should reach for by default:"
             },
             {
               "kind": "speech",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:541a2736e6f3d8ba",
+      "sourceHash": "fnv1a64:83e40d8cbef9bb56",
       "notice": null,
       "blocks": [
         {
@@ -206,7 +206,11 @@
             },
             {
               "kind": "speech",
-              "text": "I can, you can, he can. The same pattern you just met: all three sound alike, and the pronoun carries the person. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically."
+              "text": "I can, you can, he can. The same pattern you just met: all three sound alike, and the pronoun carries the person."
+            },
+            {
+              "kind": "speech",
+              "text": "That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically."
             },
             {
               "kind": "speech",
@@ -222,7 +226,11 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing happens to parler or aider. They arrive in the dictionary form and stay there, which makes this one of the cheapest structures in French: every verb you already know can be put behind peux with no change at all."
+              "text": "Nothing happens to parler or aider. They arrive in the dictionary form and stay there, which makes this one of the cheapest structures in French: every plain verb you know can be put behind peux with no change at all."
+            },
+            {
+              "kind": "speech",
+              "text": "One group does change, and you already own two of them. A verb that carries se keeps it, and the se matches the person: je peux m'asseoir, tu peux te lever. The verb itself is still untouched; only its little pronoun follows you."
             }
           ]
         },
@@ -245,11 +253,15 @@
             },
             {
               "kind": "speech",
-              "text": "Nobody is really asking whether the other person is capable. The question is the politeness, and it is why pouvoir buys you more than a translation would suggest. Pair it with the softened form you already know and you get the version for a stranger:"
+              "text": "Nobody is really asking whether the other person is capable. The question is the politeness, and it is why pouvoir buys you more than a translation would suggest."
             },
             {
               "kind": "speech",
-              "text": "Vous pouvez fermer la porte?"
+              "text": "For a stranger, soften it the same way vouloir softened into voudrais — the identical shift, on this verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "Pourriez-vous fermer la porte?"
             }
           ]
         },
@@ -319,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0a4088389eb263a",
+      "sourceHash": "fnv1a64:9ec79d2d8196026a",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +370,10 @@
             },
             {
               "kind": "speech",
+              "text": "The exceptions are the three verbs you learned earliest, and they are exceptions because they are used constantly: suis / es / est, ai / as / a, vais / vas / va. Everywhere else, expect one sound."
+            },
+            {
+              "kind": "speech",
               "text": "A plain verb follows, exactly as after peux:"
             },
             {
@@ -366,7 +382,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tu dois attendre. — You must wait."
+              "text": "Tu dois entendre. — You must hear."
             }
           ]
         },
@@ -377,7 +393,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "devoir comes from Latin debere, to owe — and it never stopped meaning that. The same French verb still does both jobs:"
+              "text": "devoir comes from Latin dēbēre, to owe — and it never stopped meaning that. The same French verb still does both jobs:"
             },
             {
               "kind": "speech",
@@ -389,11 +405,11 @@
             },
             {
               "kind": "speech",
-              "text": "One word, an obligation of time and an obligation of money, because to French they are the same idea: something is owed."
+              "text": "One word, two obligations — and the order matters. The owing came first: the Latin verb meant to owe, and the sense of must grew out of it, exactly as English ought grew out of owed."
             },
             {
               "kind": "speech",
-              "text": "That Latin debere is also where English gets debt, debit and due — so a word you have never seen has been sitting in your own vocabulary all along, spelled differently and meaning the half of devoir that involves money."
+              "text": "That Latin dēbēre is also where English gets debt, debit and due — so a word you have never seen has been sitting in your own vocabulary all along, spelled differently and meaning the half of devoir that involves money."
             }
           ]
         },
@@ -463,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:691591e4774a89cd",
+      "sourceHash": "fnv1a64:3c0416eaf66b97ca",
       "notice": null,
       "blocks": [
         {
