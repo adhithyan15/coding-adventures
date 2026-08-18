@@ -4311,6 +4311,14 @@ mod tests {
             self.secrets.lock().unwrap().len()
         }
 
+        /// Move the advisory clock forward without reading it.
+        ///
+        /// This models wall time passing while the process is blocked on
+        /// something other than a clock call — a terminal read, for instance.
+        fn advance_clock(&self, milliseconds: u64) {
+            self.clock_ms.fetch_add(milliseconds, Ordering::Relaxed);
+        }
+
         fn secret(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
             self.secrets
                 .lock()
@@ -8083,18 +8091,37 @@ mod tests {
     /// to render, so a test can assert on the exact transcript a user would
     /// have seen. An exhausted queue reports end of input, which is how a
     /// scripted session ends without an explicit `exit`.
-    struct ScriptedTerminal {
+    struct ScriptedTerminal<'host> {
         lines: Mutex<VecDeque<String>>,
         rendered: Mutex<Vec<CliOutput>>,
         readable: bool,
+        /// Host whose clock advances while this terminal waits for input.
+        idle_host: Option<&'host TestHost>,
+        /// Milliseconds each blocked read consumes.
+        idle_ms: u64,
     }
 
-    impl ScriptedTerminal {
+    impl<'host> ScriptedTerminal<'host> {
         fn new(lines: impl IntoIterator<Item = &'static str>) -> Self {
             Self {
                 lines: Mutex::new(lines.into_iter().map(str::to_owned).collect()),
                 rendered: Mutex::new(Vec::new()),
                 readable: true,
+                idle_host: None,
+                idle_ms: 0,
+            }
+        }
+
+        /// A terminal whose user takes `idle_ms` to type each line.
+        fn idle(
+            lines: impl IntoIterator<Item = &'static str>,
+            host: &'host TestHost,
+            idle_ms: u64,
+        ) -> Self {
+            Self {
+                idle_host: Some(host),
+                idle_ms,
+                ..Self::new(lines)
             }
         }
 
@@ -8104,6 +8131,8 @@ mod tests {
                 lines: Mutex::new(VecDeque::new()),
                 rendered: Mutex::new(Vec::new()),
                 readable: false,
+                idle_host: None,
+                idle_ms: 0,
             }
         }
 
@@ -8126,10 +8155,16 @@ mod tests {
         }
     }
 
-    impl ShellTerminal for ScriptedTerminal {
+    impl ShellTerminal for ScriptedTerminal<'_> {
         fn read_command_line(&self) -> Result<Option<Zeroizing<String>>, HostError> {
             if !self.readable {
                 return Err(HostError::Unavailable);
+            }
+            // A real terminal read blocks for as long as nobody types, so the
+            // scripted one models wall time passing *inside* the read rather
+            // than only between commands.
+            if let Some(host) = self.idle_host {
+                host.advance_clock(self.idle_ms);
             }
             Ok(self.lines.lock().unwrap().pop_front().map(Zeroizing::new))
         }
@@ -8170,6 +8205,14 @@ mod tests {
             );
         }
         assert!(USAGE.contains("vault-pm [--vault NAME] shell\n"));
+        // Dispatch repeats this refusal rather than trusting classification,
+        // because a delegated `shell` would recurse over the real terminal.
+        for refused in ["init", "vault", "shell", "--vault"] {
+            assert!(shell::is_refused(refused), "{refused}");
+        }
+        for delegated in ["item", "status", "search", "conflict", "audit"] {
+            assert!(!shell::is_refused(delegated), "{delegated}");
+        }
     }
 
     #[test]
@@ -8270,6 +8313,29 @@ mod tests {
             400_000,
         );
         let terminal = ScriptedTerminal::new(["item list", "item list", "exit"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        assert_eq!(host.remaining_secrets(), 0);
+        assert_eq!(terminal.transcript(), "No items.\nNo items.\n");
+    }
+
+    #[test]
+    fn shell_reauthenticates_when_the_wait_at_the_prompt_exceeds_the_bound() {
+        let root = initialized_shell_root();
+        // The clock itself never moves when it is read; all the elapsed time
+        // happens inside the blocked terminal read, which is where an
+        // unattended session actually spends it. A bound checked only before
+        // the prompt was printed would see zero elapsed time here and hand the
+        // stale authenticator to the command an attacker typed.
+        let host = TestHost::new(
+            root.paths(),
+            [
+                b"shell session passphrase".to_vec(),
+                b"shell session passphrase".to_vec(),
+            ],
+        );
+        let terminal = ScriptedTerminal::idle(["item list", "item list", "exit"], &host, 400_000);
         let output = run_with_terminal(["shell"], &host, &terminal);
 
         assert_eq!(output.exit_code(), ExitCode::Success);

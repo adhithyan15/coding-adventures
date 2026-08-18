@@ -96,6 +96,16 @@ another.
 A session refuses to start when configuration is absent (invalid input) or when
 the named vault is not configured (not found).
 
+The binding is by **name**, and each delegated command re-resolves that name
+against configuration as it stands when the command runs. If the name-to-locator
+mapping changed mid-session, the retained authenticator would be presented to a
+different vault than the one it was collected for. No shipped command rebinds an
+existing name — `vault create` only adds new ones, and it is refused inside a
+session — so this requires an attacker who can already rewrite the configuration
+file as the same operating-system user, which VLT-PM08 §2 places outside this
+boundary. It is recorded here as a residual rather than claimed as prevented,
+because the session does not pin the resolved locator.
+
 ### 3.3 Lazy collection
 
 The authenticator is collected on the first command that actually needs to
@@ -110,7 +120,8 @@ happen:
 1. the user runs `lock`;
 2. a command returns the `locked` exit class — a rejected passphrase must not
    turn one mistake into a session that can never succeed again;
-3. the configured `auto_lock_seconds` has elapsed at a command boundary;
+3. the configured `auto_lock_seconds` has elapsed when a command is submitted,
+   or when the authenticator is handed to an unlock;
 4. the advisory clock cannot be read at a command boundary, or could not be read
    when the value was first collected, in which case it is never retained;
 5. the session ends by `exit`, `quit`, end of input, or terminal failure;
@@ -118,11 +129,21 @@ happen:
 
 ### 3.5 The idle bound is a bound, not a timer
 
-Rule 3 above is checked **at command boundaries**. A session parked at its
-prompt for an hour re-authenticates on its next command; it does not re-lock
-while nobody is typing. The value used is the existing
-`vaults.<name>.auto_lock_seconds` from VLT-PM07 configuration (default 300),
-which no host enforced before this slice.
+Rule 3 above is checked when a command **is submitted** and again when the
+authenticator **is handed out**. It is deliberately not checked only before the
+prompt is printed: the process then blocks on the terminal for as long as
+nobody types, so a value that was fresh when the prompt appeared could be
+arbitrarily stale by the time somebody — not necessarily the same somebody —
+submits a command. Measuring at submission is what makes the bound mean
+anything for an unattended terminal, which is the threat `auto_lock_seconds`
+exists to address. The second check at the point of use exists so that
+reordering the loop cannot silently reopen that gap.
+
+A session parked at its prompt for an hour therefore re-authenticates on the
+very next command it is given; it does not re-lock while nobody is typing, and
+nothing wakes up to wipe the value in the meantime. The value used is the
+existing `vaults.<name>.auto_lock_seconds` from VLT-PM07 configuration (default
+300), which no host enforced before this slice.
 
 A pre-emptive timer that locks an idle session while it waits is deliberately
 **not** delivered here. It requires either a background thread holding secret
@@ -288,9 +309,12 @@ The slice is complete only when tests prove:
    session;
 3. `lock` wipes the authenticator and the next command re-authenticates;
 4. a rejected passphrase is not retained, and the following command may succeed;
-5. the configured idle bound drops the authenticator at a command boundary;
+5. the configured idle bound drops the authenticator both when the clock
+   advances between commands and when it advances entirely inside the blocked
+   terminal read, so a stale value is never handed to a submitted command;
 6. lifecycle verbs, nested `shell`, a leading `--vault`, unterminated quotes,
-   and over-long token lists are refused without ending the session;
+   and over-long token lists are refused without ending the session, and the
+   refusal is enforced at dispatch as well as at classification;
 7. `help` and blank lines need no authentication;
 8. a session refuses to start without configuration, with an unknown vault, or
    without a readable terminal, using the closed classes;

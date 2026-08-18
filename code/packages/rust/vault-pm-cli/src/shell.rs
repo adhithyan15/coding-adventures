@@ -50,8 +50,9 @@
 //! That trade is real and is stated plainly in `VLT-PM40-cli-interactive-shell`
 //! §7: an attacker with read access to this process's memory recovers the
 //! master passphrase rather than one vault's derived keys. The mitigations are
-//! the wipe-on-drop buffer, an explicit `lock`, a command-boundary idle bound,
-//! and a fail-closed wipe whenever an authentication attempt is rejected.
+//! the wipe-on-drop buffer, an explicit `lock`, an idle bound measured when a
+//! command is submitted and again when the value is used, and a fail-closed
+//! wipe whenever an authentication attempt is rejected.
 
 use crate::{
     configured_vault, decode_config, map_host, map_local_host, CliFailure, CliHost, CliOutput,
@@ -170,10 +171,21 @@ impl ShellSession {
     /// consumes what it is given. The copy handed to the command is wiped when
     /// that command's unlock finishes; the retained original is wiped by
     /// [`Self::lock`] or by this session's drop.
+    ///
+    /// The idle bound is re-checked *here*, at the point of use, and not only
+    /// where the loop checks it. The loop's check is correct as written — it
+    /// runs after the blocking read, so it measures the time the session sat
+    /// unattended — but a check placed before that read would measure nothing
+    /// at all, since the process then waits at the prompt for as long as nobody
+    /// types. A value fresh when the prompt appeared can be arbitrarily stale
+    /// when somebody finally submits a command, and that unattended terminal is
+    /// exactly what this bound defends against. Checking again here means the
+    /// gap cannot reopen by rearranging the loop.
     pub(crate) fn authenticator(
         &self,
         host: &dyn CliHost,
     ) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        self.enforce_idle_bound(host);
         if let Some(retained) = self.retained.borrow().as_ref() {
             return Ok(Zeroizing::new(retained.as_slice().to_vec()));
         }
@@ -196,14 +208,16 @@ impl ShellSession {
 
     /// Drop the authenticator when the configured idle bound has elapsed.
     ///
-    /// This is a bound checked at command boundaries, not a pre-emptive timer.
-    /// A shell parked at its prompt for an hour re-authenticates on its next
-    /// command; it does not re-lock while nobody is typing. The pre-emptive
-    /// auto-lock that a background timer would provide is Phase 1B work
-    /// (VLT-PM00 §23 item 12) and this slice does not pretend to deliver it.
+    /// This is a bound checked when a command is submitted and again when the
+    /// authenticator is handed out, not a pre-emptive timer. A shell parked at
+    /// its prompt for an hour re-authenticates on the very next command it is
+    /// given; it does not re-lock while nobody is typing, and nothing wakes up
+    /// to wipe the value in the meantime. The pre-emptive auto-lock a
+    /// background timer would provide is Phase 1B work (VLT-PM00 §23 item 12)
+    /// and this slice does not pretend to deliver it.
     ///
     /// A clock that cannot be read fails closed: the authenticator is dropped.
-    fn enforce_idle_bound(&self, host: &dyn CliHost) {
+    pub(crate) fn enforce_idle_bound(&self, host: &dyn CliHost) {
         if self.retained.borrow().is_none() {
             return;
         }
@@ -455,10 +469,15 @@ pub(crate) fn run_shell(
         session: &session,
     };
     loop {
-        session.enforce_idle_bound(host);
+        // The bound is enforced *after* the blocking read, when the command is
+        // actually submitted, so the elapsed time measured is the time the
+        // session sat unattended rather than the time before the prompt was
+        // printed. `ShellSession::authenticator` checks it again at the point
+        // of use, so reordering this loop cannot silently reopen the gap.
         let Some(line) = terminal.read_command_line().map_err(map_host)? else {
             break;
         };
+        session.enforce_idle_bound(host);
         let output = match classify(&line) {
             ShellCommand::Blank => continue,
             ShellCommand::Exit => break,
@@ -476,6 +495,10 @@ pub(crate) fn run_shell(
 }
 
 /// The one vault a session is bound to, and the policy read from its config.
+///
+/// The VLT-PM07 codec rejects `auto_lock_seconds = 0`, so `idle_bound_ms` is
+/// always at least one second. There is no "zero means never" reading of the
+/// configuration for this host to get wrong.
 struct BoundVault {
     name: ConfigName,
     idle_bound_ms: u64,
@@ -520,12 +543,22 @@ fn bind_session_vault(
 /// passphrase, or a vault whose state moved beneath it. Keeping it would turn
 /// one mistyped passphrase into a session that can never succeed again, so the
 /// session fails closed and the next command re-authenticates.
+///
+/// The refusal check is repeated here rather than trusted from [`classify`].
+/// [`crate::run`] resolves a shell to the *real* controlling terminal, so a
+/// `shell` verb that ever reached this point would open a nested session over
+/// the same terminal, inheriting this session's authenticator and recursing
+/// without bound. That is unreachable today; the guard makes it unreachable by
+/// construction rather than by one classifier arm staying correct.
 fn dispatch(
     session_host: &SessionHost<'_>,
     session: &ShellSession,
     bound: &BoundVault,
     tokens: Vec<String>,
 ) -> CliOutput {
+    if tokens.first().is_some_and(|token| is_refused(token)) {
+        return CliOutput::failure(CliFailure::InvalidCommand);
+    }
     let mut arguments = Vec::with_capacity(tokens.len() + 2);
     arguments.push("--vault".to_owned());
     arguments.push(bound.name.as_str().to_owned());
@@ -547,15 +580,21 @@ fn classify(line: &str) -> ShellCommand {
         Some("exit" | "quit") if tokens.len() == 1 => ShellCommand::Exit,
         Some("lock") if tokens.len() == 1 => ShellCommand::Lock,
         Some("help" | "--help" | "-h") if tokens.len() == 1 => ShellCommand::Help,
-        // Vault lifecycle and vault reselection stay one-shot only. `init` and
-        // `vault create` build a *different* vault than the one this session is
-        // bound to, and a leading `--vault` would aim the retained
-        // authenticator somewhere the user never authenticated against. A
-        // nested `shell` would create a second session over the same terminal
-        // with its own retained authenticator, so it is refused too.
-        Some("init" | "vault" | "shell" | "--vault") => ShellCommand::Rejected,
+        Some(verb) if is_refused(verb) => ShellCommand::Rejected,
         Some(_) => ShellCommand::Delegated(tokens),
     }
+}
+
+/// Verbs a session refuses to delegate, checked by both classification and
+/// dispatch.
+///
+/// `init` and `vault create` build a *different* vault than the one this
+/// session is bound to. A leading `--vault` would aim the retained
+/// authenticator somewhere the user never authenticated against. A nested
+/// `shell` would open a second session over the same terminal with its own
+/// retained authenticator.
+pub(crate) fn is_refused(verb: &str) -> bool {
+    matches!(verb, "init" | "vault" | "shell" | "--vault")
 }
 
 /// Split one command line into the closed shell token grammar.

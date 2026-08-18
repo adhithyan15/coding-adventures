@@ -14,8 +14,10 @@
   its own duration, so no pinned repository head is reused and an idle prompt
   blocks no other process. `lock` wipes the authenticator, a rejected
   passphrase or an unreadable clock wipes it, the configured
-  `auto_lock_seconds` bound wipes it at a command boundary, and `exit`, `quit`,
-  or end of input ends the session. `init`, `vault`, a nested `shell`, and a
+  `auto_lock_seconds` bound wipes it when a command is submitted and again when
+  the value is handed to an unlock — never merely before the prompt was
+  printed, which would let an unattended session serve a stale authenticator to
+  whoever types next — and `exit`, `quit`, or end of input ends the session. `init`, `vault`, a nested `shell`, and a
   leading `--vault` are refused inside a session. Command lines are read from
   the controlling terminal, never from process standard input, so a redirected
   stdin can supply neither a secret nor a command.

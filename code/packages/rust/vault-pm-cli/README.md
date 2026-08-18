@@ -338,8 +338,10 @@ and die inside a single command, exactly as they do one-shot — because every
 VLT-PM05 access and mutation boundary consumes its session by value so a stale
 pinned head cannot be reused. The authenticator is collected lazily on the first
 command that needs to unlock, and is wiped by `lock`, by any `locked` exit
-class, by the configured `auto_lock_seconds` bound at a command boundary, by an
-unreadable clock, and by session end. `status` therefore still reports `locked`
+class, by the configured `auto_lock_seconds` bound — measured when a command is
+submitted, not when the prompt was printed, so an unattended session cannot hand
+a stale value to whoever types next — by an unreadable clock, and by session
+end. `status` therefore still reports `locked`
 inside a session, which is accurate: between commands the vault really is
 locked.
 
