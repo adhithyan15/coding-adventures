@@ -47,5 +47,7 @@ build = {
     modules = {
         ["coding_adventures.dartmouth_basic_parser"] =
             "src/coding_adventures/dartmouth_basic_parser/init.lua",
+        ["coding_adventures.dartmouth_basic_parser._grammar"] =
+            "src/coding_adventures/dartmouth_basic_parser/_grammar.lua",
     },
 }
