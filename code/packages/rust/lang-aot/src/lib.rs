@@ -253,6 +253,14 @@ pub enum LangAotError {
     /// 9-architecture expansion following the historical-arch
     /// backend migration pattern.
     Intel8051BackendError(String),
+    /// The Intel 8086 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `intel8086-backend` (which
+    /// already includes the failing function name and the unsupported
+    /// op/type/operand).  Ninth and **final** lane of the
+    /// 9-architecture expansion following the historical-arch backend
+    /// migration pattern.
+    Intel8086BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -317,6 +325,7 @@ impl fmt::Display for LangAotError {
             LangAotError::MipsR2000BackendError(m) => write!(f, "mips-r2000: {m}"),
             LangAotError::Z80BackendError(m) => write!(f, "z80: {m}"),
             LangAotError::Intel8051BackendError(m) => write!(f, "intel8051: {m}"),
+            LangAotError::Intel8086BackendError(m) => write!(f, "intel8086: {m}"),
         }
     }
 }
@@ -1924,6 +1933,80 @@ pub fn compile_file_to_intel8051_bin(
     }
     if bytes.is_empty() {
         bytes.push(intel8051_encoder::encode_halt());
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Intel 8086 machine code (`.bin`) on disk.
+///
+/// Like `compile_file_to_mos6502_bin`, `intel8086-backend`'s compiled
+/// function bytes are already the wire format (multi-byte immediates
+/// are little-endian *within* each instruction, but there's no fixed
+/// instruction-word width to flatten across the whole output the way
+/// `compile_file_to_arm1_bin`/`compile_file_to_mips_r2000_bin` need to)
+/// — no endianness-flattening step is needed before writing them to
+/// disk.
+///
+/// Downstream consumers:
+///
+/// * [`intel8086-simulator`](../intel8086-simulator) — load + execute
+///   (accounting for the segmented `CS:IP` addressing model —  see that
+///   crate's module doc for why that can't be flattened away).
+/// * Any external Intel 8086/8088 emulator that consumes flat byte
+///   streams.
+///
+/// The Intel 8086 (1978) is the direct architectural ancestor of every
+/// x86 CPU made today. Its cheaper 8-bit-external-bus sibling, the
+/// 8088, shipped in the original IBM PC (1981), founding the
+/// "PC-compatible" industry; the 8086's segmented memory model —
+/// `physical = segment×16 + offset` — was its defining, and later
+/// controversial, architectural choice.
+///
+/// # Errors
+///
+/// * `UnsupportedLanguage` / `FrontendError` — no Rust IIR frontend for
+///   `language`, or the frontend rejected the source.
+/// * `Intel8086BackendError` — the IIR contained an op or type the
+///   Intel 8086 backend does not yet handle (the message names the
+///   failing function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=intel8086 -o foo.bin
+/// # Then load foo.bin into intel8086-simulator
+/// ```
+pub fn compile_file_to_intel8086_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Ninth and final lane of the 9-architecture expansion: route
+    // through `aot_core` + `intel8086-backend`, same per-function-loop
+    // pattern as `compile_file_to_mos6502_bin`/`compile_file_to_arm1_bin`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = intel8086_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Intel8086BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.push(intel8086_encoder::HALT_BYTE);
     }
 
     std::fs::write(out, &bytes)?;

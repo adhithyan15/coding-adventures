@@ -1,0 +1,8 @@
+[package]
+name = "intel8086-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8086 (1978) behavioral simulator -- Rust port of code/packages/python/intel-8086-simulator (Layer 07m). Curated core subset: MOV reg16/8,imm; MOV/ADD/SUB/AND/OR/XOR/CMP reg16,reg16 (register-only ModRM); INC/DEC reg16; the genuine HLT (0xF4) halt instruction; and the segmented 20-bit physical-address model (physical = CS<<4 + IP) that every instruction fetch goes through. Built on the cpu-simulator crate for Memory. Ninth and final lane of the 9-architecture expansion."
+
+[dependencies]
+cpu-simulator = { path = "../cpu-simulator" }

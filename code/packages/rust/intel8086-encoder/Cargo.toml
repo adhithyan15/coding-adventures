@@ -1,0 +1,15 @@
+[package]
+name = "intel8086-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust Intel 8086 instruction encoder.  Re-exports the canonical encode_mov_reg_imm16/encode_hlt/... helpers from intel8086-simulator (the in-tree source of truth for the curated 8086 opcode subset) and adds the HALT_BYTE/REG_AX constants the LANG VM intel8086-backend uses to lower CIR to Intel 8086 machine code bytes.  No IR knowledge.  Ninth and final lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "intel8086_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for Intel 8086 bit-level encoding.  We re-export rather
+# than duplicate so any future opcode-table fix in the simulator
+# propagates to encoder consumers automatically.
+intel8086-simulator = { path = "../intel8086-simulator" }
