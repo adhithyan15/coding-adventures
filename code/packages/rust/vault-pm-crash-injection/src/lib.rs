@@ -553,6 +553,7 @@ mod tests {
             DurableStep::ConfigCreate,
             DurableStep::ConfigReplace,
             DurableStep::ExportArtifact,
+            DurableStep::AttachmentArtifact,
         ];
         let mut labels: Vec<&str> = steps.iter().map(|step| step.label()).collect();
         let total = labels.len();
@@ -566,6 +567,10 @@ mod tests {
         assert_eq!(DurableStep::ConfigCreate.label(), "config.create");
         assert_eq!(DurableStep::ConfigReplace.label(), "config.replace");
         assert_eq!(DurableStep::ExportArtifact.label(), "export.artifact");
+        assert_eq!(
+            DurableStep::AttachmentArtifact.label(),
+            "attachment.artifact"
+        );
         assert_eq!(Phase::Before.to_string(), "before");
         assert_eq!(Phase::After.to_string(), "after");
         assert!(Phase::Before < Phase::After);
