@@ -607,7 +607,7 @@ impl LocalVaultStateV1 {
             field(2, CborValue::Unsigned(state)),
             field(3, body),
         ]))
-        .map_err(|_| ApplicationError::BoundExceeded)?;
+        .map_err(crate::codec::map_encode_error)?;
         check_state_bound(&encoded)?;
         Ok(encoded)
     }

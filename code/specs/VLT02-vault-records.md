@@ -148,6 +148,29 @@ Two properties follow that callers may rely on:
    envelope encodes to exactly `MAX_ENCODED_SIZE` bytes succeeds; one
    byte more fails. Callers must not assume slack.
 
+One property callers may *not* rely on: the rejected encode does **not**
+wipe what it had already serialised. `try_encode` drops its partial
+output buffer — up to `MAX_ENCODED_SIZE` of plaintext — without
+zeroizing it, so a refused record leaves a copy of its secret fields in
+freed heap.
+
+This is not new to the `Result`: the panicking wrapper reached that
+state by the same path, since `encode` is `try_encode(...).expect(...)`
+and the buffer was already dropped before the panic. What is new is
+that the process now survives to keep running with that heap freed but
+unwiped.
+
+It is left as it stands, and the reason is that wiping the output
+buffer alone would be misleading rather than protective. The same
+plaintext is simultaneously held in the `CborValue` tree the caller
+built and still owns, and canonical-CBOR's value types implement
+neither `Zeroize` nor a wiping `Drop` on any path — the property
+VLT-PM39 §5 already records for the whole codec layer. Wiping one copy
+while the larger one persists would buy a guarantee the layer cannot
+actually make. Closing it properly means making canonical-CBOR
+zeroize-aware end to end, which adds a dependency to a deliberately
+zero-dependency foundational crate and so belongs to its own change.
+
 ## First-party record types
 
 | Type                  | Content type              | Use case                                   |

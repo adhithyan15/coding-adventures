@@ -32,6 +32,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stays in the store, that abort repeated on every subsequent command against
   the same vault: a local denial of service from one synced record. This
   applies to all six first-party types, not just `Login`.
+  Known limitation, recorded in VLT02 *Encoding is fallible*: a refused encode
+  does not wipe what it had already serialised — `try_encode` drops its partial
+  output buffer unzeroized. That is not new to the `Result` (the panicking
+  wrapper reached the same state, since `encode` is `try_encode(…).expect(…)`
+  and the buffer was already dropped before the panic); what is new is that the
+  process survives to keep running with that heap freed but unwiped. Wiping
+  only that buffer would mislead rather than protect, because the identical
+  plaintext sits in the `CborValue` tree the caller still owns, and
+  canonical-CBOR's value types implement neither `Zeroize` nor a wiping `Drop`
+  on any path. Closing it properly means making canonical-CBOR zeroize-aware
+  end to end, which adds a dependency to a deliberately zero-dependency
+  foundational crate, so it is tracked as its own change.
 - `encode_opaque` now reports an envelope that is one level too deep to encode
   through its existing `Result`, instead of panicking. Wrapping a payload in the
   `{t, d}` envelope costs one level of nesting, so a payload nested exactly as

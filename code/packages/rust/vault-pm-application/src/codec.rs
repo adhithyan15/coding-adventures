@@ -1,12 +1,14 @@
 use crate::{ApplicationError, ObjectKind};
-use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborValue};
+use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborError, CborValue};
 use coding_adventures_vault_pm_audit::SignedAuditEventV1;
 use coding_adventures_vault_pm_domain::{
     AttachmentId, CollectionId, ContentType, ItemCandidate, ItemDocument, ItemId, ItemState,
     LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
 };
 use coding_adventures_vault_pm_format::{CommitV1, DeviceCertificateV1, DeviceId, VaultId};
-use coding_adventures_vault_records::{decode_record, encode_opaque, encode_record, AnyRecord};
+use coding_adventures_vault_records::{
+    decode_record, encode_opaque, encode_record, AnyRecord, VaultRecordError,
+};
 use coding_adventures_zeroize::Zeroize;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
@@ -191,7 +193,7 @@ impl CatalogV1 {
             field(2, CborValue::Unsigned(ObjectKind::Catalog.code())),
             field(3, CborValue::Array(entries)),
         ]))
-        .map_err(|_| ApplicationError::BoundExceeded)?;
+        .map_err(map_encode_error)?;
         check_plaintext_bound(&encoded)?;
         Ok(encoded)
     }
@@ -293,7 +295,7 @@ pub fn encode_item_revision(
         field(4, CborValue::Unsigned(state_code)),
         field(5, state),
     ]))
-    .map_err(|_| ApplicationError::BoundExceeded)?;
+    .map_err(map_encode_error)?;
     check_plaintext_bound(&encoded)?;
     Ok(encoded)
 }
@@ -394,7 +396,7 @@ fn encode_signed_object(kind: ObjectKind, exact: Vec<u8>) -> Result<Vec<u8>, App
         field(2, CborValue::Unsigned(kind.code())),
         field(3, CborValue::Bytes(exact)),
     ]))
-    .map_err(|_| ApplicationError::BoundExceeded)?;
+    .map_err(map_encode_error)?;
     check_plaintext_bound(&encoded)?;
     Ok(encoded)
 }
@@ -614,14 +616,15 @@ fn decode_operations(value: CborValue) -> Result<Vec<OperationId>, ApplicationEr
 /// namely stored payload bytes that are not valid CBOR at all, and
 /// VLT-PM39 depends on that mapping.
 fn encode_any_record(record: &AnyRecord) -> Result<Vec<u8>, ApplicationError> {
-    let too_large = |_| ApplicationError::BoundExceeded;
     match record {
-        AnyRecord::Login(value) => encode_record(value).map_err(too_large),
-        AnyRecord::SecureNote(value) => encode_record(value).map_err(too_large),
-        AnyRecord::Card(value) => encode_record(value).map_err(too_large),
-        AnyRecord::TotpSeed(value) => encode_record(value).map_err(too_large),
-        AnyRecord::ApiKey(value) => encode_record(value).map_err(too_large),
-        AnyRecord::DatabaseCredential(value) => encode_record(value).map_err(too_large),
+        AnyRecord::Login(value) => encode_record(value).map_err(map_record_encode_error),
+        AnyRecord::SecureNote(value) => encode_record(value).map_err(map_record_encode_error),
+        AnyRecord::Card(value) => encode_record(value).map_err(map_record_encode_error),
+        AnyRecord::TotpSeed(value) => encode_record(value).map_err(map_record_encode_error),
+        AnyRecord::ApiKey(value) => encode_record(value).map_err(map_record_encode_error),
+        AnyRecord::DatabaseCredential(value) => {
+            encode_record(value).map_err(map_record_encode_error)
+        }
         AnyRecord::Opaque {
             content_type,
             payload_bytes,
@@ -643,6 +646,37 @@ fn validate_catalog(entries: &BTreeMap<ItemId, Vec<RevisionId>>) -> Result<(), A
         }
     }
     Ok(())
+}
+
+/// Map one canonical-CBOR *encode* failure into this crate's closed
+/// taxonomy.
+///
+/// Only two variants mean "this value is too big or too deep to
+/// represent", which is what `BoundExceeded` names. Every other variant
+/// is a genuine canonicality or integrity fault — `DuplicateMapKey`
+/// most of all, since it says the value would encode to bytes the strict
+/// decoder rejects as ambiguous — and must not be laundered into a
+/// benign size error.
+///
+/// The wildcard this replaced collapsed all of them together. That was
+/// unreachable in practice, because every map this crate builds has
+/// distinct literal keys, but it was a trap: a later refactor that did
+/// introduce a duplicate key would have reported a real integrity fault
+/// as a size problem, and the size problem is the one an operator is
+/// told to fix by shrinking a record.
+pub(crate) fn map_encode_error(error: CborError) -> ApplicationError {
+    match error {
+        CborError::EncodeTooLarge | CborError::EncodeTooDeep => ApplicationError::BoundExceeded,
+        _ => ApplicationError::IntegrityFailure,
+    }
+}
+
+/// The same mapping one layer up, for the record codec's own error type.
+fn map_record_encode_error(error: VaultRecordError) -> ApplicationError {
+    match error {
+        VaultRecordError::Cbor(inner) => map_encode_error(inner),
+        _ => ApplicationError::IntegrityFailure,
+    }
 }
 
 fn check_plaintext_bound(encoded: &[u8]) -> Result<(), ApplicationError> {
@@ -884,6 +918,11 @@ mod tests {
         );
     }
 
+    /// Inside this crate's own 16 MiB plaintext gate, outside
+    /// canonical-CBOR's 1 MiB encoded ceiling. The shape a record
+    /// authored by a peer with a larger framing budget takes.
+    const HUGE_PASSWORD_BYTES: usize = 2 * 1024 * 1024;
+
     /// A live single-item candidate whose `Login.password` is `n` bytes
     /// and whose every other field is as small as the schema allows, so
     /// the encoded size is `n` plus a constant.
@@ -949,16 +988,15 @@ mod tests {
         // ceiling is 1 MiB. A 2 MiB password sits between them: legal to
         // hold, legal to decode, and refused by the encoder. It used to
         // abort the process instead.
-        const HUGE: usize = 2 * 1024 * 1024;
         const _: () = assert!(
-            HUGE < MAX_PLAINTEXT_BYTES,
+            HUGE_PASSWORD_BYTES < MAX_PLAINTEXT_BYTES,
             "the poisoned record must sit inside our own plaintext gate, \
              so that only the codec's tighter ceiling rejects it"
         );
         let record = AnyRecord::Login(Login {
             title: String::new(),
             username: String::new(),
-            password: "a".repeat(HUGE),
+            password: "a".repeat(HUGE_PASSWORD_BYTES),
             urls: Vec::new(),
             notes: None,
         });
@@ -970,10 +1008,85 @@ mod tests {
         // And through the revision encode that wraps it.
         assert_eq!(
             encode_item_revision(
-                candidate_with_password_len(HUGE).causal_parents(),
-                candidate_with_password_len(HUGE).state(),
+                candidate_with_password_len(HUGE_PASSWORD_BYTES).causal_parents(),
+                candidate_with_password_len(HUGE_PASSWORD_BYTES).state(),
             ),
             Err(ApplicationError::BoundExceeded)
+        );
+    }
+
+    #[test]
+    fn deleting_an_oversized_item_stays_possible() {
+        // The escape hatch. An oversized record that a peer already
+        // synced can never be re-encoded, so `item edit` and the merges
+        // are permanently closed for it. Deletion is what keeps that from
+        // being a trap, and it works because a tombstone revision carries
+        // only the item id and a timestamp -- the record is not in it.
+        //
+        // This is what stops one poisoned record from being unrecoverable,
+        // and it is also how an operator clears the way for a blocked
+        // export, so it is pinned rather than left implicit.
+        let live = candidate_with_password_len(HUGE_PASSWORD_BYTES);
+        assert_eq!(
+            encode_item_revision(live.causal_parents(), live.state()),
+            Err(ApplicationError::BoundExceeded)
+        );
+
+        let tombstone = ItemCandidate::new(
+            RevisionId::new([0x52; 32]),
+            [RevisionId::new([0x51; 32])],
+            ItemState::Tombstone(Tombstone {
+                // The very item whose live revision was refused above.
+                item_id: ItemId::new([0x21; 16]),
+                deleted_at_ms: 44,
+            }),
+        )
+        .unwrap();
+        let encoded = encode_item_revision(tombstone.causal_parents(), tombstone.state())
+            .expect("deleting an oversized item must remain possible");
+        assert_eq!(
+            decode_item_revision(tombstone.revision_id(), &encoded).unwrap(),
+            tombstone
+        );
+    }
+
+    #[test]
+    fn encode_errors_keep_size_and_integrity_faults_distinct() {
+        // Only the two ceilings mean "too big to represent". Every other
+        // CBOR encode failure is a canonicality fault and must not be
+        // laundered into a benign size error -- DuplicateMapKey above all,
+        // since it means the value would encode to bytes the strict
+        // decoder rejects as ambiguous.
+        assert_eq!(
+            map_encode_error(CborError::EncodeTooLarge),
+            ApplicationError::BoundExceeded
+        );
+        assert_eq!(
+            map_encode_error(CborError::EncodeTooDeep),
+            ApplicationError::BoundExceeded
+        );
+        assert_eq!(
+            map_encode_error(CborError::DuplicateMapKey),
+            ApplicationError::IntegrityFailure
+        );
+        assert_eq!(
+            map_encode_error(CborError::NonCanonicalMapOrder),
+            ApplicationError::IntegrityFailure
+        );
+
+        // And the same split one layer up, through the record codec's
+        // own error type.
+        assert_eq!(
+            map_record_encode_error(VaultRecordError::Cbor(CborError::EncodeTooLarge)),
+            ApplicationError::BoundExceeded
+        );
+        assert_eq!(
+            map_record_encode_error(VaultRecordError::Cbor(CborError::DuplicateMapKey)),
+            ApplicationError::IntegrityFailure
+        );
+        assert_eq!(
+            map_record_encode_error(VaultRecordError::NotARecord),
+            ApplicationError::IntegrityFailure
         );
     }
 

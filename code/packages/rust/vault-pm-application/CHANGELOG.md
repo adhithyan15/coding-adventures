@@ -34,9 +34,44 @@ All notable changes to this package are documented here.
   relies on. `LocalSecretV1::encode` and the export AAD header stay infallible
   and are documented as provably fixed-size.
 
+- Keep size faults and integrity faults distinct when mapping a CBOR encode
+  failure. The nine call sites above previously used a `|_|` wildcard that
+  collapsed every `CborError` into `BoundExceeded`, including `DuplicateMapKey`
+  — a canonicality fault meaning the value would encode to bytes the strict
+  decoder rejects as ambiguous. Unreachable today, because every map this crate
+  builds has distinct literal keys, but a trap for any later refactor: a real
+  integrity fault would have been reported as the benign size error an operator
+  is told to fix by shrinking a record. `map_encode_error` now matches
+  `EncodeTooLarge`/`EncodeTooDeep` explicitly and sends everything else to
+  `IntegrityFailure`.
+
 ### Changed
 
 - Track `vault-records`' `encode_record` signature change to `Result`.
+
+### Known limitations
+
+The change bounds the blast radius of an unencodable record; it does not stop
+one entering the catalog. Recorded in VLT-PM05 section 13.2 and tracked as
+follow-on work rather than widened into this change:
+
+- **Ingest is still ungated.** `decode_item_revision` gates on the 16 MiB
+  plaintext bound and canonical-CBOR caps decode depth but not length, so a
+  peer with a larger framing budget can still hand this device a record that
+  decodes and can never be re-encoded. Matching the ingest gate to
+  `MAX_ENCODED_SIZE` changes what the product accepts, and done naively turns a
+  partly-degraded vault into an unopenable one — a worse failure than the one
+  it prevents — so it needs its own spec.
+- **One unencodable record blocks the whole export.** The export walks every
+  current candidate and propagates the first failure, so a single bad record
+  denies evacuating the entire vault. Skip-and-report is a format and
+  verification change, not a local one: `candidate_count` and the signed
+  `snapshot_hash` assert completeness, and VLT-PM19/VLT-PM20
+  restore-verification depends on that assertion.
+- **The escape hatch.** Deleting the offending item always works, because a
+  tombstone revision carries only the item id and a timestamp. That is what
+  makes the above a degradation rather than a trap, and it is now pinned by
+  `deleting_an_oversized_item_stays_possible` rather than left as an inference.
 
 ## [0.61.0] - 2026-08-17
 

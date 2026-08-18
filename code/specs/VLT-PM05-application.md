@@ -783,6 +783,44 @@ seven authored conflict merges (VLT-PM33–VLT-PM39), `conflict choose`,
 `history restore`, and `export`. Each returns `BoundExceeded` and
 leaves the vault untouched. None aborts the process.
 
+### 13.2 What this does *not* fix — residual exposure
+
+Converting the aborts into errors bounds the blast radius; it does not
+close the hole that lets an unusable record in. Three residual
+properties are stated here deliberately, because a reader should not
+mistake "fails closed" for "cannot happen".
+
+**Ingest is still ungated.** `decode_item_revision` gates on
+`MAX_PLAINTEXT_BYTES` (16 MiB), and canonical-CBOR's decoder caps depth
+but not input length. Nothing rejects a record between 1 MiB and 16 MiB
+at the point it enters the local catalog. A peer running software with
+a larger framing budget can therefore still hand this device a record
+that decodes and can never afterwards be re-encoded. Making the ingest
+gate match `MAX_ENCODED_SIZE` is the real repair, and it is deliberately
+*not* done here: it changes what the product accepts, it needs its own
+spec, and done naively it converts a partly-degraded vault into an
+unopenable one, which is a worse failure than the one it prevents.
+
+**One poisoned record blocks the whole export.** `export_portable_with_passphrase`
+walks every current candidate and propagates the first failure, so a
+single unencodable record denies the export of the entire vault rather
+than just of itself. That matters more than the per-item failures
+because export is the evacuation path. Making export skip-and-report
+instead is *not* done here either: the snapshot's `candidate_count` and
+its signed `snapshot_hash` currently assert completeness, and
+VLT-PM19/VLT-PM20 restore-verification depends on that assertion, so
+partial export is a format and verification change, not a local one.
+
+**The escape hatch that keeps this recoverable.** Deleting the offending
+item works, because a tombstone revision carries only the item id and a
+timestamp — the record is not in it. So an operator holding a poisoned
+record can always delete the item and then export. That is what keeps
+the residual exposure a degradation rather than a trap, and it is
+pinned by test (`deleting_an_oversized_item_stays_possible`) rather than
+left as an inference from the encoding shape.
+
+Both repairs above are tracked as follow-on work against this section.
+
 ## 14. Required verification
 
 The Phase 1A package must include:

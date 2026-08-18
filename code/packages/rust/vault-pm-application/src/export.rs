@@ -367,7 +367,7 @@ fn encrypt_portable_plaintext(
     // hostile peer at all: an ordinary vault of a few dozen items
     // produces an artifact larger than 1 MiB.
     Ok(PortableExportArtifactV1 {
-        bytes: try_encode(&artifact).map_err(|_| ApplicationError::BoundExceeded)?,
+        bytes: try_encode(&artifact).map_err(crate::codec::map_encode_error)?,
     })
 }
 
@@ -384,9 +384,8 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
     // budget need not be the encoder's ceiling, so a snapshot that
     // decodes here may still be one the encoder declines to re-emit.
     // Failing closed rejects one import; panicking loses the process.
-    let encoded_entries = Zeroizing::new(
-        try_encode(entries_value.get()).map_err(|_| ApplicationError::BoundExceeded)?,
-    );
+    let encoded_entries =
+        Zeroizing::new(try_encode(entries_value.get()).map_err(crate::codec::map_encode_error)?);
     let candidate_count = usize::try_from(fields.take(4)?.into_uint()?)
         .map_err(|_| ApplicationError::BoundExceeded)?;
     let expected_hash: [u8; 32] = fields.take(5)?.into_fixed()?;
@@ -507,9 +506,8 @@ pub(crate) fn export_portable_with_passphrase(
     // Every candidate revision in the vault, concatenated. This module's
     // own ceiling on it is 512 MiB; the encoder's is 1 MiB, so a vault of
     // a few dozen ordinary items already crosses the tighter one.
-    let encoded_entries = Zeroizing::new(
-        try_encode(entries_value.get()).map_err(|_| ApplicationError::BoundExceeded)?,
-    );
+    let encoded_entries =
+        Zeroizing::new(try_encode(entries_value.get()).map_err(crate::codec::map_encode_error)?);
     let snapshot_hash = snapshot_hash(exact_bootstrap, &encoded_entries)?;
     let snapshot = SecretCborValue::new(CborValue::Map(vec![
         field(1, CborValue::Unsigned(VERSION)),
@@ -519,7 +517,7 @@ pub(crate) fn export_portable_with_passphrase(
         field(5, CborValue::Bytes(snapshot_hash.to_vec())),
     ]));
     let plaintext =
-        Zeroizing::new(try_encode(snapshot.get()).map_err(|_| ApplicationError::BoundExceeded)?);
+        Zeroizing::new(try_encode(snapshot.get()).map_err(crate::codec::map_encode_error)?);
     if plaintext.len() > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
         return Err(ApplicationError::BoundExceeded);
     }
