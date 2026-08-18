@@ -77,6 +77,14 @@ pub const OP_MUL: u8 = 0x5A;
 pub const OP_DIV: u8 = 0x5B;
 /// `xor` (0x61) — McCarthy W7 logical `not` lowers to `x ^ 1`.
 pub const OP_XOR: u8 = 0x61;
+/// `neg` (0x65) — unary two's-complement negation: pop one int, push `-x`.
+/// Macsyma Wave 4's unary `-x` (`iir-builtin-lowering::dynamic_arith`'s new
+/// unary-negate case) is the first IIR pipeline to reach the CLR column with
+/// a raw `neg` op — `iir-to-cil-bytecode` already emitted the correct opcode
+/// (`lower.rs`'s `"neg" => ... emit_raw(vec![0x65])`) but this simulator's
+/// dispatch never implemented it, so it fell through to the "unknown opcode"
+/// panic. Real CoreCLR (via `ilasm`/`dotnet`) already supports `neg` natively.
+pub const OP_NEG: u8 = 0x65;
 /// `box <typeTok>` — McCarthy W6b. Boxes a value type into an object reference.
 /// In this loose model the `Int` already roundtrips through `object[]`, so `box`
 /// is identity (skips the 4-byte type token). Mirrors the wasm `i31` box no-op.
@@ -460,6 +468,13 @@ impl CLRSimulator {
         }
         if opcode_byte == OP_XOR {
             return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b);
+        }
+        if opcode_byte == OP_NEG {
+            let a = self.pop_int();
+            let result = a.wrapping_neg();
+            self.stack.push(Some(Value::Int(result)));
+            self.pc += 1;
+            return self.trace(pc, "neg", stack_before, format!("pop {a}, push {result}"));
         }
         if opcode_byte == OP_DIV {
             let b_val = self.pop_int();
