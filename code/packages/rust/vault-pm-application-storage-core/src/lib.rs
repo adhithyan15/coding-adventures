@@ -587,6 +587,48 @@ mod tests {
         assert_eq!(store.load_latest(locator).unwrap(), Some(second));
     }
 
+    /// VLT-PM43 §5.4. The delete is what makes a rotation mean anything, so it
+    /// is checked the only way that proves it: the retired record's own bytes
+    /// must be unreadable from the backend afterwards, not merely unreferenced.
+    #[test]
+    fn a_superseded_generation_is_really_gone_and_the_live_one_is_refused() {
+        let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
+        let locator = locator(7);
+        let first = bootstrap(0, None, 9, 20);
+        let first_id = bootstrap_id(&first);
+        store.put_generation(locator, None, &first).unwrap();
+        let second = bootstrap(1, Some(first_id), 9, 21);
+        let second_id = bootstrap_id(&second);
+        store
+            .put_generation(locator, Some(first_id), &second)
+            .unwrap();
+
+        let namespace = generation_namespace(locator);
+        let retired_key = hex_bytes(first_id.as_bytes());
+        assert!(store
+            .backend()
+            .get(&namespace, &retired_key)
+            .unwrap()
+            .is_some());
+
+        // The live generation is the only way into the vault, so removing it
+        // is refused outright rather than left to caller discipline.
+        assert_eq!(
+            store.supersede_generation(locator, second_id),
+            Err(BootstrapStoreError::Conflict)
+        );
+
+        store.supersede_generation(locator, first_id).unwrap();
+        assert!(store
+            .backend()
+            .get(&namespace, &retired_key)
+            .unwrap()
+            .is_none());
+        // Recovery replays this call, so a second attempt must reach the end.
+        store.supersede_generation(locator, first_id).unwrap();
+        assert_eq!(store.load_latest(locator).unwrap(), Some(second));
+    }
+
     #[test]
     fn bootstrap_rejects_stale_wrong_vault_skipped_and_malformed_successors() {
         let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
