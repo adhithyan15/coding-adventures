@@ -124,6 +124,8 @@ def _print_usage() -> None:
     print("  compile-tokens <file.tokens> [-o <out.py>] Compile tokens to Python")
     print("  compile-grammar <file.grammar> [-o <out.py>] Compile grammar to Python")
     print()
+    print("  -f, --force   Skip validation errors and compile anyway")
+    print()
     print("Run 'grammar-tools --help' for full help text.")
 
 
@@ -323,7 +325,9 @@ def validate_grammar_only(grammar_path: str) -> int:
 # ---------------------------------------------------------------------------
 
 
-def compile_tokens_command(tokens_path: str, output_path: str | None) -> int:
+def compile_tokens_command(
+    tokens_path: str, output_path: str | None, force: bool = False
+) -> int:
     """Parse and compile a .tokens file into Python source code.
 
     The generated Python file embeds the ``TokenGrammar`` as native data
@@ -332,7 +336,15 @@ def compile_tokens_command(tokens_path: str, output_path: str | None) -> int:
 
     Writes to *output_path* if given, otherwise prints to stdout.
 
-    Returns 0 on success, 1 if the file cannot be parsed or is invalid.
+    When *force* is true, validation errors are printed but do not block
+    compilation — the code is generated anyway. This mirrors the Ruby/Go/
+    Rust/TypeScript/Elixir ``--force`` flag, needed because several
+    canonical ``.grammar`` files have pre-existing validation errors
+    (unreachable rules, etc.) that never mattered while the runtime path
+    only parsed and never validated.
+
+    Returns 0 on success, 1 if the file cannot be parsed, or is invalid
+    and *force* is false.
     """
     tokens_file = Path(tokens_path)
     if not tokens_file.exists():
@@ -349,18 +361,24 @@ def compile_tokens_command(tokens_path: str, output_path: str | None) -> int:
 
     issues = validate_token_grammar(token_grammar)
     errors = _count_errors(issues)
-    if errors:
+    if errors and not force:
         print(f"{errors} error(s)", file=sys.stderr)
         _print_issues(issues)
         return 1
 
     code = compile_token_grammar(token_grammar, tokens_file.name)
 
+    if errors:
+        print(f"{errors} error(s) (forced)", file=sys.stderr)
+        _print_issues(issues)
+
     if output_path:
         Path(output_path).write_text(code)
-        print(f"OK → {output_path}", file=sys.stderr)
+        if not errors:
+            print(f"OK → {output_path}", file=sys.stderr)
     else:
-        print("OK", file=sys.stderr)
+        if not errors:
+            print("OK", file=sys.stderr)
         print(code, end="")
 
     return 0
@@ -371,7 +389,9 @@ def compile_tokens_command(tokens_path: str, output_path: str | None) -> int:
 # ---------------------------------------------------------------------------
 
 
-def compile_grammar_command(grammar_path: str, output_path: str | None) -> int:
+def compile_grammar_command(
+    grammar_path: str, output_path: str | None, force: bool = False
+) -> int:
     """Parse and compile a .grammar file into Python source code.
 
     The generated Python file embeds the ``ParserGrammar`` as native data
@@ -380,7 +400,11 @@ def compile_grammar_command(grammar_path: str, output_path: str | None) -> int:
 
     Writes to *output_path* if given, otherwise prints to stdout.
 
-    Returns 0 on success, 1 if the file cannot be parsed or is invalid.
+    When *force* is true, validation errors are printed but do not block
+    compilation — see ``compile_tokens_command`` for why this exists.
+
+    Returns 0 on success, 1 if the file cannot be parsed, or is invalid
+    and *force* is false.
     """
     grammar_file = Path(grammar_path)
     if not grammar_file.exists():
@@ -397,18 +421,24 @@ def compile_grammar_command(grammar_path: str, output_path: str | None) -> int:
 
     issues = validate_parser_grammar(parser_grammar)
     errors = _count_errors(issues)
-    if errors:
+    if errors and not force:
         print(f"{errors} error(s)", file=sys.stderr)
         _print_issues(issues)
         return 1
 
     code = compile_parser_grammar(parser_grammar, grammar_file.name)
 
+    if errors:
+        print(f"{errors} error(s) (forced)", file=sys.stderr)
+        _print_issues(issues)
+
     if output_path:
         Path(output_path).write_text(code)
-        print(f"OK → {output_path}", file=sys.stderr)
+        if not errors:
+            print(f"OK → {output_path}", file=sys.stderr)
     else:
-        print("OK", file=sys.stderr)
+        if not errors:
+            print("OK", file=sys.stderr)
         print(code, end="")
 
     return 0
@@ -419,7 +449,9 @@ def compile_grammar_command(grammar_path: str, output_path: str | None) -> int:
 # ---------------------------------------------------------------------------
 
 
-def dispatch(command: str, files: list[str], output: str | None = None) -> int:
+def dispatch(
+    command: str, files: list[str], output: str | None = None, force: bool = False
+) -> int:
     """Dispatch a parsed command to the appropriate function.
 
     Returns an exit code (0, 1, or 2).
@@ -466,7 +498,7 @@ def dispatch(command: str, files: list[str], output: str | None = None) -> int:
             print(file=sys.stderr)
             _print_usage()
             return 2
-        return compile_tokens_command(files[0], output)
+        return compile_tokens_command(files[0], output, force)
 
     if command == "compile-grammar":
         if len(files) != 1:
@@ -477,7 +509,7 @@ def dispatch(command: str, files: list[str], output: str | None = None) -> int:
             print(file=sys.stderr)
             _print_usage()
             return 2
-        return compile_grammar_command(files[0], output)
+        return compile_grammar_command(files[0], output, force)
 
     print(f"Error: Unknown command '{command}'", file=sys.stderr)
     print(file=sys.stderr)
@@ -531,8 +563,9 @@ def main() -> int:
         files = list(files_raw)
 
     output = flags.get("output") if flags else None
+    force = bool(flags.get("force")) if flags else False
 
-    return dispatch(command, files, output)
+    return dispatch(command, files, output, force)
 
 
 if __name__ == "__main__":
